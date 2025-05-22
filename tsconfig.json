@@ -11,5 +11,8 @@
   "include": [
     "demo/**/*.js",
     "source/scrawl.d.ts"
+  ],
+  "exclude": [
+    "demo/**/temp-*.js",
   ]
 }

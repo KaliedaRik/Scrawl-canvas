@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-208.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -77,7 +77,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'alignment', '0'],
     ['input', 'handle_xAbsolute', '100'],
     ['input', 'handle_xPercent', '50'],
@@ -473,6 +473,7 @@ const updateFont = (event) => {
                 });
         }
     }
+/** @ts-expect-error */
     dom.breakTextOnSpaces.options.selectedIndex = (mylabel.get('breakTextOnSpaces')) ? 1 : 0;
 };
 scrawl.addNativeListener('change', (e) => updateFont(e), dom.font);

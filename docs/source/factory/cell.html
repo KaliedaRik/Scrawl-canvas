@@ -588,26 +588,6 @@
 <li>the source for image-based objects such as <strong>Picture entitys</strong> and <strong>Pattern styles</strong>.</li>
 <li><strong>artefacts</strong> - a Cell wrapper can act just like any artefact: it can be positioned, dimensioned, scaled and rotated ; it can act as a <code>pivot</code> or <code>mimic</code> source for other artefacts, or use them for its position and dimensions data. (Be aware, though, that Cell wrappers are NOT stored in the scrawl library’s <code>artefact</code> section).</li>
 </ul>
-<p>Cell wrappers include a number of Boolean flags and other attributes to control how they are stamped onto other Cells.</p>
-<ul>
-<li>We can set flags to determine whether to include the Cell in each step of the Display cycle (<code>cleared</code>, <code>compiled</code>, <code>shown</code>) - this allows us to set up, for example, ‘static’ Cells that only need to be compiled once and can then be used as backgrounds for other Cells and entitys to be animated over.</li>
-<li>We can vary the order in which Cell wrappers get processed during the Display cycle (<code>compileOrder</code>, <code>showOrder</code>).</li>
-<li>Each Cell can have its own <code>backgroundColor</code>.</li>
-<li>Each Cell can be made translucent (<code>alpha</code>).</li>
-<li>Each Cell can be stamped onto other Cell canvases using a different composition method (<code>composite</code>).</li>
-<li>Each Cell can be given its own dimensions, different to those of its Canvas wrapper, with updates cascading down to entitys that use the Cell to determine their own (relative) dimensions and start coordinates.</li>
-<li>We can <code>scale</code>, <code>roll</code> and <code>flip</code> a Cell.</li>
-<li>We can control which parts of the Cell display will be copied over to its destination (<code>copy attributes</code>).</li>
-<li>We can add one or more <code>filters</code> to the Cell’s outputted display.</li>
-</ul>
-<p>Every Cell wrapper will include a <a href="./group.html">Group object</a> which shares the same name as the Cell. To include an entity object in a Cell wrapper’s canvas display we add it to this group.</p>
-<ul>
-<li>Additional Group objects can be added to the Cell wrapper as-and-when required.</li>
-<li>Groups are processed in the order specified in their <code>order</code> attributes.</li>
-<li>Groups whose <code>visibility</code> flag is set to false will be skipped during the Display cycle cascade.</li>
-</ul>
-<p>Scrawl-canvas uses the <code>makeCell</code> factory function internally; it is not exported to the scrawl object. Instead, <em><strong>new Cell wrappers can be created from a Canvas wrapper</strong></em> using its <code>addCell</code> function.</p>
-<p>Scrawl-canvas (partially) disables Cell wrapper <code>packet</code> functionality. <em><strong>Cell wrappers cannot be cloned.</strong></em> They can be killed, either using their <code>kill</code> function or by invoking their Canvas wrapper controller’s <code>killCell</code> function.</p>
 
             </div>
             
@@ -626,9 +606,9 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, asset, canvas, constructors, group } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { addStrings, doCreate, isa_canvas, mergeOver, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { addStrings, doCreate, isa_canvas, mergeOver, λ<span class="hljs-literal">null</span>, λcloneError, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { getIgnorePixelRatio, getPixelRatio, currentCorePosition } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/user-interaction.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { getIgnorePixelRatio, getPixelRatio } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/user-interaction.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { makeGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./group.js&#x27;</span>;
@@ -669,7 +649,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _isFinite, _floor, _round, _values, _2D, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">DIMENSIONS</span>, <span class="hljs-variable constant_">DISPLAY_P3</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GRAYSCALE</span>, <span class="hljs-variable constant_">HEIGHT</span>, <span class="hljs-variable constant_">HIGH</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">MOZOSX_FONT_SMOOTHING</span>, <span class="hljs-variable constant_">NEVER</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">SMOOTH_FONT</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">SRGB</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">WEBKIT_FONT_SMOOTHING</span>, <span class="hljs-variable constant_">WIDTH</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _atan2, _isFinite, _floor, _piDouble, _round, _values, _2D, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">HEIGHT</span>, <span class="hljs-variable constant_">HIGH</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">SRGB</span>, <span class="hljs-variable constant_">T_CANVAS</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">WIDTH</span>, <span class="hljs-variable constant_">ZERO_STR</span>, _isArray } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1144,7 +1124,7 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.lib}</span>, {}]`</span>
 };
-P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable language_">this</span>;</pre></div></div>
+P.<span class="hljs-property">clone</span> = λcloneError;</pre></div></div>
             
         </li>
         
@@ -1355,11 +1335,18 @@ G.<span class="hljs-property">dimensions</span> = <span class="hljs-keyword">fun
 
     <span class="hljs-keyword">return</span> [w, h];
 };
-S.<span class="hljs-property">dimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) {
+S.<span class="hljs-property">dimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setCoordinateHelper</span>(<span class="hljs-variable constant_">DIMENSIONS</span>, w, h);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensionsOverride</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(item) &amp;&amp; item.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>) {
+
+        <span class="hljs-keyword">const</span> [w, h] = item;
+
+        <span class="hljs-keyword">if</span> (w != <span class="hljs-literal">null</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>[<span class="hljs-number">0</span>] = w;
+        <span class="hljs-keyword">if</span> (h != <span class="hljs-literal">null</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>[<span class="hljs-number">1</span>] = h;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensionsOverride</span> = <span class="hljs-literal">true</span>;
+    }
 };</pre></div></div>
             
         </li>
@@ -1452,6 +1439,13 @@ S.<span class="hljs-property">shown</span> = <span class="hljs-keyword">function
 };
 S.<span class="hljs-property">showOrder</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">showOrder</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateControllerCells</span>();
+};
+
+S.<span class="hljs-property">order</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">compileOrder</span> = item;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">showOrder</span> = item;
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateControllerCells</span>();
 };
@@ -1576,43 +1570,6 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
               <div class="sswrap ">
                 <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
-              <p><code>smoothFont</code> - handle this directly; don’t save the attribute state</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">smoothFont</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-    <span class="hljs-keyword">const</span> { element } = <span class="hljs-variable language_">this</span>;
-
-    <span class="hljs-keyword">if</span> (element) {
-
-        <span class="hljs-keyword">const</span> { style } = element;
-
-        <span class="hljs-keyword">if</span> (style) {
-
-            <span class="hljs-keyword">if</span> (item) {
-                style[<span class="hljs-variable constant_">WEBKIT_FONT_SMOOTHING</span>] = <span class="hljs-variable constant_">AUTO</span>;
-                style[<span class="hljs-variable constant_">MOZOSX_FONT_SMOOTHING</span>] = <span class="hljs-variable constant_">AUTO</span>;
-                style[<span class="hljs-variable constant_">SMOOTH_FONT</span>] = <span class="hljs-variable constant_">AUTO</span>;
-            }
-            <span class="hljs-keyword">else</span> {
-                style[<span class="hljs-variable constant_">WEBKIT_FONT_SMOOTHING</span>] = <span class="hljs-variable constant_">NONE</span>;
-                style[<span class="hljs-variable constant_">MOZOSX_FONT_SMOOTHING</span>] = <span class="hljs-variable constant_">GRAYSCALE</span>;
-                style[<span class="hljs-variable constant_">SMOOTH_FONT</span>] = <span class="hljs-variable constant_">NEVER</span>;
-            }
-        }
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
-              </div>
               <p><code>checkForEntityHover</code>, <code>onEntityHover</code>, <code>onEntityNoHover</code> - these are group-specific attributes which we can set on the Cell’s named group via the Cell’s wrapper</p>
 
             </div>
@@ -1639,11 +1596,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-44">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>group</code> - get the Cell’s namesake group</p>
 <ul>
@@ -1655,7 +1612,24 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
             <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">group</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">return</span> group[<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>];
+};
+P.<span class="hljs-property">getGroup</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> group[<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>];
 };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
             
         </li>
         
@@ -1665,19 +1639,6 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
               
               <div class="sswrap ">
                 <a class="ss" href="#section-45">&#x00a7;</a>
-              </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-46">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>checkSource</code> - internal function</p>
 
@@ -1691,11 +1652,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-47">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>getData</code> - internal function, invoked when a Cell wrapper is used as an entity’s pattern style</p>
 
@@ -1711,11 +1672,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-48">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>updateArtefacts</code> - passes the <strong>items</strong> argument object through to each of the Cell’s Groups for forwarding to their artefacts’ <code>setDelta</code> function</p>
 
@@ -1750,11 +1711,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-49">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwrites mixin/position function:</p>
 <ul>
@@ -1773,11 +1734,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-50">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p>Only proceed if the canvas element is in place</p>
 
@@ -1815,11 +1776,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-51">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>Only proceed if we know the Cell has a controller, and its contents don’t need to be preserved</p>
 <ul>
@@ -1844,11 +1805,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-52">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><strong>isComponent</strong> is DEPRECATED (because it is a really bad name) and replaced by <strong>baseMatchesCanvasDimensions</strong></p>
 
@@ -1906,11 +1867,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-53">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>notifySubscriber</code> - Overrides mixin/asset.js function</p>
 
@@ -1933,11 +1894,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-54">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>subscribeAction</code> - Overrides mixin/asset.js function</p>
 
@@ -1954,11 +1915,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-55">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>installElement</code> - internal function, used by the constructor</p>
 
@@ -1983,11 +1944,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-56">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>updateControllerCells</code> - internal function: ask the Cell’s Canvas controller to review/update its cells data</p>
 
@@ -2002,11 +1963,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-57">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>getController</code> - internal function: ask the Cell’s Canvas controller to review/update its cells data</p>
 
@@ -2024,11 +1985,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-58">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><code>getHost</code> - Internal function - get a reference to the Cell’s current host (where it will be stamping itself as part of the Display cycle).</p>
 <ul>
@@ -2054,11 +2015,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-59">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>updateBaseHere</code> - Internal function called by a Canvas wrapper on its base Cell</p>
 
@@ -2067,8 +2028,6 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateBaseHere</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">controllerHere, fit</span>) {
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isBase</span>) {
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span> = {};
 
         <span class="hljs-keyword">const</span> here = <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>,
             dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
@@ -2154,11 +2113,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-60">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -2211,11 +2170,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-61">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><code>compile</code></p>
 
@@ -2245,11 +2204,11 @@ S.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-62">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>show</code> - Note that functionality here differs for <strong>base cells</strong> and other Cell wrappers</p>
 
@@ -2272,11 +2231,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-63">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>get the destination cell’s canvas context</p>
 
@@ -2304,11 +2263,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-64">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>Cannot draw to the destination canvas if either of its dimensions === 0</p>
 
@@ -2333,11 +2292,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-65">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p>Cannot draw from the source canvas if either of its dimensions === 0</p>
 <ul>
@@ -2364,11 +2323,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-66">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p>copy the base canvas over to the display canvas. This copy operation ignores any scale, roll or position attributes set on the base cell, instead complying with the controller’s fit attribute requirements</p>
 
@@ -2396,11 +2355,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-67">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p>base must copy into display resized, centered, letterboxing if necessary, maintaining aspect ratio</p>
 
@@ -2430,11 +2389,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-68">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p>base must copy into display resized, centered, leaving no letterbox area, maintaining aspect ratio</p>
 
@@ -2464,11 +2423,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-69">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p>base must copy into display resized, distorting the aspect ratio as necessary</p>
 
@@ -2486,11 +2445,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-70">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p>base copies into display as-is, centred, maintaining aspect ratio</p>
 
@@ -2513,11 +2472,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-71">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p>Cell canvases are treated like entitys on the base canvas: they can be positioned, scaled and rotated. Positioning will respect lockTo; flipReverse and flipUpend; and can be pivoted to other artefacts, or follow a path entity, etc. If pivoted to the mouse, they will use the base canvas’s .here attribute, which takes into account differences between the base and display canvas dimensions.</p>
 
@@ -2549,11 +2508,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-72">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><code>applyFilters</code> - Internal function - add filters to the Cell’s current output.</p>
 
@@ -2561,11 +2520,12 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">applyFilters</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> engine = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>;
+    <span class="hljs-keyword">const</span> engine = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>,
+        element = <span class="hljs-variable language_">this</span>.<span class="hljs-property">element</span>;
 
     <span class="hljs-keyword">const</span> image = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">0</span>], <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">1</span>]);
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preprocessFilters</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preprocessFilters</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>, element.<span class="hljs-property">width</span>, element.<span class="hljs-property">height</span>);
 
     <span class="hljs-keyword">const</span> img = filterEngine.<span class="hljs-title function_">action</span>({
         <span class="hljs-attr">identifier</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">filterIdentifier</span>,
@@ -2579,11 +2539,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-73">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><code>stashOutputAction</code> - Internal function - stash the Cell’s current output. While this function can be called at any time, the simplest way to invoke it is to set the Cell’s <strong>stashOutput</strong> flag to true, which will then invoke this function at the end of the compile step of the Display cycle (after any filters have been applied to the cell display).</p>
 <ul>
@@ -2613,11 +2573,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-74">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p>Keep the stashed image within bounds of the Cell’s dimensions.</p>
 
@@ -2645,11 +2605,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-75">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p>Get the imageData object, and stash it</p>
 
@@ -2663,11 +2623,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-76">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p>Get the dataUrl String, updating the stashed &lt;img&gt; element with it</p>
 
@@ -2719,11 +2679,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-77">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><code>prepareStamp</code> - Internal function - steps to be performed before the Cell stamps its visual contents onto a Canvas object’s base cell’s canvas. Will be invoked as part of the Display cycle ‘show’ functionality.</p>
 <ul>
@@ -2774,11 +2734,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-78">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><code>prepareStampTabsHelper</code> is defined in the <code>mixin/hidden-dom-elements.js</code> file - handles updates to anchor and button objects in the DOM</p>
 
@@ -2790,11 +2750,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-79">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><code>cleanPathObject</code> - Calculate the Cell’s <strong>Path2D object</strong></p>
 
@@ -2824,11 +2784,11 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-80">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><code>updateHere</code> - get the Cell to update its .here information</p>
 <ul>
@@ -2842,8 +2802,6 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
     <span class="hljs-keyword">const</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
 
     <span class="hljs-keyword">if</span> (host) {
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span> = {};
 
         <span class="hljs-keyword">const</span> localHere = <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>;
 
@@ -2917,11 +2875,259 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         </li>
         
         
+        <li id="section-80">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-80">&#x00a7;</a>
+              </div>
+              <p><code>splitShift</code> - split and shift functionality works only on cells that are not being cleared as part of the Display cycle. The single argument is an object containing the following attributes:</p>
+<ul>
+<li><strong>px</strong> (required) - Number or String value for the amount of pixels to be shifted. Can be positive (move pixels right/down) or negative (move pixels left/up)</li>
+<li><strong>vertical</strong> (optional) - Boolean flag (default: <code>false</code>); when set to <code>true</code> we move the pixels up/down, otherwise we move them left/right</li>
+<li><strong>cycle</strong> (optional) - Boolean flag (default: <code>false</code>; when set to <code>true</code>) we save the area of the screen about to be overwritten and reinsert it on the opposite side after the shift operation completes</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">splitShift</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">px</span>) {
+
+        <span class="hljs-keyword">const</span> {
+            px,
+            vertical = <span class="hljs-literal">false</span>,
+            cycle = <span class="hljs-literal">false</span>
+        } = item;
+
+        <span class="hljs-keyword">const</span> [width, height] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
+
+        <span class="hljs-keyword">let</span> speed = <span class="hljs-number">0</span>,
+            edge = <span class="hljs-literal">null</span>;
+
+        <span class="hljs-keyword">if</span> (px.<span class="hljs-property">toFixed</span>) speed = <span class="hljs-title function_">_round</span>(px);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (px.<span class="hljs-property">substring</span>) {
+
+            <span class="hljs-keyword">if</span> (vertical) speed = <span class="hljs-title function_">_round</span>((<span class="hljs-built_in">parseFloat</span>(px) / <span class="hljs-number">100</span>) * height);
+            <span class="hljs-keyword">else</span> speed = <span class="hljs-title function_">_round</span>((<span class="hljs-built_in">parseFloat</span>(px) / <span class="hljs-number">100</span>) * width);
+        }
+
+        <span class="hljs-keyword">if</span> (speed) {
+
+            <span class="hljs-keyword">const</span> engine = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>;
+
+            <span class="hljs-keyword">if</span> (vertical) {</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-81">&#x00a7;</a>
+              </div>
+              <p>Move up</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (speed &lt; <span class="hljs-number">0</span>) {
+
+                    <span class="hljs-keyword">if</span> (cycle) edge = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, -speed);
+                    engine.<span class="hljs-title function_">putImageData</span>(engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, -speed, width, height + speed), <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                    <span class="hljs-keyword">if</span> (cycle) engine.<span class="hljs-title function_">putImageData</span>(edge, <span class="hljs-number">0</span>, height + speed);
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-82">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-82">&#x00a7;</a>
+              </div>
+              <p>Move down</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> {
+
+                    <span class="hljs-keyword">if</span> (cycle) edge = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, height - speed, width, speed);
+                    engine.<span class="hljs-title function_">putImageData</span>(engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height - speed), <span class="hljs-number">0</span>, speed);
+                    <span class="hljs-keyword">if</span> (cycle) engine.<span class="hljs-title function_">putImageData</span>(edge, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                }
+            }
+           <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-83">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-83">&#x00a7;</a>
+              </div>
+              <p>Move left</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (speed &lt; <span class="hljs-number">0</span>) {
+
+                    <span class="hljs-keyword">if</span> (cycle) edge = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, -speed, height);
+                    engine.<span class="hljs-title function_">putImageData</span>(engine.<span class="hljs-title function_">getImageData</span>(-speed, <span class="hljs-number">0</span>, width + speed, height), <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                    <span class="hljs-keyword">if</span> (cycle) engine.<span class="hljs-title function_">putImageData</span>(edge, width + speed, <span class="hljs-number">0</span>);
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-84">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-84">&#x00a7;</a>
+              </div>
+              <p>Move right</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> {
+
+                    <span class="hljs-keyword">if</span> (cycle) edge = engine.<span class="hljs-title function_">getImageData</span>(width - speed, <span class="hljs-number">0</span>, speed, height);
+                    engine.<span class="hljs-title function_">putImageData</span>(engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width - speed, height), speed, <span class="hljs-number">0</span>);
+                    <span class="hljs-keyword">if</span> (cycle) engine.<span class="hljs-title function_">putImageData</span>(edge, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                }
+            }
+        }
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-85">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-85">&#x00a7;</a>
+              </div>
+              <p><strong>getCellData</strong>, <strong>paintCellData</strong> - get the Cell engine’s image data object; paint the image data object back to the Cell’s engine.</p>
+<ul>
+<li>Allows for direct pixel manipulation</li>
+<li>Works best on Cells that are not being cleared and compiled</li>
+<li>The <code>paintCellData</code> functionality will fail if the Cell resizes for any reason; when that happens, a new image data object needs to be obtained before it can be repainted back to the Cell</li>
+<li>An alternative approach is to use a RawAsset asset object, which comes with its own dedicated Canvas element</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getCellData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">opaque = <span class="hljs-literal">false</span></span>) {
+
+    <span class="hljs-keyword">const</span> [width, height] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>,
+        halfWidth = <span class="hljs-title function_">_floor</span>(width / <span class="hljs-number">2</span>),
+        halfHeight = <span class="hljs-title function_">_floor</span>(height / <span class="hljs-number">2</span>);
+
+    <span class="hljs-keyword">const</span> iData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height),
+        data = iData.<span class="hljs-property">data</span>;
+
+    <span class="hljs-keyword">const</span> pixelState = [];
+
+    <span class="hljs-keyword">const</span> coord = <span class="hljs-title function_">requestCoordinate</span>();
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> row = <span class="hljs-number">0</span>; row &lt; height; row++) {
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> col = <span class="hljs-number">0</span>; col &lt; width; col++) {
+
+            <span class="hljs-keyword">const</span> index = ((row * width) + col) * <span class="hljs-number">4</span>;
+
+            coord.<span class="hljs-title function_">setFromArray</span>([halfWidth, halfHeight]).<span class="hljs-title function_">subtract</span>([row, col]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-86">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-86">&#x00a7;</a>
+              </div>
+              <p>We want angle <code>0deg</code> to point north, to the top of the screen</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> angle = <span class="hljs-number">1</span> - ((<span class="hljs-title function_">_atan2</span>(coord[<span class="hljs-number">1</span>], coord[<span class="hljs-number">0</span>]) / _piDouble) + <span class="hljs-number">0.5</span>);
+            <span class="hljs-keyword">if</span> (angle &gt; <span class="hljs-number">0.5</span>) angle -= <span class="hljs-number">0.5</span>;
+            <span class="hljs-keyword">else</span> angle += <span class="hljs-number">0.5</span>;
+
+            pixelState.<span class="hljs-title function_">push</span>({
+                <span class="hljs-attr">indexR</span>: index,
+                <span class="hljs-attr">indexG</span>: index + <span class="hljs-number">1</span>,
+                <span class="hljs-attr">indexB</span>: index + <span class="hljs-number">2</span>,
+                <span class="hljs-attr">indexA</span>: index + <span class="hljs-number">3</span>,
+                <span class="hljs-attr">red</span>: data[index + <span class="hljs-number">0</span>],
+                <span class="hljs-attr">green</span>: data[index + <span class="hljs-number">1</span>],
+                <span class="hljs-attr">blue</span>: data[index + <span class="hljs-number">2</span>],
+                <span class="hljs-attr">alpha</span>: (opaque) ? <span class="hljs-number">255</span> : data[index + <span class="hljs-number">3</span>],
+                row,
+                col,
+                <span class="hljs-attr">distance</span>: coord.<span class="hljs-title function_">getMagnitude</span>(),
+                angle,
+            });
+        }
+    }
+
+    <span class="hljs-title function_">releaseCoordinate</span>(coord);
+
+    <span class="hljs-keyword">return</span> {
+        iData,
+        pixelState,
+    }
+};
+
+<span class="hljs-keyword">const</span> pixelCleaner = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint8ClampedArray</span>(<span class="hljs-number">1</span>);
+
+P.<span class="hljs-property">paintCellData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item = Ωempty</span>) {
+
+    <span class="hljs-keyword">const</span> { iData, pixelState} = item;
+    <span class="hljs-keyword">const</span> { width, height, data} = iData;
+    <span class="hljs-keyword">const</span> [w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
+
+    <span class="hljs-keyword">if</span> (width &amp;&amp; height &amp;&amp; data &amp;&amp; pixelState &amp;&amp; w === width &amp;&amp; h === height) {
+
+        pixelState.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
+
+            <span class="hljs-keyword">const</span> {indexR, indexG, indexB, indexA} = p;
+
+            <span class="hljs-keyword">const</span> red = pixelCleaner[<span class="hljs-number">0</span>] = p.<span class="hljs-property">red</span>;
+            <span class="hljs-keyword">const</span> green = pixelCleaner[<span class="hljs-number">0</span>] = p.<span class="hljs-property">green</span>;
+            <span class="hljs-keyword">const</span> blue = pixelCleaner[<span class="hljs-number">0</span>] = p.<span class="hljs-property">blue</span>;
+            <span class="hljs-keyword">const</span> alpha = pixelCleaner[<span class="hljs-number">0</span>] = p.<span class="hljs-property">alpha</span>;
+
+            p.<span class="hljs-property">red</span> = red;
+            p.<span class="hljs-property">green</span> = green;
+            p.<span class="hljs-property">blue</span> = blue;
+            p.<span class="hljs-property">alpha</span> = alpha;
+
+            data[indexR] = red;
+            data[indexG] = green;
+            data[indexB] = blue;
+            data[indexA] = alpha;
+        });
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-title function_">putImageData</span>(iData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-87">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2934,26 +3140,6 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
 };
 
 constructors.<span class="hljs-property">Cell</span> = <span class="hljs-title class_">Cell</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-82">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
-              </div>
-              <p>Wide gamut colors helper</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">getCanvasColorSpace</span> = (<span class="hljs-params">useP3</span>) =&gt; {
-
-    <span class="hljs-keyword">const</span> { canvasSupportsP3Color, displaySupportsP3Color } = currentCorePosition;
-    <span class="hljs-keyword">if</span> (useP3 &amp;&amp; canvasSupportsP3Color &amp;&amp; displaySupportsP3Color) <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">DISPLAY_P3</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">SRGB</span>;
-};</pre></div></div>
             
         </li>
         

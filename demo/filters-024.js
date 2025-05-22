@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-024.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { addImageDragAndDrop, initializeDomInputs } from './utilities.js';
+import { addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
@@ -367,7 +367,7 @@ updateOutput();
 
 // #### User interaction
 // Setup form
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['select', 'useMixedChannel', 1],
     ['input', 'opacity', '1'],
 ]);

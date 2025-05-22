@@ -277,7 +277,7 @@ P.updateCanvas = function () {
         if (this.dirtyZIndex) {
 
             this.dirtyZIndex = false;
-            style.zIndex = this.canvasZIndex;
+            canvas.stampOrder = this.canvasZIndex;
         }
     }
 };

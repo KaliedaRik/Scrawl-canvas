@@ -224,3 +224,100 @@ export const observeAndUpdate = function (items = Ωempty) {
 };
 
 export const makeUpdater = (items = Ωempty) => observeAndUpdate(items);
+
+
+// __initializeDomInputs__ - exported helper function
+// + Argument is an Array of arrays, where each element Array holds the following data:
+// + `[kind: String, selector: String, value: String | number]`, where
+// + `kind` defines the kind of element to be processed - `input`, `select`, `button`, `element`
+// + `selector` - for `input`, `select` and `button` elements, that element's unique `id` value; for anything else, a valid CSS query selector string
+// + `value` - the initial value to set the input to - for `select` this will be a number
+// + Returns an object of elements keyed to the selector string
+export const initializeDomInputs = (items) => {
+
+    const results = {};
+
+    items.forEach(item => {
+
+        const [kind, selector, value] = item;
+
+        switch (kind) {
+
+            case 'input' : {
+
+                if (value.substring) {
+
+                    /** @type {HTMLInputElement} */
+                    const S = document.querySelector(`#${selector}`);
+
+                    if (S) {
+
+                        S.value = value;
+                        results[selector] = S;
+                    }
+                    else results[selector] = {};
+                }
+                else results[selector] = {};
+                break;
+            }
+
+            case 'select' : {
+
+                if (value.toFixed) {
+
+                    /** @type {HTMLSelectElement} */
+                    const S = document.querySelector(`#${selector}`);
+
+                    if (S) {
+
+                        S.options.selectedIndex = value;
+                        results[selector] = S;
+                    }
+                    else results[selector] = {};
+                }
+                else results[selector] = {};
+                break;
+            }
+
+            case 'button' : {
+
+                if (value.substring) {
+
+                    /** @type {HTMLButtonElement} */
+                    const S = document.querySelector(`#${selector}`);
+
+                    if (S) {
+
+                        S.textContent = value;
+                        results[selector] = S;
+                    }
+                    else results[selector] = {};
+                }
+                else results[selector] = {};
+                break;
+            }
+
+            case 'element' : {
+
+                /** @type {HTMLElement} */
+                const S = document.querySelector(`${selector}`);
+
+                if (S) results[selector] = S;
+                else results[selector] = {};
+                break;
+            }
+
+            default : {
+
+                /** @type {HTMLElement} */
+                const S = document.querySelector(`#${selector}`);
+
+                if (S) results[selector] = S;
+                else results[selector] = {};
+            }
+        }
+    });
+
+    return results;
+};
+

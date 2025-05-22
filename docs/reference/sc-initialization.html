@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Runbook: initialization</title>
+    <link rel='icon' type='image/png' href='/favicon.png'>
+    <link href="../css/normalize.css" rel="stylesheet" />
+    <link href="../css/general-reference.css" rel="stylesheet" />
+
+    <!-- general page metadata -->
+    <meta name="author" content="Rik Roots">
+    <meta name="description" content="undefined - ">
+</head>
+<body>
+    
+    <nav>
+        <a href=source-code-structure.html>Previous</a>
+        <a href="index.html">Contents</a>
+        <a href=sc-objects-overview.html>Next</a>
+    </nav>
+
+    <main>
+        <h1 id="scrawl-canvas-page-load-initialization">Scrawl-canvas page load initialization</h1>
+<p>Scrawl-canvas is a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">modular javascript</a> repo, which needs to be <strong><em>included</em></strong> into other Typescript/Javascript code. For instance, if the repo has been added via <code>npm install</code> or <code>yarn add</code> then dev-users can include the repo into code like this:</p>
+<pre><code>include * as scrawl from 'scrawl-canvas';</code></pre>
+<p>While such <code>include</code> statements may be encountered many times across different JS/TS files in a web page, <strong><em>the SC code itself will run only once, during page load</em></strong>, when the browser first finds the <code>include</code> statement. For every subsequent encounter, the browser just returns the SC object (<code>scrawl</code>) that was generated on that first meeting. This has implications when using SC in framework environments such as React, Vue, Angular, Svelte, etc.</p>
+<blockquote>
+  <p><strong>tl;dr: It is strongly recommended that code using SC only runs after the page's HTML download completes.</strong> This is because SC initialization code will interrogate the web page's DOM, looking for <code>&lt;canvas&gt;</code> and <code>&lt;div&gt;</code> stack elements that dev-users want it to manage … but this only happens once per page load!</p>
+</blockquote>
+<h2 id="the-scrawljs-file">The <code>scrawl.js</code> file</h2>
+<p>The <code>package.json</code> file has the following structure:</p>
+<pre><code>{
+  "name": "scrawl-canvas",
+  "version": [current version number],
+  "description": [current version number and release date],
+  "main": "./min/scrawl.js",
+  "type": "module",
+  "types": "./source/scrawl.d.ts",
+  "scripts": [ ... various script definitions ],
+  "keywords": [ ... various keywords ],
+  "repository": { ... repository details },
+  "license": "MIT",
+  "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme",
+  "devDependencies": { ... note: no direct or peer dependencies permitted! },
+  "packageManager": "yarn@4.0.1"
+}</code></pre>
+<p>The repo's entry point is the <code>min/scrawl.js</code> file (which includes all of the repo's <code>source</code> folder's code). Note that the minified file has not been <a href="https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking">tree-shaken</a> - a known issue that has not yet been fixed.</p>
+<blockquote>
+  <p><strong>tl;dr: If tree shaking is essential</strong> then dev-users can edit the <code>scrawl.js</code> file, commenting out the functionality they do not need in their project. They will have to rebuild the repo locally, and be aware that updating the repo at any point will destroy their prior work with this file (unless they take action in their dev toolchain to somehow preserve the file between updates).</p>
+</blockquote>
+<p>The <code>source/scrawl.js</code> file looks like this:</p>
+<pre><code>// ## Initialize Scrawl-canvas
+import { init as _init } from './core/init.js';
+export const init = _init;
+
+if (typeof window !== 'undefined') _init();
+
+// ## Export Scrawl-canvas module functions
+export {
+    startCoreAnimationLoop,
+    stopCoreAnimationLoop,
+} from './core/animation-loop.js';
+export {
+    clear,
+    compile,
+    show,
+    render,
+} from './core/display-cycle.js';
+export { recalculateFonts } from './core/document.js';
+export {
+    addListener,
+    removeListener,
+    addNativeListener,
+    removeNativeListener,
+    makeAnimationObserver,
+} from './core/events.js';
+export * as library from './core/library.js';
+
+[ ... etc ]</code></pre>
+<p>When the browser's JS engine runs this code it will at the same time construct all of the factory and other objects used by the SC system.</p>
+<h2 id="the-coreinitjs-file">The <code>core/init.js</code> file</h2>
+<p>The init file is the first piece of functionality to run when importing the SC repo. Note that <strong><em>the code will not run if it finds itself in an environment which doesn't include a global <code>window</code> object</em></strong>.</p>
+<pre><code>import { startCoreAnimationLoop } from './animation-loop.js';
+import { getCanvases } from '../factory/canvas.js';
+import { getStacks } from '../factory/stack.js';
+
+import { 
+    startCoreListeners,
+    applyCoreResizeListener,
+    applyCoreScrollListener,
+} from './user-interaction.js';
+
+export const init = function () {
+
+    // Discovery phase
+    getStacks();
+    getCanvases();
+
+    // Start the core animation loop
+    startCoreAnimationLoop();
+
+    // Start the core listeners on the window object
+    applyCoreResizeListener();
+    applyCoreScrollListener();
+    startCoreListeners();
+};</code></pre>
+<h3 id="imports">Imports</h3>
+<p>For a project whose only action relating to SC is to import the repo into code, where dev-users have commented out all the export lines in the <code>scrawl.js</code> file except the first four, the browser will read and run code from the following repo modules:</p>
+<ul>
+<li><code>asset-management/image-asset.js</code></li>
+<li><code>core/animation-loop.js</code></li>
+<li><code>core/document.js</code></li>
+<li><code>core/events.js</code></li>
+<li><code>core/init.js</code></li>
+<li><code>core/library.js</code></li>
+<li><code>core/user-interaction.js</code></li>
+<li><code>factory/anchor.js</code></li>
+<li><code>factory/animation.js</code></li>
+<li><code>factory/button.js</code></li>
+<li><code>factory/canvas.js</code></li>
+<li><code>factory/cell.js</code></li>
+<li><code>factory/color.js</code></li>
+<li><code>factory/element.js</code></li>
+<li><code>factory/group.js</code></li>
+<li><code>factory/stack.js</code></li>
+<li><code>helper/array-pool.js</code></li>
+<li><code>helper/document-root-elements.js</code></li>
+<li><code>helper/filter-engine-bluenoise-data.js</code></li>
+<li><code>helper/filter-engine.js</code></li>
+<li><code>helper/random-seed.js</code></li>
+<li><code>helper/shared-vars.js</code></li>
+<li><code>helper/system-flags.js</code></li>
+<li><code>helper/utilities.js</code></li>
+<li><code>helper/workstore.js</code></li>
+<li><code>mixin/anchor.js</code></li>
+<li><code>mixin/asset.js</code></li>
+<li><code>mixin/base.js</code></li>
+<li><code>mixin/button.js</code></li>
+<li><code>mixin/cascade.js</code></li>
+<li><code>mixin/cell-key-functionality.js</code></li>
+<li><code>mixin/delta.js</code></li>
+<li><code>mixin/display-shape.js</code></li>
+<li><code>mixin/dom.js</code></li>
+<li><code>mixin/filter.js</code></li>
+<li><code>mixin/hidden-dom-elements.js</code></li>
+<li><code>mixin/mimic.js</code></li>
+<li><code>mixin/path.js</code></li>
+<li><code>mixin/pattern.js</code></li>
+<li><code>mixin/pivot.js</code></li>
+<li><code>mixin/position.js</code></li>
+<li><code>untracked-factory/cell-fragment.js</code></li>
+<li><code>untracked-factory/coordinate.js</code></li>
+<li><code>untracked-factory/quaternion.js</code></li>
+<li><code>untracked-factory/state.js</code></li>
+<li><code>untracked-factory/vector.js</code></li>
+</ul>
+<p>All other SC modules are loaded as a consequence of being included as exports from the <code>scrawl.js</code> file.</p>
+<h3 id="discovery-activity">Discovery activity</h3>
+<p>The <code>init()</code> function, when it runs, invokes two discovery operations:</p>
+<ul>
+<li><code>getStacks()</code> - to find and wrap all DOM elements marked with a <code>data-scrawl-stack</code> attribute into <a href="../source/factory/stack.html">Stack artefact objects</a>. Additionally, all direct child elements of the stack element will be wrapped in <a href="../source/factory/element.html">Element artefact objects</a></li>
+<li><code>getCanvases()</code> - to find and wrap all <code>&lt;canvas&gt;</code> elements marked with a <code>data-scrawl-canvas</code> attribute into <a href="../source/factory/canvas.html">Canvas artefact objects</a></li>
+</ul>
+<p>Because this discovery activity happens as soon as the SC code loads, and only happens once per page load, it is imperative that the code does not run until the browser has downloaded the HTML file and constructed its Document Object Model from the file's content.</p>
+<p>It's also important to remember that this discovery activity will only find <code>&lt;canvas&gt;</code> elements (and stacks) that already exist in (have been hard-coded into) the HTML file. Any <code>&lt;canvas&gt;</code> element added to the DOM after page load - for instance through <a href="https://en.wikipedia.org/wiki/Hydration_(web_development)">framework client-side hydration</a> or an <a href="https://www.patterns.dev/vanilla/islands-architecture/">Islands architecture</a> pattern - will not be found during the discovery phase and thus will not have been wrapped into the SC library.</p>
+<p>This has implications for when dev-users want to retrieve the generated artefacts from the SC library for further use:</p>
+<ul>
+<li>If the artefact was created as part of the discovery process, dev-users can use the <code>scrawl.findArtefact('element-id')</code>, <code>scrawl.findCanvas('element-id')</code> or <code>scrawl.findStack('element-id')</code> functions to retrieve them. Most of the <a href="../../demo/index.html">SC demo tests</a> include this functionality</li>
+<li>If, however, the HTML element was added to the DOM after the initial load - as happens in various component-based frameworks such as React, Angular, Vue, Svelte, etc - then dev-users need to use the <code>scrawl.getCanvas('element-id')</code> and <code>scrawl.getStack('element-id')</code> functions, which perform a post-load discovery operation and wrap the element in a Canvas or Stack wrapper artefact. This functionality can be seen in <a href="../demo/dom-017.html">demo DOM-017</a></li>
+</ul>
+<p>Note that when SC wraps <code>&lt;canvas&gt;</code>, <code>&lt;div&gt;</code> stacks and stack elements into SC artefact objects, it will mutate those DOM elements. Further details about this can be found in the <a href="sc-dom-artefacts.html">SC artefacts and the DOM</a> page in the Runbook.</p>
+<h2 id="the-scrawl-canvas-animation-loop">The Scrawl-canvas animation loop</h2>
+<p>The SC system runs a single <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame">RequestAnimationFrame</a> animation loop, which gets started as part of the initialization work. More details about the animation loop can be found in the <a href="../source/core/animation-loop.html">core.animation-loop.js</a> file.</p>
+<p>More information can be found in the <a href="sc-animation-systems.html">Animation and Display cycle</a> page of this Runbook.</p>
+<h2 id="core-constants-flags-and-event-listeners">Core constants, flags and event listeners</h2>
+<p>Two of the key drivers for SC is to make <code>&lt;canvas&gt;</code> elements responsive to their environments, and offer high-level functionality for end-user interactions with those responsive elements. Much of the code that handles this functionality can be found in the <a href="../source/core/user-interaction.html">core/user-interaction.js</a> file.</p>
+<p>The code in this file makes heavy use of shared constants and system flags. As a result, these also need to be instantiated as part of the initialization process.</p>
+<h3 id="shared-constants">Shared constants</h3>
+<p>The thinking behind shared constants is that SC should minimize the work required to create throwaway strings and arrays used in loops or conditional tests - especially when repo-devs find themselves using the same string or array across different files.</p>
+<p>To solve this issue SC defines and exports a common set of strings and arrays in the <a href="../source/helper/shared-vars.html">helper/shared-vars.js</a> file. Examples of exports in the file include:</p>
+<pre><code>export const _piDouble = Math.PI * 2;
+export const _piHalf = Math.PI * 0.5;
+export const _pow = Math.pow;
+export const _radian = Math.PI / 180;
+export const _random = Math.random;
+...
+export const ACCEPTED_WRAPPERS = ['Canvas', 'Stack'];
+export const ADD_EVENT_LISTENER = 'addEventListener';
+...
+export const INT_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'];
+export const INVERT_CHANNELS = 'invert-channels';
+export const LEAVE = 'leave';
+...
+export const T_CELL = 'Cell';
+export const T_COLOR = 'Color';
+export const T_COORDINATE = 'Coordinate';
+export const T_ENHANCED_LABEL = 'EnhancedLabel';
+...
+export const WHITE = 'rgb(255 255 255 / 1)';
+export const WIDTH = 'width';
+export const ZERO_PATH = 'M0,0';
+export const ZERO_STR = '';</code></pre>
+<p>Note that repo-devs don't have any proof that this helps cut down on unnecessary work. It's just part of the SC ethos to only define constants once, and to define/export a constant from this file if they find themselves using it in different modules.</p>
+<h3 id="shared-functions">Shared functions</h3>
+<p>Similar to shared constants, SC defines a set of exported shared variables in the <a href="../source/helper/utilities.html">helper/utilities.js</a> file. These include:</p>
+<ul>
+<li>Array manipulation functions - <code>pushUnique()</code>, <code>removeItem()</code></li>
+<li>Correction functions - <code>correctAngle()</code>, <code>correctForZero()</code>, <code>constrain()</code>, <code>interpolate()</code></li>
+<li>Default functions (differentiated by what they return) - <code>λnull()</code>, <code>λfirstArg()</code>, <code>λcloneError()</code></li>
+<li>Easing functions, which are all gathered in a single object - <code>easeEngines.out()</code>, <code>easeEngines.in()</code></li>
+<li>Existence check functions - exists <code>xt()</code>, all exist <code>xta()</code>, one exists <code>xto()</code>, return the first existing <code>xtGet()</code></li>
+<li>Generation functions - <code>generateUuid()</code>, <code>generateUniqueString()</code></li>
+<li>Manipulation functions - <code>addStrings()</code>, <code>convertTime()</code></li>
+<li>Object manipulation functions - <code>mergeOver()</code>, <code>mergeDiscard()</code></li>
+<li>Type checking functions, which all begin with <code>isa_</code> - <code>isa_boolean()</code>, <code>isa_fn()</code>, <code>isa_canvas()</code></li>
+</ul>
+<h3 id="system-flags">System flags</h3>
+<p>SC uses flags - commonly Boolean - for much of its internal signalling and communications work. Many of the flags related to system state get defined in the <a href="../source/helper/system-flags.html">helper/system-flags.js</a> file. For example:</p>
+<pre><code>let mouseChanged = false;
+export const getMouseChanged = () =&gt; mouseChanged;
+export const setMouseChanged = (val) =&gt; mouseChanged = val;
+
+let viewportChanged = false;
+export const getViewportChanged = () =&gt; viewportChanged;
+export const setViewportChanged = (val) =&gt; viewportChanged = val;
+
+let prefersContrastChanged = false;
+export const getPrefersContrastChanged = () =&gt; prefersContrastChanged;
+export const setPrefersContrastChanged = (val) =&gt; prefersContrastChanged = val;</code></pre>
+<h3 id="the-currentcoreposition-object">The <code>currentCorePosition</code> object</h3>
+<p>SC keeps track of system state, and changes to that state, in its <code>currentCorePosition</code> object:</p>
+<pre><code>export const currentCorePosition = {
+    x: 0,
+    y: 0,
+    scrollX: 0,
+    scrollY: 0,
+    w: 0,
+    h: 0,
+    type: MOUSE,
+    prefersReducedMotion: false,
+    prefersDarkColorScheme: false,
+    prefersReduceTransparency: false,
+    prefersContrast: false,
+    prefersReduceData: false,
+    displaySupportsP3Color: false,
+    canvasSupportsP3Color: false,
+    devicePixelRatio: 0,
+    rawTouches: [],
+};</code></pre>
+<p>SC checks for changes to system state using an animation object - <code>SC-core-listeners-tracker</code> - that runs once at the start of each animation loop. When changes are detected Canvas and Stack artefacts will be informed (via <code>dirty flags</code>). When they in turn run their <a href="sc-animation-systems.html">Display cycle</a> functionality they will cascade that information to their constituent objects which will, if necessary, update their state to reflect the changed environment. </p>
+<h3 id="browser-mousetouchpointer-scroll-and-resize-events">Browser mouse/touch/pointer, scroll, and resize events</h3>
+<p>During initialization SC will add a set of event listeners to the <code>window</code> object which react to various <code>mouse/touch/pointer</code> events. When such events occur the listeners will set the appropriate system flags to true (ie: something has changed) and store the cursor's current position data in the <code>currentCorePosition</code> object. Functionality to react to these changes is deferred until the next animation loop runs.</p>
+<p>Similarly, SC sets event listeners on the <code>window</code> object to listen for browser <code>resize</code> and <code>scroll</code> events.</p>
+<p>After initialization completes the dev-user can stop and restart these core listeners by invoking the <code>scrawl.stopCoreListeners()</code> and <code>scrawl.startCoreListeners()</code> functions. See <a href="../demo/dom-009.html">demo test DOM-009</a> for an example of this functionality in action.</p>
+<h3 id="end-user-preferences-media-queries-and-events">End-user preferences media queries and events</h3>
+<p>SC uses evented media queries to listen out for changes in various system settings. For example:</p>
+<pre><code>const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+colorSchemeMediaQuery.addEventListener(CHANGE, () =&gt; {
+
+    const res = colorSchemeMediaQuery.matches;
+
+    if (currentCorePosition.prefersDarkColorScheme !== res) {
+
+        currentCorePosition.prefersDarkColorScheme = res;
+        setPrefersDarkColorSchemeChanged(true);
+    }
+});
+currentCorePosition.prefersDarkColorScheme = colorSchemeMediaQuery.matches;</code></pre>
+<p>SC tracks the following system settings:</p>
+<ul>
+<li><code>prefers-color-scheme</code></li>
+<li><code>prefers-contrast</code></li>
+<li><code>prefers-reduced-data</code></li>
+<li><code>prefers-reduced-motion</code></li>
+<li><code>prefers-reduced-transparency</code></li>
+</ul>
+<p>SC, by default, doesn't react to changes in these settings. It's up to the dev-user to add hook functions to each Canvas wrapper object to supply the appropriate functionality for that canvas's output when changes occur. See the <a href="sc-objects-overview.html">Objects overview page</a> in the Runbook for further details. </p>
+<p>SC also tracks the current <code>pixel-ratio</code> and <code>color-gamut: p3</code> settings for the device/screen on which the browser is displaying. This can change when, for instance, an end-user drags the browser window between screens. Such changes are handled by SC internally with little need for additional dev-user intervention.</p>
+<h2 id="scrawl-canvas-pools">Scrawl-canvas pools</h2>
+<p>SC code needs to run fast. For this reason functional programming approaches, where new objects get created rather than existing objects mutated, adds computational weight (and excessive garbage collection) which is best avoided.</p>
+<p>Instead, SC code makes use of a set of pooled objects and arrays for much of its functionality. These pools get initialised when the browser first imports the relevant modules, and start as empty arrays. While some of these pools are made available to the dev-user via scrawl functions, others are strictly internal.</p>
+<p>Internal pooled objects/arrays include:</p>
+<ul>
+<li>Generic <strong>zero-length arrays</strong>, from <a href="../source/helper/array-pool.html">helper/array-pool.js</a>; note that the pool will be periodically culled - <code>requestArray()</code>, <code>releaseArray()</code></li>
+<li>SC basic <strong>Cell objects</strong> from <a href="../source/untracked-factory/cell-fragment.html">untracked-factory/cell-fragment.js</a>, wrapping unattached <code>&lt;canvas&gt;</code> elements and their associated 2D context engines - <code>requestCell()</code>, <code>releaseCell()</code></li>
+<li>SC <strong>particle objects</strong> from <a href="../source/factory/particle.html">factory/particle.js</a>; note that the pool will be periodically culled - <code>requestParticle()</code>, <code>releaseParticle()</code></li>
+<li>SC <strong>particle history arrays</strong> from <a href="../source/untracked-factory/particle-history.html">untracked-factory/particle-history.js</a>; note that the pool will be periodically culled - <code>requestParticleHistory()</code>, <code>releaseParticleHistory()</code></li>
+</ul>
+<p>Scrawl-exported pooled objects/arrays, which can be used by dev-users, include:</p>
+<ul>
+<li>SC <strong>coordinate arrays</strong>, from <a href="../source/untracked-factory/coordinate.html">untracked-factory/coordinate.js</a> - <code>requestCoordinate()</code>, <code>releaseCoordinate()</code></li>
+<li>SC <strong>quaternion objects</strong>, from <a href="../source/untracked-factory/quaternion.html">untracked-factory/quaternion.js</a> - <code>requestQuaternion()</code>, <code>releaseQuaternion()</code></li>
+<li>SC <strong>vector objects</strong>, from <a href="../source/untracked-factory/vector.html">untracked-factory/vector.js</a> - <code>requestVector()</code>, <code>releaseVector()</code></li>
+</ul>
+<blockquote>
+  <p><strong>tl;dr: Always release requested pooled objects/arrays!</strong> Failure to release them will lead to less efficient code and (potentially) slow memory leaks.</p>
+</blockquote>
+<h2 id="scrawl-canvas-filter-engine">Scrawl-canvas filter engine</h2>
+<p>SC comes with a sophisticated set of <a href="sc-filter-engine.html">graphical filters</a> which can be applied at the entity, Group or Cell level - see <a href="../demo/canvas-007.html">demo Canvas-007</a> for an example.</p>
+<p>The functionality to generate these filters and apply them to entitys, Groups and Cells is housed in a single filter engine object whose code can be found in the <a href="../source/helper/filter-engine.html">helper/filter-engine.js</a> file. This singleton object is instantiated as part of the SC initialization process as a by-product of both the Cell and Group modules importing it.</p>
+<p>The filter engine module will also set up a permanent animation object - <code>SC-core-filters-cleanup-action</code> - to run once at the end of every animation loop iteration, to reset <a href="../source/factory/filter.html">filter object</a> <code>dirtyFilterIdentifier</code> flags back to <code>false</code>.</p>
+<p>Finally, the filter engine will instantiate an internal <a href="../source/factory/color.html">Color object</a> - <code>SC-core-color-engine</code> - during initialization.</p>
+<h2 id="scrawl-canvas-workstore">Scrawl-canvas workstore</h2>
+<p>The SC workstore is an internal mechanism for caching various computationally-intensive objects; it is used in particular by the singleton filter engine but is available for use by other SC modules as required.</p>
+<p>Every object cached in the workstore includes a timestamp indicating the last time it was accessed; the workstore actively purges objects that haven't been recently accessed. This action is handled by an animation object - <code>SC-core-workstore-hygeine</code> - which gets instantiated at the same time as the workstore.</p>
+<p>More details about workstore functionality can be found in the <a href="../source/helper/workstore.html">helper/workstore.js</a> file.</p>
+    </main>
+    
+    <nav>
+        <a href=source-code-structure.html>Previous</a>
+        <a href="index.html">Contents</a>
+        <a href=sc-objects-overview.html>Next</a>
+    </nav>
+
+</body>
+</html>

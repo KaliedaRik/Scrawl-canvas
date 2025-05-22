@@ -15,10 +15,10 @@ import { addListener } from "./events.js";
 
 import { makeAnimation } from "../factory/animation.js";
 
-import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged } from '../helper/system-flags.js';
+import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged, getPrefersInvertedColorsChanged, setPrefersInvertedColorsChanged, getPrefersForcedColorsChanged, setPrefersForcedColorsChanged } from '../helper/system-flags.js';
 
 // Shared constants
-import { _floor, _isFinite, _now, _round, _values, ADD_EVENT_LISTENER, DISPLAY_P3, FONT_USERS, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, T_CANVAS, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from '../helper/shared-vars.js'
+import { _floor, _isFinite, _now, _round, _values, ADD_EVENT_LISTENER, DISPLAY_P3, FONT_USERS, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, SRGB, T_CANVAS, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from '../helper/shared-vars.js'
 
 // Local constants
 const CHANGE = 'change',
@@ -46,6 +46,8 @@ export const currentCorePosition = {
     prefersReduceTransparency: false,
     prefersContrast: false,
     prefersReduceData: false,
+    prefersInvertedColors: false,
+    prefersForcedColors: false,
     displaySupportsP3Color: false,
     canvasSupportsP3Color: false,
     devicePixelRatio: 0,
@@ -55,7 +57,7 @@ export const currentCorePosition = {
 
 // ### Accessibility preferences
 
-// __contrastMediaQuery__ - real-time check on the `prefers-reduced-motion` user preference, as set for the device or OS
+// __contrastMediaQuery__ - real-time check on the `prefers-contrast` user preference, as set for the device or OS
 const contrastMediaQuery = window.matchMedia("(prefers-contrast: more)");
 
 contrastMediaQuery.addEventListener(CHANGE, () => {
@@ -129,6 +131,36 @@ reducedDataMediaQuery.addEventListener(CHANGE, () => {
     }
 });
 currentCorePosition.prefersReduceData = reducedDataMediaQuery.matches;
+
+// __invertedColorsMediaQuery__ - real-time check on the `inverted-colors` user preference, as set for the device or OS
+const invertedColorsMediaQuery = window.matchMedia("(inverted-colors: inverted)");
+
+invertedColorsMediaQuery.addEventListener(CHANGE, () => {
+
+    const res = invertedColorsMediaQuery.matches;
+
+    if (currentCorePosition.prefersInvertedColors !== res) {
+
+        currentCorePosition.prefersInvertedColors = res;
+        setPrefersInvertedColorsChanged(true);
+    }
+});
+currentCorePosition.prefersInvertedColors = invertedColorsMediaQuery.matches;
+
+// __forcedColorsMediaQuery__ - real-time check on the `forced-colors` user preference, as set for the device or OS
+const forcedColorsMediaQuery = window.matchMedia("(forced-colors: active)");
+
+forcedColorsMediaQuery.addEventListener(CHANGE, () => {
+
+    const res = forcedColorsMediaQuery.matches;
+
+    if (currentCorePosition.prefersForcedColors !== res) {
+
+        currentCorePosition.prefersForcedColors = res;
+        setPrefersForcedColorsChanged(true);
+    }
+});
+currentCorePosition.prefersForcedColors = forcedColorsMediaQuery.matches;
 
 
 // ### Watch for changes when user drags browser window between screens
@@ -331,8 +363,6 @@ const updateUiSubscribedElement = function (art) {
 
     if (dom) {
 
-        if (!dom.here) dom.here = {};
-
         const { here, domElement:el } = dom;
 
         // Accessibility
@@ -341,6 +371,8 @@ const updateUiSubscribedElement = function (art) {
         here.prefersDarkColorScheme = currentCorePosition.prefersDarkColorScheme;
         here.prefersReduceTransparency = currentCorePosition.prefersReduceTransparency;
         here.prefersReduceData = currentCorePosition.prefersReduceData;
+        here.prefersInvertedColors = currentCorePosition.prefersInvertedColors;
+        here.prefersForcedColors = currentCorePosition.prefersForcedColors;
         here.devicePixelRatio = currentCorePosition.devicePixelRatio;
 
         if (getPrefersContrastChanged()) dom.contrastActions();
@@ -348,6 +380,8 @@ const updateUiSubscribedElement = function (art) {
         if (getPrefersDarkColorSchemeChanged()) dom.colorSchemeActions();
         if (getPrefersReduceTransparencyChanged()) dom.reducedTransparencyActions();
         if (getPrefersReduceDataChanged()) dom.reducedDataActions();
+        if (getPrefersInvertedColorsChanged()) dom.invertedColorsActions();
+        if (getPrefersForcedColorsChanged()) dom.forcedColorsActions();
 
         // DOM-element-dependant values
         if (el) {
@@ -373,7 +407,7 @@ const updateUiSubscribedElement = function (art) {
             here.inViewportBase = ivpb;
             here.inViewportCenter = ivpc;
 
-            // DOM-based artefacts have the option of creating a local mouse move event listener, which better tracks mouse movements across them when their element has been rotated in three dimensions.
+            // Default mouse tracking behaviour
             if (!dom.localMouseListener) {
 
                 here.localListener = false;
@@ -389,7 +423,9 @@ const updateUiSubscribedElement = function (art) {
 
                 if (here.normX < 0 || here.normX > 1 || here.normY < 0 || here.normY > 1) here.active = false;
             }
-            // Default mouse tracking behaviour
+            // DOM-based artefacts have the option of creating a local mouse move event listener
+            // + The listener better tracks mouse movements across the artefact when its element has been rotated in three dimensions.
+            // + The listener will update the local here.x and here.y values
             else {
 
                 here.localListener = true;
@@ -405,9 +441,9 @@ const updateUiSubscribedElement = function (art) {
 
             const touches = currentCorePosition.rawTouches;
 
-            if (touches.length) {
+            if (!here.touches) here.touches = [];
 
-                if (!here.touches) here.touches = [];
+            if (touches.length) {
 
                 here.touches.length = 0;
 
@@ -435,7 +471,6 @@ const updateUiSubscribedElement = function (art) {
                     // + It will include padding and borders in its `getBoundingClientRect` object (and its `getComputedStyle` width/height values), but these are specifically excluded from the element's `width` and `height` attributes
                     // + Which leads to the normal resize test - `if (w !== here.w || h !== here.h)` - triggering on every mouse/scroll/resize event, which in turn leads to the canvas dimensions increasing uncontrollably.
                     // + Solved by subtracting padding/border values from the `getBoundingClientRect` dimension values before performing the test.
-                    // + Tested in Demo [Canvas-004](../../demo/canvas-004.html).
 
                     const s = dom.computedStyles,
                         hw = _floor(here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth) - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight)),
@@ -519,24 +554,31 @@ const coreListenersTracker = makeAnimation({
         const trackMouse = getTrackMouse();
         const mouseChanged = getMouseChanged();
         const viewportChanged = getViewportChanged();
+        const prefersContrastChanged = getPrefersContrastChanged();
         const prefersReducedMotionChanged = getPrefersReducedMotionChanged();
         const prefersDarkColorSchemeChanged = getPrefersDarkColorSchemeChanged();
         const prefersReduceTransparencyChanged = getPrefersReduceTransparencyChanged();
         const prefersReduceDataChanged = getPrefersReduceDataChanged();
-
-        if (!uiSubscribedElements.length) return false;
+        const prefersInvertedColorsChanged = getPrefersInvertedColorsChanged();
+        const prefersForcedColorsChanged = getPrefersForcedColorsChanged();
 
         if ((trackMouse && mouseChanged) ||
             prefersReducedMotionChanged ||
+            prefersContrastChanged ||
             prefersDarkColorSchemeChanged ||
             prefersReduceTransparencyChanged ||
-            prefersReduceDataChanged) updateUiSubscribedElements();
+            prefersReduceDataChanged ||
+            prefersInvertedColorsChanged ||
+            prefersForcedColorsChanged) updateUiSubscribedElements();
 
         if (trackMouse && mouseChanged) setMouseChanged(false);
+        if (prefersContrastChanged) setPrefersContrastChanged(false);
         if (prefersReducedMotionChanged) setPrefersReducedMotionChanged(false);
         if (prefersDarkColorSchemeChanged) setPrefersDarkColorSchemeChanged(false);
         if (prefersReduceTransparencyChanged) setPrefersReduceTransparencyChanged(false);
         if (prefersReduceDataChanged) setPrefersReduceDataChanged(false);
+        if (prefersInvertedColorsChanged) setPrefersInvertedColorsChanged(false);
+        if (prefersForcedColorsChanged) setPrefersForcedColorsChanged(false);
 
         if (viewportChanged) {
 
@@ -620,4 +662,13 @@ export const purgeFontMetadata = function () {
 
     fontfamilymetadatanames.forEach(f => delete fontfamilymetadata[f]);
     fontfamilymetadatanames.length = 0;
+};
+
+
+// Wide gamut colors helper
+export const getCanvasColorSpace = (useP3) => {
+
+    const { canvasSupportsP3Color, displaySupportsP3Color } = currentCorePosition;
+    if (useP3 && canvasSupportsP3Color && displaySupportsP3Color) return DISPLAY_P3;
+    return SRGB;
 };

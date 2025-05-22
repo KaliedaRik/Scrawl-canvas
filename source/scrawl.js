@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.14.0 - 1 September 2024
+// #### Version 8.15.0 - 21 May 2025
 
 
 // ## Initialize Scrawl-canvas
@@ -80,7 +80,6 @@ export { makeCog } from './factory/cog.js';
 export { makeColor } from './factory/color.js';
 export { makeConicGradient } from './factory/conic-gradient.js';
 export { makeCrescent } from './factory/crescent.js';
-export { makeElement } from './factory/element.js';
 export { makeEmitter } from './factory/emitter.js';
 export { makeEnhancedLabel } from './factory/enhanced-label.js';
 export { makeFilter } from './factory/filter.js';
@@ -146,7 +145,8 @@ export { makeDragZone } from './untracked-factory/drag-zone.js';
 export { makeKeyboardZone } from './untracked-factory/keyboard-zone.js';
 export {
     observeAndUpdate,
-    makeUpdater
+    makeUpdater,
+    initializeDomInputs,
 } from './untracked-factory/observe-update.js';
 export {
     requestQuaternion,

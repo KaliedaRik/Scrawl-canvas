@@ -14,11 +14,7 @@
       margin: 1em auto;
       box-shadow: 0px 0px 0px 1px black;
     }
-    .controls {
-      grid-template-columns: 1fr 2fr 1fr 2fr;
-    }
   </style>
-
 </head>
 
 <body>
@@ -27,48 +23,21 @@
     <a href="canvas-052.html">Next &rarr;</a>
   </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 051</h1>
-  <h2>Line Spirals</h2>
-
-  <div class="controls">
-
-    <div class="yellow label">startRadius</div>
-    <div class="yellow"><input class="controlItem" id="startRadius" type="range" value="0" min="0" max="250" step="1" /></div>
-
-    <div class="green label">startAngle</div>
-    <div class="green"><input class="controlItem" id="startAngle" type="range" value="0" min="0" max="360" step="0.1" /></div>
-    
-    <div class="yellow label">radiusIncrement</div>
-    <div class="yellow"><input class="controlItem" id="radiusIncrement" type="range" value="0.1" min="-1" max="1" step="0.001" /></div>
-    
-    <div class="green label">angleIncrement</div>
-    <div class="green"><input class="controlItem" id="angleIncrement" type="range" value="5" min="-180" max="180" step="0.1" /></div>
-    
-    <div class="yellow label">radiusIncrementAdjust</div>
-    <div class="yellow"><input class="controlItem" id="radiusIncrementAdjust" type="range" value="1" min="0.99" max="1.01" step="0.0001" /></div>
-    
-    <div class="green label">angleIncrementAdjust</div>
-    <div class="green"><input class="controlItem" id="angleIncrementAdjust" type="range" value="1" min="0.99" max="1.01" step="0.0001" /></div>
-    
-    <div class="pink label">stepLimit</div>
-    <div class="pink"><input class="controlItem" id="stepLimit" type="range" value="100" min="1" max="5000" step="1" /></div>
-    
-  </div>
+  <h2>Interactions between filters, GCO and GlobalAlpha applied to an entity</h2>
 
   <canvas 
     id="mycanvas" 
-    width="600" 
-    height="400"
     data-scrawl-canvas
+    width="600"
+    height="600"
   ></canvas>
-
-  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
+
     <ul>
-      <li>Create and display a LineSpiral entity</li>
-      <li>Check that the entity reacts appropriately to the controls</li>
-      <li>Have fun!</li>
+      <li>In each square, a gray box should appear</li>
+      <li>For the right-hand column the gray box is translucent, making them a different color from the other gray boxes</li>
     </ul>
 
     <p><b>Touch test:</b> not required</p>

@@ -9,10 +9,22 @@
   <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+
   <style>
     canvas {
       margin: 1em auto;
       box-shadow: 0px 0px 0px 1px black;
+    }
+    .controls {
+      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
+    }
+    #reportmessage {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background-color: #60d060;
+      padding: 0.5em 1em;
+      margin: 0 auto 1em;
     }
   </style>
 </head>
@@ -20,30 +32,214 @@
 <body>
   <div id="test-navigation">
     <a href="canvas-059.html">&larr; Previous</a>
-    <a href="canvas-201.html">Next &rarr;</a>
+    <a href="canvas-061.html">Next &rarr;</a>
   </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 060</h1>
-  <h2>Wide Gamut 2D Graphics using HTML Canvas</h2>
-
-  <canvas 
-    id="mycanvas" 
-    data-scrawl-canvas
-    data-canvas-color-space="display-p3"
-    data-base-background-color="orange"
-    width="400"
-    height="400"
-  ></canvas>
+  <h2>Wheel entity attributes and functionality</h3>
 
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
+  <div class="controls">
+    <div class="pink label">Radius</div>
+    <div class="pink">(n) <input class="controlItem" id="radius_absolute" type="range" value="150" min="0" max="250" step="1" /></div>
+    <div class="pink">('n%') <input class="controlItem" id="radius_relative" type="range" value="37.5" min="0" max="60" step="0.1" /></div>
+
+    <div class="pink">&nbsp;</div>
+    <div class="pink">&nbsp;</div>
+    <div class="pink">&nbsp;</div>
+
+    <div class="pink label">Start angle</div>
+    <div class="pink"><input class="controlItem" id="startAngle" type="range" value="0" min="-360" max="360" step="1" /></div>
+    <div class="pink">&nbsp;</div>
+
+    <div class="pink label">End angle</div>
+    <div class="pink"><input class="controlItem" id="endAngle" type="range" value="360" min="-360" max="360" step="1" /></div>
+    <div class="pink">&nbsp;</div>
+
+    <div class="orange label">Closed</div>
+    <div class="orange">
+      <select class="controlItem" id="closed">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="orange">&nbsp;</div>
+
+    <div class="orange label">Include center</div>
+    <div class="orange">
+      <select class="controlItem" id="includeCenter">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="orange">&nbsp;</div>
+
+    <div class="orange label">Clockwise</div>
+    <div class="orange">
+      <select class="controlItem" id="clockwise">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="orange">&nbsp;</div>
+
+    <div class="orange">&nbsp;</div>
+    <div class="orange">&nbsp;</div>
+    <div class="orange">&nbsp;</div>
+  </div>
+
+  <canvas 
+    id="mycanvas" 
+    width="400" 
+    height="400"
+    data-scrawl-canvas
+  ></canvas>
+
+  <div class="controls">
+    <div class="blue label">Starts ('n%')</div>
+    <div class="blue">X: <input class="controlItem" id="start_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="green label">Handles ('n%')</div>
+    <div class="green">X: <input class="controlItem" id="handle_xPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yPercent" type="range" value="50" min="-50" max="150" step="1" /></div>
+
+    <div class="blue label">Starts (n)</div>
+    <div class="blue">X: <input class="controlItem" id="start_xAbsolute" type="range" value="300" min="-20" max="620" step="5" /></div>
+    <div class="blue">Y: <input class="controlItem" id="start_yAbsolute" type="range" value="200" min="-20" max="620" step="5" /></div>
+
+    <div class="green label">Handles (n)</div>
+    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="150" min="-100" max="300" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="100" min="-100" max="300" step="1" /></div>
+
+    <div class="blue label">Starts ('str')</div>
+    <div class="blue">X: <select class="controlItem" id="start_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="blue">Y: <select class="controlItem" id="start_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="green label">Handles ('str')</div>
+    <div class="green">X: <select class="controlItem" id="handle_xString">
+        <option value="left">left</option>
+        <option value="center">center</option>
+        <option value="right">right</option>
+      </select>
+    </div>
+    <div class="green">Y: <select class="controlItem" id="handle_yString">
+        <option value="top">top</option>
+        <option value="center">center</option>
+        <option value="bottom">bottom</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Offset ('n%')</div>
+    <div class="lavender">X: <input class="controlItem" id="offset_xPercent" type="range" value="0" min="-50" max="150" step="1" /></div>
+    <div class="lavender">Y: <input class="controlItem" id="offset_yPercent" type="range" value="0" min="-50" max="150" step="1" /></div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="lavender label">Offset (n)</div>
+    <div class="lavender">X: <input class="controlItem" id="offset_xAbsolute" type="range" value="0" min="-100" max="100" step="1" /></div>
+    <div class="lavender">Y: <input class="controlItem" id="offset_yAbsolute" type="range" value="0" min="-100" max="100" step="1" /></div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0" max="2" step="0.01" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Line join</div>
+    <div class="yellow">
+      <select class="controlItem" id="lineJoin">
+        <option value="mitre">mitre</option>
+        <option value="round">round</option>
+        <option value="bevel">bevel</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Line width</div>
+    <div class="yellow"><input class="controlItem" id="lineWidth" type="range" value="6" min="0" max="40" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Method</div>
+    <div class="yellow">
+      <select class="controlItem" id="method">
+        <option value="fill">fill</option>
+        <option value="draw">draw</option>
+        <option value="fillAndDraw">fillAndDraw</option>
+        <option value="drawAndFill">drawAndFill</option>
+        <option value="fillThenDraw">fillThenDraw</option>
+        <option value="drawThenFill">drawThenFill</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale outline</div>
+    <div class="yellow">
+      <select class="controlItem" id="scaleOutline">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow">&nbsp;</div>
+    <div class="yellow">&nbsp;</div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale shadow</div>
+    <div class="yellow">
+      <select class="controlItem" id="scaleShadow">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="upend">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Flip-reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="reverse">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="bluegreen label">Shadow offset</div>
+    <div class="bluegreen">X: <input class="controlItem" id="shadowOffsetX" type="range" value="0" min="-20" max="20" step="1" /></div>
+    <div class="bluegreen">Y: <input class="controlItem" id="shadowOffsetY" type="range" value="0" min="-20" max="20" step="1" /></div>
+
+    <div class="bluegreen label">Shadow blur</div>
+    <div class="bluegreen"><input class="controlItem" id="shadowBlur" type="range" value="0" min="0" max="20" step="1" /></div>
+    <div class="bluegreen">&nbsp;</div>
+  </div>
+
   <div class="testinfo">
     <h4>Test purpose</h4>
-
     <ul>
-      <li>When using a browser which supports "display-p3" color gamut setting on &lt;canvas> elements, and which is displaying on a screen which also supports wide-gamut color spaces, the canvas will display coloured squares containing a brighter, smaller square.</li>
+      <li>Create a Wheel entity</li>
+      <li>Check that we can position the Wheel on the canvas, including handle and offset</li>
+      <li>Check that flip values, roll and scaling does not affect Wheel positioning</li>
+      <li>Check that we can manipulate the Wheel-specific attributes</li>
     </ul>
-
-    <p><b>Note that:</b> Scrawl-canvas functionality is to NOT update the canvas when a user drags the browser between screens that do/do not support the "display-p3" color gamut.</p>
 
     <p><b>Touch test:</b> not required</p>
 

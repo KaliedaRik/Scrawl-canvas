@@ -97,6 +97,7 @@ scrawl.makeRectangle({
     start: ['center', '25%'],
     handle: ['center', 'center'],
 
+    // Known issue: the entity will get "jittery" in a responsive environment. Fix, as yet, unknown
     rectangleWidth: '60%',
     rectangleHeight: '15%',
 
@@ -123,6 +124,7 @@ scrawl.makeStar({
     start: ['center', '25%'],
     handle: ['center', 'center'],
 
+    // Known issue: the entity will get "jittery" in a responsive environment. The current fix (in a hacky, undesirable way) is to make `radius2` larger than `radius1`
     radius1: '20%',
     radius2: '10%',
 
@@ -163,6 +165,7 @@ scrawl.makeCog({
 
     name: name('responsive-cog'),
 
+    // Known issue: the entity will get "jittery" in a responsive environment. The current fix (in a hacky, undesirable way) is to make the `innerRadius` larger than the `outerRadius`
     outerRadius: `${(180/400) * 100}%`,
     innerRadius: `${(160/400) * 100}%`,
     outerControlsDistance: `${(10/400) * 100}%`,

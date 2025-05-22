@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-010.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -76,7 +76,7 @@ const viddyTwo = scrawl.makePicture({
 let viddyThree;
 
 scrawl.importMediaStream({
-    audio: false,
+    video: true,
 })
 .then(myface => {
 
@@ -240,7 +240,7 @@ scrawl.addListener('up', function () {
 
 
 // Setup form
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'copy_dims_heightAbsolute', '200'],
     ['input', 'copy_dims_heightPercent', '50'],
     ['input', 'copy_dims_widthAbsolute', '200'],

@@ -4,7 +4,7 @@
 // [Run code](../../demo/particles-008.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -220,7 +220,7 @@ scrawl.makeRender({
 
 
 // #### User interaction
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'springConstant', '50'],
     ['input', 'mass', '1'],
     ['input', 'restLength', '1'],

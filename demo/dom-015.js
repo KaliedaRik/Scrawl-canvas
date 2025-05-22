@@ -4,7 +4,7 @@
 // [Run code](../../demo/dom-015.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
@@ -178,8 +178,8 @@ scrawl.makeRender({
     target: stack,
     afterShow: report,
 
-    // Fixes element misplacement issue on scene creation - see Demo [DOM-007](./dom-007.html) for more details of the fix
-    afterCreated: () => stack.set({ height: 400 }),
+    // Fixes element misplacement issue on scene creation
+    afterCreated: () => stack.reset(),
 });
 
 // We can have more than one Display cycle animation on a web page
@@ -192,7 +192,7 @@ scrawl.makeRender({
 
 // #### More user interaction
 // Setup form
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'width', '200'],
     ['input', 'height', '200'],
     ['input', 'handle_xAbsolute', '100'],

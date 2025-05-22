@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-050.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -267,7 +267,7 @@ scrawl.makeUpdater({
 
 
 // Set the DOM input values
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['button', 'scaling', 'Add scaling'],
     ['select', 'constraintAction', 0],
     ['select', 'maxFrameRate', 0]

@@ -26,16 +26,38 @@
       margin: 0 auto;
     }
 
-    h1 {
-      margin-bottom: 1rem;
+    header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
       border-bottom: 1px solid #e9e9e9;
-      text-align: left;
+      margin-bottom: 1rem;
+
+      & ul {
+        text-align: right;
+        margin: 0 0 1rem;
+
+        & li {
+          list-style: none;
+          margin: 0;
+        }
+
+        & .links {
+          font-weight: bold;
+        }
+      }
+
+      & h1 {
+        text-align: left;
+        border: 0;
+
+        & span {
+          font-style: italic;
+          font-size: 80%;
+        }
+      }
     }
-    h1 span {
-      font-style: italic;
-      font-size: 80%;
-    }
-    
+
     h2 {
       margin: 2rem 0 0.5rem 0;
       text-align: left;
@@ -64,7 +86,7 @@
     
     .container {
       display: grid;
-      grid-template-columns: grid-template-columns: 1fr 2fr;
+      grid-template-columns: 1fr 2fr;
       grid-column-gap: 10px;
 
       grid-template-rows: auto;
@@ -118,12 +140,22 @@
         grid-template-columns: 1fr 2fr 1fr 2fr 1fr 2fr;
       }
     }
+
   </style>
 </head>
 
 <body>
   <main>
-    <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.14.0)</span></h1>
+    <header>
+      <div>
+        <h1><a href="index.html">Scrawl-canvas</a> &mdash; Demo tests<br /><span>(For version 8.15.0)</span></h1>
+      </div>
+      <ul>
+        <li class="links">Documentation links</li>
+        <li><a href="../docs/reference/index.html">Developer Runbook</a> &laquo;</li>
+        <li><a href="../docs/index.html">Inline documentation</a> &laquo;</li>
+      </ul>
+    </header>
 
     <p>The Scrawl-canvas library makes it easier to create and use &lt;canvas> presentations and scenes in a web page. Canvases discovered on a page, or added to it, will be enhanced by the library to help make them more responsive and accessible, and easy to interact with.</p>
 
@@ -355,7 +387,6 @@
         Video control and manipulation; filter-based hit zone
         <br /><span class="responsive">Responsive canvas</span>
         <br /><span class="responsive">Anchor links</span>
-        <br /><span class="responsive">Keyboard zones</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-028.webp" /></div>
@@ -515,7 +546,7 @@
       <div class="no-padding"><img src="thumbs/canvas-051.webp" /></div>
       <div>
         <a href="canvas-051.html">Canvas 051</a>
-        Line Spirals
+        Interactions between filters, GCO and GlobalAlpha applied to an entity
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-052.webp" /></div>
@@ -542,7 +573,7 @@
       <div class="no-padding"><img src="thumbs/canvas-055.webp" /></div>
       <div>
         <a href="canvas-055.html">Canvas 055</a>
-        Crescent entity functionality
+        Wide Gamut 2D Graphics using HTML Canvas
       </div>
 
       <div class="no-padding"><img src="thumbs/canvas-056.webp" /></div>
@@ -577,7 +608,79 @@
       <div class="no-padding"><img src="thumbs/canvas-060.webp" /></div>
       <div>
         <a href="canvas-060.html">Canvas 060</a>
-        Wide Gamut 2D Graphics using HTML Canvas
+        Wheel entity attributes and functionality
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-061.webp" /></div>
+      <div>
+        <a href="canvas-061.html">Canvas 061</a>
+        Crescent entity attributes and functionality
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-062.webp" /></div>
+      <div>
+        <a href="canvas-062.html">Canvas 062</a>
+        Tetragon and Oval entity attributes and functionality
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-063.webp" /></div>
+      <div>
+        <a href="canvas-063.html">Canvas 063</a>
+        Rectangle entity attributes and functionality
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-064.webp" /></div>
+      <div>
+        <a href="canvas-064.html">Canvas 064</a>
+        Polygon entity attributes and functionality
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-065.webp" /></div>
+      <div>
+        <a href="canvas-065.html">Canvas 065</a>
+        Star entity attributes and functionality
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-066.webp" /></div>
+      <div>
+        <a href="canvas-066.html">Canvas 066</a>
+        Spiral entity attributes and functionality
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-067.webp" /></div>
+      <div>
+        <a href="canvas-067.html">Canvas 067</a>
+        Cog entity attributes and functionality
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-068.webp" /></div>
+      <div>
+        <a href="canvas-068.html">Canvas 068</a>
+        LineSpiral entity attributes and functionality
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-069.webp" /></div>
+      <div>
+        <a href="canvas-069.html">Canvas 069</a>
+        Test Cell splitShift functionality (shift only)
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-070.webp" /></div>
+      <div>
+        <a href="canvas-070.html">Canvas 070</a>
+        Test Cell splitShift functionality (infinite scroll)
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-071.webp" /></div>
+      <div>
+        <a href="canvas-071.html">Canvas 071</a>
+        Using getCellData, paintCellData functionality
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-072.webp" /></div>
+      <div>
+        <a href="canvas-072.html">Canvas 072</a>
+        Public transport furniture cover design
       </div>
     </div>
 
@@ -687,19 +790,13 @@
       <div class="no-padding"><img src="thumbs/filters-001.webp" /></div>
       <div>
         <a href="filters-001.html">Filters 001</a>
-        Parameters for: Blur, Gaussianblur filters; filter memoization
-      </div>
-
-      <div class="no-padding"><img src="thumbs/filters-002.webp" /></div>
-      <div>
-        <a href="filters-002.html">Filters 002</a>
         Parameters for: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue, grayscale, sepia, invert filters
       </div>
 
       <div class="no-padding"><img src="thumbs/filters-002.webp" /></div>
       <div>
-        <a href="filters-002a.html">Filters 002a</a>
-        Cache output to improve render speeds
+        <a href="filters-002.html">Filters 002</a>
+        Filters - cache entity output to improve render speeds
       </div>
 
       <div class="no-padding"><img src="thumbs/filters-003.webp" /></div>
@@ -881,6 +978,36 @@
       <div>
         <a href="filters-032.html">Filters 032</a>
         Parameters for: modulateOk filter
+      </div>
+
+      <div class="no-padding"><img src="thumbs/filters-033.webp" /></div>
+      <div>
+        <a href="filters-033.html">Filters 033</a>
+        Parameters for: blur filter
+      </div>
+
+      <div class="no-padding"><img src="thumbs/filters-034.webp" /></div>
+      <div>
+        <a href="filters-034.html">Filters 034</a>
+        Parameters for: gaussianblur filter
+      </div>
+
+      <div class="no-padding"><img src="thumbs/filters-035.webp" /></div>
+      <div>
+        <a href="filters-035.html">Filters 035</a>
+        Parameters for: offset filter
+      </div>
+
+      <div class="no-padding"><img src="thumbs/filters-036.webp" /></div>
+      <div>
+        <a href="filters-036.html">Filters 036</a>
+        Parameters for: offsetChannels filter
+      </div>
+
+      <div class="no-padding"><img src="thumbs/filters-037.webp" /></div>
+      <div>
+        <a href="filters-037.html">Filters 037</a>
+        Test various channel-alpha filters
       </div>
 
     </div>
@@ -1067,6 +1194,13 @@
       <div>
         <a href="particles-016.html">Particles 016</a>
         Mesh entitys
+        <br /><span class="responsive">Drag zones</span>
+      </div>
+
+      <div class="no-padding"><img src="thumbs/particles-017.webp" /></div>
+      <div>
+        <a href="particles-017.html">Particles 017</a>
+        Dynamic update of particle colors
         <br /><span class="responsive">Drag zones</span>
       </div>
     </div>
@@ -1350,7 +1484,7 @@
         <a href="snippets-005.html">Snippets 005</a>
         Create a responsive, interactive and accessible before/after slider infographic
         <br /><span class="responsive">Responsive canvas</span>
-        <br /><span class="responsive">Anchor links</span>
+        <br /><span class="responsive">Keyboard zones</span>
       </div>
 
       <div class="no-padding"><img src="thumbs/snippets-006.webp" /></div>

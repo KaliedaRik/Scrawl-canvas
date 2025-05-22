@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-024.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
@@ -217,11 +217,15 @@ const myLoom = scrawl.makeLoom({
     boundingBoxColor: 'red',
     showBoundingBox: true,
 
+    interferenceLoops: 2,
+    interferenceFactor: 1.03,
+    sourceExpansionFactor: 1,
+
     method: 'fillThenDraw',
 
-/** @ts-expect-error */
+/** @this {import('../source/scrawl.js').LoomInstance} */
     onEnter: function () { this.set({ lineWidth: 6 }) },
-/** @ts-expect-error */
+/** @this {import('../source/scrawl.js').LoomInstance} */
     onLeave: function () { this.set({ lineWidth: 2 }) },
 });
 
@@ -285,6 +289,9 @@ scrawl.makeUpdater({
         looping: ['loopPathCursors', 'boolean'],
         rendering: ['isHorizontalCopy', 'boolean'],
         method: ['method', 'raw'],
+        interferenceLoops: ['interferenceLoops', 'int'],
+        interferenceFactor: ['interferenceFactor', 'float'],
+        sourceExpansionFactor: ['sourceExpansionFactor', 'float'],
     },
 });
 
@@ -375,7 +382,7 @@ scrawl.makeUpdater({
 });
 
 // Setup form
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'fromStart', '0'],
     ['input', 'fromEnd', '1'],
     ['input', 'toStart', '0'],
@@ -388,6 +395,9 @@ initializeDomInputs([
     ['input', 'copy_start_yAbsolute', '0'],
     ['input', 'copy_dims_heightPercent', '100'],
     ['input', 'copy_dims_heightAbsolute', '400'],
+    ['input', 'interferenceLoops', '2'],
+    ['input', 'interferenceFactor', '1.03'],
+    ['input', 'sourceExpansionFactor', '1'],
     ['select', 'sync', 1],
     ['select', 'looping', 1],
     ['select', 'rendering', 0],
@@ -395,7 +405,6 @@ initializeDomInputs([
     ['select', 'filter', 0],
     ['select', 'method', 4],
 ]);
-
 
 // #### Development and testing
 // Test packet functionality

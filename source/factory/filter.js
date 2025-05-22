@@ -4,86 +4,12 @@
 // Scrawl-canvas defines its filters in __Filter objects__, detailed in this module. The functionality to make use of these objects is coded up in the [filter mixin](../mixin/filter.html), which is used by the Cell, Group and all entity factories.
 //
 // The Scrawl-canvas filter engine implements a number of common filter algorithms. These algorithms - __called filter actions__ - can be combined in a wide variety of ways, including the use of multiple pathways, to create complex filter results.
-//
-// #### Filter engine actions
-// `alpha-to-channels` - Copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue`.
-//
-// `area-alpha` - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to values set in the `areaAlphaLevels` array. Can be used to create horizontal or vertical bars, or chequerboard effects. Object attributes: `action, lineIn, lineOut, opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels`.
-//
-// `average-channels` - Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue`.
-//
-// `blend` - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations). The blending method is determined by the String value supplied in the `blend` argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments. Object attributes: `action, lineIn, lineOut, lineMix, opacity, blend, offsetX, offsetY`.
-//
-// `blur` - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect. Note that this filter is expensive, thus much slower to complete compared to other filter effects. Object attributes: `action, lineIn, lineOut, opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, step`.
-//
-// `channels-to-alpha` - Calculates an average value from each pixel's included channels and applies that value to the alpha channel. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue`.
-//
-// `chroma` - A chroma-key effect. Using an array of 'range' color arrays, determine whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. Each 'range' color array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values. Object attributes: `action, lineIn, lineOut, opacity, ranges`.
-//
-// `clamp-channels` - Clamp each color channel to a range set by lowColor and highColor values. Object attributes: `action, lineIn, lineOut, opacity, lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue`.
-//
-// `colors-to-alpha` - A chroma-key effect. Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the "red", "green" and "blue" arguments. The sensitivity of the effect can be manipulated using the "transparentAt" and "opaqueAt" values, both of which lie in the range 0-1. Object attributes: `action, lineIn, lineOut, opacity, red, green, blue, opaqueAt, transparentAt`; pseudo-arguments for the convenience method include `reference` - any valid CSS color string from which the channel values will be calculated.
-//
-// `compose` - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the "compose" argument; permitted values are: 'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', 'xor', or 'lighter'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments. Object attributes: `action, lineIn, lineOut, lineMix, opacity, compose, offsetX, offsetY`.
-//
-// `corrode` - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The operation will set the pixel's channel value to match either the 'lowest', 'highest' or 'average' (default) values as dictated by its neighbours - this value is set in the "level" attribute. Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, operation`.
-//
-// `displace` - Shift pixels around the image, based on the values supplied in a displacement process-image. Common source images can be generated from the various Noise assets, though any image will create an effect. Object attributes: `action, lineIn, lineOut, lineMix, opacity, channelX, channelY, scaleX, scaleY, transparentEdges, offsetX, offsetY`.
-//
-// `emboss` - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action. Object attributes: `action, lineIn, lineOut, opacity, strength, angle, tolerance, keepOnlyChangedAreas, postProcessResults`; pseudo-arguments for the convenience method include `useNaturalGrayscale, clamp, smoothing`.
-//
-// `flood` - Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments. Object attributes: `action, lineIn, lineOut, opacity, red, green, blue, alpha`; pseudo-arguments for the convenience method include `reference` - any valid CSS color string from which the channel values will be calculated.
-//
-// `gaussianblur` - a fast linear gaussian blur algorithm taken from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021). Object attributes: `action, lineIn, lineOut, opacity, radius`.
-//
-// `glitch` - CRT television/monitor glitching effect - shifts rows horizontally by a random amount (mediated by limits). Object attributes: `action, lineIn, lineOut, opacity, useMixedChannel, seed, step, offsetMin, offsetMax, offsetRedMin, offsetRedMax, offsetGreenMin, offsetGreenMax, offsetBlueMin, offsetBlueMax, offsetAlphaMin, offsetAlphaMax, transparentEdges, level`.
-//
-// `grayscale` - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect. Object attributes: `action, lineIn, lineOut, opacity`.
-//
-// `invert-channels` - For each pixel, subtracts its current channel values - when included - from 255. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha`.
-//
-// `lock-channels-to-levels` - Produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value. Object attributes: `action, lineIn, lineOut, opacity, red, green, blue, alpha`.
-//
-// `map-to-gradient` - maps the colors in the supplied (complex) gradient to a grayscaled input. Object attributes: `action, lineIn, lineOut, opacity, useNaturalGrayscale, gradient`.
-//
-// `matrix` - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, weights`.
-//
-// `modify-ok-channels` - Adds a value to each of the OKLAB channels. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow). Object attributes: `action, lineIn, lineOut, opacity, channelA, channelB, channelL`
-//
-// `modulate-channels` - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at the color range mid point. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value. Object attributes: `action, lineIn, lineOut, opacity, red, green, blue, alpha, saturation`; pseudo-argument: `level`
-//
-// `modulate-ok-channels` - Multiplies each of the OKLAB channels by a given amount. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow). Object attributes: `action, lineIn, lineOut, opacity, channelA, channelB, channelL`
-//
-// `negative` - For each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB. Object attributes: `action, lineIn, lineOut, opacity`.
-//
-// `offset` - Offset the input image in the output image. Object attributes: `action, lineIn, lineOut, opacity, offsetRedX, offsetRedY, offsetGreenX, offsetGreenY, offsetBlueX, offsetBlueY, offsetAlphaX, offsetAlphaY; pseudo-argument: offsetX, offsetY`.
-//
-// `pixelate` - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the "tileWidth", "tileHeight", "offsetX" and "offsetY" arguments. Object attributes: `action, lineIn, lineOut, opacity, tileWidth, tileHeight, offsetX, offsetY, includeRed, includeGreen, includeBlue, includeAlpha`.
-//
-// `process-image` - Add an asset image to the filter process chain. The asset - the String name of the asset object - must be pre-loaded before it can be included in the filter. The "width" and "height" arguments are measured in integer Number pixels; the "copy" arguments can be either percentage Strings (relative to the asset's natural dimensions) or absolute Number values (in pixels). The "lineOut" argument is required - be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset's data. Object attributes: `action, lineOut, asset, width, height, copyWidth, copyHeight, copyX, copyY`.
-//
-// `reduce-palette` - Reduce the number of colors in an image palette. The palette attribute can be: a Number (for the commonest colors); an Array of CSS color Strings to use as the palette; or the String name of a pre-defined palette - default: 'black-white'. All internal color comparisons to match pixels to the closest palette color happen in the LAB color space. Dithering is applied to select the closest, or second closest, color when setting each pixel's final output color; dithering can be random (default), ordered or blue-noise. When calculating commonest colors, a minimum color distance can be set to get a better representative spread for images which have a predominant color (eg: images containing sky, clouds, vegetation or a plain background); calculating the commonest colors can take place in either the RGB space, or the LAB space. The Object attributes: `action, lineIn, lineOut, lineMix, opacity, palette, useBluenoise, minimumColorDistance`.
-//
-// `rotate-hue` - For each pixel: convert to OKLCH; rotate hue value by supplied angle; convert back to RGB. Object attributes: `action, lineIn, lineOut, angle, opacity`.
-//
-// `set-channel-to-level` - Sets the value of each pixel's included channel to the value supplied in the "level" argument. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, level`.
-//
-// `step-channels` - Takes three divisor values - "red", "green", "blue". For each pixel, its color channel values are divided by the corresponding color divisor, rounded down or up to the integer value and then multiplied by the divisor. For example a divisor value of '50' applied to a channel value of '120' will give a result of '100' (if clamp is set to "down" or "round") or '150' (clamp set to "up"). The output is a form of posterization. Object attributes: `action, lineIn, lineOut, opacity, red, green, blue, clamp`.
-//
-// `swirl` - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate. Object attributes: `action, lineIn, lineOut, opacity, swirls (array of arrays)`; pseudo-arguments (for one swirl): startX, startY, innerRadius, outerRadius, angle, easing, staticSwirls`. Note that the start paramenters can be absolute (Number) or relative (String) values, with values relative to the host Cell's dimensions; inner and outer radius values can also be Strings relative to the host Cell's width. Supported easing values are included in demo Filters-026.
-//
-// `threshold` - Grayscales the input then, for each pixel, checks the color channel values against a "level" argument: pixels with channel values above the level value are assigned to the 'high' color; otherwise they are updated to the 'low' color. The "high" and "low" arguments are [red, green, blue] integer Number Arrays. The convenience function will accept the pseudo-attributes "highRed", "lowRed" etc in place of the "high" and "low" Arrays. Object attributes: `action, lineIn, lineOut, opacity, low, high; pseudo-arguments: lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue`; this filter also accepts `lowColor` and `highColor` pseudo-attributes - CSS color Strings in place of the `lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue` values.
-//
-// `tint-channels` - Has similarities to the SVG <feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The 'sepia' convenience filter presets these values to create a sepia effect. Object attributes: `action, lineIn, lineOut, opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue`; pseudo-arguments for the convenience method include `reference` - any valid CSS color string from which the channel values will be calculated; pseudo-arguments for the convenience method include `redColor, greenColor, blueColor` - any valid CSS color string from which the rgbIn values will be calculated.
-//
-// `user-defined-legacy` - Previous to Scrawl-canvas version 8.4.0, filters could be defined with an argument which passed a function string to a filter web worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged. Object attributes: `action, lineIn, lineOut, opacity`.
-//
-// `vary-channels-by-weights` - curves filter (for image processing tonality). The weights array must by 1024 elements long, with each element defaulting to a value of `1.0`. Object attributes: `action, lineIn, lineOut, opacity, weights, useMixedChannel`.
+
 
 // #### Imports
 import { cell, constructors, entity, group, styles } from '../core/library.js';
 
-import { addStrings, doCreate, mergeOver, removeItem, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, generateUuid, mergeOver, removeItem, Ωempty } from '../helper/utilities.js';
 
 import { makeGradient } from './gradient.js';
 import { colorEngine } from '../helper/filter-engine.js';
@@ -91,7 +17,7 @@ import { colorEngine } from '../helper/filter-engine.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _keys, _round, _values, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NORMAL, OFFSET, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+import { _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NORMAL, OFFSET, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const CLAMP_VALUES = ['down', 'round', 'up'],
@@ -278,11 +204,15 @@ const defaultAttributes = {
     outerRadius: PC30,
     palette: BLACK_WHITE,
     passes: 1,
+    passesHorizontal: 1,
+    passesVertical: 1,
     points: null,
     postProcessResults: true,
     processHorizontal: true,
     processVertical: true,
     radius: 1,
+    radiusHorizontal: 1,
+    radiusVertical: 1,
     ranges: null,
     red: 0,
     redInBlue: 0,
@@ -297,6 +227,8 @@ const defaultAttributes = {
     startX: PC50,
     startY: PC50,
     step: 1,
+    stepHorizontal: 1,
+    stepVertical: 1,
     strength: 1,
     staticSwirls: null,
     tileHeight: 1,
@@ -480,6 +412,16 @@ const setActionsArray = {
         }];
     },
 
+// __alphaToLuminance__ - (new in v8.15.0) - sets the OKLAB luminance channel to the value of the alpha channel, then sets the alpha channel to opaque and the A and B channels to 0 (gray)
+    alphaToLuminance: function (f) {
+        f.actions = [{
+            action: ALPHA_TO_LUMINANCE,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+        }];
+    },
+
 // __areaAlpha__ (new in v8.4.0) - places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
     areaAlpha: function (f) {
         f.actions = [{
@@ -527,6 +469,25 @@ const setActionsArray = {
 // A bespoke blur function. Creates visual artefacts with various settings that might be useful. Strongly advise to memoize the results from this filter as it is resource-intensive.
 // + Use the gaussian blur filter for a smoother result.
     blur: function (f) {
+
+        if (f.radius != null) {
+            f.radiusHorizontal = f.radius;
+            f.radiusVertical = f.radius;
+            delete f.radius;
+        }
+
+        if (f.step != null) {
+            f.stepHorizontal = f.step;
+            f.stepVertical = f.step;
+            delete f.step;
+        }
+
+        if (f.passes != null) {
+            f.passesHorizontal = f.passes;
+            f.passesVertical = f.passes;
+            delete f.passes;
+        }
+
         f.actions = [{
             action: BLUR,
             lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
@@ -538,10 +499,13 @@ const setActionsArray = {
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
             excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : false,
             processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
+            radiusHorizontal: (f.radiusHorizontal != null) ? f.radiusHorizontal : 1,
+            stepHorizontal: (f.stepHorizontal != null) ? f.stepHorizontal : 1,
+            passesHorizontal: (f.passesHorizontal != null) ? f.passesHorizontal : 1,
             processVertical: (f.processVertical != null) ? f.processVertical : true,
-            radius: (f.radius != null) ? f.radius : 1,
-            passes: (f.passes != null) ? f.passes : 1,
-            step: (f.step != null) ? f.step : 1,
+            radiusVertical: (f.radiusVertical != null) ? f.radiusVertical : 1,
+            stepVertical: (f.stepVertical != null) ? f.stepVertical : 1,
+            passesVertical: (f.passesVertical != null) ? f.passesVertical : 1,
         }];
     },
 
@@ -933,12 +897,24 @@ const setActionsArray = {
 
 // __gaussianBlur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
     gaussianBlur: function (f) {
+        if (f.radius != null) {
+            f.radiusHorizontal = f.radius;
+            f.radiusVertical = f.radius;
+            delete f.radius;
+        }
+
         f.actions = [{
             action: GAUSSIAN_BLUR,
             lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
+            excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : false,
             opacity: (f.opacity != null) ? f.opacity : 1,
-            radius: (f.radius != null) ? f.radius : 1,
+            radiusHorizontal: (f.radiusHorizontal != null) ? f.radiusHorizontal : 1,
+            radiusVertical: (f.radiusVertical != null) ? f.radiusVertical : 1,
         }];
     },
 
@@ -1005,17 +981,19 @@ const setActionsArray = {
 // __image__ (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image
     image: function (f) {
 
-        f.actions = [{
+        const o = {
             action: PROCESS_IMAGE,
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             asset: (f.asset != null) ? f.asset : ZERO_STR,
-            width: (f.width != null) ? f.width : 1,
-            height: (f.height != null) ? f.height : 1,
             copyWidth: (f.copyWidth != null) ? f.copyWidth : 1,
             copyHeight: (f.copyHeight != null) ? f.copyHeight : 1,
             copyX: (f.copyX != null) ? f.copyX : 0,
             copyY: (f.copyY != null) ? f.copyY : 0,
-        }];
+        };
+
+        o.identifier = `user-image-${o.asset}-${generateUuid()}`;
+
+        f.actions = [o];
     },
 
 // __invert__ - inverts the colors in the image, producing an effect similar to a photograph negative
@@ -1028,6 +1006,16 @@ const setActionsArray = {
             includeRed: true,
             includeGreen: true,
             includeBlue: true,
+        }];
+    },
+
+// __luminanceToAlpha__ - (new in v8.15.0) - sets the OKLAB alpha channel to the value of the luminance channel, then sets the luminance, A and B channels to 0 (black).
+    luminanceToAlpha: function (f) {
+        f.actions = [{
+            action: LUMINANCE_TO_ALPHA,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            opacity: (f.opacity != null) ? f.opacity : 1,
         }];
     },
 
@@ -1044,7 +1032,7 @@ const setActionsArray = {
         }];
     },
 
-// __mapToGradient__ - produces a more realistic black-and-white photograph effect
+// __mapToGradient__ - applies a gradient to a grayscaled input
     mapToGradient: function (f) {
 
         if (f.gradient && f.gradient.substring) f.gradient = styles[f.gradient];

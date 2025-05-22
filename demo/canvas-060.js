@@ -1,7 +1,7 @@
 // # Demo Canvas 060
-// Wide Gamut 2D Graphics using HTML Canvas
+// Wheel entity attributes and functionality
 
-// [Run code](../../demo/filters-060.html)
+// [Run code](../../demo/canvas-060.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
@@ -16,67 +16,57 @@ const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
-// Red
-const outerBlock = scrawl.makeBlock({
-    name: name('rgb-red'),
-    start: ['25%', '25%'],
+const myWheel = scrawl.makeWheel({
+    name: name('my-wheel'),
+    start: ['center', 'center'],
     handle: ['center', 'center'],
-    dimensions: ['50%', '50%'],
-    fillStyle: 'rgb(255 0 0)',
+    radius: 150,
+
+    fillStyle: 'lightblue',
+    strokeStyle: 'sienna',
+    lineWidth: 6,
+    lineJoin: 'round',
+    method: 'fillThenDraw',
 });
 
-const innerBlock = scrawl.makeBlock({
-    name: name('p3-red'),
-    pivot: name('rgb-red'),
+scrawl.makeWheel({
+    name: name('pin'),
+    radius: 5,
+    fillStyle: 'red',
+    pivot: name('my-wheel'),
     lockTo: 'pivot',
     handle: ['center', 'center'],
-    dimensions: ['25%', '25%'],
-    fillStyle: 'color(display-p3 1 0 0)',
-});
-
-// Green
-outerBlock.clone({
-    name: name('rgb-green'),
-    start: ['75%', '25%'],
-    fillStyle: 'rgb(0 255 0)',
-});
-
-innerBlock.clone({
-    name: name('p3-green'),
-    pivot: name('rgb-green'),
-    fillStyle: 'color(display-p3 0 1 0)',
-});
-
-// Blue
-outerBlock.clone({
-    name: name('rgb-blue'),
-    start: ['25%', '75%'],
-    fillStyle: 'rgb(0 0 255)',
-});
-
-innerBlock.clone({
-    name: name('p3-blue'),
-    pivot: name('rgb-blue'),
-    fillStyle: 'color(display-p3 0 0 1)',
-});
-
-// Magenta
-outerBlock.clone({
-    name: name('rgb-magenta'),
-    start: ['75%', '75%'],
-    fillStyle: 'rgb(255 0 255)',
-});
-
-innerBlock.clone({
-    name: name('p3-magenta'),
-    pivot: name('rgb-magenta'),
-    fillStyle: 'color(display-p3 1 0 1)',
 });
 
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-const report = reportSpeed('#reportmessage');
+const report = reportSpeed('#reportmessage', function () {
+
+    const {
+        roll,
+        scale,
+        radius,
+        startAngle,
+        endAngle,
+        start,
+        handle,
+        offset,
+    } = myWheel;
+
+    const {
+        lineWidth,
+        shadowOffsetX,
+        shadowOffsetY,
+        shadowBlur
+/** @ts-expect-error */
+    } = myWheel.state;
+
+    return `    Wheel - radius: ${radius}, startAngle: ${startAngle}, endAngle: ${endAngle}
+    Start - [${start}]; Handle - [${handle}]; Offset - [${offset}]
+    Roll: ${roll}; Scale: ${scale}; lineWidth: ${lineWidth}
+    Shadow - offsetX: ${shadowOffsetX}; offsetY: ${shadowOffsetY}; blur: ${shadowBlur}; `;
+});
 
 
 // Create the Display cycle animation
@@ -86,6 +76,100 @@ scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
+
+
+// #### User interaction
+// Setup form observer functionality
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: myWheel,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+        clockwise: ['clockwise', 'boolean'],
+        closed: ['closed', 'boolean'],
+        endAngle: ['endAngle', 'round'],
+        includeCenter: ['includeCenter', 'boolean'],
+        radius_absolute: ['radius', 'round'],
+        radius_relative: ['radius', '%'],
+        startAngle: ['startAngle', 'round'],
+
+        handle_xAbsolute: ['handleX', 'round'],
+        handle_xPercent: ['handleX', '%'],
+        handle_xString: ['handleX', 'raw'],
+        handle_yAbsolute: ['handleY', 'round'],
+        handle_yPercent: ['handleY', '%'],
+        handle_yString: ['handleY', 'raw'],
+        lineJoin: ['lineJoin', 'raw'],
+        lineWidth: ['lineWidth', 'round'],
+        method: ['method', 'raw'],
+        offset_xAbsolute: ['offsetX', 'round'],
+        offset_xPercent: ['offsetX', '%'],
+        offset_yAbsolute: ['offsetY', 'round'],
+        offset_yPercent: ['offsetY', '%'],
+        reverse: ['flipReverse', 'boolean'],
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
+        scaleOutline: ['scaleOutline', 'boolean'],
+        scaleShadow: ['scaleShadow', 'boolean'],
+        shadowBlur: ['shadowBlur', 'round'],
+        shadowOffsetX: ['shadowOffsetX', 'round'],
+        shadowOffsetY: ['shadowOffsetY', 'round'],
+        start_xAbsolute: ['startX', 'round'],
+        start_xPercent: ['startX', '%'],
+        start_xString: ['startX', 'raw'],
+        start_yAbsolute: ['startY', 'round'],
+        start_yPercent: ['startY', '%'],
+        start_yString: ['startY', 'raw'],
+        upend: ['flipUpend', 'boolean'],
+    },
+});
+
+
+// Setup form
+scrawl.initializeDomInputs([
+    ['input', 'endAngle', '360'],
+    ['input', 'radius_absolute', '150'],
+    ['input', 'radius_relative', '37.5'],
+    ['input', 'startAngle', '0'],
+    ['select', 'clockwise', 1],
+    ['select', 'closed', 1],
+    ['select', 'includeCenter', 0],
+
+    ['input', 'handle_xAbsolute', '150'],
+    ['input', 'handle_xPercent', '50'],
+    ['input', 'handle_yAbsolute', '100'],
+    ['input', 'handle_yPercent', '50'],
+    ['input', 'lineWidth', '6'],
+    ['input', 'offset_xAbsolute', '0'],
+    ['input', 'offset_xPercent', '0'],
+    ['input', 'offset_yAbsolute', '0'],
+    ['input', 'offset_yPercent', '0'],
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['input', 'shadowBlur', '0'],
+    ['input', 'shadowOffsetX', '0'],
+    ['input', 'shadowOffsetY', '0'],
+    ['input', 'start_xAbsolute', '300'],
+    ['input', 'start_xPercent', '50'],
+    ['input', 'start_yAbsolute', '200'],
+    ['input', 'start_yPercent', '50'],
+    ['select', 'handle_xString', 1],
+    ['select', 'handle_yString', 1],
+    ['select', 'lineJoin', 1],
+    ['select', 'method', 4],
+    ['select', 'reverse', 0],
+    ['select', 'scaleOutline', 1],
+    ['select', 'scaleShadow', 0],
+    ['select', 'start_xString', 1],
+    ['select', 'start_yString', 1],
+    ['select', 'upend', 0],
+]);
 
 
 // #### Development and testing

@@ -576,25 +576,7 @@
               </div>
               <h1 id="element-factory">Element factory</h1>
 <p>The Scrawl-canvas Stack/Element system is an attempt to supplement DOM elements with Scrawl-canvas entity <a href="../mixin/position.html">positioning and dimensioning</a> functionality.</p>
-<ul>
-<li><a href="../mixin/entity.html">Entitys</a> exist in a <a href="./cell.html">Cell</a> environment</li>
-<li>They can position themselves within that Cell either <strong>absolutely</strong> (px coordinates), or <strong>relatively</strong> (% coordinates, with values relative to the Cell’s dimensions), or <strong>by reference</strong> (using other entity’s coordinates to calculate their own coordinates - <code>pivot</code>, <code>mimic</code>, <code>path</code>)</li>
-<li>They can also base their dimensions on absolute (px) or relative (%) values</li>
-<li>They can be <strong>animated</strong> directly (<code>set</code>, <code>deltaSet</code>), or through automation (<code>delta</code> object), or through the Scrawl-canvas <code>tween</code> functionality</li>
-<li>They can be stored and retrieved (‘packet’ functionality), cloned (‘clone’, based on packets) and killed (‘kill’ functions)</li>
-</ul>
-<p><strong>A <a href="./stack.html">Stack</a> is a wrapper object around a DOM element</strong>, whose direct children are given Scrawl-canvas Element wrappers:</p>
-<pre><code><span class="hljs-title class_">Stack</span>    ~~&gt; <span class="hljs-title class_">Canvas</span>/<span class="hljs-title class_">Cell</span>
-<span class="hljs-title class_">Element</span>  ~~&gt; <span class="hljs-title class_">Entity</span> (eg <span class="hljs-title class_">Block</span>)
-</code></pre>
-<p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-scrawl-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
-<ul>
-<li>Stack elements have <code>relative</code> positioning within the DOM</li>
-<li>Element elements have <code>absolute</code> positioning within the Stack</li>
-</ul>
-<p>The <code>makeElement</code> function is not exported by the scrawl object. To create a new Element within a Stack, use <code>mystack.addNewElement({})</code>.</p>
-<p>Element wrapper objects use the <strong>base</strong>, <strong>position</strong>, <strong>anchor</strong> and <strong>dom</strong> mixins. Thus Element wrappers are also <strong>artefact</strong> objects. As such, Elements can be used (almost) like any other artefact; in particular, other artefacts - including any canvas-based entity - can use Elements as their pivot or mimic targets.</p>
-<p>Element wrappers are included in the Scrawl-canvas packet system; they can be saved and cloned. Killing an Element wrapper will remove its DOM element from the document.</p>
+<p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-scrawl-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements).</p>
 
             </div>
             
@@ -635,7 +617,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CORNER_SELECTOR</span>, <span class="hljs-variable constant_">ELEMENT</span>, <span class="hljs-variable constant_">MIMIC</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CORNER_SELECTOR</span>, <span class="hljs-variable constant_">ELEMENT</span>, <span class="hljs-variable constant_">FORBIDDEN_ELEMENTS</span>, <span class="hljs-variable constant_">MIMIC</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -667,12 +649,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Element</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">const</span> el = items.<span class="hljs-property">domElement</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
-
-    <span class="hljs-keyword">if</span> (el) {</pre></div></div>
+    <span class="hljs-keyword">const</span> el = items.<span class="hljs-property">domElement</span>;</pre></div></div>
             
         </li>
         
@@ -683,45 +660,19 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>Scrawl-canvas does not retain an Element’s textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes <code>text</code> (for textContent, which automatically escapes all HTML-related tags and entities) and <code>content</code> (which should respect HTML tags and entities)</p>
+              <p>Restrict what can become an Element</p>
+<ul>
+<li>The last check is to exclude Web Components</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">text</span>) el.<span class="hljs-property">textContent</span> = items.<span class="hljs-property">text</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.<span class="hljs-property">content</span>) el.<span class="hljs-property">innerHTML</span> = items.<span class="hljs-property">content</span>;
-    }
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (el &amp;&amp; !<span class="hljs-variable constant_">FORBIDDEN_ELEMENTS</span>.<span class="hljs-title function_">includes</span>(el.<span class="hljs-property">tagName</span>) &amp;&amp; !el.<span class="hljs-property">tagName</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;-&#x27;</span>)) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>[<span class="hljs-number">0</span>] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>[<span class="hljs-number">1</span>] = <span class="hljs-number">100</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCorners</span> = [];
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">css</span> = {};
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span> = {};
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializeDomLayout</span>(items);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializeAccessibility</span>();
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span> = <span class="hljs-literal">null</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span> = <span class="hljs-literal">null</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyContent</span> = <span class="hljs-literal">true</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCss</span> = <span class="hljs-literal">true</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">localMouseListener</span> = <span class="hljs-literal">null</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span> = <span class="hljs-literal">null</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">elementComputedStyles</span> = <span class="hljs-literal">null</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
-
-    <span class="hljs-keyword">const</span> myEl = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
-
-    <span class="hljs-keyword">if</span> (myEl) myEl.<span class="hljs-property">id</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">apply</span>();
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
+        <span class="hljs-keyword">if</span> (el) {</pre></div></div>
             
         </li>
         
@@ -731,6 +682,56 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>Scrawl-canvas does not retain an Element’s textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes <code>text</code> (for textContent, which automatically escapes all HTML-related tags and entities) and <code>content</code> (which should respect HTML tags and entities)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (items.<span class="hljs-property">text</span>) el.<span class="hljs-property">textContent</span> = items.<span class="hljs-property">text</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.<span class="hljs-property">content</span>) el.<span class="hljs-property">innerHTML</span> = items.<span class="hljs-property">content</span>;
+        }
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>[<span class="hljs-number">0</span>] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>[<span class="hljs-number">1</span>] = <span class="hljs-number">100</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCorners</span> = [];
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">css</span> = {};
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span> = {};
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializeDomLayout</span>(items);
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializeAccessibility</span>();
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span> = <span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span> = <span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyContent</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCss</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampOrder</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">localMouseListener</span> = <span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span> = <span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">elementComputedStyles</span> = <span class="hljs-literal">null</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
+
+        <span class="hljs-keyword">const</span> myEl = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
+
+        <span class="hljs-keyword">if</span> (myEl) myEl.<span class="hljs-property">id</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
+
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="element-prototype">Element prototype</h4>
 
@@ -745,11 +746,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -761,28 +762,14 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <h4 id="element-attributes">Element attributes</h4>
-<p>No additional attributes required beyond those supplied by the mixins</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet functionality required</p>
+              <h4 id="element-attributes">Element attributes</h4>
+<p>No additional attributes required beyond those supplied by the mixins</p>
 
             </div>
             
@@ -795,8 +782,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
 
             </div>
             
@@ -809,16 +796,10 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-title function_">removeItem</span>(uiSubscribedElements, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">remove</span>();
-};</pre></div></div>
             
         </li>
         
@@ -829,11 +810,16 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <h4 id="kill-management">Kill management</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">removeElement = <span class="hljs-literal">true</span></span>) {
+
+    <span class="hljs-title function_">removeItem</span>(uiSubscribedElements, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+
+    <span class="hljs-keyword">if</span> (removeElement) <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">remove</span>();
+};</pre></div></div>
             
         </li>
         
@@ -843,6 +829,21 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><code>text</code> - <strong>this is the preferred way to update an element’s text content</strong> because the text supplied in the argument is not treated as HTML by the browser.</p>
 <p>When we update the DOM attribute <code>element.textContent</code>, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its ‘kids’ after updating the text</p>
@@ -868,11 +869,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><code>content</code> - <strong>WARNING - this is a dangerous function!</strong> It does not perform any character escaping before inserting the supplied argument into the element. Raw HTML (including, for instance, &lt;script&gt; tags) will be added to the DOM. It’s up to the developer to make sure this content is safe!</p>
 <p>When we update the DOM attribute <code>element.innerHTML</code>, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its ‘kids’ after updating the text</p>
@@ -898,11 +899,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -911,11 +912,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwrites mixin/position function.</p>
 
@@ -929,11 +930,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="snippet-related-functions">Snippet-related functions</h4>
 
@@ -942,11 +943,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>addCanvas</code> - adds a new &lt;canvas&gt; element to Scrawl-canvas stack immediately before this element, and sets up the canvas to mimic the element (meaning it will mimic changes to the element’s dimensions, positioning, scale and 3D rotational values)</p>
 <ul>
@@ -1009,11 +1010,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-title class_">Get</span> a handle to a <span class="hljs-title class_">Stack</span> wrapper

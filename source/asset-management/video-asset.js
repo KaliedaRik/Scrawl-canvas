@@ -1,15 +1,13 @@
 // # VideoAsset factory
 // The factory generates wrapper Objects around &lt;video> elements which can either be pulled from the current document (DOM-based assets) or fetched from the server using an URL address.
 //
-// Scrawl-canvas can also create VideoAssets from the Web API [MediaStream](https://developer.mozilla.org/en-US/docs/Web/API/MediaStream) interface - ___this is an experimental feature___.
-//
-// VideoAssets are used by [Picture](./picture.html) and [Grid](./grid.html) entitys, and [Pattern](./pattern.html) styles (though not recommended).
+// Scrawl-canvas can also create VideoAssets from the Web API [MediaStream](https://developer.mozilla.org/en-US/docs/Web/API/MediaStream) and [Screen Capture](https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API) interfaces.
 
 
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, generateUniqueString, xt, λthis, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, generateUniqueString, mergeOver, λcloneError, λnull, Ωempty } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -79,7 +77,25 @@ export const settableVideoAssetAtributes = [
 // #### VideoAsset constructor
 const VideoAsset = function (items = Ωempty) {
 
-    return this.assetConstructor(items);
+    this.makeName(items.name);
+    this.register();
+    this.subscribers = [];
+    this.set(this.defs);
+
+    this.source = null;
+    this.currentSrc = null;
+    this.currentFile = null;
+    this.sourceNaturalWidth = 0;
+    this.sourceNaturalHeight = 0;
+
+    this.onMediaStreamEnd = λnull;
+    this.isAudioOnly = false;
+
+    this.set(items);
+
+    if (items.subscribe) this.subscribers.push(items.subscribe);
+
+    return this;
 };
 
 
@@ -96,9 +112,13 @@ baseMix(P);
 assetMix(P);
 
 
-
 // #### VideoAsset attributes
-// No additional attributes required beyond those supplied by the mixins
+const defaultAttributes = {
+    mediaStream: null,
+    mediaStreamTrack: null,
+    onMediaStreamEnd: null,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
@@ -113,11 +133,21 @@ P.finalizePacketOut = λnull;
 
 
 // #### Clone management
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill management
-// No additional kill functionality required
+P.kill = function (removeDomEntity = false) {
+
+    if (removeDomEntity && this.source) this.source.remove();
+
+    if (this.mediaStream && this.mediaStreamTrack && this.mediaStream.active) {
+
+        this.mediaStream.removeTrack(this.mediaStreamTrack);
+    }
+
+    return this.deregister();
+};
 
 
 // #### Get, Set, deltaSet
@@ -307,30 +337,13 @@ export const importDomVideo = function (query) {
 
 // `importMediaStream` - __Warning: experimental!__
 // + This function will attempt to link a mediaStream - for instance from a device's camera - to an offscreen &lt;video> element, which then gets wrapped in a videoAsset instance which can be displayed in a canvas via a Picture entity (or even a Pattern style).
-// + TODO - extend functionality so users can manipulate the mediaStream via the Picture entity using it as its asset
 export const importMediaStream = function (items = Ωempty) {
 
     // Setup the constraints object with user-supplied data in the items argument
     const constraints = {};
 
-    // For proof-of-concept, only interested in wheter to include or exclude audio in the capture
-    constraints.audio = (xt(items.audio)) ? items.audio : true;
-
-    // For video, limiting functionality to accepting user values for video width and height (as minDIMENSION, maxDIMENSION and the ideal DIMENSION, and a preference for which camera to use - where applicable
-    constraints.video = {};
-
-    const width = constraints.video.width = {};
-    if (items.minWidth) width.min = items.minWidth;
-    if (items.maxWidth) width.max = items.maxWidth;
-    width.ideal = (items.width) ? items.width : 1280;
-
-    const height = constraints.video.height = {};
-    if (items.minHeight) height.min = items.minHeight;
-    if (items.maxHeight) height.max = items.maxHeight;
-    height.ideal = (items.height) ? items.height : 720;
-
-    // For mobile devices etc - values can be 'user' or 'environment'
-    if (items.facing) constraints.video.facingMode = items.facing;
+    constraints.audio = (items.audio != null) ? items.audio : false;
+    constraints.video = (items.video != null) ? items.video : false;
 
     // We need a video element to receive the media stream
     const name = items.name || generateUniqueString();
@@ -340,7 +353,10 @@ export const importMediaStream = function (items = Ωempty) {
     const vid = makeVideoAsset({
         name: name,
         source: el,
+        onMediaStreamEnd: items.onMediaStreamEnd || λnull,
     });
+
+    if (!constraints.video) vid.isAudioOnly = true;
 
     return new Promise((resolve, reject) => {
 
@@ -349,27 +365,44 @@ export const importMediaStream = function (items = Ωempty) {
             navigator.mediaDevices.getUserMedia(constraints)
             .then(mediaStream => {
 
-                const actuals = mediaStream.getVideoTracks();
+                vid.mediaStream = mediaStream;
 
-                let data;
+                // For audio-only video
+                if (vid.isAudioOnly) {
 
-                if (_isArray(actuals) && actuals[0]) data = actuals[0].getConstraints();
+                    const actuals = mediaStream.getAudioTracks();
 
-                el.id = vid.name;
+                    if (_isArray(actuals) && actuals[0]) {
 
-                if (data) {
-
-                    el.width = data.width;
-                    el.height = data.height;
+                        vid.mediaStreamTrack = actuals[0];
+                        vid.mediaStreamTrack.addEventListener("ended", vid.onMediaStreamEnd);
+                    }
                 }
 
-                el.srcObject = mediaStream;
+                // For video-only video
+                else {
 
-                el.onloadedmetadata = function () {
+                    const actuals = mediaStream.getVideoTracks();
+                    let data;
 
-                    el.play();
+                    if (_isArray(actuals) && actuals[0]) {
+
+                        data = actuals[0].getConstraints();
+                        vid.mediaStreamTrack = actuals[0];
+                        vid.mediaStreamTrack.addEventListener("ended", vid.onMediaStreamEnd);
+                    }
+                    el.id = vid.name;
+
+                    if (data) {
+
+                        el.width = data.width;
+                        el.height = data.height;
+                    }
+
+                    el.srcObject = mediaStream;
+
+                    el.onloadedmetadata = function () { el.play(); }
                 }
-
                 resolve(vid);
             })
             .catch (err => {
@@ -427,6 +460,7 @@ export const importScreenCapture = function (items = Ωempty) {
     const vid = makeVideoAsset({
         name: name,
         source: el,
+        onMediaStreamEnd: items.onMediaStreamEnd || λnull,
     });
 
     return new Promise((resolve, reject) => {
@@ -439,11 +473,18 @@ export const importScreenCapture = function (items = Ωempty) {
             })
             .then(mediaStream => {
 
+                vid.mediaStream = mediaStream;
+
                 const actuals = mediaStream.getVideoTracks();
 
                 let data;
 
-                if (_isArray(actuals) && actuals[0]) data = actuals[0].getConstraints();
+                if (_isArray(actuals) && actuals[0]) {
+
+                    data = actuals[0].getConstraints();
+                    vid.mediaStreamTrack = actuals[0];
+                    vid.mediaStreamTrack.addEventListener("ended", vid.onMediaStreamEnd);
+                }
 
                 el.id = vid.name;
 

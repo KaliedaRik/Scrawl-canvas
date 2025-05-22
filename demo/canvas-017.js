@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-017.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -196,7 +196,7 @@ scrawl.addNativeListener(['click'], () => {
 
 
 // Setup form
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['select', 'easing', 0],
     ['select', 'colorStops', 0],
     ['select', 'method', 0],

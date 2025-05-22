@@ -17,3 +17,5 @@ import * as scrawl from '../source/scrawl.js';
 import rippleEffect from './snippets/ripple-effect-snippet.js';
 const rippleElements = document.querySelectorAll('.ripple');
 rippleElements.forEach(el => rippleEffect(scrawl, el));
+
+console.log(scrawl.library);

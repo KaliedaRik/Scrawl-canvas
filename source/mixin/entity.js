@@ -1,4 +1,4 @@
- // # Entity mixin
+// # Entity mixin
 // This mixin builds on the base and position mixins to give Canvas entity objects (Scrawl-canvas [Block](../factory/block.html), [Grid](../factory/grid.html), [Loom](../factory/loom.html), [Label](../factory/label.html), [Picture](../factory/picture.html), [Shape](../factory/shape.html), [Wheel](../factory/wheel.html), etc) the ability to act as __artefacts__.
 //
 // Entitys differ from non-entity artefacts in that they are restricted to Cell wrappers (though no harm should come if they are included in Stack-related Groups).
@@ -10,7 +10,7 @@
 
 
 // #### Imports
-import { addStrings, mergeOver, pushUnique, xt, λnull, Ωempty } from '../helper/utilities.js';
+import { addStrings, mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeState } from '../untracked-factory/state.js';
 
@@ -20,15 +20,15 @@ import { filterEngine } from '../helper/filter-engine.js';
 import { importDomImage } from '../asset-management/image-asset.js';
 import { currentGroup } from '../factory/canvas.js';
 
-import positionMix from '../mixin/position.js';
-import deltaMix from '../mixin/delta.js';
-import pivotMix from '../mixin/pivot.js';
-import mimicMix from '../mixin/mimic.js';
-import pathMix from '../mixin/path.js';
-import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
-import anchorMix from '../mixin/anchor.js';
-import buttonMix from '../mixin/button.js';
-import filterMix from '../mixin/filter.js';
+import positionMix from './position.js';
+import deltaMix from './delta.js';
+import pivotMix from './pivot.js';
+import mimicMix from './mimic.js';
+import pathMix from './path.js';
+import hiddenElementsMix from './hidden-dom-elements.js';
+import anchorMix from './anchor.js';
+import buttonMix from './button.js';
+import filterMix from './filter.js';
 
 // Shared constants
 import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../helper/shared-vars.js';
@@ -81,8 +81,11 @@ export default function (P = Ωempty) {
         flipReverse: false,
         flipUpend: false,
 
-// __scaleOutline__ - Boolean flag. When set, the entity will increase its `lineWidth` proportionat to the entity's `scale` value - an entity of scale = 2 will display lines twice the thickness of the same entity at scale = 1
+// __scaleOutline__ - Boolean flag. When set, the entity will increase its `lineWidth` value proportionate to the entity's `scale` value - an entity of scale = 2 will display lines twice the thickness of the same entity at scale = 1
         scaleOutline: true,
+
+// __scaleShadow__ - Boolean flag. When set, the entity will increase its `shadowOffsetX`, `shadowOffsetY` and `shadowBlur` values proportionate to the entity's `scale` value - an entity of scale = 2 will display shadows twice the size of the same entity at scale = 1
+        scaleShadow: false,
 
 // __lockFillStyleToEntity__, __lockStrokeStyleToEntity__ - Boolean flags.
 // + When set, these flags instruct any gradient-type style (Scrawl-canvas Gradient, RadialGradient) to map their `start` and `end` coordinates to the entity's dimensions
@@ -120,7 +123,7 @@ export default function (P = Ωempty) {
 // __onUp__ - define tasks to be performed for `up` events
         onUp: null,
 
-// __onOtherInteraction__ - define tasks to be performed for `up` events
+// __onOtherInteraction__ - define tasks to be performed for `other interaction` events
         onOtherInteraction: null,
 
 // ##### State object attributes
@@ -216,27 +219,9 @@ export default function (P = Ωempty) {
 // #### Clone management
     P.postCloneAction = function(clone, items) {
 
-        if (this.onEnter) clone.onEnter = this.onEnter;
-        if (this.onLeave) clone.onLeave = this.onLeave;
-        if (this.onDown) clone.onDown = this.onDown;
-        if (this.onUp) clone.onUp = this.onUp;
-        if (this.onOtherInteraction) clone.onOtherInteraction = this.onOtherInteraction;
-
         // Shared state
         if (items.sharedState) clone.state = this.state;
 
-        // Cloned anchors
-        if (items.anchor) {
-
-            items.anchor.host = clone;
-
-            if (!xt(items.anchor.focusAction)) items.anchor.focusAction = this.anchor.focusAction;
-            if (!xt(items.anchor.blurAction)) items.anchor.blurAction = this.anchor.blurAction;
-
-            clone.buildAnchor(items.anchor);
-
-            if (!items.anchor.clickAction) clone.anchor.clickAction = this.anchor.clickAction;
-        }
         return clone;
     };
 
@@ -591,8 +576,15 @@ export default function (P = Ωempty) {
             const oldNoCanvasEngineUpdates = this.noCanvasEngineUpdates;
             this.noCanvasEngineUpdates = false;
 
+            // Handle GCO
+            let oldGCO = SOURCE_OVER
+            if (state) oldGCO = state.globalCompositeOperation;
+
             // Stamp the entity onto the pool Cell
             this.regularStamp();
+
+            // Restore GCO
+            if (state) state.globalCompositeOperation = oldGCO;
 
             if (hasFilters) {
 
@@ -615,7 +607,7 @@ export default function (P = Ωempty) {
 
                 const myimage = filterEng.getImageData(0, 0, w, h);
 
-                this.preprocessFilters(filters);
+                this.preprocessFilters(filters, w, h);
 
                 const img = filterEngine.action({
                     identifier: this.filterIdentifier,

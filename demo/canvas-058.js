@@ -70,6 +70,7 @@ const referenceBlock = scrawl.makeBlock({
         lineDashOffset: 0.2,
     },
 
+/** @this {import('../source/scrawl.js').BlockInstance} */
     onEnter: function () {
 
         canvas.set({
@@ -78,13 +79,13 @@ const referenceBlock = scrawl.makeBlock({
             },
         });
 
-/** @ts-expect-error */
         this.set({
             lineDash: [16, 2],
             lineWidth: 2,
         });
     },
 
+/** @this {import('../source/scrawl.js').BlockInstance} */
     onLeave: function () {
 
         canvas.set({
@@ -93,7 +94,6 @@ const referenceBlock = scrawl.makeBlock({
             },
         });
 
-/** @ts-expect-error */
         this.set({
             lineDash: [4, 2],
             lineWidth: 1,

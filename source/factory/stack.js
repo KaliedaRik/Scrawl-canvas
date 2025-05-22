@@ -1,36 +1,11 @@
 // # Stack factory
 // The Scrawl-canvas Stack/Element system is an attempt to supplement DOM elements with Scrawl-canvas entity positioning and dimensioning functionality.
-// + Entitys exist in a Cell environment
-// + They can position themselves within that Cell either __absolutely__ (px coordinates), or __relatively__ (% coordinates, with values relative to the Cell's dimensions), or __by reference__ (using other entity's coordinates to calculate their own coordinates - `pivot`, `mimic`, `path`)
-// + They can also base their dimensions on absolute (px) or relative (%) values
-// + They can be __animated__ directly (`set`, `deltaSet`), or through automation (`delta` object), or through the Scrawl-canvas `tween` functionality
-// + They can be stored and retrieved ('packet' functionality), cloned ('clone', based on packets) and killed ('kill' functions)
-//
-// __A Stack is a wrapper object around a DOM element__, whose direct children are given Scrawl-canvas Element wrappers:
-// ```
-// Stack    ~~> Canvas/Cell
-// Element  ~~> Entity (eg Block)
-// ```
-// During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a `data-scrawl-stack` attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas> elements). As part of this work, Scrawl-canvas will modify the affected elements' `position` CSS style:
-// + Stack elements have `relative` positioning within the DOM
-// + Element elements have `absolute` positioning within the Stack
-//
-// The Stack factory is not used directly; the factory is not exported as part of the __scrawl object__ during Scrawl-canvas initialization. Instead, wrappers can be created for a DOM-based &lt;div> element using the following scrawl function:
-// + `scrawl.addStack` - generates a new &lt;div> element, creates a wrapper for it, then adds it to the DOM.
-//
-// Stack wrapper objects use the __base__, __position__, __anchor__, __cascade__ and __dom__ mixins. Thus Stack wrappers are also __artefact__ objects: if a Stack's DOM element is a direct child of another Stack wrapper's element then it can be positioned, dimensioned and rotated like any other artefact.
-//
-// By default, all Stack wrappers will track mouse/touch movements across their DOM element, supplying this data to constituent Canvas objects and artefacts as-and-when-required.
-//
-// Stack wrappers are used by Scrawl-canvas to invoke the __Display cycle cascade__. As such, they include `clear`, `compile`, `show` and `render` functions to manage the Display cycle.
-//
-// Stack wrappers are excluded from the Scrawl-canvas packet system; they cannot be saved or cloned. Killing a Stack wrapper will remove its DOM element from the document - __including all Elements and Canvases that it contains__.
 
 
 // #### Imports
 import { artefact, constructors, group, purge, stack } from '../core/library.js';
 
-import { addStrings, doCreate, generateUniqueString, isa_canvas, isa_dom, mergeOver, removeItem, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, generateUniqueString, isa_canvas, isa_dom, mergeOver, removeItem, xt, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { domShow } from '../core/document.js';
 
@@ -47,7 +22,7 @@ import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
 // Shared constants
-import { _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DIV, NAME, PC50, RELATIVE, ROOT, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
+import { _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DIV, NAME, PC50, PERMITTED_STACK_ELEMENTS, RELATIVE, ROOT, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const $DATA_SCRAWL_STACK = '[data-scrawl-stack]',
@@ -59,64 +34,69 @@ const $DATA_SCRAWL_STACK = '[data-scrawl-stack]',
 // #### Stack constructor
 const Stack = function (items = Ωempty) {
 
-    this.makeName(items.name);
-    this.register();
-    this.initializePositions();
-    this.initializeCascade();
+    if (items.domElement && PERMITTED_STACK_ELEMENTS.includes(items.domElement.tagName)) {
 
-    this.dimensions[0] = 300;
-    this.dimensions[1] = 150;
+        this.makeName(items.name);
+        this.register();
+        this.initializePositions();
+        this.initializeCascade();
 
-    this.pathCorners = [];
-    this.css = {};
-    this.here = {};
-    this.perspective = {
+        this.dimensions[0] = 300;
+        this.dimensions[1] = 150;
 
-        x: PC50,
-        y: PC50,
-        z: 0
-    };
-    this.dirtyPerspective = true;
+        this.pathCorners = [];
+        this.css = {};
+        this.here = {};
+        this.perspective = {
 
-    this.initializeDomLayout(items);
+            x: PC50,
+            y: PC50,
+            z: 0
+        };
+        this.dirtyPerspective = true;
 
-    const g = makeGroup({
-        name: this.name,
-        host: this.name
-    });
-    this.addGroups(g.name);
+        this.initializeDomLayout(items);
 
-    this.set(this.defs);
+        const g = makeGroup({
+            name: this.name,
+            host: this.name
+        });
+        this.addGroups(g.name);
 
-    this.initializeDisplayShapeActions();
+        this.set(this.defs);
 
-    this.initializeAccessibility();
+        this.initializeDisplayShapeActions();
 
-    this.dirtyDomDimensions = true;
-    this.dirtyPath = true;
-    this.rotation = null;
-    this.currentCornersData = null;
-    this.currentTransformString = '';
-    this.dirtyTransform = true;
-    this.currentTransformOriginString = '';
-    this.dirtyTransformOrigin = true;
-    this.domShowRequired = true;
-    this.dirtyCss = true;
-    this.localMouseListener = null;
+        this.initializeAccessibility();
 
-    this.set(items);
+        this.dirtyDomDimensions = true;
+        this.dirtyPath = true;
+        this.rotation = null;
+        this.currentCornersData = null;
+        this.currentTransformString = '';
+        this.dirtyTransform = true;
+        this.currentTransformOriginString = '';
+        this.dirtyTransformOrigin = true;
+        this.domShowRequired = true;
+        this.dirtyCss = true;
+        this.dirtyStampOrder = true;
+        this.localMouseListener = null;
 
-    const el = this.domElement;
+        this.set(items);
 
-    if (el) {
+        const el = this.domElement;
 
-        const ds = el.dataset;
+        if (el) {
 
-        if (ds.isResponsive) this.isResponsive = true;
+            const ds = el.dataset;
 
-        if (el.getAttribute(DATA_SCRAWL_GROUP) === ROOT) rootElementsAdd(this.name);
+            if (ds.isResponsive) this.isResponsive = true;
+
+            if (el.getAttribute(DATA_SCRAWL_GROUP) === ROOT) rootElementsAdd(this.name);
+        }
+        return this;
     }
-    return this;
+    return null;
 };
 
 
@@ -161,7 +141,7 @@ P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill functionality
@@ -268,6 +248,12 @@ P.updateArtefacts = function (items = Ωempty) {
             if (items.dirtyPathObject) art.dirtyPathObject = true;
         })
     });
+};
+
+P.reset = function () {
+
+    this.dirtyDimensions = true;
+    domShow(this.name);
 };
 
 // `cleanDimensionsAdditionalActions` - overwrites mixin/position function. Promulgates Stack dimension changes through to all Element and Canvas wrappers associated with the Stack wrapper's Group object.
@@ -379,6 +365,7 @@ P.show = function () {
 // `render`
 P.render = function () {
 
+    this.clear();
     this.compile();
     this.show();
 };
@@ -464,7 +451,7 @@ constructors.Stack = Stack;
 
 
 // #### Stack discovery
-// `Exported function` (to modules). Parse the DOM, looking for all elements that have been given a __data-stack__ attribute; then create __Stack__ artefact wrappers for each of them.
+// `Exported function` (to modules). Parse the DOM, looking for all elements that have been given a __data-scrawl-stack__ attribute; then create __Stack__ artefact wrappers for each of them.
 //
 // This function will also create wrappers for all __direct child elements__ (one level down) within the stack, and create appropriate wrappers (Stack, Canvas, Element) for them.
 export const getStacks = function (query = $DATA_SCRAWL_STACK) {

@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-503.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, addImageDragAndDrop, initializeDomInputs } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 
 // #### Scene setup
@@ -57,7 +57,7 @@ scrawl.makeRender({
 
 
 // #### User interaction
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'r1', '0.1'],
     ['input', 'r2', '0.4'],
     ['input', 'r3', '0.7'],

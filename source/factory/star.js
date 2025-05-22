@@ -1,44 +1,19 @@
 // # Star factory
 // A factory for generating star shape-based entitys
-//
-// Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D). They use the [shapeBasic](../mixin/shapeBasic.html) and [shapePathCalculation](../mixin/shapePathCalculation.html) (some also use [shapeCurve](../mixin/shapeCurve.html)) mixins to define much of their functionality.
-//
-// All path-defined entitys can be positioned, cloned, filtered etc:
-// + Positioning functionality for the entity is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin.
-// + Dimensions, however, have little meaning for path-defined entitys - their width and height are determined by their SVG path data Strings; use `scale` instead.
-// + Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
-// + They will also accept __Filter__ objects.
-// + They can use __Anchor__ objects for user navigation.
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
-// + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
-// + Path-defined entitys can be cloned, and killed.
-
-
-// #### Using path-defined entitys as Scrawl-canvas paths
-// A path is a track - straight, or curved, or as complex as required - placed across a container which artefacts can use as a source of their positioning data. We can animate an artifact to move along the path:
-// + To enable a path-defined entity to be used as a path by other artefacts, set its `useAsPath` flag to `true`.
-// + The artefact can then set its `path` attribute to the path-defined entity's name-String (or the entity itself), and set its `lockTo` Array values to `"path"`.
-// + We position the artefact by setting its `pathPosition` attribute to a float Number value between `0.0 - 1.0`, with `0` being the start of the path, and `1` being its end.
-// + Path-defined entitys can use other path-defined entitys as a path.
-// + EnhancedLabel entitys can use a path to position their text units; they can also use a path to position each letter individually along the path.
-// + Artefacts (and letters) can be rotated so that they match the rotation at that point along the path - ___tangential rotation___ by setting their `addPathRotation` flag to `true`.
-// + Animate an artefact along the path by either using the artefact's `delta` object, or triggering a Tween to perform the movement.
 
 
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { releaseVector, requestVector } from '../untracked-factory/vector.js';
-
-import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { _abs, _min, ENTITY, ZERO_STR } from '../helper/shared-vars.js';
+import { ENTITY, ZERO_PATH, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const STAR = 'star',
@@ -101,7 +76,7 @@ S.radius1 = function (item) {
 };
 D.radius1 = function (item) {
 
-    this.radius1 += item;
+    this.radius1 = addStrings(this.radius1, item);
     this.updateDirty();
 };
 S.radius2 = function (item) {
@@ -111,7 +86,7 @@ S.radius2 = function (item) {
 };
 D.radius2 = function (item) {
 
-    this.radius2 += item;
+    this.radius2 = addStrings(this.radius2, item);
     this.updateDirty();
 };
 
@@ -155,8 +130,7 @@ P.makeStarPath = function () {
 
     const points = this.points,
         twist = this.twist,
-        turn = 360 / points,
-        xPts = requestArray();
+        turn = 360 / points;
 
     let radius1 = this.radius1,
         radius2 = this.radius2;
@@ -183,8 +157,6 @@ P.makeStarPath = function () {
     currentX = v1.x;
     currentY = v1.y;
 
-    xPts.push(currentX);
-
     v2.rotate(-turn/2);
     v2.rotate(twist);
 
@@ -194,7 +166,6 @@ P.makeStarPath = function () {
 
         x = parseFloat((v2.x - currentX).toFixed(1));
         currentX += x;
-        xPts.push(currentX);
 
         y = parseFloat((v2.y - currentY).toFixed(1));
         currentY += y;
@@ -205,7 +176,6 @@ P.makeStarPath = function () {
 
         x = parseFloat((v1.x - currentX).toFixed(1));
         currentX += x;
-        xPts.push(currentX);
 
         y = parseFloat((v1.y - currentY).toFixed(1));
         currentY += y;
@@ -216,14 +186,24 @@ P.makeStarPath = function () {
 
     releaseVector(v1, v2);
 
-    const myMin = _min(...xPts),
-        myXoffset = _abs(myMin).toFixed(1);
+    return `${ZERO_PATH}l${myPath}z`;
+};
 
-    myPath = `m${myXoffset},0l${myPath}z`;
+P.calculateLocalPathAdditionalActions = function () {
 
-    releaseArray(xPts);
+    let scale = this.scale;
 
-    return myPath;
+    if (scale < 0.001) scale = 0.001;
+
+    const [x, y] = this.localBox;
+
+    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x / scale},${-y / scale}`);
+
+    this.pathCalculatedOnce = false;
+
+    // ALWAYS, when invoking `calculateLocalPath` from `calculateLocalPathAdditionalActions`, include the second argument, set to `true`! Failure to do this leads to an infinite loop which will make your machine weep.
+    // + We need to recalculate the local path to take into account the offset required to put the Rectangle entity's start coordinates at the top-left of the local box, and to recalculate the data used by other artefacts to place themselves on, or move along, its path.
+    this.calculateLocalPath(this.pathDefinition, true);
 };
 
 

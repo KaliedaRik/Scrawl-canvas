@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-039.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -72,14 +72,21 @@ const setCursorTo = {
 };
 
 // Create the drag group
+// + Using this to test Group clone functionality wrt entity hover!
 scrawl.makeGroup({
 
-    name: name('drag-group'),
+    name: name('label-group'),
     host: mycell,
     checkForEntityHover: true,
     onEntityHover: setCursorTo.pointer,
     onEntityNoHover: setCursorTo.auto,
-})
+    order: 1,
+
+}).clone({
+
+    name: name('drag-group'),
+    order: 0,
+});
 
 // Create draggable entitys
 scrawl.makeWheel({
@@ -141,7 +148,7 @@ scrawl.makeWheel({
 // Test to make sure EnhancedLabel entitys can be used on non-base Cells
 scrawl.makeEnhancedLabel({
     name: name('label'),
-    group: name('drag-group'),
+    group: name('label-group'),
     layoutTemplate: name('wheel-yellow'),
     text: 'Drag the dots around the canvas',
     justifyLine: 'space-around',
@@ -237,7 +244,7 @@ scrawl.makeUpdater({
 });
 
 // Setup form
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'start_x', '380'],
     ['input', 'start_y', '200'],
     ['input', 'handle_x', '400'],
@@ -255,3 +262,11 @@ initializeDomInputs([
 
 // #### Development and testing
 console.log(scrawl.library);
+
+// Group serialization test
+console.log(scrawl.findGroup(name('drag-group')).saveAsPacket());
+
+// Group clone test
+const testGroup = scrawl.findGroup(name('drag-group')).clone({ name: name('test-group')});
+console.log(testGroup);
+console.log()

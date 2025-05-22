@@ -5,7 +5,7 @@
 
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 const stack = scrawl.findStack('mystack'),
@@ -32,6 +32,8 @@ canvas.set({
     handle: ['center', 'center'],
     trackHere: 'local',
     offsetZ: 150,
+    pitch: 10,
+    yaw: 15,
 });
 
 
@@ -154,7 +156,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Housekeeping - set the DOM input values to their starting values on each page reload
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'width', '400'],
     ['input', 'height', '400'],
     ['input', 'start_xAbsolute', '300'],
@@ -164,8 +166,8 @@ initializeDomInputs([
     ['input', 'offset_xAbsolute', '0'],
     ['input', 'offset_yAbsolute', '0'],
     ['input', 'roll', '0'],
-    ['input', 'pitch', '0'],
-    ['input', 'yaw', '0'],
+    ['input', 'pitch', '10'],
+    ['input', 'yaw', '15'],
     ['input', 'scale', '1'],
 ]);
 

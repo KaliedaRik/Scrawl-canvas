@@ -4,22 +4,12 @@
 // Mesh entitys are ___composite entitys___ - an entity that relies on other entitys for its basic functionality.
 // + Every Mesh object requires a [Net](./net.html) entity create the grid that it uses for transforming its image.
 // + A Mesh entity also requires a [Picture](./picture.html) entity to act as its image source.
-// + Meshes can (in theory) use CSS color Strings for their strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
-// + They can (in theory) use __Anchor__ objects for user navigation.
-// + They can (in theory) be rendered to the canvas by including them in a __Cell__ object's __Group__.
-// + They can (in theory) be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
-// + Meshes can (in theory) be cloned, and killed.
-//
-// ___Note that this is experimental technology!___
-// + The Mesh entity code base shares many similarities to that of the Loom entity; some of the code has been copied over from that file directly.
-// + Current code does not use [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins, meaning much of the code here has been copied over from those mixins (DRY issue).
-// + TODO: packet management, clone and kill functionality not yet tested. Much of the other functionality also lacks tests.
 
 
 // #### Imports
 import { artefact, constructors, group } from '../core/library.js';
 
-import { addStrings, doCreate, mergeOver, pushUnique, xta, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, mergeOver, pushUnique, xta, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { currentCorePosition } from '../core/user-interaction.js';
 
@@ -266,7 +256,7 @@ P.handlePacketAnchor = function (copy, items) {
 
 // #### Clone management
 // TODO - this functionality is currently disabled, need to enable it and make it work properly
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill management

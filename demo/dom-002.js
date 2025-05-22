@@ -4,7 +4,7 @@
 // [Run code](../../demo/dom-002.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -18,7 +18,10 @@ const name = (n) => `${namespace}-${n}`;
 
 // Give the stack element some depth
 stack.set({
-    perspectiveZ: 1200
+    perspectiveZ: 1200,
+    css: {
+        overflow: 'hidden',
+    },
 });
 
 
@@ -65,6 +68,7 @@ mimic.set({
     addOwnHandleToMimic: false,
     addOwnOffsetToMimic: true,
     addOwnRotationToMimic: false,
+    order: 1,
 });
 
 
@@ -73,6 +77,7 @@ const pivot = scrawl.findElement('mypivot');
 pivot.set({
     pivot: 'myelement',
     lockTo: 'pivot',
+    order: 1,
 });
 
 
@@ -129,7 +134,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Housekeeping - set the DOM input values to their starting values on each page reload
-initializeDomInputs([
+scrawl.initializeDomInputs([
     ['input', 'dims_widthPercent', '50'],
     ['input', 'dims_heightPercent', '50'],
     ['input', 'dims_widthAbsolute', '250'],

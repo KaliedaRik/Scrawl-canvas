@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-056.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -169,9 +169,9 @@ scrawl.makeDragZone({
 
 scrawl.addNativeListener(['input', 'change'], () => {
 
-    rotationValue = dom.rotation.value;
-    lengthValue = dom.length.value;
-    densityValue = dom.density.value;
+    rotationValue = parseFloat(dom.rotation.value);
+    lengthValue = parseFloat(dom.length.value);
+    densityValue = parseFloat(dom.density.value);
 
     pathrollValue = ('0' === dom.pathroll.value) ? false : true;
 
@@ -182,7 +182,7 @@ scrawl.addNativeListener(['input', 'change'], () => {
 
 
 // Setup form
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'rotation', '360'],
     ['input', 'length', '20'],
     ['input', 'density', '600'],

@@ -109,21 +109,21 @@ flower.set({
 // #### Scene animation
 
 // Updating the flower's DOM element's class attribute
+// + Using this as a test to make sure `.addClasses` can add more than one class
+// + Also testing to make sure `.removeClasses` removes all the classes in the string, whatever the order of the classes presented for removal
 const checkForFlowerClassUpdates = function () {
 
 /** @ts-expect-error */
     const current = hitgroup.getArtefactAt([flower.get('start')]).artefact;
 
-    // console.log(flower.get('start'), current)
-
     if (current && !currentClass) {
 
         currentClass = (current.name === 'leftbox') ? 'make_blue' : 'make_red';
-        flower.addClasses(currentClass);
+        flower.addClasses(`test_class ${currentClass}`);
     }
     else if (!current && currentClass) {
 
-        flower.removeClasses(currentClass);
+        flower.removeClasses(`rogue_class ${currentClass} test_class`);
         currentClass = '';
     }
 };
@@ -146,8 +146,7 @@ scrawl.makeRender({
     afterShow: report,
 
     // We need to finalize the stack's display after the first Display cycle completes
-    // + Tweaking the stack's `height` attribute should cascade through to its constituent elements, so that they can finalize their own dimensions and positioning (which in this case are both set relative to the stack's dimensions).
-    afterCreated: () => stack.set({height: 400}),
+    afterCreated: () => stack.reset(),
 });
 
 

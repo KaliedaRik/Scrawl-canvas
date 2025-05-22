@@ -24,7 +24,8 @@ const BUTT = 'butt',
     LINE_WIDTH = 'lineWidth',
     MITER = 'miter',
     STATE_LINE_KEYS = ['lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit'],
-    STATE_MAIN_KEYS = ['filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'shadowBlur', 'shadowOffsetX', 'shadowOffsetY'],
+    STATE_MAIN_KEYS = ['filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality'],
+    STATE_SHADOW_KEYS = ['shadowBlur', 'shadowOffsetX', 'shadowOffsetY'],
     STATE_STYLE_KEYS = ['fillStyle', 'shadowColor', 'strokeStyle'],
     T_STATE = 'State';
 
@@ -254,7 +255,7 @@ P.getChanges = function (ent, engineState) {
 
     if (ent.substring) ent = entity[ent];
 
-    // 'filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'shadowBlur', 'shadowOffsetX', 'shadowOffsetY'
+    // 'filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality'
     for (i = 0, iz = STATE_MAIN_KEYS.length; i < iz; i++) {
 
         k = STATE_MAIN_KEYS[i];
@@ -262,6 +263,27 @@ P.getChanges = function (ent, engineState) {
         current = getItem(engineState, k);
 
         if (current !== desired) result[k] = desired;
+    }
+
+    // 'shadowBlur', 'shadowOffsetX', 'shadowOffsetY'
+    for (i = 0, iz = STATE_SHADOW_KEYS.length; i < iz; i++) {
+
+        k = STATE_SHADOW_KEYS[i];
+        desired = getItem(this, k);
+        current = getItem(engineState, k);
+
+        if (ent.scaleShadow) {
+
+            scaled = (desired || 0) * (ent.scale || 1);
+
+            if (scaled !== current) result[k] = scaled;
+        }
+        else {
+
+            if (desired !== current) result[k] = desired;
+        }
+
+        // if (current !== desired) result[k] = desired;
     }
 
     // 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit'

@@ -5,11 +5,7 @@
 // + `scrawl.getCanvas` - locates a &lt;canvas> element in the DOM and creates a wrapper for it.
 // + `scrawl.addCanvas` - generates a new &lt;canvas> element, creates a wrapper for it, then adds it to the DOM.
 //
-// During initialization Scrawl-canvas will search the DOM tree and automatically create Canvas wrappers for all the &lt;canvas> elements it discovers. The first &lt;canvas> element discovered becomes the __current canvas__; all entitys created without a specified `group` attribute will be assigned to that element's wrapper's base Cell's Group object. We can change the current canvas by invoking the `scrawl.setCurrentCanvas` function.
-//
-// A canvas wrapper can include more than one Cell object. It will always include a base Cell object; additional Cells can be treated as ___cell layers___ and/or normal artefacts contributing to the final display.
-//
-// During their creation, Canvas wrappers will directly modify the DOM, adding &lt;div> and &lt;nav> elements to it. These new elements are used as _holds_ where the Canvas will store data and text, mainly to expose &lt;a> links and &lt;p> blocks which expose scene details to assistive technologies (accessibility). These additional elements have zero dimensions and should not affect the layout or painting of the rest of the web page.
+// During initialization Scrawl-canvas will search the DOM tree and automatically create Canvas wrappers for all the &lt;canvas> elements it discovers. During their creation, Canvas wrappers will directly modify the DOM, adding &lt;div> and &lt;nav> elements to it. These new elements are used as _holds_ where the Canvas will store data and text, mainly to expose &lt;a> links and &lt;p> blocks which expose scene details to assistive technologies (accessibility). These additional elements have zero dimensions and should not affect the layout or painting of the rest of the web page.
 //
 // Canvas wrapper objects use the __base__, __position__, __dom__ and __anchor__ mixins. Thus Canvas wrappers are also __artefact__ objects: if a &lt;canvas> element is a direct child of a Stack wrapper's element then it can be positioned, dimensioned and rotated like any other artefact.
 //
@@ -34,18 +30,21 @@ import { domShow } from '../core/document.js';
 
 import { rootElementsAdd, rootElementsRemove } from "../helper/document-root-elements.js";
 
-import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, generateUniqueString, isa_dom, mergeOver, pushUnique, removeItem, xt, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
-import { uiSubscribedElements } from '../core/user-interaction.js';
+import { getCanvasColorSpace, uiSubscribedElements } from '../core/user-interaction.js';
 
 import { makeState } from '../untracked-factory/state.js';
-import { getCanvasColorSpace, makeCell } from './cell.js';
+import { makeCell } from './cell.js';
 
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
+import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
+import anchorMix from '../mixin/anchor.js';
+import buttonMix from '../mixin/button.js';
 
 // Shared constants
 import { _2D, _computed, ABSOLUTE, ARIA_HIDDEN, ARIA_LIVE, CANVAS, DATA_TAB_ORDER, DATA_SCRAWL_GROUP, DISPLAY_P3, DIV, DOWN, ENTER, IMG, LEAVE, MOVE, NAME, NONE, PC100, PC50, POLITE, RELATIVE, ROLE, ROOT, SRGB, SUBSCRIBE, T_CANVAS, T_STACK, TRUE, UP, ZERO_STR } from '../helper/shared-vars.js';
@@ -84,6 +83,7 @@ const Canvas = function (items = Ωempty) {
     this.dirtyPerspective = true;
 
     this.initializeDomLayout(items);
+    this.modifyConstructorInputForAnchorButton(items);
 
     this.set(this.defs);
 
@@ -97,6 +97,7 @@ const Canvas = function (items = Ωempty) {
 
     this.currentActiveEntityNames = null;
     this.dirtyCss = true;
+    this.dirtyStampOrder = true;
     this.localMouseListener = null;
     this.mimic = null;
     this.pivot = null;
@@ -151,6 +152,14 @@ const Canvas = function (items = Ωempty) {
 
         this.cleanDimensions();
 
+        let willReadFrequently = ds.willReadFrequently;
+
+        if (willReadFrequently === "false") willReadFrequently = false;
+        else willReadFrequently = items.willReadFrequently;
+
+        if (willReadFrequently == null) willReadFrequently = true;
+        else willReadFrequently = !!willReadFrequently;
+
         // setup base cell
         const cellArgs = {
             name: `${this.name}_base`,
@@ -165,6 +174,7 @@ const Canvas = function (items = Ωempty) {
             controller: this,
             order: 10,
             canvasColorSpace: this.canvasColorSpace,
+            willReadFrequently,
         };
 
         if (ds.baseClearAlpha) cellArgs.clearAlpha = parseFloat(ds.baseClearAlpha);
@@ -247,7 +257,6 @@ const Canvas = function (items = Ωempty) {
     }
 
     this.dirtyCells = true;
-    this.apply();
 
     this.dirtyDomDimensions = true;
     if (items.setAsCurrentCanvas) this.setAsCurrentCanvas();
@@ -268,6 +277,9 @@ P.isAsset = false;
 baseMix(P);
 domMix(P);
 displayMix(P);
+hiddenElementsMix(P);
+anchorMix(P);
+buttonMix(P);
 
 
 // #### Canvas attributes
@@ -338,7 +350,7 @@ P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill functionality
@@ -566,6 +578,12 @@ P.getBaseHere = function () {
     return this.base.here;
 };
 
+P.reset = function () {
+
+    this.dirtyDimensions = true;
+    domShow(this.name);
+};
+
 // Internal function - passes the Canvas wrapper's current __here__ object and __fit__ attribute to the base Cell for further processing
 P.updateBaseHere = function () {
 
@@ -643,6 +661,12 @@ P.cleanDimensionsAdditionalActions = function () {
     this.dirtyDomDimensions = true;
     this.dirtyDisplayShape = true;
     this.dirtyDisplayArea = true;
+};
+
+// `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
+P.prepareStampAdditionalActions = function () {
+
+    this.prepareStampTabsHelper();
 };
 
 // `addCell` - add a Cell object to the wrapper's cells Array; argument can be the Cell's name-String, or the Cell object itself
@@ -1202,7 +1226,7 @@ export const addCanvas = function (items = Ωempty) {
         host = items.host,
         temphost;
 
-    if (host.substring) {
+    if (host && host.substring) {
 
         temphost = artefact[host];
 

@@ -1,5 +1,13 @@
 // # Demo DOM 008
 // 3d animated cube
+//
+// To note: this demo includes an edge case where each canvas has a shadow dot which will track the mouse cursor, but only while the cursor is moving and happens to be over the canvas. When the cursor is stationary the shadow dot will not move even though the canvas itself has rotated
+// + This is because each canvas is using a local `here` object, which better tracks mouse positions over the rotated canvas
+// + This *local here* is gets updated by an event listener attached to the canvas DOM element listening for mouse/pointer/touch movements over it
+// + An alternative to this approach is to use the regular `here` functionality to determine current mouse position and rotate the results (using quaternions) to match each canvas element's current 3d rotation, recalculating every time the mouse moves or the canvas rotates.
+// + (There may be alternative, better solutions but we can't think of any at the moment)
+// + The current solution is computationally cheap (the browser does it for us) but, in this particular edge case, unsatisfactory
+// + **Action:** we could do the work, but only if someone comes up with a compelling reason to do it! For now, mark as "won't fix"
 
 // [Run code](../../demo/dom-008.html)
 import * as scrawl from '../source/scrawl.js'
@@ -34,7 +42,7 @@ const faces = scrawl.makeGroup({
 stack.set({
     perspectiveX: '50%',
     perspectiveY: '50%',
-    perspectiveZ: 1200
+    perspectiveZ: 1000,
 });
 
 pin.set({
@@ -49,7 +57,7 @@ pin.set({
     delta: {
         pitch: 0.4,
         yaw: 0.8,
-        roll: 0.2
+        roll: 0.2,
     }
 });
 
@@ -60,17 +68,12 @@ faces.setArtefacts({
     // - so that they pick up changes to its positioning
     order: 2,
 
-    trackHere: 'local',
-
-    // Common dimensions; common start/handle values
-    width: 300,
-    height: 300,
-    baseMatchesCanvasDimensions: true,
     start: ['center', 'center'],
     handle: ['center', 'center'],
 
     // Offset each canvas from the pin
     offsetZ: 150,
+    trackHere: 'local',
 
     // Set each canvas to pivot to the pin
     lockTo: 'pivot',
@@ -80,9 +83,7 @@ faces.setArtefacts({
     addPivotRotation: true,
 
     // Styling common to all the canvas elements
-    css: {
-        backfaceVisibility: 'hidden',
-    },
+    css: { backfaceVisibility: 'hidden' },
 });
 
 // Give each canvas its initial rotation
@@ -100,9 +101,9 @@ scrawl.makeGradient({
     endX: '100%',
     endY: '100%',
     colors: [
-        [0, '#fff'],
+        [0, '#f88'],
         [499, '#f00'],
-        [999, '#000'],
+        [999, '#800'],
     ],
     colorSpace: 'OKLAB',
 
@@ -110,45 +111,45 @@ scrawl.makeGradient({
 
     name: name('green-gradient'),
     colors: [
-        [0, '#fff'],
+        [0, '#8f8'],
         [499, '#0f0'],
-        [999, '#000'],
+        [999, '#080'],
     ]
 
 }).clone({
 
     name: name('blue-gradient'),
     colors: [
-        [0, '#fff'],
-        [499, '#00f'],
-        [999, '#000'],
+        [0, '#aaf'],
+        [499, '#66f'],
+        [999, '#66a'],
     ]
 
 }).clone({
 
     name: name('yellow-gradient'),
     colors: [
-        [0, '#fff'],
+        [0, '#ff8'],
         [499, '#ff0'],
-        [999, '#000'],
+        [999, '#880'],
     ]
 
 }).clone({
 
     name: name('magenta-gradient'),
     colors: [
-        [0, '#fff'],
+        [0, '#f8f'],
         [499, '#f0f'],
-        [999, '#000'],
+        [999, '#808'],
     ]
 
 }).clone({
 
     name: name('cyan-gradient'),
     colors: [
-        [0, '#fff'],
+        [0, '#8ff'],
         [499, '#0ff'],
-        [999, '#000'],
+        [999, '#088'],
     ]
 });
 
@@ -173,28 +174,62 @@ scrawl.makeBlock({
     name: name('bottomface-block'),
     group: bottom.get('baseGroup'),
     fillStyle: name('yellow-gradient'),
-    roll: -90,
 
 }).clone({
 
     name: name('rightface-block'),
     group: right.get('baseGroup'),
     fillStyle: name('magenta-gradient'),
-    roll: 90,
 
 }).clone({
 
     name: name('frontface-block'),
     group: front.get('baseGroup'),
     fillStyle: name('cyan-gradient'),
-    roll: 0,
 
 }).clone({
 
     name: name('backface-block'),
     group: back.get('baseGroup'),
     fillStyle: name('blue-gradient'),
-    roll: -90,
+});
+
+// Display a translucent dot on each canvas, pivoted to the mouse
+scrawl.makeWheel({
+
+    name: name('topface-dot'),
+    group: top.get('baseGroup'),
+    radius: '20%',
+    handle: ['center', 'center'],
+    lockTo: 'mouse',
+    fillStyle: 'rgba(127 127 127 / 0.4)',
+    strokeStyle: 'rgba(127 127 127 / 0.8)',
+    method: 'fillThenDraw',
+
+}).clone({
+
+    name: name('leftface-dot'),
+    group: left.get('baseGroup'),
+
+}).clone({
+
+    name: name('bottomface-dot'),
+    group: bottom.get('baseGroup'),
+
+}).clone({
+
+    name: name('rightface-dot'),
+    group: right.get('baseGroup'),
+
+}).clone({
+
+    name: name('frontface-dot'),
+    group: front.get('baseGroup'),
+
+}).clone({
+
+    name: name('backface-dot'),
+    group: back.get('baseGroup'),
 });
 
 // Add a label to each canvas using a Label entity

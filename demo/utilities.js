@@ -3,21 +3,20 @@ const reportSpeed = function (output = '', xtra = () => '') {
 
     if (!output) return function () {};
 
-        const testMessage = document.querySelector(output),
-            history = []
+    const testMessage = document.querySelector(output),
+        history = []
 
-        let testTicker = Date.now(),
-            testTime, testNow,
-            averageTime = 0;
+    let testTicker = Date.now(),
+        testTime, testNow,
+        averageTime = 0;
 
-        const addTime = (t) => {
+    const addTime = (t) => {
 
-            if (history.length > 60) history.shift();
-            history.push(t);
-            averageTime = history.reduce((p, c) => p + c, 0);
-            averageTime /= history.length;
-        }
-
+        if (history.length > 60) history.shift();
+        history.push(t);
+        averageTime = history.reduce((p, c) => p + c, 0);
+        averageTime /= history.length;
+    }
 
     return function () {
 
@@ -147,6 +146,7 @@ const killArtefact = (scrawl, canvas, name, time, finishResurrection = () => {})
         removed from group.artefactCalculateBuckets: ${checkGroupBucket(name, groupname)}`);
 
             packet = L.artefact[name].saveAsPacket();
+            console.log(packet);
 
             L.artefact[name].kill();
 
@@ -198,6 +198,7 @@ const killStyle = (scrawl, canvas, name, time, finishResurrection = () => {}) =>
         removed from stylesnames: ${(L.stylesnames.indexOf(name) >= 0) ? 'no' : 'yes'}`);
 
             packet = L.styles[name].saveAsPacket();
+            console.log(packet);
 
             L.styles[name].kill();
 
@@ -251,6 +252,7 @@ const killArtefactAndAnchor = (scrawl, canvas, name, anchorname, time, finishRes
     anchor removed: ${(L.anchor[anchorname]) ? 'no' : 'yes'}`);
 
         packet = L.artefact[name].saveAsPacket();
+        console.log(packet);
 
         L.artefact[name].kill();
 
@@ -320,6 +322,7 @@ const killPolylineArtefact = (scrawl, canvas, name, time, myline, restore = () =
     removed from group.artefactCalculateBuckets: ${checkGroupBucket(name, groupname)}`);
 
         packet = L.artefact[name].saveAsPacket();
+        console.log(packet);
 
         L.artefact[name].kill();
 
@@ -368,6 +371,7 @@ const killTicker = (scrawl, stack, name, time) => {
     removed from tickers: ${(L.animationtickers[name]) ? 'no' : 'yes'}`);
 
         packet = L.animationtickers[name].saveAsPacket();
+        console.log(packet);
 
         L.animationtickers[name].kill();
 
@@ -504,7 +508,7 @@ const addImageDragAndDrop = (scrawl, canvas, selector, targets, callback = () =>
                                 copyHeight: dim,
                             });
                         }
-                        else {
+                        else if (target.type !== 'Filter') {
 
                             target.set({
                                 copyStartX,
@@ -558,95 +562,6 @@ const addCheckerboardBackground = (scrawl, canvas, namespace) => {
     });
 };
 
-
-const initializeDomInputs = (items) => {
-
-    const results = {};
-
-    items.forEach(item => {
-
-        const [type, selector, value] = item;
-
-        switch (type) {
-
-            case 'input' : {
-
-                if (value.substring) {
-
-                    /** @type {HTMLInputElement} */
-                    const S = document.querySelector(`#${selector}`);
-
-                    if (S) {
-
-                        S.value = value;
-                        results[selector] = S;
-                    }
-                    else results[selector] = {};
-                }
-                else results[selector] = {};
-                break;
-            }
-
-            case 'select' : {
-
-                if (value.toFixed) {
-
-                    /** @type {HTMLSelectElement} */
-                    const S = document.querySelector(`#${selector}`);
-
-                    if (S) {
-
-                        S.options.selectedIndex = value;
-                        results[selector] = S;
-                    }
-                    else results[selector] = {};
-                }
-                else results[selector] = {};
-                break;
-            }
-
-            case 'button' : {
-
-                if (value.substring) {
-
-                    /** @type {HTMLButtonElement} */
-                    const S = document.querySelector(`#${selector}`);
-
-                    if (S) {
-
-                        S.textContent = value;
-                        results[selector] = S;
-                    }
-                    else results[selector] = {};
-                }
-                else results[selector] = {};
-                break;
-            }
-
-            case 'element' : {
-
-                /** @type {HTMLElement} */
-                const S = document.querySelector(`${selector}`);
-
-                if (S) results[selector] = S;
-                else results[selector] = {};
-                break;
-            }
-
-            default : {
-
-                /** @type {HTMLElement} */
-                const S = document.querySelector(`#${selector}`);
-
-                if (S) results[selector] = S;
-                else results[selector] = {};
-            }
-        }
-    });
-
-    return results;
-}
-
 export {
     reportSpeed,
     reportFullLibrary,
@@ -659,6 +574,4 @@ export {
 
     addCheckerboardBackground,
     addImageDragAndDrop,
-
-    initializeDomInputs,
 }

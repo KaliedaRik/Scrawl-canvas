@@ -346,7 +346,7 @@ const animateGradients = function () {
 
         if (typeof dragging !== 'boolean' && dragging) {
 
-            if (dragging.artefact && dragging.artefact.name === name('animated-block')) tweeny.run();
+            if (dragging.artefact.name === name('animated-block')) tweeny.run();
         }
     }
 };
@@ -358,8 +358,7 @@ scrawl.makeRender({
     name: name('animation'),
     target: canvas,
 
-    // Gradient animation is not automatically handled by the Display cycle
-    // - instead we have to trigger it manually
+    // We're animating the 'pipes' gradient by means of a tween. This checks to see if we have to invoke that tween as a result of user interaction
     commence: animateGradients,
 
     // We have to tell the canvas to check UI for hovering states every Display cycle

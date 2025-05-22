@@ -4,7 +4,7 @@
 // [Run code](../../demo/particles-007.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -133,7 +133,7 @@ scrawl.makeForce({
 
             const mag = v.getMagnitude();
 
-            if (mag < 100) load.vectorAdd(v);
+            if (mag < 200) load.vectorAdd(v);
 
             scrawl.releaseVector(v);
         }
@@ -146,7 +146,7 @@ const myEmitter = scrawl.makeEmitter({
     name: name('field-emitter'),
     world: myWorld,
 
-    generationRate: 100,
+    generationRate: 1000,
     particleCount: 50,
 
     generateInArea: name('field-block'),
@@ -223,7 +223,7 @@ scrawl.addNativeListener('touchmove', (e) => {
 
 
 // Setup form observer functionality
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'particleCount', '50'],
     ['input', 'brownianIntensity', '2'],
     ['select', 'filter', 0],

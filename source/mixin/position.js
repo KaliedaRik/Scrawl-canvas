@@ -1,11 +1,6 @@
 // # Position mixin
-// This mixin defines the key attributes and functionality of Scrawl-canvas __artefact objects__.
-//
-// We define an artefact as something that can be displayed in a Scrawl-canvas [Canvas](../factory/stack.html) or [Stack](../factory/stack.html) wrapper - both of which wrap DOM elements in the web page document - &lt;canvas>, and other DOM elements (most commonly a &lt;div> element), respectively.
-// + We call canvas based artefacts __entity objects__ - these objects represent a shape, path or image drawn in the canvas.
-// + Entitys include: [Block](../factory/block.html); [Grid](../factory/grid.html); [Loom](../factory/loom.html); [Label](../factory/label.html) for text; [Picture](../factory/picture.html) for images, videos, etc; [Shape](../factory/shape.html)s of various types; [Wheel](../factory/wheel.html), etc.
-// + __Other artefacts__ live in stack containers. They include nested Stack wrappers, Canvas wrappers (which can exist outside of a stack); and [Element](../factory/element.html) wrappers for other direct child elements.
-//
+// This mixin defines the key attributes and functionality of Scrawl-canvas __artefact__ and __entity__ objects.
+
 // ##### Positioning
 // Artefacts break away from the normal flow mechanisms of the HTML document; instead they are explicitly positioned within their containers in a variety of ways:
 // + __absolute__ positioning - where we give the artefact a coordinate, measured in pixels from the top left corner of the container (`[0, 0]`, `[347, 26.4]`, etc).
@@ -135,7 +130,7 @@ import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../untrack
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 // Shared constants
-import { _isArray, _isFinite, _keys, _parse, _values, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, LEFT, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, T_ENHANCED_LABEL, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _parse, _values, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, LEFT, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, T_ENHANCED_LABEL, T_CELL, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const ALL = 'all',
@@ -655,6 +650,23 @@ export default function (P = Ωempty) {
 
         this.calculateOrder = val;
         this.stampOrder = val;
+
+        const g = this.group;
+        if (g && g.type === T_GROUP) g.batchResort = true;
+    };
+    S.calculateOrder = function (val) {
+
+        this.calculateOrder = val;
+
+        const g = this.group;
+        if (g && g.type === T_GROUP) g.batchResort = true;
+    };
+    S.stampOrder = function (val) {
+
+        this.stampOrder = val;
+
+        const g = this.group;
+        if (g && g.type === T_GROUP) g.batchResort = true;
     };
 
 // __particle__
@@ -766,6 +778,13 @@ export default function (P = Ωempty) {
             if (item.substring) {
 
                 const val = group[item];
+
+                if (val) this.group = val;
+                else this.group = item;
+            }
+            else if (item.type === T_CELL) {
+
+                const val = group[item.name];
 
                 if (val) this.group = val;
                 else this.group = item;
@@ -1372,9 +1391,6 @@ export default function (P = Ωempty) {
                 ignoreDragForY,
                 isBeingDragged,
                 lockTo,
-                mimic,
-                path,
-                pivot,
                 pivotCorner,
                 pivotPin,
                 pivotIndex,
@@ -1382,8 +1398,31 @@ export default function (P = Ωempty) {
                 useMimicStart,
             } = this;
 
+            let { mimic, path, pivot } = this;
+
             let physParticle = this.particle,
                 textIndex;
+
+            // To help fix the bug where user has pivoted to an artefact which they have not yet defined
+            if (pivot && pivot.substring) {
+
+                this.set({ pivot });
+                pivot = this.pivot;
+            }
+
+            // To help fix the bug where user has mimicked to an artefact which they have not yet defined
+            if (mimic && mimic.substring) {
+
+                this.set({ mimic });
+                mimic = this.mimic;
+            }
+
+            // To help fix the bug where user has pathed to an artefact which they have not yet defined
+            if (path && path.substring) {
+
+                this.set({ path });
+                path = this.path;
+            }
 
             const confirmLock = function (lock) {
 
@@ -1710,6 +1749,8 @@ export default function (P = Ωempty) {
             if (bringToFrontOnDrag) {
 
                 this.stampOrder += 9999;
+                if (xt(this.dirtyStampOrder)) this.dirtyStampOrder = true;
+
                 group.batchResort = true;
             }
 
@@ -1759,10 +1800,10 @@ export default function (P = Ωempty) {
             this.stampOrder -= 9999;
 
             if (this.stampOrder < 0) this.stampOrder = 0;
+            if (xt(this.dirtyStampOrder)) this.dirtyStampOrder = true;
 
             group.batchResort = true;
         }
-
 
         if (xt(this.dirtyPathObject)) this.dirtyPathObject = true;
 

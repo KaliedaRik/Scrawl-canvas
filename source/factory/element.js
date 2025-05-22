@@ -1,25 +1,7 @@
 // # Element factory
 // The Scrawl-canvas Stack/Element system is an attempt to supplement DOM elements with Scrawl-canvas entity [positioning and dimensioning](../mixin/position.html) functionality.
-// + [Entitys](../mixin/entity.html) exist in a [Cell](./cell.html) environment
-// + They can position themselves within that Cell either __absolutely__ (px coordinates), or __relatively__ (% coordinates, with values relative to the Cell's dimensions), or __by reference__ (using other entity's coordinates to calculate their own coordinates - `pivot`, `mimic`, `path`)
-// + They can also base their dimensions on absolute (px) or relative (%) values
-// + They can be __animated__ directly (`set`, `deltaSet`), or through automation (`delta` object), or through the Scrawl-canvas `tween` functionality
-// + They can be stored and retrieved ('packet' functionality), cloned ('clone', based on packets) and killed ('kill' functions)
 //
-// __A [Stack](./stack.html) is a wrapper object around a DOM element__, whose direct children are given Scrawl-canvas Element wrappers:
-// ```
-// Stack    ~~> Canvas/Cell
-// Element  ~~> Entity (eg Block)
-// ```
-// During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a `data-scrawl-stack` attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas> elements). As part of this work, Scrawl-canvas will modify the affected elements' `position` CSS style:
-// + Stack elements have `relative` positioning within the DOM
-// + Element elements have `absolute` positioning within the Stack
-//
-// The `makeElement` function is not exported by the scrawl object. To create a new Element within a Stack, use `mystack.addNewElement({})`.
-//
-// Element wrapper objects use the __base__, __position__, __anchor__ and __dom__ mixins. Thus Element wrappers are also __artefact__ objects. As such, Elements can be used (almost) like any other artefact; in particular, other artefacts - including any canvas-based entity - can use Elements as their pivot or mimic targets.
-//
-// Element wrappers are included in the Scrawl-canvas packet system; they can be saved and cloned. Killing an Element wrapper will remove its DOM element from the document.
+// During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a `data-scrawl-stack` attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas> elements).
 
 
 // #### Imports
@@ -35,7 +17,7 @@ import baseMix from '../mixin/base.js';
 import domMix from '../mixin/dom.js';
 
 // Shared constants
-import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, MIMIC } from '../helper/shared-vars.js';
+import { ABSOLUTE, CANVAS, CORNER_SELECTOR, ELEMENT, FORBIDDEN_ELEMENTS, MIMIC } from '../helper/shared-vars.js';
 
 // Local constants
 const T_ELEMENT = 'Element';
@@ -46,46 +28,51 @@ const Element = function (items = Ωempty) {
 
     const el = items.domElement;
 
-    this.makeName(items.name);
-    this.register();
+    // Restrict what can become an Element
+    // + The last check is to exclude Web Components
+    if (el && !FORBIDDEN_ELEMENTS.includes(el.tagName) && !el.tagName.includes('-')) {
 
-    if (el) {
+        this.makeName(items.name);
+        this.register();
 
-        // Scrawl-canvas does not retain an Element's textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes `text` (for textContent, which automatically escapes all HTML-related tags and entities) and `content` (which should respect HTML tags and entities)
-        if (items.text) el.textContent = items.text;
-        else if (items.content) el.innerHTML = items.content;
+        if (el) {
+
+            // Scrawl-canvas does not retain an Element's textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes `text` (for textContent, which automatically escapes all HTML-related tags and entities) and `content` (which should respect HTML tags and entities)
+            if (items.text) el.textContent = items.text;
+            else if (items.content) el.innerHTML = items.content;
+        }
+
+        this.initializePositions();
+        this.dimensions[0] = this.dimensions[1] = 100;
+
+        this.pathCorners = [];
+        this.css = {};
+        this.here = {};
+
+        this.initializeDomLayout(items);
+
+        this.set(this.defs);
+
+        this.initializeAccessibility();
+
+        this.mimic = null;
+        this.pivot = null;
+        this.dirtyContent = true;
+        this.dirtyCss = true;
+        this.dirtyStampOrder = true;
+        this.localMouseListener = null;
+        this.canvas = null;
+        this.elementComputedStyles = null;
+
+        this.set(items);
+
+        const myEl = this.domElement;
+
+        if (myEl) myEl.id = this.name;
+
+        return this;
     }
-
-    this.initializePositions();
-    this.dimensions[0] = this.dimensions[1] = 100;
-
-    this.pathCorners = [];
-    this.css = {};
-    this.here = {};
-
-    this.initializeDomLayout(items);
-
-    this.set(this.defs);
-
-    this.initializeAccessibility();
-
-    this.mimic = null;
-    this.pivot = null;
-    this.dirtyContent = true;
-    this.dirtyCss = true;
-    this.localMouseListener = null;
-    this.canvas = null;
-    this.elementComputedStyles = null;
-
-    this.set(items);
-
-    const myEl = this.domElement;
-
-    if (myEl) myEl.id = this.name;
-
-    this.apply();
-
-    return this;
+    return null;
 };
 
 
@@ -115,11 +102,11 @@ domMix(P);
 
 
 // #### Kill management
-P.factoryKill = function () {
+P.factoryKill = function (removeElement = true) {
 
     removeItem(uiSubscribedElements, this.name);
 
-    this.domElement.remove();
+    if (removeElement) this.domElement.remove();
 };
 
 

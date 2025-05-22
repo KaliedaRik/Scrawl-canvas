@@ -1,30 +1,5 @@
 // # Tween factory
 // A ___tween___ - _inbetween animation_ - is a small, targeted, time-limited animation where we define the start and end points (_key frames_) of the animation, and a method for calculating the intermediate values between the two (_interpolation_, using an _easing_ function).
-//
-// Scrawl-canvas includes a full range of functionality to implement tweening. Any Scrawl-canvas object that includes a `set` function, which accepts a `{key:value}` object as its single argument, can be tweened.
-// + Tween animations are defined by creating a Tween object using the `makeTween` factory function.
-// + Each Tween object includes a `targets` Array - one Tween may animate many objects.
-// + Each Tween also includes a `definitions` Array which sets out the details of the animation to be performed.
-// + The `definitions` Array can include multiple objects, each defining a change to a specific attribute that needs to be applied to the target objects.
-// + __Any number-type attribute can be animated using a Tween__ - this includes integer and float Numbers, percentage Strings (`12.5%`) and measurement Strings (`20px`).
-// + We can run multiple Tween animations at the same time; Tweens can overlap (start one tween while another is running).
-// + We can dynamically halt, resume, restart and terminate Tweens in response to user interactions.
-// + Tweens include `packet` functionality: they can be saved, and cloned.
-//
-// Scrawl-canvas separates the timing aspects of its Tweens from their definitions.
-// + Tweens run against a ___timeline___ object called a [Ticker](./ticker.html).
-// + When we define a Tween, we can either assign it to an existing Ticker, or get the Tween factory to create a new Ticker for it.
-// + Tickers can also have [Action](./action.html) objects assigned to them, allowing us to trigger functions at specific points along the timeline.
-
-// ##### Using other tween factories
-// We don't recommend using other tween factories - such as [Greensock](https://greensock.com/) - with Scrawl-canvas objects at this time.
-// + The reason is simple. All updates to Scrawl-canvas objects should be made through their dedicated `set`, `setDelta` and related functions, which take a single Javascript object as their argument.
-// + When attributes are updated in this way, Scrawl-canvas makes sure various `dirty` flags get set (among other work), so the object can update itself appropriately at the most convenient time for itself.
-// + Libraries like GSAP works by directly updating object attributes, which misses out the necessary work of setting the appropriate `dirty` flags - thus the object will not know that it needs to do work.
-// + ___This does not mean you can't use other tween libraries in your web page___ - just be aware of the limitations of trying to use them with Scrawl-canvas objects!
-
-
-// TODO: basic packet and kill functionality tested in Demo DOM-004, but there's a lot of Ticker/Tween/Action functionality that needs to be explored and tested further (see [Ticker TODO section](./ticker.html#section-2) for issues and suggested work).
 
 
 // #### Imports
@@ -38,26 +13,51 @@ import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
 // Shared constants
-import { _isArray, _keys, _round, FUNCTION, LINEAR, NAME, PC, T_GROUP, T_TWEEN, TWEEN, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _keys, _round, FUNCTION, LINEAR, NAME, PC, T_GROUP, T_TICKER, T_TWEEN, TWEEN, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
-// Local constants (none defined)
+// Set objects - used by tweens as the argument for `target.set`, `target.setArtefact` invocations
+// + Using an informal cache to cut down on the number of objects created for heavily tweened scenes
+const setObjectsHold = {};
+
+const getSetObjectKey = (defs) => {
+
+    let response = '';
+
+    defs.forEach(d => response += d.attribute);
+
+    return response;
+};
+
+const getSetObject = (key) => {
+
+    if (setObjectsHold[key]) return setObjectsHold[key];
+
+    if (key.substring) {
+
+        setObjectsHold[key] = {};
+        return setObjectsHold[key];
+    }
+    return {};
+};
 
 
 // #### Tween constructor
 const Tween = function (items = Ωempty) {
 
-    let tn;
-
     this.makeName(items.name);
     this.register();
 
+    this.targets = [];
+    this.definitions = [];
+
     this.set(this.defs);
 
-    this.setObj = null;
+    const t = items.ticker;
+    if (t && !t.substring && t.name && t.type === T_TICKER) items.ticker = t.name;
 
     this.set(items);
 
-    this.setDefinitionsValues();
+    this.setObj = getSetObjectKey(this.definitions);
 
     // `status` magic numbers: `-1` = "before"; `0` = "running"; `1` = "after".
     this.status = -1;
@@ -69,14 +69,13 @@ const Tween = function (items = Ωempty) {
     if (animationtickers[items.ticker]) this.addToTicker(items.ticker);
     else {
 
-        tn = `${this.name}_ticker`;
+        const tn = `${this.name}_ticker`;
 
         makeTicker({
             name: tn,
             order: this.order,
             subscribers: this.name,
             duration: this.effectiveDuration,
-            eventChoke: xtGet(items.eventChoke, 0),
             cycles: xtGet(items.cycles, 1),
             killOnComplete: xtGet(items.killOnComplete, false),
             observer: items.observer,
@@ -105,18 +104,6 @@ tweenMix(P);
 
 // #### Tween attributes
 const defaultAttributes = {
-
-// __definitions__ - Array of objects defining the animations to be performed by the Tween. Object attributes include:
-// + __attribute__ (required) - String attribute key.
-// + __start__ - Number or String value for this attribute's start point.
-// + __end__ - Number or String value for this attribute's end point.
-// + __integer__ - Boolean flag indicating whether we should force results to be integers (default: false)
-// + __engine__ - String name for the easing function ___engine___ to be used to animate this change; or an easing function supplied by the developer.
-//
-// Scrawl-canvas includes functionality to allow `start` and `end` values to be defined as Strings, with a measurement suffix (`%`, `px`, etc) attached to the number.
-// + These values should be of a type that the target object (generally an artefact) expects to receive in its `set` function.
-// + Any object with a `set` function that takes an object as its argument can be tweened.
-    definitions: null,
 
 // __duration__ - can accept a variety of values:
 // + Number, representing milliseconds.
@@ -152,8 +139,18 @@ const defaultAttributes = {
 
 // The following [Ticker](./ticker.html)-related attributes are not stored in the Tween object:
 // + __cycles__ - positive integer Number representing the number of cycles the Ticker will undertake before it completes.
-// + __eventChoke__ Number representing minimum number of milliseconds between Ticker event emissions
 // + __observer__ - String name of a RenderAnimation object, or the object itself - halt/resume the ticker based on the running state of the animation object
+
+// __definitions__ - Array of objects defining the animations to be performed by the Tween. Object attributes include:
+// + __attribute__ (required) - String attribute key.
+// + __start__ - Number or String value for this attribute's start point.
+// + __end__ - Number or String value for this attribute's end point.
+// + __integer__ - Boolean flag indicating whether we should force results to be integers (default: false)
+// + __engine__ - String name for the easing function ___engine___ to be used to animate this change; or an easing function supplied by the developer.
+//
+// Scrawl-canvas includes functionality to allow `start` and `end` values to be defined as Strings, with a measurement suffix (`%`, `px`, etc) attached to the number.
+// + These values should be of a type that the target object (generally an artefact) expects to receive in its `set` function.
+// + Any object with a `set` function that takes an object as its argument can be tweened.
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -164,40 +161,37 @@ P.packetFunctions = pushUnique(P.packetFunctions, ['commenceAction', 'completeAc
 
 P.finalizePacketOut = function (copy) {
 
-    if (_isArray(this.targets)) copy.targets = this.targets.map(t => t.name);
+    copy.targets = this.targets.map(t => t.name);
 
-    if (_isArray(this.definitions)) {
+    copy.definitions = this.definitions.map(d => {
 
-        copy.definitions = this.definitions.map(d => {
+        const res = {};
+        res.attribute = d.attribute;
+        res.start = d.start;
+        res.end = d.end;
 
-            const res = {};
-            res.attribute = d.attribute;
-            res.start = d.start;
-            res.end = d.end;
+        if (d.engine && d.engine.substring) res.engine = d.engine.substring;
+        else {
 
-            if (d.engine && d.engine.substring) res.engine = d.engine.substring;
-            else {
+            if (xt(d.engine) && d.engine != null) {
 
-                if (xt(d.engine) && d.engine != null) {
+                const e = this.stringifyFunction(d.engine);
 
-                    const e = this.stringifyFunction(d.engine);
+                if (e) {
 
-                    if (e) {
-
-                        res.engine = e;
-                        res.engineIsFunction = true;
-                    }
+                    res.engine = e;
+                    res.engineIsFunction = true;
                 }
             }
-            return res;
-        });
-    }
+        }
+        return res;
+    });
     return copy;
 };
 
 
 // #### Clone management
-// When cloning a ticker, we can use an additional attribute in the clone function's argument object:
+// When cloning a tween, we can use an additional attribute in the clone function's argument object:
 // + __useNewTicker__ - Boolean flag - when set, the clone will also create its own Ticker object
 P.postCloneAction = function(clone, items) {
 
@@ -245,13 +239,12 @@ const G = P.getters,
 // __definitions__
 G.definitions = function() {
 
-    return [].concat(this.definitions);
+    return [...this.definitions];
 };
 
 S.definitions = function (item) {
 
-    this.definitions = [].concat(item);
-    this.setDefinitionsValues();
+    if (item) this.setDefinitions(item);
 };
 
 // __commenceAction__
@@ -274,6 +267,9 @@ S.completeAction = function (item) {
 // + updating the Tween's Ticker object happens here
 // + recalculating effectiveDuration happens here if the __time__ or __duration__ values change
 P.set = function (items = Ωempty) {
+
+    const t = items.ticker;
+    if (t && !t.substring && t.name && t.type === T_TICKER) items.ticker = t.name;
 
     const setters = this.setters,
         keys = _keys(items),
@@ -422,48 +418,38 @@ P.doSimpleUpdate = function (items = Ωempty) {
         definitions = this.definitions,
         targets = this.targets,
         action = this.action,
+        setObj = getSetObject(this.setObj);
 
-        // We store the `setObj` object as an attribute on the Tween object for convenience, and to cut down on the number of objects created during the lifetime of the Tween.
-        setObj = this.setObj || {};
-
-    let def, engine, val, effectiveStart, effectiveChange, int, suffix, attribute,
-        i, iz, j, jz, progress;
+    let progress;
 
     const effectiveTick = (this.reversed) ? items.reverseTick - starts : items.tick - starts;
 
     if (effectiveDuration && !status) progress = effectiveTick / effectiveDuration;
     else progress = (status > 0) ? 1 : 0;
 
-    for (i = 0, iz = definitions.length; i < iz; i++) {
+    for (let i = 0, iz = definitions.length, val, def, engine; i < iz; i++) {
 
         def = definitions[i];
         engine = def.engine;
-        effectiveStart = def.effectiveStart;
-        effectiveChange = def.effectiveChange;
-        int = def.integer;
-        suffix = def.suffix;
-        attribute = def.attribute;
 
         // Invoke the appropriate easing function for this particular definition object
-        if (engine.substring) val = actions(engine, effectiveStart, effectiveChange, progress);
-        else val = engine(effectiveStart, effectiveChange, progress);
+        if (engine.substring) val = actions(engine, def.effectiveStart, def.effectiveChange, progress);
+        else val = engine(def.effectiveStart, def.effectiveChange, progress);
 
-        if (int) val = _round(val);
+        if (def.integer) val = _round(val);
 
-        if (suffix) val += suffix;
+        if (def.suffix) val += def.suffix;
 
-        setObj[attribute] = val;
+        setObj[def.attribute] = val;
     }
 
-    for (j = 0, jz = targets.length; j < jz; j++) {
+    for (let j = 0, jz = targets.length, t; j < jz; j++) {
 
-        const t = targets[j];
+        t = targets[j];
 
         if (T_GROUP === t.type) t.setArtefacts(setObj);
         else t.set(setObj);
     }
-
-    this.setObj = setObj;
 
     // We call the `action` attribute function (if it is defined) at the completion of every update.
     if (action) action();
@@ -483,6 +469,22 @@ P.engineActions = function(engine, start, change, position) {
 
     const e = (null != easeEngines[engine]) ? engine : LINEAR;
     return start + (change * easeEngines[e](position));
+};
+
+// `setDefinitions`, `clearDefinitions`
+P.setDefinitions = function (...args) {
+
+    this.definitions.length = 0;
+    this.definitions.push(...args.flat(Infinity));
+    this.setObj = getSetObjectKey(this.definitions);
+
+    this.setDefinitionsValues();
+};
+
+P.clearDefinitions = function () {
+
+    this.definitions.length = 0;
+    this.setObj = getSetObjectKey(this.definitions);
 };
 
 // `setDefinitionsValues` - convert `start` and `end` values into float Numbers.

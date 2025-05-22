@@ -1,12 +1,5 @@
 // # RadialGradient factory
 // Scrawl-canvas RadialGradient objects implement the Canvas API's [createRadialGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createRadialGradient) method. The resulting [CanvasGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) object can be used by any Scrawl-canvas entity as its `fillStyle` or `strokeStyle`.
-// + Most gradient-related functionality has been coded up in the [styles mixin](../mixin/styles.html), and is documented there.
-// + RadialGradients fully participate in the Scrawl-canvas packet system, thus can be saved, restored, cloned, killed, etc.
-// + RadialGradients can be animated in a variety of ways; the can act as target objects for Scrawl-canvas Tweens.
-//
-// RadialGradients can be applied to an entity in two different ways, depending on the entity's `lockFillStyleToEntity` and `lockStrokeStyleToEntity` attribute flags:
-// + __Cell-locked__ RadialGradients will cover the entire Cell; an entity moved from one part of the display to another will show different parts of the gradient
-// + __Entity-locked__ RadialGradients display their entire color range on the entity, move with the entity and even rotate with the entity.
 
 
 // #### Imports

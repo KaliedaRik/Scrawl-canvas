@@ -54,6 +54,7 @@
     width="600" 
     height="400"
     data-scrawl-canvas
+    data-will-read-frequently="false"
   >
     <div class="assets" aria-hidden="true">
       <img src="img/brick.png" id="brick" class="mypatterns" />
@@ -112,7 +113,15 @@
       <li>Kill and resurrect a Pattern style to make sure it removes itself entirely from the Scrawl-canvas system, and cleanly recreate itself from saved packet</li>
     </ul>
 
-    <p><b>To note:</b> (fixed in latest Chrome - July 24?) this test runs very slowly on Chrome-based browsers, but as expected on Firefox/Safari. The issue is entirely around the canvas context drawImage() function. One possibility is that in Chrome, if the source and destination canvas/contexts are of different sizes such that one gets stored in in CPU and the other in GPU, then the speed of the drawImage copy gets badly degraded. Chrome appears to use drawImage() internally to create patterns, which can lead to painfully slow render speeds.</p>
+    <p><b>To note:</b> There is a curious interplay in Chrome browsers between assets, shadows and the &lt;canvas> element's context engine's "willReadFrequently" attribute. Very occasionally this interplay will combine to kill the performance of a canvas - as happens in this demo:</p>
+    <ul>
+      <li>Shadows: enabled; willReadFrequently: true - performance: &lt; 2fps</li>
+      <li>Shadows: disabled; willReadFrequently: true - performance: &gt; 60fps</li>
+      <li>Shadows: enabled; willReadFrequently: false - performance: &gt; 60fps</li>
+      <li>Shadows: disabled; willReadFrequently: false - performance: &gt; 60fps</li>
+    </ul>
+
+    <p>By default, SC sets "willReadFrequently" to true for all canvas context engines. For &lt;canvas> elements demonstrating bad performance (in Chrome) this can be disabled by including <code style="display: inline-block; background-color: #ddd;">data-will-read-frequently="false"</code> in the element's markup. If setting this attribute on a canvas, additional testing will be required in non-Chrome browsers to make sure performance is not degraded in those environments.</p>
 
     <p><b>Touch test:</b> should work as expected - but dragging a finger from one block to another may lead to web page navigation being blocked by browser</p>
 

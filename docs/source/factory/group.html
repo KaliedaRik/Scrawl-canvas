@@ -575,7 +575,6 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="group-factory">Group factory</h1>
-<p>Scrawl-canvas uses Group objects to gather together artefact objects (Block, Canvas, Element, Grid, Loom, Label, Picture, Shape, Stack, Wheel, etc) for common functions.</p>
 <p>Groups connect artefacts with controller objects - Stack, Cell - through which the Display cycle can cascade. Each controller object can have more than one Group associated with it. Only Groups whose <strong>visibility</strong> flag has been set to true will propagate the Display cycle cascade to their member artefacts. The order in which each controller object invokes its Group objects is determined by each Group object’s <strong>order</strong> value.</p>
 <p>Groups can also be used for purposes beyond the Display cycle:</p>
 <ul>
@@ -583,8 +582,6 @@
 <li>They can be used to propagate updates to their constituent artefacts - for instance animating them in a coordinated manner.</li>
 <li>Filters can be applied to entity objects at the Group level</li>
 </ul>
-<p>Additional functionality to help control and interact with Groups is defined in the <strong>cascade</strong> mixin. Groups also use the <strong>base</strong> mixin, thus they come equipped with packet functionality, alongside clone and kill functions.</p>
-<p>NOTE: <strong>Groups are NOT used to position a set of artefacts in the display</strong> - they have no positioning functionality, which is instead handled by the artefact objects themselves. To position and move a collection of artefacts around the display, choose one of them to act as a a reference, and then <strong>pivot</strong> or <strong>mimic</strong> other artefacts to that reference. When you position or animate the reference artefact, all the other artefacts will position/move with it. See Demo <a href="../../demo/canvas-002.html">Canvas-002</a> for an example.</p>
 
             </div>
             
@@ -800,11 +797,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p><strong>regionRadius</strong> - positive Number (measured in px), used as an initial test as part of collision detection functionality</p>
+              <p><strong>checkForEntityHover</strong> - we can trigger groups, as part of the Display cycle, to check if any of their entitys are currently hittable (the mouse cursor is hovering over them) and run functions based on changes in hover state. This is not the same as canvas <code>cascadeEventActions</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">regionRadius</span>: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">checkForEntityHover</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -815,21 +812,6 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p><strong>checkForEntityHover</strong> - we can trigger groups, as part of the Display cycle, to check if any of their entitys are currently hittable (the mouse cursor is hovering over them) and run functions based on changes in hover state. This is not the same as canvas <code>cascadeEventActions</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">checkForEntityHover</span>: <span class="hljs-literal">false</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
               <p><strong>onEntityHover</strong> - define tasks to be performed for <code>down</code> events</p>
 
             </div>
@@ -839,11 +821,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>onEntityNoHover</strong> - define tasks to be performed for <code>up</code> events</p>
 
@@ -856,11 +838,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -872,11 +854,11 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 
@@ -886,7 +868,7 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
 
     <span class="hljs-keyword">let</span> host;
 
-    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">host</span>) {
+    <span class="hljs-keyword">if</span> (items &amp;&amp; items.<span class="hljs-property">host</span>) {
 
         <span class="hljs-keyword">if</span> (items.<span class="hljs-property">host</span>.<span class="hljs-property">substring</span>) host = artefact[items.<span class="hljs-property">host</span>];
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.<span class="hljs-property">host</span>.<span class="hljs-property">type</span> &amp;&amp; <span class="hljs-variable constant_">ACCEPTED_OWNERS</span>.<span class="hljs-title function_">includes</span>(items.<span class="hljs-property">host</span>.<span class="hljs-property">type</span>)) host = items.<span class="hljs-property">host</span>;
@@ -907,11 +889,27 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
         <span class="hljs-keyword">if</span> (!clone.<span class="hljs-property">host</span>) clone.<span class="hljs-property">host</span> = host.<span class="hljs-property">name</span>;
     }
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onEntityHover</span>) clone.<span class="hljs-property">onEntityHover</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onEntityHover</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onEntityNoHover</span>) clone.<span class="hljs-property">onEntityNoHover</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onEntityNoHover</span>;
-
     <span class="hljs-keyword">return</span> clone;
 };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killArtefacts = <span class="hljs-literal">false</span>, killDomElement = <span class="hljs-literal">false</span></span>) {
+
+    <span class="hljs-keyword">if</span> (killArtefacts) <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-title function_">kill</span>(killDomElement));
+
+    <span class="hljs-keyword">const</span> myname = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;</pre></div></div>
             
         </li>
         
@@ -921,25 +919,6 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
               
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <h4 id="kill-management">Kill management</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killArtefacts = <span class="hljs-literal">false</span></span>) {
-
-    <span class="hljs-keyword">if</span> (killArtefacts) <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-title function_">kill</span>());
-
-    <span class="hljs-keyword">const</span> myname = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Remove the Group object from affected Stack and Cell objects’ <code>groups</code> attribute</p>
 
@@ -966,11 +945,11 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Remove Group object from the Scrawl-canvas library</p>
 
@@ -979,9 +958,9 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
 }
 
-P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killDomElement = <span class="hljs-literal">false</span></span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-title function_">kill</span>());
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactCalculateBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-title function_">kill</span>(killDomElement));
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 }</pre></div></div>
@@ -989,11 +968,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1005,11 +984,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Artefect membership of the Group object is better handled by the dedicated artefact management functions - <strong>addArtefacts</strong>, <strong>removeArtefacts</strong>, <strong>clearArtefacts</strong>, <strong>moveArtefactsIntoGroup</strong>.</p>
 
@@ -1018,11 +997,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Returns a new Array containing the name String values of current artefact members</p>
 
@@ -1036,11 +1015,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Replaces the existing artefact membership with new members, supplied as an Array of name-String values</p>
 
@@ -1057,11 +1036,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Adds the Group to a new controller Stack or Cell object. NOTE that this does not remove the Group from its existing host!</p>
 
@@ -1083,11 +1062,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-26">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Update the Group’s <code>order</code> attribute, and tell its current host that it will need to resort its associated Groups</p>
 
@@ -1110,11 +1089,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><strong>noFilters</strong></p>
 
@@ -1129,11 +1108,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-28">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1147,11 +1126,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-29">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>getHost</code> - internal helper function</p>
 
@@ -1175,11 +1154,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-30">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>forceStamp</code> - invoke the Group to instruct its artefact members to perform a <code>stamp</code> action, ignoring whether the Group <code>visibility</code> flag setting</p>
 
@@ -1196,11 +1175,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>stamp</code> - the Display Cycle is mediated through Groups.</p>
 
@@ -1211,11 +1190,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>Check we have a host of some sort (either a Stack artefact or a Cell asset)</p>
 
@@ -1240,11 +1219,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-33">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Check if artefacts need to be sorterd and, if yes, sort them by their order attribute</p>
 
@@ -1255,11 +1234,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Get a pool cell for the filter/stash functionality, if required</p>
 
@@ -1275,11 +1254,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>We save/restore the canvas engine at this point because some entitys may have their <code>method</code> attribute set to <code>clip</code> and the only way to get rid of a clip region from an engine is to save the engine before applying the clip, then restoring the engine afterwards</p>
 <ul>
@@ -1293,11 +1272,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Prepare the Group’s artefacts for the forthcoming stamp activity</p>
 
@@ -1308,11 +1287,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-37">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Get the Group’s artefacts to stamp themselves on the current host or pool Cell</p>
 
@@ -1336,11 +1315,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-38">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><code>sortArtefacts</code> - internal function. Uses a bucket sort algorithm</p>
 
@@ -1369,11 +1348,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-39">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Sort for artefact calculateOrder</p>
 
@@ -1386,11 +1365,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-40">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>Sort for artefact stampOrder</p>
 
@@ -1433,11 +1412,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-41">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>prepareStamp</code> - initial action in the Display cycle, before Stacks/Cells start their clear/compile/show cascade</p>
 
@@ -1469,11 +1448,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-42">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>stampAction</code> - the key Group-mediated action in the Display cycle, invoked as part of the <code>compile</code> functionality.</p>
 
@@ -1502,11 +1481,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-43">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>We set up things to draw the group on a pool cell if the Group’s <code>stashOutput</code> flag is set to true - so now we have to paint it back into the host Cell</p>
 
@@ -1540,11 +1519,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-44">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>applyFilters</code> - filters can be applied to entity artefacts at the group level, in addition to any filters applied at the entity level.</p>
 
@@ -1561,11 +1540,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-45">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>Get handles to current and filter Cell elements and engines</p>
 
@@ -1580,11 +1559,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-46">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>Action a request to use the filtered artefacts as a stencil - as determined by the Group’s <code>isStencil</code> flag</p>
 
@@ -1605,11 +1584,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-47">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p>At this point we will send the contents of the filterHost canvas over to the filter engine</p>
 
@@ -1619,7 +1598,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
 
     <span class="hljs-keyword">const</span> myimage = filterCellEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterCellElement.<span class="hljs-property">width</span>, filterCellElement.<span class="hljs-property">height</span>);
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preprocessFilters</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preprocessFilters</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>, filterCellElement.<span class="hljs-property">width</span>, filterCellElement.<span class="hljs-property">height</span>);
 
     <span class="hljs-keyword">const</span> img = filterEngine.<span class="hljs-title function_">action</span>({
         <span class="hljs-attr">identifier</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">filterIdentifier</span>,
@@ -1647,11 +1626,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-48">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>stashAction</code> - internal function which creates an ImageAsset object (and, as determined by the setting of the Group’s <code>stashOutputAsAsset</code> flag, an &lt;img&gt; element which gets attached to the host &lt;canvas&gt; element’s <code>canvasHold</code> hidden &lt;div&gt; element) from the Group’s entity’s output.</p>
 <p>NOTE: the <code>stashOutput</code> and <code>stashOutputAsAsset</code> flags are not Group object attributes. They are set on the group as a result of invoking the <code>scrawl.createImageFromGroup</code> function, and will be set to false as soon as the <code>Group.stashAction</code> function runs (in other words, stashing a Group’s output is a one-off operation).</p>
@@ -1717,11 +1696,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-49">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>getCellCoverage</code> - internal function which calculates the cumulative coverage of the Group’s artefacts. Used as part of the <code>stashAction</code> functionality</p>
 
@@ -1759,11 +1738,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-50">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <h4 id="artefact-management">Artefact management</h4>
 <p>Artefacts should be added to, and removed from, the Group object using the functions detailed below.</p>
@@ -1774,11 +1753,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-51">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><code>addArtefacts</code> - an artefact can belong to more than one Group</p>
 
@@ -1804,11 +1783,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-52">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><code>getArtefact</code> - return the artifact with the given name IF the artefact is a member of the group</p>
 
@@ -1823,11 +1802,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-53">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>removeArtefacts</code> - remove an artefact from this Group</p>
 
@@ -1851,11 +1830,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-54">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>moveArtefactsIntoGroup</code> - remove the artefact from their current Group (which is generally their Display cycle group, as set in their <code>group</code> and/or <code>host</code> attribute) and add them to this Group</p>
 
@@ -1894,11 +1873,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-55">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>clearArtefacts</code> - remove all artefacts from this Group</p>
 
@@ -1916,11 +1895,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-56">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>updateArtefacts</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>setDelta</code> function</p>
 
@@ -1935,11 +1914,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-57">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>setArtefacts</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>set</code> function</p>
 
@@ -1954,11 +1933,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-58">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><code>updateByDelta</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>updateByDelta</code> function</p>
 
@@ -1973,11 +1952,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-59">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>reverseByDelta</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>reverseByDelta</code> function</p>
 
@@ -1992,11 +1971,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-60">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>addArtefactClasses</code> - specifically for non-entity artefacts. Passes the <strong>items</strong> argument String through to each of the Group’s artefact’s <code>addClasses</code> function</p>
 
@@ -2011,11 +1990,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-61">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><code>removeArtefactClasses</code> - specifically for non-entity artefacts. Passes the <strong>items</strong> argument String through to each of the Group’s artefact’s <code>removeClasses</code> function</p>
 
@@ -2030,11 +2009,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-62">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>cascadeAction</code> - internal helper function for the above artefact manipulation functionality</p>
 
@@ -2056,11 +2035,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-63">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>setDeltaValues</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>setDeltaValues</code> function</p>
 
@@ -2076,11 +2055,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-64">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>We can add and remove filters to each of the Group’s entity artefacts using the following functions. The argument for each function can be one or more Filter name-Strings, or the Filter objects themselves, separated by commas.</p>
 
@@ -2089,11 +2068,11 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-65">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><code>addFiltersToEntitys</code>
 TODO: don’t think this is tested anywhere - build test!</p>
@@ -2116,11 +2095,11 @@ TODO: don’t think this is tested anywhere - build test!</p>
         </li>
         
         
-        <li id="section-66">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>removeFiltersFromEntitys</code>
 TODO: don’t think this is tested anywhere - build test!</p>
@@ -2143,11 +2122,11 @@ TODO: don’t think this is tested anywhere - build test!</p>
         </li>
         
         
-        <li id="section-67">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><code>clearFiltersFromEntitys</code> - clears all filters from all the Group’s entity artefacts.
 TODO: don’t think this is tested anywhere - build test!</p>
@@ -2170,11 +2149,11 @@ TODO: don’t think this is tested anywhere - build test!</p>
         </li>
         
         
-        <li id="section-68">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><code>recalculateFonts</code> - gets Label and EnhancedLabel entitys in the Group to recalculate their font/text dimensions.</p>
 
@@ -2196,11 +2175,11 @@ TODO: don’t think this is tested anywhere - build test!</p>
         </li>
         
         
-        <li id="section-69">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 <p>The <code>getArtefactAt</code> function checks to see if any of the Group object’s artefacts are located at the supplied coordinates in the argument object.</p>
@@ -2241,11 +2220,11 @@ TODO: don’t think this is tested anywhere - build test!</p>
         </li>
         
         
-        <li id="section-70">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p>The <code>getAllArtefactsAt</code> function returns an array of hit reports from all of the Group object’s artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first in the response array.</p>
 <p>The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
@@ -2303,11 +2282,11 @@ TODO: don’t think this is tested anywhere - build test!</p>
         </li>
         
         
-        <li id="section-71">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> faces = scrawl.<span class="hljs-title function_">makeGroup</span>({

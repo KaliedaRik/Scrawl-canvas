@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-029.html)
 import * as scrawl from '../source/scrawl.js'
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -19,7 +19,7 @@ const name = (n) => `${namespace}-${n}`;
 scrawl.importDomImage('.flowers');
 
 
-const textCell = canvas.buildCell({
+canvas.buildCell({
 
     name: name('text-cell'),
     dimensions: [100, 100],
@@ -147,22 +147,8 @@ scrawl.makeUpdater({
 });
 
 
-scrawl.addNativeListener(['input', 'change'], (e) => {
-
-    if (e && e.target) {
-
-        const val = (e.target.value === '1') ? true : false;
-
-        canvas.set({ smoothFont: val });
-        canvas.setBase({ smoothFont: val });
-        textCell.set({ smoothFont: val });
-    }
-}, '#smoothFont')
-
-
 // Setup form
-initializeDomInputs([
-    ['select', 'smoothFont', 1],
+scrawl.initializeDomInputs([
     ['select', 'imageSmoothingEnabled', 1],
     ['select', 'imageSmoothingQuality', 2],
 ]);

@@ -20,7 +20,14 @@
 </head>
 
 <body>
-  <h1>Scrawl-canvas documentation (for version 8.14.0)</h1>
+  <h1>Scrawl-canvas inline documentation<br>
+  <span style="font-size: 50%; font-style: italic;">(for version 8.15.0)</span></h1>
+
+  <nav>
+    <h3>Testing and other documentation pages</h3>
+    <p>&raquo; The <b><a href="reference/index.html">Scrawl-canvas developer Runbook</a></b> can be found in its own pages.<br>
+    &raquo; The <b><a href="../demo/index.html">Scrawl-canvas demo tests</a></b> page</p>
+  </nav>
 
   <h3>Scrawl-canvas modules</h3>
 
@@ -527,16 +534,28 @@
     <li><a href="demo/canvas-048.html">Canvas-048</a> Display a filtered media stream</li>
     <li><a href="demo/canvas-049.html">Canvas-049</a> Conic gradients</li>
     <li><a href="demo/canvas-050.html">Canvas-050</a> Manipulate artefact delta animation values; test animation maxFrameRate</li>
-    <li><a href="demo/canvas-051.html">Canvas-051</a> Line Spirals</li>
+    <li><a href="demo/canvas-051.html">Canvas-051</a> Interactions between filters, GCO and GlobalAlpha applied to an entity</li>
     <li><a href="demo/canvas-052.html">Canvas-052</a> Noise asset functionality</li>
     <li><a href="demo/canvas-053.html">Canvas-053</a> Display output from a Reaction-Diffusion asset</li>
     <li><a href="demo/canvas-054.html">Canvas-054</a> Animated contour lines: map a complex gradient to NoiseAsset output</li>
-    <li><a href="demo/canvas-055.html">Canvas-055</a> Crescent entity functionality</li>
+    <li><a href="demo/canvas-055.html">Canvas-055</a> Wide Gamut 2D Graphics using HTML Canvas</li>
     <li><a href="demo/canvas-056.html">Canvas-056</a> Seeded random number generator; point on path</li>
     <li><a href="demo/canvas-057.html">Canvas-057</a> Create and use a RawAsset object to modify an image asset</li>
     <li><a href="demo/canvas-058.html">Canvas-058</a> Group and ungroup entitys; create a bespoke drag-drop UX</li>
     <li><a href="demo/canvas-059.html">Canvas-059</a> Semi-accessible Minimap; multiple drag zones</li>
-    <li><a href="demo/canvas-060.html">Canvas-060</a> Wide Gamut 2D Graphics using HTML Canvas</li>
+    <li><a href="demo/canvas-060.html">Canvas-060</a> Wheel entity attributes and functionality</li>
+    <li><a href="demo/canvas-061.html">Canvas-061</a> Crescent entity attributes and functionality</li>
+    <li><a href="demo/canvas-062.html">Canvas-062</a> Tetragon and Oval entity attributes and functionality</li>
+    <li><a href="demo/canvas-063.html">Canvas-063</a> Rectangle entity attributes and functionality</li>
+    <li><a href="demo/canvas-064.html">Canvas-064</a> Polygon entity attributes and functionality</li>
+    <li><a href="demo/canvas-065.html">Canvas-065</a> Star entity attributes and functionality</li>
+    <li><a href="demo/canvas-066.html">Canvas-066</a> Spiral entity attributes and functionality</li>
+    <li><a href="demo/canvas-067.html">Canvas-067</a> Cog entity attributes and functionality</li>
+    <li><a href="demo/canvas-068.html">Canvas-068</a> LineSpiral entity attributes and functionality</li>
+    <li><a href="demo/canvas-069.html">Canvas-069</a> Test Cell splitShift functionality (shift only)</li>
+    <li><a href="demo/canvas-070.html">Canvas-070</a> Test Cell splitShift functionality (infinite scroll)</li>
+    <li><a href="demo/canvas-071.html">Canvas-071</a> Using getCellData, paintCellData functionality</li>
+    <li><a href="demo/canvas-072.html">Canvas-072</a> Public transport furniture cover design</li>
 
     <li><a href="demo/canvas-201.html">Canvas-201</a> Label entity (make, clone, method); Label accessible text</li>
     <li><a href="demo/canvas-202.html">Canvas-202</a> Label entity - basic support for non-western fonts</li>
@@ -554,9 +573,8 @@
 
   <h4>Filters demos</h4>
   <ul>
-    <li><a href="demo/filters-001.html">Filters-001</a> Parameters for: Blur, Gaussianblur filters; filter memoization</li>
-    <li><a href="demo/filters-002.html">Filters-002</a> Parameters for: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue, grayscale, sepia, invert filters</li>
-    <li><a href="demo/filters-002a.html">Filters-002a</a> Cache output to improve render speeds</li>
+    <li><a href="demo/filters-001.html">Filters-001</a> Parameters for: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue, grayscale, sepia, invert filters</li>
+    <li><a href="demo/filters-002.html">Filters-002</a> Cache entity output to improve render speeds</li>
     <li><a href="demo/filters-003.html">Filters-003</a> Parameters for: brightness, saturation filters</li>
     <li><a href="demo/filters-004.html">Filters-004</a> Parameters for: threshold filter</li>
     <li><a href="demo/filters-005.html">Filters-005</a> Parameters for: channelstep filter</li>
@@ -587,6 +605,11 @@
     <li><a href="demo/filters-030.html">Filters-030</a> Parameters for: negative filter</li>
     <li><a href="demo/filters-031.html">Filters-031</a> Parameters for: modifyOk filter</li>
     <li><a href="demo/filters-032.html">Filters-032</a> Parameters for: modulateOk filter</li>
+    <li><a href="demo/filters-033.html">Filters-033</a> Parameters for: blur filter</li>
+    <li><a href="demo/filters-034.html">Filters-034</a> Parameters for: gaussianblur filter</li>
+    <li><a href="demo/filters-035.html">Filters-035</a> Parameters for: offset filter</li>
+    <li><a href="demo/filters-036.html">Filters-036</a> Parameters for: offsetChannels filter</li>
+    <li><a href="demo/filters-037.html">Filters-037</a> Test various channel-alpha filters</li>
   </ul>
 
   <h4>Compound filters demos</h4>
@@ -625,6 +648,7 @@
     <li><a href="demo/particles-014.html">Particles-014</a> Emitter functionality: generate from existing particles</li>
     <li><a href="demo/particles-015.html">Particles-015</a> Emitter functionality: generate from existing particle histories</li>
     <li><a href="demo/particles-016.html">Particles-016</a> Mesh entitys</li>
+    <li><a href="demo/particles-017.html">Particles-017</a> Dynamic update of particle colors</li>
   </ul>
 
   <h4>Module demos</h4>

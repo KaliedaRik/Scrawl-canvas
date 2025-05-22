@@ -24,7 +24,7 @@ import { makeColor } from '../factory/color.js';
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _ceil, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
 const _exp = Math.exp,
@@ -115,7 +115,7 @@ const FilterEngine = function () {
     // __cache__ - an Object consisting of `key:Object` pairs where the key is the named input of a `process-image` action or the output of any action object. This object is cleared and re-initialized each time the `engine.action` function is invoked
     this.cache = null;
 
-    // __actions__ - the Array of action objects that the engine needs to process - data supplied by the main thread in its message's `packetFiltersArray` attribute.
+    // __actions__ - the Array of action objects that the engine needs to process.
     this.actions = [];
 
     return this;
@@ -139,7 +139,7 @@ P.action = function (packet) {
 
     for (i = 0, iz = filters.length; i < iz; i++) {
 
-        actions.push(...filters[i].actions)
+        actions.push(...filters[i].actions);
     }
 
     const actionsLen = actions.length;
@@ -1286,6 +1286,59 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
+// __alpha-to-luminance__ - Sets the OKLAB luminance channel to the value of the alpha channel, then sets the alpha channel to opaque and the A and B channels to 0 (gray)
+    [ALPHA_TO_LUMINANCE]: function (requirements) {
+
+        const [input, output] = this.getInputAndOutputLines(requirements);
+
+        const iData = input.data,
+            oData = output.data,
+            len = iData.length;
+
+        const {
+            opacity = 1,
+            lineOut,
+        } = requirements;
+
+        const libs = this.retrieveColorPointLibraries();
+
+        let r, g, b, a, i, L, _r, _g, _b, alpha;
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            alpha = iData[a];
+
+            if (alpha) {
+
+                L = alpha / 256;
+                if (L > 1) L = 1;
+                else if (L < 0) L = 0;
+
+                [_r, _g, _b] = this.getRegularColorVals(L, 0, 0, libs);
+
+                oData[r] = _r;
+                oData[g] = _g;
+                oData[b] = _b;
+                oData[a] = 255;
+            }
+            else {
+
+                oData[r] = iData[r];
+                oData[g] = iData[g];
+                oData[b] = iData[b];
+                oData[a] = 0;
+            }
+        }
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
 // __area-alpha__ - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
     [AREA_ALPHA]: function (requirements) {
 
@@ -2084,7 +2137,7 @@ P.theBigActionsObject = {
 // Note that this filter is expensive, thus much slower to complete compared to other filter effects. Where possible, memoize the results this filter produces.
     [BLUR]: function (requirements) {
 
-        const getUncheckedValue = function (flag, gridStore, pos, data, offset) {
+        const getUncheckedValue = function (flag, gridStore, pos, data, offset, step) {
 
             if (flag) {
 
@@ -2111,7 +2164,7 @@ P.theBigActionsObject = {
             return data[(pos * 4) + offset];
         };
 
-        const getCheckedValue = function (flag, gridStore, pos, data, offset) {
+        const getCheckedValue = function (flag, gridStore, pos, data, offset, step) {
 
             if (flag) {
 
@@ -2153,16 +2206,19 @@ P.theBigActionsObject = {
 
         const {
             opacity = 1,
-            radius = 0,
-            passes = 1,
             processVertical = true,
+            radiusVertical = 0,
+            passesVertical = 1,
+            stepVertical = 1,
             processHorizontal = true,
+            radiusHorizontal = 0,
+            passesHorizontal = 1,
+            stepHorizontal = 1,
             includeRed = true,
             includeGreen = true,
             includeBlue = true,
             includeAlpha = false,
             excludeTransparentPixels = false,
-            step = 1,
             lineOut,
         } = requirements;
 
@@ -2172,9 +2228,9 @@ P.theBigActionsObject = {
 
             const grid = this.buildImageGrid(input);
 
-            if (processHorizontal)  horizontalBlurGrid = this.buildHorizontalBlur(grid, radius);
+            if (processHorizontal)  horizontalBlurGrid = this.buildHorizontalBlur(grid, radiusHorizontal);
 
-            if (processVertical) verticalBlurGrid = this.buildVerticalBlur(grid, radius);
+            if (processVertical) verticalBlurGrid = this.buildVerticalBlur(grid, radiusVertical);
         }
 
         oData.set(iData);
@@ -2185,9 +2241,9 @@ P.theBigActionsObject = {
 
         let counter, r, g, b, a, pass;
 
-        for (pass = 0; pass < passes; pass++) {
+        if (processHorizontal) {
 
-            if (processHorizontal) {
+            for (pass = 0; pass < passesHorizontal; pass++) {
 
                 for (counter = 0; counter < pixelLen; counter++) {
 
@@ -2198,17 +2254,20 @@ P.theBigActionsObject = {
 
                     if (includeAlpha || hold[a]) {
 
-                        oData[r] = selectedMethod(includeRed, horizontalBlurGrid, counter, hold, 0);
-                        oData[g] = selectedMethod(includeGreen, horizontalBlurGrid, counter, hold, 1);
-                        oData[b] = selectedMethod(includeBlue, horizontalBlurGrid, counter, hold, 2);
-                        oData[a] = getUncheckedValue(includeAlpha, horizontalBlurGrid, counter, hold, 3);
+                        oData[r] = selectedMethod(includeRed, horizontalBlurGrid, counter, hold, 0, stepHorizontal);
+                        oData[g] = selectedMethod(includeGreen, horizontalBlurGrid, counter, hold, 1, stepHorizontal);
+                        oData[b] = selectedMethod(includeBlue, horizontalBlurGrid, counter, hold, 2, stepHorizontal);
+                        oData[a] = getUncheckedValue(includeAlpha, horizontalBlurGrid, counter, hold, 3, stepHorizontal);
                     }
                 }
 
-                if (processVertical || pass < passes - 1) hold.set(oData);
+                if (processVertical || pass < passesHorizontal - 1) hold.set(oData);
             }
+        }
 
-            if (processVertical) {
+        if (processVertical) {
+
+            for (pass = 0; pass < passesVertical; pass++) {
 
                 for (counter = 0; counter < pixelLen; counter++) {
 
@@ -2219,13 +2278,13 @@ P.theBigActionsObject = {
 
                     if (includeAlpha || hold[a]) {
 
-                        oData[r] = selectedMethod(includeRed, verticalBlurGrid, counter, hold, 0);
-                        oData[g] = selectedMethod(includeGreen, verticalBlurGrid, counter, hold, 1);
-                        oData[b] = selectedMethod(includeBlue, verticalBlurGrid, counter, hold, 2);
-                        oData[a] = getUncheckedValue(includeAlpha, verticalBlurGrid, counter, hold, 3);
+                        oData[r] = selectedMethod(includeRed, verticalBlurGrid, counter, hold, 0, stepVertical);
+                        oData[g] = selectedMethod(includeGreen, verticalBlurGrid, counter, hold, 1, stepVertical);
+                        oData[b] = selectedMethod(includeBlue, verticalBlurGrid, counter, hold, 2, stepVertical);
+                        oData[a] = getUncheckedValue(includeAlpha, verticalBlurGrid, counter, hold, 3, stepVertical);
                     }
                 }
-                if (pass < passes - 1) hold.set(oData);
+                if (pass < passesVertical - 1) hold.set(oData);
             }
         }
 
@@ -3365,7 +3424,13 @@ P.theBigActionsObject = {
 
         const {
             opacity = 1,
-            radius = 1,
+            radiusHorizontal = 1,
+            radiusVertical = 1,
+            includeRed = true,
+            includeGreen = true,
+            includeBlue = true,
+            includeAlpha = true,
+            excludeTransparentPixels = false,
             lineOut,
         } = requirements;
 
@@ -3376,12 +3441,54 @@ P.theBigActionsObject = {
         const out = new Uint32Array(src32.length),
             tmp_line = new Float32Array(_max(width, height) * 4);
 
-        const coeff = gaussCoef(radius);
+        const horizontalCoeff = gaussCoef(radiusHorizontal),
+            verticalCoeff = gaussCoef(radiusVertical);
 
-        convolveRGBA(src32, out, tmp_line, coeff, width, height, radius);
-        convolveRGBA(out, src32, tmp_line, coeff, height, width, radius);
+        convolveRGBA(src32, out, tmp_line, horizontalCoeff, width, height, radiusHorizontal);
+        convolveRGBA(out, src32, tmp_line, verticalCoeff, height, width, radiusVertical);
 
-        oData.set(hold);
+        let r, g, b, a, i, iz;
+
+        if (!excludeTransparentPixels) {
+
+            for (i = 0, iz = iData.length; i < iz; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                oData[r] = (includeRed) ? hold[r] : iData[r];
+                oData[g] = (includeGreen) ? hold[g] : iData[g];
+                oData[b] = (includeBlue) ? hold[b] : iData[b];
+                oData[a] = (includeAlpha) ? hold[a] : iData[a];
+            }
+        }
+        else {
+
+            for (i = 0, iz = iData.length; i < iz; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                if (iData[a]) {
+
+                    oData[r] = (includeRed) ? hold[r] : iData[r];
+                    oData[g] = (includeGreen) ? hold[g] : iData[g];
+                    oData[b] = (includeBlue) ? hold[b] : iData[b];
+                    oData[a] = (includeAlpha) ? hold[a] : iData[a];
+                }
+                else {
+
+                    oData[r] = iData[r];
+                    oData[g] = iData[g];
+                    oData[b] = iData[b];
+                    oData[a] = iData[a];
+                }
+            }
+        }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
@@ -3633,6 +3740,43 @@ P.theBigActionsObject = {
             oData[g] = getLCTLValue(iData[g], green);
             oData[b] = getLCTLValue(iData[b], blue);
             oData[a] = getLCTLValue(iData[a], alpha);
+        }
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
+// __luminance-to-alpha__ - sets the OKLAB alpha channel to the value of the luminance channel, then sets the luminance, A and B channels to 0 (black).
+    [LUMINANCE_TO_ALPHA]: function (requirements) {
+
+        const [input, output] = this.getInputAndOutputLines(requirements);
+
+        const iData = input.data,
+            oData = output.data,
+            len = iData.length;
+
+        const {
+            opacity = 1,
+            lineOut,
+        } = requirements;
+
+        const libs = this.retrieveColorPointLibraries();
+
+        let r, g, b, a, i, L;
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            [L] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+
+            oData[r] = 0;
+            oData[g] = 0;
+            oData[b] = 0;
+            oData[a] = _floor(L * 256);
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -4288,11 +4432,15 @@ P.theBigActionsObject = {
 // + Adding assets to a filter chain will very often disable filter memoization functionality!
     [PROCESS_IMAGE]: function (requirements) {
 
-        const {assetData, lineOut} = requirements;
+        const {identifier, lineOut} = requirements;
 
         if (lineOut && lineOut.substring && lineOut.length) {
 
-            let {width, height, data} = assetData;
+            const assetData = getWorkstoreItem(identifier);
+
+            let width = assetData ? assetData.width : 1,
+                height = assetData ? assetData.height : 1,
+                data = assetData ? assetData.data : new Uint8ClampedArray(4);
 
             if (width && height && data) {
 

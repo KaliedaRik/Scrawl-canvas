@@ -42,6 +42,7 @@ export const ABSOLUTE = 'absolute';
 export const ACCEPTED_WRAPPERS = ['Canvas', 'Stack'];
 export const ADD_EVENT_LISTENER = 'addEventListener';
 export const ALPHA_TO_CHANNELS = 'alpha-to-channels';
+export const ALPHA_TO_LUMINANCE = 'alpha-to-luminance';
 export const ALPHABETIC = 'alphabetic';
 export const ANCHOR = 'anchor';
 export const ANIMATION = 'animation';
@@ -132,6 +133,7 @@ export const LINE_DASH = 'lineDash';
 export const LINEAR = 'linear';
 export const LOCK_CHANNELS_TO_LEVELS = 'lock-channels-to-levels';
 export const LTR = 'ltr';
+export const LUMINANCE_TO_ALPHA = 'luminance-to-alpha';
 export const MAP_TO_GRADIENT = 'map-to-gradient';
 export const MATRIX = 'matrix';
 export const MEAN = 'mean';
@@ -147,11 +149,9 @@ export const MOUSE_LEAVE = 'mouseleave';
 export const MOUSE_MOVE = 'mousemove';
 export const MOUSE_UP = 'mouseup';
 export const MOVE = 'move';
-export const MOZOSX_FONT_SMOOTHING = 'mozOsxFontSmoothing';
 export const MULTIPLY = 'multiply';
 export const NAME = 'name';
 export const NEGATIVE = 'negative';
-export const NEVER = 'never';
 export const NEWSPRINT = 'newsprint';
 export const NONE = 'none';
 export const NORMAL = 'normal';
@@ -195,7 +195,6 @@ export const ROOT = 'root';
 export const ROTATE_HUE = 'rotate-hue';
 export const ROUND = 'round';
 export const SET_CHANNEL_TO_LEVEL = 'set-channel-to-level';
-export const SMOOTH_FONT = 'smoothFont';
 export const SOURCE = 'source';
 export const SOURCE_IN = 'source-in';
 export const SOURCE_OUT = 'source-out';
@@ -211,6 +210,7 @@ export const STEP_CHANNELS = 'step-channels';
 export const STYLES = 'styles';
 export const SUBSCRIBE = 'subscribe';
 export const SWIRL = 'swirl';
+export const T_ACTION = 'Action';
 export const T_BEZIER = 'Bezier';
 export const T_CANVAS = 'Canvas';
 export const T_CELL = 'Cell';
@@ -235,6 +235,7 @@ export const T_RD_ASSET = 'RdAsset';
 export const T_RENDER_ANIMATION = 'RenderAnimation';
 export const T_SPRITE = 'Sprite';
 export const T_STACK = 'Stack';
+export const T_TICKER = 'Ticker';
 export const T_TWEEN = 'Tween';
 export const T_VECTOR = 'Vector';
 export const T_VIDEO = 'Video';
@@ -260,8 +261,19 @@ export const USER_DEFINED_LEGACY = 'user-defined-legacy';
 export const VALUE = 'value';
 export const VARY_CHANNELS_BY_WEIGHTS = 'vary-channels-by-weights';
 export const VIDEO = 'video';
-export const WEBKIT_FONT_SMOOTHING = 'webkitFontSmoothing';
 export const WHITE = 'rgb(255 255 255 / 1)';
 export const WIDTH = 'width';
 export const ZERO_PATH = 'M0,0';
 export const ZERO_STR = '';
+
+// Can be turned into stacks
+export const PERMITTED_STACK_ELEMENTS = ['ARTICLE', 'ASIDE', 'DIV', 'FOOTER', 'HEADER', 'MAIN', 'NAV', 'SECTION'];
+
+// Can be imported into stacks as elements; have hit zones/pivot points - corner elements added
+export const PERMITTED_TRACKED_ELEMENTS = ['ARTICLE', 'ASIDE', 'DIV', 'FOOTER', 'HEADER', 'MAIN', 'NAV', 'SECTION', 'ADDRESS', 'BLOCKQUOTE', 'DL', 'FIGURE', 'FORM', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'HGROUP', 'MENU', 'METER', 'OL', 'P', 'PRE', 'PROGRESS', 'SEARCH', 'SELECT', 'TABLE', 'TEXTAREA', 'UL', 'OUTPUT'];
+
+// Elements not included in the other 3 groups. Can be imported into stacks as elements; do not have hit zones/pivot points - corner elements not added
+// export const PERMITTED_UNTRACKED_ELEMENTS = ['AUDIO', 'VIDEO', 'EMBED', 'FENCEDFRAME', 'IFRAME', 'OBJECT', 'IMG', 'PICTURE', 'SVG', 'MATH', 'INPUT', 'A', 'BUTTON', 'DETAILS'];
+
+// Cannot be used as stacks or stack elements
+export const FORBIDDEN_ELEMENTS = ['BASE', 'HEAD', 'LINK', 'META', 'STYLE', 'TITLE', 'BODY', 'DD', 'DT', 'FIGCAPTION', 'HR', 'LI', 'ABBR', 'B', 'BDI', 'BDO', 'BR', 'CITE', 'CODE', 'DATA', 'DFN', 'EM', 'I', 'KBD', 'MARK', 'Q', 'RP', 'RT', 'RUBY', 'S', 'SAMP', 'SMALL', 'SPAN', 'STRONG', 'SUB', 'SUP', 'TIME', 'U', 'VAR', 'WBR', 'AREA', 'MAP', 'TRACK', 'SOURCE', 'NOSCRIPT', 'SCRIPT', 'DEL', 'INS', 'CAPTION', 'COL', 'COLGROUP', 'TBODY', 'TD', 'TFOOT', 'TH', 'THEAD', 'TR', 'DATALIST', 'FIELDSET', 'LABEL', 'LEGEND', 'OPTGROUP', 'OPTION', 'SLOT', 'DIALOG', 'SUMMARY', 'TEMPLATE', 'ACRONYM', 'BIG', 'CENTER', 'CONTENT', 'DIR', 'FONT', 'FRAME', 'FRAMESET', 'IMAGE', 'MARQUEE', 'MENUITEM', 'NOBR', 'NOEMBED', 'NOFRAMES', 'PARAM', 'PLAINTEXT', 'RB', 'RTC', 'SHADOW', 'STRIKE', 'TT', 'XMP', 'ANIMATE', 'ANIMATEMOTION', 'ANIMATETRANSFORM', 'CIRCLE', 'CLIPPATH', 'CURSOR', 'DEFS', 'DESC', 'ELLIPSE', 'FEBLEND', 'FECOLORMATRIX', 'FECOMPONENTTRANSFER', 'FECOMPOSITE', 'FECONVOLVEMATRIX', 'FEDIFFUSELIGHTING', 'FEDISPLACEMENTMAP', 'FEDISTANTLIGHT', 'FEDROPSHADOW', 'FEFLOOD', 'FEFUNCA', 'FEFUNCB', 'FEFUNCG', 'FEFUNCR', 'FEGAUSSIANBLUR', 'FEIMAGE', 'FEMERGE', 'FEMERGENODE', 'FEMORPHOLOGY', 'FEOFFSET', 'FEPOINTLIGHT', 'FESPECULARLIGHTING', 'FESPOTLIGHT', 'FETILE', 'FETURBULENCE', 'FILTER', 'FONT-FACE-FORMAT', 'FONT-FACE-NAME', 'FONT-FACE-SRC', 'FONT-FACE-URI', 'FONT-FACE', 'FONT', 'FONT', 'FOREIGNOBJECT', 'G', 'GLYPH', 'GLYPHREF', 'HKERN', 'IMAGE', 'LINE', 'LINEARGRADIENT', 'MARKER', 'MASK', 'METADATA', 'MISSING-GLYPH', 'MPATH', 'PATH', 'PATTERN', 'POLYGON', 'POLYLINE', 'RADIALGRADIENT', 'RECT', 'SCRIPT', 'SET', 'STOP', 'STYLE', 'SWITCH', 'SYMBOL', 'TEXT', 'TEXTPATH', 'TREF', 'TSPAN', 'USE', 'VIEW', 'VKERN'];

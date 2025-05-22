@@ -599,7 +599,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { addStrings, mergeOver, pushUnique, xt, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { addStrings, mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/state.js&#x27;</span>;
 
@@ -609,15 +609,15 @@
 <span class="hljs-keyword">import</span> { importDomImage } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../asset-management/image-asset.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { currentGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/canvas.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> positionMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/position.js&#x27;</span>;
-<span class="hljs-keyword">import</span> deltaMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/delta.js&#x27;</span>;
-<span class="hljs-keyword">import</span> pivotMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/pivot.js&#x27;</span>;
-<span class="hljs-keyword">import</span> mimicMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/mimic.js&#x27;</span>;
-<span class="hljs-keyword">import</span> pathMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/path.js&#x27;</span>;
-<span class="hljs-keyword">import</span> hiddenElementsMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/hidden-dom-elements.js&#x27;</span>;
-<span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/anchor.js&#x27;</span>;
-<span class="hljs-keyword">import</span> buttonMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/button.js&#x27;</span>;
-<span class="hljs-keyword">import</span> filterMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/filter.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> positionMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./position.js&#x27;</span>;
+<span class="hljs-keyword">import</span> deltaMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./delta.js&#x27;</span>;
+<span class="hljs-keyword">import</span> pivotMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./pivot.js&#x27;</span>;
+<span class="hljs-keyword">import</span> mimicMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./mimic.js&#x27;</span>;
+<span class="hljs-keyword">import</span> pathMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./path.js&#x27;</span>;
+<span class="hljs-keyword">import</span> hiddenElementsMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./hidden-dom-elements.js&#x27;</span>;
+<span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./anchor.js&#x27;</span>;
+<span class="hljs-keyword">import</span> buttonMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./button.js&#x27;</span>;
+<span class="hljs-keyword">import</span> filterMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filter.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -790,7 +790,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p><strong>scaleOutline</strong> - Boolean flag. When set, the entity will increase its <code>lineWidth</code> proportionat to the entity’s <code>scale</code> value - an entity of scale = 2 will display lines twice the thickness of the same entity at scale = 1</p>
+              <p><strong>scaleOutline</strong> - Boolean flag. When set, the entity will increase its <code>lineWidth</code> value proportionate to the entity’s <code>scale</code> value - an entity of scale = 2 will display lines twice the thickness of the same entity at scale = 1</p>
 
             </div>
             
@@ -804,6 +804,21 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p><strong>scaleShadow</strong> - Boolean flag. When set, the entity will increase its <code>shadowOffsetX</code>, <code>shadowOffsetY</code> and <code>shadowBlur</code> values proportionate to the entity’s <code>scale</code> value - an entity of scale = 2 will display shadows twice the size of the same entity at scale = 1</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">scaleShadow</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>lockFillStyleToEntity</strong>, <strong>lockStrokeStyleToEntity</strong> - Boolean flags.</p>
 <ul>
@@ -819,11 +834,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h5 id="event-listener-functions">Event listener functions</h5>
 <p>Entity objects have the ability to act as ‘hotspots’ within a canvas display, reacting to mouse/pointer movements over the canvas. Four mouse-like events are supported:</p>
@@ -851,11 +866,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>onEnter</strong> - define tasks to be performed for <code>enter</code> events</p>
 
@@ -866,11 +881,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>onLeave</strong> - define tasks to be performed for <code>leave</code> events</p>
 
@@ -881,11 +896,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>onDown</strong> - define tasks to be performed for <code>down</code> events</p>
 
@@ -896,11 +911,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><strong>onUp</strong> - define tasks to be performed for <code>up</code> events</p>
 
@@ -911,13 +926,13 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p><strong>onOtherInteraction</strong> - define tasks to be performed for <code>up</code> events</p>
+              <p><strong>onOtherInteraction</strong> - define tasks to be performed for <code>other interaction</code> events</p>
 
             </div>
             
@@ -926,11 +941,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h5 id="state-object-attributes">State object attributes</h5>
 <p>We can treat the following attributes as if they are entity object attributes, though in fact they are stored and managed by <strong>State objects</strong></p>
@@ -996,11 +1011,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -1036,38 +1051,17 @@
         </li>
         
         
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <h4 id="clone-management">Clone management</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) {
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onEnter</span>) clone.<span class="hljs-property">onEnter</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onEnter</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onLeave</span>) clone.<span class="hljs-property">onLeave</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onLeave</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onDown</span>) clone.<span class="hljs-property">onDown</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onDown</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onUp</span>) clone.<span class="hljs-property">onUp</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onUp</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onOtherInteraction</span>) clone.<span class="hljs-property">onOtherInteraction</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onOtherInteraction</span>;</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p>Shared state</p>
+              <h4 id="clone-management">Clone management</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">sharedState</span>) clone.<span class="hljs-property">state</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) {</pre></div></div>
             
         </li>
         
@@ -1078,21 +1072,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
-              <p>Cloned anchors</p>
+              <p>Shared state</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchor</span>) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">sharedState</span>) clone.<span class="hljs-property">state</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
 
-            items.<span class="hljs-property">anchor</span>.<span class="hljs-property">host</span> = clone;
-
-            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">anchor</span>.<span class="hljs-property">focusAction</span>)) items.<span class="hljs-property">anchor</span>.<span class="hljs-property">focusAction</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-property">focusAction</span>;
-            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">anchor</span>.<span class="hljs-property">blurAction</span>)) items.<span class="hljs-property">anchor</span>.<span class="hljs-property">blurAction</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-property">blurAction</span>;
-
-            clone.<span class="hljs-title function_">buildAnchor</span>(items.<span class="hljs-property">anchor</span>);
-
-            <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">anchor</span>.<span class="hljs-property">clickAction</span>) clone.<span class="hljs-property">anchor</span>.<span class="hljs-property">clickAction</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-property">clickAction</span>;
-        }
         <span class="hljs-keyword">return</span> clone;
     };</pre></div></div>
             
@@ -1885,15 +1870,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
-              <p>Stamp the entity onto the pool Cell</p>
+              <p>Handle GCO</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();
-
-            <span class="hljs-keyword">if</span> (hasFilters) {
-
-                <span class="hljs-keyword">const</span> filters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> oldGCO = <span class="hljs-variable constant_">SOURCE_OVER</span>
+            <span class="hljs-keyword">if</span> (state) oldGCO = state.<span class="hljs-property">globalCompositeOperation</span>;</pre></div></div>
             
         </li>
         
@@ -1903,6 +1885,40 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-62">&#x00a7;</a>
+              </div>
+              <p>Stamp the entity onto the pool Cell</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-63">&#x00a7;</a>
+              </div>
+              <p>Restore GCO</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (state) state.<span class="hljs-property">globalCompositeOperation</span> = oldGCO;
+
+            <span class="hljs-keyword">if</span> (hasFilters) {
+
+                <span class="hljs-keyword">const</span> filters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p>If we’re using the entity as a stencil, copy the entity cell’s current display over the entity in the pool Cell</p>
 
@@ -1924,7 +1940,7 @@
 
                 <span class="hljs-keyword">const</span> myimage = filterEng.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, w, h);
 
-                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preprocessFilters</span>(filters);
+                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preprocessFilters</span>(filters, w, h);
 
                 <span class="hljs-keyword">const</span> img = filterEngine.<span class="hljs-title function_">action</span>({
                     <span class="hljs-attr">identifier</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">filterIdentifier</span>,
@@ -1942,11 +1958,11 @@
         </li>
         
         
-        <li id="section-63">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p>To note: <code>checkHitIgnoreTransparency</code> is specific to Picture entity</p>
 
@@ -1967,11 +1983,11 @@
         </li>
         
         
-        <li id="section-64">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p>This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img&gt; elements for use elsewhere in the Scrawl-canvas ecosystem.</p>
 
@@ -1992,11 +2008,11 @@
         </li>
         
         
-        <li id="section-65">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p>KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo <a href="../../demo/canvas-020.html">Canvas-020</a> for a workaround.</p>
 
@@ -2045,11 +2061,11 @@
         </li>
         
         
-        <li id="section-66">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>getCellCoverage</code> - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the <code>scrawl.createImageFromEntity</code> function is invoked.</p>
 
@@ -2087,11 +2103,11 @@
         </li>
         
         
-        <li id="section-67">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>simpleStamp</code> - an alternative to the <code>stamp</code> function, to get an entity to stamp its output onto a Cell.</p>
 <ul>
@@ -2117,11 +2133,11 @@
         </li>
         
         
-        <li id="section-68">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>All actual drawing is achieved using the entity’s pre-calculated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D object</a>.</p>
@@ -2131,11 +2147,11 @@
         </li>
         
         
-        <li id="section-69">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><code>draw</code> - stroke the entity outline with the entity’s <code>strokeStyle</code> color, gradient or pattern - including shadow</p>
 
@@ -2149,11 +2165,11 @@
         </li>
         
         
-        <li id="section-70">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><code>fill</code> - fill the entity with the entity’s <code>fillStyle</code> color, gradient or pattern - including shadow</p>
 
@@ -2167,11 +2183,11 @@
         </li>
         
         
-        <li id="section-71">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code> - stamp the entity stroke, then fill, then remove shadow and repeat</p>
 
@@ -2191,11 +2207,11 @@
         </li>
         
         
-        <li id="section-72">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code> - stamp the entity fill, then stroke, then remove shadow and repeat</p>
 
@@ -2215,11 +2231,11 @@
         </li>
         
         
-        <li id="section-73">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code> - stroke the entity’s outline, then fill it (shadow applied twice)</p>
 
@@ -2236,11 +2252,11 @@
         </li>
         
         
-        <li id="section-74">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code> - fill the entity’s outline, then stroke it (shadow applied twice)</p>
 
@@ -2257,11 +2273,11 @@
         </li>
         
         
-        <li id="section-75">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><code>clip</code> - restrict drawing activities to the entity’s enclosed area</p>
 
@@ -2275,11 +2291,11 @@
         </li>
         
         
-        <li id="section-76">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><code>clear</code> - remove everything that would have been covered if the entity had performed fill (including shadow)</p>
 
@@ -2298,11 +2314,11 @@
         </li>
         
         
-        <li id="section-77">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><code>none</code> - perform all the calculations required, but don’t perform the final stamping</p>
 

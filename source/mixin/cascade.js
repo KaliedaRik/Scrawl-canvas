@@ -64,6 +64,7 @@ export default function (P = Ωempty) {
         return [].concat(this.groups);
     };
 
+// Passes the first argument to the `addGroups` function. Not recommended
     S.groups = function (item) {
 
         this.groups.length = 0;

@@ -16,7 +16,7 @@ import { calculatePath, releasePathCalcObject, requestPathCalcObject } from '../
 import entityMix from './entity.js';
 
 // Shared constants
-import { _atan2, _ceil, _floor, _isFinite, _parse, _piHalf, _pow, _radian, BEZIER, CLOSE, DESTINATION_OUT, LINEAR, MOUSE, MOVE, PARTICLE, QUADRATIC, SOURCE_OVER, T_BEZIER, T_LINE, T_POLYLINE, T_QUADRATIC, UNKNOWN, ZERO_STR } from '../helper/shared-vars.js';
+import { _atan2, _isFinite, _parse, _piHalf, _pow, _radian, BEZIER, CLOSE, DESTINATION_OUT, LINEAR, MOUSE, MOVE, PARTICLE, QUADRATIC, SOURCE_OVER, T_BEZIER, T_LINE, T_POLYLINE, T_QUADRATIC, UNKNOWN, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const HALFTRANS = 'rgb(0 0 0 / 0.5)';
@@ -659,6 +659,6 @@ export default function (P = Ωempty) {
         if (w < minDims) w = minDims;
         if (h < minDims) h = minDims;
 
-        return [_floor(x - hX), _floor(y - hY), _ceil(w), _ceil(h), sX, sY];
+        return [x - hX, y - hY, w, h, sX, sY];
     };
 }

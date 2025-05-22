@@ -576,40 +576,6 @@
               </div>
               <h1 id="ticker-factory">Ticker factory</h1>
 <p>Ticker objects represent a timeline against which <a href="./tween.html">Tween</a> and <a href="./action.html">Action</a> objects will run.</p>
-<ul>
-<li><em><strong>A Ticker is an animation</strong></em> (but not a Scrawl-canvas <a href="./animation.html">Animation</a>) object; it defines a <code>fn</code> function internally which will check through all Tween and Action objects subscribing to it and, where appropriate, trigger their <code>update</code> functions.</li>
-<li>This module defines and launches a <code>coreTickersAnimation</code> Animation object; all Ticker objects get added to this object when their <code>run</code> or <code>resume</code> functions are triggered.</li>
-<li>The <code>coreTickersAnimation</code> object runs in the Scrawl-canvas <code>animationLoop</code> which is tied to the browser/device’s requestAnimationFrame (RAF) functionality.</li>
-<li><code>coreTickersAnimation</code> runs before other Animation objects, thus <em><strong>Tween/Action updates happen before any Display cycle functionality</strong></em>.</li>
-<li>Unlike Animation objects, <em><strong>Ticker objects do not run automatically</strong></em> as soon as they have been created.</li>
-<li>To trigger a Ticker object, invoke its <code>run</code> or <code>resume</code> functions.</li>
-</ul>
-<p>Ticker objects have an <em><strong>effective duration</strong></em> - a set number of milliseconds for which they will run.</p>
-<ul>
-<li>We can set this value directly, using the <code>duration</code> attribute.</li>
-<li>We can also ask the Ticker to calculate its own effective duration, taking into accout the start times and duration of its currently subscribed Tweens and Actions</li>
-<li>By default a Ticker will run once, then terminate (remove itself from the <code>coreTickersAnimation</code> function). This counts as 1 cycle.</li>
-<li>We can get the Ticker to run multiple times before terminating, by setting its <code>cycles</code> attribute to a positive integer Number value.</li>
-<li>Setting the <code>cycles</code> attribute to <code>0</code> causes the Ticker to run continuously once started, until told to stop.</li>
-<li>Note that Tickers always run forwards, never backwards. Tweens and Actions can be reversed by setting the appropriate flags on them.</li>
-</ul>
-<p>Tickers (unlike Animations) take part in Scrawl-canvas packet functionality; they can be saved, restored and cloned.</p>
-<p>Tickers can be controlled through a set of trigger functions: <strong>run, halt, reverse, resume, seekTo, seekFor, complete, reset</strong>.</p>
-<ul>
-<li>We can add <em><strong>Ticker hook functions</strong></em> to each of these trigger functions.</li>
-</ul>
-<p>A Ticker can be made to dispatch a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">DOM Custom Event</a> at regular intervals as it runs, by setting its <code>eventChoke</code> attribute to a Number value (representing milliseconds) greater than <code>0</code>.</p>
-<ul>
-<li>The Custom Event is named <code>tickerupdate</code>.</li>
-<li>Its <code>detail</code> object includes the following attributes: <strong>name</strong> (Ticker name-String); <strong>type</strong> (<code>Ticker</code>); <strong>tick</strong> (milliseconds since Ticker started running); <strong>reverseTick</strong> (milliseconds remaining until Ticker completes its current cycle).</li>
-<li>The Event bubbles, and is cancelable.</li>
-</ul>
-<p>Tickers are very closely associated with Tweens.</p>
-<ul>
-<li>Each Ticker can have more than one Tween (and 0 or more Actions) subscribed to it.</li>
-<li>Tweens and Actions can be told to subscribe to a Ticker when they are created; they can change their Ticker subscription at any time.</li>
-<li><em><strong>A Tween can make its own Ticker when it is created.</strong></em></li>
-</ul>
 
             </div>
             
@@ -622,34 +588,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>TODO: basic packet and kill functionality tested in Demo DOM-004, but there’s a lot of Ticker/Tween/Action functionality that needs to be explored and tested further:</p>
-<ul>
-<li>If we kill a Ticker but leave associated Tweens untouched, will running those Tweens crash the script?</li>
-<li>Can we successfully clone a Tween whose Ticker has been killed?</li>
-<li>A Ticker can have more than one subscribed Tween/Action; can (should?) Tweens/Actions be able to subscribe to more than one Ticker? <em>Initial thoughts: no - if such functionality required, clone the Tween/Action</em></li>
-<li>Can Tickers be nested? How could we use nested Tickers? <em>Initial thoughts: yes to nesting, possibly use an Action on one ticker to run/halt a second Ticker; one use case may be to break up a complex animation into smaller, more discrete parts? But this all begs the question: if we halt a nested Ticker (via user interaction), how would we cascade that through to parent/sibling Tickers?</em></li>
-<li>Possible additional demo - tie a more complex Ticker/Tween/Action sequence to a graphical timeline - see blog post <a href="https://blog.rikworks.co.uk/2018/05/26/Adding-some-canvas-love-to-Hexo/">Adding some canvas love to Hexo</a>.</li>
-<li>Would be a Big Win if we can tether Ticker/Tween/Actions to progress while a video plays - opens up the world of <em><strong>interactive video</strong></em>.</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
               <h4 id="imports">Imports</h4>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { animation, animationtickers, constructors, tween } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { convertTime, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xt, xtGet, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { convertTime, doCreate, isa_obj, mergeOver, pushUnique, removeItem, xt, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./animation.js&#x27;</span>;
 
@@ -660,17 +605,32 @@
         </li>
         
         
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _floor, _now, <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">T_ACTION</span>, <span class="hljs-variable constant_">T_RENDER_ANIMATION</span>, <span class="hljs-variable constant_">T_TICKER</span>, <span class="hljs-variable constant_">T_TWEEN</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Shared constants</p>
+              <p>Local constants</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _floor, _isArray, _now, <span class="hljs-variable constant_">FUNCTION</span>, <span class="hljs-variable constant_">PC</span>, <span class="hljs-variable constant_">T_RENDER_ANIMATION</span>, <span class="hljs-variable constant_">T_TWEEN</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">ANIMATIONTICKERS</span> = <span class="hljs-string">&#x27;animationtickers&#x27;</span></pre></div></div>
             
         </li>
         
@@ -680,23 +640,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
-              </div>
-              <p>Local constants</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">ANIMATIONTICKERS</span> = <span class="hljs-string">&#x27;animationtickers&#x27;</span>,
-    <span class="hljs-variable constant_">T_TICKER</span> = <span class="hljs-string">&#x27;Ticker&#x27;</span>,
-    <span class="hljs-variable constant_">TICKERUPDATE</span> = <span class="hljs-string">&#x27;tickerupdate&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="ticker-constructor">Ticker constructor</h4>
 
@@ -719,7 +662,6 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">startTime</span> = <span class="hljs-number">0</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTime</span> = <span class="hljs-number">0</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">tick</span> = <span class="hljs-number">0</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastEvent</span> = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">if</span> (items.<span class="hljs-property">subscribers</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">subscribe</span>(items.<span class="hljs-property">subscribers</span>);
 
@@ -730,11 +672,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="ticker-prototype">Ticker prototype</h4>
 
@@ -749,11 +691,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -764,11 +706,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="ticker-attributes">Ticker attributes</h4>
 
@@ -779,11 +721,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>order</strong> - positive integer Number - determines the order in which each Ticker animation object will be actioned before the Display cycle starts.</p>
 <ul>
@@ -798,11 +740,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>duration</strong> - can accept a variety of values:</p>
 <ul>
@@ -818,11 +760,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>subscribers</strong> - Array of Tween and Action name-Strings. Use <code>subscribe</code> and <code>unsubscribe</code> functions rather than the <code>set</code> function to add/remove Tweens and/or Actions to/from the Ticker</p>
 
@@ -833,11 +775,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>killOnComplete</strong> - Boolean flag. When set, the Ticker will kill both itself and all Tweens and Actions associated with it at the end of its run</p>
 
@@ -848,11 +790,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>cycles</strong> - positive integer Number representing the number of cycles the Ticker will run before it completes.</p>
 <ul>
@@ -867,26 +809,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p><strong>eventChoke</strong> - positive Number representing the time to elapse before the Ticker creates and emits another event. A value of <code>0</code> stops the Ticker emitting events as it runs.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">eventChoke</span>: <span class="hljs-number">0</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>observer</strong> - String name of a RenderAnimation object, or the object itself - halt/resume the ticker based on the running state of the animation object</p>
 
@@ -897,11 +824,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-17">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>The Ticker object supports some <strong>hook functions</strong>:</p>
 <ul>
@@ -931,11 +858,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-18">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -947,11 +874,11 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
         </li>
         
         
-        <li id="section-19">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required.</p>
@@ -961,37 +888,57 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
         </li>
         
         
-        <li id="section-20">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p><code>kill</code> - remove Ticker from Scrawl-canvas system.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killTweens = <span class="hljs-literal">true</span>, autokill = <span class="hljs-literal">true</span></span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">halt</span>();
+    <span class="hljs-keyword">if</span> (killTweens) {
 
-    <span class="hljs-title function_">removeItem</span>(tickerAnimations, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
-    tickerAnimationsFlag = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">const</span> subs = [...<span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>];
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = subs.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">const</span> sub = tween[subs[i]];
+
+            <span class="hljs-keyword">if</span> (sub) {
+
+                sub.<span class="hljs-title function_">completeAction</span>();
+                sub.<span class="hljs-title function_">kill</span>();
+            }
+        }
+    }
+
+    <span class="hljs-keyword">if</span> (autokill) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">halt</span>();
+
+        <span class="hljs-title function_">removeItem</span>(tickerAnimations, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+        tickerAnimationsFlag = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
+
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-21">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>killTweens</code> - remove a Ticker’s subscribed Tweens from Scrawl-canvas system.</p>
 <ul>
@@ -1002,32 +949,17 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">killTweens</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">autokill = <span class="hljs-literal">false</span></span>) {
 
-    <span class="hljs-keyword">let</span> i, iz, sub;
-
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-
-        sub = tween[<span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>[i]];
-        sub.<span class="hljs-title function_">completeAction</span>();
-        sub.<span class="hljs-title function_">kill</span>();
-    }
-
-    <span class="hljs-keyword">if</span> (autokill) {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">kill</span>();
-        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-    }
-
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>, autokill);
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-22">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1039,11 +971,11 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
         </li>
         
         
-        <li id="section-23">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><strong>subscribers</strong> - see also the <code>subscribe</code> and <code>unsubscribe</code> functions below</p>
 <ul>
@@ -1055,22 +987,21 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
             
             <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>);
+    <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>];
 };
 S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span> = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">subscribe</span>(item);
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-24">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>order</strong></p>
 
@@ -1086,11 +1017,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-25">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>cycles</strong></p>
 
@@ -1106,11 +1037,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-26">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><strong>duration</strong> - changes to the <code>duration</code> (and as a consequence <code>effectiveDuration</code>) attributes will be cascaded down to subscribed Tweens and Actions immediately.</p>
 
@@ -1144,15 +1075,102 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <h4 id="subscription-management">Subscription management</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p><code>subscribe</code> - can accept one or more arguments, each of which can be:</p>
+<ul>
+<li>a Tween or Action name-String, or the Tween or Action objects themselves</li>
+<li>an Array of such name-Strings or objects</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">subscribe</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
+
+    <span class="hljs-keyword">const</span> items = args.<span class="hljs-title function_">flat</span>(<span class="hljs-title class_">Infinity</span>);
+
+    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">length</span>) {
+
+        items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+
+            <span class="hljs-keyword">let</span> obj;
+
+            <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) obj = tween[item];
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; (item.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_ACTION</span> || item.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_TWEEN</span>)) obj = item;
+
+            <span class="hljs-keyword">if</span> (obj) {
+
+                <span class="hljs-title function_">pushUnique</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>, obj.<span class="hljs-property">name</span>);
+                obj.<span class="hljs-property">ticker</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
+                obj.<span class="hljs-title function_">calculateEffectiveTime</span>();
+            }
+        });
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortSubscribers</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">recalculateEffectiveDuration</span>();
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <h4 id="subscription-management">Subscription management</h4>
+              <p><code>unsubscribe</code> - can accept one or more arguments, each of which can be:</p>
+<ul>
+<li>a Tween or Action name-String, or the Tween or Action objects themselves</li>
+<li>an Array of such name-Strings or objects</li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">unsubscribe</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
+
+    <span class="hljs-keyword">const</span> items = args.<span class="hljs-title function_">flat</span>(<span class="hljs-title class_">Infinity</span>);
+
+    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">length</span>) {
+
+        items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+
+            <span class="hljs-keyword">let</span> obj;
+
+            <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) obj = tween[item];
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; (item.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_ACTION</span> || item.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_TWEEN</span>)) obj = item;
+
+            <span class="hljs-keyword">if</span> (obj) {
+
+                <span class="hljs-title function_">removeItem</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>, obj.<span class="hljs-property">name</span>);
+                obj.<span class="hljs-property">ticker</span> = <span class="hljs-variable constant_">ZERO_STR</span>;
+            }
+        });
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortSubscribers</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">recalculateEffectiveDuration</span>();
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};</pre></div></div>
             
         </li>
         
@@ -1162,89 +1180,6 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
               
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
-              </div>
-              <p><code>subscribe</code> - accepts a Tween or Action name-String, or an Array of such Strings.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">subscribe</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
-
-    <span class="hljs-keyword">const</span> myItems = <span class="hljs-title function_">requestArray</span>();
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(items)) myItems.<span class="hljs-title function_">push</span>(...items);
-    <span class="hljs-keyword">else</span> myItems.<span class="hljs-title function_">push</span>(items);
-
-    <span class="hljs-keyword">let</span> i, iz, item, name;
-
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = myItems.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-
-        item = myItems[i];
-
-        <span class="hljs-keyword">if</span>(item != <span class="hljs-literal">null</span>){
-
-            <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) name = item;
-            <span class="hljs-keyword">else</span> name = (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; item.<span class="hljs-property">name</span>) ? item.<span class="hljs-property">name</span> : <span class="hljs-literal">false</span>;
-
-            <span class="hljs-keyword">if</span> (name) <span class="hljs-title function_">pushUnique</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>, name);
-        }
-    }
-
-    <span class="hljs-keyword">if</span> (myItems.<span class="hljs-property">length</span>) {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortSubscribers</span>();
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">recalculateEffectiveDuration</span>();
-    }
-    <span class="hljs-title function_">releaseArray</span>(myItems);
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <p><code>unsubscribe</code> - accepts a Tween or Action name-String, or an Array of such Strings.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">unsubscribe</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
-
-    <span class="hljs-keyword">const</span> myItems = <span class="hljs-title function_">requestArray</span>();
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(items)) myItems.<span class="hljs-title function_">push</span>(...items);
-    <span class="hljs-keyword">else</span> myItems.<span class="hljs-title function_">push</span>(items);
-
-    <span class="hljs-keyword">let</span> i, iz, item, name;
-
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = myItems.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-
-        item = items[i];
-
-        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) name = item;
-        <span class="hljs-keyword">else</span> name = (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; item.<span class="hljs-property">name</span>) ? item.<span class="hljs-property">name</span> : <span class="hljs-literal">false</span>;
-
-        <span class="hljs-keyword">if</span> (name) <span class="hljs-title function_">removeItem</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>, name);
-    }
-
-    <span class="hljs-keyword">if</span> (myItems.<span class="hljs-property">length</span>) {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortSubscribers</span>();
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">recalculateEffectiveDuration</span>();
-    }
-    <span class="hljs-title function_">releaseArray</span>(myItems);
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>repopulateSubscriberObjects</code></p>
 
@@ -1269,11 +1204,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-31">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>getSubscriberObjects</code></p>
 
@@ -1289,11 +1224,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-32">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>sortSubscribers</code> - internal Helper function called by <code>subscribe</code> and <code>unsubscribe</code></p>
 
@@ -1341,11 +1276,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-33">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>updateSubscribers</code> - internal function called by the <code>run</code>, <code>reset</code> and <code>complete</code> functions below.</p>
 <ul>
@@ -1383,11 +1318,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-34">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><code>changeSubscriberDirection</code> - internal function - when invoked, Tween/Actions will be told to reverse their current direction.</p>
 
@@ -1405,51 +1340,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-35">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
-              </div>
-              <h4 id="events">Events</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
-              </div>
-              <p><code>makeTickerUpdateEvent</code> - internal function - generates a new CustomEvent object.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeTickerUpdateEvent</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CustomEvent</span>(<span class="hljs-variable constant_">TICKERUPDATE</span>, {
-        <span class="hljs-attr">detail</span>: {
-            <span class="hljs-attr">name</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>,
-            <span class="hljs-attr">type</span>: <span class="hljs-variable constant_">T_TICKER</span>,
-            <span class="hljs-attr">tick</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">tick</span>,
-            <span class="hljs-attr">reverseTick</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveDuration</span> - <span class="hljs-variable language_">this</span>.<span class="hljs-property">tick</span>
-        },
-        <span class="hljs-attr">bubbles</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">cancelable</span>: <span class="hljs-literal">true</span>
-    });
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <h4 id="animation">Animation</h4>
 
@@ -1458,11 +1353,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-38">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><code>recalculateEffectiveDuration</code> - where a Ticker has not been given a <code>duration</code> value, it needs to consult its subscribed Tween/Action objects to calculate an <code>effectiveDuration</code> value with sufficient time allocated for each Tween to run to completion, and each Action to trigger.</p>
 <ul>
@@ -1493,11 +1388,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-39">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Shouldn’t cause an infinite loop …</p>
 
@@ -1511,11 +1406,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-40">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><code>setEffectiveDuration</code> - internal helper function - convert <code>duration</code> value into <code>effectiveDuration</code> value.</p>
 
@@ -1532,11 +1427,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-41">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Cannot use %-String values for Ticker <code>duration</code> attribute</p>
 
@@ -1555,11 +1450,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-42">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>checkObserverRunningState</code> - internal helper function</p>
 
@@ -1592,11 +1487,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-43">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>fn</code> - internal - the <strong>animation function</strong> will trigger once per RequestAnimationFrame (RAF) tick - approximately 60 times a second, depending on other calculation work.</p>
 <ul>
@@ -1611,11 +1506,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-44">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>Determine the order in which subscribed objects will be processed</p>
 
@@ -1626,11 +1521,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-45">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>Request a <code>result</code> object from the pool.</p>
 
@@ -1640,10 +1535,9 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
 
     <span class="hljs-keyword">const</span> startTime = <span class="hljs-variable language_">this</span>.<span class="hljs-property">startTime</span>,
         cycles = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cycles</span>,
-        effectiveDuration = <span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveDuration</span>,
-        eventChoke = <span class="hljs-variable language_">this</span>.<span class="hljs-property">eventChoke</span>;
+        effectiveDuration = <span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveDuration</span>;
 
-    <span class="hljs-keyword">let</span> i, iz, subs, eTime, now, e,
+    <span class="hljs-keyword">let</span> i, iz, subs,
         currentTime, tick,
         active = <span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>,
         cycleCount = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cycleCount</span>;</pre></div></div>
@@ -1651,11 +1545,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-46">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>Process only if the Ticker is currently <em><strong>active</strong></em> and has a <em><strong>startTime</strong></em> value assigned to it.</p>
 
@@ -1666,11 +1560,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-47">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>Process only if the Ticker’s <code>cycles</code> attribute has been set to <code>0</code>, or if the Ticker has not yet completed all its cycles.</p>
 
@@ -1684,11 +1578,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-48">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>Update the results object</p>
 <ul>
@@ -1724,11 +1618,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-49">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <ul>
 <li>Functionality performed only when the <em><strong>Tween is on its final cycle</strong></em>.</li>
@@ -1761,11 +1655,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-50">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p>Invoke the <code>update</code> function on each subscribed Tween/Action</p>
 
@@ -1791,37 +1685,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-51">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
-              </div>
-              <p>Dispatch the Ticker Event, if required.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (eventChoke) {
-
-                eTime = <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastEvent</span> + eventChoke;
-                now = <span class="hljs-title function_">_now</span>();
-
-                <span class="hljs-keyword">if</span> (eTime &lt; now) {
-
-                    e = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeTickerUpdateEvent</span>();
-                    <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">dispatchEvent</span>(e);
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastEvent</span> = now;
-                }
-            }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-52">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p>If this invocation of the function has completed the Ticker’s run, switch it off.</p>
 
@@ -1832,11 +1700,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-53">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>If the Ticker’s run is completed and the <code>killOnComplete</code> flag is set, kill everything.</p>
 
@@ -1849,11 +1717,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-54">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p>Release the <code>result</code> object back to the pool.</p>
 
@@ -1865,11 +1733,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-55">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <h4 id="animation-control">Animation control</h4>
 
@@ -1878,11 +1746,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-56">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><code>run</code></p>
 <ul>
@@ -1916,11 +1784,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-57">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>isRunning</code> - check to see if Ticker is in a running state.</p>
 
@@ -1934,11 +1802,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-58">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>reset</code></p>
 <ul>
@@ -1974,11 +1842,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-59">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>complete</code></p>
 <ul>
@@ -2014,11 +1882,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-60">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>reverse</code> - simulates a reversal in the Ticker’s animation.</p>
 <ul>
@@ -2033,11 +1901,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">reverse</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">resume = <span class="hljs-literal">false</span></span>) {
 
-    resume = <span class="hljs-title function_">xtGet</span>(resume, <span class="hljs-literal">false</span>);
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>) {
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">halt</span>();
-    }
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">halt</span>();
 
     <span class="hljs-keyword">const</span> timePlayed = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTime</span> - <span class="hljs-variable language_">this</span>.<span class="hljs-property">startTime</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">startTime</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTime</span> - (<span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveDuration</span> - timePlayed);
@@ -2057,11 +1921,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-61">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>halt</code></p>
 <ul>
@@ -2085,11 +1949,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-62">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><code>resume</code> - this function can also be triggered by the <code>reverse</code>, <code>seekTo</code> and <code>seekFor</code> functions</p>
 <ul>
@@ -2123,11 +1987,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-63">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>seekTo</code></p>
 <ul>
@@ -2141,11 +2005,9 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">seekTo</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">milliseconds, resume = <span class="hljs-literal">false</span></span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">seekTo</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">milliseconds = <span class="hljs-number">0</span>, resume = <span class="hljs-literal">false</span></span>) {
 
     <span class="hljs-keyword">let</span> backwards = <span class="hljs-literal">false</span>;
-
-    milliseconds = <span class="hljs-title function_">xtGet</span>(milliseconds, <span class="hljs-number">0</span>);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">halt</span>();
 
@@ -2170,11 +2032,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-64">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>seekFor</code></p>
 <ul>
@@ -2188,11 +2050,9 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">seekFor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">milliseconds, resume = <span class="hljs-literal">false</span></span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">seekFor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">milliseconds = <span class="hljs-number">0</span>, resume = <span class="hljs-literal">false</span></span>) {
 
     <span class="hljs-keyword">let</span> backwards = <span class="hljs-literal">false</span>;
-
-    milliseconds = <span class="hljs-title function_">xtGet</span>(milliseconds, <span class="hljs-number">0</span>);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">active</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">halt</span>();
 
@@ -2217,11 +2077,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-65">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <h4 id="ticker-animation-controller">Ticker animation controller</h4>
 
@@ -2233,11 +2093,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-66">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>coreTickersAnimation</code></p>
 
@@ -2252,11 +2112,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-67">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>We only sort active Ticker objects when absolutely necessary.</p>
 <ul>
@@ -2304,11 +2164,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-68">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>Invoke each Ticker’s <code>fn</code> function.</p>
 <ul>
@@ -2330,11 +2190,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-69">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <h4 id="resultobject-pool">ResultObject pool</h4>
 <p>TODO: do we need a pool for this?</p>
@@ -2350,11 +2210,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-70">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>requestResultObject</code></p>
 
@@ -2378,11 +2238,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-71">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><code>releaseResultObject</code></p>
 
@@ -2403,11 +2263,11 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-72">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 

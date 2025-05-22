@@ -787,12 +787,6 @@
             <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">groups</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>);
-    };
-
-    S.<span class="hljs-property">groups</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addGroups</span>(item);
     };</pre></div></div>
             
         </li>
@@ -804,9 +798,15 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <p>Passes the first argument to the <code>addGroups</code> function. Not recommended</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">groups</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addGroups</span>(item);
+    };</pre></div></div>
             
         </li>
         
@@ -816,6 +816,19 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><code>sortGroups</code> - internal function - Groups are sorted from the <strong>groups</strong> Array into the <strong>groupBuckets</strong> array using a bespoke bucket sort algorithm, based on each Group object’s <strong>order</strong> attribute</p>
 
@@ -865,11 +878,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>initializeCascade</code> - internal function used by factory constructors</p>
 
@@ -884,11 +897,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h5 id="group-management">Group management</h5>
 <p>Groups should be added to, and removed from, the controller object using the <strong>addGroups</strong> and <strong>removeGroups</strong> functions. The argument can be one or more Group object’s name attribute, or the Group object(s) itself.</p>
@@ -898,11 +911,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>addGroups</code></p>
 
@@ -926,11 +939,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>removeGroups</code></p>
 
@@ -954,11 +967,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><code>cascadeAction</code> - internal helper function used by the functions below</p>
 
@@ -982,11 +995,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><code>updateArtefacts</code> - Update all artefact objects in all the controller object’s Groups. The supplied argument will be passed on to each artefact’s <code>setDelta</code> function.</p>
 
@@ -1001,11 +1014,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>updateArtefacts</code> - Set all artefact objects in all the controller object’s Groups. The supplied argument will be passed on to each artefact’s <code>set</code> functions</p>
 
@@ -1020,11 +1033,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>addArtefactClasses</code> - specific to DOM-related artefacts (Stack, Canvas, Element)</p>
 
@@ -1039,11 +1052,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>removeArtefactClasses</code> - specific to DOM-related artefacts (Stack, Canvas, Element)</p>
 
@@ -1058,11 +1071,11 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><code>updateByDelta</code> - triggers the related artefact function, to update (add) its attributes by values held in its <code>delta</code> object attribute</p>
 
@@ -1077,11 +1090,11 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>reverseByDelta</code> - triggers the related artefact function, to reverse (subtract) its attributes by values held in its <code>delta</code> object attribute</p>
 
@@ -1096,11 +1109,11 @@
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h5 id="collision-detection">Collision detection</h5>
 <p>The <code>getArtefactAt</code> function checks to see if any of the controller object’s Groups’ artefacts are located at the supplied coordinates in the argument object.</p>
@@ -1139,11 +1152,11 @@
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>The <code>getAllArtefactsAt</code> function returns all of the controller object’s Groups’ artefacts located at the supplied coordinates in the argument object.</p>
 <ul>

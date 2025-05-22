@@ -1,0 +1,2516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Runbook: filter engine</title>
+    <link rel='icon' type='image/png' href='/favicon.png'>
+    <link href="../css/normalize.css" rel="stylesheet" />
+    <link href="../css/general-reference.css" rel="stylesheet" />
+
+    <!-- general page metadata -->
+    <meta name="author" content="Rik Roots">
+    <meta name="description" content="undefined - ">
+</head>
+<body>
+    
+    <nav>
+        <a href=sc-positioning.html>Previous</a>
+        <a href="index.html">Contents</a>
+        <a href=sc-particle-engine.html>Next</a>
+    </nav>
+
+    <main>
+        <h1 id="scrawl-canvas-filters">Scrawl-canvas filters</h1>
+<p>The purpose of a computer graphics filter is to take an input graphic, apply a set of manipulations to each pixel in the graphic, and output the modified result. For web pages, filter algorithms are generally applied to elements - including <code>&lt;canvas&gt;</code> elements - using the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/filter">CSS filter property</a>.</p>
+<blockquote>
+  <p><strong>tl;dr:</strong> Filter effects - however they are used in a web page - are often computationally expensive and risk slowing down page speed and responsiveness. Use filters wisely!</p>
+</blockquote>
+<h2 id="css-and-svg-filters">CSS and SVG filters</h2>
+<p>CSS filters are a set of functions which the dev-user can use to quickly apply a range of effects - <code>blur()</code>, <code>saturate()</code>, <code>drop-shadow()</code>, etc - either to a DOM element or to the background behind that element. While these filters can be stacked (eg: sepia + blur), for more advanced effects CSS offers a <code>url()</code> filter, which allows the dev-user to apply an <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/filter">SVG-defined filter effect</a> to the element.</p>
+<p>Note that SVG filters are complex and powerful. In addition to the MDN page linked above, the following resources may be of interest to the inquisitive:</p>
+<ul>
+<li>(Webplatform, 2015) - <a href="https://webplatform.github.io/docs/svg/tutorials/smarter_svg_filters/">A summary of the various SVG filter primatives</a></li>
+<li>(Codrops, 2019) - <a href="https://tympanus.net/codrops/2019/01/15/svg-filters-101/">A series of articles around SVG filters</a></li>
+<li>(yoksel.github.io) - <a href="https://yoksel.github.io/svg-filters/#/">An interactive SVG filters playground</a></li>
+</ul>
+<p>Browsers extend the use of these filters to Javascript-driven paint operations in the <code>&lt;canvas&gt;</code> element. The canvas context engine includes a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter">filter property</a> (note: the key is singular), which dev-users can use to apply CSS filters to specific fill and stroke invocations. SC implements this functionality via regular <code>set</code> function calls: <code>cell.set({filter: string})</code> for the entire Cell object's display, and <code>entity.set({filter: string})</code> for individual entity objects within the display. Test demo <a href="../../demo/filters-501.html">Filters-501</a> shows this functionality in action.</p>
+<h2 id="the-sc-filter-factory">The SC filter factory</h2>
+<p>While browsers have (for the most part) supported general CSS filter functionality since 2013, extending that support to the canvas context engine <code>engine.filter</code> property has lagged and (as of March 2025, with respect to Safari browsers) remains incomplete.</p>
+<p>Given how useful filter functionality can be for creating various <code>&lt;canvas&gt;</code>-based displays and products, repo-devs built a bespoke filter engine into SC. Much of the functionality for the filter engine is defined in the <a href="../source/helper/filter-engine.html">helper/filter-engine.js</a> file. This filter engine - which is an entirely novel filter system, separate from CSS filters - acts as a singleton object, created during SC initialization, and handles all SC-specific filter effect processing across all <code>&lt;canvas&gt;</code> elements present on the web page.</p>
+<blockquote>
+  <p><strong>tl;dr:</strong> The SC filter engine has been inspired by (the better parts of) the <a href="https://drafts.fxtf.org/filter-effects/">Filter Effects Module Level 1</a> specification (which itself is based on the <a href="https://www.w3.org/TR/SVG11/filters.html">SVG 1.1 (Second Edition) Filter Effects</a> specification). <em>It is</em> <strong><em>NOT an emulation</em></strong> <em>of that specification</em>.</p>
+</blockquote>
+<h3 id="the-scrawlmakefilter-factory-function">The <code>scrawl.makeFilter()</code> factory function</h3>
+<p>SC filters have been built to operate seamlessly with the wider SC environment. Dev-users can create a Filter object using the <code>scrawl.makeFilter()</code> factory function. Once created, the filter can be applied multiple times to Cell, Group and entity objects by adding it to their <code>filters</code> (note: the key is plural!) Array:</p>
+<ul>
+<li>Filter objects can be applied to entity, Group and Cell objects during their instantiation using the <code>filters: ['name-string', Filter-object, ...]</code> attribute. This attribute expects to receive an Array of Filter objects and/or those objects' <code>name</code> strings.</li>
+<li>Following instantiation, any entity, Group or Cell object can have its <code>filters</code> Array updated using the <code>object.addFilters('name-string', Filter-object, ...)</code>, <code>object.removeFilters('name-string', Filter-object, ...)</code> and <code>object.clearFilters()</code> functions.</li>
+</ul>
+<p>The code associated with assigning and managing Filter objects on Cell, Group and entity objects can be found in the <a href="../source/mixin/filter.html">mixin/filter.js</a> file. The factory function code itself is defined in the <a href="../source/factory/filter.html">factory/filter.js</a> file.</p>
+<h4 id="create-filter-objects">Create Filter objects</h4>
+<p>Dev users can instantiate a Filter object at any time using the <code>scrawl.makeFilter({key: value, ...})</code> factory function. The factory takes a single object for its argument, all of whose attributes are optional:</p>
+<pre><code>Attribute   Type             Default               Comments
+----------  ---------------  --------------------  ---------------------------------------------------
+name        String           computer-generated    Must be unique
+actions     ActionObject[]   []                    Action objects define filter actions
+method      String           ''                    Convenience alternative to generate ActionObjects
+lineIn      String           ''                    ID string of chained filter input
+lineMix     String           ''                    ID string of chained filter input
+lineOut     String           ''                    ID string for this filter's output
+opacity     Number           1                     Float number between 0 and 1
+...                                                (Additional ActionObject-specific attributes)</code></pre>
+<p>The Filter objects generated by the <code>scrawl.makeFilter()</code> factory function are <em>tracked objects</em>, thus each object requires its own unique <code>name</code> attribute when being instantiated. Once created, they can be retrieved from the SC library using the <code>scrawl.findFilter('name-string')</code> function.</p>
+<p>There are actually two ways to use the factory function, both of which are equally valid:</p>
+<ul>
+<li>For the <em>modern</em> approach, dev-users can define an Array of <strong>action objects</strong> keyed to the <code>actions</code> attribute. These action objects outline a set of <strong>filter primative functions</strong>, alongside the values to be fed into those functions, which together create the desired filter effect.</li>
+<li>The <em>legacy</em> approach uses the <code>method</code> attribute, alongside the required attributes for the method. SC will automatically create the appropriate action objects for the stipulated method as part of the Filter object's instantiation.</li>
+</ul>
+<p>While the modern approach offers more versatility when it comes to chaining filter primitive functions together to create complex effects, the legacy approach is often more convenient for creating simpler effects. It is also easier to animate legacy filter attributes. Compare the different approaches to creating a simple pixellation filter:</p>
+<pre><code>Legacy approach                           Modern approach
+--------------------------------------    -----------------------------------
+const pixels = scrawl.makeFilter({        const pixels = scrawl.makeFilter({
+  name: 'my-pixellated-filter',             name: 'my-pixellated-filter',
+  method: 'pixelate',                       actions: [{
+  tileWidth: 20,                              action: 'pixelate',
+  tileHeight: 20,                             offsetX: 8,
+  offsetX: 8,                                 offsetY: 8,
+  offsetY: 8,                                 tileHeight: 20,
+});                                           tileWidth: 20,
+                                            }],
+                                          });</code></pre>
+<p>More complex filters - such as this comic-effect filter, as seen in test demo <a href="../../demo/filters-103.html">Filters-103</a> - are easier to build and edit using the modern approach:</p>
+<pre><code>const comicFilter = scrawl.makeFilter({
+  name: 'my-comic-effect-filter',
+  actions: [{
+    action: 'gaussian-blur',
+    radius: 1,
+    lineOut: 'outline1',
+  }, {
+    action: 'matrix',
+    lineIn: 'outline1',
+    lineOut: 'outline2',
+    width: 3,
+    height: 3,
+    offsetX: 1,
+    offsetY: 1,
+    weights: [0,1,0,1,-4,1,0,1,0],
+  }, {
+    action: 'threshold',
+    lineIn: 'outline2',
+    lineOut: 'outline3',
+    level: 6,
+    high: [0, 0, 0, 255],
+    low: [0, 0, 0, 0],
+    includeAlpha: true,
+  }, {
+    action: 'gaussian-blur',
+    radius: 1,
+    lineIn: 'outline3',
+    lineOut: 'outline4',
+  }, {
+    action: 'step-channels',
+    clamp: 'round',
+    lineOut: 'color1',
+    red: 16,
+    green: 16,
+    blue: 16,
+  }, {
+    action: 'gaussian-blur',
+    radius: 4,
+    lineIn: 'color1',
+    lineOut: 'color2',
+  }, {
+    action: 'compose',
+    compose: 'destination-over',
+    lineIn: 'color2',
+    lineMix: 'outline4',
+  }],
+});</code></pre>
+<h4 id="serialize-clone-and-kill-filter-objects">Serialize, clone and kill Filter objects</h4>
+<p>Filter objects can be serialized using the <code>filter.saveAsPacket()</code> function. To deserialize a Filter packet string use either <code>object.importPacket('url-string' | ['url-string', ...])</code> or <code>object.actionPacket('packet-string')</code> functions where <code>object</code> is any existing SC <em>tracked object</em>.</p>
+<p>To clone a Filter object, use the <code>filter.clone({key: value, ...})</code> function. Data included in the function's argument object will overwrite the existing Filter object's values.</p>
+<p>The <code>filter.kill()</code> function will remove the Filter object entirely from the SC environment. This includes removing the filter from any Cell, Group or entity object that may be using it.</p>
+<h2 id="filter-application">Filter application</h2>
+<p>Filter objects are not part of the SC scene graph. Instead they are applied directly to the SC objects they have been associated with (via those objects' <code>filters</code> attribute array), as follows:</p>
+<ul>
+<li>For Cell objects, their associated Filter objects are applied at the point where the Cell stamps itself onto its host Cell, at the end of the <code>compile</code> operation of the Display cycle.</li>
+<li>Group objects set up their filtered output by instructing their associated entity Objects to stamp themselves onto a <code>pool</code> Cell that the Group instantiates and supplies; the filters are then applied to the pool Cell before it is stamped into the Group object's host Cell (near the end of the <code>compile</code> operation of the Display cycle).</li>
+<li>Entity objects also make use of <code>pool</code> Cells to generate their filtered output, which then gets stamped onto whichever Cell object their Group object has supplied to them (that is: the host Cell for unfiltered Groups, or another <code>pool</code> Cell for filtered Groups).</li>
+</ul>
+<p>Note that both CSS/SVG filters, and SC Filter objects, can (in theory) be applied to a Cell or entity object at the same time. The advice to dev-users considering such an approach is: don't! Filters are expensive operations; invoking two entirely separate filter systems on the same object will increase the risk of page performance degredation.</p>
+<h3 id="stacking-filters">Stacking filters</h3>
+<p>CSS filters can be combined:</p>
+<pre><code>&lt;div class="filtered-div"&gt;
+  &lt;p&gt;This is a div element with a CSS filter effect applied to it&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+  .filtered-div {
+    filter: hue-rotate(90deg) drop-shadow(6px 6px 2px black);
+  }
+&lt;/style&gt;</code></pre>
+<p>In the above example, the browser will first apply the <code>hue-rotate</code> filter to the <code>&lt;div&gt;</code> element, then pass the result of that pixel manipulation to the <code>drop-shadow</code> filter for further processing before delivering the final output to the browser's display.</p>
+<p>The simplest way to think of this is as a form of layer stacking: the original input goes at the bottom of the stack then each filter is added, in turn, over the original input until all the filters have been applied. In effect, the output from the previous filter becomes the input for the next filter. The end-user only sees the top of the stack; that is, the final result of the entire operation.</p>
+<p>The SC filter engine follows much the same process (unless directed otherwise). When an entity with an Array of Filter objects gets stamped on its host Cell, the filter engine will take all of those filters and apply their primative functions, in turn, to the entity display. Only after the last primative function completes does the filter engine return the results to the SC system for stamping onto the host Cell.</p>
+<p>This means that the order in which Filter objects appear in the <code>entity.filters</code> Array becomes very important:</p>
+<pre><code>scrawl.makeFilter({
+  name: 'my-gray-filter',
+  method: 'gray',
+}).clone({
+  name: 'my-red-filter',
+  method: 'red',
+});
+
+// This first image will have all of its blue/green channel colors set to 0
+// before the cross-channel-averaging gray effect is applied 
+// - it will display as (a dark) monochrome white
+scrawl.makePicture({
+  name: 'gray-image',
+  asset: 'iris',
+  dimensions: ['100%', '100%'],
+  copyDimensions: ['100%', '100%'],
+  filters: ['my-red-filter', 'my-gray-filter'],
+
+// This cloned image has the filters defined in reverse order
+// - it will display as monochrome red
+}).clone({
+  name: 'red-image',
+  filters: ['my-gray-filter', 'my-red-filter'],
+});</code></pre>
+<table>
+<thead>
+<tr>
+<th id="input_>_red_>_gray_>_output">input &gt; red &gt; gray &gt; output</th>
+<th id="input_>_gray_>_red_>_output">input &gt; gray &gt; red &gt; output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="sc-filter-engine-asset-001.webp" alt="Red before grayscale" /></td>
+<td><img src="sc-filter-engine-asset-002.webp" alt="Grayscale before red" /></td>
+</tr>
+</tbody>
+</table>
+<h3 id="chaining-filters">Chaining filters</h3>
+<p>SVG filters include a way to define the inputs for an SVG filter primitive, and label the primitive's output so that it can be used as an input for a subsequent primitive operation. This method of <strong>filter chaining</strong> is what gives SVG filters their unique power to break away from the linear stacking approach to filter composition.</p>
+<p>SC follows in SVG's footsteps. Every SC filter primative function includes <code>lineIn</code> and <code>lineOut</code> argument attributes to define the primitive's input data and output label; some functions also require a <code>lineMix</code> attribute </p>
+<h4 id="input-and-output-identifiers">Input and output identifiers</h4>
+<p>When an SC object invokes the filter engine to create a filtered output, it will include an <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">imageData object</a> of its unfiltered display for the filter engine to work on. The imageData dimensions will match the dimensions of the host Cell on which the filtered output will eventually be stamped.</p>
+<p>When the SC filter engine receives this imageData, it's first action will be to <strong><em>unwrap</em></strong> the data in preparation for work. Three copies of the imageData object will be cached:</p>
+<ul>
+<li><code>source</code> - this copy is never altered by the filters.</li>
+<li><code>sourceAlpha</code> - this copy is mutated: all pixel color channels get set to <code>0</code>, while the pixel's alpha channel is set to <code>0</code> for transparent pixels, <code>255</code> otherwise.</li>
+<li><code>work</code> - this is the working copy of the imageData object.</li>
+</ul>
+<p>The filter engine then iterates through each filter action object. When the object's action function is invoked, it will check the object's <code>lineIn</code> (and <code>lineMix</code>, if required) attribute and select its input data as follows:</p>
+<ul>
+<li><code>lineIn: 'source'</code> - use the <code>cache.source</code> imageData.</li>
+<li><code>lineIn: 'source-alpha'</code> - use the <code>cache.sourceAlpha</code> imageData.</li>
+<li><code>lineIn: undefined</code> - use the <code>cache.work</code> imageData.</li>
+</ul>
+<p>The <code>lineIn</code> and <code>lineMix</code> attributes can also be String identifiers:</p>
+<ul>
+<li>Whenever an action function completes, it will replace the <code>cache.work</code> imageData object with its own modified imageData output - except where the action object's <code>lineOut</code> identifier String has been defined, in which case the output will be stored in a new <code>cache[identifier]</code> attribute.</li>
+<li>Once a new <code>cache[identifier]</code> attribute has been created, any subsequent action function can use that identifier String for their <code>lineIn</code> (and <code>lineMix</code>) attribute value. The function will use that identifier's imageData object for its input.</li>
+</ul>
+<p>The following example shows the steps involved in creating the filtered output for the comic filter effect, whose code was shown earlier on this page:</p>
+<table>
+<thead>
+<tr>
+<th id="filter">Filter</th>
+<th id="input">Input</th>
+<th id="output">Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Path 1 step 1</strong> <br> <code>action: 'gaussian-blur'</code> <br> <code>lineIn: undefined</code> <br> <code>radius: 1</code> <br> <code>lineOut: 'outline1'</code></td>
+<td><img src="sc-filter-engine-asset-003.webp" alt="Step 1.1 in" /></td>
+<td><img src="sc-filter-engine-asset-004.webp" alt="Step 1.1 out" /></td>
+</tr>
+<tr>
+<td><strong>Path 1 step 2</strong> <br> <code>action: 'matrix'</code> <br> <code>lineIn: 'outline1'</code> <br> <code>width: 3'</code> <br> <code>height: 3'</code> <br> <code>offsetX: 1'</code> <br> <code>offsetY: 1</code> <br> <code>weights: [0,1,0,1,-4,1,0,1,0]</code> <br> <code>lineOut: 'outline2'</code></td>
+<td><img src="sc-filter-engine-asset-004.webp" alt="Step 1.2 in" /></td>
+<td><img src="sc-filter-engine-asset-005.webp" alt="Step 1.2 out" /></td>
+</tr>
+<tr>
+<td><strong>Path 1 step 3</strong> <br> <code>action: 'threshold'</code> <br> <code>lineIn: 'outline2'</code> <br> <code>level: 6</code> <br> <code>high: [0,0,0,255]</code> <br> <code>low: [0,0,0,0]</code> <br> <code>includeAlpha: true</code> <br> <code>lineOut: 'outline3'</code></td>
+<td><img src="sc-filter-engine-asset-005.webp" alt="Step 1.3 in" /></td>
+<td><img src="sc-filter-engine-asset-006.webp" alt="Step 1.3 out" /></td>
+</tr>
+<tr>
+<td><strong>Path 1 step 4</strong> <br> <code>action: 'gaussian-blur'</code> <br> <code>lineIn: 'outline3'</code> <br> <code>radius: 1</code> <br> <code>lineOut: 'outline4'</code></td>
+<td><img src="sc-filter-engine-asset-006.webp" alt="Step 1.4 in" /></td>
+<td><img src="sc-filter-engine-asset-007.webp" alt="Step 1.4 out" /></td>
+</tr>
+<tr>
+<td><strong>Path 2 step 1</strong> <br> <code>action: 'step-channels'</code> <br> <code>lineIn: undefined</code> <br> <code>red: 16</code> <br> <code>green: 16</code> <br> <code>blue: 16</code> <br> <code>clamp: 'round'</code> <br> <code>lineOut: 'color1'</code></td>
+<td><img src="sc-filter-engine-asset-003.webp" alt="Step 2.1 in" /></td>
+<td><img src="sc-filter-engine-asset-008.webp" alt="Step 2.1 out" /></td>
+</tr>
+<tr>
+<td><strong>Path 2 step 2</strong> <br> <code>action: 'gaussian-blur'</code> <br> <code>lineIn: 'color1'</code> <br> <code>radius: 4</code> <br> <code>lineOut: 'color2'</code></td>
+<td><img src="sc-filter-engine-asset-008.webp" alt="Step 2.2 in" /></td>
+<td><img src="sc-filter-engine-asset-009.webp" alt="Step 2.2 out" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th id="filter">Filter</th>
+<th id="input_1">Input 1</th>
+<th id="input_2">Input 2</th>
+<th id="output">Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Composition step</strong> <br> <code>action: 'compose'</code> <br> <code>lineIn: 'color2'</code> <br> <code>lineMix: 'outline4'</code> <br> <code>compose: 'destination-over'</code> <br> <code>lineOut: undefined</code></td>
+<td><img src="sc-filter-engine-asset-009.webp" alt="Step 3 in" /></td>
+<td><img src="sc-filter-engine-asset-007.webp" alt="Step 3 mix" /></td>
+<td><img src="sc-filter-engine-asset-010.webp" alt="Step 3 out" /></td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-opacity">Filter opacity</h3>
+<p>All SC filter primitive functions include a final step - a crude channel-by-channel blending of the function's input imageData data and its calculated output data. The strength of this blend is set in the filter's <code>opacity</code> attribute:</p>
+<ul>
+<li>For <code>opacity: 0</code>, the final output is 100% input + 0% calculated effect</li>
+<li>For <code>opacity: 1</code>, the final output is 0% input + 100% calculated effect</li>
+<li>For <code>opacity: 0.4</code>, the final output is 60% input + 40% calculated effect</li>
+<li>… etc.</li>
+</ul>
+<p>Most of the Filter test demos include an <code>opacity</code> control for repo-dev testing and dev-user investigation.</p>
+<h3 id="using-objects-as-filter-stencils">Using objects as filter stencils</h3>
+<p>CSS/SVG filters can be used to add a filter effect to the background behind a DOM element, via the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter">CSS backdrop-filter property</a>.</p>
+<p>In a similar vein, SC filters can be applied to the (currently stamped) display behind an SC entity object, or a Group of such objects. Dev-users can set up this effect by setting the object's <code>isStencil</code> attribute to <code>true</code>.</p>
+<p>Note that the object will not be able to memoize its filtered output - there's no way that SC can predict whether the background behind an entity has changed between Display cycle frames.</p>
+<p>Test demo <a href="../../demo/filters-028.html">Filters-028</a> demonstrates stencilled filter effects.</p>
+<h3 id="memoizing-a-filtered-objects-output">Memoizing a filtered object's output</h3>
+<p>For any SC-controlled <code>&lt;canvas&gt;</code> which includes any animated effects in its display, that canvas needs to update at a minimum of 20 frames-per-second (fps) - every 50 milliseconds - to make the animation tolerable for the end-user, and preferably should update at a rate of 60fps (16ms) for a smooth animation effect. Some device/screen combinations allow for an update rate of 120fps (8ms) or higher!</p>
+<p>This means that SC must complete all of a Display cycle's required updates - across all <code>&lt;canvas&gt;</code> elements currently animating on the web page - within 16ms. For scenes which include filtered Cell, Group or entity objects this can be a difficult ask, given the intense computational nature of filter calculations.</p>
+<p>Thus it makes sense for filtered objects to cache - <strong><em>memoize</em></strong> - their filtered output as comprehensively as possible. Dev-users can achieve this by setting the <code>memoizeFilterOutput</code> attribute to <code>true</code> on these objects.</p>
+<p>SC attempts to make the memoization process as painless as possible for dev-users. Much of the functionality has been internalized so setting the <code>memoizeFilterOutput</code> flag should be the only action the dev-user has to take.</p>
+<h4 id="internal-memoization-functionality">Internal memoization functionality</h4>
+<p>When a filtered object first has its <code>memoizeFilterOutput</code> flag set to <code>true</code> it will generate a random String and associate it to its internal <code>filterIdentifier</code> attribute. The first time the filter engine processes the object's filters and generates an output it will lodge that output in the SC workstore, keyed to the identifier string, before returning the output for stamping.</p>
+<p>The next time the filter engine encounters the object, it will check the workstore for the identifier key. If the key exists, the engine immediately returns that previously generated output.</p>
+<p>There are a number of actions that can invalidate the memoized filter output. These include:</p>
+<ul>
+<li>Any change to the filtered object's position, dimensions, scale, rotation or other styling.</li>
+<li>Any change to the Array of filters that need to be applied to the object, or (for legacy filters) changes to an associated Filter object's attributes.</li>
+<li>Objects acting as a filter stencil cannot be memoized as there's no way to predict that the canvas display behind the object has not changed</li>
+<li>Filtered Cell object output cannot be memoized (for the same reason).</li>
+</ul>
+<p>Whenever the dev-user triggers such changes, the object will set a <code>dirtyFilterIdentifier</code> flag which in turn will cause the object to set its <code>filterIdentifier</code> attribute to a new random String. The next time the filter engine encounters the object it will not find the new identifier in the SC workstore, leading to it running all the required filter operations on the object and lodging that output in the workstore keyed to the new identifier.</p>
+<p>The workstore regularly purges unaccessed keys - the output keyed to the old identifier will generally be purged one second after it was last accessed.</p>
+<h3 id="one-time-capture-of-a-filtered-objects-output">One-time capture of a filtered object's output</h3>
+<p>SC includes three functions to capture either a Cell, Group or entity object's output in a DOM <code>&lt;img&gt;</code> element which can then be imported into the SC environment as an ImageAsset object. These functions (defined in the <a href="../source/asset-management/image-asset.html">asset-management/image-asset.js</a> file) are:</p>
+<ul>
+<li><code>scrawl.createImageFromCell(object, assetName)</code></li>
+<li><code>scrawl.createImageFromGroup(object, assetName)</code></li>
+<li><code>scrawl.createImageFromEntity(object, assetName)</code></li>
+</ul>
+<p>Where:</p>
+<ul>
+<li>The <code>object</code> argument is either the Cell, Group or entity object, or that object's <code>name</code> attribute value.</li>
+<li>The <code>assetName</code> argument is the String <code>name</code> value which will be given to the new Asset object.</li>
+</ul>
+<p>These functions are one-shot functions: the capture will happen as part of the next Display cycle. The functionality includes adding the visual output to an <code>&lt;img&gt;</code> element in the DOM, as a child of an appropriately hidden <code>&lt;div&gt;</code> element within the <code>&lt;canvas&gt;</code> element. The action is necessarily asynchronous, thus the new Asset object may take a few additional iterations of the Display cycle to show up.</p>
+<p>There are various reasons why a dev-user may want to capture a static image of a Cell, Group or entity object - for instance when a particularly complicated filter has been applied to that object's display but it is not possible to memoize the object's output.</p>
+<p>Once the new asset is captured it can be displayed multiple times in canvas scenes using Picture entitys. For example, see test demos <a href="../../demo/canvas-046.html">Canvas-046</a>, and <a href="../../demo/canvas-020.html">Canvas-020</a>.</p>
+<p>The code associated with this functionality is closely tied with the filter functionality code (described below) as both functionalities rely on using <code>pool</code> Cell objects for generating their output.</p>
+<h3 id="internal-coding-protocols">Internal coding protocols</h3>
+<p>The work to set up a Cell, Group or entity object to be modified by SC filters, and to display the filtered results on a host Cell, happens outside of the SC filter engine and factory code. </p>
+<p>Due to Cell, Group and entity objects having distinct roles in the Display cycle, the protocols for applying filters to them necessarily differ - as described below. All of this functionality happens internally; the dev-user only needs to add filters to the objects for the processes to take place.</p>
+<h4 id="apply-filters-to-cell-objects">Apply filters to Cell objects</h4>
+<p>SC Cell object filters are applied at the end of the Cell's participation in the Display cycle <code>compile</code> operation, after all entitys have stamped themselves onto its display. This filtered result will directly replace the original image data, ready for final display as part of the Display cycle <code>show</code> operation.</p>
+<p>Any required output stashing functionality (as requested by <code>scrawl.createImageFromCell()</code>) happens after the filtering functionality completes.</p>
+<p>This functionality is all defined in the <a href="../source/factory/cell.html">factory/cell.js</a> file, specifically the <code>cell.compile()</code>, <code>cell.applyFilters()</code> and <code>cell.stashOutputAction()</code> functions.</p>
+<h4 id="apply-filters-to-group-objects">Apply filters to Group objects</h4>
+<p>At the start of every Display cycle <code>compile</code> operation, each Cell object goes through its Array of associated Group objects and invokes the <code>group.stamp()</code> function on each of them in turn. This leads to the Group object performing the following protocol:</p>
+<ol>
+<li>Determine whether any filters have been associated with the Group object, or if output needs to be stashed (as requested by <code>scrawl.createImageFromGroup()</code> function):<ul>
+<li>If yes, retrieve a <code>pool</code> Cell object and set its dimensions to the Group's host Cell object's dimensions.</li>
+<li>If no, use the Group's host Cell object for the following steps.</li></ul></li>
+<li>Prepare the Group object's associated entity objects for stamping by invoking <code>group.prepareStamp()</code>.</li>
+<li>Invoke the <code>group.stampAction()</code> function, passing it the <code>pool</code> Cell object if one has been created.</li>
+<li>All associated entity objects now stamp themselves onto the required Cell object (as determined in step 1).</li>
+<li>If a <code>pool</code> Cell was supplied as the function's argument and Filter objects have been associated with the group, invoke the <code>group.applyFilters()</code> function:<ul>
+<li>If the group is acting as a stencil, do the work to retrieve the host Cell's current display and stamp it onto the <code>pool</code> Cell, clipped by the Group's entity object's stamped displays.</li>
+<li>Preprocess the filters to load any external assets into the filter engine.</li>
+<li>Invoke the filter engine, passing it the necessary input and filter data.</li>
+<li>Stamp the filter engine's results onto the host Cell.</li></ul></li>
+<li>If output stashing is required then invoke the <code>group.stashAction()</code> function.</li>
+<li>If a <code>pool</code> Cell object was used, release it back to the pool.</li>
+</ol>
+<p>This functionality is all defined in the <a href="../source/factory/group.html">factory/group.js</a> file.</p>
+<h4 id="apply-filters-to-entity-objects">Apply filters to entity objects</h4>
+<p>SC filters are applied to the display output of entity objects at the point where they are stamped onto their host Cell. This is achieved using the following protocol:</p>
+<ol>
+<li>Determine whether any filters need to be applied to the entity:<ul>
+<li>If no, use the entity's <code>regularStamp</code> functionality (not detailed below).</li>
+<li>If yes, use the entity's <code>filteredStamp</code> functionality.</li></ul></li>
+<li>If the entity has not been stamped before, or its <code>entity.dirtyFilters</code> flag is <code>true</code>, process the filter objects into the internal <code>entity.currentFilters</code> Array so they are ready for application.</li>
+<li>Request a <code>pool</code> Cell object, size it to match the host Cell's dimensions and <code>regularStamp</code> the entity onto it (ignoring the <code>entity.globalCompositeOperation</code> attribute).<ul>
+<li>If the <code>entity.isStencil</code> Boolean flag has been set to <code>true</code>, stamp the host Cell's current display over the entity (using <code>globalCompositeOperation: 'source-in'</code>).</li></ul></li>
+<li>Get the current image data from the <code>pool</code> Cell.</li>
+<li>Preprocess the filter objects - specifically to retrieve data for any external images used by the filters.</li>
+<li>Invoke the filter engine's <code>filterEngine.action()</code> function, passing all the required data to it.</li>
+<li>Reset the <code>pool</code> Cell and stamp the filter engine's returned <code>imageData</code> data into it.</li>
+<li>If the <code>entity.stashOutput</code> Boolean flag has been set to <code>true</code>, stash the <code>pool</code> data, either in a DOM <code>&lt;img&gt;</code> element or as <code>imageData</code> assigned to the <code>entity.stashedImageData</code> attribute.</li>
+<li>Stamp the <code>pool</code> Cell onto the host Cell (taking into account the <code>entity.globalCompositeOperation</code> attribute).</li>
+<li>Release the <code>pool</code> Cell object.</li>
+</ol>
+<p>All entity objects, apart from the EnhancedLabel entity, share the above functionality, whose code can be found in the <a href="../source/mixin/entity.html">mixin/entity.js</a> file - specifically the <code>filteredStamp()</code> and <code>getCellCoverage()</code> functions.</p>
+<h4 id="apply-filters-to-enhancedlabel-entity-objects">Apply filters to EnhancedLabel entity objects</h4>
+<p>Because the EnhancedLabel entity is so tightly coupled with the <a href="sc-text-layout-engine.html">SC text layout engine</a>, repo-devs have had to replicate the entity filter protocol in that entity's factory function. Thus changes in the entity filter protocol will need to be replicated in the <a href="../source/factory/enhanced-label.html">factory/enhanced-label.js</a> file.</p>
+<h2 id="the-sc-filter-engine">The SC filter engine</h2>
+<p>The filter engine has been designed as a single, standalone JS object that handles all SC filter requirements across all SC-controlled <code>&lt;canvas&gt;</code> elements on a web page. The object instantiates when the SC library first runs, which generally happens when it is first imported into the page during page load.</p>
+<p>All engine functionality can be found in the <a href="../source/helper/filter-engine.html">helper/filter-engine.js</a> file. The file exports the instantiated object itself to other files in the SC environment. Files that import the object should only use the <code>engine.action(packetObject)</code> function which takes a packet of data as its argument and returns an <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">ImageData object</a> ready to be painted onto a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a> engine.</p>
+<h3 id="code-efficiency">Code efficiency</h3>
+<p>The SC filter engine has been built around the principle of manipulating <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">ImageData object</a> pixel data, which presents as a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray">Uint8ClampedArray</a> whose elements are restricted to being positive integer Numbers in the range <code>0</code>-<code>255</code>.</p>
+<p>Each pixel in the image data is coded in the <a href="https://developer.mozilla.org/en-US/docs/Glossary/RGB">sRGB color space</a> using three color channels and an additional alpha channel, always in the order <code>[red, green, blue, alpha]</code>. This means that for an ImageData object with a width of 100px and a height of 50px, the <code>imageData.data</code> Array will be <code>100 * 50 * 4 = 20,000</code> elements long.</p>
+<p>Given the (potentially huge) sizes that these image data Arrays can reach, repo-devs need to be particularly strict when it comes to coding up the data manipulations for filter primitive functions. The following guidelines may help:</p>
+<ul>
+<li>Precalculate any requirements that a primitive function may have - for instance, the locations of pixels in a matrix calculation, or the pixels that make up a tile - and cache the results in case other primitive functions can make use of them.</li>
+<li>Always try to process the data array in a single pass. For instance, rather than use two loops to process image data by rows and columns, repo devs should use a single loop and calculate row/column positions within that loop.</li>
+<li>Always check to see if the current pixel is transparent (its alpha channel has a value of <code>0</code>) and, if yes, skip the calculations for that pixel if possible.</li>
+<li>When dealing with non-RGB color space calculations, use the color caches - calculating a pixel's OKLCH channel values is very computationally expensive which is why the results of the first calculation for a given color should be cached.</li>
+</ul>
+<h4 id="filter-regions">Filter regions</h4>
+<p>A key difference between SVG filters and SC filters is that the SVG restricts its filter computations to a <a href="https://www.w3.org/TR/SVG11/filters.html#FilterEffectsRegion">filter effects region</a>. It takes this approach to limit the pixel area that needs to be processed by its filter functions.</p>
+<p>SC does not take this approach. Instead the ImageData object that the filter engine receives will have the dimensions of the host Cell where the filter results will be applied. When a dev-user applies a filter to a <code>10px x 10px</code> Block entity, and a Wheel entity with radius <code>10px</code>, both appearing on a <code>100px x 100px</code> Cell, the ImageData objects presented to the filter engine will include a data Array containing (<code>100 x 100 x 4 = 40,000</code>) elements.</p>
+<p>Consider the situation where both the Block and Wheel entitys have the same <code>pixellate</code> filter applied to them. The pixellate primitive function, as part of its work, will generate a set of objects containing the location details (the data Array indexes) for the pixels contained in each of the tiles required to generate the effect. It calculates this locations data across the entire ImageData, and stashes the results in the SC workstore. Thus while the calculation may happen for the first entity the primitive function encounters, for every other entity on that Cell using the same filter the primitive function only needs to retrieve those calculated results from the workstore - and this remains true even if the Block or Wheel entitys subsequently change their dimensions, scale or position.</p>
+<blockquote>
+  <p><strong>tl;dr:</strong> SVG filter regions are (often) tied to the elements to which the filter is applied. SC filter regions are tied to the Cell on which their effects appear.</p>
+</blockquote>
+<p>While it may seem sensible to limit the area over which a filter effect gets applied, to minimize the calculation effort, the current SC approach - paradoxically - doesn't seem to significantly damage filter performance. This can be seen in test demo <a href="../../demo/canvas-007.html">Canvas-007</a>.</p>
+<h4 id="external-caching-using-the-sc-workstore">External caching using the SC workstore</h4>
+<p>The SC <code>workstore</code> is a keyed object used for longer-term caching of generated data. Like the SC library and the filter engine itself, only one <code>workstore</code> object exists in the SC environment, instantiated at the same time as those other objects during page initialization.</p>
+<p>The <code>workstore</code> itself (alongside an accompanying <code>workstoreLastAccessed</code> object which helps keep track of stale workstore items) is not exported. Instead the <a href="../source/helper/workstore.html">helper/workstore.js</a> file exports getter and setter functions that other SC files can import:</p>
+<ul>
+<li><code>checkForWorkstoreItem('key')</code></li>
+<li><code>getWorkstoreItem('key')</code></li>
+<li><code>setWorkstoreItem('key', data)</code></li>
+<li><code>getOrAddWorkstoreItem('key', data)</code></li>
+<li><code>setAndReturnWorkstoreItem('key', data)</code></li>
+</ul>
+<p>The filter engine makes extensive use of the workstore. Many of the calculations undertaken by the engine are expensive, thus it makes sense to cache the results after their first calculation to speed up future operations:</p>
+<ul>
+<li><p><strong>buildHorizontalBlur</strong> creates a grid - an Array of Arrays - detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Stores the result in the key <code>blur-h-${gridWidth}-${gridHeight}-${radius}</code>. Used by the <code>blur</code> primitive function.</p></li>
+<li><p><strong>buildImageGrid</strong> creates a grid - an Array of Arrays representing columns and rows - which contains the location of each pixel in an <code>ImageData.data</code> Array. Stores the result in the key <code>grid-${ImageData.width}-${ImageData.height}</code>. Used by the <code>blur</code>, <code>offset</code> and <code>swirl</code> primitive functions.</p></li>
+<li><p><strong>buildMatrixGrid</strong> creates a grid - an Array of Arrays - detailing which pixels contribute to each pixel's matrix calculation. Stores the result in the key <code>matrix-${ImageData.width}-${ImageData.height}-${width}-${height}-${x}-${y}</code>. Used by the <code>corrode</code>, <code>emboss</code> and <code>matrix</code> primitive functions.</p></li>
+<li><p><strong>buildVerticalBlur</strong> creates a grid - an Array of Arrays - detailing which pixels contribute to the vertical part of each pixel's blur calculation. Stores the result in the key <code>blur-v-${gridWidth}-${gridHeight}-${radius}</code>. Used by the <code>blur</code> primitive function.</p></li>
+<li><p><strong>getGradientData</strong> creates an imageData object containing the pixel values from a <code>256px x 1px</code> canvas to which a linear gradient has been applied. Stores the result in the key <code>gradient-data-${gradient.name}</code>. Used by the <code>map-to-gradient</code> primitive function as well as SC gradient Palette objects.</p></li>
+<li><p><strong>getRandomNumbers</strong> generates an array of "random" numbers from either <em>bluenoise</em> or <em>ordered</em> data, or alternatively from a seeded random number generator, to a given length. Stores the results in the key <code>random-${seed}-${length}-${type}</code>. Used by the <code>glitch</code>, <code>random-noise</code>, <code>reduce-palette</code> and (indirectly) <code>tiles</code> primitive functions.</p></li>
+</ul>
+<p>If a Cell, Group or entity object has requested that its filtered output be memoized, then the final results of those filter operations will also be cached in the workstore, keyed to the object's <code>filterIdentifier</code> attribute.</p>
+<h4 id="filter-engine-internal-cache">Filter engine internal cache</h4>
+<p>The filter engine includes a <code>cache</code> object which gets reset to an empty object every time the <code>engine.action()</code> function gets invoked. This cache holds references to the initial ImageData objects supplied to the <code>action()</code> function, alongside any intermediate ImageData objects created as the engine processes the filter action objects.</p>
+<h4 id="color-caches">Color caches</h4>
+<p>Color space conversion calculations are expensive. For this reason SC will cache the results of each calculation in an object containing a set of three Arrays. This object gets stored in the SC workstore keyed to the <code>color-point-arrays</code> String.</p>
+<p>The structures of the Array elements held by the color cache Arrays are:</p>
+<ul>
+<li><strong>labColorLib</strong> - maps quantized OKLAB color values to their RGB equivalent values, stored as an <code>[r, g, b]</code> array</li>
+<li><strong>lchColorLib</strong> - maps quantized OKLCH color values to their RGB equivalent values, stored as an <code>[r, g, b]</code> array</li>
+<li><strong>rgbColorLib</strong> - maps RGB channel color values to their OKLAB/OKLCH equivalent values, stored as an array with the structure: <code>[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]</code></li>
+</ul>
+<p>The colorLib Arrays are sets of nested sparse Arrays. See the code in the filter engine <code>getOkColorVals()</code>, <code>getRegularColorVals()</code>, <code>setOkColorVals()</code>, <code>memoizeLab()</code>, <code>memoizeLch()</code>, <code>getColorLabIndices()</code> and <code>getColorLchIndices()</code> functions for details.</p>
+<p>The color conversion algorithms themselves are handled by an SC color object. The filter engine generates (and exports) a Color object - named <code>SC-core-color-engine</code> - when the file's code first runs. The algorithm code can be seen in the <a href="../source/factory/color.html">factory/color.js</a> file.</p>
+<h3 id="additional-resources-used-by-the-filter-engine">Additional resources used by the filter engine</h3>
+<p>The filter engine file imports a number of pool functions, which repo-devs can then use when building and maintaining the filter primitive functions. As ever, always release a pooled object after using it - failure to release can lead to slow memory leaks:</p>
+<ul>
+<li><code>releaseCell</code>, <code>requestCell</code></li>
+<li><code>releaseCoordinate</code>, <code>requestCoordinate</code></li>
+<li><code>releaseArray</code>, <code>requestArray</code></li>
+</ul>
+<h4 id="the-seeded-random-numbers-generator">The seeded random numbers generator</h4>
+<p>The filter engine's <code>getRandomNumbers()</code> function generates arrays of random numbers that get consumed by the <code>glitch</code>, <code>random-noise</code>, <code>reduce-palette</code> and <code>tiles</code> primitive functions. However these functions require their random numbers to be consistent.</p>
+<p>For this reason, SC uses a <a href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator">pseudorandom number generator</a>, whose code is defined in the <a href="../source/helper/random-seed.html">helper/random-seed.js</a> file. This code, created by Gibson Research Corporation, has been taken verbatim from the <a href="https://github.com/skratchdot/random-seed">skratchdot/random-seed repository</a> on GitHub. Repo-devs made the decision to directly import this code into the code base because: 1. it's very good at its job; and 2. SC prides itself on having no direct dependencies.</p>
+<p>The generator repo itself includes a direct dependency on the <a href="https://github.com/moll/json-stringify-safe">moll/json-stringify-safe repository</a>. Again, SC takes that code and includes it in the <a href="../source/helper/random-seed.html">helper/random-seed.js</a> file.</p>
+<p>Licenses for the above code:</p>
+<ul>
+<li>skratchdot/random-seed repository - <a href="https://opensource.org/license/mit">MIT</a> - Gibson Research Corporation.</li>
+<li>moll/json-stringify-safe - <a href="https://opensource.org/license/isc-license-txt">ISC</a> - Isaac Z. Schlueter and Contributors.</li>
+</ul>
+<h4 id="noise-generators">Noise generators</h4>
+<p>Generating noise can be computationally intensive. In addition to random noise, SC makes use of <a href="https://en.wikipedia.org/wiki/Colors_of_noise#Blue_noise">blue noise</a> and <a href="https://en.wikipedia.org/wiki/Ordered_dithering">ordered noise</a>, consumed by the <code>random-noise</code> and <code>reduce-palette</code> primitive functions.</p>
+<p>The blue noise values Array has been retrieved from blue noise images donated to the <a href="https://creativecommons.org/public-domain/">Public Domain</a> by Christoph Peters, who has a very interesting blog post on <a href="http://momentsingraphics.de/BlueNoise.html">how to generate blue noise</a>. SC keeps its blue noise values Array in the <a href="../source/helper/filter-engine-bluenoise-data.html">helper/filter-engine-bluenoise-data.js</a> file, for convenience.</p>
+<p>SC defines its own (much shorter) ordered noise values array in the filter engine code.</p>
+<h3 id="protocol-for-processing-a-filter-request">Protocol for processing a filter request</h3>
+<p>While the filter engine has many functions defined on its prototype, only one is of interest for the wider code base: <code>engine.action(packet)</code>. This is the function that gets invoked whenever another part of the code base needs to apply filter manipulations to an ImageData object.</p>
+<p>The <code>packet</code> argument supplied to the <code>action</code> function has the following shape:</p>
+<pre><code>{
+  identifier: memoization identifier String 
+  image: unprocessed ImageData object
+  filters: An Array of filter action objects (detailed below)
+}</code></pre>
+<p>The <code>action</code> function itself is simple:</p>
+<pre><code>engine.prototype.action = function (packet) {
+
+  // Define helper variables 
+  const { identifier, filters, image } = packet;
+  const { actions, theBigActionsObject } = this;
+  let i, iz, actData, a;
+
+  // 1. Check to see if output data has been previously generated for this identifier
+  const itemInWorkstore = getWorkstoreItem(identifier);
+  if (itemInWorkstore) return itemInWorkstore;
+
+  // 2. Populate the engine.actions Array with action objects
+  actions.length = 0;
+
+  for (i = 0, iz = filters.length; i &lt; iz; i++) {
+
+      actions.push(...filters[i].actions);
+  }
+
+  const actionsLen = actions.length;
+
+  // 3. Only do work if there's work to be done
+  // - The calling code should have already checked that there's a need to filter data
+  if (actionsLen) {
+
+    // 4. Populate engine.cache with initial DataObjects
+    // - cache.source
+    // - cache['source-alpha']
+    // - cache.work
+    this.unknit(image);
+
+    // 5. Loop through each action object in turn
+    for (i = 0; i &lt; actionsLen; i++) {
+
+      actData = actions[i];
+      a = theBigActionsObject[actData.action];
+
+      // 6. Only invoke the primitive function if it exists
+      if (a) a.call(this, actData);
+    }
+
+    // 7. Cache the resulting ImageData object in the SC workstore, if required
+    if (identifier) setWorkstoreItem(identifier, this.cache.work);
+
+    // 8. Return the resulting ImageData object
+    return this.cache.work;
+  }
+  // 9. If there was no work to do, return the unprocessed ImageData object
+  return image;
+}</code></pre>
+<h2 id="sc-filter-primitive-functions">SC filter primitive functions</h2>
+<p>All primitive functions live in an object called <code>engine.theBigActionsObject</code>. They mostly follow a similar code design pattern:</p>
+<pre><code>// The requirements argument is an action object
+[FUNCTION_NAME]: function (requirements) {
+
+  // Define local functions at the top of the object
+
+  // Get input, output (and mix, if required) ImageData objects
+  const [input, output] = this.getInputAndOutputLines(requirements);
+
+  // Setup convenience variables
+  const iData = input.data,
+      oData = output.data,
+      len = iData.length;
+
+  // Extract remaining data from the requirements object
+  // - All variable values should have default values
+  // - Except lineOut - which can be a String, or undefined (default)
+  const {
+    opacity = 1,
+    includeRed = true,
+    includeGreen = true,
+    includeBlue = true,
+    includeAlpha = true,
+    lineOut,
+  } = requirements;
+
+  // Define additional variables that will be used in the processing loop
+  let r, g, b, a, i;
+
+  // The processing loop:
+  // - Works on a per-pixel basis by stepping through the input Array in batches of 4
+  // - Extracts the input data 
+  // - Manipulates the data, as required
+  // - Places the results of the data manipulation in the output Array
+  for (i = 0; i &lt; len; i += 4) {
+
+    // Many primitive functions can skip over transparent pixels
+    if (iData[i + 3]) {
+
+      r = i;
+      g = r + 1;
+      b = g + 1;
+      a = b + 1;
+
+      oData[r] = (includeRed) ? iData[r] : 0;
+      oData[g] = (includeGreen) ? iData[g] : 0;
+      oData[b] = (includeBlue) ? iData[b] : 0;
+      oData[a] = (includeAlpha) ? iData[a] : 0;
+    }
+
+    // Skipped pixel data still needs to transfer to the output Array
+    else {
+
+      oData[r] = iData[r];
+      oData[g] = iData[g];
+      oData[b] = iData[b];
+      oData[a] = iData[a];
+    }
+  }
+
+  // Merge the input and output data in line with opacity requirements
+  if (lineOut) this.processResults(output, input, 1 - opacity);
+  else this.processResults(this.cache.work, output, opacity);
+},</code></pre>
+<h3 id="alpha-channel-filters">Alpha channel filters</h3>
+<p>The following primitive functions primarily handle manipulations that affect a pixel's alpha channel, in particular for creating <a href="https://en.wikipedia.org/wiki/Chroma_key">chroma key compositing effects</a>.</p>
+<p>Note that many other filters may impact with the pixel's alpha channel, though that is not their primary functionality.</p>
+<h4 id="action-area-alpha">Action: <code>area-alpha</code></h4>
+<p>Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to the appropriate value specified in the <code>areaAlphaLevels</code> attribute. Can be used to create horizontal or vertical bars, or chequerboard effects:</p>
+<ul>
+<li>Top left quadrant dimensions: <code>tileWidth</code>, <code>tileHeight</code></li>
+<li>Top right quadrant dimensions: <code>gutterWidth</code>, <code>tileHeight</code></li>
+<li>Bottom left quadrant dimensions: <code>tileWidth</code>, <code>gutterHeight</code></li>
+<li>Bottom right quadrant dimensions: <code>gutterWidth</code>, <code>gutterHeight</code></li>
+</ul>
+<p>The <code>offset</code> values represent an offset from the top-left corner of the display. Partial tiles will be displayed as appropriate along the top and left edges of the display.</p>
+<p>Specify the new alpha channel values in the <code>areaAlphaLevels</code> attribute Array as follows:</p>
+<ul>
+<li>[top-left quadrant, top-right quadrant, bottom-left quadrant, bottom-right quadrant]</li>
+</ul>
+<p>Used by factory function method: <code>areaAlpha</code>.</p>
+<p>See test demo <a href="../../demo/filters-014.html">Filters-014</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  areaAlphaLevels: [255, 0, 0, 0],
+  gutterHeight: 1,
+  gutterWidth: 1,
+  offsetX: 0,
+  offsetY: 0,
+  tileHeight: 1,
+  tileWidth: 1,
+}</code></pre>
+<h4 id="action-channels-to-alpha">Action: <code>channels-to-alpha</code></h4>
+<p>Calculates an average value from each pixel's included channels and applies that value to the pixel's alpha channel.</p>
+<p>Used by factory function method: <code>channelsToAlpha</code>.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+}</code></pre>
+<h4 id="action-chroma">Action: <code>chroma</code></h4>
+<p>Produces a <a href="https://en.wikipedia.org/wiki/Chroma_key">chroma key compositing effect</a> across the input.</p>
+<p>Using an array of <code>range</code> arrays, determines whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. </p>
+<p>Each <code>range</code> array comprises six integer Numbers (between <code>0</code> and <code>255</code>) representing the following channel values: </p>
+<ul>
+<li><code>[minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue]</code></li>
+</ul>
+<p>Used by factory function method: <code>chroma</code>.</p>
+<p>See test demo <a href="../../demo/filters-010.html">Filters-010</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  ranges: [],
+}</code></pre>
+<h4 id="action-colors-to-alpha">Action: <code>colors-to-alpha</code></h4>
+<p>Produces a <a href="https://en.wikipedia.org/wiki/Chroma_key">chroma key compositing effect</a> across the input.</p>
+<p>Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the <code>red</code>, <code>green</code> and <code>blue</code> arguments. These attributes' values should be integer Numbers (between <code>0</code> and <code>255</code>).</p>
+<p>The sensitivity of the effect can be manipulated using the <code>transparentAt</code> and <code>opaqueAt</code> attribute values, both of which lie in the range <code>0-1</code>.</p>
+<p>Used by factory function method: <code>chromakey</code>.</p>
+<p>See test demo <a href="../../demo/filters-011.html">Filters-011</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  blue: 0,
+  green: 255,
+  red: 0,
+
+  transparentAt: 0,
+  opaqueAt: 1,
+}</code></pre>
+<h3 id="color-channel-filters">Color channel filters</h3>
+<p>The following primitive functions primarily handle manipulations that affect a pixel's color channels.</p>
+<h4 id="action-alpha-to-channels">Action: <code>alpha-to-channels</code></h4>
+<p>Copies an input's alpha channel value over to each selected channel's value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. </p>
+<p>Setting the appropriate <code>includeChannel</code> flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate <code>excludeChannel</code> flag will set that channel's value to zero.</p>
+<p>Used by factory function method: <code>alphaToChannels</code>.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  excludeBlue: true,
+  excludeGreen: true,
+  excludeRed: true,
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+}</code></pre>
+<h4 id="action-average-channels">Action: <code>average-channels</code></h4>
+<p>Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to <code>0</code>.</p>
+<p>Used by factory function methods: <code>blue</code>, <code>cyan</code>, <code>emboss</code>, <code>gray</code>, <code>green</code>, <code>magenta</code>, <code>red</code>, <code>yellow</code>.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  excludeBlue: false,
+  excludeGreen: false,
+  excludeRed: false,
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+}</code></pre>
+<h4 id="action-clamp-channels">Action: <code>clamp-channels</code></h4>
+<p>Clamp each color channel to a range determined by a set of <code>low</code> and <code>high</code> channel values. These attributes' values should be integer Numbers (between <code>0</code> and <code>255</code>). </p>
+<p>Used by factory function method: <code>clampChannels</code>.</p>
+<p>See test demo <a href="../../demo/filters-020.html">Filters-020</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  highBlue: 255,
+  highGreen: 255,
+  highRed: 255,
+
+  lowBlue: 0,
+  lowGreen: 0,
+  lowRed: 0,
+}</code></pre>
+<h4 id="action-flood">Action: <code>flood</code></h4>
+<p>Creates a uniform sheet of the required color, which can then be used by other filter actions. </p>
+<p>The color are set through the <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> attributes; these attribute values should be integer Numbers (between <code>0</code> and <code>255</code>). </p>
+<p>The flood can be restricted to only apply to non-transparent input pixels using the <code>excludeAlpha</code> flag.</p>
+<p>Used by factory function method: <code>flood</code>.</p>
+<p>See test demos <a href="../../demo/filters-013.html">Filters-013</a> and <a href="../../demo/filters-037.html">Filters-037</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  alpha: 255,
+  blue: 0,
+  green: 0,
+  red: 0,
+
+  excludeAlpha: false,
+}</code></pre>
+<h4 id="action-grayscale">Action: <code>grayscale</code></h4>
+<p>Averages the input's appropriately weighted color channel values for each pixel, to produce a more realistic black-and-white monochrome effect.</p>
+<p>Used by factory function methods: <code>emboss</code>, <code>grayscale</code>.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+}</code></pre>
+<h4 id="action-invert-channels">Action: <code>invert-channels</code></h4>
+<p>Inverts the color channel values in the input (<code>0 &gt; 255</code>, <code>200 &gt; 55</code>, etc), producing an effect similar to a photograph negative. </p>
+<p>Color channels can be excluded from the calculation using the <code>include</code> flags. Has no impact on the alpha channel.</p>
+<p>Used by factory function method: <code>invert</code>.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+}</code></pre>
+<h4 id="action-lock-channels-to-levels">Action: <code>lock-channels-to-levels</code></h4>
+<p>Produces a <a href="https://en.wikipedia.org/wiki/Posterization">posterization effect</a> on the input. </p>
+<p>Takes in four arguments - <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> - each of which is an Array of zero or more integer Numbers (between 0 and 255). </p>
+<p>The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value</p>
+<p>Used by factory function method: <code>channelLevels</code>.</p>
+<p>See test demo <a href="../../demo/filters-006.html">Filters-006</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  alpha: [255],
+  blue: [0],
+  green: [0],
+  red: [0],
+}</code></pre>
+<h4 id="action-map-to-gradient">Action: <code>map-to-gradient</code></h4>
+<p>Applies a gradient to a grayscaled input. </p>
+<p>The type of grayscale can be set using the <code>useNaturalGrayscale</code> flag. The grayscale is applied as part of the primative function and does not need to be created in a prior chained ActionObject.</p>
+<p>The <code>gradient</code> attribute can be a Gradient object, or that object's <code>name</code> attribute.</p>
+<p>Used by factory function method: <code>mapToGradient</code>.</p>
+<p>See test demo <a href="../../demo/filters-022.html">Filters-022</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  useNaturalGrayscale: false,
+  gradient: default Gradient object,
+}</code></pre>
+<h4 id="action-modulate-channels">Action: <code>modulate-channels</code></h4>
+<p>Multiplies each channel's value by the supplied argument value. A channel-argument's value of <code>0</code> will set that channel's value to zero; a value of <code>1</code> will leave the channel value unchanged. </p>
+<p>If the <code>saturation</code> flag is set to <code>true</code> the calculation changes to start at that pixel's grayscale values.</p>
+<p>Used by factory function methods: <code>brightness</code>, <code>channels</code>, <code>saturation</code>.</p>
+<p>See test demos <a href="../../demo/filters-003.html">Filters-003</a>, <a href="../../demo/filters-007.html">Filters-007</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  alpha: 1,
+  blue: 1,
+  green: 1,
+  red: 1,
+
+  saturation: false,
+}</code></pre>
+<h4 id="action-set-channel-to-level">Action: <code>set-channel-to-level</code></h4>
+<p>Sets the value of each pixel's included channel to the value supplied in the <code>level</code> attribute.</p>
+<p>Used by factory function methods: <code>notRed</code>, <code>notGreen</code>, <code>notBlue</code>.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  includeAlpha: false,
+  includeBlue: false,
+  includeGreen: false,
+  includeRed: false,
+
+  level: 0,
+}</code></pre>
+<h4 id="action-step-channels">Action: <code>step-channels</code></h4>
+<p>Restricts the number of color values that each channel can set by imposing regular bands on each channel. This produces a <a href="https://en.wikipedia.org/wiki/Posterization">posterization effect</a> on the input.</p>
+<p>Takes three divisor values - <code>red</code>, <code>green</code>, <code>blue</code>. For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of <code>50</code> applied to a channel value of <code>120</code> will give a result of <code>100</code>.</p>
+<p>The <code>clamp</code> attribute determines where in the band the color reference value should fall:</p>
+<ul>
+<li><code>down</code> (default) - uses <code>Math.floor()</code> for the calculation.</li>
+<li><code>up</code> - uses <code>Math.ceil()</code>.</li>
+<li><code>round</code> - uses <code>Math.round()</code>.</li>
+</ul>
+<p>Used by factory function method: <code>channelstep</code>.</p>
+<p>See test demo <a href="../../demo/filters-005.html">Filters-005</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  blue: 1,
+  green: 1,
+  red: 1,
+
+  clamp: 'down',
+}
+
+The clamp attribute permitted values are:
+  'down',           'round',            'up'</code></pre>
+<h4 id="action-threshold">Action: <code>threshold</code></h4>
+<p>Creates a duotone effect across the input:</p>
+<ul>
+<li>Grayscales the input.</li>
+<li>For each pixel, checks the color channel values against a <code>level</code> argument: <ul>
+<li>pixels with channel values above the level value are assigned to the <code>high</code> color;</li>
+<li>otherwise they are updated to the <code>low</code> color.</li></ul></li>
+</ul>
+<p>The <code>high</code> and <code>low</code> attributes are both Arrays in the form:</p>
+<ul>
+<li><code>[redVal, greenVal, blueVal, alphaVal]</code> where values are positive integers in the range <code>0</code>-<code>255</code>.</li>
+</ul>
+<p>If the <code>useMixedChannel</code> flag is set to <code>true</code>, processing occurs on a per-pixel level; otherwise processing happens on a per-channel basis. Individual channel levels can be set in the <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> attributes. Channels can also be excluded from the calculation.</p>
+<p>Used by factory function method: <code>threshold</code>.</p>
+<p>See test demo <a href="../../demo/filters-004.html">Filters-004</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  level: 128,
+
+  alpha: 128,
+  blue: 128,
+  green: 128,
+  red: 128,
+
+  low: [0, 0, 0, 0],
+  high: [255, 255, 255, 255],
+
+  includeRed: true,
+  includeGreen: true,
+  includeBlue: true,
+  includeAlpha: false,
+
+  useMixedChannel: true,
+}</code></pre>
+<h4 id="action-tint-channels">Action: <code>tint-channels</code></h4>
+<p>Transforms an input's pixel values based on an interplay between the values of each pixel's channel values:</p>
+<pre><code>Red channel     = (val * redInRed)   + (val * greenInRed)   + (val * blueInRed)
+Green channel   = (val * redInGreen) + (val * greenInGreen) + (val * blueInGreen)
+Blue channel    = (val * redInBlue)  + (val * greenInBlue)  + (val * blueInBlue)
+
+Where: 
+  val = the pixel channel's original value
+  multipliers are float Number values between 0 and 1</code></pre>
+<p>Used by factory function methods: <code>sepia</code>, <code>tint</code>.</p>
+<p>See test demo <a href="../../demo/filters-008.html">Filters-008</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  blueInBlue: 1,
+  blueInGreen: 0,
+  blueInRed: 0,
+  greenInBlue: 0,
+  greenInGreen: 1,
+  greenInRed: 0,
+  redInBlue: 0,
+  redInGreen: 0,
+  redInRed: 1,
+}</code></pre>
+<h4 id="action-vary-channels-by-weights">Action: <code>vary-channels-by-weights</code></h4>
+<p>Applies an array of weights values to the input's pixel data. This represents a (vague) form of <a href="https://en.wikipedia.org/wiki/Tone_mapping">tone mapping</a>.</p>
+<p>The <code>weights</code> Array needs to be exactly (256 * 4 = 1024) elements long. For each color level, we supply four weights: <code>redweight, greenweight, blueweight, allweight</code></p>
+<ul>
+<li>The default weighting for all elements is <code>0</code>. Weights are added to a pixel channel's value, thus weighting values need to be integer Numbers, either positive or negative</li>
+<li>The <code>useMixedChannel</code> flag uses a different calculation, where a pixel's channel values are combined to give their grayscale value, then that weighting (stored as the <code>allweight</code> weighting value) is added to each channel value, pro-rata in line with the grayscale channel weightings. (Note: this produces a different result compared to tools supplied in various other graphic manipulation software).</li>
+</ul>
+<p>Used by factory function method: <code>curveWeights</code>.</p>
+<p>Dev-users are advised to find some way to generate the array data programmatically. See test demo <a href="../../demo/filters-024.html">Filters-024</a> for inspiration.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  weights: [],
+  useMixedChannel: true,
+}</code></pre>
+<h3 id="composition-filters">Composition filters</h3>
+<p>The following primitive functions use two inputs (for compositing). The external image import function is also grouped here. </p>
+<h4 id="action-blend">Action: <code>blend</code></h4>
+<p>Uses two inputs - <code>lineIn</code>, <code>lineMix</code> - and combines their pixel data using various separable and non-separable blend modes, as defined in the <a href="https://www.w3.org/TR/compositing-1/#blending">W3C Compositing and Blending recommendations</a> specification.</p>
+<p>Note that the inputs may be of different sizes: the output - <code>lineOut</code> - image size will be the same as the source (NOT <code>lineIn</code>) image. The <code>lineMix</code> input can be moved relative to the <code>lineIn</code> input using the <code>offsetX</code> and <code>offsetY</code> attributes.</p>
+<p>Used by factory function method: <code>blend</code>.</p>
+<p>See test demo <a href="../../demo/filters-102.html">Filters-102</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineMix: '',
+  lineOut: '',
+  opacity: 1,
+
+  blend: 'normal',
+  offsetX: 0,
+  offsetY: 0,
+}
+
+The blend attribute permitted values are:
+  'color'           'color-burn'        'color-dodge'       'darken'
+  'difference'      'exclusion'         'hard-light'        'hue'
+  'lighten'         'lighter'           'luminosity'        'multiply'
+  'normal'          'overlay'           'saturation'        'screen'
+  'soft-light'</code></pre>
+<h4 id="action-compose">Action: <code>compose</code></h4>
+<p>Perform a Porter-Duff compositing operation on two inputs - see <a href="https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators">W3C Compositing and Blending recommendations</a> for details.</p>
+<p>Note that the <code>lineMix</code> input - which MUST be specified - can be offset using the <code>offsetX</code> and <code>offsetY</code> attributes.</p>
+<p>Used by factory function method: <code>compose</code>.</p>
+<p>See test demo <a href="../../demo/filters-101.html">Filters-101</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineMix: '',
+  lineOut: '',
+  opacity: 1,
+
+  compose: 'normal',
+  offsetX: 0,
+  offsetY: 0,
+}
+
+The compose attribute permitted values are:
+  'destination-only'      'source-only'           'clear'
+  'destination-over'      'source-over'           'xor'
+  'destination-in'        'source-in'             'normal'
+  'destination-out'       'source-out'
+  'destination-atop'      'source-atop'</code></pre>
+<h4 id="action-process-image">Action: <code>process-image</code></h4>
+<p>Loads an image into the filter engine, where it can then be used by other filter actions. Useful for effects such as watermarking an image.</p>
+<p>The portion of the image to be imported into the filter engine can be controlled using the <code>copy</code> attributes. These attributes can be set in either absolute pixel values, or relative (to the image) 'string%' values.</p>
+<p>The <code>asset</code> attribute is required, and should be the name string of the asset. Any valid asset is permitted, including Cell objects. Where things go wrong, the system will attempt to load a <code>1x1</code> transparent pixel in place of the asset.</p>
+<p>If the image's dimensions differ from the source dimensions then, where a given dimension is smaller than source, that dimension will be centered; where the image dimension is larger then that dimension will be pinned to the top, or left. Note that Filters will run faster when the asset's dimensions match the dimensions of the source to which the filter is being applied.</p>
+<p>The <code>lineOut</code> attribute's value must be a (unique) string, which other primitive functions can use as their <code>lineIn</code> and <code>lineMix</code> values.</p>
+<p>Used by factory function method: <code>image</code>.</p>
+<p>See test demos <a href="../../demo/filters-101.html">Filters-101</a> and <a href="../../demo/filters-102.html">Filters-102</a>, which include image filters.</p>
+<pre><code>Default object
+{
+  lineOut: '',
+
+  asset: '',
+
+  copyHeight: 1,
+  copyWidth: 1,
+  copyX: 0,
+  copyY: 0,
+}</code></pre>
+<h3 id="convolution-filters">Convolution filters</h3>
+<p>The following primitive functions all make use of some form of <a href="https://en.wikipedia.org/wiki/Kernel_(image_processing)">convolution matrix</a> for their image data manipulations.</p>
+<h4 id="action-blur">Action: <code>blur</code></h4>
+<p>A bespoke <a href="https://en.wikipedia.org/wiki/Box_blur">box blur</a> function. Creates visual artefacts with various settings that might be useful. </p>
+<p>By default the visible chanels are included in the calculation while the <code>alpha</code> channel is excluded. Transparent pixels (which tend to be transparent black) can also be excluded from the calculation.</p>
+<p>The functionality defines separate <code>radius</code> (box width and height) values for the vertical and horizontal passes. The number of <code>passes</code> performed can also be increased.</p>
+<p>The <code>step</code> values are used to determined which pixels within the box should be included in the calculation; a greater <code>step</code> value will lead to more (potentially useful) visual artefacts in the result.</p>
+<p>Used by factory function method: <code>blur</code>.</p>
+<p>See test demo <a href="../../demo/filters-033.html">Filters-033</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  excludeTransparentPixels: false,
+  includeAlpha: false,
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+
+  passesHorizontal: 1,
+  processHorizontal: true,
+  radiusHorizontal: 1,
+  stepHorizontal: 1,
+
+  passesVertical: 1,
+  processVertical: true,
+  radiusVertical: 1,
+  stepVertical: 1,
+}</code></pre>
+<h4 id="action-corrode">Action: <code>corrode</code></h4>
+<p>Performs a special form of matrix operation on each input pixel's color and alpha channels, calculating the new value using neighbouring pixel values. This is (roughly) equivalent to the SVG <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology"><code>&lt;feMorphology&gt;</code></a> filter primative.</p>
+<p>The matrix dimensions can be set using the <code>width</code> and <code>height</code> arguments, while setting the home pixel's position within the matrix can be set using the <code>offsetX</code> and <code>offsetY</code> arguments.</p>
+<p>The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the <code>operation</code> attribute.</p>
+<p>Channels can be selected for inclusion in the calculation by setting the various <code>include</code> flags.</p>
+<p>Used by factory function method: <code>corrode</code>.</p>
+<p>See test demo <a href="../../demo/filters-021.html">Filters-021</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  includeAlpha: true,
+  includeBlue: false,
+  includeGreen: false,
+  includeRed: false,
+
+  height: 3,
+  offsetX: 1,
+  offsetY: 1,
+  width: 3,
+
+  operation: 'mean',
+}
+
+The operation attribute permitted values are:
+  'lowest'    'highest'   'mean'      'median'</code></pre>
+<h4 id="action-emboss">Action: <code>emboss</code></h4>
+<p>Performs a <a href="https://en.wikipedia.org/wiki/Image_embossing">directional difference filter</a> across the input, using a <code>3x3</code> weighted matrix.</p>
+<p>The <code>angle</code> (measured in degrees) and <code>strength</code> attributes contribute to the weights used in the matrix.</p>
+<p>The function also handles some post-processing effects, controlled by the <code>postProcessResults</code> and <code>keepOnlyChangedAreas</code> flags, and the <code>tolerance</code> positive float Number attribute.</p>
+<p>Used as the final step by factory function method: <code>emboss</code>.</p>
+<p>See test demo <a href="../../demo/filters-018.html">Filters-018</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  angle: 0,
+  strength: 1,
+
+  keepOnlyChangedAreas: false,
+  postProcessResults: false,
+  tolerance: 0,
+}</code></pre>
+<h4 id="action-gaussian-blur">Action: <code>gaussian-blur</code></h4>
+<p>Generates a <a href="https://en.wikipedia.org/wiki/Gaussian_blur">gaussian blur</a> effect from the input. </p>
+<p>The code behind this approach uses an <a href="https://en.wikipedia.org/wiki/Infinite_impulse_response">infinite impulse response</a> algorithm to produce the blur. The concept was developed by IBM engineers but, sadly, the paper seems to have been removed from the IBM site. The IBM concept was adapted to run in Javascript by contributors to the <a href="https://github.com/nodeca/glur/blob/master/index.js">nodeca/glur</a> GitHub repository - it is that code which repo-devs have adapted into the SC code base for this blur effect. The nodeca/glur code uses the <a href="https://opensource.org/license/mit">MIT</a> license.</p>
+<p>The horizontal and vertical parts of the blur can be separately set. Channels can also be excluded from the blur calculations, and the blur effect can be restricted to just the non-transparent parts of the input.</p>
+<p>Used by factory function method: <code>gaussianBlur</code>.</p>
+<p>See test demo <a href="../../demo/filters-034.html">Filters-034</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  excludeTransparentPixels: false,
+  includeAlpha: true,
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+
+  radiusHorizontal: 1,
+  radiusVertical: 1,
+}</code></pre>
+<h4 id="action-matrix">Action: <code>matrix</code></h4>
+<p>Applies a <a href="https://en.wikipedia.org/wiki/Kernel_(image_processing)">convolution matrix</a> (also known as a kernel, or mask) operation to the input.</p>
+<p>The matrix dimensions must be set using the <code>width</code> and <code>height</code> attributes, and the weights for the matrix supplied in the <code>weights</code> attribute's Array. The length of the <code>weights</code> array must equal <code>width x height</code>.</p>
+<p>The matrix does not need to be centered. Use the <code>offset</code> attributes to define the position of the home pixel within the matrix grid.</p>
+<p>Individual channels can be excluded from the calculation.</p>
+<p>Used by factory function methods: <code>edgeDetect</code>, <code>matrix</code>, <code>matrix5</code>, <code>sharpen</code>.</p>
+<p>See test demo <a href="../../demo/filters-012.html">Filters-012</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  height: 3,
+  offsetY: 1,
+  offsetX: 1,
+  width: 3,
+
+  weights: [],
+
+  includeAlpha: false,
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+}</code></pre>
+<h4 id="action-newsprint">Action: <code>newsprint</code></h4>
+<p>Attempts to simulate a black-white dither effect similar to newsprint across the input.</p>
+<p>The <code>width</code> attribute defines the size of the blocks used in the filter.</p>
+<p>Used by factory function method: <code>newsprint</code>.</p>
+<p>See test demo <a href="../../demo/filters-016.html">Filters-016</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  width: 1,
+}</code></pre>
+<h4 id="action-pixelate">Action: <code>pixelate</code></h4>
+<p>Averages the colors within a set of rectangular blocks across the input to produce a series of obscuring tiles.</p>
+<p>Individual channels can be included in the calculation by setting their respective <code>include</code> flags.</p>
+<p>The effect can be offset using the <code>offset</code> attributes (measured in <code>px</code>).</p>
+<p>Used by factory function method: <code>pixelate</code>.</p>
+<p>See test demo <a href="../../demo/filters-009.html">Filters-009</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  includeAlpha: false,
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+
+  offsetX: 0,
+  offsetY: 0,
+  tileHeight: 1,
+  tileWidth: 1,
+}</code></pre>
+<h4 id="action-tiles">Action: <code>tiles</code></h4>
+<p>Covers the input with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the <code>pixelate</code> filter, but uses a set of coordinate points to generate the tiles which results in a more Delauney-like output.</p>
+<p>The filter has four modes, set on the <code>points</code> attribute:</p>
+<ul>
+<li><code>'rect-grid'</code> - generates a regular grid of tiles, where: <code>offsetX</code>, <code>offsetY</code> represent the origin coordinate from which the grid will be calculated; <code>tileWidth</code>, <code>tileHeight</code> supply the dimensions of the rectangular tiles; <code>angle</code> is the amount of tile rotation.</li>
+<li><code>'hex-grid'</code> - generates a hexagonal grid of tiles, where: <code>offsetX</code>, <code>offsetY</code> represent the origin coordinate from which the grid will be calculated; <code>tileRadius</code> supplies the radius for each hexagonal tile; <code>angle</code> is the amount of tile rotation.</li>
+<li>Number - semi-randomly generates a set of points to the given value, constrained to an area determined by the <code>tileRadius</code>, <code>offsetX</code>, <code>offsetY</code> and <code>angle</code> arguments. Unlike other versions, this version will only include pixels within the bounds of circle of the given radius centered on the supplied offset coordinate values. To vary the randomness of point generation, the user can supply a <code>seed</code> argument, used when initializing the pseudo-random number generator.</li>
+<li>Array eg: <code>[x1, y1, x2, y2, ...]</code> - actions the points as described in the array. Pixel selection for each point is constrained by the supplied <code>tileRadius</code>, <code>offsetX</code> and <code>offsetY</code> arguments.</li>
+</ul>
+<p>Dev-users should be aware that initial calculation of the tile sets is very computationally intensive.</p>
+<p>Channels can be included in the calculation by setting the appropriate <code>include</code> flags.</p>
+<p>Used by factory function method: <code>tiles</code>.</p>
+<p>See test demo <a href="../../demo/filters-015.html">Filters-015</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  points: 'rect-grid',
+
+  angle: 0,
+  offsetX: 0,
+  offsetY: 0,
+  seed: DEFAULT_SEED,
+  tileHeight: 1,
+  tileRadius: 1,
+  tileWidth: 1,
+
+  includeAlpha: false,
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+}
+
+The points attribute's permitted values are:
+  'rect-grid'     'hex-grid'      Number          Number[]      </code></pre>
+<h3 id="displacement-filters">Displacement filters</h3>
+<p>The following primitive functions handle the movement of pixel data around the image data Array</p>
+<h4 id="action-displace">Action: <code>displace</code></h4>
+<p>Moves pixels around the input image, based on the color channel values supplied by a displacement map image. This is the SC filter engine's attempt to reproduce the SVG <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap"><code>&lt;feDisplacementMap&gt;</code></a> filter primative.</p>
+<p>Note that the <code>lineMix</code> input - which MUST be specified - can be offset using the <code>offsetX</code> and <code>offsetY</code> attributes. Ideally, the mix image should be the same size as the input image, but it can be larger or smaller - hence the inclusion of these attributes. The displacement transform will only happen when both inputs have pixels at the appropriate coordinate</p>
+<p>As for the SVG filter primative, translations in the <code>x</code> and <code>y</code> axes are tied to the pixel values in a given color channel. These pixel values can be scaled.</p>
+<p>When a pixel moves it can leave a copy of itself behind in case another pixel doesn't replace itself. If this behaviour is not wanted it can be switched off using the <code>transparentEdges</code> flag.</p>
+<p>Used by factory function method: <code>displace</code>.</p>
+<p>See test demo <a href="../../demo/filters-017.html">Filters-017</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineMix: '',
+  lineOut: '',
+  opacity: 1,
+
+  channelX: 'red',
+  channelY: 'green',
+  offsetX: 0,
+  offsetY: 0,
+  scaleX: 1,
+  scaleY: 1,
+  transparentEdges: false,
+}
+
+The channelX and channelY attribute permitted values are:
+  'red'       'green'     'blue'      'alpha'</code></pre>
+<h4 id="action-glitch">Action: <code>glitch</code></h4>
+<p>Generates a semi-random shift across the input's horizontal rows.</p>
+<p>The effect can be generated across channels, or applied to channels separately, through the <code>useMixedChannel</code> flag. </p>
+<p>The <code>level</code> value (a float Number between <code>0</code> and <code>1</code>) determines the likliness of a glitch occurring in a row, while the <code>step</code> value (a positive integer Number greater than 0) controls the number of rows to be included in each glitch.</p>
+<p>The strength of the glitch is controlled by the various <code>offset</code> attributes.</p>
+<p>Used by factory function method: <code>glitch</code>.</p>
+<p>See test demo <a href="../../demo/filters-025.html">Filters-025</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  level: 0,
+  seed: DEFAULT_SEED,
+  step: 1,
+  transparentEdges: false,
+
+  useMixedChannel: true,
+  offsetMax: 0,
+  offsetMin: 0,
+
+  offsetAlphaMax: 0,
+  offsetAlphaMin: 0,
+  offsetBlueMax: 0,
+  offsetBlueMin: 0,
+  offsetGreenMax: 0,
+  offsetGreenMin: 0,
+  offsetRedMax: 0,
+  offsetRedMin: 0,
+}</code></pre>
+<h4 id="action-offset">Action: <code>offset</code></h4>
+<p>Moves each channel input by an offset (measured in <code>px</code>) set for that channel.</p>
+<p>Used by factory function methods: <code>offset</code>, <code>offsetChannels</code>.</p>
+<p>See test demos <a href="../../demo/filters-035.html">Filters-035</a>, <a href="../../demo/filters-036.html">Filters-036</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  offsetAlphaX: 0,
+  offsetAlphaY: 0,
+  offsetBlueX: 0,
+  offsetBlueY: 0,
+  offsetGreenX: 0,
+  offsetGreenY: 0,
+  offsetRedX: 0,
+  offsetRedY: 0,
+}</code></pre>
+<h4 id="action-random-noise">Action: <code>random-noise</code></h4>
+<p>Creates a stippling effect across the image.</p>
+<p>The spread of the effect can be controlled using the <code>width</code> and <code>height</code> attributes (which can be negative). Dev-users can manage the intensity of the effect using the <code>level</code> attribute, which ranges from <code>0</code> to <code>1</code>.</p>
+<p>The effect can be wrapped by setting the <code>noWrap</code> Boolean flag. Channels can be excluded from the calculations using their respective <code>include</code> flags.</p>
+<p>The effect supports 3 noise types:</p>
+<ul>
+<li><code>random</code> noise creates a general spread effect; the <a href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator">pseudorandom generator's</a> <code>seed</code> can be set to any String value.</li>
+<li><code>ordered</code> and <code>bluenoise</code> noise can be used for more directional results.</li>
+</ul>
+<p>Used by factory function method: <code>randomNoise</code>.</p>
+<p>See test demo <a href="../../demo/filters-023.html">Filters-023</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  includeAlpha: true,
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+
+  height: 1,
+  level: 0,
+  width: 1,
+
+  excludeTransparentPixels: true,
+  noiseType: 'random',
+  noWrap: false,
+  seed: DEFAULT_SEED,
+}
+
+The noiseType permitted values are:
+  'bluenoise'     'ordered'       'random'</code></pre>
+<h4 id="action-swirl">Action: <code>swirl</code></h4>
+<p>For each input pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.</p>
+<p>This filter can handle multiple swirls in a single pass. Each swirl is defined in an object with the following attributes:</p>
+<ul>
+<li>The <code>start</code> and <code>radius</code> attributes can be defined in absolute <code>px</code> Number values, or relative <code>%</code> String values - relative to the input width.</li>
+<li>The <code>angle</code> Number value is measured in degrees - a value of <code>720</code> will result in a swirl of 2 complete turns.</li>
+<li>The <code>easing</code> value can be any valid easing string identifier (for example <code>'linear'</code>, <code>'easeOutIn'</code>, etc) or, alternatively, a dev-user defined easing function.</li>
+</ul>
+<pre><code>{
+  startX: Number | String;
+  startY: Number | String;
+  innerRadius: Number | String;
+  outerRadius: Number | String;
+  angle: Number;
+  easing: String | EasingFunctionObject;
+}</code></pre>
+<p>Used by factory function method: <code>swirl</code>.</p>
+<p>See test demo <a href="../../demo/filters-026.html">Filters-026</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  swirls: [],
+}</code></pre>
+<h3 id="ok-filters">OK filters</h3>
+<p>The following primitive functions manipulate pixel image data in the <a href="https://developer.mozilla.org/en-US/docs/Glossary/Color_space#cielab_color_spaces">CIELAB color space</a> - in particular OKLAB and OKLCH.</p>
+<h4 id="action-alpha-to-luminance">Action: <code>alpha-to-luminance</code></h4>
+<p>For each pixel in the input, where alpha is not <code>0</code>:</p>
+<ul>
+<li>Convert to OKLAB</li>
+<li>Set L to alpha value</li>
+<li>Set A and B to 0</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Used by factory function method: <code>alphaToLuminance</code>.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+}</code></pre>
+<h4 id="action-luminance-to-alpha">Action: <code>luminance-to-alpha</code></h4>
+<p>For each pixel in the input:</p>
+<ul>
+<li>Calculate OKLAB luminance from RGB colors</li>
+<li>Set alpha to luminance</li>
+<li>Set color channels to <code>0</code></li>
+</ul>
+<p>Used by factory function method: <code>luminanceToAlpha</code>.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+}</code></pre>
+<h4 id="action-modify-ok-channels">Action: <code>modify-ok-channels</code></h4>
+<p>For each pixel in the input:</p>
+<ul>
+<li>Convert to OKLAB</li>
+<li>Add a value to each of the OKLAB channels</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Where: </p>
+<ul>
+<li><code>L</code> (luminance) channel controls brightness, and will be a value between <code>0.0</code> (black) and <code>1.0</code> (white)</li>
+<li><code>A</code> (red-green) channel controls red-green hues - values range from <code>-0.4</code> (full green) to <code>+0.4</code> (full red)</li>
+<li><code>B</code> (yellow-blue) channel controls yellow-blue hues - values range from <code>-0.4</code> (full blue) to <code>+0.4</code> (full yellow)</li>
+</ul>
+<p>Used by factory function method: <code>modifyOk</code>.</p>
+<p>See test demo <a href="../../demo/filters-031.html">Filters-031</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  channelA: 0,
+  channelB: 0,
+  channelL: 0,
+}</code></pre>
+<h4 id="action-modulate-ok-channels">Action: <code>modulate-ok-channels</code></h4>
+<p>For each pixel in the input:</p>
+<ul>
+<li>Convert to OKLAB</li>
+<li>Multiplies a value to each of the OKLAB channels</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Where: </p>
+<ul>
+<li><code>L</code> (luminance) channel controls brightness, and will be a value between <code>0.0</code> (black) and <code>1.0</code> (white)</li>
+<li><code>A</code> (red-green) channel controls red-green hues - values range from <code>-0.4</code> (full green) to <code>+0.4</code> (full red)</li>
+<li><code>B</code> (yellow-blue) channel controls yellow-blue hues - values range from <code>-0.4</code> (full blue) to <code>+0.4</code> (full yellow)</li>
+</ul>
+<p>Used by factory function method: <code>modulateOk</code>.</p>
+<p>See test demo <a href="../../demo/filters-032.html">Filters-032</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  channelA: 1,
+  channelB: 1,
+  channelL: 1,
+}</code></pre>
+<h4 id="action-negative">Action: <code>negative</code></h4>
+<p>For each pixel in the input:</p>
+<ul>
+<li>Convert to OKLCH</li>
+<li>Rotate hue value <code>180deg</code></li>
+<li>Subtract luminance from 1</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Used by factory function method: <code>negative</code>.</p>
+<p>See test demo <a href="../../demo/filters-030.html">Filters-030</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+}</code></pre>
+<h4 id="action-reduce-palette">Action: <code>reduce-palette</code></h4>
+<p>Analyses the input and, dependant on settings:</p>
+<ul>
+<li>If necessary, calculate a "commonest colors" reduced palette based on the input colors, guided by the number of colors required and a <a href="https://en.wikipedia.org/wiki/Color_difference">minimum color distance</a> between the selected colors.</li>
+<li>Apply the palette to the input, using a given <a href="https://en.wikipedia.org/wiki/Dither">dithering effect</a>.</li>
+</ul>
+<p>The <code>palette</code> attribute is multi-functional. It can accept:</p>
+<ul>
+<li>A defined string to create various grayscale outputs: <code>'black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'</code></li>
+<li>An Array of predefined CSS Color strings which will form the reduced palette.</li>
+<li>A Number, representing the number of "commonest color" colors to calculate for the reduced palette.</li>
+</ul>
+<p>The effect can output different dithering results dependent on the selected <code>noiseType</code> value.</p>
+<p>Used by factory function method: <code>reducePalette</code>.</p>
+<p>See test demo <a href="../../demo/filters-027.html">Filters-027</a>.</p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  minimumColorDistance: 1000,
+  noiseType: 'random',
+  palette: 'black-white',
+  seed: DEFAULT_SEED,
+}
+
+The noiseType permitted values are:
+  'bluenoise'     'ordered'       'random'</code></pre>
+<h4 id="action-rotate-hue">Action: <code>rotate-hue</code></h4>
+<p>For each pixel in the input:</p>
+<ul>
+<li>Convert to OKLCH</li>
+<li>Rotate hue value by given angle (measured in degrees)</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Used by factory function method: <code>rotateHue</code>.</p>
+<p>See test demo <a href="../../demo/filters-029.html">Filters-029</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  angle: 0,
+}</code></pre>
+<h2 id="sc-predefined-filter-effects">SC predefined filter effects</h2>
+<p>The Filter factory function <code>scrawl.makeFilter()</code> comes with a large set of predefined filter <strong><em>methods</em></strong> which are, in many ways, easier to use than using the alternative, <strong><em>actions</em></strong> approach of defining a filter. Even so, these <em>method</em> filters allow the dev-user to chain filters together (using <code>lineIn</code>, <code>lineMix</code> and <code>lineOut</code> attributes) and to control each filter's strength in the final output (using the <code>opacity</code> attribute).</p>
+<p>So the only disadvantage to using <em>method</em> objects is that a complex filter effect will require the generation of several objects which all need to be added to a Cell, Group or entity object, compared to defining the filter in a single <em>actions</em> object.</p>
+<p>Against that, it is a lot easier to animate <em>method</em> object attributes! </p>
+<h3 id="method-alphatochannels">Method: <code>alphaToChannels</code></h3>
+<p><strong>(Color channels filter)</strong> Copies an input's alpha channel value over to each selected channel's value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. </p>
+<p>Setting the appropriate <code>includeChannel</code> flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate <code>excludeChannel</code> flag will set that channel's value to zero.</p>
+<p>Creates an ActionObject for the <code>alpha-to-channels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+excludeBlue                 yes         true
+excludeGreen                yes         true
+excludeRed                  yes         true
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true</code></pre>
+<h3 id="method-alphatoluminance">Method: <code>alphaToLuminance</code></h3>
+<p><strong>(OK filter)</strong> For each pixel in the input, where alpha is not <code>0</code>:</p>
+<ul>
+<li>Convert to OKLAB</li>
+<li>Set L to alpha value</li>
+<li>Set A and B to 0</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Creates an ActionObject for the <code>alpha-to-luminance</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-areaalpha">Method: <code>areaAlpha</code></h3>
+<p><strong>(Alpha channel filter)</strong> Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to the appropriate value specified in the <code>areaAlphaLevels</code> attribute. Can be used to create horizontal or vertical bars, or chequerboard effects:</p>
+<ul>
+<li>Top left quadrant dimensions: <code>tileWidth</code>, <code>tileHeight</code></li>
+<li>Top right quadrant dimensions: <code>gutterWidth</code>, <code>tileHeight</code></li>
+<li>Bottom left quadrant dimensions: <code>tileWidth</code>, <code>gutterHeight</code></li>
+<li>Bottom right quadrant dimensions: <code>gutterWidth</code>, <code>gutterHeight</code></li>
+</ul>
+<p>The <code>offset</code> values represent an offset from the top-left corner of the display. Partial tiles will be displayed as appropriate along the top and left edges of the display.</p>
+<p>Specify the new alpha channel values in the <code>areaAlphaLevels</code> attribute Array as follows:</p>
+<ul>
+<li>[top-left quadrant, top-right quadrant, bottom-left quadrant, bottom-right quadrant]</li>
+</ul>
+<p>Creates an ActionObject for the <code>area-alpha</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-014.html">Filters-014</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+areaAlphaLevels             yes         [255, 0, 0, 0]
+gutterHeight                yes         1
+gutterWidth                 yes         1
+offsetX                     yes         0
+offsetY                     yes         0
+tileHeight                  yes         1
+tileWidth                   yes         1</code></pre>
+<h3 id="method-blend">Method: <code>blend</code></h3>
+<p><strong>(Composition filter)</strong> Performs a blend operation on two inputs - see <a href="https://www.w3.org/TR/compositing-1/#blending">W3C Compositing and Blending recommendations</a> for more details.</p>
+<p>Note that the <code>lineMix</code> input - which MUST be specified - can be offset using the <code>offsetX</code> and <code>offsetY</code> attributes.</p>
+<p>Creates an ActionObject for the <code>blend</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-102.html">Filters-102</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineMix                     yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+blend                       yes         'normal'
+offsetX                     yes         0
+offsetY                     yes         0
+
+The blend attribute permitted values are:
+  'color'           'color-burn'        'color-dodge'       'darken'
+  'difference'      'exclusion'         'hard-light'        'hue'
+  'lighten'         'lighter'           'luminosity'        'multiply'
+  'normal'          'overlay'           'saturation'        'screen'
+  'soft-light'</code></pre>
+<h3 id="method-blue">Method: <code>blue</code></h3>
+<p><strong>(Color channels filter)</strong> Sets the input's red and green channel values to zero.</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-blur">Method: <code>blur</code></h3>
+<p><strong>(Convolution filter)</strong> A bespoke <a href="https://en.wikipedia.org/wiki/Box_blur">box blur</a> function. Creates visual artefacts with various settings that might be useful. </p>
+<p>Dev-users are strongly advised to memoize the results from this filter as it is very resource-intensive. Use the gaussian blur filter for a smoother result.</p>
+<p>By default the visible chanels are included in the calculation while the <code>alpha</code> channel is excluded. Transparent pixels (which tend to be transparent black) can also be excluded from the calculation.</p>
+<p>The functionality defines separate <code>radius</code> (box width and height) values for the vertical and horizontal passes. The number of <code>passes</code> performed can also be increased.</p>
+<p>The <code>step</code> values are used to determined which pixels within the box should be included in the calculation; a greater <code>step</code> value will lead to more (potentially useful) visual artefacts in the result.</p>
+<p>Creates an ActionObject for the <code>blur</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-033.html">Filters-033</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+excludeTransparentPixels    yes         false
+includeAlpha                yes         false
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+passes                      no          (pseudo-attribute)
+passesHorizontal            yes         1
+passesVertical              yes         1
+processHorizontal           yes         true
+processVertical             yes         true
+radius                      no          (pseudo-attribute)
+radiusHorizontal            yes         1
+radiusVertical              yes         1
+step                        no          (pseudo-attribute)
+stepHorizontal              yes         1
+stepVertical                yes         1</code></pre>
+<h3 id="method-brightness">Method: <code>brightness</code></h3>
+<p><strong>(Color channels filter)</strong> Adjusts the brightness of the input.</p>
+<p>Creates an ActionObject for the <code>modulate-channels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-003.html">Filters-003</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+level                       yes         1</code></pre>
+<h3 id="method-channellevels">Method: <code>channelLevels</code></h3>
+<p><strong>(Color channels filter)</strong> Produces a <a href="https://en.wikipedia.org/wiki/Posterization">posterization effect</a> on the input. </p>
+<p>Takes in four arguments - <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> - each of which is an Array of zero or more integer Numbers (between 0 and 255). </p>
+<p>The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value</p>
+<p>Creates an ActionObject for the <code>lock-channels-to-levels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-006.html">Filters-006</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+alpha                       yes         [255]
+blue                        yes         [0]
+green                       yes         [0]
+red                         yes         [0]</code></pre>
+<h3 id="method-channels">Method: <code>channels</code></h3>
+<p><strong>(Color channels filter)</strong> Adjusts the value of each input channel by a specified multiplier.</p>
+<p>Creates an ActionObject for the <code>modulate-channels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-007.html">Filters-007</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+alpha                       yes         1
+blue                        yes         1
+green                       yes         1
+red                         yes         1</code></pre>
+<h3 id="method-channelstep">Method: <code>channelstep</code></h3>
+<p><strong>(Color channels filter)</strong> Restricts the number of color values that each channel can set by imposing regular bands on each channel. This produces a <a href="https://en.wikipedia.org/wiki/Posterization">posterization effect</a> on the input.</p>
+<p>Takes three divisor values - <code>red</code>, <code>green</code>, <code>blue</code>. For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of <code>50</code> applied to a channel value of <code>120</code> will give a result of <code>100</code>.</p>
+<p>The <code>clamp</code> attribute determines where in the band the color reference value should fall:</p>
+<ul>
+<li><code>down</code> (default) - uses <code>Math.floor()</code> for the calculation.</li>
+<li><code>up</code> - uses <code>Math.ceil()</code>.</li>
+<li><code>round</code> - uses <code>Math.round()</code>.</li>
+</ul>
+<p>Creates an ActionObject for the <code>step-channels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-005.html">Filters-005</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+clamp                       yes         'down'
+
+blue                        yes         1
+green                       yes         1
+red                         yes         1
+
+The clamp attribute permitted values are:
+  'down',           'round',            'up'</code></pre>
+<h3 id="method-channelstoalpha">Method: <code>channelsToAlpha</code></h3>
+<p><strong>(Alpha channel filter)</strong> Calculates an average value from each pixel's included channels and applies that value to the pixel's alpha channel.</p>
+<p>Creates an ActionObject for the <code>channels-to-alpha</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true</code></pre>
+<h3 id="method-chroma">Method: <code>chroma</code></h3>
+<p><strong>(Alpha channel filter)</strong> Produces a <a href="https://en.wikipedia.org/wiki/Chroma_key">chroma key compositing effect</a> across the input.</p>
+<p>Using an array of <code>range</code> arrays, determines whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. </p>
+<p>Each <code>range</code> array comprises six integer Numbers (between <code>0</code> and <code>255</code>) representing the following channel values: </p>
+<ul>
+<li><code>[minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue]</code></li>
+</ul>
+<p>Dev-users can also define <code>range</code> Arrays as </p>
+<ul>
+<li><code>[minimum-CSS-color-string, maximum-CSS-color-string]</code></li>
+</ul>
+<p>Creates an ActionObject for the <code>chroma</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-010.html">Filters-010</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+ranges                      yes         []</code></pre>
+<h3 id="method-chromakey">Method: <code>chromakey</code></h3>
+<p><strong>(Alpha channel filter)</strong> Produces a <a href="https://en.wikipedia.org/wiki/Chroma_key">chroma key compositing effect</a> across the input.</p>
+<p>Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the <code>red</code>, <code>green</code> and <code>blue</code> arguments. These attributes' values should be integer Numbers (between <code>0</code> and <code>255</code>).</p>
+<p>Dev-users can also supply the reference color as a CSS-color-string, in a <code>reference</code> attribute.</p>
+<p>The sensitivity of the effect can be manipulated using the <code>transparentAt</code> and <code>opaqueAt</code> attribute values, both of which lie in the range <code>0-1</code>.</p>
+<p>Creates an ActionObject for the <code>colors-to-alpha</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-011.html">Filters-011</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+reference                   no          (pseudo-attribute)
+blue                        yes         0
+green                       yes         255
+red                         yes         0
+
+transparentAt               yes         0
+opaqueAt                    yes         1</code></pre>
+<h3 id="method-clampchannels">Method: <code>clampChannels</code></h3>
+<p><strong>(Color channels filter)</strong> Clamp each color channel to a range determined by a set of <code>low</code> and <code>high</code> channel values. These attributes' values should be integer Numbers (between <code>0</code> and <code>255</code>). </p>
+<p>Dev-users can also supply the reference colors as CSS-color-strings, in <code>lowColor</code> and <code>highColor</code> attributes.</p>
+<p>Creates an ActionObject for the <code>clamp-channels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-020.html">Filters-020</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+highColor                   no          (pseudo-attribute)
+highBlue                    yes         255
+highGreen                   yes         255
+highRed                     yes         255
+
+lowColor                    no          (pseudo-attribute)
+lowBlue                     yes         0
+lowGreen                    yes         0
+lowRed                      yes         0</code></pre>
+<h3 id="method-compose">Method: <code>compose</code></h3>
+<p><strong>(Composition filter)</strong> Perform a Porter-Duff compositing operation on two inputs - see <a href="https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators">W3C Compositing and Blending recommendations</a> for details.</p>
+<p>Note that the <code>lineMix</code> input - which MUST be specified - can be offset using the <code>offsetX</code> and <code>offsetY</code> attributes.</p>
+<p>Creates an ActionObject for the <code>compose</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-101.html">Filters-101</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineMix                     yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+compose                     yes         'normal'
+offsetX                     yes         0
+offsetY                     yes         0
+
+The compose attribute permitted values are:
+  'destination-only'      'source-only'           'clear'
+  'destination-over'      'source-over'           'xor'
+  'destination-in'        'source-in'             'normal'
+  'destination-out'       'source-out'
+  'destination-atop'      'source-atop'</code></pre>
+<h3 id="method-corrode">Method: <code>corrode</code></h3>
+<p><strong>(Convolution filter)</strong> Performs a special form of matrix operation on each input pixel's color and alpha channels, calculating the new value using neighbouring pixel values. This is (roughly) equivalent to the SVG <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology"><code>&lt;feMorphology&gt;</code></a> filter primative.</p>
+<p>The matrix dimensions can be set using the <code>width</code> and <code>height</code> arguments, while setting the home pixel's position within the matrix can be set using the <code>offsetX</code> and <code>offsetY</code> arguments.</p>
+<p>The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the <code>operation</code> attribute.</p>
+<p>Channels can be selected for inclusion in the calculation by setting the <code>includeRed</code>, <code>includeGreen</code>, <code>includeBlue</code> (all false by default) and <code>includeAlpha</code> (default: true) flags.</p>
+<p>Dev-users should note that this filter is expensive, thus much slower to complete compared to other filter effects. Memoization is strongly advised!</p>
+<p>Creates an ActionObject for the <code>corrode</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-021.html">Filters-021</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+includeAlpha                yes         true
+includeBlue                 yes         false
+includeGreen                yes         false
+includeRed                  yes         false
+
+height                      yes         3
+offsetX                     yes         1
+offsetY                     yes         1
+width                       yes         3
+
+operation                   yes         'mean'
+
+The operation attribute permitted values are:
+  'lowest'    'highest'   'mean'      'median'</code></pre>
+<h3 id="method-curveweights">Method: <code>curveWeights</code></h3>
+<p><strong>(Color channels filter)</strong> Applies an array of weights values to the input's pixel data. This represents a (vague) form of <a href="https://en.wikipedia.org/wiki/Tone_mapping">tone mapping</a>.</p>
+<p>The <code>weights</code> Array needs to be exactly (256 * 4 = 1024) elements long. For each color level, we supply four weights: <code>redweight, greenweight, blueweight, allweight</code></p>
+<ul>
+<li>The default weighting for all elements is <code>0</code>. Weights are added to a pixel channel's value, thus weighting values need to be integer Numbers, either positive or negative</li>
+<li>The <code>useMixedChannel</code> flag uses a different calculation, where a pixel's channel values are combined to give their grayscale value, then that weighting (stored as the <code>allweight</code> weighting value) is added to each channel value, pro-rata in line with the grayscale channel weightings. (Note: this produces a different result compared to tools supplied in various other graphic manipulation software).</li>
+</ul>
+<p>Creates an ActionObject for the <code>vary-channels-by-weights</code> primitive function.</p>
+<p>Dev-users are advised to find some way to generate the array data programmatically. See test demo <a href="../../demo/filters-024.html">Filters-024</a> for inspiration.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+weights                     yes         false (valid values must be Array.length 1024)
+useMixedChannel             yes         true</code></pre>
+<h3 id="method-cyan">Method: <code>cyan</code></h3>
+<p><strong>(Color channels filter)</strong> Sets the input's red channel values to zero, and averages the remaining channel colors for each pixel</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-displace">Method: <code>displace</code></h3>
+<p><strong>(Displacement filter)</strong> Moves pixels around the input image, based on the color channel values supplied by a displacement map image. This is the SC filter engine's attempt to reproduce the SVG <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap"><code>&lt;feDisplacementMap&gt;</code></a> filter primative.</p>
+<p>Note that the <code>lineMix</code> input - which MUST be specified - can be offset using the <code>offsetX</code> and <code>offsetY</code> attributes. Ideally, the mix image should be the same size as the input image, but it can be larger or smaller - hence the inclusion of these attributes. The displacement transform will only happen when both inputs have pixels at the appropriate coordinate</p>
+<p>As for the SVG filter primative, translations in the <code>x</code> and <code>y</code> axes are tied to the pixel values in a given color channel. These pixel values can be scaled.</p>
+<p>When a pixel moves it can leave a copy of itself behind in case another pixel doesn't replace itself. If this behaviour is not wanted it can be switched off using the <code>transparentEdges</code> flag.</p>
+<p>Creates an ActionObject for the <code>displace</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-017.html">Filters-017</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineMix                     yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+channelX                    yes         'red'
+channelY                    yes         'green'
+offsetX                     yes         0
+offsetY                     yes         0
+scaleX                      yes         1
+scaleY                      yes         1
+transparentEdges            yes         false
+
+The channelX and channelY attribute permitted values are:
+  'red'       'green'     'blue'      'alpha'</code></pre>
+<h3 id="method-edgedetect">Method: <code>edgeDetect</code></h3>
+<p><strong>(Convolution filter)</strong> Applies a preset 3x3 edge-detect matrix to the input</p>
+<p>Creates an ActionObject for the <code>matrix</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-019.html">Filters-019</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-emboss">Method: <code>emboss</code></h3>
+<p><strong>(Convolution filter)</strong> Outputs an emboss effect across the input.</p>
+<p>This method creates a chain of FilterAction objects, the composition of which can be controlled by a set of flags supplied by the dev-user:</p>
+<ul>
+<li><code>useNaturalGrayscale</code> Boolean - if <code>true</code> the filter will start with a <code>grayscale</code> pass; default is to use an <code>average-channels</code> pass.</li>
+<li><code>clamp</code> positive integer Number - clamps each color channel by the given value, using a <code>clampChannels</code> pass; pushes channel values towards a value of 127. Default is <code>0</code> (no pass).</li>
+<li><code>smoothing</code> positive float Number - adds a <code>gaussianBlur</code> pass with the attribute's value acting as the radius. Default is <code>0</code> (no pass).</li>
+</ul>
+<p>The final FilterAction object added to the chain performs an <code>emboss</code> pass on what has gone before. This filter primative function, which calculates and applies a 3x3 convolution matrix to the image data, accepts a number of attributes:</p>
+<ul>
+<li><code>angle</code> float Number (measured in degrees) - contributes to the weights used in the matrix</li>
+<li><code>strength</code> float Number - contributes to the weights used in the matrix</li>
+<li><code>postProcessResults</code> Boolean - if set to <code>true</code>, extra work happens after the matrix pass completes to either smooth pixel channels towards <code>127</code>, taking into account a <code>tolerance</code> value, or alternatively make qualifying pixels transparent</li>
+<li><code>tolerance</code> positive float Number - only used during post-processing</li>
+<li><code>keepOnlyChangedAreas</code> Boolean - determines whether, during post-processing, pixels will be smoothed towards 127, or set to transparent.</li>
+</ul>
+<p>Creates a chain of primitive function ActionObjects as follows:</p>
+<ul>
+<li><code>grayscale</code> | <code>average-channels</code> &gt; (<code>clamp</code>) &gt; (<code>gaussianBlur</code>) &gt; <code>emboss</code></li>
+</ul>
+<p>See test demo <a href="../../demo/filters-018.html">Filters-018</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+useNaturalGrayscale         yes         false
+clamp                       yes         0
+smoothing                   yes         0
+
+angle                       yes         0
+strength                    yes         1    
+
+postProcessResults          yes         false
+tolerance                   yes         0
+keepOnlyChangedAreas        yes         false</code></pre>
+<h3 id="method-flood">Method: <code>flood</code></h3>
+<p><strong>(Color channels filter)</strong> Creates a uniform sheet of the required color, which can then be used by other filter actions. The color are set through the <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> attributes; these attributes' values should be integer Numbers (between <code>0</code> and <code>255</code>). </p>
+<p>Dev-users can also supply a <code>reference</code> color as a CSS-color-string.</p>
+<p>The flood can be restricted to only apply to non-transparent input pixels using the <code>excludeAlpha</code> flag.</p>
+<p>Creates an ActionObject for the <code>flood</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-013.html">Filters-013</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+reference                   no          (pseudo-attribute)
+alpha                       yes         255
+blue                        yes         0
+green                       yes         0
+red                         yes         0
+
+excludeAlpha                yes         false</code></pre>
+<h3 id="method-gaussianblur">Method: <code>gaussianBlur</code></h3>
+<p><strong>(Convolution filter)</strong> Generates a <a href="https://en.wikipedia.org/wiki/Gaussian_blur">gaussian blur</a> effect from the input. </p>
+<p>The horizontal and vertical parts of the blur can be separately set. Channels can also be excluded from the blur calculations, and the blur effect can be restricted to just the non-transparent parts of the input.</p>
+<p>Creates an ActionObject for the <code>gaussian-blur</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-034.html">Filters-034</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+excludeTransparentPixels    yes         false
+includeAlpha                yes         true
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+
+radius                      no          (pseudo-attribute)
+radiusHorizontal            yes         1
+radiusVertical              yes         1</code></pre>
+<h3 id="method-glitch">Method: <code>glitch</code></h3>
+<p><strong>(Displacement filter)</strong> Generates a semi-random shift across the input's horizontal rows.</p>
+<p>The effect can be generated across channels, or applied to channels separately, through the <code>useMixedChannel</code> flag. </p>
+<p>The <code>level</code> value (a float Number between <code>0</code> and <code>1</code>) determines the likliness of a glitch occurring in a row, while the <code>step</code> value (a positive integer Number greater than 0) controls the number of rows to be included in each glitch.</p>
+<p>The strength of the glitch is controlled by the various <code>offset</code> attributes.</p>
+<p>Creates an ActionObject for the <code>glitch</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-025.html">Filters-025</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+level                       yes         0
+seed                        yes         DEFAULT_SEED string
+step                        yes         1
+transparentEdges            yes         false
+
+offsetAlphaMax              yes         0
+offsetAlphaMin              yes         0
+offsetBlueMax               yes         0
+offsetBlueMin               yes         0
+offsetGreenMax              yes         0
+offsetGreenMin              yes         0
+offsetMax                   yes         0
+offsetMin                   yes         0
+offsetRedMax                yes         0
+offsetRedMin                yes         0
+
+useMixedChannel             yes         true</code></pre>
+<h3 id="method-gray">Method: <code>gray</code></h3>
+<p><strong>(Color channels filter)</strong> Averages the input's color channel values for each pixel.</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-grayscale">Method: <code>grayscale</code></h3>
+<p><strong>(Color channels filter)</strong> Averages the input's appropriately weighted color channel values for each pixel, to produce a more realistic black-and-white monochrome effect.</p>
+<p>Creates an ActionObject for the <code>grayscale</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-green">Method: <code>green</code></h3>
+<p><strong>(Color channels filter)</strong> Sets the input's red and blue channel values to zero.</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-image">Method: <code>image</code></h3>
+<p><strong>(Composition filter)</strong> Loads an image into the filter engine, where it can then be used by other filter actions. Useful for effects such as watermarking an image.</p>
+<p>The portion of the image to be imported into the filter engine can be controlled using the <code>copy</code> attributes. These attributes can be set in either absolute pixel values, or relative (to the image) 'string%' values.</p>
+<p>The <code>asset</code> attribute is required, and should be the name string of the asset. Any valid asset is permitted, including Cell objects. Where things go wrong, the system will attempt to load a <code>1x1</code> transparent pixel in place of the asset.</p>
+<p>If the image's dimensions differ from the source dimensions then, where a given dimension is smaller than source, that dimension will be centered; where the image dimension is larger then that dimension will be pinned to the top, or left. Note that Filters will run faster when the asset's dimensions match the dimensions of the source to which the filter is being applied.</p>
+<p>The <code>lineOut</code> attribute's value must be a (unique) string, which other primitive functions can use as their <code>lineIn</code> and <code>lineMix</code> values.</p>
+<p>Creates an ActionObject for the <code>process-image</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-101.html">Filters-101</a> and <a href="../../demo/filters-102.html">Filters-102</a>, which include image filters.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineOut                     yes         ''
+
+asset                       yes         ''
+
+copyHeight                  yes         1
+copyWidth                   yes         1
+copyX                       yes         0
+copyY                       yes         0</code></pre>
+<h3 id="method-invert">Method: <code>invert</code></h3>
+<p><strong>(Color channels filter)</strong> Inverts the color channel values in the input (<code>0 &gt; 255</code>, <code>200 &gt; 55</code>, etc), producing an effect similar to a photograph negative. </p>
+<p>Color channels can be excluded from the calculation using the <code>include</code> flags. Has no impact on the alpha channel.</p>
+<p>Creates an ActionObject for the <code>invert-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true</code></pre>
+<h3 id="method-luminancetoalpha">Method: <code>luminanceToAlpha</code></h3>
+<p><strong>(OK filter)</strong> For each pixel in the input:</p>
+<ul>
+<li>Calculate OKLAB luminance from RGB colors</li>
+<li>Set alpha to luminance</li>
+<li>Set color channels to <code>0</code></li>
+</ul>
+<p>Creates an ActionObject for the <code>luminance-to-alpha</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-037.html">Filters-037</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-magenta">Method: <code>magenta</code></h3>
+<p><strong>(Color channels filter)</strong> Sets the input's green channel values to zero, and averages the remaining channel colors for each pixel</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-maptogradient">Method: <code>mapToGradient</code></h3>
+<p><strong>(Color channels filter)</strong> Applies a gradient to a grayscaled input. </p>
+<p>The type of grayscale can be set using the <code>useNaturalGrayscale</code> flag. The grayscale is applied as part of the primative function and does not need to be created in a prior chained ActionObject.</p>
+<p>The <code>gradient</code> attribute can be a Gradient object, or that object's <code>name</code> attribute.</p>
+<p>Creates an ActionObject for the <code>map-to-gradient</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-022.html">Filters-022</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+useNaturalGrayscale         yes         false
+gradient                    yes         default Gradient object</code></pre>
+<h3 id="method-matrix">Method: <code>matrix</code></h3>
+<p><strong>(Convolution filter)</strong> Applies a 3x3 <a href="https://en.wikipedia.org/wiki/Kernel_(image_processing)">convolution matrix</a> (also known as a kernel, or mask) operation to the input.</p>
+<p>The <code>weights</code> attribute should be an Array of length <code>9</code>.</p>
+<p>Individual channels can be excluded from the calculation.</p>
+<p>Creates an ActionObject for the <code>matrix</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-012.html">Filters-012</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+includeAlpha                yes         true
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+
+weights                     yes         [
+                                          0, 0, 0,
+                                          0, 1, 0,
+                                          0, 0, 0
+                                        ]</code></pre>
+<h3 id="method-matrix5">Method: <code>matrix5</code></h3>
+<p><strong>(Convolution filter)</strong> Applies a 5x5 <a href="https://en.wikipedia.org/wiki/Kernel_(image_processing)">convolution matrix</a> (also known as a kernel, or mask) operation to the input.</p>
+<p>The <code>weights</code> attribute should be an Array of length <code>25</code>.</p>
+<p>Individual channels can be excluded from the calculation.</p>
+<p>Creates an ActionObject for the <code>matrix</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-012.html">Filters-012</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+includeAlpha                yes         true
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+
+weights                     yes         [
+                                          0, 0, 0, 0, 0, 
+                                          0, 0, 0, 0, 0, 
+                                          0, 0, 1, 0, 0,
+                                          0, 0, 0, 0, 0, 
+                                          0, 0, 0, 0, 0, 
+                                        ]</code></pre>
+<h3 id="method-modifyok">Method: <code>modifyOk</code></h3>
+<p><strong>(OK filter)</strong> For each pixel in the input:</p>
+<ul>
+<li>Convert to OKLAB</li>
+<li>Add a value to each of the OKLAB channels</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Where: </p>
+<ul>
+<li><code>L</code> (luminance) channel controls brightness, and will be a value between <code>0.0</code> (black) and <code>1.0</code> (white)</li>
+<li><code>A</code> (red-green) channel controls red-green hues - values range from <code>-0.4</code> (full green) to <code>+0.4</code> (full red)</li>
+<li><code>B</code> (yellow-blue) channel controls yellow-blue hues - values range from <code>-0.4</code> (full blue) to <code>+0.4</code> (full yellow)</li>
+</ul>
+<p>Creates an ActionObject for the <code>modify-ok-channels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-031.html">Filters-031</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+channelA                    yes         0
+channelB                    yes         0
+channelL                    yes         0</code></pre>
+<h3 id="method-modulateok">Method: <code>modulateOk</code></h3>
+<p><strong>(OK filter)</strong> For each pixel in the input:</p>
+<ul>
+<li>Convert to OKLAB</li>
+<li>Multiply a value to each of the OKLAB channels</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Creates an ActionObject for the <code>modulate-ok-channels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-032.html">Filters-032</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+channelA                    yes         1
+channelB                    yes         1
+channelL                    yes         1</code></pre>
+<h3 id="method-negative">Method: <code>negative</code></h3>
+<p><strong>(OK filter)</strong> For each pixel in the input:</p>
+<ul>
+<li>Convert to OKLCH</li>
+<li>Rotate hue value <code>180deg</code></li>
+<li>Subtract luminance from 1</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Creates an ActionObject for the <code>negative</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-030.html">Filters-030</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-newsprint">Method: <code>newsprint</code></h3>
+<p><strong>(Convolution filter)</strong> Attempts to simulate a black-white dither effect similar to newsprint across the input.</p>
+<p>The <code>width</code> attribute defines the size of the blocks used in the filter.</p>
+<p>Creates an ActionObject for the <code>newsprint</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-016.html">Filters-016</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+width                       yes         1</code></pre>
+<h3 id="method-notblue">Method: <code>notblue</code></h3>
+<p><strong>(Color channels filter)</strong> Sets the input's blue channel values to zero.</p>
+<p>Creates an ActionObject for the <code>set-channel-to-level</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-notgreen">Method: <code>notgreen</code></h3>
+<p><strong>(Color channels filter)</strong> Sets the input's green channel values to zero.</p>
+<p>Creates an ActionObject for the <code>set-channel-to-level</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-notred">Method: <code>notred</code></h3>
+<p><strong>(Color channels filter)</strong> Sets the input's red channel values to zero.</p>
+<p>Creates an ActionObject for the <code>set-channel-to-level</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-offset">Method: <code>offset</code></h3>
+<p><strong>(Displacement filter)</strong> Moves the input in its entirety by the given offsets.</p>
+<p>Creates an ActionObject for the <code>offset</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-035.html">Filters-035</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+offsetX                     yes         0
+offsetY                     yes         0</code></pre>
+<h3 id="method-offsetchannels">Method: <code>offsetChannels</code></h3>
+<p><strong>(Displacement filter)</strong> Moves each channel input by an offset set for that channel.</p>
+<p>Creates an ActionObject for the <code>offset</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-036.html">Filters-036</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+offsetAlphaX                yes         0
+offsetAlphaY                yes         0
+offsetBlueX                 yes         0
+offsetBlueY                 yes         0
+offsetGreenX                yes         0
+offsetGreenY                yes         0
+offsetRedX                  yes         0
+offsetRedY                  yes         0</code></pre>
+<h3 id="method-pixelate">Method: <code>pixelate</code></h3>
+<p><strong>(Convolution filter)</strong> Averages the colors within a set of rectangular blocks across the input to produce a series of obscuring tiles.</p>
+<p>Individual channels can be included in the calculation by setting their respective <code>include</code> flags.</p>
+<p>The effect can be offset using the <code>offset</code> attributes (measured in <code>px</code>).</p>
+<p>Creates an ActionObject for the <code>pixelate</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-009.html">Filters-009</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+includeAlpha                yes         false
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+
+offsetX                     yes         0
+offsetY                     yes         0
+tileHeight                  yes         1
+tileWidth                   yes         1</code></pre>
+<h3 id="method-randomnoise">Method: <code>randomNoise</code></h3>
+<p><strong>(Displacement filter)</strong> Creates a stippling effect across the image.</p>
+<p>The spread of the effect can be controlled using the <code>width</code> and <code>height</code> attributes (which can be negative). Dev-users can manage the intensity of the effect using the <code>level</code> attribute, which ranges from <code>0</code> to <code>1</code>.</p>
+<p>The effect can be wrapped by setting the <code>noWrap</code> Boolean flag. Channels can be excluded from the calculations using their respective <code>include</code> flags.</p>
+<p>The effect supports 3 noise types:</p>
+<ul>
+<li><code>random</code> noise creates a general spread effect; the <a href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator">pseudorandom generator's</a> <code>seed</code> can be set to any String value.</li>
+<li><code>ordered</code> and <code>bluenoise</code> noise can be used for more directional results.</li>
+</ul>
+<p>Creates an ActionObject for the <code>random-noise</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-023.html">Filters-023</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+includeAlpha                yes         true
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+
+height                      yes         1
+level                       yes         0
+width                       yes         1
+
+excludeTransparentPixels    yes         true
+noiseType                   yes         'random'
+noWrap                      yes         false
+seed                        yes         DEFAULT_SEED
+
+The noiseType permitted values are:
+  'bluenoise'     'ordered'       'random'</code></pre>
+<h3 id="method-red">Method: <code>red</code></h3>
+<p><strong>(Color channels filter)</strong> Sets the input's blue and green channel values to zero</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-reducepalette">Method: <code>reducePalette</code></h3>
+<p><strong>(OK filter)</strong> Analyses the input and, dependant on settings:</p>
+<ul>
+<li>If necessary, calculate a "commonest colors" reduced palette based on the input colors, guided by the number of colors required and a <a href="https://en.wikipedia.org/wiki/Color_difference">minimum color distance</a> between the selected colors.</li>
+<li>Apply the palette to the input, using a given <a href="https://en.wikipedia.org/wiki/Dither">dithering effect</a>.</li>
+</ul>
+<p>The <code>palette</code> attribute is multi-functional. It can accept:</p>
+<ul>
+<li>A defined string to create various grayscale outputs: <code>'black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'</code></li>
+<li>An Array of predefined CSS Color strings which will form the reduced palette.</li>
+<li>A Number, representing the number of "commonest color" colors to calculate for the reduced palette.</li>
+</ul>
+<p>The effect can output different dithering results dependent on the selected <code>noiseType</code> value.</p>
+<p>Be aware this is a complex and expensive filter! Dev-users are strongly advised to memoize its output.</p>
+<p>Creates an ActionObject for the <code>reduce-palette</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-027.html">Filters-027</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+minimumColorDistance        yes         1000
+noiseType                   yes         'random'
+palette                     yes         'black-white'
+seed                        yes         DEFAULT_SEED
+
+The noiseType permitted values are:
+  'bluenoise'     'ordered'       'random'</code></pre>
+<h3 id="method-rotatehue">Method: <code>rotateHue</code></h3>
+<p><strong>(OK filter)</strong> For each pixel in the input:</p>
+<ul>
+<li>Convert to OKLCH</li>
+<li>Rotate hue value by given angle (measured in degrees)</li>
+<li>Convert back to RGB</li>
+</ul>
+<p>Creates an ActionObject for the <code>rotate-hue</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-029.html">Filters-029</a></p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+angle                       yes         0</code></pre>
+<h3 id="method-saturation">Method: <code>saturation</code></h3>
+<p><strong>(Color channels filter)</strong> Adjusts the saturation of the input.</p>
+<p>Creates an ActionObject for the <code>modulate-channels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-003.html">Filters-003</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+level                       yes         1</code></pre>
+<h3 id="method-sepia">Method: <code>sepia</code></h3>
+<p><strong>(Color channels filter)</strong> Applies a predefined tint to the input.</p>
+<p>Creates an ActionObject for the <code>tint-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-sharpen">Method: <code>sharpen</code></h3>
+<p><strong>(Convolution filter)</strong> Applies a preset 3x3 sharpen matrix to the input.</p>
+<p>Creates an ActionObject for the <code>matrix</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-019.html">Filters-019</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+<h3 id="method-swirl">Method: <code>swirl</code></h3>
+<p><strong>(Displacement filter)</strong> For each input pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.</p>
+<p>This filter can handle multiple swirls in a single pass. Each swirl is defined in an object with the following attributes:</p>
+<ul>
+<li>The <code>start</code> and <code>radius</code> attributes can be defined in absolute <code>px</code> Number values, or relative <code>%</code> String values - relative to the input width.</li>
+<li>The <code>angle</code> Number value is measured in degrees - a value of <code>720</code> will result in a swirl of 2 complete turns.</li>
+<li>The <code>easing</code> value can be any valid easing string identifier (for example <code>'linear'</code>, <code>'easeOutIn'</code>, etc) or, alternatively, a dev-user defined easing function.</li>
+</ul>
+<pre><code>{
+  startX: Number | String;
+  startY: Number | String;
+  innerRadius: Number | String;
+  outerRadius: Number | String;
+  angle: Number;
+  easing: String | EasingFunctionObject;
+}</code></pre>
+<p>To generate a single swirl, define these attributes directly in the factory function's argument object. This swirl can be animated. Additional swirls need to be defined as objects within an Array assigned to the <code>swirls</code> attribute.</p>
+<p>Creates an ActionObject for the <code>swirl</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-026.html">Filters-026</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+startX                      yes         1
+startY                      yes         1
+innerRadius                 yes         1
+outerRadius                 yes         '30%'
+angle                       yes         0
+easing                      yes         'linear'
+
+swirls                      yes         []</code></pre>
+<h3 id="method-threshold">Method: <code>threshold</code></h3>
+<p><strong>(Color channels filter)</strong> Creates a duotone effect across the input:</p>
+<ul>
+<li>Grayscales the input.</li>
+<li>For each pixel, checks the color channel values against a <code>level</code> argument: <ul>
+<li>pixels with channel values above the level value are assigned to the <code>high</code> color;</li>
+<li>otherwise they are updated to the <code>low</code> color.</li></ul></li>
+</ul>
+<p>The <code>high</code> and <code>low</code> color channels can be set using their related attributes. Alternatively dev-users can set the <code>highColor</code> and <code>lowColor</code> attributes to CSS Color strings.</p>
+<p>If the <code>useMixedChannel</code> flag is set to <code>true</code>, processing occurs on a per-pixel level; otherwise processing happens on a per-channel basis. Individual channel levels can be set in the <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> attributes. Channels can also be excluded from the calculation.</p>
+<p>Creates an ActionObject for the <code>threshold</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-004.html">Filters-004</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+level                       yes         128
+
+alpha                       yes         128
+blue                        yes         128
+green                       yes         128
+red                         yes         128
+
+highColor                   no          (pseudo-attribute)
+highAlpha                   yes         255
+highBlue                    yes         255
+highGreen                   yes         255
+highRed                     yes         255
+
+lowColor                    no          (pseudo-attribute)
+lowAlpha                    yes         255
+lowBlue                     yes         0
+lowGreen                    yes         0
+lowRed                      yes         0
+
+includeRed                  yes         true
+includeGreen                yes         true
+includeBlue                 yes         true
+includeAlpha                yes         false
+
+useMixedChannel             yes         true</code></pre>
+<h3 id="method-tiles">Method: <code>tiles</code></h3>
+<p><strong>(Convolution filter)</strong> Covers the input with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the <code>pixelate</code> filter, but uses a set of coordinate points to generate the tiles which results in a more Delauney-like output.</p>
+<p>The filter has four modes, set on the <code>points</code> attribute:</p>
+<ul>
+<li><code>'rect-grid'</code> - generates a regular grid of tiles, where: <code>offsetX</code>, <code>offsetY</code> represent the origin coordinate from which the grid will be calculated; <code>tileWidth</code>, <code>tileHeight</code> supply the dimensions of the rectangular tiles; <code>angle</code> is the amount of tile rotation.</li>
+<li><code>'hex-grid'</code> - generates a hexagonal grid of tiles, where: <code>offsetX</code>, <code>offsetY</code> represent the origin coordinate from which the grid will be calculated; <code>tileRadius</code> supplies the radius for each hexagonal tile; <code>angle</code> is the amount of tile rotation.</li>
+<li>Number - semi-randomly generates a set of points to the given value, constrained to an area determined by the <code>tileRadius</code>, <code>offsetX</code>, <code>offsetY</code> and <code>angle</code> arguments. Unlike other versions, this version will only include pixels within the bounds of circle of the given radius centered on the supplied offset coordinate values. To vary the randomness of point generation, the user can supply a <code>seed</code> argument, used when initializing the pseudo-random number generator.</li>
+<li>Array eg: <code>[x1, y1, x2, y2, ...]</code> - actions the points as described in the array. Pixel selection for each point is constrained by the supplied <code>tileRadius</code>, <code>offsetX</code> and <code>offsetY</code> arguments.</li>
+</ul>
+<p>Dev-users should be aware that initial calculation of the tile sets is very computationally intensive.</p>
+<p>Channels can be included in the calculation by setting the appropriate <code>include</code> flags.</p>
+<p>Creates an ActionObject for the <code>tiles</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-015.html">Filters-015</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+points                      yes         'rect-grid',
+
+angle                       yes         0
+offsetX                     yes         0
+offsetY                     yes         0
+seed                        yes         DEFAULT_SEED,
+tileHeight                  yes         1
+tileRadius                  yes         1
+tileWidth                   yes         1
+
+includeAlpha                yes         false
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+
+The points attribute's permitted values are:
+  'rect-grid'     'hex-grid'      Number          Number[]      </code></pre>
+<h3 id="method-tint">Method: <code>tint</code></h3>
+<p><strong>(Color channels filter)</strong> Transforms an input's pixel values based on an interplay between the values of each pixel's channel values:</p>
+<pre><code>Red channel     = (val * redInRed)   + (val * greenInRed)   + (val * blueInRed)
+Green channel   = (val * redInGreen) + (val * greenInGreen) + (val * blueInGreen)
+Blue channel    = (val * redInBlue)  + (val * greenInBlue)  + (val * blueInBlue)
+
+Where: 
+  val = the pixel channel's original value
+  multipliers are float Number values between 0 and 1</code></pre>
+<p>Dev-users can set the multipliers either as float Numbers in the nine supplied attributes, or by using the <code>redColor</code>, <code>greenColor</code>, <code>blueColor</code> attributes, which can be set to CSS Color string values:</p>
+<pre><code>redColor     -&gt; [ redInRed,   greenInRed,   blueInRed   ]
+greenColor   -&gt; [ redInGreen, greenInGreen, blueInGreen ]
+blueColor    -&gt; [ redInBlue,  greenInBlue,  blueInBlue  ]</code></pre>
+<p>Creates an ActionObject for the <code>tint-channels</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-008.html">Filters-008</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+blueColor                   no          (pseudo-attribute)
+blueInBlue                  yes         1
+blueInGreen                 yes         0
+blueInRed                   yes         0
+greenColor                  no          (pseudo-attribute)
+greenInBlue                 yes         0
+greenInGreen                yes         1
+greenInRed                  yes         0
+redColor                    no          (pseudo-attribute)
+redInBlue                   yes         0
+redInGreen                  yes         0
+redInRed                    yes         1</code></pre>
+<h3 id="method-yellow">Method: <code>yellow</code></h3>
+<p><strong>(Color channels filter)</strong> Sets the input's blue channel values to zero, and averages the remaining channel colors for each pixel</p>
+<p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>
+<p>See test demos <a href="../../demo/filters-001.html">Filters-001</a> and <a href="../../demo/filters-002.html">Filters-002</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1</code></pre>
+    </main>
+    
+    <nav>
+        <a href=sc-positioning.html>Previous</a>
+        <a href="index.html">Contents</a>
+        <a href=sc-particle-engine.html>Next</a>
+    </nav>
+
+</body>
+</html>

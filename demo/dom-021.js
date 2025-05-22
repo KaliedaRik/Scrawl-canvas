@@ -81,14 +81,14 @@ const shapeLabel = scrawl.makeLabel({
     lineWidth: 1,
     method: 'fill',
 
+/** @this {import('../source/scrawl.js').LabelInstance} */
     onEnter: function () {
         canvas.set({ css: { cursor: 'pointer' }});
-/** @ts-expect-error */
         this.set({ showBoundingBox: true});
     },
+/** @this {import('../source/scrawl.js').LabelInstance} */
     onLeave: function () {
         canvas.set({ css: { cursor: 'auto' }});
-/** @ts-expect-error */
         this.set({ showBoundingBox: false});
     },
 });
@@ -120,14 +120,14 @@ const closeButton = scrawl.makeRectangle({
     strokeStyle: 'orange',
     lineWidth: 2,
 
+/** @this {import('../source/scrawl.js').RectangleInstance} */
     onEnter: function () {
         canvas.set({ css: { cursor: 'pointer' }});
-/** @ts-expect-error */
         this.set({ fillStyle: 'yellow'});
     },
+/** @this {import('../source/scrawl.js').RectangleInstance} */
     onLeave: function () {
         canvas.set({ css: { cursor: 'auto' }});
-/** @ts-expect-error */
         this.set({ fillStyle: 'white'});
     },
     button: {
@@ -138,8 +138,8 @@ const closeButton = scrawl.makeRectangle({
         disabled: true,
     },
 
+/** @this {import('../source/scrawl.js').RectangleInstance} */
     onUp: function () {
-/** @ts-expect-error */
         this.clickButton();
     },
 });
@@ -169,8 +169,10 @@ scrawl.addNativeListener('toggle', (e) => {
             buttonAutofocus: true,
         });
 
-        // The canvas gets resized by the browser but in the popover context this doesn't get picked up (until the user interacts with the web page, for example by moving the mouse cursor). So we need to manually invoke the canvas wrapper's reaction to the change ourselves.
-        canvas.apply();
+        // The canvas gets resized by the browser but in the popover context this doesn't get picked up.
+        // + The `reset` function triggers the canvas to recalculate its current values outside of the Scrawl-canvas display cycle
+        // + This will then trigger associated Cells and entitys to recalculate themselves appropriately
+        canvas.reset();
     }
 
     else {

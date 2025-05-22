@@ -18,9 +18,9 @@ import { setMouseChanged } from '../helper/system-flags.js';
 
 import { correctAngle, isa_dom, isa_fn, isa_obj, isa_quaternion, mergeOver, pushUnique, removeItem, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
-import { addLocalMouseMoveListener, applyCoreResizeListener, currentCorePosition, removeLocalMouseMoveListener, uiSubscribedElements } from '../core/user-interaction.js';
+import { addLocalMouseMoveListener, currentCorePosition, removeLocalMouseMoveListener, uiSubscribedElements } from '../core/user-interaction.js';
 
-import { addDomShowElement, domShow, setDomShowRequired } from '../core/document.js';
+import { addDomShowElement, setDomShowRequired } from '../core/document.js';
 
 import { makeQuaternion, releaseQuaternion, requestQuaternion } from '../untracked-factory/quaternion.js';
 
@@ -31,13 +31,11 @@ import deltaMix from './delta.js';
 import pivotMix from './pivot.js';
 import mimicMix from './mimic.js';
 import pathMix from './path.js';
-// Question: do DOM elements really need additional anchors and buttons?
-import hiddenElementsMix from '../mixin/hidden-dom-elements.js';
-import anchorMix from './anchor.js';
-import buttonMix from './button.js';
+
 
 // Shared constants
-import { _entries, _isArray, _isFinite, _round, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, CORNER_LABELS, CORNER_SELECTOR, DIV, MIMIC, MOUSE, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TRUE, ZERO_STR } from '../helper/shared-vars.js'
+import { _entries, _isArray, _isFinite, _round, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, CORNER_LABELS, CORNER_SELECTOR, DIV, MIMIC, MOUSE, PARTICLE, PATH, PC0, PC100, PERMITTED_TRACKED_ELEMENTS, PIVOT, SPACE, T_STACK, TRUE, ZERO_STR } from '../helper/shared-vars.js'
+
 
 // Local constants
 const BOTTOMLEFT = 'bottomLeft',
@@ -46,7 +44,6 @@ const BOTTOMLEFT = 'bottomLeft',
     CORNER_ATTR = 'data-scrawl-corner-div',
     CORNER_ATTR_VAL = 'sc',
     LOCAL = 'local',
-    NO_CORNER_ELEMENTS = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'CANVAS'],
     TABINDEX = 'tabindex',
     TOPLEFT = 'topLeft',
     TOPRIGHT = 'topRight';
@@ -62,9 +59,6 @@ export default function (P = Ωempty) {
     pivotMix(P);
     mimicMix(P);
     pathMix(P);
-    hiddenElementsMix(P);
-    anchorMix(P);
-    buttonMix(P);
 
 
 // #### Shared attributes
@@ -97,12 +91,6 @@ export default function (P = Ωempty) {
 // + other possible values - except `static` - will be respected if they are explicitly set on the DOM elements prior to Scrawl-canvas initialization.
         position: ABSOLUTE,
 
-// __smoothFont__ - a Boolean to handle the non-standards `font-smooth`, `-webkit-font-smoothing` and `-moz-osx-font-smoothing` CSS properties.
-// + by default all Scrawl-canvas Stack, Canvas and Element wrapper DOM will automatically smooth fonts
-// + setting this value to false will get Scrawl-canvas to attempt to switch off font smoothing
-// + ___This CSS property is non-standards-compliant___ and thus likely to break in interesting and unexpected ways!
-        smoothFont: true,
-
 // __checkForResize__ - Boolean - automatically update stuff when the element changes its dimensions
 // + triggers as part of the [userInteraction](../core/userInteraction.html) `updateUiSubscribedElement` functionality
         checkForResize: false,
@@ -133,6 +121,10 @@ export default function (P = Ωempty) {
         noPreferenceTransparencyAction: null,
         reduceDataAction: null,
         noPreferenceDataAction: null,
+        invertedColorsAction: null,
+        normalColorsAction: null,
+        noForcedColorsAction: null,
+        activeForcedColorsAction: null,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -179,16 +171,7 @@ export default function (P = Ωempty) {
 
 
 // #### Clone management
-// `postCloneAction` - internal helper function
-    P.postCloneAction = function(clone) {
-
-        if (this.onEnter) clone.onEnter = this.onEnter;
-        if (this.onLeave) clone.onLeave = this.onLeave;
-        if (this.onDown) clone.onDown = this.onDown;
-        if (this.onUp) clone.onUp = this.onUp;
-
-        return clone;
-    };
+// No additional clone functionality required
 
 
 // #### Kill management
@@ -223,13 +206,6 @@ export default function (P = Ωempty) {
 
         this.position = item;
         this.dirtyPosition = true;
-    };
-
-// `smoothFont`
-    S.smoothFont = function (item) {
-
-        this.smoothFont = item;
-        this.dirtySmoothFont = true;
     };
 
 // `visibility`
@@ -302,6 +278,13 @@ export default function (P = Ωempty) {
         this.dirtyClasses = true;
     };
 
+// `classes`
+    S.stampOrder = function (item) {
+
+        this.stampOrder = item;
+        this.dirtyStampOrder = true;
+    };
+
 // `domAttributes` - see `updateDomAttributes` below
     S.domAttributes = function (item) {
 
@@ -355,8 +338,6 @@ export default function (P = Ωempty) {
 // + TODO - there's a lot of improvements we can do here - the aim should be to create the wrapper object and update the objects DOM element's style and dimensions attributes - specifically shifting `position` from "static" to "absolute" - in a way that does not disturb the page view in any way whatsoever (pixel-perfect!) so website visitors are completely unaware that the work has taken place
     P.initializeDomLayout = function (items) {
 
-        this.modifyConstructorInputForAnchorButton(items);
-
         const el = items.domElement;
 
         if (el) {
@@ -389,7 +370,7 @@ export default function (P = Ωempty) {
 
                     host = items.host;
 
-                    if (host.substring && artefact[host]) host = artefact[host];
+                    if (host && host.substring && artefact[host]) host = artefact[host];
                 }
 
                 if (host && host.domElement) {
@@ -442,6 +423,7 @@ export default function (P = Ωempty) {
 // ##### DOM element class attribute management
 
 // `addClasses`
+// + Argument should be a single String of space-separated classes
     P.addClasses = function (item) {
 
         if (item.substring) {
@@ -458,11 +440,12 @@ export default function (P = Ωempty) {
     };
 
 // `removeClasses`
+// + Argument should be a single string of space-separated classes
     P.removeClasses = function (item) {
 
         if (item.substring) {
 
-            const targets = item.split();
+            const targets = item.split(' ');
 
             let classes = this.classes,
                 search;
@@ -492,7 +475,7 @@ export default function (P = Ωempty) {
 
         const el = this.domElement;
 
-        if (el && !this.noUserInteraction && !NO_CORNER_ELEMENTS.includes(el.tagName)) {
+        if (el && !this.noUserInteraction && PERMITTED_TRACKED_ELEMENTS.includes(el.tagName)) {
 
             const pointMaker = function () {
 
@@ -821,9 +804,11 @@ export default function (P = Ωempty) {
 
         if (this.dirtyPathObject) this.cleanPathObject();
 
-        // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
-        this.prepareStampTabsHelper();
+        this.prepareStampAdditionalActions();
     };
+
+// `prepareStampAdditionalActions` - Canvas artefacts need to perform additional stamp actions around button and anchor hidden elements, but this is not relevant to Stack or Element artefacts
+    P.prepareStampAdditionalActions = λnull;
 
 // `stamp` - builds a set of Strings which can then be applied to the DOM wrapper's element's `style` attribute.
 // + The functionality for performing the update is defined in the [document](../core/document.html) module's `domShow` function, which will be called for each DOM-based artefact during the 'show' stage of the Display cycle
@@ -833,7 +818,7 @@ export default function (P = Ωempty) {
 // + `position` (relative vs absolute, not position within a Stack)
 // + `width` and `height` - for dimensions
 // + `transformOrigin` - relating to wrapper `handle` values
-// + `transform` - for positioning and rotation within a Stack element
+// + `transform` - for positioning, rotation and scale within a Stack element
 // + `display` - for visibility
     P.stamp = function () {
 
@@ -878,7 +863,7 @@ export default function (P = Ωempty) {
         }
 
         // determine whether there is a need to trigger a redraw of the DOM element
-        if (this.dirtyTransform || this.dirtyPerspective || this.dirtyPosition || this.dirtyDomDimensions || this.dirtyTransformOrigin || this.dirtyVisibility || this.dirtySmoothFont || this.dirtyCss || this.dirtyClasses || this.domShowRequired) {
+        if (this.dirtyTransform || this.dirtyPerspective || this.dirtyPosition || this.dirtyDomDimensions || this.dirtyTransformOrigin || this.dirtyVisibility || this.dirtyCss || this.dirtyClasses || this.dirtyStampOrder || this.domShowRequired) {
 
             this.domShowRequired = false;
             addDomShowElement(this.name);
@@ -918,6 +903,10 @@ export default function (P = Ωempty) {
         this.noPreferenceDataAction = λnull;
         this.moreContrastAction = λnull;
         this.otherContrastAction = λnull;
+        this.invertedColorsAction = λnull;
+        this.normalColorsAction = λnull;
+        this.noForcedColorsAction = λnull;
+        this.activeForcedColorsAction = λnull;
     };
 
 // __prefers-contrast__ accessibility user choice
@@ -1067,6 +1056,64 @@ export default function (P = Ωempty) {
         }
     };
 
+// __inverted-colors__ accessibility user choice
+    S.invertedColorsAction = function (item) {
+        if (isa_fn(item)) this.invertedColorsAction = item;
+    };
+    P.setInvertedColorsAction = function (item) {
+        if (isa_fn(item)) this.invertedColorsAction = item;
+    };
+    S.normalColorsAction = function (item) {
+        if (isa_fn(item)) this.normalColorsAction = item;
+    };
+    P.setNormalColorsAction = function (item) {
+        if (isa_fn(item)) this.normalColorsAction = item;
+    };
+    P.invertedColorsActions = function () {
+
+        const here = this.here;
+
+        if (xt(here)) {
+
+            const flag = here.prefersInvertedColors;
+
+            if (xt(flag)) {
+
+                if (flag) this.invertedColorsAction();
+                else this.normalColorsAction();
+            }
+        }
+    };
+
+// __forced-colors__ accessibility user choice
+    S.noForcedColorsAction = function (item) {
+        if (isa_fn(item)) this.noForcedColorsAction = item;
+    };
+    P.setNoForcedColorsAction = function (item) {
+        if (isa_fn(item)) this.noForcedColorsAction = item;
+    };
+    S.activeForcedColorsAction = function (item) {
+        if (isa_fn(item)) this.activeForcedColorsAction = item;
+    };
+    P.setActiveForcedColorsAction = function (item) {
+        if (isa_fn(item)) this.activeForcedColorsAction = item;
+    };
+    P.forcedColorsActions = function () {
+
+        const here = this.here;
+
+        if (xt(here)) {
+
+            const accessibilityFlag = here.prefersForcedColors;
+
+            if (xt(accessibilityFlag)) {
+
+                if (accessibilityFlag) this.activeForcedColorsAction();
+                else this.noForcedColorsAction();
+            }
+        }
+    };
+
     P.checkAccessibilityValues = function () {
 
         this.contrastActions();
@@ -1074,21 +1121,7 @@ export default function (P = Ωempty) {
         this.colorSchemeActions();
         this.reducedTransparencyActions();
         this.reducedDataActions();
-    };
-
-
-// `apply`
-// + I really don't like this functionality - see if we can purge it from the code base?
-    P.apply = function() {
-
-        applyCoreResizeListener();
-
-        this.prepareStamp();
-        this.stamp()
-
-        domShow(this.name);
-
-        this.dirtyPathObject = true;
-        this.cleanPathObject();
+        this.invertedColorsActions();
+        this.forcedColorsActions()
     };
 }

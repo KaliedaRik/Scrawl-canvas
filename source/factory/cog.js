@@ -1,43 +1,18 @@
 // # Cog factory
 // A factory for generating star shape-based entitys
-//
-// Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D). They use the [shapeBasic](../mixin/shapeBasic.html) and [shapePathCalculation](../mixin/shapePathCalculation.html) (some also use [shapeCurve](../mixin/shapeCurve.html)) mixins to define much of their functionality.
-//
-// All path-defined entitys can be positioned, cloned, filtered etc:
-// + Positioning functionality for the entity is supplied by the __position__ mixin, while rendering functionality comes from the __entity__ mixin.
-// + Dimensions, however, have little meaning for path-defined entitys - their width and height are determined by their SVG path data Strings; use `scale` instead.
-// + Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects.
-// + They will also accept __Filter__ objects.
-// + They can use __Anchor__ objects for user navigation.
-// + They can be rendered to the canvas by including them in a __Cell__ object's __Group__.
-// + They can be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
-// + Path-defined entitys can be cloned, and killed.
-
-
-// #### Using path-defined entitys as Scrawl-canvas paths
-// A path is a track - straight, or curved, or as complex as required - placed across a container which artefacts can use as a source of their positioning data. We can animate an artifact to move along the path:
-// + To enable a path-defined entity to be used as a path by other artefacts, set its `useAsPath` flag to `true`.
-// + The artefact can then set its `path` attribute to the path-defined entity's name-String (or the entity itself), and set its `lockTo` Array values to `"path"`.
-// + We position the artefact by setting its `pathPosition` attribute to a float Number value between `0.0 - 1.0`, with `0` being the start of the path, and `1` being its end.
-// + Path-defined entitys can use other path-defined entitys as a path.
-// + EnhancedLabel entitys can use a path to position their text units; they can also use a path to position each letter individually along the path.
-// + Artefacts (and letters) can be rotated so that they match the rotation at that point along the path - ___tangential rotation___ by setting their `addPathRotation` flag to `true`.
-// + Animate an artefact along the path by either using the artefact's `delta` object, or triggering a Tween to perform the movement.
 
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, mergeOver, Ωempty } from '../helper/utilities.js';
 
 import { releaseVector, requestVector } from '../untracked-factory/vector.js';
-
-import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { _abs, _min, BEZIER, ENTITY, QUADRATIC } from '../helper/shared-vars.js';
+import { BEZIER, ENTITY, QUADRATIC, ZERO_PATH, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const PERMITTED_CURVES = ['line', 'quadratic', 'bezier'],
@@ -105,7 +80,7 @@ S.outerRadius = function (item) {
 };
 D.outerRadius = function (item) {
 
-    this.outerRadius += item;
+    this.outerRadius = addStrings(this.outerRadius, item);
     this.updateDirty();
 };
 S.innerRadius = function (item) {
@@ -115,7 +90,7 @@ S.innerRadius = function (item) {
 };
 D.innerRadius = function (item) {
 
-    this.innerRadius += item;
+    this.innerRadius = addStrings(this.innerRadius, item);
     this.updateDirty();
 };
 
@@ -127,7 +102,7 @@ S.outerControlsDistance = function (item) {
 };
 D.outerControlsDistance = function (item) {
 
-    this.outerControlsDistance += item;
+    this.outerControlsDistance = addStrings(this.outerControlsDistance, item);
     this.updateDirty();
 };
 S.innerControlsDistance = function (item) {
@@ -137,7 +112,7 @@ S.innerControlsDistance = function (item) {
 };
 D.innerControlsDistance = function (item) {
 
-    this.innerControlsDistance += item;
+    this.innerControlsDistance = addStrings(this.innerControlsDistance, item);
     this.updateDirty();
 };
 
@@ -149,7 +124,7 @@ S.outerControlsOffset = function (item) {
 };
 D.outerControlsOffset = function (item) {
 
-    this.outerControlsOffset += item;
+    this.outerControlsOffset = addStrings(this.outerControlsOffset, item);
     this.updateDirty();
 };
 S.innerControlsOffset = function (item) {
@@ -159,7 +134,7 @@ S.innerControlsOffset = function (item) {
 };
 D.innerControlsOffset = function (item) {
 
-    this.innerControlsOffset += item;
+    this.innerControlsOffset = addStrings(this.innerControlsOffset, item);
     this.updateDirty();
 };
 
@@ -213,11 +188,10 @@ P.makeCogPath = function () {
 
     let { outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset } = this;
 
-    const turn = 360 / points,
-        xPts = requestArray();
+    const turn = 360 / points;
 
     let currentPointX, currentPointY, deltaX, deltaY, i,
-        myPath = '';
+        myPath = ZERO_STR;
 
     if (outerRadius.substring || innerRadius.substring || outerControlsDistance.substring || innerControlsDistance.substring || outerControlsOffset.substring || innerControlsOffset.substring) {
 
@@ -253,8 +227,6 @@ P.makeCogPath = function () {
     currentPointX = outerPoint.x;
     currentPointY = outerPoint.y;
 
-    xPts.push(currentPointX);
-
     if (curve === BEZIER) {
 
         for (i = 0; i < points; i++) {
@@ -273,7 +245,6 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((innerPoint.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((innerPoint.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -292,7 +263,6 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((outerPoint.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((outerPoint.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -311,7 +281,6 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((innerPoint.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((innerPoint.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -325,7 +294,6 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((outerPoint.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((outerPoint.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -337,7 +305,6 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((outerPointLead.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((outerPointLead.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -348,21 +315,18 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((innerPointTrail.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((innerPointTrail.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
 
             deltaX = parseFloat((innerPoint.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((innerPoint.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
 
             deltaX = parseFloat((innerPointLead.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((innerPointLead.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -373,14 +337,12 @@ P.makeCogPath = function () {
 
             deltaX = parseFloat((outerPointTrail.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((outerPointTrail.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
 
             deltaX = parseFloat((outerPoint.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
             deltaY = parseFloat((outerPoint.y - currentPointY).toFixed(1));
             currentPointY += deltaY;
             myPath += `${deltaX},${deltaY} `;
@@ -388,14 +350,26 @@ P.makeCogPath = function () {
     }
     releaseVector(outerPoint, outerPointLead, outerPointTrail, innerPoint, innerPointLead, innerPointTrail);
 
-    const myMin = _min(...xPts),
-        myXoffset = _abs(myMin).toFixed(1);
+    if (curve === BEZIER) return `${ZERO_PATH}c${myPath}z`;
+    if (curve === QUADRATIC) return `${ZERO_PATH}q${myPath}z`;
+    return `${ZERO_PATH}l${myPath}z`;
+};
 
-    releaseArray(xPts);
+P.calculateLocalPathAdditionalActions = function () {
 
-    if (curve === BEZIER) return `m${myXoffset},0c${myPath}z`;
-    if (curve === QUADRATIC) return `m${myXoffset},0q${myPath}z`;
-    return `m${myXoffset},0l${myPath}z`;
+    let scale = this.scale;
+
+    if (scale < 0.001) scale = 0.001;
+
+    const [x, y] = this.localBox;
+
+    this.pathDefinition = this.pathDefinition.replace(ZERO_PATH, `m${-x / scale},${-y / scale}`);
+
+    this.pathCalculatedOnce = false;
+
+    // ALWAYS, when invoking `calculateLocalPath` from `calculateLocalPathAdditionalActions`, include the second argument, set to `true`! Failure to do this leads to an infinite loop which will make your machine weep.
+    // + We need to recalculate the local path to take into account the offset required to put the Rectangle entity's start coordinates at the top-left of the local box, and to recalculate the data used by other artefacts to place themselves on, or move along, its path.
+    this.calculateLocalPath(this.pathDefinition, true);
 };
 
 

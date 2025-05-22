@@ -7,30 +7,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Scrawl-canvas</title>
   <link rel='icon' type='image/png' href='/favicon.png'>
-  <link href="demo/css/normalize.css" rel="stylesheet" />
-  <link href="demo/css/tests.css" rel="stylesheet" />
+  <link href="docs/css/normalize.css" rel="stylesheet" />
+  <link href="docs/css/general-reference.css" rel="stylesheet" />
 </head>
 
 <body>
   <h1>Welcome to the Scrawl-canvas code base</h1>
 
-  <p>Scrawl-canvas is a JavaScript library for working with the HTML5 &lt;canvas> element. The library:</p>
+  <p>This documentation and demo test suite is for <b>Scrawl-canvas version 8.15.0</b></p>
+
+  <h3>Library purpose</h3>
+
+  <p>Scrawl-canvas is a JavaScript library for working with the HTML5 <code>&lt;canvas></code> element. The library:</p>
 
   <ul>
-    <li>Automatically discovers existing &lt;canvas> elements in a web page.</li>
-    <li>Can add new &lt;canvas> elements to the web page.</li>
-    <li>Defines a set of factory functions for creating a wide range of graphic artefacts and effects, which can be drawn on a canvas.</li>
+    <li>Defines a set of factory functions for creating a wide range of graphic artefacts and effects, which can be drawn on a <code>&lt;canvas></code> element.</li>
     <li>Includes an adaptable - yet easy to use - protocol for positioning, displaying and animating artefacts and effects across the canvas.</li>
-    <li>Adds functionality to make &lt;canvas> elements responsive, adapting their size according to their surrounding environment.</li>
-    <li>Makes the canvas both accessible, and interactive - including the ability to easily track user interactions with different parts of the canvas.</li>
+    <li>Adds functionality to make <code>&lt;canvas></code> elements responsive, accessible, and interactive.</li>
+    <li>Automatically discovers existing <code>&lt;canvas></code> elements in a web page, and can add new <code>&lt;canvas></code> elements to the web page.</li>
   </ul>
 
-  <p>These test demos and documentation are for <b>Scrawl-canvas v8.14.0</b></p>
+  <h3>Links to documentation and tests</h3>
 
-  <h4>Download and installation</h4>
-  <p><a href="https://github.com/KaliedaRik/Scrawl-canvas">See GitHub for details</a> on how to add Scrawl-canvas to a project.</p>
+  <ul>
+    <li><a href="docs/reference/index.html">SC Developer Runbook</a></li>
+    <li><a href="docs/index.html">SC Inline Documentation</a></li>
+    <li><a href="demo/index.html">SC Demo Test suite</a></li>
+  </ul>
 
-  <p>See the local <a href="docs/index.html">documentation</a> and <a href="demo/index.html">Demo pages</a> for examples of how to use Scrawl-canvas in your project.</p>
+  <h3>Local server</h3>
+
+  <p>The local server is supplied by <a href="https://browsersync.io/">Browser-sync</a> and should be available on localhost port 3000 when running the command <code>yarn dev</code>. By default the server should open this page in a new tab in your preferred browser when it starts. Additional browsers can be spun up and pointed in the direction of this page, at which point many user actions in one browser - such as page navigation - will be mirrored in the other browsers. Updating and saving a watched file should hot reload the page across browsers.</p>
+
+  <p>The Browser-sync local server comes with a user interface, which can be accessed at <a href="http://localhost:3001">localhost port 3001</a> if the need arises to adapt its configuration while it is running.</p>
+
+  <h3>Documentation</h3>
+
+  <p>We use the following libraries for generating documentation:</p>
+  <ul>
+    <li><a href="https://showdownjs.com/docs/">Showdown</a>, for generating the Developer Runbook documentation from <code>.md</code> files.</li>
+    <li><a href="https://ashkenas.com/docco/">Docco</a>, for generating the inline documentation from source code and demo <code>.js</code> files.</li>
+  </ul>
+
 </body>
 
 </html>

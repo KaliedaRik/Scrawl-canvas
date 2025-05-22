@@ -4,7 +4,7 @@
 // [Run code](../../demo/canvas-206.html)
 import * as scrawl from '../source/scrawl.js';
 
-import { reportSpeed, initializeDomInputs } from './utilities.js';
+import { reportSpeed } from './utilities.js';
 
 
 // #### Scene setup
@@ -113,7 +113,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form
-const dom = initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['', 'domText'],
     ['input', 'alignment', '0'],
     ['input', 'height', '80'],
@@ -647,7 +647,9 @@ const updateFont = (event) => {
                 });
         }
 
+/** @ts-expect-error */
         if (mylabel.get('breakTextOnSpaces')) dom.breakTextOnSpaces.options.selectedIndex = 1;
+/** @ts-expect-error */
         else dom.breakTextOnSpaces.options.selectedIndex = 0;
 
         dom.lineSpacing.value = mylabel.get('lineSpacing');

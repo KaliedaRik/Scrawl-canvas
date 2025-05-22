@@ -9,34 +9,14 @@
 // + __layers__ to be applied to the base cell, allowing us to break a canvas display into more manageable portions
 // + the source for image-based objects such as __Picture entitys__ and __Pattern styles__.
 // + __artefacts__ - a Cell wrapper can act just like any artefact: it can be positioned, dimensioned, scaled and rotated ; it can act as a `pivot` or `mimic` source for other artefacts, or use them for its position and dimensions data. (Be aware, though, that Cell wrappers are NOT stored in the scrawl library's `artefact` section).
-//
-// Cell wrappers include a number of Boolean flags and other attributes to control how they are stamped onto other Cells.
-// + We can set flags to determine whether to include the Cell in each step of the Display cycle (`cleared`, `compiled`, `shown`) - this allows us to set up, for example, 'static' Cells that only need to be compiled once and can then be used as backgrounds for other Cells and entitys to be animated over.
-// + We can vary the order in which Cell wrappers get processed during the Display cycle (`compileOrder`, `showOrder`).
-// + Each Cell can have its own `backgroundColor`.
-// + Each Cell can be made translucent (`alpha`).
-// + Each Cell can be stamped onto other Cell canvases using a different composition method (`composite`).
-// + Each Cell can be given its own dimensions, different to those of its Canvas wrapper, with updates cascading down to entitys that use the Cell to determine their own (relative) dimensions and start coordinates.
-// + We can `scale`, `roll` and `flip` a Cell.
-// + We can control which parts of the Cell display will be copied over to its destination (`copy attributes`).
-// + We can add one or more `filters` to the Cell's outputted display.
-//
-// Every Cell wrapper will include a [Group object](./group.html) which shares the same name as the Cell. To include an entity object in a Cell wrapper's canvas display we add it to this group.
-// + Additional Group objects can be added to the Cell wrapper as-and-when required.
-// + Groups are processed in the order specified in their `order` attributes.
-// + Groups whose `visibility` flag is set to false will be skipped during the Display cycle cascade.
-//
-// Scrawl-canvas uses the `makeCell` factory function internally; it is not exported to the scrawl object. Instead, ___new Cell wrappers can be created from a Canvas wrapper___ using its `addCell` function.
-//
-// Scrawl-canvas (partially) disables Cell wrapper `packet` functionality. ___Cell wrappers cannot be cloned.___ They can be killed, either using their `kill` function or by invoking their Canvas wrapper controller's `killCell` function.
 
 
 // #### Imports
 import { artefact, asset, canvas, constructors, group } from '../core/library.js';
 
-import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
-import { getIgnorePixelRatio, getPixelRatio, currentCorePosition } from '../core/user-interaction.js';
+import { getIgnorePixelRatio, getPixelRatio } from '../core/user-interaction.js';
 
 
 import { makeGroup } from './group.js';
@@ -65,7 +45,7 @@ import patternMix from '../mixin/pattern.js';
 import filterMix from '../mixin/filter.js';
 
 // Shared constants
-import { _isFinite, _floor, _round, _values, _2D, AUTO, CANVAS, DIMENSIONS, DISPLAY_P3, FILL, GRAYSCALE, HEIGHT, HIGH, IMG, MOUSE, MOZOSX_FONT_SMOOTHING, NEVER, NONE, SMOOTH_FONT, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, WEBKIT_FONT_SMOOTHING, WIDTH, ZERO_STR } from '../helper/shared-vars.js';
+import { _atan2, _isFinite, _floor, _piDouble, _round, _values, _2D, CANVAS, FILL, HEIGHT, HIGH, IMG, MOUSE, NONE, SOURCE_OVER, SRGB, T_CANVAS, T_CELL, WIDTH, ZERO_STR, _isArray } from '../helper/shared-vars.js';
 
 // Local constants
 const CELL = 'cell',
@@ -244,7 +224,7 @@ P.saveAsPacket = function () {
 
     return `[${this.name}, ${this.type}, ${this.lib}, {}]`
 };
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill functionality
@@ -361,11 +341,18 @@ G.dimensions = function () {
 
     return [w, h];
 };
-S.dimensions = function (w, h) {
+S.dimensions = function (item) {
 
-    this.setCoordinateHelper(DIMENSIONS, w, h);
-    this.dirtyDimensions = true;
-    this.dirtyDimensionsOverride = true;
+    if (_isArray(item) && item.length > 1) {
+
+        const [w, h] = item;
+
+        if (w != null) this.dimensions[0] = w;
+        if (h != null) this.dimensions[1] = h;
+
+        this.dirtyDimensions = true;
+        this.dirtyDimensionsOverride = true;
+    }
 };
 
 // Internal setters
@@ -410,6 +397,13 @@ S.compileOrder = function (item) {
 };
 S.showOrder = function (item) {
 
+    this.showOrder = item;
+    this.updateControllerCells();
+};
+
+S.order = function (item) {
+
+    this.compileOrder = item;
     this.showOrder = item;
     this.updateControllerCells();
 };
@@ -512,31 +506,6 @@ D.clearAlpha = function (val) {
     }
 };
 
-// `smoothFont` - handle this directly; don't save the attribute state
-S.smoothFont = function (item) {
-
-    const { element } = this;
-
-    if (element) {
-
-        const { style } = element;
-
-        if (style) {
-
-            if (item) {
-                style[WEBKIT_FONT_SMOOTHING] = AUTO;
-                style[MOZOSX_FONT_SMOOTHING] = AUTO;
-                style[SMOOTH_FONT] = AUTO;
-            }
-            else {
-                style[WEBKIT_FONT_SMOOTHING] = NONE;
-                style[MOZOSX_FONT_SMOOTHING] = GRAYSCALE;
-                style[SMOOTH_FONT] = NEVER;
-            }
-        }
-    }
-};
-
 // `checkForEntityHover`, `onEntityHover`, `onEntityNoHover` - these are group-specific attributes which we can set on the Cell's named group via the Cell's wrapper
 S.checkForEntityHover = function (item) {
 
@@ -560,6 +529,10 @@ S.onEntityNoHover = function (item) {
 // `group` - get the Cell's namesake group
 // + Note that Cell wrappers can action more than one group
 G.group = function () {
+
+    return group[this.name];
+};
+P.getGroup = function () {
 
     return group[this.name];
 };
@@ -792,8 +765,6 @@ P.getHost = function () {
 P.updateBaseHere = function (controllerHere, fit) {
 
     if (this.isBase) {
-
-        if (!this.here) this.here = {};
 
         const here = this.here,
             dims = this.currentDimensions;
@@ -1124,11 +1095,12 @@ P.show = function () {
 // `applyFilters` - Internal function - add filters to the Cell's current output.
 P.applyFilters = function () {
 
-    const engine = this.engine;
+    const engine = this.engine,
+        element = this.element;
 
     const image = engine.getImageData(0, 0, this.currentDimensions[0], this.currentDimensions[1]);
 
-    this.preprocessFilters(this.currentFilters);
+    this.preprocessFilters(this.currentFilters, element.width, element.height);
 
     const img = filterEngine.action({
         identifier: this.filterIdentifier,
@@ -1306,8 +1278,6 @@ P.updateHere = function () {
 
     if (host) {
 
-        if (!this.here) this.here = {};
-
         const localHere = this.here;
 
         const [width, height] = this.currentDimensions;
@@ -1378,6 +1348,165 @@ P.updateHere = function () {
 };
 
 
+// `splitShift` - split and shift functionality works only on cells that are not being cleared as part of the Display cycle. The single argument is an object containing the following attributes:
+// + __px__ (required) - Number or String value for the amount of pixels to be shifted. Can be positive (move pixels right/down) or negative (move pixels left/up)
+// + __vertical__ (optional) - Boolean flag (default: `false`); when set to `true` we move the pixels up/down, otherwise we move them left/right
+// + __cycle__ (optional) - Boolean flag (default: `false`; when set to `true`) we save the area of the screen about to be overwritten and reinsert it on the opposite side after the shift operation completes
+P.splitShift = function (item) {
+
+    if (item && item.px) {
+
+        const {
+            px,
+            vertical = false,
+            cycle = false
+        } = item;
+
+        const [width, height] = this.currentDimensions;
+
+        let speed = 0,
+            edge = null;
+
+        if (px.toFixed) speed = _round(px);
+        else if (px.substring) {
+
+            if (vertical) speed = _round((parseFloat(px) / 100) * height);
+            else speed = _round((parseFloat(px) / 100) * width);
+        }
+
+        if (speed) {
+
+            const engine = this.engine;
+
+            if (vertical) {
+
+                // Move up
+                if (speed < 0) {
+
+                    if (cycle) edge = engine.getImageData(0, 0, width, -speed);
+                    engine.putImageData(engine.getImageData(0, -speed, width, height + speed), 0, 0);
+                    if (cycle) engine.putImageData(edge, 0, height + speed);
+                }
+                // Move down
+                else {
+
+                    if (cycle) edge = engine.getImageData(0, height - speed, width, speed);
+                    engine.putImageData(engine.getImageData(0, 0, width, height - speed), 0, speed);
+                    if (cycle) engine.putImageData(edge, 0, 0);
+                }
+            }
+           else {
+
+                // Move left
+                if (speed < 0) {
+
+                    if (cycle) edge = engine.getImageData(0, 0, -speed, height);
+                    engine.putImageData(engine.getImageData(-speed, 0, width + speed, height), 0, 0);
+                    if (cycle) engine.putImageData(edge, width + speed, 0);
+                }
+                // Move right
+                else {
+
+                    if (cycle) edge = engine.getImageData(width - speed, 0, speed, height);
+                    engine.putImageData(engine.getImageData(0, 0, width - speed, height), speed, 0);
+                    if (cycle) engine.putImageData(edge, 0, 0);
+                }
+            }
+        }
+    }
+};
+
+
+// __getCellData__, __paintCellData__ - get the Cell engine's image data object; paint the image data object back to the Cell's engine.
+// + Allows for direct pixel manipulation
+// + Works best on Cells that are not being cleared and compiled
+// + The `paintCellData` functionality will fail if the Cell resizes for any reason; when that happens, a new image data object needs to be obtained before it can be repainted back to the Cell
+// + An alternative approach is to use a RawAsset asset object, which comes with its own dedicated Canvas element
+P.getCellData = function (opaque = false) {
+
+    const [width, height] = this.currentDimensions,
+        halfWidth = _floor(width / 2),
+        halfHeight = _floor(height / 2);
+
+    const iData = this.engine.getImageData(0, 0, width, height),
+        data = iData.data;
+
+    const pixelState = [];
+
+    const coord = requestCoordinate();
+
+    for (let row = 0; row < height; row++) {
+
+        for (let col = 0; col < width; col++) {
+
+            const index = ((row * width) + col) * 4;
+
+            coord.setFromArray([halfWidth, halfHeight]).subtract([row, col]);
+
+            // We want angle `0deg` to point north, to the top of the screen
+            let angle = 1 - ((_atan2(coord[1], coord[0]) / _piDouble) + 0.5);
+            if (angle > 0.5) angle -= 0.5;
+            else angle += 0.5;
+
+            pixelState.push({
+                indexR: index,
+                indexG: index + 1,
+                indexB: index + 2,
+                indexA: index + 3,
+                red: data[index + 0],
+                green: data[index + 1],
+                blue: data[index + 2],
+                alpha: (opaque) ? 255 : data[index + 3],
+                row,
+                col,
+                distance: coord.getMagnitude(),
+                angle,
+            });
+        }
+    }
+
+    releaseCoordinate(coord);
+
+    return {
+        iData,
+        pixelState,
+    }
+};
+
+const pixelCleaner = new Uint8ClampedArray(1);
+
+P.paintCellData = function (item = Ωempty) {
+
+    const { iData, pixelState} = item;
+    const { width, height, data} = iData;
+    const [w, h] = this.currentDimensions;
+
+    if (width && height && data && pixelState && w === width && h === height) {
+
+        pixelState.forEach(p => {
+
+            const {indexR, indexG, indexB, indexA} = p;
+
+            const red = pixelCleaner[0] = p.red;
+            const green = pixelCleaner[0] = p.green;
+            const blue = pixelCleaner[0] = p.blue;
+            const alpha = pixelCleaner[0] = p.alpha;
+
+            p.red = red;
+            p.green = green;
+            p.blue = blue;
+            p.alpha = alpha;
+
+            data[indexR] = red;
+            data[indexG] = green;
+            data[indexB] = blue;
+            data[indexA] = alpha;
+        });
+
+        this.engine.putImageData(iData, 0, 0);
+    }
+};
+
 // #### Factory
 export const makeCell = function (items) {
 
@@ -1386,13 +1515,3 @@ export const makeCell = function (items) {
 };
 
 constructors.Cell = Cell;
-
-
-
-// Wide gamut colors helper
-export const getCanvasColorSpace = (useP3) => {
-
-    const { canvasSupportsP3Color, displaySupportsP3Color } = currentCorePosition;
-    if (useP3 && canvasSupportsP3Color && displaySupportsP3Color) return DISPLAY_P3;
-    return SRGB;
-};

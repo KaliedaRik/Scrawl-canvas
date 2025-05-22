@@ -5,7 +5,6 @@
 // + `afterCompile` - triggers when the `compile` cascade completes, before the `show` cascade begins.
 // + `afterShow` - triggers at the end of the Display cycle, after the `show` cascade completes.
 // + `afterCreated` - triggers once, after the first Display cycle completes.
-// + `error` - triggers when the Display cycle throws an error.
 //
 // The RenderAnimation object also supports the Animation object's __animation hook functions__:
 // + `onRun` - triggers each time the RenderAnimation object's `run` function is invoked
@@ -25,7 +24,7 @@ import { clear, compile, show } from '../core/display-cycle.js';
 
 import { makeAnimationObserver } from '../core/events.js';
 
-import { doCreate, isa_boolean, mergeOver, xt, λnull, λthis, Ωempty } from '../helper/utilities.js';
+import { doCreate, isa_boolean, mergeOver, xt, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { animateAdd, animateIncludes, animateRemove } from '../core/animation-loop.js';
 
@@ -37,7 +36,6 @@ import baseMix from '../mixin/base.js';
 import { _assign, _isArray, ANIMATION, T_RENDER_ANIMATION } from '../helper/shared-vars.js';
 
 // Local constants (none defined)
-
 
 // #### RenderAnimation constructor
 const RenderAnimation = function (items = Ωempty) {
@@ -94,51 +92,14 @@ const RenderAnimation = function (items = Ωempty) {
     this.afterCompile = items.afterCompile || λnull;
     this.afterShow = items.afterShow || λnull;
     this.afterCreated = items.afterCreated || λnull;
-    this.error = items.error || λnull;
 
     this.readyToInitialize = true;
-
-    // ##### The Display cycle animation function
-    this.fn = function () {
-
-        if (this.noTarget) {
-
-            this.commence();
-            this.afterClear();
-            this.afterCompile();
-            this.afterShow();
-
-            if (this.readyToInitialize) {
-
-                this.afterCreated(this);
-                this.readyToInitialize = false;
-            }
-        }
-        else if (this.isRunning()) {
-
-            this.commence();
-            this.target.clear();
-            this.afterClear();
-            this.target.compile();
-            this.afterCompile();
-            this.target.show();
-            this.afterShow();
-
-            if (this.readyToInitialize) {
-
-                this.target.checkAccessibilityValues();
-
-                this.afterCreated(this);
-                this.readyToInitialize = false;
-            }
-        }
-    }
 
     // Register in Scrawl-canvas library
     this.register();
 
     // The `observer` attribute
-    const obs = items.observer || false;
+    const obs = items.observer != null ? items.observer : true;
     this.observer = null;
 
     if (obs) {
@@ -189,7 +150,7 @@ const defaultAttributes = {
     onHalt: null,
     onKill: null,
 
-// __commence__, __afterClear__, __afterCompile__, __afterShow__, __afterCreated__, __error__
+// __commence__, __afterClear__, __afterCompile__, __afterShow__, __afterCreated__
 //
 // RenderAnimation objects support the following ___Display cycle hook functions___:
 // + `commence` - triggers at the start of the Display cycle, before the `clear` cascade begins.
@@ -197,13 +158,11 @@ const defaultAttributes = {
 // + `afterCompile` - triggers when the `compile` cascade completes, before the `show` cascade begins.
 // + `afterShow` - triggers at the end of the Display cycle, after the `show` cascade completes.
 // + `afterCreated` - triggers once, after the first Display cycle completes.
-// + `error` - triggers when the Display cycle throws an error.
     commence: null,
     afterClear: null,
     afterCompile: null,
     afterShow: null,
     afterCreated: null,
-    error: null,
 
 // __target__ - handle to the [Stack](./stack.html) or [Cell](./cell.html) wrapper object; each can have its own Display cycle animation.
 // + Can be supplied in the argument object as either a name-String for the target object, or the target object itself
@@ -226,7 +185,7 @@ P.saveAsPacket = function () {
 
 
 // #### Clone management
-P.clone = λthis;
+P.clone = λcloneError;
 
 
 // #### Kill management
@@ -248,6 +207,42 @@ P.kill = function () {
 
 
 // #### Prototype functions
+// The Display cycle animation function
+P.fn = function () {
+
+    if (this.noTarget) {
+
+        this.commence();
+        this.afterClear();
+        this.afterCompile();
+        this.afterShow();
+
+        if (this.readyToInitialize) {
+
+            this.afterCreated(this);
+            this.readyToInitialize = false;
+        }
+    }
+    else if (this.isRunning()) {
+
+        this.commence();
+        this.target.clear();
+        this.afterClear();
+        this.target.compile();
+        this.afterCompile();
+        this.target.show();
+        this.afterShow();
+
+        if (this.readyToInitialize) {
+
+            this.target.checkAccessibilityValues();
+
+            this.afterCreated(this);
+            this.readyToInitialize = false;
+        }
+    }
+};
+
 
 // `run` - start the animation, if it is not already running
 P.run = function () {
@@ -327,11 +322,6 @@ P.updateHook = function (hook = '', func) {
         case 'afterCreated' :
             if (func) this.afterCreated = func;
             else this.afterCreated = λnull;
-            break;
-
-        case 'error' :
-            if (func) this.error = func;
-            else this.error = λnull;
             break;
     }
 };

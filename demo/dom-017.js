@@ -108,11 +108,11 @@ const buildSquareCanvas = (namespace) => {
                 href: 'https://en.wikipedia.org/wiki/Square',
                 description: 'Link to the Wikipedia article on squares (opens in new tab)',
             },
-/** @ts-expect-error */
+/** @this {import('../source/scrawl.js').BlockInstance} */
             onEnter: function () { this.set({ lineWidth: 6 }) },
-/** @ts-expect-error */
+/** @this {import('../source/scrawl.js').BlockInstance} */
             onLeave: function () { this.set({ lineWidth: 2 }) },
-/** @ts-expect-error */
+/** @this {import('../source/scrawl.js').BlockInstance} */
             onUp: function () { this.clickAnchor() },
         });
 
@@ -206,11 +206,11 @@ const buildCircleCanvas = (namespace) => {
                 href: 'https://en.wikipedia.org/wiki/Circle',
                 description: 'Link to the Wikipedia article on circles (opens in new tab)',
             },
-/** @ts-expect-error */
+/** @this {import('../source/scrawl.js').WheelInstance} */
             onEnter: function () { this.set({ lineWidth: 6 }) },
-/** @ts-expect-error */
+/** @this {import('../source/scrawl.js').WheelInstance} */
             onLeave: function () { this.set({ lineWidth: 2 }) },
-/** @ts-expect-error */
+/** @this {import('../source/scrawl.js').WheelInstance} */
             onUp: function () { this.clickAnchor() },
         });
 
