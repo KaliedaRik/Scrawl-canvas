@@ -1,12 +1,15 @@
 # Welcome to the Scrawl-canvas Library
 Version: `8.15.0 - 21 May 2025` 
 
-Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
-+ learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
-+ documentation: [scrawl-v8.rikweb.org.uk/documentation](https://scrawl-v8.rikweb.org.uk/documentation).
-+ tests/demos: [scrawl-v8.rikweb.org.uk/demonstrations](https://scrawl-v8.rikweb.org.uk/demonstrations).
+#### Key links
++ Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
++ Learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
++ Documentation: [scrawl-v8.rikweb.org.uk/documentation](https://scrawl-v8.rikweb.org.uk/documentation).
++ Demos and tests: [scrawl-v8.rikweb.org.uk/demonstrations](https://scrawl-v8.rikweb.org.uk/demonstrations).
 
 Scrawl-canvas on CodePen: [codepen.io/collection/RzzMjw](https://codepen.io/collection/RzzMjw).
+
+LLM-compatible summary of library capabilities: [Scrawl-canvas summary](https://github.com/KaliedaRik/Scrawl-canvas/blob/v8/LLM-summary-for-scrawl-canvas.md)
 
 Scrawl-canvas on Discord: [discord.com/channels/...](https://discord.com/channels/906541519509536829/906541519996080149)
 
