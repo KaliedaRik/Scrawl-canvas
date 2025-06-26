@@ -56,6 +56,16 @@ const myWorld = scrawl.makeWorld({
             key: 'alphaDecay',
             defaultValue: 6,
         },
+        // We will store a user-updatable Boolean value - `processInReverse` - which we will use in the `stampAction` function to tweak the particle effect that we are trying to achieve
+        {
+            key: 'processInReverse',
+            defaultValue: false,
+            setter: function (item) {
+                console.log(`Updating processInReverse to ${item === 'yes' ? 'true' : 'false'}`); 
+/** @ts-expect-error */
+                this.processInReverse = item === 'yes' ? true : false;
+            },
+        },
     ],
 
     // Overwrite our user-defined attributes' default values with new data, for testing.
@@ -127,6 +137,8 @@ const myEmitter = scrawl.makeEmitter({
             len = history.length,
 /** @ts-expect-error */
             alphaDecay = myWorld.alphaDecay,
+/** @ts-expect-error */
+            processInReverse = myWorld.processInReverse,
             endRad = Math.PI * 2;
 
         let remaining, radius, alpha,
@@ -144,7 +156,8 @@ const myEmitter = scrawl.makeEmitter({
         // engine.fillStyle = myWorld.get('particleColor');
 
         // We are going to display all of the particle's most recent tick positions, as saved in their `history` array
-        history.forEach((p, index) => {
+        const hParticles = processInReverse ? history.toReversed() : history;
+        hParticles.forEach((p, index) => {
 
             // Every ParticleHistory Array stores its data in the following manner:
             // ```
@@ -164,7 +177,7 @@ const myEmitter = scrawl.makeEmitter({
             alpha = remaining / alphaDecay;
 
             // Another ageing mecahnism can be constructed using the index value vs the history array's length.
-            colorRange = index / len;
+            colorRange = processInReverse ? 1 - (index / len) : index / len;
 
             // Only draw this historical instance of the particle if it will be visible
             if (radius > 0 && alpha > 0) {
@@ -272,6 +285,7 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'generationRate', '60'],
     ['select', 'gravity', 0],
     ['select', 'stampFirst', 0],
+    ['select', 'processInReverse', 0],
 ]);
 
 
@@ -298,6 +312,7 @@ scrawl.makeUpdater({
 
         world_speed: ['tickMultiplier', 'float'],
         color_alpha: ['alphaDecay', 'float'],
+        processInReverse: ['processInReverse', 'raw'],
     },
 });
 
