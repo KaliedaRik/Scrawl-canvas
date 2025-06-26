@@ -94,7 +94,7 @@ const myEmitter = scrawl.makeEmitter({
     killAfterTimeVariation: 0.1,
 
     // For every Display cycle tick (which in optimal conditions will be around 17 milliseconds after the previous tick), a particle will update its position and record the new position using a ParticleHistory array. This data is then added to the entity's `history` array. We can limit the number of ParticleHistory arrays stored in the history array by setting the `historyLength` attribute to a suitable integer Number value.
-    historyLength: 100,
+    historyLength: 20,
 
     // The key functionality of a particle is that it moves.
     // + Particles will move as a consequence of the forces and spring constraints applied to them.
@@ -113,11 +113,12 @@ const myEmitter = scrawl.makeEmitter({
     rangeFromZ: -0.2,
 
     // We can assign a range of colors to our particle - we'll start the demo with the minimum and maximum fillStyle colors set to the same color
-    fillMinimumColor: '#f0f8ff',
-    fillMaximumColor: '#f0f8ff',
+    fillMinimumColor: '#ffff00',
+    fillMaximumColor: '#ff0000',
 
     // The `stampAction` function describes the steps that our Emitter will take to draw each of its particles onto the host canvas screen.
     // + In this instance, we have not supplied the Emitter with an `artefact`; instead we will draw directly on the host object's &lt;canvas> element.
+    stampFirst: 'oldest',
     stampAction: function (artefact, particle, host) {
 
         // We obtain the [canvas element's 2D rendering context](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) - which we will call the ___engine___ - from the function's `host` argument.
@@ -255,8 +256,8 @@ scrawl.makeRender({
 // #### User interaction
 const dom = scrawl.initializeDomInputs([
     ['input', 'world_speed', '2'],
-    ['input', 'maxcolor_controller', '#f0f8ff'],
-    ['input', 'mincolor_controller', '#f0f8ff'],
+    ['input', 'maxcolor_controller', '#ff0000'],
+    ['input', 'mincolor_controller', '#ffff00'],
     ['input', 'color_alpha', '6'],
     ['input', 'background', '#000000'],
     ['input', 'range_x', '40'],
@@ -265,11 +266,12 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'rangefrom_y', '-20'],
     ['input', 'range_z', '-1'],
     ['input', 'rangefrom_z', '-0.2'],
-    ['input', 'historyLength', '100'],
+    ['input', 'historyLength', '20'],
     ['input', 'killAfterTime', '5'],
     ['input', 'killAfterTimeVariation', '0.1'],
     ['input', 'generationRate', '60'],
     ['select', 'gravity', 0],
+    ['select', 'stampFirst', 0],
 ]);
 
 
@@ -322,6 +324,7 @@ scrawl.makeUpdater({
         rangefrom_y: ['rangeFromY', 'float'],
         range_z: ['rangeZ', 'float'],
         rangefrom_z: ['rangeFromZ', 'float'],
+        stampFirst: ['stampFirst', 'raw'],
     },
 });
 

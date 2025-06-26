@@ -1248,6 +1248,8 @@ export interface ElementInstance extends ElementFactoryInputs, ElementFactoryFun
 
 // EmitterInstance factory
 // -------------------------------------
+type EmitterStampFirstValues = 'oldest' | 'newest';
+
 interface EmitterFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs {
     generationRate?: number;
     particleCount?: number;
@@ -1295,6 +1297,7 @@ interface EmitterFactoryInputs extends BaseMixinInputs, EntityMixinInputs, Emitt
     rangeFrom?: VectorInstance;
     showHitRadius?: boolean;
     stampAction?: (artefact: EntityInstance, particle: ParticleInstance, host: CellInstance) => void;
+    stampFirst?: EmitterStampFirstValues,
     strokeColor?: string;
     strokeMaximumColor?: string;
     strokeMinimumColor?: string;
@@ -1312,11 +1315,7 @@ interface EmitterFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctio
     simpleStamp: (host: CellInstance, items?: EmitterFactoryInputs) => void;
 }
 
-export interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions {
-    fillColorFactory: ColorInstance;
-    strokeColorFactor: ColorInstance;
-    particleStore: ParticleInstance[];
-}
+export interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions {}
 
 
 
