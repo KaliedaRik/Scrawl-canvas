@@ -19,10 +19,10 @@
 // #### Exported function
 export default function (items) {
 
-    const { assetName, page, canvas, scrawl } = items;
+    const { assetName, page, canvas, scrawl, namespace } = items;
 
     // Check we can proceed
-    if (assetName && page && canvas && scrawl) {
+    if (assetName && page && canvas && scrawl && namespace) {
 
         const {
             size = 400,
@@ -32,7 +32,7 @@ export default function (items) {
             maximumColor = 'red',
         } = items;
 
-        const name = item => `temp-${assetName}-${item}`;
+        const name = n => `${namespace}-${n}`;
 
         // We will create a new Cell for the chart, fabricate the required entitys, render the Cell, then capture the output into an asset
         const cell = canvas.buildCell({
@@ -165,7 +165,7 @@ export default function (items) {
             cell.compile();
 
             // Clean up our mess
-            scrawl.library.purge(name(''));
+            scrawl.purge(namespace);
         })
         .catch(e => console.log('buildChart error', e));
     }

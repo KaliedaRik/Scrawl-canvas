@@ -235,8 +235,3 @@ Version release has not (yet) been automated, which means the following steps ne
 #### CodePen
 
 22: Repo-devs can now update all the [SC Pen demos in CodePen](https://codepen.io/collection/RzzMjw). This is required work because several of these demos are embedded into the website's various "Learn" articles. The change in each Pen is to update the SC import line to the latest version.
-
-#### tsdocs.dev website
-
-23: Remember to visit the [tsdocs.dev](https://tsdocs.dev/) website and search for `scrawl-canvas`. This should (fingers crossed) be sufficient for the site to pick up the latest version of the library and auto-generate reference pages for it from the `scrawl.d.ts` file.
-

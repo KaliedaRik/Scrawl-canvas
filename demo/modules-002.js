@@ -13,8 +13,10 @@ import buildChart from './modules/wikipedia-views-spiral-chart.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.findCanvas('mycanvas');
 
+const namespace = canvas.name;
+const name = (n) => `${namespace}-${n}`;
 
 // We need to generate an initial chart to display
 // + We give the asset a name, which we can then use with our Picture entity
@@ -25,12 +27,13 @@ buildChart({
     assetName: initialAssetName,
     canvas,
     scrawl,
+    namespace: name(initialAssetName),
 });
 
 
 // And we need a picture entity in which to display the chart
 const piccy = scrawl.makePicture({
-    name: 'spiral-chart',
+    name: name('spiral-chart-display'),
     dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
     asset: initialAssetName,
@@ -50,7 +53,7 @@ const report = reportSpeed('#reportmessage', function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: 'demo-animation',
+    name: name('demo-animation'),
     target: canvas,
     afterShow: report,
 });
@@ -66,13 +69,14 @@ scrawl.addNativeListener('change', () => {
 
         const assetName = `wiki-${page}-chart`;
 
-        if (!scrawl.library.assetnames.includes(assetName)) {
+        if (!scrawl.findAsset(assetName)) {
 
             buildChart({
                 page,
                 assetName,
                 canvas,
                 scrawl,
+                namespace: name(assetName),
             });
         }
 
