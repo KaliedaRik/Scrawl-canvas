@@ -36,21 +36,30 @@ const _pi = Math.PI,
 // ```
 export const addStrings = (current, delta) => {
 
-    if ((delta != null)) {
+    // no-op if delta is null/undefined
+    if (delta == null) return current;
+
+    // Fast numeric path
+    if (isa_number(current) && isa_number(delta)) return current + delta;
+
+    if (current.substring) {
 
         // Correct for labels
         if (LEFT === current || TOP === current) current = PC0;
         else if (RIGHT === current || BOTTOM === current) current = PC100;
         else if (CENTER === current) current = PC50;
-
-        const stringFlag = (current.substring || delta.substring) ? true : false;
-
-        if (isa_number(current)) current += (isa_number(delta) ? delta : parseFloat(delta));
-        else current = parseFloat(current) + (isa_number(delta) ? delta : parseFloat(delta));
-
-        return (stringFlag) ? current + PC : current;
     }
-    return current;
+
+    // If either operand is a string, we keep percent semantics
+    const wantPercent = (current.substring || delta.substring) ? true : false;
+
+    // Parse numbers safely (treat bad parses as 0)
+    const cNum = isa_number(current) ? current : (parseFloat(current) || 0);
+    const dNum = isa_number(delta) ? delta : (parseFloat(delta) || 0);
+
+    const res = cNum + dNum;
+
+    return wantPercent ? (res + PC) : res;
 };
 
 
