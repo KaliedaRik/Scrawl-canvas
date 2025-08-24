@@ -66,8 +66,6 @@ const Net = function (items = Ωempty) {
 
     this.set(items);
 
-    if (this.purge) this.purgeArtefact(this.purge);
-
     return this;
 };
 

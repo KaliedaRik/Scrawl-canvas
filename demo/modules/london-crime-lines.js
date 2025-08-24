@@ -112,7 +112,7 @@ api.build = function (items) {
         // + We pass the namespace through to the lines module, so we can handle kill functionality here rather than there
         api.kill = () => {
 
-            scrawl.library.purge(namespace);
+            scrawl.purge(namespace);
             currentData = false;
             isBuilt = false;
         }

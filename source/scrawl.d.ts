@@ -477,8 +477,6 @@ interface PivotMixinFunctions {}
 // -------------------------------------
 type LockToValues = 'start' | 'pivot' | 'path' | 'mimic' | 'particle' | 'mouse';
 
-type PurgeValues = 'pivot' | 'mimic' | 'path' | 'filter' | 'all' | string[];
-
 interface PositionMixinDeltaInputs {
     dimensions?: CommonTwoElementArrayInput;
     handle?: CommonTwoElementArrayInput;
@@ -513,7 +511,6 @@ interface PositionMixinInputs {
     calculateOrder?: number;
     stampOrder?: number;
     particle?: ParticleInstance | string;
-    purge?: PurgeValues;
     visibility?: boolean;
 }
 
@@ -532,7 +529,6 @@ interface PositionMixinFunctions {
     checkHit?: (tests: HitTests) => HitOutput | boolean;
     dropArtefact?: () => ArtefactInstance;
     pickupArtefact?: (items: CommonTwoElementArrayInput | CommonHereObjectInput) => ArtefactInstance;
-    purgeArtefact?: (item: string | string[]) => void;
 }
 
 

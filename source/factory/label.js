@@ -154,8 +154,6 @@ P.entityInit = function (items = Ωempty) {
 
     this.midInitActions(items);
 
-    if (this.purge) this.purgeArtefact(this.purge);
-
     this.dirtyFont = true;
     this.currentFontIsLoaded = false;
 };

@@ -401,8 +401,6 @@ export default function (P = Ωempty) {
         this.set(items);
 
         this.midInitActions(items);
-
-        if (this.purge) this.purgeArtefact(this.purge);
     };
 
     P.midInitActions = λnull;

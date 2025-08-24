@@ -294,10 +294,6 @@ export default function (P = Ωempty) {
         noCanvasEngineUpdates: false,
         noFilters: false,
         noPathUpdates: false,
-
-
-// __purge__ - ?
-        purge: null,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -805,66 +801,9 @@ export default function (P = Ωempty) {
 
 // #### Prototype functions
 
-// `purgeArtefact` - Artefact objects gather many attributes during their creation. Many of these may not be subsequentlyt used - for instance, if the artefact is never going to mimic another artefact, then it doesn't need all the attributes and flags associated with mimic functionality. In such cases, we can purge the artefact object of those attributes to free up a tiny bit of extra memory
-// + Argument can be a string of value `pivot`, `mimic`, `path`, `filter`, or an array of such strings.
-// + Passing the argument `all` will purge all attributes listed in the `doPurge` internal function.
-// + Clone functionality - include items to be purged
+// `purgeArtefact` - This functionality has been deprecated, and will be removed in a future release
+// + The function used to delete keys from objects. However this alters the object shape and leads to decreased code-run efficiency (the opposite of the intended code efficiency enhancement)
     P.purgeArtefact = function (item) {
-
-        const doPurge = function (art, val) {
-
-            switch (val) {
-
-                case PIVOT :
-                    delete art.pivot;
-                    delete art.pivotCorner;
-                    delete art.pivotPin;
-                    delete art.pivotIndex;
-                    delete art.addPivotHandle;
-                    delete art.addPivotOffset;
-                    delete art.addPivotRotation;
-                    break;
-
-                case MIMIC :
-                    delete art.mimic;
-                    delete art.useMimicDimensions;
-                    delete art.useMimicScale;
-                    delete art.useMimicStart;
-                    delete art.useMimicHandle;
-                    delete art.useMimicOffset;
-                    delete art.useMimicRotation;
-                    delete art.useMimicFlip;
-                    delete art.addOwnDimensionsToMimic;
-                    delete art.addOwnScaleToMimic;
-                    delete art.addOwnStartToMimic;
-                    delete art.addOwnHandleToMimic;
-                    delete art.addOwnOffsetToMimic;
-                    delete art.addOwnRotationToMimic;
-                    break;
-
-                case PATH :
-                    delete art.path;
-                    delete art.pathPosition;
-                    delete art.addPathHandle;
-                    delete art.addPathOffset;
-                    delete art.addPathRotation;
-                    break;
-
-                case FILTER :
-                    delete art.filter;
-                    delete art.filters;
-                    delete art.isStencil;
-                    break;
-            }
-        }
-
-        if (item.substring) {
-
-            if (item === ALL) item = [PIVOT, MIMIC, PATH, FILTER];
-            else item = [item];
-        }
-
-        if (_isArray(item)) item.forEach(val => doPurge(this, val));
 
         return this;
     };
