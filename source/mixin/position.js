@@ -1456,7 +1456,7 @@ export default function (P = Ωempty) {
                 },
             };
 
-            const localLockArray = requestCoordinate();
+            const localLockArray = [START, START];
 
             let hereFlag = false,
                 lock, here, pathData;
@@ -1502,7 +1502,7 @@ export default function (P = Ωempty) {
             stamp[0] = coord1[0];
             stamp[1] = coord2[1];
 
-            releaseCoordinate(localLockArray, coord1, coord2);
+            releaseCoordinate(coord1, coord2);
         }
 
         if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true;
