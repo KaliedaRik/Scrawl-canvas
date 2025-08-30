@@ -11,6 +11,18 @@
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
+    .canvas-container {
+      overflow: hidden;
+      resize: both;
+      border: 1px solid black;
+      width: 600px;
+      height: 600px;
+      min-height: 400px;
+      min-width: 400px;
+      max-height: 800px;
+      max-width: 800px;
+    }
+
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
     }
@@ -24,7 +36,6 @@
   </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Mediapipe test 001</h1>
   <h2>MediaPipe Selfie Segmentation - model image output</h2>
-  <p>Warning: these demos use outdated models!</p>
 
   <div class="controls">
     <div class="yellow label">Background filter</div>
@@ -33,13 +44,13 @@
         <option value="">None</option>
         <option value="grayscale">Grayscale</option>
         <option value="sepia">Sepia</option>
-        <option value="invert">Invert</option>
+        <option value="negative">Negative</option>
         <option value="red">Red</option>
         <option value="background-blur">Blur</option>
         <option value="pixelate">Pixelate</option>
       </select>
     </div>
-    <div class="yellow label">Blur outline</div>
+    <div class="yellow label">Blur head into background</div>
     <div class="yellow">
       <select class="controlItem" id="outlineFilter">
         <option value="0">False</option>
@@ -48,12 +59,16 @@
     </div>
   </div>
 
-  <canvas 
-    id="mycanvas" 
-    width="600" 
-    height="400"
-    data-scrawl-canvas
-  ></canvas>
+  <div class="canvas-container">
+    <canvas 
+      id="mycanvas"
+      data-scrawl-canvas
+      data-is-responsive="true" 
+      data-base-width="400" 
+      data-base-height="400" 
+      data-fit="cover"
+    ></canvas>
+  </div>
 
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
@@ -61,7 +76,7 @@
     <h4>Test purpose</h4>
     <ul>
       <li>Check that the media stream loads (if browser/device supports it)</li>
-      <li>Check that we can load and use both Mediapipe (from a CDN) and its selfie segmentation model</li>
+      <li>Check that we can load and use Mediapipe and its selfie segmentation model</li>
       <li>Apply the model to a live camera feed</li>
       <li>Apply filters to both the identified bodies, and to the background</li>
     </ul>
@@ -75,8 +90,10 @@
     <p><a href="../docs/demo/mediapipe-001.html">Annotated code</a></p>
   </div>
 
+<!--
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
+ -->
 
   <script src="mediapipe-001.js" type="module"></script>
 

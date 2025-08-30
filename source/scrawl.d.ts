@@ -2910,7 +2910,16 @@ interface VideoAssetFactoryInputs extends BaseMixinInputs, VideoAssetFactoryDelt
 
 interface VideoAssetFactoryFunctions extends BaseMixinFunctions {}
 
-export interface VideoAssetInstance extends VideoAssetFactoryInputs, VideoAssetFactoryFunctions {}
+export interface VideoAssetInstance extends VideoAssetFactoryInputs, VideoAssetFactoryFunctions {
+    isAudioOnly: boolean;
+    mediaStream: MediaStream;
+    mediaStreamTrack: MediaStreamTrack;
+    onMediaStreamEnd: () => void;
+    source: HTMLVideoElement;
+    sourceLoaded: boolean;
+    sourceNaturalWidth: number;
+    sourceNaturalHeight: number;
+}
 
 
 
