@@ -130,11 +130,10 @@ import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../untrack
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 // Shared constants
-import { _isArray, _isFinite, _keys, _parse, _values, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, LEFT, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, T_ENHANCED_LABEL, T_CELL, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _parse, _values, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, LEFT, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, T_ENHANCED_LABEL, T_CELL, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const ALL = 'all',
-    HANDLE = 'handle',
+const HANDLE = 'handle',
     LOCKTO = 'lockTo',
     STARTX = 'startX',
     STARTY = 'startY';
@@ -803,7 +802,7 @@ export default function (P = Ωempty) {
 
 // `purgeArtefact` - This functionality has been deprecated, and will be removed in a future release
 // + The function used to delete keys from objects. However this alters the object shape and leads to decreased code-run efficiency (the opposite of the intended code efficiency enhancement)
-    P.purgeArtefact = function (item) {
+    P.purgeArtefact = function () {
 
         return this;
     };

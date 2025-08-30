@@ -147,7 +147,7 @@ scrawl.makePicture({
     group: modelInputCell,
 
     asset: videoFeedCell,
-    
+
     dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
 });
@@ -197,8 +197,7 @@ const background = scrawl.makePicture({
 
 
 // #### Google MediaPipe ML model code
-let imageSegmenter,
-modelIsRunning = false;
+let imageSegmenter;
 
 const startModel = async () => {
 
@@ -218,8 +217,6 @@ const startModel = async () => {
         outputConfidenceMasks: false,
         runningMode: 'LIVE_STREAM',
     });
-
-    modelIsRunning = true;
 };
 
 // We can start the model code running straight away
@@ -231,6 +228,10 @@ startModel();
 // - imageSegmenter doesn't start its work until it has something to segment
 const processModelData = (results) => {
 
+    // Be aware: MediaPipe objects don't feel stable
+    // + This model instance is returning data in a `g` attribute (as the first element of an array)
+    // + Previous (recent) versions returned this data in a `categoryMask.containers` attribute
+    // + Moral: never trust; always check!
     if (results && results.categoryMask && results.categoryMask.g && results.categoryMask.g.length) {
 
         const data = results.categoryMask.g[0];
@@ -240,7 +241,7 @@ const processModelData = (results) => {
             for (let i = 0, iz = data.length; i < iz; i++) {
 
                 pixels[i].alpha = 256 - data[i];
-            } 
+            }
 
             modelOutputCell.paintCellData(maskData);
 
@@ -278,7 +279,7 @@ scrawl.importMediaStream({
         inputPicture.set({
             dimensions: [width, height],
             scale,
-            asset: streamAsset, 
+            asset: streamAsset,
         });
 
         // We need to feed input data into the model discretely, via an SC animation object
@@ -294,6 +295,7 @@ scrawl.importMediaStream({
                 }
             }
         });
+
     }, streamAsset.source);
 })
 .catch(err => console.log(err.message));

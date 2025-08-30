@@ -61,7 +61,7 @@ const myWorld = scrawl.makeWorld({
             key: 'processInReverse',
             defaultValue: false,
             setter: function (item) {
-                console.log(`Updating processInReverse to ${item === 'yes' ? 'true' : 'false'}`); 
+                console.log(`Updating processInReverse to ${item === 'yes' ? 'true' : 'false'}`);
 /** @ts-expect-error */
                 this.processInReverse = item === 'yes' ? true : false;
             },
