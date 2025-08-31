@@ -9,6 +9,20 @@
   <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .canvas-container {
+      overflow: hidden;
+      resize: both;
+      border: 1px solid black;
+      width: 600px;
+      height: 600px;
+      min-height: 400px;
+      min-width: 400px;
+      max-height: 800px;
+      max-width: 800px;
+    }
+  </style>
 </head>
 
 <body>
@@ -17,15 +31,18 @@
     <a href="mediapipe-003.html">Next &rarr;</a>
   </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Mediapipe test 002</h1>
-  <h2>MediaPipe Face Mesh - model image output</h2>
-  <p>Warning: these demos use outdated models!</p>
+  <h2>MediaPipe Face Landmarker - model image output</h2>
 
-  <canvas 
-    id="mycanvas" 
-    width="600" 
-    height="400"
-    data-scrawl-canvas
-  ></canvas>
+  <div class="canvas-container">
+    <canvas 
+      id="mycanvas"
+      data-scrawl-canvas
+      data-is-responsive="true" 
+      data-base-width="400" 
+      data-base-height="400" 
+      data-fit="cover"
+    ></canvas>
+  </div>
 
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
@@ -42,11 +59,6 @@
 
     <p><a href="../docs/demo/mediapipe-002.html">Annotated code</a></p>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
 
   <script src="mediapipe-002.js" type="module"></script>
 
