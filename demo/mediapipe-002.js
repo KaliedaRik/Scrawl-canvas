@@ -1,5 +1,5 @@
 // # Demo Mediapipe 002
-// MediaPipe Face Mesh - model image output
+// MediaPipe Face Landmarker - model image output
 
 // [Run code](../../demo/mediapipe-002.html)
 import * as MediaPipe from './js/mediapipe/tasks-vision/vision-bundle.js';
@@ -23,11 +23,7 @@ const name = (n) => `${namespace}-${n}`;
 // + Create a media stream video asset
 // + Display the media stream asset in a Picture entity in our hidden Cell
 // + Display the hidden Cell in the base Cell using a second Picture entity (the background)
-// + Apply filters to the background output
-//
-// We are using this approach because we:
-// + Want to feed the hidden Cell data through MediaPipe to remove the background
-// + We can then display the results in the base Cell over the filtered background
+// + Display an overlay of label coordinates detected by the face landmarker
 //
 // + Note 1: Users will need to explicitly agree to let Scrawl-canvas use the media stream the first time the page loads (the browser should handle this agreement procedure itself)
 // + Note 2: importMediaStream returns a Promise!
