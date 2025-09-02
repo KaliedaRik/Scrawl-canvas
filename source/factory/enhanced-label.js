@@ -27,7 +27,7 @@ import textMix from '../mixin/text.js';
 import { doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 // Shared constants
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, BOTTOM, CENTER, DESTINATION_OVER, END, ENTITY, FILL, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, START, T_CELL, T_ENHANCED_LABEL, T_GROUP, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, BOTTOM, CENTER, DESTINATION_OVER, END, ENTITY, FILL, GOOD_HOST_SET, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, START, T_CELL, T_ENHANCED_LABEL, T_GROUP, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const DRAW = 'draw',
@@ -2659,7 +2659,7 @@ P.stamp = function (force = false, host, changes) {
 
         if (force) {
 
-            if (host && GOOD_HOST.includes(host.type)) this.currentHost = host;
+            if (host && GOOD_HOST_SET.has(host.type)) this.currentHost = host;
 
             if (changes) {
 

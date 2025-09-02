@@ -12,7 +12,7 @@ import { releaseArray, requestArray } from '../helper/array-pool.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _abs, _atan2, _cos, _floor, _isArray, _isFinite, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _2D, BLACK, BLANK, CANVAS, FUNCTION, INT_COLOR_SPACES, LINEAR, NAME, NONE, PC, RANDOM, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, UNDEF, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _atan2, _cos, _floor, _isArray, _isFinite, _keys, _max, _min, _pow, _radian,  _random, _round, _sin, _sqrt, _values, _2D, BLACK, BLANK, CANVAS, FUNCTION, INT_COLOR_SPACES_SET, LINEAR, NAME, NONE, PC, RANDOM, RGB, SOURCE_OVER, SPACE, STYLES, T_COLOR, UNDEF, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const _inverseRadian = 180 / Math.PI,
@@ -459,7 +459,7 @@ P.setColorSpaceHelper = function (item) {
 
         item = item.toUpperCase();
 
-        if (INT_COLOR_SPACES.includes(item)) {
+        if (INT_COLOR_SPACES_SET.has(item)) {
 
             const current = this.getCurrentColor(),
                 min = this.getMinimumColor(),

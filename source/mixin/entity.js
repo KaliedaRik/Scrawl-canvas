@@ -31,7 +31,7 @@ import buttonMix from './button.js';
 import filterMix from './filter.js';
 
 // Shared constants
-import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST_SET, IMG, MOUSE, NAME, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS_SET,  UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const NONZERO = 'nonzero';
@@ -200,7 +200,7 @@ export default function (P = Ωempty) {
 
         let result = true;
 
-        if(!incs.indexOf(key) && value === this.defs[key]) result = false;
+        if(!incs.includes(key) && value === this.defs[key]) result = false;
 
         return result;
     };
@@ -300,7 +300,7 @@ export default function (P = Ωempty) {
 
                 if (key && key !== NAME && val != null) {
 
-                    if (!STATE_KEYS.includes(key)) {
+                    if (!STATE_KEYS_SET.has(key)) {
 
                         fn = setters[key];
 
@@ -343,7 +343,7 @@ export default function (P = Ωempty) {
 
                 if (key && key !== NAME && val != null) {
 
-                    if (!STATE_KEYS.includes(key)) {
+                    if (!STATE_KEYS_SET.has(key)) {
 
                         fn = setters[key];
 
@@ -494,7 +494,7 @@ export default function (P = Ωempty) {
 
         if (force) {
 
-            if (host && GOOD_HOST.includes(host.type)) this.currentHost = host;
+            if (host && GOOD_HOST_SET.has(host.type)) this.currentHost = host;
 
             if (changes) this.set(changes);
 
@@ -722,7 +722,7 @@ export default function (P = Ωempty) {
 // + Will ignore any filters assigned to the entity
     P.simpleStamp = function (host, changes) {
 
-        if (host && GOOD_HOST.includes(host.type)) {
+        if (host && GOOD_HOST_SET.has(host.type)) {
 
             this.currentHost = host;
 

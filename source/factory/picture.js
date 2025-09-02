@@ -18,7 +18,7 @@ import entityMix from '../mixin/entity.js';
 import assetConsumerMix from '../mixin/asset-consumer.js';
 
 // Shared constants
-import { $IMAGE, $VIDEO, _keys, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS, T_PICTURE, T_SPRITE, UNDEF } from '../helper/shared-vars.js';
+import { $IMAGE, $VIDEO, _keys, ENTITY, MOUSE, NAME, PARTICLE, STATE_KEYS_SET, T_PICTURE, T_SPRITE, UNDEF } from '../helper/shared-vars.js';
 
 // Local constants
 const COPY_DIMENSIONS = 'copyDimensions',
@@ -334,7 +334,7 @@ P.set = function (items = Ωempty) {
 
             else if (key && key !== NAME && value != null) {
 
-                if (!STATE_KEYS.includes(key)) {
+                if (!STATE_KEYS_SET.has(key)) {
 
                     fn = setters[key];
 

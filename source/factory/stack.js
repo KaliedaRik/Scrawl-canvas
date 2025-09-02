@@ -22,19 +22,20 @@ import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
 // Shared constants
-import { _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DIV, NAME, PC50, PERMITTED_STACK_ELEMENTS, RELATIVE, ROOT, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
+import { _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DIV, NAME, PC50, RELATIVE, ROOT, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const $DATA_SCRAWL_STACK = '[data-scrawl-stack]',
     $SCRIPT = 'SCRIPT',
     DATA_SCRAWL_STACK = 'data-scrawl-stack',
+    PERMITTED_STACK_ELEMENTS_SET = new Set(['ARTICLE', 'ASIDE', 'DIV', 'FOOTER', 'HEADER', 'MAIN', 'NAV', 'SECTION']),
     STACK = 'stack';
 
 
 // #### Stack constructor
 const Stack = function (items = Ωempty) {
 
-    if (items.domElement && PERMITTED_STACK_ELEMENTS.includes(items.domElement.tagName)) {
+    if (items.domElement && PERMITTED_STACK_ELEMENTS_SET.has(items.domElement.tagName)) {
 
         this.makeName(items.name);
         this.register();

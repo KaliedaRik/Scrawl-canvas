@@ -17,7 +17,7 @@ import { doCreate, xt, xtGet } from '../helper/utilities.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { AUTO, BLACK, DEFAULT_FONT, FONT_USERS, HIGH, LEFT, LINE_DASH, LTR, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LABEL_KEYS, T_COLOR, TOP, UNDEF } from '../helper/shared-vars.js';
+import { AUTO, BLACK, DEFAULT_FONT, FONT_USERS_SET, HIGH, LEFT, LINE_DASH, LTR, NONE, NORMAL, PX0, SOURCE_OVER, STATE_ALL_KEYS, STATE_LABEL_KEYS, T_COLOR, TOP, UNDEF } from '../helper/shared-vars.js';
 
 // Local constants
 const BUTT = 'butt',
@@ -358,7 +358,7 @@ P.getChanges = function (ent, engineState) {
     }
 
     // 'font', 'direction', 'fontKerning', 'textRendering', 'letterSpacing', 'wordSpacing'
-    if (FONT_USERS.includes(ent.type)) {
+    if (FONT_USERS_SET.has(ent.type)) {
 
         for (i = 0, iz = STATE_LABEL_KEYS.length; i < iz; i++) {
 

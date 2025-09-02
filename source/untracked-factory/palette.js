@@ -57,7 +57,7 @@ import { makeColor } from '../factory/color.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _assign, _entries, _floor, _isArray, _isFinite, _keys, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES, LINEAR, RGB, SPACE, T_PALETTE, WHITE } from '../helper/shared-vars.js';
+import { _assign, _entries, _floor, _isArray, _isFinite, _keys, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES_SET, LINEAR, RGB, SPACE, T_PALETTE, WHITE } from '../helper/shared-vars.js';
 
 // Local constants
 const PALETTE = 'palette';
@@ -248,7 +248,7 @@ S.colorSpace = function (item) {
         const ITM = item.toUpperCase();
         const itm = item.toLowerCase();
 
-        if (INT_COLOR_SPACES.includes(ITM)) {
+        if (INT_COLOR_SPACES_SET.has(ITM)) {
 
             const oldColors = _assign({}, this.colors);
 

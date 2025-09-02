@@ -175,8 +175,6 @@ startModel();
 // - handLandmarker doesn't start its work until it has something to segment
 const processModelData = (results) => {
 
-    console.log('results', results);
-
     if (results && results.landmarks && results.landmarks.length) {
 
         const data = results.landmarks[0];

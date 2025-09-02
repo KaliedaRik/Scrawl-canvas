@@ -39,7 +39,7 @@ export const $IMAGE = 'image_';
 export const $VIDEO = 'video_';
 export const _2D = '2d';
 export const ABSOLUTE = 'absolute';
-export const ACCEPTED_WRAPPERS = ['Canvas', 'Stack'];
+export const ACCEPTED_WRAPPERS_SET = new Set(['Canvas', 'Stack']);
 export const ADD_EVENT_LISTENER = 'addEventListener';
 export const ALPHA_TO_CHANNELS = 'alpha-to-channels';
 export const ALPHA_TO_LUMINANCE = 'alpha-to-luminance';
@@ -81,7 +81,7 @@ export const COLORS_TO_ALPHA = 'colors-to-alpha';
 export const COMPOSE = 'compose';
 export const CONTROL = 'control';
 export const COORD = 'coord';
-export const CORNER_LABELS = ['topLeft', 'topRight', 'bottomRight', 'bottomLeft'];
+export const CORNER_LABELS_SET = new Set(['topLeft', 'topRight', 'bottomRight', 'bottomLeft']);
 export const CORNER_SELECTOR = '[data-scrawl-corner-div="sc"]';
 export const CORRODE = 'corrode';
 export const DATA_SCRAWL_GROUP = 'data-scrawl-group';
@@ -110,12 +110,12 @@ export const FILTER = 'filter';
 export const FLOOD = 'flood';
 export const FOCUS = 'focus';
 export const FOCUS_ACTION = 'focusAction';
-export const FONT_USERS = ['Label', 'EnhancedLabel'];
+export const FONT_USERS_SET = new Set(['Label', 'EnhancedLabel']);
 export const FORM = 'form';
 export const FUNCTION = 'function';
 export const GAUSSIAN_BLUR = 'gaussian-blur';
 export const GLITCH = 'glitch';
-export const GOOD_HOST = ['Cell', 'CellFragment'];
+export const GOOD_HOST_SET = new Set(['Cell', 'CellFragment']);
 export const GRAYSCALE = 'grayscale';
 export const GREEN = 'green';
 export const HANGING = 'hanging';
@@ -125,7 +125,7 @@ export const HREF = 'href';
 export const HREFLANG = 'hreflang';
 export const IDEOGRAPHIC = 'ideographic';
 export const IMG = 'img';
-export const INT_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'];
+export const INT_COLOR_SPACES_SET = new Set(['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH']);
 export const INVERT_CHANNELS = 'invert-channels';
 export const LEAVE = 'leave';
 export const LEFT = 'left';
@@ -204,7 +204,7 @@ export const SRGB = 'srgb';
 export const START = 'start';
 export const START_CONTROL = 'startControl';
 export const STATE_ALL_KEYS = ['direction', 'fillStyle', 'filter', 'font', 'fontKerning', 'fontStretch', 'fontVariantCaps', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'letterSpacing', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle', 'textAlign', 'textBaseline', 'textRendering', 'wordSpacing'];
-export const STATE_KEYS = ['fillStyle', 'filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle'];
+export const STATE_KEYS_SET = new Set(['fillStyle', 'filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle']);
 export const STATE_LABEL_KEYS = ['direction', 'font', 'fontKerning', 'fontStretch', 'fontVariantCaps', 'letterSpacing', 'textRendering', 'wordSpacing'];
 export const STEP_CHANNELS = 'step-channels';
 export const STYLES = 'styles';
@@ -265,15 +265,3 @@ export const WHITE = 'rgb(255 255 255 / 1)';
 export const WIDTH = 'width';
 export const ZERO_PATH = 'M0,0';
 export const ZERO_STR = '';
-
-// Can be turned into stacks
-export const PERMITTED_STACK_ELEMENTS = ['ARTICLE', 'ASIDE', 'DIV', 'FOOTER', 'HEADER', 'MAIN', 'NAV', 'SECTION'];
-
-// Can be imported into stacks as elements; have hit zones/pivot points - corner elements added
-export const PERMITTED_TRACKED_ELEMENTS = ['ARTICLE', 'ASIDE', 'DIV', 'FOOTER', 'HEADER', 'MAIN', 'NAV', 'SECTION', 'ADDRESS', 'BLOCKQUOTE', 'DL', 'FIGURE', 'FORM', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'HGROUP', 'MENU', 'METER', 'OL', 'P', 'PRE', 'PROGRESS', 'SEARCH', 'SELECT', 'TABLE', 'TEXTAREA', 'UL', 'OUTPUT'];
-
-// Elements not included in the other 3 groups. Can be imported into stacks as elements; do not have hit zones/pivot points - corner elements not added
-// export const PERMITTED_UNTRACKED_ELEMENTS = ['AUDIO', 'VIDEO', 'EMBED', 'FENCEDFRAME', 'IFRAME', 'OBJECT', 'IMG', 'PICTURE', 'SVG', 'MATH', 'INPUT', 'A', 'BUTTON', 'DETAILS'];
-
-// Cannot be used as stacks or stack elements
-export const FORBIDDEN_ELEMENTS = ['BASE', 'HEAD', 'LINK', 'META', 'STYLE', 'TITLE', 'BODY', 'DD', 'DT', 'FIGCAPTION', 'HR', 'LI', 'ABBR', 'B', 'BDI', 'BDO', 'BR', 'CITE', 'CODE', 'DATA', 'DFN', 'EM', 'I', 'KBD', 'MARK', 'Q', 'RP', 'RT', 'RUBY', 'S', 'SAMP', 'SMALL', 'SPAN', 'STRONG', 'SUB', 'SUP', 'TIME', 'U', 'VAR', 'WBR', 'AREA', 'MAP', 'TRACK', 'SOURCE', 'NOSCRIPT', 'SCRIPT', 'DEL', 'INS', 'CAPTION', 'COL', 'COLGROUP', 'TBODY', 'TD', 'TFOOT', 'TH', 'THEAD', 'TR', 'DATALIST', 'FIELDSET', 'LABEL', 'LEGEND', 'OPTGROUP', 'OPTION', 'SLOT', 'DIALOG', 'SUMMARY', 'TEMPLATE', 'ACRONYM', 'BIG', 'CENTER', 'CONTENT', 'DIR', 'FONT', 'FRAME', 'FRAMESET', 'IMAGE', 'MARQUEE', 'MENUITEM', 'NOBR', 'NOEMBED', 'NOFRAMES', 'PARAM', 'PLAINTEXT', 'RB', 'RTC', 'SHADOW', 'STRIKE', 'TT', 'XMP', 'ANIMATE', 'ANIMATEMOTION', 'ANIMATETRANSFORM', 'CIRCLE', 'CLIPPATH', 'CURSOR', 'DEFS', 'DESC', 'ELLIPSE', 'FEBLEND', 'FECOLORMATRIX', 'FECOMPONENTTRANSFER', 'FECOMPOSITE', 'FECONVOLVEMATRIX', 'FEDIFFUSELIGHTING', 'FEDISPLACEMENTMAP', 'FEDISTANTLIGHT', 'FEDROPSHADOW', 'FEFLOOD', 'FEFUNCA', 'FEFUNCB', 'FEFUNCG', 'FEFUNCR', 'FEGAUSSIANBLUR', 'FEIMAGE', 'FEMERGE', 'FEMERGENODE', 'FEMORPHOLOGY', 'FEOFFSET', 'FEPOINTLIGHT', 'FESPECULARLIGHTING', 'FESPOTLIGHT', 'FETILE', 'FETURBULENCE', 'FILTER', 'FONT-FACE-FORMAT', 'FONT-FACE-NAME', 'FONT-FACE-SRC', 'FONT-FACE-URI', 'FONT-FACE', 'FONT', 'FONT', 'FOREIGNOBJECT', 'G', 'GLYPH', 'GLYPHREF', 'HKERN', 'IMAGE', 'LINE', 'LINEARGRADIENT', 'MARKER', 'MASK', 'METADATA', 'MISSING-GLYPH', 'MPATH', 'PATH', 'PATTERN', 'POLYGON', 'POLYLINE', 'RADIALGRADIENT', 'RECT', 'SCRIPT', 'SET', 'STOP', 'STYLE', 'SWITCH', 'SYMBOL', 'TEXT', 'TEXTPATH', 'TREF', 'TSPAN', 'USE', 'VIEW', 'VKERN'];
