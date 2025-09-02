@@ -204,7 +204,11 @@ export const SRGB = 'srgb';
 export const START = 'start';
 export const START_CONTROL = 'startControl';
 export const STATE_ALL_KEYS = ['direction', 'fillStyle', 'filter', 'font', 'fontKerning', 'fontStretch', 'fontVariantCaps', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'letterSpacing', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle', 'textAlign', 'textBaseline', 'textRendering', 'wordSpacing'];
+
+// This is the danger of LLMs - you ask it to identify potential efficiency gains; it tells you to use Set.has instead of Array.includes ... which in this case adds no efficiency because the benefits only become apparent when dealing with Arrays/Sets containing many thousands of elements. In fact, there is a miniscule impact on performance because Set involves a little more initial work for each check.
+// + I'm not going to change this code back, for now. Instead I'll keep the code and this comment here, to remind my future self to distrust everything LLMs claim about code efficiency, until demonstrated/verified otherwise.
 export const STATE_KEYS_SET = new Set(['fillStyle', 'filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle']);
+
 export const STATE_LABEL_KEYS = ['direction', 'font', 'fontKerning', 'fontStretch', 'fontVariantCaps', 'letterSpacing', 'textRendering', 'wordSpacing'];
 export const STEP_CHANNELS = 'step-channels';
 export const STYLES = 'styles';
