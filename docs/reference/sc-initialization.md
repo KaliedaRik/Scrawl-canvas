@@ -206,7 +206,7 @@ export const ZERO_PATH = 'M0,0';
 export const ZERO_STR = '';
 ```
 
-Note that repo-devs don't have any proof that this helps cut down on unnecessary work. It's just part of the SC ethos to only define constants once, and to define/export a constant from this file if they find themselves using it in different modules.
+Note that repo-devs don't have any proof that this helps cut down on unnecessary work (in fact various LLMs are adamant that this approach offers no clear efficiency benefits). It's just part of the SC ethos to only define constants once, and to define/export a constant from this file if they find themselves using it in different modules.
 
 ### Shared functions
 Similar to shared constants, SC defines a set of exported shared variables in the [helper/utilities.js](../source/helper/utilities.html) file. These include:
@@ -290,6 +290,8 @@ currentCorePosition.prefersDarkColorScheme = colorSchemeMediaQuery.matches;
 ```
 
 SC tracks the following system settings:
++ `forced-colors`
++ `inverted-colors`
 + `prefers-color-scheme`
 + `prefers-contrast`
 + `prefers-reduced-data`

@@ -1037,35 +1037,41 @@ P.getGrayscaleValue = function (r, g, b) {
     return _floor((0.2126 * r) + (0.7152 * g) + (0.0722 * b));
 };
 
-// `retrieveColorPointLibraries` - manages the three color point libraries. The function retrieves them from the workstore or - if they have not yet been created or have been deleted - creates, stores and returns them to the calling function. Returns an object with the following attributes:
-// + __labColorLib__ maps quantized OKLAB color values to their RGB equivalent values, stored as an `[r, g, b]` array
-// + __lchColorLib__ maps quantized OKLCH color values to their RGB equivalent values, stored as an `[r, g, b]` array
-// + __rgbColorLib__ maps RGB channel color values to their OKLAB/OKLCH equivalent values, stored as an array with the structure: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
+// `retrieveColorPointLibraries` - manages the three color point libraries. The function retrieves them from the workstore or - if they have not yet been created or have been deleted - creates, stores and returns them to the calling function.
 P.retrieveColorPointLibraries = function () {
 
     if (!checkForWorkstoreItem(COLOR_POINT_ARRAYS)) {
 
         setWorkstoreItem(COLOR_POINT_ARRAYS, {
-
-            labColorLib: [],
-            lchColorLib: [],
-            rgbColorLib: [],
+            labColorLib: new Map(),
+            lchColorLib: new Map(),
+            rgbColorLib: new Map(),
         });
     }
+
     return getWorkstoreItem(COLOR_POINT_ARRAYS);
 };
-
 // `getOkColorVals` - returns an array of OKLAB/OKLCH calculated values for a given RGB color point
 // + Arguments __r, g, b__ - positive integer clamped between 0-255 - RGB red, green and blue channel values
 // + Argument __libs__ - the object returned by the `retrieveColorPointLibraries` function
 // + Return an array: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
 P.getOkColorVals = function (r, g, b, libs) {
 
-    const lib = libs.rgbColorLib;
+    const k = this.rgbKey(r, g, b),
+        hit = libs.rgbColorLib.get(k);
 
-    if (!lib[r] || !lib[r][g] || lib[r][g][b] == null) return this.setOkColorVals(r, g, b, libs);
+    if (hit !== undefined) return hit;
 
-    return lib[r][g][b];
+    const lab = colorEngine.convertRGBtoOKLAB(r, g, b),
+        lch = colorEngine.convertOKLABtoOKLCH(lab[0], lab[1], lab[2]),
+        vals = [lab[0], lab[1], lab[2], lch[1], lch[2]];
+
+    libs.rgbColorLib.set(k, vals);
+
+    libs.labColorLib.set(this.labKeyFromLab(lab[0], lab[1], lab[2]), [r, g, b]);
+    libs.lchColorLib.set(this.lchKeyFromLch(lch[0], lch[1], lch[2]),   [r, g, b]);
+
+    return vals;
 };
 
 // `getRegularColorVals` - returns an array of RGB channel values for a given OKLAB or OKLCH color point. Note that arguments must represent an OKLAB color point only, or an OKLCH color point only
@@ -1077,88 +1083,110 @@ P.getOkColorVals = function (r, g, b, libs) {
 // + Return an array of RGB color values: `[r, g, b]`
 P.getRegularColorVals = function (l, ac, bh, libs, isLch = false) {
 
-    const { labColorLib, lchColorLib } = libs;
-
-    let L, AC, BH, rgb;
-
     if (isLch) {
 
-        [L, AC, BH] = this.getColorLchIndices(l, ac, bh);
+        const k = this.lchKeyFromLch(l, ac, bh),
+            hit = libs.lchColorLib.get(k);
 
-        if (!lchColorLib[L] || !lchColorLib[L][AC] || lchColorLib[L][AC][BH] == null) {
+        if (hit !== undefined) return hit;
 
-            rgb = colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, ac, bh));
-            this.memoizeLch(l, ac, bh, rgb, lchColorLib);
-            return rgb;
-        }
-        return lchColorLib[L][AC][BH];
-    }
+        const lab = colorEngine.convertOKLCHtoOKLAB(l, ac, bh),
+            rgb = colorEngine.convertOKLABtoRGB(lab[0], lab[1], lab[2]);
+
+        libs.lchColorLib.set(k, rgb);
+        libs.labColorLib.set(this.labKeyFromLab(lab[0], lab[1], lab[2]), rgb);
+
+        return rgb;
+
+    } 
     else {
+    
+        const k = this.labKeyFromLab(l, ac, bh),
+            hit = libs.labColorLib.get(k);
 
-        [L, AC, BH] = this.getColorLabIndices(l, ac, bh);
+        if (hit !== undefined) return hit;
 
-        if (!labColorLib[L] || !labColorLib[L][AC] || labColorLib[L][AC][BH] == null) {
+        const rgb = colorEngine.convertOKLABtoRGB(l, ac, bh);
+        libs.labColorLib.set(k, rgb);
 
-            rgb = colorEngine.convertOKLABtoRGB(l, ac, bh);
-            this.memoizeLab(l, ac, bh, rgb, labColorLib);
-            return rgb;
-        }
-        return labColorLib[L][AC][BH];
+        const lch = colorEngine.convertOKLABtoOKLCH(l, ac, bh);
+        libs.lchColorLib.set(this.lchKeyFromLch(lch[0], lch[1], lch[2]), rgb);
+        
+        return rgb;
     }
 };
 
-// Color point library helper functions
-P.setOkColorVals = function (r, g, b, libs) {
+// Warning: magic numbers
+const LAB_A_SIZE = 501,
+    LAB_B_SIZE = 501,
+    LAB_STRIDE_A = LAB_B_SIZE,
+    LAB_STRIDE_L = LAB_A_SIZE * LAB_B_SIZE,
+    LCH_C_SIZE = 201,
+    LCH_H_SIZE = 540,
+    LCH_STRIDE_C = LCH_H_SIZE,
+    LCH_STRIDE_L = LCH_C_SIZE * LCH_H_SIZE,
+    MIN_AB = -0.4,
+    MAX_AB = 0.4,
+    MAKE_AB_POSITIVE = 0.4,
+    AB_GRANULARITY = 625,
+    MIN_C = 0,
+    MAX_C = 0.8,
+    C_GRANULARITY = 250,
+    H_GRANULARITY = 1.5;
 
-    const { rgbColorLib: lib, labColorLib, lchColorLib } = libs;
+P.labKeyFromLab = function (l, a, b) {
 
-    if (!lib[r]) lib[r] = [];
-    if (!lib[r][g]) lib[r][g] = [];
+    const L = this.getLuminanceIndex(l);
 
-    const vals = [],
-        rgb = [r, g, b];
+    if (a < MIN_AB) a = MIN_AB;
+    else if (a > MAX_AB) a = MAX_AB;
 
-    const lab = colorEngine.convertRGBtoOKLAB(...rgb);
-    const lch = colorEngine.convertOKLABtoOKLCH(...lab);
+    if (b < MIN_AB) b = MIN_AB;
+    else if (b > MAX_AB) b = MAX_AB;
 
-    vals.push(...lab, lch[1], lch[2]);
+    const A = _floor((a + MAKE_AB_POSITIVE) * AB_GRANULARITY);
+    const B = _floor((b + MAKE_AB_POSITIVE) * AB_GRANULARITY);
 
-    lib[r][g][b] = vals;
-
-    this.memoizeLab(...lab, rgb, labColorLib);
-    this.memoizeLch(...lch, rgb, lchColorLib);
-
-    return vals;
+    return (L * LAB_STRIDE_L) + (A * LAB_STRIDE_A) + B;
 };
 
-P.memoizeLab = function (l, a, b, rgb, lib) {
+P.lchKeyFromLch = function (l, c, h) {
 
-    const [L, A, B] = this.getColorLabIndices(l, a, b);
+    const L = this.getLuminanceIndex(l);
 
-    if (!lib[L]) lib[L] = [];
-    if (!lib[L][A]) lib[L][A] = [];
+    if (c < MIN_C) c = MIN_C;
+    else if (c > MAX_C) c = MAX_C;
 
-    lib[L][A][B] = rgb;
+    const C = _floor(c * C_GRANULARITY),
+        H = _floor(h * H_GRANULARITY);
+
+    return (L * LCH_STRIDE_L) + (C * LCH_STRIDE_C) + H;
 };
 
-P.memoizeLch = function (l, c, h, rgb, lib) {
+P.rgbKey = function (r, g, b) {
 
-    const [L, C, H] = this.getColorLchIndices(l, c, h);
-
-    if (!lib[L]) lib[L] = [];
-    if (!lib[L][C]) lib[L][C] = [];
-
-    lib[L][C][H] = rgb;
+    return (r << 16) | (g << 8) | b;
 };
 
-// Warning: magic numbers!
-P.getColorLabIndices = function (l, a, b) {
+// Perceptual luminance quantization: denser in midtones, coarser in highlights/shadows
+const LOW_L_CEILING = 0.4,
+    MED_L_CEILING = 0.9,
+    MIN_L = 0,
+    MAX_L = 1,
+    LOW_GRANULARITY = 250,
+    MED_GRANULARITY = 600,
+    HIGH_GRANULARITY = 1000,
+    MED_STEP = 100,
+    HIGH_STEP = 400;
 
-    return [_floor(l * 500), _floor((a + 0.4) * 625), _floor((b + 0.4) * 625)];
-};
-P.getColorLchIndices = function (l, c, h) {
+P.getLuminanceIndex = function (l) {
 
-    return [_floor(l * 500), _floor(c * 1250), _floor(h * 3)];
+    if (l < MIN_L) l = MIN_L;
+    else if (l > MAX_L) l = MAX_L;
+
+    if (l < LOW_L_CEILING) return _floor(l * LOW_GRANULARITY);
+    if (l < MED_L_CEILING) return _floor(MED_STEP + ((l - LOW_L_CEILING) * MED_GRANULARITY));
+    return _floor(HIGH_STEP + ((l - MED_L_CEILING) * HIGH_GRANULARITY));
 };
 
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
@@ -4606,10 +4634,9 @@ P.theBigActionsObject = {
 
         const getRGBIndex = (r, g, b) => (r * _256_SQUARE) + (g * _256) + b;
 
-        // Filter generics (as used by all filters)
-        const [input, output] = this.getInputAndOutputLines(requirements);
-
-        const iData = input.data,
+        // Filter generics
+        const [input, output] = this.getInputAndOutputLines(requirements),
+            iData = input.data,
             iWidth = input.width,
             oData = output.data,
             len = iData.length;
@@ -4622,331 +4649,406 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let {
-            palette = BLACK_WHITE,
-        } = requirements;
+        let { palette = BLACK_WHITE } = requirements;
 
-        const noiseType = (useBluenoise) ? BLUENOISE : requirements.noiseType || RANDOM;
+        const noiseType = useBluenoise ? BLUENOISE : (requirements.noiseType || RANDOM);
 
         const libs = this.retrieveColorPointLibraries();
 
-        // Noise - used for dithering the output
+        // Dither noise (one per pixel)
         const rnd = this.getRandomNumbers({
             seed,
             length: len / 4,
             imgWidth: iWidth,
             type: noiseType,
         });
-
         let rndCursor = -1;
 
-        // Check we have a valid palette value
+        // Validate palette
         if (palette == null) palette = BLACK_WHITE;
         else if (palette.substring && !predefinedPalette[palette]) palette = BLACK_WHITE;
         else if (_isArray(palette) && palette.length < 2) palette = BLACK_WHITE;
         else if (palette.toFixed && (palette < 2 || palette > 256)) palette = BLACK_WHITE;
 
-        // Grayscale vs array vs commonest colors palettes follow different computing paths
         const isGray = GRAY_PALETTES.includes(palette);
         const isArrayPalette = _isArray(palette);
 
-        const distances = [];
+        // Helper: pick two nearest palette entries using scaled-int OKLAB
+        // + Palette entries must be [r,g,b, PLi, PAi, PBi] where
+        // + PLi = L * 100 | 0
+        // + PAi = (a + 0.4) * 125 | 0
+        // + PBi = (b + 0.4) * 125 | 0
+        function bestTwoPaletteIndices(ILi, IAi, IBi, pal) {
 
-        let selectedPalette, selectedPaletteLength,
-            i, iz, index, r, g, b, a, _r, _g, _b,
-            okPaletteVals, distance, distance0, distance1,
-            candidate0, candidate1,
-            totalScore, propensity, test, selectedColor,
-            IL, IA, IB, PL, PA, PB, L, A, B;
+            let i0 = -1,
+                i1 = -1,
+                d0 = Infinity,
+                d1 = Infinity;
 
-        // Grayscale palette
+            for (let p = 0, pz = pal.length; p < pz; p++) {
+
+                const e = pal[p],
+                    dL = ILi - e[3],
+                    dA = IAi - e[4],
+                    dB = IBi - e[5],
+                    dsq = (dL * dL) + (dA * dA) + (dB * dB);
+
+                if (dsq < d0) {
+
+                    d1 = d0;
+                    i1 = i0;
+                    d0 = dsq;
+                    i0 = p;
+                }
+                else if (dsq < d1) {
+
+                    d1 = dsq;
+                    i1 = p;
+                }
+            }
+            // sqrt only the two winners, to preserve your weighting behavior
+            return [i0, i1, _sqrt(d0), _sqrt(d1)];
+        }
+
+        // Helper: Map legacy UI min-distance (typically 0..1000) to OKLAB-int units.
+        // + If caller already passes a small value (<=200), treat it as OKLAB-int and skip rescale.
+        function toOkIntDist2(uiValue) {
+
+            if (uiValue < 100) uiValue = 100;
+
+            const mapped = uiValue * 0.01;
+
+            return mapped * mapped;
+        }
+
+        // == Grayscale palettes ==
         if (isGray) {
 
-            const { getGrayscaleValue } = this;
+            const selectedPalette = predefinedPalette[palette],
+                P = selectedPalette.length,
+                getGrayscaleValue = this.getGrayscaleValue;
 
-            selectedPalette = predefinedPalette[palette];
-            selectedPaletteLength = selectedPalette.length;
+            for (let i = 0; i < len; i += 4) {
 
-            let paletteColor, gray;
+                const a = i + 3;
+                const alpha = iData[a];
 
-            for (i = 0; i < len; i += 4) {
+                if (alpha) {
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+                    const r = i,
+                        g = i + 1,
+                        b = i + 2,
+                        gray = getGrayscaleValue(iData[r], iData[g], iData[b]);
 
-                if (iData[a]) {
+                    // track best two without building arrays/sorting
+                    let idx0 = -1,
+                        idx1 = -1,
+                        d0 = Infinity,
+                        d1 = Infinity;
 
-                    gray = getGrayscaleValue(iData[r], iData[g], iData[b]);
+                    for (let pi = 0; pi < P; pi++) {
 
-                    distances.length = 0;
+                        const pv = selectedPalette[pi],
+                            d = _abs(pv - gray);
 
-                    for (index = 0; index < selectedPaletteLength; index++) {
+                        if (d < d0) {
 
-                        paletteColor = selectedPalette[index];
-                        distance = _abs(paletteColor - gray);
-                        distances.push([paletteColor, distance]);
+                            d1 = d0;
+                            idx1 = idx0;
+                            d0 = d;
+                            idx0 = pi;
+                        }
+                        else if (d < d1) {
 
-                        // Because of the palette's ordered data shape, we can short-circuit calculations for G8/G16 palettes
-                        if (index && distance >= distances[index - 1][1]) break;
+                            d1 = d;
+                            idx1 = pi;
+                        }
+                        
+                        // short-circuit for ordered palettes (G8/G16): if distances increase, we can break
+                        if (pi && d >= d1) break;
                     }
 
-                    distances.sort((a, b) => a[1] - b[1]);
+                    const total = d0 + d1,
+                        propensity = total - d0,
+                        test = rnd[++rndCursor] * total,
+                        chosen = (test < propensity) ? selectedPalette[idx0] : selectedPalette[idx1];
 
-                    [candidate0, distance0] = distances[0];
-                    [candidate1, distance1] = distances[1];
-                    totalScore = distance0 + distance1;
-                    propensity = totalScore - distance0;
-
-                    test = rnd[++rndCursor] * totalScore;
-
-                    if (test < propensity) selectedColor = candidate0;
-                    else selectedColor = candidate1;
-
-                    oData[r] = selectedColor;
-                    oData[g] = selectedColor;
-                    oData[b] = selectedColor;
-                    oData[a] = iData[a];
-                }
+                    oData[r] = chosen;
+                    oData[g] = chosen;
+                    oData[b] = chosen;
+                    oData[a] = alpha;
+                } 
                 else {
 
                     ++rndCursor;
-
-                    oData[r] = iData[r];
-                    oData[g] = iData[g];
-                    oData[b] = iData[b];
-                    oData[a] = iData[a];
+                    oData[i] = iData[i];
+                    oData[i + 1] = iData[i + 1];
+                    oData[i + 2] = iData[i + 2];
+                    oData[a] = 0;
                 }
             }
+
             setLastUsedReducePalette(palette);
+            
+            if (lineOut) this.processResults(output, input, 1 - opacity);
+            else this.processResults(this.cache.work, output, opacity);
+            
+            return;
         }
 
-        // Array of colors palette
-        // - Known issue (2024-08-26): Safari browser does not like named colors (eg: `red`) in the array, but seems happy to process structured colors (eg: `rgb(255 0 0)`). Firefox and Chrome just get on with the job (as normal)
-        else if (isArrayPalette) {
+        // == Array-of-colors palette ==
+        if (isArrayPalette) {
 
             const name = palette.join(ARG_SPLITTER);
 
-            if (predefinedPalette[name]) selectedPalette = predefinedPalette[name];
-            else {
+            let selectedPalette = predefinedPalette[name];
+
+            if (!selectedPalette) {
 
                 selectedPalette = [];
 
-                let eRed, eGreen, eBlue;
+                for (let i = 0, iz = palette.length; i < iz; i++) {
 
-                for (i = 0, iz = palette.length; i < iz; i++) {
+                    const [eR, eG, eB] = colorEngine.getColorFromCanvas(palette[i].trim());
+                    
+                    const ok = this.getOkColorVals(eR, eG, eB, libs),
+                        PLi = (ok[0] * 100) | 0,
+                        PAi = ((ok[1] + 0.4) * 125) | 0,
+                        PBi = ((ok[2] + 0.4) * 125) | 0;
 
-                    [eRed, eGreen, eBlue] = colorEngine.getColorFromCanvas(palette[i].trim());
-
-                    okPaletteVals = this.getOkColorVals(eRed, eGreen, eBlue, libs);
-                    selectedPalette.push([eRed, eGreen, eBlue, ...okPaletteVals]);
+                    selectedPalette.push([eR, eG, eB, PLi, PAi, PBi]);
                 }
-
                 predefinedPalette[name] = selectedPalette;
             }
 
-            selectedPaletteLength = selectedPalette.length;
+            const P = selectedPalette.length;
 
-            for (i = 0; i < len; i += 4) {
+            for (let i = 0; i < len; i += 4) {
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+                const a = i + 3,
+                    alpha = iData[a];
 
-                if (iData[a]) {
+                if (alpha) {
 
-                    distances.length = 0;
+                    const r = i,
+                        g = i + 1,
+                        b = i + 2;
 
-                    [IL, IA, IB] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+                    const ok = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
 
-                    for (index = 0; index < selectedPaletteLength; index++) {
+                    const ILi = (ok[0] * 100) | 0,
+                        IAi = ((ok[1] + 0.4) * 125) | 0,
+                        IBi = ((ok[2] + 0.4) * 125) | 0;
 
-                        [,,,PL, PA, PB] = selectedPalette[index];
+                    const [i0, i1, d0, d1] = bestTwoPaletteIndices(ILi, IAi, IBi, selectedPalette);
 
-                        L = (IL * 100) - (PL * 100);
-                        A = ((IA + 0.4) * 125) - ((PA + 0.4) * 125);
-                        B = ((IB + 0.4) * 125) - ((PB + 0.4) * 125);
-                        distance = _sqrt((L * L) + (A * A) + (B * B));
-                        distances.push([index, distance]);
-                    }
+                    const total = d0 + d1,
+                        propensity = total - d0,
+                        test = rnd[++rndCursor] * total;
 
-                    distances.sort((a, b) => a[1] - b[1]);
+                    const chosen = (test < propensity) ? selectedPalette[i0] : selectedPalette[i1];
 
-                    [candidate0, distance0] = distances[0];
-                    [candidate1, distance1] = distances[1];
-                    totalScore = distance0 + distance1;
-                    propensity = totalScore - distance0;
+                    oData[r] = chosen[0];
+                    oData[g] = chosen[1];
+                    oData[b] = chosen[2];
+                    oData[a] = alpha;
 
-                    test = rnd[++rndCursor] * totalScore;
-
-                    if (test < propensity) selectedColor = selectedPalette[candidate0];
-                    else selectedColor = selectedPalette[candidate1];
-
-                    [_r, _g, _b] = selectedColor;
-
-                    oData[r] = _r;
-                    oData[g] = _g;
-                    oData[b] = _b;
-                    oData[a] = iData[a];
-                }
-                else {
-
+                } else {
                     ++rndCursor;
-
-                    oData[r] = iData[r];
-                    oData[g] = iData[g];
-                    oData[b] = iData[b];
-                    oData[a] = iData[a];
+                    oData[i] = iData[i];
+                    oData[i + 1] = iData[i + 1];
+                    oData[i + 2] = iData[i + 2];
+                    oData[a] = 0;
                 }
             }
             setLastUsedReducePalette(palette);
+
+            if (lineOut) this.processResults(output, input, 1 - opacity);
+            else this.processResults(this.cache.work, output, opacity);
+
+            return;
         }
 
-        // Commonest colors palette
-        // + We need to calculate the commonest colors palette for this image
-        else {
+        // == Commonest colors palette ==
+        //
+        // Use a Map keyed by rgbIndex so we only store colors that actually appear.
+        // + rgbIndex -> [count, r, g, b, ILi, IAi, IBi]
+        const metadata = new Map(),
+            seen = [];
 
-            // 1. Go through the data to collect metadata: frequency, values, etc
-            const metadata = Array(_256_CUBE);
+        // 1) collect metadata for observed colors
+        for (let i = 0; i < len; i += 4) {
 
-            let rgbIndex, j, jz;
+            const a = i + 3;
+            
+            if (!iData[a]) continue;
 
-            for (i = 0; i < len; i += 4) {
+            const r = iData[i],
+                g = iData[i + 1],
+                b = iData[i + 2],
+                rgbIndex = getRGBIndex(r, g, b);
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+            const row = metadata.get(rgbIndex);
 
-                _r = iData[r];
-                _g = iData[g];
-                _b = iData[b];
+            if (row) {
 
-                // Ignore transparent pixels
-                if (iData[a]) {
+                row[0] += 1;
 
-                    rgbIndex = getRGBIndex(_r, _g, _b);
+            } else {
+                
+                const ok = this.getOkColorVals(r, g, b, libs),
+                    ILi = (ok[0] * 100) | 0,
+                    IAi = ((ok[1] + 0.4) * 125) | 0,
+                    IBi = ((ok[2] + 0.4) * 125) | 0;
 
-                    if (metadata[rgbIndex]) metadata[rgbIndex][0] += 1;
-                    else {
+                metadata.set(rgbIndex, [1, r, g, b, ILi, IAi, IBi]);
 
-                        [L, A, B] = this.getOkColorVals(_r, _g, _b, libs);
-                        L *= 100;
-                        A = (A + 0.4) * 125;
-                        B = (B + 0.4) * 125;
-
-                        metadata[rgbIndex] = [1, _r, _g, _b, L, A, B];
-                    }
-                }
-            }
-
-            // 2. Filter metadata, then sort for commonest colors
-            const filteredMetadata = metadata.filter(e => e != null);
-            filteredMetadata.sort((a, b) => b[0] - a[0]);
-
-            // 3. Generate the palette, using minimumColorDistance to winnow out similar colors
-            selectedPalette = [[...filteredMetadata[0]]];
-
-            const difference = [];
-
-            for (i = 1, iz = filteredMetadata.length; i < iz; i++) {
-
-                [,,,, IL, IA, IB] = filteredMetadata[i];
-
-                difference.length = 0;
-
-                for (j = 0, jz = selectedPalette.length; j < jz; j++) {
-
-                    [,,,, PL, PA, PB] = selectedPalette[j];
-
-                    L = (IL * 100) - (PL * 100);
-                    A = ((IA + 0.4) * 125) - ((PA + 0.4) * 125);
-                    B = ((IB + 0.4) * 125) - ((PB + 0.4) * 125);
-                    distance = _sqrt((L * L) + (A * A) + (B * B));
-                    difference.push(distance);
-                }
-
-                difference.sort((a, b) => a - b);
-
-                if (difference[0] > minimumColorDistance) selectedPalette.push([...filteredMetadata[i]]);
-                if (selectedPalette.length >= palette) break;
-            }
-
-            selectedPaletteLength = selectedPalette.length;
-
-            setLastUsedReducePalette(selectedPalette.map(item => `rgb(${item[1]} ${item[2]} ${item[3]})`));
-
-            // 4. Update metadata, replacing each entry's RGB with its 2 closest candidates in the palette
-            metadata.forEach(item => {
-
-                [,,,, IL, IA, IB] = item;
-
-                distances.length = 0;
-
-                for (index = 0; index < selectedPaletteLength; index++) {
-
-                    [,,,, PL, PA, PB] = selectedPalette[index];
-
-                    L = (IL * 100) - (PL * 100);
-                    A = ((IA + 0.4) * 125) - ((PA + 0.4) * 125);
-                    B = ((IB + 0.4) * 125) - ((PB + 0.4) * 125);
-                    distance = _sqrt((L * L) + (A * A) + (B * B));
-                    distances.push([index, distance]);
-                }
-
-                distances.sort((a, b) => a[1] - b[1]);
-
-                [candidate0, distance0] = distances[0];
-                [candidate1, distance1] = distances[1];
-                totalScore = distance0 + distance1;
-                propensity = totalScore - distance0;
-
-                item.length = 0;
-
-                item.push(totalScore, propensity, selectedPalette[candidate0], selectedPalette[candidate1]);
-            });
-
-            // 5. Apply the filter results to the output
-            for (i = 0; i < len; i += 4) {
-
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
-
-                if (iData[a]) {
-
-                    rgbIndex = getRGBIndex(iData[r], iData[g], iData[b]);
-
-                    [totalScore, propensity, candidate0, candidate1] = metadata[rgbIndex];
-
-                    test = rnd[++rndCursor] * totalScore;
-
-                    if (test < propensity) selectedColor = candidate0;
-                    else selectedColor = candidate1;
-
-                    [, _r, _g, _b] = selectedColor;
-
-                    oData[r] = _r;
-                    oData[g] = _g;
-                    oData[b] = _b;
-                    oData[a] = iData[a];
-                }
-                else {
-
-                    ++rndCursor;
-
-                    oData[r] = iData[r];
-                    oData[g] = iData[g];
-                    oData[b] = iData[b];
-                    oData[a] = iData[a];
-                }
+                seen.push(rgbIndex);
             }
         }
 
-        // Boilerplate filter post-processing
+        // 2) commonest first (sort only the seen colors)
+        seen.sort((i1, i2) => metadata.get(i2)[0] - metadata.get(i1)[0]);
+
+        // 3) generate palette, winnowing by minimumColorDistance
+        const minDist2 = toOkIntDist2(minimumColorDistance),
+            firstRow = metadata.get(seen[0]),
+            selectedPalette = [ firstRow.slice() ];
+
+        for (let s = 1, sz = seen.length; s < sz; s++) {
+
+            if (selectedPalette.length >= palette) break;
+
+            const row = metadata.get(seen[s]),
+                IL = row[4],
+                IA = row[5],
+                IB = row[6];
+
+            // find nearest in current palette (distance squared)
+            let best2 = Infinity;
+
+            for (let j = 0, P = selectedPalette.length; j < P; j++) {
+
+                const p = selectedPalette[j],
+                    dL = IL - p[4],
+                    dA = IA - p[5],
+                    dB = IB - p[6],
+                    dsq = (dL * dL) + (dA * dA) + (dB * dB);
+
+                if (dsq < best2) best2 = dsq;
+            }
+            if (best2 > minDist2) selectedPalette.push(row.slice());
+        }
+
+        if (selectedPalette.length === 1 && seen.length > 1) {
+
+            // push the 2nd most common color unconditionally
+            selectedPalette.push(metadata.get(seen[1]).slice());
+        }
+
+        const selectedPaletteLength = selectedPalette.length;
+
+        setLastUsedReducePalette(selectedPalette.map(item => `rgb(${item[1]} ${item[2]} ${item[3]})`));
+
+        // 4) for each seen color, precompute its two best palette candidates (store totals/propensity)
+        for (let s = 0, sz = seen.length; s < sz; s++) {
+
+            const idx = seen[s],
+                row = metadata.get(idx),
+                IL = row[4],
+                IA = row[5],
+                IB = row[6];
+
+            // find best two (squared), then sqrt winners to preserve weighting
+            let i0 = -1, 
+                i1 = -1, 
+                d0 = Infinity, 
+                d1 = Infinity;
+
+            for (let j = 0; j < selectedPaletteLength; j++) {
+
+                const p = selectedPalette[j],
+                    dL = IL - p[4],
+                    dA = IA - p[5],
+                    dB = IB - p[6],
+                    dsq = dL * dL + dA * dA + dB * dB;
+
+                if (dsq < d0) {
+
+                    d1 = d0;
+                    i1 = i0;
+                    d0 = dsq;
+                    i0 = j;
+                }
+                else if (dsq < d1) {
+
+                    d1 = dsq;
+                    i1 = j;
+                }
+            }
+
+            // Robust fallback when there's only one palette entry (or ties)
+            if (i0 === -1) {
+                i0 = 0;
+                d0 = 0;
+            }
+            
+            if (i1 === -1) {
+                i1 = i0;
+                d1 = d0;
+            }
+
+            const sd0 = _sqrt(d0),
+                sd1 = _sqrt(d1),
+                total = sd0 + sd1,
+                propensity = total - sd0;
+
+            // overwrite with compact decision record:
+            // [total, propensity, candidate0Row, candidate1Row]
+            metadata.set(idx, [
+                total,
+                propensity,
+                selectedPalette[i0],
+                selectedPalette[i1],
+            ]);
+        }
+
+        // 5) apply
+        for (let i = 0; i < len; i += 4) {
+
+            const a = i + 3,
+                alpha = iData[a];
+
+            if (alpha) {
+
+                const r = iData[i],
+                    g = iData[i + 1],
+                    b = iData[i + 2],
+                    rgbIndex = getRGBIndex(r, g, b),
+
+                    rec = metadata.get(rgbIndex),
+                    total = rec[0],
+
+                    propensity = rec[1],
+                    test = rnd[++rndCursor] * total,
+                    chosen = (test < propensity) ? rec[2] : rec[3];
+
+                oData[i] = chosen[1];
+                oData[i + 1] = chosen[2];
+                oData[i + 2] = chosen[3];
+                oData[a] = alpha;
+
+            } else {
+
+                ++rndCursor;
+                oData[i] = iData[i];
+                oData[i + 1] = iData[i + 1];
+                oData[i + 2] = iData[i + 2];
+                oData[a] = 0;
+            }
+        }
+
+        // Boilerplate post-processing
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },

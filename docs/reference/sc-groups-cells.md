@@ -6,7 +6,7 @@ Scrawl-canvas works by generating a **retained mode** description - an object mo
 > Dev-users should be aware that this - *somewhat different* - approach may take a bit of getting used to but, once the concepts are in place, it should be relatively simple to work with.
 
 ## SC scene graph hierarchy
-The following code creates a canvas display with this output. Note that the code is creating a deliberately complex scene-graph, for demonstration purposes; none of the test demos generate scene graphs as complex as this one:
+The following code creates a canvas display with this output. Note that the code is creating a deliberately complex scene-graph, for demonstration purposes; few of the test demos generate scene graphs as complex as this one:
 
 ![Code output](sc-groups-cells-asset-001.webp)
 

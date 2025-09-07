@@ -50,11 +50,11 @@ Stacks also offered repo-devs an easy way to introduce functionality to the canv
 Today Stacks are tightly integrated into the SC ecosystem. Stacks, like Canvas wrappers, take part in the [SC Display cycle](sc-animation-systems.html) and use the same functionality to add [SC event listeners](sc-events-signals.html) to their DOM elements. And a Stack's direct child elements get wrapped into SC artefact objects (called Element) and tracked in the SC library just like graphical entity objects.
 
 ### HTML elements that can become Stack or Element artefacts
-Messing with the web page DOM can become, well, messy. SC makes a best effort towards minimising this messiness - in part - by limiting the types of HTML elements which can be wrapped in SC artefact objects. These limitations get defined in the [helper/shared-vars.js](../source/helper/shared-vars.html) file.
+Messing with the web page DOM can become, well, messy. SC makes a best effort towards minimising this messiness - in part - by limiting the types of HTML elements which can be wrapped in SC artefact objects.
 + **HTML elements that can be wrapped as Stack artefacts:** `<article>`, `<aside>`, `<div>`, `<footer>`, `<header>`, `<main>`, `<nav>`, `<section>`.
 + **HTML elements that can be wrapped as Element artefacts:** `<a>`, `<address>`, `<article>`, `<aside>`, `<audio>`, `<blockquote>`, `<button>`, `<details>`, `<div>`, `<dl>`, `<embed>`, `<fencedframe>`, `<figure>`, `<footer>`, `<form>`, `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, `<h6>`, `<header>`, `<hgroup>`, `<iframe>`, `<img>`, `<input>`, `<main>`, `<math>`, `<menu>`, `<meter>`, `<nav>`, `<object>`, `<ol>`, `<output>`, `<p>`, `<picture>`, `<pre>`, `<progress>`, `<search>`, `<section>`, `<select>`, `<svg>`, `<table>`, `<textarea>`, `<ul>`, `<video>`.
 
-`<canvas>` elements can also be part of an Stack, with the same positioning functionality as afforded to Element objects. They cannot be their own Stack.
+`<canvas>` elements can also be part of a Stack, with the same positioning functionality as afforded to Element objects. They cannot be their own Stack.
 
 SC stacks can also (in theory) include other Stacks - nested stacks - though repo-devs don't currently test such functionality.
 
@@ -79,7 +79,7 @@ Beyond the above, SC expects dev-users to style their web pages in the normal wa
 SC includes functionality - `artefact.set({ classes: string })`, alongside `artefact.addClasses(string)` and `artefact.removeClasses(string)` - which gives dev-users the ability to add and remove classes via the SC artefact object. An example of this in action can be seen in the test demo [DOM-007](../../demo/dom-007.html).
 
 ## SC artefact object functionality
-SC artefact objects share a lot of functionality with SC graphical entity objects - for instance managing object **position, rotation, scale and order** within an Stack, and managing their **dimensions** relative to the Stack. This functionality is coded in the [mixin/position.js](../source/mixin/position.html) file, as amended by the various DOM-related mixin and factory files. Further details can be found in the [SC positioning system](sc-positioning.html) page of the Runbook.
+SC artefact objects share a lot of functionality with SC graphical entity objects - for instance managing object **position, rotation, scale and order** within a Stack, and managing their **dimensions** relative to the Stack. This functionality is coded in the [mixin/position.js](../source/mixin/position.html) file, as amended by the various DOM-related mixin and factory files. Further details can be found in the [SC positioning system](sc-positioning.html) page of the Runbook.
 
 ### Accessibility
 More details about how SC helps dev-users address a range of accessibility issues for `<canvas>` elements can be found in the [accessibility page](sc-accessibility.html) of this Runbook.
@@ -109,7 +109,7 @@ Beyond that, it is up to the dev-user to code up functions to handle the initial
 (With apologies for the slight inconsistency in the naming of the reduce-related preferences.)
 
 ### Progressive enhancement
-To quote Wikipedia: "[Progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement) is a strategy in web design that puts emphasis on web content first, allowing everyone to access the basic content and functionality of a web page, while users with additional browser features or faster Internet access receive the enhanced version instead."
+To quote Wikipedia: *"[Progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement) is a strategy in web design that puts emphasis on web content first, allowing everyone to access the basic content and functionality of a web page, while users with additional browser features or faster Internet access receive the enhanced version instead."*
 
 This matters for SC because `<canvas>` elements require Javascript to work. In *JS-disabled environments*, the browser will treat the `<canvas>` tags like a `<div>` element and display the HTML between the tags (the **fallback content**, sometimes also called the [canvas shadow DOM](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/hh968259(v=vs.85)) - at least by Microsoft) instead.
 
@@ -486,7 +486,7 @@ The Canvas artefact object affords a number of *convenience functions* to dev-us
 
 ## Stack artefact notes
 SC will wrap DOM elements into Stack artefact objects under the following conditions:
-+ Any element with a `display: block;` CSS property which has a `data-scrawl-stack` attribute discovered in the DOM during page initialization.
++ Any (permitted) element with a `display: block;` CSS property which has a `data-scrawl-stack` attribute discovered in the DOM during page initialization.
 + The dev-user adds a new Stack to the web page using the `scrawl.addStack()` function.
 + The Stack element is defined as part of a component in a front end framework - React, Angular, Vue, Svelte, etc - and the component code includes an invocation to `scrawl.getStack('stack-id-string')` as part of the component's mount functionality.
 

@@ -202,7 +202,7 @@ export const WHITE = 'rgb(255 255 255 / 1)';
 export const WIDTH = 'width';
 export const ZERO_PATH = 'M0,0';
 export const ZERO_STR = '';</code></pre>
-<p>Note that repo-devs don't have any proof that this helps cut down on unnecessary work. It's just part of the SC ethos to only define constants once, and to define/export a constant from this file if they find themselves using it in different modules.</p>
+<p>Note that repo-devs don't have any proof that this helps cut down on unnecessary work (in fact various LLMs are adamant that this approach offers no clear efficiency benefits). It's just part of the SC ethos to only define constants once, and to define/export a constant from this file if they find themselves using it in different modules.</p>
 <h3 id="shared-functions">Shared functions</h3>
 <p>Similar to shared constants, SC defines a set of exported shared variables in the <a href="../source/helper/utilities.html">helper/utilities.js</a> file. These include:</p>
 <ul>
@@ -271,6 +271,8 @@ colorSchemeMediaQuery.addEventListener(CHANGE, () =&gt; {
 currentCorePosition.prefersDarkColorScheme = colorSchemeMediaQuery.matches;</code></pre>
 <p>SC tracks the following system settings:</p>
 <ul>
+<li><code>forced-colors</code></li>
+<li><code>inverted-colors</code></li>
 <li><code>prefers-color-scheme</code></li>
 <li><code>prefers-contrast</code></li>
 <li><code>prefers-reduced-data</code></li>
