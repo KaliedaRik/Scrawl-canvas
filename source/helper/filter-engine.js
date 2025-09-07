@@ -175,32 +175,23 @@ P.unknit = function (image) {
 
     const { width, height, data } = image;
 
-    cache.source = new ImageData(data, width, height);
-    cache.work = new ImageData(data, width, height);
+    cache.source = new ImageData(new Uint8ClampedArray(data), width, height);
+    cache.work = new ImageData(new Uint8ClampedArray(data), width, height);
 };
 
-// `getAlphaData` - extract alpha channel data from (usually the source) ImageData object and populate the color channels of a new ImageData object with that data
+// `getAlphaData` - extract alpha channel data from (usually the source) ImageData object and create an alpha coverage mask (alpha channel: 0, or 255 if value is > 0), at the same time setting each pixel's color channels to black
 P.getAlphaData = function (image) {
 
-    const {width, height, data:iData} = image;
+    const { width, height, data:iData } = image,
+        aImg = aImg = new ImageData(width, height),
+        aData = aImg.data;
 
-    const len = iData.length;
+    for (let i = 3, len = iData.length; i < len; i += 4) {
 
-    const sourceAlpha = new ImageData(width, height),
-        aData = sourceAlpha.data;
-
-    let a, i;
-
-    for (i = 0; i < len; i += 4) {
-
-        a = iData[i + 3];
-        aData[i] = 0;
-        aData[i + 1] = 0;
-        aData[i + 2] = 0;
-        aData[i + 3] = (a > 0) ? 255 : 0;
+        aData[i] = (iData[i] > 0) ? 255 : 0;
     }
 
-    return sourceAlpha;
+    return aImg;
 };
 
 
@@ -259,81 +250,40 @@ P.getRandomNumbers = function (items = {}) {
 
     if (itemInWorkstore) return itemInWorkstore;
 
-    const vals = requestArray();
+    if ((type === BLUENOISE || type === ORDERED) && imgWidth) {
 
-    let i, j, k, temp, currentRow;
+        const base = (type === BLUENOISE) ? bluenoise : orderedNoise,
+            dim = (_sqrt(base.length) | 0),
+            imgH = ((length / imgWidth) | 0),
+            out = new Float32Array(length);
 
-    if (type === BLUENOISE && imgWidth) {
+        let p = 0;
 
-        const bLen = bluenoise.length,
-            blueDims = _sqrt(bLen),
-            imgHeight = length / imgWidth,
-            bLines = requestArray();
+        for (let y = 0; y < imgH && p < length; y++) {
 
-        for (i = 0; i < bLen; i += blueDims) {
+            const y0 = (y % dim) * dim;
 
-            temp = bluenoise.slice(i, i + blueDims);
-            bLines.push(temp);
-        }
+            for (let x = 0; x < imgWidth && p < length; x++) {
 
-        for (i = imgHeight; i > 0; i -= blueDims) {
-
-            for (j = 0; j < blueDims; j++) {
-
-                currentRow = bLines[j];
-
-                for (k = imgWidth; k > 0; k -= blueDims) {
-
-                    if (k < blueDims) vals.push(...currentRow.slice(0, k));
-                    else vals.push(...currentRow);
-                }
+                out[p++] = base[y0 + (x % dim)];
             }
         }
-        releaseArray(bLines);
-    }
-    else if (type === ORDERED && imgWidth) {
-
-        const oLen = orderedNoise.length,
-            oDims = _sqrt(oLen),
-            imgHeight = length / imgWidth,
-            oLines = requestArray();
-
-        for (i = 0; i < oLen; i += oDims) {
-
-            temp = orderedNoise.slice(i, i + oDims);
-            oLines.push(temp);
-        }
-
-        for (i = imgHeight; i > 0; i -= oDims) {
-
-            for (j = 0; j < oDims; j++) {
-
-                currentRow = oLines[j];
-
-                for (k = imgWidth; k > 0; k -= oDims) {
-
-                    if (k < oDims) vals.push(...currentRow.slice(0, k));
-                    else vals.push(...currentRow);
-                }
-            }
-        }
-        releaseArray(oLines);
+        setWorkstoreItem(name, out);
+        return out;
     }
     else {
 
-        const engine = seededRandomNumberGenerator(seed);
+        const engine = seededRandomNumberGenerator(seed),
+            out = new Float32Array(length);
 
-        for (i = 0; i < length; i++) {
+        for (let i = 0; i < length; i++) {
 
-            vals.push(engine.random());
+            out[i] = engine.random();
         }
+        
+        setWorkstoreItem(name, out);
+        return out;
     }
-
-    const valsArray = new Float32Array(vals);
-    releaseArray(vals);
-
-    setWorkstoreItem(name, valsArray);
-    return valsArray;
 };
 
 P.buildImageCoordinateLookup = function (image) {
@@ -418,46 +368,57 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
 
                 hold = [];
                 for (y = j, yz = j + tileHeight; y < yz; y++) {
+
                     if (y >= 0 && y < iHeight) {
+
                         for (x = i, xz = i + tileWidth; x < xz; x++) {
+
                             if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
                         }
                     }
                 }
-                tiles.push([].concat(hold));
+                tiles.push(hold);
 
                 hold = [];
                 for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
+
                     if (y >= 0 && y < iHeight) {
+
                         for (let x = i, xz = i + tileWidth; x < xz; x++) {
+
                             if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
                         }
                     }
                 }
-                tiles.push([].concat(hold));
+                tiles.push(hold);
 
                 hold = [];
                 for (y = j, yz = j + tileHeight; y < yz; y++) {
+
                     if (y >= 0 && y < iHeight) {
+
                         for (let x = i + tileWidth, xz = i + tileWidth + gutterWidth; x < xz; x++) {
+
                             if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
                         }
                     }
                 }
-                tiles.push([].concat(hold));
+                tiles.push(hold);
 
                 hold = [];
                 for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
+
                     if (y >= 0 && y < iHeight) {
+
                         for (let x = i + tileWidth, xz = i + tileWidth + gutterWidth; x < xz; x++) {
+
                             if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
                         }
                     }
                 }
-                tiles.push([].concat(hold));
+                tiles.push(hold);
             }
         }
-
         setWorkstoreItem(name, tiles);
         return tiles;
     }
@@ -670,7 +631,7 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
 
             case RANDOM_POINTS :
 
-                pointsName = `random-points-${iWidth}-${iHeight}-${tileR}-${offX}-${offY}-${points}-${seed}`;
+                pointsName = `random-points-${iWidth}-${iHeight}-${tileR}-${offX}-${offY}-${pointVals}-${seed}`;
                 points = getWorkstoreItem(pointsName);
 
                 if (!points) {
@@ -700,7 +661,7 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
 
             case POINTS_ARRAY :
 
-                pointsName = `defined-points-${iWidth}-${iHeight}-${tileR}-${pointVals}`;
+                pointsName = `defined-points-${iWidth}-${iHeight}-${tileR}-${pointVals.join(ARG_SPLITTER)}`;
                 points = getWorkstoreItem(pointsName);
 
                 if (!points) {
@@ -992,6 +953,29 @@ P.cacheOutput = function (name, obj) {
     this.cache[name] = obj;
 };
 
+// `getWorkstoreImageData` - acquire a zeroed ImageData of size w×h from the Workstore.
+// + Keyed by dimensions + optional logical name (stable across frames)
+// + Zeroes the buffer each time to replicate `new ImageData(w,h)` semantics
+P.getWorkstoreImageData = function (w, h, key = 'anon') {
+
+    const name = `imagedata-${w}x${h}-${key}`;
+
+    let img = getWorkstoreItem(name);
+
+    // Guard against stale/mismatched objects (or purged entries)
+    if (!img || img.width !== w || img.height !== h || img.data.length !== (w * h * 4)) {
+
+        img = new ImageData(new Uint8ClampedArray(w * h * 4), w, h);
+        setWorkstoreItem(name, img);
+    } 
+    else {
+    
+        // Maintain previous semantics: new ImageData(w,h) returns zeroed data
+        img.data.fill(0);
+    }
+    return img;
+};
+
 // `getInputAndOutputLines` - determine, and return, the appropriate results object for the lineIn, lineMix and lineOut values supplied to each action function when it gets invoked
 P.getInputAndOutputLines = function (requirements) {
 
@@ -1020,6 +1004,7 @@ P.getInputAndOutputLines = function (requirements) {
     }
 
     let lineOut;
+
     if (!requirements.lineOut || !cache[requirements.lineOut]) {
 
         lineOut = new ImageData(lineIn.width, lineIn.height);
@@ -1199,12 +1184,11 @@ P.processResults = function (store, incoming, ratio) {
 
     if (ratio === 1) {
 
-        for (i = 0, iz = sData.length; i < iz; i++) {
+        sData.set(iData);
 
-            sData[i] = iData[i];
-        }
+        return;
     }
-    else if (ratio > 0) {
+    if (ratio > 0) {
 
         antiRatio = 1 - ratio;
 
@@ -1250,20 +1234,8 @@ P.getGradientData = function (gradient) {
 
 P.transferDataUnchanged = function (oData, iData, len) {
 
-    let r, g, b, a, i;
-
-    for (i = 0; i < len; i += 4) {
-
-        r = i;
-        g = r + 1;
-        b = g + 1;
-        a = b + 1;
-
-        oData[r] = iData[r];
-        oData[g] = iData[g];
-        oData[b] = iData[b];
-        oData[a] = iData[a];
-    }
+    if (len === iData.length) oData.set(iData);
+    else oData.set(iData.subarray(0, len));
 };
 
 
@@ -3963,45 +3935,53 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const libs = this.retrieveColorPointLibraries();
+        if (channelL === 0 && channelA === 0 && channelB === 0) {
 
-        let r, g, b, a, i, L, A, B, _r, _g, _b;
+            this.transferDataUnchanged(oData, iData, len);
+        }
+        else {
 
-        for (i = 0; i < len; i += 4) {
+            const libs = this.retrieveColorPointLibraries(),
+                getOkColorVals  = this.getOkColorVals.bind(this),
+                getRegularColorVals = this.getRegularColorVals.bind(this);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            let r, g, b, a, L, A, B, i, res;
 
-            if (iData[a]) {
+            for (i = 0; i < len; i += 4) {
 
-                [L, A, B] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+                r = i,
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
 
-                L += channelL;
-                if (L > 1) L = 1;
-                else if (L < 0) L = 0;
+                if (iData[a] === 0) {
 
-                A += channelA;
-                if (A > 0.4) A = 0.4;
-                else if (A < -0.4) A = -0.4;
+                    oData[r] = iData[r];
+                    oData[g] = iData[g];
+                    oData[b] = iData[b];
+                    oData[a] = 0;
+                    continue;
+                }
+                
+                res = getOkColorVals(iData[r], iData[g], iData[b], libs);
 
-                B += channelB;
-                if (B > 0.4) B = 0.4;
-                else if (B < -0.4) B = -0.4;
+                L = res[0] + channelL;
+                if (L < 0) L = 0;
+                else if (L > 1) L = 1;
+                
+                A = res[1] + channelA;
+                if (A < -0.4) A = -0.4;
+                else if (A > 0.4) A = 0.4;
+                
+                B = res[2] + channelB;
+                if (B < -0.4) B = -0.4;
+                else if (B > 0.4) B = 0.4;
+                
+                res = getRegularColorVals(L, A, B, libs);
 
-                [_r, _g, _b] = this.getRegularColorVals(L, A, B, libs);
-
-                oData[r] = _r;
-                oData[g] = _g;
-                oData[b] = _b;
-                oData[a] = iData[a];
-            }
-            else {
-
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
+                oData[r] = res[0];
+                oData[g] = res[1];
+                oData[b] = res[2];
                 oData[a] = iData[a];
             }
         }
@@ -4091,45 +4071,53 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const libs = this.retrieveColorPointLibraries();
+        if (channelL === 1 && channelA === 1 && channelB === 1) {
 
-        let r, g, b, a, i, L, A, B, _r, _g, _b;
+            this.transferDataUnchanged(oData, iData, len);
+        }
+        else {
 
-        for (i = 0; i < len; i += 4) {
+            const libs = this.retrieveColorPointLibraries(),
+                getOkColorVals  = this.getOkColorVals.bind(this),
+                getRegularColorVals = this.getRegularColorVals.bind(this);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            let r, g, b, a, L, A, B, i, res;
 
-            if (iData[a]) {
+            for (i = 0; i < len; i += 4) {
 
-                [L, A, B] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+                r = i,
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
 
-                L *= channelL;
-                if (L > 1) L = 1;
-                else if (L < 0) L = 0;
+                if (iData[a] === 0) {
 
-                A *= channelA;
-                if (A > 0.4) A = 0.4;
-                else if (A < -0.4) A = -0.4;
+                    oData[r] = iData[r];
+                    oData[g] = iData[g];
+                    oData[b] = iData[b];
+                    oData[a] = 0;
+                    continue;
+                }
+                
+                res = getOkColorVals(iData[r], iData[g], iData[b], libs);
 
-                B *= channelB;
-                if (B > 0.4) B = 0.4;
-                else if (B < -0.4) B = -0.4;
+                L = res[0] * channelL;
+                if (L < 0) L = 0;
+                else if (L > 1) L = 1;
+                
+                A = res[1] * channelA;
+                if (A < -0.4) A = -0.4;
+                else if (A > 0.4) A = 0.4;
+                
+                B = res[2] * channelB;
+                if (B < -0.4) B = -0.4;
+                else if (B > 0.4) B = 0.4;
+                
+                res = getRegularColorVals(L, A, B, libs);
 
-                [_r, _g, _b] = this.getRegularColorVals(L, A, B, libs);
-
-                oData[r] = _r;
-                oData[g] = _g;
-                oData[b] = _b;
-                oData[a] = iData[a];
-            }
-            else {
-
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
+                oData[r] = res[0];
+                oData[g] = res[1];
+                oData[b] = res[2];
                 oData[a] = iData[a];
             }
         }
@@ -4138,52 +4126,45 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __negative__ - for each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB
+// __negative__ - for each pixel: convert to OKLAB; negate A and B; invert L; convert back to RGB
     [NEGATIVE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
-
-        const iData = input.data,
+        const [input, output] = this.getInputAndOutputLines(requirements),
+            iData = input.data,
             oData = output.data,
             len = iData.length;
 
-        const {
-            opacity = 1,
-            lineOut,
-        } = requirements;
+        const { opacity = 1, lineOut } = requirements;
 
         const libs = this.retrieveColorPointLibraries();
 
-        let r, g, b, a, i, L, C, H, _r, _g, _b;
+        let i, L, A, B, _r, _g, _b;
 
         for (i = 0; i < len; i += 4) {
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            const aIdx = i + 3;
 
-            if (iData[a]) {
+            if (iData[aIdx] === 0) {
 
-                [L, , , C, H] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
-
-                L = 1 - L;
-                H += 180;
-
-                [_r, _g, _b] = this.getRegularColorVals(L, C, H, libs, true);
-
-                oData[r] = _r;
-                oData[g] = _g;
-                oData[b] = _b;
-                oData[a] = iData[a];
+                oData[i] = iData[i];
+                oData[i + 1] = iData[i + 1];
+                oData[i + 2] = iData[i + 2];
+                oData[aIdx] = 0;
+                continue;
             }
-            else {
 
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = iData[a];
-            }
+            [L, A, B] = this.getOkColorVals(iData[i], iData[i + 1], iData[i + 2], libs);
+
+            L = 1 - L;
+            A = -A;
+            B = -B;
+
+            [_r, _g, _b] = this.getRegularColorVals(L, A, B, libs, false);
+
+            oData[i] = _r;
+            oData[i + 1] = _g;
+            oData[i + 2] = _b;
+            oData[aIdx] = iData[aIdx];
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -5059,51 +5040,69 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+              oData = output.data,
+              len = iData.length;
 
-        const {
-            opacity = 1,
-            angle = 0,
-            lineOut,
-        } = requirements;
+        let { opacity = 1, angle = 0, lineOut } = requirements;
 
-        if (angle) {
+        // Normalize once to [0, 360)
+        angle = ((angle % 360) + 360) % 360;
 
-            const libs = this.retrieveColorPointLibraries();
+        if (angle === 0) this.transferDataUnchanged(oData, iData, len);
+        else {
 
-            let r, g, b, a, i, L, C, H, _r, _g, _b;
+            const libs = this.retrieveColorPointLibraries(),
+                getOkColorVals = this.getOkColorVals.bind(this),
+                getRegularColorVals = this.getRegularColorVals.bind(this);
+
+            const CHROMA_EPS = 1e-4;
+
+            let r, g, b, a, i, res, L, C, H;
 
             for (i = 0; i < len; i += 4) {
 
-                r = i;
+                r = i; 
                 g = r + 1;
                 b = g + 1;
                 a = b + 1;
 
-                if (iData[a]) {
+                // Fully transparent → copy & continue
+                if (iData[a] === 0) {
 
-                    [L, , , C, H] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
-
-                    H += angle;
-
-                    [_r, _g, _b] = this.getRegularColorVals(L, C, H, libs, true);
-
-                    oData[r] = _r;
-                    oData[g] = _g;
-                    oData[b] = _b;
-                    oData[a] = iData[a];
+                    oData[r] = iData[r];
+                    oData[g] = iData[g];
+                    oData[b] = iData[b];
+                    oData[a] = 0;
+                    continue;
                 }
-                else {
+
+                res = getOkColorVals(iData[r], iData[g], iData[b], libs);
+
+                L = res[0];
+                C = res[3];
+                H = res[4] + angle;
+
+                // Grays (C≈0) unaffected by hue rotation → copy and skip
+                if (C < CHROMA_EPS) {
 
                     oData[r] = iData[r];
                     oData[g] = iData[g];
                     oData[b] = iData[b];
                     oData[a] = iData[a];
+                    continue;
                 }
+
+                // Wrap once; angle already normalized
+                if (H >= 360) H -= 360;
+
+                res = getRegularColorVals(L, C, H, libs, true);
+
+                oData[r] = res[0];
+                oData[g] = res[1];
+                oData[b] = res[2];
+                oData[a] = iData[a];
             }
         }
-        else this.transferDataUnchanged(oData, iData, len);
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
