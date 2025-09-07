@@ -183,7 +183,7 @@ P.unknit = function (image) {
 P.getAlphaData = function (image) {
 
     const { width, height, data:iData } = image,
-        aImg = aImg = new ImageData(width, height),
+        aImg = new ImageData(width, height),
         aData = aImg.data;
 
     for (let i = 3, len = iData.length; i < len; i += 4) {
