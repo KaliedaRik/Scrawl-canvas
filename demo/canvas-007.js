@@ -609,7 +609,9 @@ scrawl.makeFilter({
 scrawl.makeFilter({
     name: name('reducePalette'),
     method: 'reducePalette',
-    noiseType: 'ordered',
+    noiseType: 'bluenoise',
+    palette: 128,
+    minimumColorDistance: 150,
 });
 
 scrawl.makeGradient({
