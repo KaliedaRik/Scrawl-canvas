@@ -768,74 +768,102 @@ P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius,
     return [];
 };
 
+// `getBlurPrefixBuffers` Prefix buffers for blur filter (inclusive prefix sums).
+P.getBlurPrefixBuffers = function (len, axisKey) {
+
+    const name = `blur-prefix-${axisKey}-${len}`;
+
+    let obj = getWorkstoreItem(name);
+    if (obj) return obj;
+
+    const n = (len + 1),
+        bytes = n * 4 * 4,
+        buf = new ArrayBuffer(bytes);
+
+    const r = new Uint32Array(buf, 0, n),
+        g = new Uint32Array(buf, n * 4, n),
+        b = new Uint32Array(buf, n * 8, n),
+        a = new Uint32Array(buf, n * 12, n);
+
+    obj = { r, g, b, a };
+
+    setWorkstoreItem(name, obj);
+    
+    return obj;
+};
+
 // `buildHorizontalBlur` - creates an Array of Arrays detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Resulting object will be cached in the store
-P.buildHorizontalBlur = function (grid, radius) {
+P.buildHorizontalBlur = function (gridWidth, gridHeight, radius) {
 
     if (!_isFinite(radius)) radius = 0;
-
-    const gridHeight = grid.length,
-        gridWidth = grid[0].length;
 
     const name = `blur-h-${gridWidth}-${gridHeight}-${radius}`,
         itemInWorkstore = getWorkstoreItem(name);
 
     if (itemInWorkstore) return itemInWorkstore;
 
-    const horizontalBlur = [];
+    const startX = new Uint16Array(gridWidth * gridHeight);
+    const endX = new Uint16Array(gridWidth * gridHeight);
 
-    let x, y, c, cz, cellsToProcess;
+    let x, y, p, sx, ex;
 
     for (y = 0; y < gridHeight; y++) {
 
         for (x = 0; x < gridWidth; x++) {
 
-            cellsToProcess = [];
+            p = (y * gridWidth) + x;
+            sx = x - radius;
+            ex = x + radius;
 
-            for (c = x - radius, cz = x + radius + 1; c < cz; c++) {
-
-                if (c >= 0 && c < gridWidth) cellsToProcess.push(grid[y][c] * 4);
-            }
-            horizontalBlur[(y * gridWidth) + x] = cellsToProcess;
+            if (sx < 0) sx = 0;
+            if (ex >= gridWidth) ex = gridWidth - 1;
+            
+            startX[p] = sx;
+            endX[p] = ex;
         }
     }
 
-    setWorkstoreItem(name, horizontalBlur);
-    return horizontalBlur;
+    const horizontalRanges = { startX, endX, width: gridWidth, height: gridHeight, kind: 'range-h' };
+
+    setWorkstoreItem(name, horizontalRanges);
+    return horizontalRanges;
 };
 
 // `buildVerticalBlur` - creates an Array of Arrays detailing which pixels contribute to the vertical part of each pixel's blur calculation. Resulting object will be cached in the store
-P.buildVerticalBlur = function (grid, radius) {
+P.buildVerticalBlur = function (gridWidth, gridHeight, radius) {
 
     if (!_isFinite(radius)) radius = 0;
-
-    const gridHeight = grid.length,
-        gridWidth = grid[0].length;
 
     const name = `blur-v-${gridWidth}-${gridHeight}-${radius}`,
         itemInWorkstore = getWorkstoreItem(name);
 
     if (itemInWorkstore) return itemInWorkstore;
 
-    const verticalBlur = [];
+    const startY = new Uint16Array(gridWidth * gridHeight);
+    const endY = new Uint16Array(gridWidth * gridHeight);
 
-    let x, y, c, cz, cellsToProcess;
+    let x, y, p, sy, ey;
 
-    for (x = 0; x < gridWidth; x++) {
+    for (y = 0; y < gridHeight; y++) {
 
-        for (y = 0; y < gridHeight; y++) {
+        for (x = 0; x < gridWidth; x++) {
 
-            cellsToProcess = [];
+            p = (y * gridWidth) + x;
+            sy = y - radius;
+            ey = y + radius;
 
-            for (c = y - radius, cz = y + radius + 1; c < cz; c++) {
-
-                if (c >= 0 && c < gridHeight) cellsToProcess.push(grid[c][x] * 4);
-            }
-            verticalBlur[(y * gridWidth) + x] = cellsToProcess;
+            if (sy < 0) sy = 0;
+            if (ey >= gridHeight) ey = gridHeight - 1;
+            
+            startY[p] = sy;
+            endY[p] = ey;
         }
     }
 
-    setWorkstoreItem(name, verticalBlur);
-    return verticalBlur;
+    const verticalRanges = { startY, endY, width: gridWidth, height: gridHeight, kind: 'range-v' };
+
+    setWorkstoreItem(name, verticalRanges);
+    return verticalRanges;
 };
 
 // `buildMatrixGrid` - creates an Array of Arrays detailing which pixels contribute to each pixel's matrix calculation. Resulting object will be cached in the store
@@ -2137,66 +2165,6 @@ P.theBigActionsObject = {
 // Note that this filter is expensive, thus much slower to complete compared to other filter effects. Where possible, memoize the results this filter produces.
     [BLUR]: function (requirements) {
 
-        const getUncheckedValue = function (flag, gridStore, pos, data, offset, step) {
-
-            if (flag) {
-
-                const h = gridStore[pos];
-
-                if (h != null) {
-
-                    const l = h.length;
-
-                    let valCounter = 0,
-                        total = 0,
-                        index, t;
-
-                    for (t = 0; t < l; t += step) {
-
-                        index = h[t] + offset;
-
-                        total += data[index];
-                        valCounter++
-                    }
-                    return total / valCounter;
-                }
-            }
-            return data[(pos * 4) + offset];
-        };
-
-        const getCheckedValue = function (flag, gridStore, pos, data, offset, step) {
-
-            if (flag) {
-
-                const h = gridStore[pos];
-
-                if (h != null) {
-
-                    const l = h.length;
-
-                    let valCounter = 0,
-                        total = 0,
-                        index, t, a, hVal;
-
-                    for (t = 0; t < l; t += step) {
-
-                        hVal = h[t];
-                        a = hVal + 3;
-
-                        if (data[a]) {
-
-                            index = hVal + offset;
-
-                            total += data[index];
-                            valCounter++
-                        }
-                    }
-                    if (valCounter) return total / valCounter;
-                }
-            }
-            return data[(pos * 4) + offset];
-        };
-
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
@@ -2222,69 +2190,304 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let horizontalBlurGrid, verticalBlurGrid;
+        if ((!processVertical && !processHorizontal) || (!includeRed && !includeGreen && !includeBlue && !includeAlpha)) this.transferDataUnchanged(oData, iData, len);
+        else {
 
-        if (processHorizontal || processVertical) {
+            const gridWidth = input.width,
+                gridHeight = input.height;
 
-            const grid = this.buildImageGrid(input);
+            let horizontalBlurGrid, verticalBlurGrid;
 
-            if (processHorizontal)  horizontalBlurGrid = this.buildHorizontalBlur(grid, radiusHorizontal);
+            if (processHorizontal || processVertical) {
 
-            if (processVertical) verticalBlurGrid = this.buildVerticalBlur(grid, radiusVertical);
-        }
+                if (processHorizontal) horizontalBlurGrid = this.buildHorizontalBlur(gridWidth, gridHeight, radiusHorizontal);
 
-        oData.set(iData);
-
-        const hold = new Uint8ClampedArray(iData);
-
-        const selectedMethod = (excludeTransparentPixels) ? getCheckedValue : getUncheckedValue;
-
-        let counter, r, g, b, a, pass;
-
-        if (processHorizontal) {
-
-            for (pass = 0; pass < passesHorizontal; pass++) {
-
-                for (counter = 0; counter < pixelLen; counter++) {
-
-                    r = counter * 4;
-                    g = r + 1;
-                    b = g + 1;
-                    a = b + 1;
-
-                    if (includeAlpha || hold[a]) {
-
-                        oData[r] = selectedMethod(includeRed, horizontalBlurGrid, counter, hold, 0, stepHorizontal);
-                        oData[g] = selectedMethod(includeGreen, horizontalBlurGrid, counter, hold, 1, stepHorizontal);
-                        oData[b] = selectedMethod(includeBlue, horizontalBlurGrid, counter, hold, 2, stepHorizontal);
-                        oData[a] = getUncheckedValue(includeAlpha, horizontalBlurGrid, counter, hold, 3, stepHorizontal);
-                    }
-                }
-
-                if (processVertical || pass < passesHorizontal - 1) hold.set(oData);
+                if (processVertical) verticalBlurGrid = this.buildVerticalBlur(gridWidth, gridHeight, radiusVertical);
             }
-        }
 
-        if (processVertical) {
+            oData.set(iData);
 
-            for (pass = 0; pass < passesVertical; pass++) {
+            const hold = new Uint8ClampedArray(iData);
 
-                for (counter = 0; counter < pixelLen; counter++) {
+            let pass, counter, rIdx, gIdx, bIdx, aIdx, startX, endX, width, height, sx, ex, y, rowBase, step4, sumR, sumG, sumB, sumA, countRGB, totalCount, idx, c, aVal, startY, endY, sy, ey, x, stepRow4, pr, pg, pb, pa, base, pos, count;
 
-                    r = counter * 4;
-                    g = r + 1;
-                    b = g + 1;
-                    a = b + 1;
+            const canFastH = (stepHorizontal === 1) && !excludeTransparentPixels,
+                canFastV = (stepVertical === 1) && !excludeTransparentPixels;
 
-                    if (includeAlpha || hold[a]) {
+            if (processHorizontal) {
 
-                        oData[r] = selectedMethod(includeRed, verticalBlurGrid, counter, hold, 0, stepVertical);
-                        oData[g] = selectedMethod(includeGreen, verticalBlurGrid, counter, hold, 1, stepVertical);
-                        oData[b] = selectedMethod(includeBlue, verticalBlurGrid, counter, hold, 2, stepVertical);
-                        oData[a] = getUncheckedValue(includeAlpha, verticalBlurGrid, counter, hold, 3, stepVertical);
+                for (pass = 0; pass < passesHorizontal; pass++) {
+
+                    if (canFastH) {
+
+                        ({ startX, endX, width, height } = horizontalBlurGrid);
+                        ({ r: pr, g: pg, b: pb, a: pa } = this.getBlurPrefixBuffers(width, 'h'));
+
+                        for (y = 0; y < height; y++) {
+
+                            base = (y * width) << 2;
+
+                            if (includeRed) pr[0] = 0;
+                            if (includeGreen) pg[0] = 0;
+                            if (includeBlue) pb[0] = 0;
+                            if (includeAlpha) pa[0] = 0;
+
+                            for (let x = 0; x < width; x++) {
+
+                                idx = base + (x << 2);
+
+                                if (includeRed) pr[x + 1] = pr[x] + hold[idx];
+                                if (includeGreen) pg[x + 1] = pg[x] + hold[idx + 1];
+                                if (includeBlue) pb[x + 1] = pb[x] + hold[idx + 2];
+                                if (includeAlpha) pa[x + 1] = pa[x] + hold[idx + 3];
+                            }
+
+                            for (let x = 0; x < width; x++) {
+
+                                pos = (y * width) + x;
+                                sx = startX[pos], ex = endX[pos];
+                                count = (ex - sx + 1);
+                                idx = base + (x << 2);
+
+                                if (includeRed) oData[idx] = (pr[ex + 1] - pr[sx]) / count;
+                                else oData[idx] = hold[idx];
+
+                                if (includeGreen) oData[idx + 1] = (pg[ex + 1] - pg[sx]) / count;
+                                else oData[idx + 1] = hold[idx + 1];
+
+                                if (includeBlue) oData[idx + 2] = (pb[ex + 1] - pb[sx]) / count;
+                                else oData[idx + 2] = hold[idx + 2];
+
+                                if (includeAlpha) oData[idx + 3] = (pa[ex + 1] - pa[sx]) / count;
+                                else oData[idx + 3] = hold[idx + 3];
+                            }
+                        }
+                    } 
+                    else {
+
+                        for (counter = 0; counter < pixelLen; counter++) {
+
+                            rIdx = counter * 4;
+                            gIdx = rIdx + 1;
+                            bIdx = gIdx + 1;
+                            aIdx = bIdx + 1;
+
+                            if (includeAlpha || hold[aIdx]) {
+
+                                ({ startX, endX, width } = horizontalBlurGrid);
+                                
+                                sx = startX[counter];
+                                ex = endX[counter];
+                                y  = (counter / width) | 0;
+                                rowBase = (y * width) * 4;
+
+                                step4 = stepHorizontal << 2;
+
+                                sumR = 0;
+                                sumG = 0;
+                                sumB = 0;
+                                sumA = 0;
+                                countRGB = 0;
+
+                                totalCount = ((ex - sx) / stepHorizontal | 0) + 1;
+
+                                idx = rowBase + (sx << 2);
+
+                                if (!excludeTransparentPixels) {
+
+                                    for (c = sx; c <= ex; c += stepHorizontal) {
+
+                                        if (includeRed)   sumR += hold[idx];
+                                        if (includeGreen) sumG += hold[idx + 1];
+                                        if (includeBlue)  sumB += hold[idx + 2];
+                                        if (includeAlpha) sumA += hold[idx + 3];
+                                        idx += step4;
+                                    }
+
+                                    if (includeRed) oData[rIdx] = sumR / totalCount;
+                                    else oData[rIdx] = hold[rIdx];
+
+                                    if (includeGreen) oData[gIdx] = sumG / totalCount;
+                                    else oData[gIdx] = hold[gIdx];
+
+                                    if (includeBlue) oData[bIdx] = sumB / totalCount;
+                                    else oData[bIdx] = hold[bIdx];
+
+                                    if (includeAlpha) oData[aIdx] = sumA / totalCount;
+                                    else oData[aIdx] = hold[aIdx];
+                                }
+                                else {
+
+                                    for (c = sx; c <= ex; c += stepHorizontal) {
+
+                                        aVal = hold[idx + 3];
+
+                                        if (aVal) {
+
+                                            if (includeRed) sumR += hold[idx];
+                                            if (includeGreen) sumG += hold[idx + 1];
+                                            if (includeBlue) sumB += hold[idx + 2];
+                                            countRGB++;
+                                        }
+                                        
+                                        if (includeAlpha) sumA += aVal;
+
+                                        idx += step4;
+                                    }
+
+                                    if (includeRed) oData[rIdx] = countRGB ? (sumR / countRGB) : hold[rIdx];
+                                    else oData[rIdx] = hold[rIdx];
+
+                                    if (includeGreen) oData[gIdx] = countRGB ? (sumG / countRGB) : hold[gIdx];
+                                    else oData[gIdx] = hold[gIdx];
+
+                                    if (includeBlue)  oData[bIdx] = countRGB ? (sumB / countRGB) : hold[bIdx];
+                                    else oData[bIdx] = hold[bIdx];
+
+                                    if (includeAlpha) oData[aIdx] = sumA / totalCount;
+                                    else oData[aIdx] = hold[aIdx];
+                                }
+                            }
+                        }
                     }
+                    if (processVertical || pass < passesHorizontal - 1) hold.set(oData);
                 }
-                if (pass < passesVertical - 1) hold.set(oData);
+            }
+
+            if (processVertical) {
+
+                for (pass = 0; pass < passesVertical; pass++) {
+
+                    if (canFastV) {
+
+                        ({ startY, endY, width, height } = verticalBlurGrid);
+                        ({ r: pr, g: pg, b: pb, a: pa } = this.getBlurPrefixBuffers(height, 'v'));
+
+                        for (x = 0; x < width; x++) {
+
+                            if (includeRed) pr[0] = 0;
+                            if (includeGreen) pg[0] = 0;
+                            if (includeBlue) pb[0] = 0;
+                            if (includeAlpha) pa[0] = 0;
+
+                            for (y = 0; y < height; y++) {
+
+                                idx = (((y * width) + x) << 2);
+
+                                if (includeRed) pr[y + 1] = pr[y] + hold[idx];
+                                if (includeGreen) pg[y + 1] = pg[y] + hold[idx + 1];
+                                if (includeBlue) pb[y + 1] = pb[y] + hold[idx + 2];
+                                if (includeAlpha) pa[y + 1] = pa[y] + hold[idx + 3];
+                            }
+
+                            for (y = 0; y < height; y++) {
+
+                                pos = (y * width) + x;
+                                sy = startY[pos], ey = endY[pos];
+                                count = (ey - sy + 1);
+                                idx = (((y * width) + x) << 2);
+
+                                if (includeRed) oData[idx] = (pr[ey + 1] - pr[sy]) / count;
+                                else oData[idx] = hold[idx];
+
+                                if (includeGreen) oData[idx + 1] = (pg[ey + 1] - pg[sy]) / count;
+                                else oData[idx + 1] = hold[idx + 1];
+
+                                if (includeBlue) oData[idx + 2] = (pb[ey + 1] - pb[sy]) / count;
+                                else oData[idx + 2] = hold[idx + 2];
+
+                                if (includeAlpha) oData[idx + 3] = (pa[ey + 1] - pa[sy]) / count;
+                                else oData[idx + 3] = hold[idx + 3];
+                            }
+                        }
+                    } 
+                    else {
+
+                        for (counter = 0; counter < pixelLen; counter++) {
+
+                            rIdx = counter * 4;
+                            gIdx = rIdx + 1;
+                            bIdx = gIdx + 1;
+                            aIdx = bIdx + 1;
+
+                            if (includeAlpha || hold[aIdx]) {
+
+                                ({ startY, endY, width } = verticalBlurGrid);
+                                sy = startY[counter];
+                                ey = endY[counter];
+                                x  = counter % width;
+
+                                stepRow4 = (width * 4 * stepVertical);
+
+                                sumR = 0;
+                                sumG = 0;
+                                sumB = 0;
+                                sumA = 0;
+                                countRGB = 0;
+                                
+                                totalCount = ((ey - sy) / stepVertical | 0) + 1;
+
+                                idx = (sy * width * 4) + (x << 2);
+
+                                if (!excludeTransparentPixels) {
+
+                                    for (let r = sy; r <= ey; r += stepVertical) {
+
+                                        if (includeRed) sumR += hold[idx];
+                                        if (includeGreen) sumG += hold[idx + 1];
+                                        if (includeBlue) sumB += hold[idx + 2];
+                                        if (includeAlpha) sumA += hold[idx + 3];
+
+                                        idx += stepRow4;
+                                    }
+                                    if (includeRed) oData[rIdx] = sumR / totalCount;
+                                    else oData[rIdx] = hold[rIdx];
+                                    
+                                    if (includeGreen) oData[gIdx] = sumG / totalCount;
+                                    else oData[gIdx] = hold[gIdx];
+
+                                    if (includeBlue) oData[bIdx] = sumB / totalCount;
+                                    else oData[bIdx] = hold[bIdx];
+
+                                    if (includeAlpha) oData[aIdx] = sumA / totalCount;
+                                    else oData[aIdx] = hold[aIdx];
+                                }
+                                else {
+
+                                    for (let r = sy; r <= ey; r += stepVertical) {
+
+                                        aVal = hold[idx + 3];
+
+                                        if (aVal) {
+
+                                            if (includeRed) sumR += hold[idx];
+                                            if (includeGreen) sumG += hold[idx + 1];
+                                            if (includeBlue) sumB += hold[idx + 2];
+                                            countRGB++;
+                                        }
+
+                                        if (includeAlpha) sumA += aVal;
+                                        
+                                        idx += stepRow4;
+                                    }
+
+                                    if (includeRed) oData[rIdx] = countRGB ? (sumR / countRGB) : hold[rIdx];
+                                    else oData[rIdx] = hold[rIdx];
+
+                                    if (includeGreen) oData[gIdx] = countRGB ? (sumG / countRGB) : hold[gIdx];
+                                    else oData[gIdx] = hold[gIdx];
+
+                                    if (includeBlue) oData[bIdx] = countRGB ? (sumB / countRGB) : hold[bIdx];
+                                    else oData[bIdx] = hold[bIdx];
+
+                                    if (includeAlpha) oData[aIdx] = sumA / totalCount;
+                                    else oData[aIdx] = hold[aIdx];
+                                }
+                            }
+                        }
+                    }
+                    if (pass < passesVertical - 1) hold.set(oData);
+                }
             }
         }
 
