@@ -161,7 +161,7 @@ P.action = function (packet) {
         return this.cache.work;
     }
     return image;
-}
+};
 
 
 // ### Permanent variables
@@ -247,64 +247,65 @@ P.getRandomNumbers = function (items = {}) {
     }
 };
 
-// `buildImageTileSets` - creates a record of which pixels belong to which tile - used for manipulating color channels values. Resulting object will be cached in the store
-P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image) {
+// Build compact tile rectangles (no per-pixel arrays).
+// + Returns an Int32Array laid out as [x0, y0, x1, y1, x0, y0, x1, y1, ...]
+P.buildTileRects = function (tileWidth, tileHeight, offsetX, offsetY, image) {
 
-    const { cache } = this;
+    if (!image) image = this.cache.source;
 
-    if (!image) image = cache.source;
+    const iWidth  = image.width | 0,
+        iHeight = image.height | 0;
 
-    const { width:iWidth, height:iHeight } = image;
+    if (!iWidth || !iHeight) return new Int32Array(0);
 
-    if (iWidth && iHeight) {
+    let tW = (_isFinite(tileWidth) ? tileWidth : 1) | 0,
+        tH = (_isFinite(tileHeight) ? tileHeight : 1) | 0,
+        offX = (_isFinite(offsetX) ? offsetX : 0) | 0,
+        offY = (_isFinite(offsetY) ? offsetY : 0) | 0;
 
-        tileWidth = (_isFinite(tileWidth)) ? tileWidth : 1;
-        tileHeight = (_isFinite(tileHeight)) ? tileHeight : 1;
-        offsetX = (_isFinite(offsetX)) ? offsetX : 0;
-        offsetY = (_isFinite(offsetY)) ? offsetY : 0;
+    if (tW < 1) tW = 1;
+    if (tW >= iWidth)  tW = iWidth - 1;
+    if (tH < 1) tH = 1;
+    if (tH >= iHeight) tH = iHeight - 1;
 
-        if (tileWidth < 1) tileWidth = 1;
-        if (tileWidth >= iWidth) tileWidth = iWidth - 1;
-        if (tileHeight < 1) tileHeight = 1;
-        if (tileHeight >= iHeight) tileHeight = iHeight - 1;
-        if (offsetX < 0) offsetX = 0;
-        if (offsetX >= tileWidth) offsetX = tileWidth - 1;
-        if (offsetY < 0) offsetY = 0;
-        if (offsetY >= tileHeight) offsetY = tileHeight - 1;
+    if (offX < 0) offX = 0;
+    else if (offX >= tW) offX = tW - 1;
 
-        const name = `simple-tileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${offsetX}-${offsetY}`,
-            itemInWorkstore = getWorkstoreItem(name);
+    if (offY < 0) offY = 0;
+    else if (offY >= tH) offY = tH - 1;
 
-        if (itemInWorkstore) return itemInWorkstore;
+    const name = `simple-tileset-rects-${iWidth}-${iHeight}-${tW}-${tH}-${offX}-${offY}`;
 
-        const tiles = [];
+    const cached = getWorkstoreItem(name);
+    if (cached) return cached;
 
-        let i, iz, j, jz, x, xz, y, yz, hold;
+    const rects = [];
 
-        for (j = offsetY - tileHeight, jz = iHeight; j < jz; j += tileHeight) {
+    for (let j = offY - tH; j < iHeight; j += tH) {
 
-            for (i = offsetX - tileWidth, iz = iWidth; i < iz; i += tileWidth) {
+        const y0 = (j < 0 ? 0 : j),
+            y1 = j + tH;
 
-                hold = [];
+        if (y0 >= iHeight) break;
 
-                for (y = j, yz = j + tileHeight; y < yz; y++) {
+        const yEnd = (y1 > iHeight ? iHeight : y1);
 
-                    if (y >= 0 && y < iHeight) {
+        for (let i = offX - tW; i < iWidth; i += tW) {
 
-                        for (x = i, xz = i + tileWidth; x < xz; x++) {
+            const x0 = (i < 0 ? 0 : i),
+                x1 = i + tW;
 
-                            if (x >= 0 && x < iWidth) hold.push(((y * iWidth) + x) * 4);
-                        }
-                    }
-                }
-                if (hold.length) tiles.push(hold);
-            }
+            if (x0 >= iWidth) break;
+
+            const xEnd = (x1 > iWidth ? iWidth : x1);
+
+            if (x0 < xEnd && y0 < yEnd) rects.push(x0, y0, xEnd, yEnd);
         }
-
-        setWorkstoreItem(name, tiles);
-        return tiles;
     }
-    return false;
+    const out = new Int32Array(rects);
+    setWorkstoreItem(name, out);
+
+    return out;
 };
 
 // `buildGeneralTileSets` - separate the available space into a set of groups (tiles) and assign pixels to each group. Each tile centers on a `point` - an x/y coordinate; the calculations assign each pixel in the image to the group whose point it is closest to. Resulting object will be cached in the store
@@ -886,6 +887,7 @@ P.retrieveColorPointLibraries = function () {
 
     return getWorkstoreItem(COLOR_POINT_ARRAYS);
 };
+
 // `getOkColorVals` - returns an array of OKLAB/OKLCH calculated values for a given RGB color point
 // + Arguments __r, g, b__ - positive integer clamped between 0-255 - RGB red, green and blue channel values
 // + Argument __libs__ - the object returned by the `retrieveColorPointLibraries` function
@@ -4262,97 +4264,85 @@ P.theBigActionsObject = {
 // __newsprint__ - Attempts to simulate a black-white dither effect similar to newsprint
     [NEWSPRINT]: function (requirements) {
 
-        const doCalculations = function (inChannel, outChannel, tile) {
-
-            grays.length = 0;
-            calcGrays.length = 0;
-
-            let avg = 0,
-                i, r, g, b, a, gray;
-
-            const l = tile.length;
-
-            for (i = 0; i < l; i++) {
-
-                r = tile[i];
-                g = r + 1;
-                b = g + 1;
-
-                gray = gVal(inChannel[r], inChannel[g], inChannel[b]);
-
-                avg += gray;
-            }
-            avg /= l;
-
-            const pattern = patterns[_floor((avg / 255) * 13)];
-
-            if (width === 1) grays.push(...pattern);
-            else {
-
-                gray = pattern[0];
-                for (i = 0; i < width; i++) {
-                    calcGrays.push(gray);
-                }
-                gray = pattern[1];
-                for (i = 0; i < width; i++) {
-                    calcGrays.push(gray);
-                }
-                for (i = 0; i < width; i++) {
-                    grays.push(...calcGrays);
-                }
-                gray = pattern[2];
-                calcGrays.length = 0;
-                for (i = 0; i < width; i++) {
-                    calcGrays.push(gray);
-                }
-                gray = pattern[3];
-                for (i = 0; i < width; i++) {
-                    calcGrays.push(gray);
-                }
-                for (i = 0; i < width; i++) {
-                    grays.push(...calcGrays);
-                }
-            }
-
-            for (i = 0; i < l; i++) {
-
-                gray = grays[i];
-
-                r = tile[i];
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
-
-                outChannel[r] = gray;
-                outChannel[g] = gray;
-                outChannel[b] = gray;
-                outChannel[a] = inChannel[a];
-            }
-        }
-
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data;
+              oData = output.data;
 
         const {
             opacity = 1,
             lineOut,
         } = requirements;
 
-        let width = _floor(requirements.width || 1);
-        if (width < 1) width = 1;
+        let w = _floor(requirements.width || 1);
+        if (w < 1) w = 1;
 
-        const tileDimensions = width * 2;
+        const tDim = w << 1,
+            width  = input.width | 0,
+            height = input.height | 0,
+            rowStride = width << 2;
 
-        const tiles = this.buildImageTileSets(tileDimensions, tileDimensions, 0, 0);
+        const rects = this.buildTileRects(tDim, tDim, 0, 0, input);
 
-        const gVal = this.getGrayscaleValue;
-        const patterns = newspaperPatterns;
-        const grays = [],
-            calcGrays = [];
+        const gVal = this.getGrayscaleValue,
+            patterns = newspaperPatterns;
 
-        tiles.forEach(t => doCalculations(iData, oData, t));
+        let t, x0, x1, y0, y1, tw, th, count, sum, y, idx, end, avg, p, p0, p1, p2, p3, ox, oy, topBand, rowBase, x, leftBand, gray;
+
+        for (t = 0; t < rects.length; t += 4) {
+
+            x0 = rects[t];
+            y0 = rects[t + 1];
+            x1 = rects[t + 2];
+            y1 = rects[t + 3];
+
+            tw = x1 - x0;
+            th = y1 - y0;
+            count = tw * th;
+
+            sum = 0;
+
+            for (y = y0; y < y1; y++) {
+                
+                idx = (y * rowStride) + (x0 << 2);
+                end = idx + (tw << 2);
+                
+                for (; idx < end; idx += 4) {
+            
+                    sum += gVal(iData[idx], iData[idx + 1], iData[idx + 2]);
+                }
+            }
+            avg = sum / count;
+
+            p = patterns[_min(12, _floor((avg / 255) * 13))];
+            
+            p0 = p[0];
+            p1 = p[1];
+            p2 = p[2];
+            p3 = p[3];
+
+            ox = _floor(x0 / tDim) * tDim;
+            oy = _floor(y0 / tDim) * tDim;
+
+            for (y = y0; y < y1; y++) {
+                
+                topBand = ((y - oy) < w);
+                rowBase = (y * rowStride);
+
+                for (x = x0; x < x1; x++) {
+
+                    leftBand = ((x - ox) < w);
+                    gray = topBand ? (leftBand ? p0 : p1) : (leftBand ? p2 : p3);
+
+                    idx = rowBase + (x << 2);
+                    
+                    oData[idx] = gray;
+                    oData[idx + 1] = gray;
+                    oData[idx + 2] = gray;
+                    oData[idx + 3] = iData[idx + 3];
+                }
+            }
+        }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
@@ -4482,33 +4472,11 @@ P.theBigActionsObject = {
 // __pixelate__ - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the "tileWidth", "tileHeight", "offsetX" and "offsetY" arguments.
     [PIXELATE]: function (requirements) {
 
-        const doCalculations = function (inChannel, outChannel, tile, offset) {
-
-            let avg = tile.reduce((a, v) => a + inChannel[v + offset], 0);
-
-            avg = _floor(avg / tile.length);
-
-            for (let i = 0, iz = tile.length; i < iz; i++) {
-
-                outChannel[tile[i] + offset] = avg;
-            }
-        }
-
-        const setOutValueToInValue = function (inChannel, outChannel, tile, offset) {
-
-            let cell;
-
-            for (let i = 0, iz = tile.length; i < iz; i++) {
-
-                cell = tile[i];
-                outChannel[cell + offset] = inChannel[cell + offset];
-            }
-        };
-
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data;
+            oData = output.data,
+            len = iData.length;
 
         const {
             opacity = 1,
@@ -4523,22 +4491,105 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const tiles = this.buildImageTileSets(tileWidth, tileHeight, offsetX, offsetY);
+        const width  = input.width | 0;
+        const height = input.height | 0;
+        const rowStride = width << 2;
 
-        tiles.forEach(t => {
+        if (!includeRed && !includeGreen && !includeBlue && !includeAlpha) transferDataUnchanged(oData, iData, len);
+        else {
 
-            if (includeRed) doCalculations(iData, oData, t, 0);
-            else setOutValueToInValue(iData, oData, t, 0);
+            const rects = this.buildTileRects(tileWidth, tileHeight, offsetX, offsetY, input);
 
-            if (includeGreen) doCalculations(iData, oData, t, 1);
-            else setOutValueToInValue(iData, oData, t, 1);
+            let t, x0, x1, y0, y1, w, h, count, sumR, sumG, sumB, sumA, idx, end, avgR, avgG, avgB, avgA, y, start, p;
 
-            if (includeBlue) doCalculations(iData, oData, t, 2);
-            else setOutValueToInValue(iData, oData, t, 2);
+            // Process each tile
+            for (t = 0; t < rects.length; t += 4) {
 
-            if (includeAlpha) doCalculations(iData, oData, t, 3);
-            else setOutValueToInValue(iData, oData, t, 3);
-        });
+                x0 = rects[t];
+                y0 = rects[t + 1];
+                x1 = rects[t+2];
+                y1 = rects[t + 3];
+
+                w = x1 - x0;
+                h = y1 - y0;
+                count = w * h;
+
+                sumR = 0;
+                sumG = 0;
+                sumB = 0;
+                sumA = 0;
+
+                if (includeRed || includeGreen || includeBlue || includeAlpha) {
+
+                    for (y = y0; y < y1; y++) {
+
+                        idx = (y * rowStride) + (x0 << 2);
+                        end = idx + (w << 2);
+                        
+                        if (includeRed && includeGreen && includeBlue && includeAlpha) {
+                        
+                            // Fast path: accumulate all 4 channels
+                            for (; idx < end; idx += 4) {
+                        
+                                sumR += iData[idx];
+                                sumG += iData[idx + 1];
+                                sumB += iData[idx + 2];
+                                sumA += iData[idx + 3];
+                            }
+                        } else {
+                        
+                            // Selective accumulation
+                            for (; idx < end; idx += 4) {
+                        
+                                if (includeRed) sumR += iData[idx];
+                                if (includeGreen) sumG += iData[idx + 1];
+                                if (includeBlue) sumB += iData[idx + 2];
+                                if (includeAlpha) sumA += iData[idx + 3];
+                            }
+                        }
+                    }
+                }
+
+                avgR = includeRed ? _floor(sumR / count) : 0;
+                avgG = includeGreen ? _floor(sumG / count) : 0;
+                avgB = includeBlue ? _floor(sumB / count) : 0;
+                avgA = includeAlpha ? _floor(sumA / count) : 0;
+
+                for (y = y0; y < y1; y++) {
+                    
+                    start = (y * rowStride) + (x0 << 2);
+                    end = start + (w << 2);
+
+                    oData.set(iData.subarray(start, end), start);
+
+                    if (includeRed || includeGreen || includeBlue || includeAlpha) {
+
+                        p = start;
+                        
+                        if (includeRed && includeGreen && includeBlue && includeAlpha) {
+
+                            for (; p < end; p += 4) {
+
+                                oData[p] = avgR;
+                                oData[p + 1] = avgG;
+                                oData[p + 2] = avgB;
+                                oData[p + 3] = avgA;
+                            }
+                        } 
+                        else {
+
+                            for (; p < end; p += 4) {
+
+                                if (includeRed) oData[p] = avgR;
+                                if (includeGreen) oData[p + 1] = avgG;
+                                if (includeBlue) oData[p + 2] = avgB;
+                                if (includeAlpha) oData[p + 3] = avgA;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
