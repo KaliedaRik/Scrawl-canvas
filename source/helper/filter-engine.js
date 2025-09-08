@@ -247,145 +247,6 @@ P.getRandomNumbers = function (items = {}) {
     }
 };
 
-P.buildImageCoordinateLookup = function (image) {
-
-    const { cache } = this;
-
-    if (!image) image = cache.source;
-
-    const { width, height } = image
-
-    if (width && height) {
-
-        const name = `coords-lookup-${width}-${height}`,
-            itemInWorkstore = getWorkstoreItem(name);
-
-        if (itemInWorkstore) return itemInWorkstore;
-
-        const lookup = []
-
-        for (let y = 0; y < height; y++) {
-
-            for (let x = 0; x < width; x++) {
-
-                lookup.push([x, y]);
-            }
-        }
-
-        setWorkstoreItem(name, lookup);
-        return lookup;
-    }
-    return false;
-};
-
-// `buildAlphaTileSets` - creates a record of which pixels belong to which tile - used for manipulating alpha channel values. Resulting object will be cached in the store
-P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels, image) {
-
-    const { cache } = this;
-
-    if (!image) image = cache.source;
-
-    const { width:iWidth, height:iHeight } = image;
-
-    if (iWidth && iHeight) {
-
-        tileWidth = (_isFinite(tileWidth)) ? tileWidth : 1;
-        tileHeight = (_isFinite(tileHeight)) ? tileHeight : 1;
-        gutterWidth = (_isFinite(gutterWidth)) ? gutterWidth : 1;
-        gutterHeight = (_isFinite(gutterHeight)) ? gutterHeight : 1;
-        offsetX = (_isFinite(offsetX)) ? offsetX : 0;
-        offsetY = (_isFinite(offsetY)) ? offsetY : 0;
-
-        if (tileWidth < 1) tileWidth = 1;
-        if (tileHeight < 1) tileHeight = 1;
-        if (tileWidth + gutterWidth >= iWidth) tileWidth = iWidth - gutterWidth - 1;
-        if (tileHeight + gutterHeight >= iHeight) tileHeight = iHeight - gutterHeight - 1;
-
-        if (tileWidth < 1) tileWidth = 1;
-        if (tileHeight < 1) tileHeight = 1;
-        if (tileWidth + gutterWidth >= iWidth) gutterWidth = iWidth - tileWidth - 1;
-        if (tileHeight + gutterHeight >= iHeight) gutterHeight = iHeight - tileHeight - 1;
-
-        const aWidth = tileWidth + gutterWidth,
-            aHeight = tileHeight + gutterHeight;
-
-        if (offsetX < 0) offsetX = 0;
-        if (offsetX >= aWidth) offsetX = aWidth - 1;
-        if (offsetY < 0) offsetY = 0;
-        if (offsetY >= aHeight) offsetY = aHeight - 1;
-
-        const name = `alphatileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${gutterWidth}-${gutterHeight}-${offsetX}-${offsetY}`,
-            itemInWorkstore = getWorkstoreItem(name);
-
-        if (itemInWorkstore) return itemInWorkstore;
-
-        const tiles = [];
-
-        let hold, i, iz, j, jz, x, xz, y, yz;
-
-        for (j = offsetY - aHeight, jz = iHeight; j < jz; j += aHeight) {
-
-            for (i = offsetX - aWidth, iz = iWidth; i < iz; i += aWidth) {
-
-                hold = [];
-                for (y = j, yz = j + tileHeight; y < yz; y++) {
-
-                    if (y >= 0 && y < iHeight) {
-
-                        for (x = i, xz = i + tileWidth; x < xz; x++) {
-
-                            if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
-                        }
-                    }
-                }
-                tiles.push(hold);
-
-                hold = [];
-                for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
-
-                    if (y >= 0 && y < iHeight) {
-
-                        for (let x = i, xz = i + tileWidth; x < xz; x++) {
-
-                            if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
-                        }
-                    }
-                }
-                tiles.push(hold);
-
-                hold = [];
-                for (y = j, yz = j + tileHeight; y < yz; y++) {
-
-                    if (y >= 0 && y < iHeight) {
-
-                        for (let x = i + tileWidth, xz = i + tileWidth + gutterWidth; x < xz; x++) {
-
-                            if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
-                        }
-                    }
-                }
-                tiles.push(hold);
-
-                hold = [];
-                for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
-
-                    if (y >= 0 && y < iHeight) {
-
-                        for (let x = i + tileWidth, xz = i + tileWidth + gutterWidth; x < xz; x++) {
-
-                            if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
-                        }
-                    }
-                }
-                tiles.push(hold);
-            }
-        }
-        setWorkstoreItem(name, tiles);
-        return tiles;
-    }
-    return false;
-};
-
 // `buildImageTileSets` - creates a record of which pixels belong to which tile - used for manipulating color channels values. Resulting object will be cached in the store
 P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image) {
 
@@ -1335,7 +1196,9 @@ P.theBigActionsObject = {
 
         const iData = input.data,
             oData = output.data,
-            len = iData.length;
+            len   = iData.length,
+            width  = input.width,
+            height = input.height;
 
         const {
             opacity = 1,
@@ -1345,27 +1208,88 @@ P.theBigActionsObject = {
             offsetY = 0,
             gutterWidth = 1,
             gutterHeight = 1,
+            // [core, bottom-strip, right-strip, bottom-right corner]
             areaAlphaLevels = [255, 0, 0, 0],
             lineOut,
         } = requirements;
 
-        const tiles = this.buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
-
         this.transferDataUnchanged(oData, iData, len);
 
-        let a, j, jz, tVal;
+        // Clamp/correct like the old builder did
+        let tW = (_isFinite(tileWidth) ? tileWidth : 1) | 0,
+            tH = (_isFinite(tileHeight) ? tileHeight : 1) | 0,
+            gW = (_isFinite(gutterWidth) ? gutterWidth : 1) | 0,
+            gH = (_isFinite(gutterHeight) ? gutterHeight : 1) | 0;
 
-        tiles.forEach((t, index) => {
+        if (tW < 1) tW = 1;
+        if (tH < 1) tH = 1;
 
-            a = areaAlphaLevels[index % 4];
+        if (tW + gW >= width)  {
 
-            for (j = 0, jz = t.length; j < jz; j++) {
+            tW = _max(1, width  - gW - 1);
+            gW = _max(1, width  - tW - 1);
+        }
 
-                tVal = t[j];
+        if (tH + gH >= height) {
 
-                if (iData[tVal]) oData[tVal] = a;
+            tH = _max(1, height - gH - 1);
+            gH = _max(1, height - tH - 1);
+        }
+
+        const aW = tW + gW,
+            aH = tH + gH;
+
+        let offX = (_isFinite(offsetX) ? offsetX : 0) | 0,
+            offY = (_isFinite(offsetY) ? offsetY : 0) | 0;
+
+        if (offX < 0) offX = 0;
+        else if (offX >= aW) offX = aW - 1;
+
+        if (offY < 0) offY = 0;
+        else if (offY >= aH) offY = aH - 1;
+
+        const mod = (a, m) => {
+            let r = a % m;
+            return r < 0 ? r + m : r;
+        };
+
+        let y, localY, inCoreY, localX, x, inCoreX, idx, a, segmentSpan, runLen, remain, p, k;
+
+        for (y = 0; y < height; y++) {
+
+            localY = mod(y - offY, aH);
+            inCoreY = (localY < tH);
+
+            localX = mod(0 - offX, aW);
+            x = 0;
+
+            while (x < width) {
+
+                inCoreX = (localX < tW);
+
+                idx = inCoreY ? (inCoreX ? 0 : 2) : (inCoreX ? 1 : 3);
+
+                a = areaAlphaLevels[idx] | 0;
+
+                segmentSpan = inCoreX ? (tW - localX) : (aW - localX);
+                runLen = segmentSpan;
+                remain = width - x;
+                
+                if (runLen > remain) runLen = remain;
+
+                p = ((y * width) + x) * 4 + 3;
+
+                for (k = 0; k < runLen; k++) {
+
+                    if (iData[p]) oData[p] = a;
+                    p += 4;
+                }
+
+                x += runLen;
+
+                localX = (localX + runLen) % aW;
             }
-        });
+        }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
