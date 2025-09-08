@@ -197,45 +197,6 @@ P.getAlphaData = function (image) {
 
 // ### Functions invoked by a range of different action functions
 //
-// `buildImageGrid` creates an Array of Arrays which contain the indexes of each pixel in the image channel Arrays
-P.buildImageGrid = function (image) {
-
-    const { cache } = this;
-
-    if (!image) image = cache.source;
-
-    const { width, height } = image
-
-    if (width && height) {
-
-        const name = `grid-${width}-${height}`,
-            itemInWorkstore = getWorkstoreItem(name);
-
-        if (itemInWorkstore) return itemInWorkstore;
-
-        const grid = [];
-
-        let counter = 0,
-            row, x, y;
-
-        for (y = 0; y < height; y++) {
-
-            row = [];
-
-            for (x = 0; x < width; x++) {
-
-                row.push(counter);
-                counter++;
-            }
-            grid.push(row);
-        }
-
-        setWorkstoreItem(name, grid);
-        return grid;
-    }
-    return false;
-};
-
 P.getRandomNumbers = function (items = {}) {
 
     const {
@@ -4479,7 +4440,8 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data;
+            oData = output.data,
+            len = iData.length;
 
         const {
             opacity = 1,
@@ -4494,70 +4456,95 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        if (offsetRedX || offsetGreenX || offsetBlueX || offsetAlphaX || offsetRedY || offsetGreenY || offsetBlueY || offsetAlphaY) {
+        if (!(offsetRedX || offsetGreenX || offsetBlueX || offsetAlphaX || offsetRedY || offsetGreenY || offsetBlueY || offsetAlphaY)) {
 
-            let simpleoffset = false;
+            this.transferDataUnchanged(oData, iData, len);
+        }
+        else {
 
-            if (offsetRedX === offsetGreenX && offsetRedX === offsetBlueX && offsetRedX === offsetAlphaX && offsetRedY === offsetGreenY && offsetRedY === offsetBlueY && offsetRedY === offsetAlphaY) simpleoffset = true;
+            const width = input.width,
+                height = input.height,
+                rowStride = width << 2;
 
-            const grid = this.buildImageGrid(input),
-                gWidth = grid[0].length,
-                gHeight = grid.length;
+            // Simple = same offset for all channels
+            const simple = offsetRedX === offsetGreenX && offsetRedX === offsetBlueX && offsetRedX === offsetAlphaX && offsetRedY === offsetGreenY && offsetRedY === offsetBlueY && offsetRedY === offsetAlphaY;
 
-            let drx, dry, dgx, dgy, dbx, dby, dax, day, inCell, outCell;
+            if (simple) {
 
-            for (let y = 0; y < gHeight; y++) {
-                for (let x = 0; x < gWidth; x++) {
+                const dx = offsetRedX,
+                    dy = offsetRedY;
 
-                    inCell = grid[y][x] * 4;
+                let y, ty, xStart, xEnd, pixels, srcStart, destStart;
 
-                    if (simpleoffset) {
+                // Copy rows with a single typed-array slice per row (fast, identical output)
+                for (y = 0; y < height; y++) {
 
-                        drx = x + offsetRedX;
-                        dry = y + offsetRedY;
+                    ty = y + dy;
 
-                        if (drx >= 0 && drx < gWidth && dry >= 0 && dry < gHeight) {
+                    if (ty < 0 || ty >= height) continue;
 
-                            outCell = grid[dry][drx] * 4;
-                            oData[outCell] = iData[inCell];
-                            oData[outCell + 1] = iData[inCell + 1];
-                            oData[outCell + 2] = iData[inCell + 2];
-                            oData[outCell + 3] = iData[inCell + 3];
+                    xStart = (dx < 0) ? -dx : 0;
+                    xEnd = (dx > 0) ? (width - dx) : width;
+
+                    if (xEnd <= xStart) continue;
+
+                    pixels = xEnd - xStart;
+                    srcStart = (y * rowStride) + (xStart << 2);
+                    destStart = (ty * rowStride) + ((xStart + dx) << 2);
+                    
+                    oData.set(iData.subarray(srcStart, srcStart + (pixels << 2)), destStart);
+                }
+            }
+            else {
+
+                let y, rowBase, inBase, x, rx, ry, gx, gy, bx, by, ax, ay, out;
+
+                for (y = 0; y < height; y++) {
+
+                    rowBase = y * rowStride;
+                    
+                    for (x = 0; x < width; x++) {
+                        
+                        inBase = rowBase + (x << 2);
+
+                        // Red
+                        rx = x + offsetRedX;
+                        ry = y + offsetRedY;
+
+                        if (rx >= 0 && rx < width && ry >= 0 && ry < height) {
+                            
+                            out = ((ry * width) + rx) << 2;
+                            oData[out] = iData[inBase];
                         }
-                    }
-                    else {
 
-                        drx = x + offsetRedX;
-                        dry = y + offsetRedY;
-                        dgx = x + offsetGreenX;
-                        dgy = y + offsetGreenY;
-                        dbx = x + offsetBlueX;
-                        dby = y + offsetBlueY;
-                        dax = x + offsetAlphaX;
-                        day = y + offsetAlphaY;
+                        // Green
+                        gx = x + offsetGreenX;
+                        gy = y + offsetGreenY;
 
-                        if (drx >= 0 && drx < gWidth && dry >= 0 && dry < gHeight) {
-
-                            outCell = grid[dry][drx] * 4;
-                            oData[outCell] = iData[inCell];
+                        if (gx >= 0 && gx < width && gy >= 0 && gy < height) {
+                            
+                            out = ((gy * width) + gx) << 2;
+                            oData[out + 1] = iData[inBase + 1];
                         }
 
-                        if (dgx >= 0 && dgx < gWidth && dgy >= 0 && dgy < gHeight) {
+                        // Blue
+                        bx = x + offsetBlueX;
+                        by = y + offsetBlueY;
 
-                            outCell = grid[dgy][dgx] * 4;
-                            oData[outCell + 1] = iData[inCell + 1];
+                        if (bx >= 0 && bx < width && by >= 0 && by < height) {
+                            
+                            out = ((by * width) + bx) << 2;
+                            oData[out + 2] = iData[inBase + 2];
                         }
 
-                        if (dbx >= 0 && dbx < gWidth && dby >= 0 && dby < gHeight) {
+                        // Alpha
+                        ax = x + offsetAlphaX;
+                        ay = y + offsetAlphaY;
 
-                            outCell = grid[dby][dbx] * 4;
-                            oData[outCell + 2] = iData[inCell + 2];
-                        }
+                        if (ax >= 0 && ax < width && ay >= 0 && ay < height) {
 
-                        if (dax >= 0 && dax < gWidth && day >= 0 && day < gHeight) {
-
-                            outCell = grid[day][dax] * 4;
-                            oData[outCell + 3] = iData[inCell + 3];
+                            out = ((ay * width) + ax) << 2;
+                            oData[out + 3] = iData[inBase + 3];
                         }
                     }
                 }
@@ -5412,23 +5399,17 @@ P.theBigActionsObject = {
 // + This filter can handle multiple swirls in a single pass
     [SWIRL]: function (requirements) {
 
-        const getValue = function (val, dim) {
-
-            return (val.substring) ? _floor((parseFloat(val) / 100) * dim) : val;
-        };
+        const getValue = (val, dim) => (val && val.substring) ? _floor((parseFloat(val) / 100) * dim) : val;
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            iWidth = input.width,
+            len   = iData.length,
+            iWidth  = input.width,
             iHeight = input.height;
 
-        const tempInput = new ImageData(iWidth, iHeight),
-            tData = tempInput.data,
-            tWidth = tempInput.width,
-            tHeight = tempInput.height;
+        const tData = new Uint8ClampedArray(iData);
 
         const {
             opacity = 1,
@@ -5436,114 +5417,90 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let r, g, b, a, s, sz, pos, x, y, xz, yz, i, j,
-            distance, dr, dg, db, da, dx, dy, dLen;
+        if (_isArray(swirls) && !swirls.length) this.transferDataUnchanged(oData, iData, len);
+        else {
 
-        for (i = 0; i < len; i += 4) {
+            tData.set(iData);
+            oData.set(iData);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
-
-            tData[r] = iData[r];
-            tData[g] = iData[g];
-            tData[b] = iData[b];
-            tData[a] = iData[a];
-
-            oData[r] = iData[r];
-            oData[g] = iData[g];
-            oData[b] = iData[b];
-            oData[a] = iData[a];
-        }
-
-        if (_isArray(swirls) && swirls.length) {
-
-            const grid = this.buildImageGrid(input);
+            let s, sz, startX, startY, innerRadius, outerRadius, angle, easing, sx, sy, outer, inner, complexLen, x, xz, y, yz, e, ename, swirlName, swirlCoords, start, coord, iy, ix, destIdx, distance, srcIdx, factor, dx, dy, cursor, rowBase, bytesPerPx, spanPx, spanBytes, off;
 
             for (s = 0, sz = swirls.length; s < sz; s++) {
 
-                const [startX, startY, innerRadius, outerRadius, angle, easing] = swirls[s];
+                [startX, startY, innerRadius, outerRadius, angle, easing] = swirls[s];
 
-                const sx = getValue(startX, iWidth),
-                    sy = getValue(startY, iHeight);
+                sx = getValue(startX,  iWidth);
+                sy = getValue(startY,  iHeight);
 
-                let outer = getValue(outerRadius, iWidth),
-                    inner = getValue(innerRadius, iWidth);
+                outer = getValue(outerRadius, iWidth);
+                inner = getValue(innerRadius, iWidth);
 
                 if (inner > outer) {
 
-                    const temp = inner;
+                    const tmp = inner;
                     inner = outer;
-                    outer = temp;
+                    outer = tmp;
                 }
 
-                let complexLen = outer - inner;
+                complexLen = outer - inner;
                 if (complexLen === 0) complexLen = 0.1;
 
-                x = sx - outer;
+                // Bounding box clamp
+                x  = sx - outer;
                 if (x < 0) x = 0;
-                xz = sx + outer
-                if (xz > tWidth) xz = tWidth;
+
+                xz = sx + outer;
+                if (xz > iWidth) xz = iWidth;
+
                 y = sy - outer;
                 if (y < 0) y = 0;
-                yz = sy + outer
-                if (yz >= tHeight) yz = tHeight;
+                
+                yz = sy + outer;
+                if (yz > iHeight) yz = iHeight;
 
-                if (x < xz && y < yz && x < tWidth && xz > 0 && y < tHeight && yz > 0) {
+                if (x < xz && y < yz && x < iWidth && xz > 0 && y < iHeight && yz > 0) {
 
-                    let e = easing;
-                    let ename = easing;
-
-                    if (isa_fn(e)) ename = `ude-${e(0)}-${e(0.1)}-${e(0.2)}-${e(0.3)}-${e(0.4)}-${e(0.5)}-${e(0.6)}-${e(0.7)}-${e(0.8)}-${e(0.9)}-${e(1)}`;
+                    // Resolve easing
+                    e = easing;
+                    ename = easing;
+                    if (isa_fn(e)) {
+                    
+                        ename = `ude-${e(0)}-${e(0.1)}-${e(0.2)}-${e(0.3)}-${e(0.4)}-${e(0.5)}-${e(0.6)}-${e(0.7)}-${e(0.8)}-${e(0.9)}-${e(1)}`;
+                    }
                     else {
                         e = (null != easeEngines[e]) ? easeEngines[e] : easeEngines['linear'];
                     }
 
-                    const swirlName = `swirl-${startX}-${startY}-${innerRadius}-${outerRadius}-${angle}-${ename}-${iWidth}-${iHeight}`;
-
-                    const swirlCoords = getOrAddWorkstoreItem(swirlName);
+                    swirlName = `swirl-${startX}-${startY}-${innerRadius}-${outerRadius}-${angle}-${ename}-${iWidth}-${iHeight}`;
+                    
+                    swirlCoords = getOrAddWorkstoreItem(swirlName);
 
                     if (!swirlCoords.length) {
 
-                        const start = requestCoordinate();
-                        const coord = requestCoordinate();
+                        start = requestCoordinate();
+                        coord = requestCoordinate();
 
                         start.setFromArray([sx, sy]);
 
-                        for (i = y; i < yz; i++) {
+                        for (iy = y; iy < yz; iy++) {
+                        
+                            for (ix = x; ix < xz; ix++) {
 
-                            for (j = x; j < xz; j++) {
+                                destIdx = (((iy * iWidth) + ix) << 2);
 
-                                pos = [j, i];
+                                distance = coord.set([ix, iy]).subtract(start).getMagnitude();
 
-                                r = grid[i][j] * 4;
-
-                                distance = coord.set(pos).subtract(start).getMagnitude();
-
-                                if (distance > outer) dr = r;
-                                else if (distance < inner) {
-
-                                    coord.rotate(angle).add(start);
-
-                                    dx = _floor(coord[0]);
-                                    dy = _floor(coord[1]);
-
-                                    if (dx < 0) dx += iWidth;
-                                    else if (dx >= iWidth) dx -= iWidth;
-
-                                    if (dy < 0) dy += iHeight;
-                                    else if (dy >= iHeight) dy -= iHeight;
-
-                                    dr = grid[dy][dx] * 4;
-                                }
+                                if (distance > outer) srcIdx = destIdx;
                                 else {
+                                    
+                                    factor = 1;
+                                    if (distance >= inner) {
+                                    
+                                        factor = 1 - ((distance - inner) / complexLen);
+                                        factor = e(factor);
+                                    }
 
-                                    dLen = 1 - ((distance - inner) / complexLen);
-
-                                    dLen = e(dLen);
-
-                                    coord.rotate(angle * dLen).add(start);
+                                    coord.rotate(angle * factor).add(start);
 
                                     dx = _floor(coord[0]);
                                     dy = _floor(coord[1]);
@@ -5554,54 +5511,47 @@ P.theBigActionsObject = {
                                     if (dy < 0) dy += iHeight;
                                     else if (dy >= iHeight) dy -= iHeight;
 
-                                    dr = grid[dy][dx] * 4;
+                                    srcIdx = (((dy * iWidth) + dx) << 2);
                                 }
-                                swirlCoords.push(dr);
+
+                                swirlCoords.push(srcIdx);
                             }
                         }
                         releaseCoordinate(coord, start);
                     }
 
-                    let swirlCursor = -1;
-                    for (i = y; i < yz; i++) {
+                    cursor = 0;
 
-                        for (j = x; j < xz; j++) {
+                    for (let iy = y; iy < yz; iy++) {
 
-                            r = grid[i][j] * 4;
-                            g = r + 1;
-                            b = g + 1;
-                            a = b + 1;
+                        rowBase = (iy * iWidth) << 2;
+                        
+                        for (ix = x; ix < xz; ix++) {
+                            
+                            destIdx = rowBase + (ix << 2);
+                            srcIdx  = swirlCoords[cursor++];
 
-                            dr = swirlCoords[++swirlCursor];
-                            dg = dr + 1;
-                            db = dg + 1;
-                            da = db + 1;
-
-                            oData[r] = tData[dr];
-                            oData[g] = tData[dg];
-                            oData[b] = tData[db];
-                            oData[a] = tData[da];
+                            oData[destIdx] = tData[srcIdx];
+                            oData[destIdx + 1] = tData[srcIdx + 1];
+                            oData[destIdx + 2] = tData[srcIdx + 2];
+                            oData[destIdx + 3] = tData[srcIdx + 3];
                         }
                     }
 
-                    for (i = y; i < yz; i++) {
+                    bytesPerPx = 4;
+                    spanPx = (xz - x);
+                    spanBytes = spanPx * bytesPerPx;
 
-                        for (j = x; j < xz; j++) {
+                    for (iy = y; iy < yz; iy++) {
 
-                            r = grid[i][j] * 4;
-                            g = r + 1;
-                            b = g + 1;
-                            a = b + 1;
+                        off = (((iy * iWidth) + x) << 2);
 
-                            tData[r] = oData[r];
-                            tData[g] = oData[g];
-                            tData[b] = oData[b];
-                            tData[a] = oData[a];
-                        }
+                        tData.set(oData.subarray(off, off + spanBytes), off);
                     }
                 }
             }
         }
+
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
