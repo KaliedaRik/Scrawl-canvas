@@ -750,6 +750,47 @@ P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
     return grid;
 };
 
+P.getMatrixOffsets = function (mWidth, mHeight, mX, mY, image) {
+
+    if (!image) image = this.cache.source;
+
+    const iWidth  = image.width | 0,
+        iHeight = image.height | 0;
+
+    mWidth = (_isFinite(mWidth) && mWidth > 0) ? mWidth | 0 : 1;
+    mHeight = (_isFinite(mHeight) && mHeight > 0) ? mHeight | 0 : 1;
+
+    mX = (_isFinite(mX) ? mX : 0) | 0;
+    if (mX < 0) mX = 0;
+    else if (mX >= mWidth) mX = mWidth  - 1;
+
+    mY = (_isFinite(mY) ? mY : 0) | 0;
+    if (mY < 0) mY = 0;
+    else if (mY >= mHeight) mY = mHeight - 1;
+
+    const name = `matrix-offsets-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`;
+    
+    let res = getWorkstoreItem(name);
+    if (res) return res;
+
+    res = new Int32Array(mWidth * mHeight);
+
+    let p = 0,
+        rowOff;
+
+    for (let y = -mY, yz = mHeight - mY; y < yz; y++) {
+
+        rowOff = (y * iWidth) << 2;
+
+        for (let x = -mX, xz = mWidth - mX; x < xz; x++) {
+
+            res[p++] = rowOff + (x << 2);
+        }
+    }
+    setWorkstoreItem(name, res);
+    return res;
+};
+
 // `checkChannelLevelsParameters` - divide each channel into discrete sequences of pixels
 P.checkChannelLevelsParameters = function (f) {
 
@@ -3144,25 +3185,16 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __emboss__ - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action
     [EMBOSS]: function (requirements) {
-
-        const doCalculations = function (data, matrix, offset) {
-
-            let val = 0;
-
-            for (let m = 0, mz = matrix.length; m < mz; m++) {
-
-                if (weights[m]) val += (data[matrix[m] + offset] * weights[m]);
-            }
-            return val;
-        }
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+              oData = output.data,
+              W = input.width  | 0,
+              H = input.height | 0,
+              rowStride = W << 2,
+              len = iData.length;
 
         const {
             opacity = 1,
@@ -3172,106 +3204,147 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const strength = _abs(requirements.strength || 1);
+        // --- Build 3x3 weights from strength + angle
+        const strength = _abs(requirements.strength || 1),
+            angle = correctAngle(requirements.angle || 0),
+            slices  = (angle / 45) | 0,
+            remains = ((angle % 45) / 45) * strength;
 
-        const angle = correctAngle(requirements.angle || 0);
-
-        const slices = _floor(angle / 45),
-            remains = ((angle % 45) / 45) * strength,
-            weights = new Array(9);
-
-        weights.fill(0, 0, 9);
-        weights[4] = 1;
+        const w = new Float32Array(9);
+        w[4] = 1;
 
         if (slices === 0) {
-            weights[5] = strength - remains;
-            weights[8] = remains;
-            weights[3] = -weights[5];
-            weights[0] = -weights[8];
-        }
+
+            w[5] = strength - remains;
+            w[8] = remains;
+            w[3] = -w[5];
+            w[0] = -w[8];
+        } 
         else if (slices === 1) {
-            weights[8] = strength - remains;
-            weights[7] = remains;
-            weights[0] = -weights[8];
-            weights[1] = -weights[7];
-        }
+
+            w[8] = strength - remains;
+            w[7] = remains;
+            w[0] = -w[8];
+            w[1] = -w[7];
+        } 
         else if (slices === 2) {
-            weights[7] = strength - remains;
-            weights[6] = remains;
-            weights[1] = -weights[7];
-            weights[2] = -weights[6];
-        }
+
+            w[7] = strength - remains;
+            w[6] = remains;
+            w[1] = -w[7];
+            w[2] = -w[6];
+        } 
         else if (slices === 3) {
-            weights[6] = strength - remains;
-            weights[3] = remains;
-            weights[2] = -weights[6];
-            weights[5] = -weights[3];
-        }
+            w[6] = strength - remains;
+            w[3] = remains;
+            w[2] = -w[6];
+            w[5] = -w[3];
+        } 
         else if (slices === 4) {
-            weights[3] = strength - remains;
-            weights[0] = remains;
-            weights[5] = -weights[3];
-            weights[8] = -weights[0];
-        }
+            w[3] = strength - remains;
+            w[0] = remains;
+            w[5] = -w[3];
+            w[8] = -w[0];
+        } 
         else if (slices === 5) {
-            weights[0] = strength - remains;
-            weights[1] = remains;
-            weights[8] = -weights[0];
-            weights[7] = -weights[1];
-        }
+            w[0] = strength - remains;
+            w[1] = remains;
+            w[8] = -w[0];
+            w[7] = -w[1];
+        } 
         else if (slices === 6) {
-            weights[1] = strength - remains;
-            weights[2] = remains;
-            weights[7] = -weights[1];
-            weights[6] = -weights[2];
-        }
+            w[1] = strength - remains;
+            w[2] = remains;
+            w[7] = -w[1];
+            w[6] = -w[2];
+        } 
         else {
-            weights[2] = strength - remains;
-            weights[5] = remains;
-            weights[6] = -weights[2];
-            weights[3] = -weights[5];
+            w[2] = strength - remains;
+            w[5] = remains;
+            w[6] = -w[2];
+            w[3] = -w[5];
         }
 
-        const grid = this.buildMatrixGrid(3, 3, 1, 1, input);
+        // Copy input → output as a base (alpha passthrough needed anyway)
+        // oData.set(iData);
 
-        let i, r, g, b, a, iR, iG, iB, iA, oR, oG, oB, m;
+        let x, y, yU, yD, rowU, rowM, rowD, xL, xC, xR,
+            p00, p01, p02, p10, p11, p12, p20, p21, p22,
+            r, g, b, iR, iG, iB, unchanged;        
 
-        for (i = 0; i < len; i += 4) {
+        // Main pass (toroidal wrap)
+        for (y = 0; y < H; y++) {
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            yU = (y === 0 ? H - 1 : y - 1);
+            yD = (y === H - 1 ? 0 : y + 1);
 
-            iR = iData[r];
-            iG = iData[g];
-            iB = iData[b];
-            iA = iData[a];
+            rowU = (yU * rowStride) | 0;
+            rowM = (y * rowStride) | 0;
+            rowD = (yD * rowStride) | 0;
 
-            if (iA) {
+            for (x = 0; x < W; x++) {
 
-                m = _floor(i / 4);
+                xL = (x === 0 ? W - 1 : x - 1) << 2;
+                xC = (x << 2);
+                xR = (x === W - 1 ? 0 : x + 1) << 2;
 
-                oData[r] = doCalculations(iData, grid[m], 0);
-                oData[g] = doCalculations(iData, grid[m], 1);
-                oData[b] = doCalculations(iData, grid[m], 2);
-                oData[a] = iData[a];
+                // Indices for 3x3 neighborhood, row-major
+                p00 = rowU + xL;
+                p01 = rowU + xC;
+                p02 = rowU + xR;
+                p10 = rowM + xL;
+                p11 = rowM + xC;
+                p12 = rowM + xR;
+                p20 = rowD + xL;
+                p21 = rowD + xC;
+                p22 = rowD + xR;
 
+                // Center alpha gate matches old behavior (skip fully transparent)
+                if (!iData[p11 + 3]) continue;
+
+                // Convolve per channel (RGB). Alpha = passthrough center.
+                // Unrolled for speed; Uint8ClampedArray will clamp on assignment.
+                let r =
+                    iData[p00] * w[0] + iData[p01] * w[1] + iData[p02] * w[2] +
+                    iData[p10] * w[3] + iData[p11] * w[4] + iData[p12] * w[5] +
+                    iData[p20] * w[6] + iData[p21] * w[7] + iData[p22] * w[8];
+
+                let g =
+                    iData[p00 + 1] * w[0] + iData[p01 + 1] * w[1] + iData[p02 + 1] * w[2] +
+                    iData[p10 + 1] * w[3] + iData[p11 + 1] * w[4] + iData[p12 + 1] * w[5] +
+                    iData[p20 + 1] * w[6] + iData[p21 + 1] * w[7] + iData[p22 + 1] * w[8];
+
+                let b =
+                    iData[p00 + 2] * w[0] + iData[p01 + 2] * w[1] + iData[p02 + 2] * w[2] +
+                    iData[p10 + 2] * w[3] + iData[p11 + 2] * w[4] + iData[p12 + 2] * w[5] +
+                    iData[p20 + 2] * w[6] + iData[p21 + 2] * w[7] + iData[p22 + 2] * w[8];
+
+                // Write RGB, keep alpha
+                oData[p11] = r;
+                oData[p11 + 1] = g;
+                oData[p11 + 2] = b;
+                oData[p11 + 3] = iData[p11 + 3];
+
+                // Optional post-process (unchanged → midgray or transparent)
                 if (postProcessResults) {
 
-                    oR = oData[r];
-                    oG = oData[g];
-                    oB = oData[b];
+                    iR = iData[p11];
+                    iG = iData[p11 + 1];
+                    iB = iData[p11 + 2];
 
-                    if (oR >= iR - tolerance && oR <= iR + tolerance &&
-                        oG >= iG - tolerance && oG <= iG + tolerance &&
-                        oB >= iB - tolerance && oB <= iB + tolerance) {
+                    unchanged =
+                        (r >= iR - tolerance && r <= iR + tolerance) &&
+                        (g >= iG - tolerance && g <= iG + tolerance) &&
+                        (b >= iB - tolerance && b <= iB + tolerance);
 
-                        if (keepOnlyChangedAreas) oData[a] = 0;
+                    if (unchanged) {
+
+                        if (keepOnlyChangedAreas) oData[p11 + 3] = 0;
                         else {
-                            oData[r] = 127;
-                            oData[g] = 127;
-                            oData[b] = 127;
+                        
+                            oData[p11] = 127;
+                            oData[p11 + 1] = 127;
+                            oData[p11 + 2] = 127;
                         }
                     }
                 }
@@ -3934,73 +4007,145 @@ P.theBigActionsObject = {
 // __matrix__ - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights.
     [MATRIX]: function (requirements) {
 
-        const doCalculations = function (data, matrix, offset) {
-
-            let val = 0,
-                c;
-
-            for (let m = 0, mz = matrix.length; m < mz; m++) {
-
-
-                if (weights[m]) {
-
-                    c = matrix[m] + offset;
-                    val += (data[c] * weights[m]);
-                }
-            }
-            return val;
-        };
-
-        const [input, output] = this.getInputAndOutputLines(requirements);
-
-        const iData = input.data,
+        const [input, output] = this.getInputAndOutputLines(requirements),
+            iData = input.data,
             oData = output.data,
             len = iData.length;
 
         const {
             opacity = 1,
-            includeRed = true,
+            includeRed   = true,
             includeGreen = true,
-            includeBlue = true,
+            includeBlue  = true,
             includeAlpha = false,
             offsetX = 1,
             offsetY = 1,
             lineOut,
         } = requirements;
 
-        let width = requirements.width;
-        if (!_isFinite(width) || width < 1) width = 3;
-        width = _floor(width);
+        // Matrix dims
+        let mW = requirements.width;
+        if (!_isFinite(mW) || mW < 1) mW = 3;
+        mW |= 0;
 
-        let height = requirements.height;
-        if (!_isFinite(height) || height < 1) height = 3;
-        height = _floor(height);
+        let mH = requirements.height;
+        if (!_isFinite(mH) || mH < 1) mH = 3;
+        mH |= 0;
 
+        // Clamp anchor to matrix bounds (so default identity lines up with offsets)
+        let aX = (_isFinite(offsetX) ? offsetX : 0) | 0;
+        if (aX < 0) aX = 0;
+        else if (aX >= mW) aX = mW - 1;
+
+        let aY = (_isFinite(offsetY) ? offsetY : 0) | 0;
+        if (aY < 0) aY = 0;
+        else if (aY >= mH) aY = mH - 1;
+
+        // Weights
         let weights = requirements.weights;
-        if (!weights || weights.length !== (width * height)) {
-            weights = [].fill(0, 0, (width * height) - 1);
-            weights[_floor(weights.length / 2) + 1] = 1;
+
+        if (!weights || weights.length !== (mW * mH)) {
+
+            weights = new Float32Array(mW * mH);
+            weights[(aY * mW) + aX] = 1;
+        } 
+        else if (!(weights instanceof Float32Array)) {
+            weights = Float32Array.from(weights);
         }
 
-        const grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
+        // Kernel offsets (cached)
+        const nzIdx = [],
+            nzW = [];
 
-        let r, g, b, a, i;
+        for (let i = 0; i < weights.length; i++) {
 
-        const pixels = _floor(len / 4);
+            const w = weights[i];
+            
+            if (w !== 0) {
 
-        for (i = 0; i < pixels; i++) {
+                nzIdx.push(i);
+                nzW.push(w);
+            }
+        }
+        const nzCount = nzIdx.length;
 
-            r = i * 4;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        if (nzCount === 0) this.transferDataUnchanged(oData, iData, len);
+        else {
 
-            if (iData[a]) {
+            const offs = this.getMatrixOffsets(mW, mH, aX, aY, input);
+            
+            const pixels = (len >> 2);
 
-                oData[r] = (includeRed) ? doCalculations(iData, grid[i], 0) : iData[r];
-                oData[g] = (includeGreen) ? doCalculations(iData, grid[i], 1) : iData[g];
-                oData[b] = (includeBlue) ? doCalculations(iData, grid[i], 2) : iData[b];
-                oData[a] = (includeAlpha) ? doCalculations(iData, grid[i], 3) : iData[a];
+            let base, acc, k, p;
+
+            for (let i = 0; i < pixels; i++) {
+
+                base = i << 2;
+
+                if (!iData[base + 3]) continue;
+
+                if (includeRed) {
+
+                    acc = 0;
+                    
+                    for (k = 0; k < nzCount; k++) {
+                        
+                        p = base + offs[nzIdx[k]];
+                        if (p < 0) p += len;
+                        else if (p >= len) p -= len;
+                        
+                        acc += iData[p] * nzW[k];
+                    }
+                    oData[base] = acc;
+                }
+                else oData[base] = iData[base];
+
+                if (includeGreen) {
+                
+                    acc = 0;
+                    
+                    for (k = 0; k < nzCount; k++) {
+                        
+                        p = base + offs[nzIdx[k]];
+                        if (p < 0) p += len;
+                        else if (p >= len) p -= len;
+                        
+                        acc += iData[p + 1] * nzW[k];
+                    }
+                    oData[base + 1] = acc;
+                }
+                else oData[base + 1] = iData[base + 1];
+
+                if (includeBlue) {
+                
+                    acc = 0;
+                    
+                    for (k = 0; k < nzCount; k++) {
+                        
+                        p = base + offs[nzIdx[k]];
+                        if (p < 0) p += len;
+                        else if (p >= len) p -= len;
+                        
+                        acc += iData[p + 2] * nzW[k];
+                    }
+                    oData[base + 2] = acc;
+                }
+                else oData[base + 2] = iData[base + 2];
+
+                if (includeAlpha) {
+                
+                    acc = 0;
+                    for (k = 0; k < nzCount; k++) {
+                        
+                        p = base + offs[nzIdx[k]];
+                        if (p < 0) p += len;
+                        else if (p >= len) p -= len;
+                        
+                        acc += iData[p + 3] * nzW[k];
+                    }
+                    oData[base + 3] = acc;
+                } 
+                else oData[base + 3] = iData[base + 3];
             }
         }
 
@@ -4025,10 +4170,7 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        if (channelL === 0 && channelA === 0 && channelB === 0) {
-
-            this.transferDataUnchanged(oData, iData, len);
-        }
+        if (channelL === 0 && channelA === 0 && channelB === 0) this.transferDataUnchanged(oData, iData, len);
         else {
 
             const libs = this.retrieveColorPointLibraries(),
