@@ -174,8 +174,12 @@ export default function (items) {
         name: name('filter-action-main'),
         ticker: name('ticker'),
         time: 850,
-        action: () => base.addFilters(filter),
-        revert: () => base.removeFilters(filter),
+        action: () => {
+            if (!base.filters.length) base.addFilters(filter);
+        },
+        revert: () => {
+            if (base.filters.length) base.clearFilters();
+        },
     });
 
     scrawl.addNativeListener('focus', () => {
