@@ -17,8 +17,6 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 
 import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
-
 import { makeColor } from '../factory/color.js';
 
 import { bluenoise } from './filter-engine-bluenoise-data.js';
@@ -30,7 +28,6 @@ import { _abs, _ceil, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, AL
 const _exp = Math.exp,
     _256 = 256,
     _256_SQUARE = 256 * 256,
-    _256_CUBE = 256 * 256 * 256,
     BLUE = 'blue',
     COLOR_BURN = 'color-burn',
     COLOR_DODGE = 'color-dodge',
@@ -241,7 +238,7 @@ P.getRandomNumbers = function (items = {}) {
 
             out[i] = engine.random();
         }
-        
+
         setWorkstoreItem(name, out);
         return out;
     }
@@ -611,7 +608,7 @@ P.getBlurPrefixBuffers = function (len, axisKey) {
     obj = { r, g, b, a };
 
     setWorkstoreItem(name, obj);
-    
+
     return obj;
 };
 
@@ -640,7 +637,7 @@ P.buildHorizontalBlur = function (gridWidth, gridHeight, radius) {
 
             if (sx < 0) sx = 0;
             if (ex >= gridWidth) ex = gridWidth - 1;
-            
+
             startX[p] = sx;
             endX[p] = ex;
         }
@@ -677,7 +674,7 @@ P.buildVerticalBlur = function (gridWidth, gridHeight, radius) {
 
             if (sy < 0) sy = 0;
             if (ey >= gridHeight) ey = gridHeight - 1;
-            
+
             startY[p] = sy;
             endY[p] = ey;
         }
@@ -769,7 +766,7 @@ P.getMatrixOffsets = function (mWidth, mHeight, mX, mY, image) {
     else if (mY >= mHeight) mY = mHeight - 1;
 
     const name = `matrix-offsets-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`;
-    
+
     let res = getWorkstoreItem(name);
     if (res) return res;
 
@@ -859,9 +856,9 @@ P.getWorkstoreImageData = function (w, h, key = 'anon') {
 
         img = new ImageData(new Uint8ClampedArray(w * h * 4), w, h);
         setWorkstoreItem(name, img);
-    } 
+    }
     else {
-    
+
         // Maintain previous semantics: new ImageData(w,h) returns zeroed data
         img.data.fill(0);
     }
@@ -976,9 +973,9 @@ P.getRegularColorVals = function (l, ac, bh, libs, isLch = false) {
 
         return rgb;
 
-    } 
+    }
     else {
-    
+
         const k = this.labKeyFromLab(l, ac, bh),
             hit = libs.labColorLib.get(k);
 
@@ -989,7 +986,7 @@ P.getRegularColorVals = function (l, ac, bh, libs, isLch = false) {
 
         const lch = colorEngine.convertOKLABtoOKLCH(l, ac, bh);
         libs.lchColorLib.set(this.lchKeyFromLch(lch[0], lch[1], lch[2]), rgb);
-        
+
         return rgb;
     }
 };
@@ -1292,7 +1289,7 @@ P.theBigActionsObject = {
         else if (offY >= aH) offY = aH - 1;
 
         const mod = (a, m) => {
-            let r = a % m;
+            const r = a % m;
             return r < 0 ? r + m : r;
         };
 
@@ -1317,7 +1314,7 @@ P.theBigActionsObject = {
                 segmentSpan = inCoreX ? (tW - localX) : (aW - localX);
                 runLen = segmentSpan;
                 remain = width - x;
-                
+
                 if (runLen > remain) runLen = remain;
 
                 p = ((y * width) + x) * 4 + 3;
@@ -2173,7 +2170,8 @@ P.theBigActionsObject = {
                             for (let x = 0; x < width; x++) {
 
                                 pos = (y * width) + x;
-                                sx = startX[pos], ex = endX[pos];
+                                sx = startX[pos];
+                                ex = endX[pos];
                                 count = (ex - sx + 1);
                                 idx = base + (x << 2);
 
@@ -2190,7 +2188,7 @@ P.theBigActionsObject = {
                                 else oData[idx + 3] = hold[idx + 3];
                             }
                         }
-                    } 
+                    }
                     else {
 
                         for (counter = 0; counter < pixelLen; counter++) {
@@ -2203,7 +2201,7 @@ P.theBigActionsObject = {
                             if (includeAlpha || hold[aIdx]) {
 
                                 ({ startX, endX, width } = horizontalBlurGrid);
-                                
+
                                 sx = startX[counter];
                                 ex = endX[counter];
                                 y  = (counter / width) | 0;
@@ -2257,7 +2255,7 @@ P.theBigActionsObject = {
                                             if (includeBlue) sumB += hold[idx + 2];
                                             countRGB++;
                                         }
-                                        
+
                                         if (includeAlpha) sumA += aVal;
 
                                         idx += step4;
@@ -2311,7 +2309,8 @@ P.theBigActionsObject = {
                             for (y = 0; y < height; y++) {
 
                                 pos = (y * width) + x;
-                                sy = startY[pos], ey = endY[pos];
+                                sy = startY[pos];
+                                ey = endY[pos];
                                 count = (ey - sy + 1);
                                 idx = (((y * width) + x) << 2);
 
@@ -2328,7 +2327,7 @@ P.theBigActionsObject = {
                                 else oData[idx + 3] = hold[idx + 3];
                             }
                         }
-                    } 
+                    }
                     else {
 
                         for (counter = 0; counter < pixelLen; counter++) {
@@ -2352,7 +2351,7 @@ P.theBigActionsObject = {
                                 sumB = 0;
                                 sumA = 0;
                                 countRGB = 0;
-                                
+
                                 totalCount = ((ey - sy) / stepVertical | 0) + 1;
 
                                 idx = (sy * width * 4) + (x << 2);
@@ -2370,7 +2369,7 @@ P.theBigActionsObject = {
                                     }
                                     if (includeRed) oData[rIdx] = sumR / totalCount;
                                     else oData[rIdx] = hold[rIdx];
-                                    
+
                                     if (includeGreen) oData[gIdx] = sumG / totalCount;
                                     else oData[gIdx] = hold[gIdx];
 
@@ -2395,7 +2394,7 @@ P.theBigActionsObject = {
                                         }
 
                                         if (includeAlpha) sumA += aVal;
-                                        
+
                                         idx += stepRow4;
                                     }
 
@@ -3193,8 +3192,7 @@ P.theBigActionsObject = {
               oData = output.data,
               W = input.width  | 0,
               H = input.height | 0,
-              rowStride = W << 2,
-              len = iData.length;
+              rowStride = W << 2;
 
         const {
             opacity = 1,
@@ -3219,45 +3217,45 @@ P.theBigActionsObject = {
             w[8] = remains;
             w[3] = -w[5];
             w[0] = -w[8];
-        } 
+        }
         else if (slices === 1) {
 
             w[8] = strength - remains;
             w[7] = remains;
             w[0] = -w[8];
             w[1] = -w[7];
-        } 
+        }
         else if (slices === 2) {
 
             w[7] = strength - remains;
             w[6] = remains;
             w[1] = -w[7];
             w[2] = -w[6];
-        } 
+        }
         else if (slices === 3) {
             w[6] = strength - remains;
             w[3] = remains;
             w[2] = -w[6];
             w[5] = -w[3];
-        } 
+        }
         else if (slices === 4) {
             w[3] = strength - remains;
             w[0] = remains;
             w[5] = -w[3];
             w[8] = -w[0];
-        } 
+        }
         else if (slices === 5) {
             w[0] = strength - remains;
             w[1] = remains;
             w[8] = -w[0];
             w[7] = -w[1];
-        } 
+        }
         else if (slices === 6) {
             w[1] = strength - remains;
             w[2] = remains;
             w[7] = -w[1];
             w[6] = -w[2];
-        } 
+        }
         else {
             w[2] = strength - remains;
             w[5] = remains;
@@ -3270,7 +3268,7 @@ P.theBigActionsObject = {
 
         let x, y, yU, yD, rowU, rowM, rowD, xL, xC, xR,
             p00, p01, p02, p10, p11, p12, p20, p21, p22,
-            r, g, b, iR, iG, iB, unchanged;        
+            r, g, b, iR, iG, iB, unchanged;
 
         // Main pass (toroidal wrap)
         for (y = 0; y < H; y++) {
@@ -3304,17 +3302,17 @@ P.theBigActionsObject = {
 
                 // Convolve per channel (RGB). Alpha = passthrough center.
                 // Unrolled for speed; Uint8ClampedArray will clamp on assignment.
-                let r =
+                r =
                     iData[p00] * w[0] + iData[p01] * w[1] + iData[p02] * w[2] +
                     iData[p10] * w[3] + iData[p11] * w[4] + iData[p12] * w[5] +
                     iData[p20] * w[6] + iData[p21] * w[7] + iData[p22] * w[8];
 
-                let g =
+                g =
                     iData[p00 + 1] * w[0] + iData[p01 + 1] * w[1] + iData[p02 + 1] * w[2] +
                     iData[p10 + 1] * w[3] + iData[p11 + 1] * w[4] + iData[p12 + 1] * w[5] +
                     iData[p20 + 1] * w[6] + iData[p21 + 1] * w[7] + iData[p22 + 1] * w[8];
 
-                let b =
+                b =
                     iData[p00 + 2] * w[0] + iData[p01 + 2] * w[1] + iData[p02 + 2] * w[2] +
                     iData[p10 + 2] * w[3] + iData[p11 + 2] * w[4] + iData[p12 + 2] * w[5] +
                     iData[p20 + 2] * w[6] + iData[p21 + 2] * w[7] + iData[p22 + 2] * w[8];
@@ -3341,7 +3339,7 @@ P.theBigActionsObject = {
 
                         if (keepOnlyChangedAreas) oData[p11 + 3] = 0;
                         else {
-                        
+
                             oData[p11] = 127;
                             oData[p11 + 1] = 127;
                             oData[p11 + 2] = 127;
@@ -4048,7 +4046,7 @@ P.theBigActionsObject = {
 
             weights = new Float32Array(mW * mH);
             weights[(aY * mW) + aX] = 1;
-        } 
+        }
         else if (!(weights instanceof Float32Array)) {
             weights = Float32Array.from(weights);
         }
@@ -4060,7 +4058,7 @@ P.theBigActionsObject = {
         for (let i = 0; i < weights.length; i++) {
 
             const w = weights[i];
-            
+
             if (w !== 0) {
 
                 nzIdx.push(i);
@@ -4073,7 +4071,7 @@ P.theBigActionsObject = {
         else {
 
             const offs = this.getMatrixOffsets(mW, mH, aX, aY, input);
-            
+
             const pixels = (len >> 2);
 
             let base, acc, k, p;
@@ -4087,13 +4085,13 @@ P.theBigActionsObject = {
                 if (includeRed) {
 
                     acc = 0;
-                    
+
                     for (k = 0; k < nzCount; k++) {
-                        
+
                         p = base + offs[nzIdx[k]];
                         if (p < 0) p += len;
                         else if (p >= len) p -= len;
-                        
+
                         acc += iData[p] * nzW[k];
                     }
                     oData[base] = acc;
@@ -4101,15 +4099,15 @@ P.theBigActionsObject = {
                 else oData[base] = iData[base];
 
                 if (includeGreen) {
-                
+
                     acc = 0;
-                    
+
                     for (k = 0; k < nzCount; k++) {
-                        
+
                         p = base + offs[nzIdx[k]];
                         if (p < 0) p += len;
                         else if (p >= len) p -= len;
-                        
+
                         acc += iData[p + 1] * nzW[k];
                     }
                     oData[base + 1] = acc;
@@ -4117,15 +4115,15 @@ P.theBigActionsObject = {
                 else oData[base + 1] = iData[base + 1];
 
                 if (includeBlue) {
-                
+
                     acc = 0;
-                    
+
                     for (k = 0; k < nzCount; k++) {
-                        
+
                         p = base + offs[nzIdx[k]];
                         if (p < 0) p += len;
                         else if (p >= len) p -= len;
-                        
+
                         acc += iData[p + 2] * nzW[k];
                     }
                     oData[base + 2] = acc;
@@ -4133,18 +4131,18 @@ P.theBigActionsObject = {
                 else oData[base + 2] = iData[base + 2];
 
                 if (includeAlpha) {
-                
+
                     acc = 0;
                     for (k = 0; k < nzCount; k++) {
-                        
+
                         p = base + offs[nzIdx[k]];
                         if (p < 0) p += len;
                         else if (p >= len) p -= len;
-                        
+
                         acc += iData[p + 3] * nzW[k];
                     }
                     oData[base + 3] = acc;
-                } 
+                }
                 else oData[base + 3] = iData[base + 3];
             }
         }
@@ -4181,7 +4179,7 @@ P.theBigActionsObject = {
 
             for (i = 0; i < len; i += 4) {
 
-                r = i,
+                r = i;
                 g = r + 1;
                 b = g + 1;
                 a = b + 1;
@@ -4194,21 +4192,21 @@ P.theBigActionsObject = {
                     oData[a] = 0;
                     continue;
                 }
-                
+
                 res = getOkColorVals(iData[r], iData[g], iData[b], libs);
 
                 L = res[0] + channelL;
                 if (L < 0) L = 0;
                 else if (L > 1) L = 1;
-                
+
                 A = res[1] + channelA;
                 if (A < -0.4) A = -0.4;
                 else if (A > 0.4) A = 0.4;
-                
+
                 B = res[2] + channelB;
                 if (B < -0.4) B = -0.4;
                 else if (B > 0.4) B = 0.4;
-                
+
                 res = getRegularColorVals(L, A, B, libs);
 
                 oData[r] = res[0];
@@ -4317,7 +4315,7 @@ P.theBigActionsObject = {
 
             for (i = 0; i < len; i += 4) {
 
-                r = i,
+                r = i;
                 g = r + 1;
                 b = g + 1;
                 a = b + 1;
@@ -4330,21 +4328,21 @@ P.theBigActionsObject = {
                     oData[a] = 0;
                     continue;
                 }
-                
+
                 res = getOkColorVals(iData[r], iData[g], iData[b], libs);
 
                 L = res[0] * channelL;
                 if (L < 0) L = 0;
                 else if (L > 1) L = 1;
-                
+
                 A = res[1] * channelA;
                 if (A < -0.4) A = -0.4;
                 else if (A > 0.4) A = 0.4;
-                
+
                 B = res[2] * channelB;
                 if (B < -0.4) B = -0.4;
                 else if (B > 0.4) B = 0.4;
-                
+
                 res = getRegularColorVals(L, A, B, libs);
 
                 oData[r] = res[0];
@@ -4421,7 +4419,6 @@ P.theBigActionsObject = {
 
         const tDim = w << 1,
             width  = input.width | 0,
-            height = input.height | 0,
             rowStride = width << 2;
 
         const rects = this.buildTileRects(tDim, tDim, 0, 0, input);
@@ -4445,19 +4442,19 @@ P.theBigActionsObject = {
             sum = 0;
 
             for (y = y0; y < y1; y++) {
-                
+
                 idx = (y * rowStride) + (x0 << 2);
                 end = idx + (tw << 2);
-                
+
                 for (; idx < end; idx += 4) {
-            
+
                     sum += gVal(iData[idx], iData[idx + 1], iData[idx + 2]);
                 }
             }
             avg = sum / count;
 
             p = patterns[_min(12, _floor((avg / 255) * 13))];
-            
+
             p0 = p[0];
             p1 = p[1];
             p2 = p[2];
@@ -4467,7 +4464,7 @@ P.theBigActionsObject = {
             oy = _floor(y0 / tDim) * tDim;
 
             for (y = y0; y < y1; y++) {
-                
+
                 topBand = ((y - oy) < w);
                 rowBase = (y * rowStride);
 
@@ -4477,7 +4474,7 @@ P.theBigActionsObject = {
                     gray = topBand ? (leftBand ? p0 : p1) : (leftBand ? p2 : p3);
 
                     idx = rowBase + (x << 2);
-                    
+
                     oData[idx] = gray;
                     oData[idx + 1] = gray;
                     oData[idx + 2] = gray;
@@ -4547,7 +4544,7 @@ P.theBigActionsObject = {
                     pixels = xEnd - xStart;
                     srcStart = (y * rowStride) + (xStart << 2);
                     destStart = (ty * rowStride) + ((xStart + dx) << 2);
-                    
+
                     oData.set(iData.subarray(srcStart, srcStart + (pixels << 2)), destStart);
                 }
             }
@@ -4558,9 +4555,9 @@ P.theBigActionsObject = {
                 for (y = 0; y < height; y++) {
 
                     rowBase = y * rowStride;
-                    
+
                     for (x = 0; x < width; x++) {
-                        
+
                         inBase = rowBase + (x << 2);
 
                         // Red
@@ -4568,7 +4565,7 @@ P.theBigActionsObject = {
                         ry = y + offsetRedY;
 
                         if (rx >= 0 && rx < width && ry >= 0 && ry < height) {
-                            
+
                             out = ((ry * width) + rx) << 2;
                             oData[out] = iData[inBase];
                         }
@@ -4578,7 +4575,7 @@ P.theBigActionsObject = {
                         gy = y + offsetGreenY;
 
                         if (gx >= 0 && gx < width && gy >= 0 && gy < height) {
-                            
+
                             out = ((gy * width) + gx) << 2;
                             oData[out + 1] = iData[inBase + 1];
                         }
@@ -4588,7 +4585,7 @@ P.theBigActionsObject = {
                         by = y + offsetBlueY;
 
                         if (bx >= 0 && bx < width && by >= 0 && by < height) {
-                            
+
                             out = ((by * width) + bx) << 2;
                             oData[out + 2] = iData[inBase + 2];
                         }
@@ -4633,11 +4630,10 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const width  = input.width | 0;
-        const height = input.height | 0;
-        const rowStride = width << 2;
+        const width  = input.width | 0,
+            rowStride = width << 2;
 
-        if (!includeRed && !includeGreen && !includeBlue && !includeAlpha) transferDataUnchanged(oData, iData, len);
+        if (!includeRed && !includeGreen && !includeBlue && !includeAlpha) this.transferDataUnchanged(oData, iData, len);
         else {
 
             const rects = this.buildTileRects(tileWidth, tileHeight, offsetX, offsetY, input);
@@ -4667,22 +4663,22 @@ P.theBigActionsObject = {
 
                         idx = (y * rowStride) + (x0 << 2);
                         end = idx + (w << 2);
-                        
+
                         if (includeRed && includeGreen && includeBlue && includeAlpha) {
-                        
+
                             // Fast path: accumulate all 4 channels
                             for (; idx < end; idx += 4) {
-                        
+
                                 sumR += iData[idx];
                                 sumG += iData[idx + 1];
                                 sumB += iData[idx + 2];
                                 sumA += iData[idx + 3];
                             }
                         } else {
-                        
+
                             // Selective accumulation
                             for (; idx < end; idx += 4) {
-                        
+
                                 if (includeRed) sumR += iData[idx];
                                 if (includeGreen) sumG += iData[idx + 1];
                                 if (includeBlue) sumB += iData[idx + 2];
@@ -4698,7 +4694,7 @@ P.theBigActionsObject = {
                 avgA = includeAlpha ? _floor(sumA / count) : 0;
 
                 for (y = y0; y < y1; y++) {
-                    
+
                     start = (y * rowStride) + (x0 << 2);
                     end = start + (w << 2);
 
@@ -4707,7 +4703,7 @@ P.theBigActionsObject = {
                     if (includeRed || includeGreen || includeBlue || includeAlpha) {
 
                         p = start;
-                        
+
                         if (includeRed && includeGreen && includeBlue && includeAlpha) {
 
                             for (; p < end; p += 4) {
@@ -4717,7 +4713,7 @@ P.theBigActionsObject = {
                                 oData[p + 2] = avgB;
                                 oData[p + 3] = avgA;
                             }
-                        } 
+                        }
                         else {
 
                             for (; p < end; p += 4) {
@@ -5051,7 +5047,7 @@ P.theBigActionsObject = {
                             d1 = d;
                             idx1 = pi;
                         }
-                        
+
                         // short-circuit for ordered palettes (G8/G16): if distances increase, we can break
                         if (pi && d >= d1) break;
                     }
@@ -5065,7 +5061,7 @@ P.theBigActionsObject = {
                     oData[g] = chosen;
                     oData[b] = chosen;
                     oData[a] = alpha;
-                } 
+                }
                 else {
 
                     ++rndCursor;
@@ -5077,10 +5073,10 @@ P.theBigActionsObject = {
             }
 
             setLastUsedReducePalette(palette);
-            
+
             if (lineOut) this.processResults(output, input, 1 - opacity);
             else this.processResults(this.cache.work, output, opacity);
-            
+
             return;
         }
 
@@ -5098,7 +5094,7 @@ P.theBigActionsObject = {
                 for (let i = 0, iz = palette.length; i < iz; i++) {
 
                     const [eR, eG, eB] = colorEngine.getColorFromCanvas(palette[i].trim());
-                    
+
                     const ok = this.getOkColorVals(eR, eG, eB, libs),
                         PLi = (ok[0] * 100) | 0,
                         PAi = ((ok[1] + 0.4) * 125) | 0,
@@ -5108,8 +5104,6 @@ P.theBigActionsObject = {
                 }
                 predefinedPalette[name] = selectedPalette;
             }
-
-            const P = selectedPalette.length;
 
             for (let i = 0; i < len; i += 4) {
 
@@ -5168,7 +5162,7 @@ P.theBigActionsObject = {
         for (let i = 0; i < len; i += 4) {
 
             const a = i + 3;
-            
+
             if (!iData[a]) continue;
 
             const r = iData[i],
@@ -5183,7 +5177,7 @@ P.theBigActionsObject = {
                 row[0] += 1;
 
             } else {
-                
+
                 const ok = this.getOkColorVals(r, g, b, libs),
                     ILi = (ok[0] * 100) | 0,
                     IAi = ((ok[1] + 0.4) * 125) | 0,
@@ -5248,9 +5242,9 @@ P.theBigActionsObject = {
                 IB = row[6];
 
             // find best two (squared), then sqrt winners to preserve weighting
-            let i0 = -1, 
-                i1 = -1, 
-                d0 = Infinity, 
+            let i0 = -1,
+                i1 = -1,
+                d0 = Infinity,
                 d1 = Infinity;
 
             for (let j = 0; j < selectedPaletteLength; j++) {
@@ -5280,7 +5274,7 @@ P.theBigActionsObject = {
                 i0 = 0;
                 d0 = 0;
             }
-            
+
             if (i1 === -1) {
                 i1 = i0;
                 d1 = d0;
@@ -5350,7 +5344,12 @@ P.theBigActionsObject = {
               oData = output.data,
               len = iData.length;
 
-        let { opacity = 1, angle = 0, lineOut } = requirements;
+        const {
+            opacity = 1,
+            lineOut
+        } = requirements;
+
+        let { angle = 0 } = requirements;
 
         // Normalize once to [0, 360)
         angle = ((angle % 360) + 360) % 360;
@@ -5368,7 +5367,7 @@ P.theBigActionsObject = {
 
             for (i = 0; i < len; i += 4) {
 
-                r = i; 
+                r = i;
                 g = r + 1;
                 b = g + 1;
                 a = b + 1;
@@ -5571,7 +5570,7 @@ P.theBigActionsObject = {
 
                 y = sy - outer;
                 if (y < 0) y = 0;
-                
+
                 yz = sy + outer;
                 if (yz > iHeight) yz = iHeight;
 
@@ -5581,7 +5580,7 @@ P.theBigActionsObject = {
                     e = easing;
                     ename = easing;
                     if (isa_fn(e)) {
-                    
+
                         ename = `ude-${e(0)}-${e(0.1)}-${e(0.2)}-${e(0.3)}-${e(0.4)}-${e(0.5)}-${e(0.6)}-${e(0.7)}-${e(0.8)}-${e(0.9)}-${e(1)}`;
                     }
                     else {
@@ -5589,7 +5588,7 @@ P.theBigActionsObject = {
                     }
 
                     swirlName = `swirl-${startX}-${startY}-${innerRadius}-${outerRadius}-${angle}-${ename}-${iWidth}-${iHeight}`;
-                    
+
                     swirlCoords = getOrAddWorkstoreItem(swirlName);
 
                     if (!swirlCoords.length) {
@@ -5600,7 +5599,7 @@ P.theBigActionsObject = {
                         start.setFromArray([sx, sy]);
 
                         for (iy = y; iy < yz; iy++) {
-                        
+
                             for (ix = x; ix < xz; ix++) {
 
                                 destIdx = (((iy * iWidth) + ix) << 2);
@@ -5609,10 +5608,10 @@ P.theBigActionsObject = {
 
                                 if (distance > outer) srcIdx = destIdx;
                                 else {
-                                    
+
                                     factor = 1;
                                     if (distance >= inner) {
-                                    
+
                                         factor = 1 - ((distance - inner) / complexLen);
                                         factor = e(factor);
                                     }
@@ -5642,9 +5641,9 @@ P.theBigActionsObject = {
                     for (let iy = y; iy < yz; iy++) {
 
                         rowBase = (iy * iWidth) << 2;
-                        
+
                         for (ix = x; ix < xz; ix++) {
-                            
+
                             destIdx = rowBase + (ix << 2);
                             srcIdx  = swirlCoords[cursor++];
 

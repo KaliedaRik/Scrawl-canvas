@@ -15,8 +15,7 @@
     "source/scrawl.d.ts"
   ],
   "exclude": [
-    "demo/**/temp-*.js",
-    "demo/js/**/*.js",
-    "demo/js/mediapipe/tasks-vision/*.js"
+    "demo/**/temp-*",
+    "demo/mediapipe-*",
   ]
 }

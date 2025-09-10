@@ -410,7 +410,6 @@ P.doSimpleUpdate = function (items = Ωempty) {
 
     // We create handles to a bunch of attributes so that we only need to look them up once each time the function runs
     const starts = this.effectiveTime,
-        actions = this.engineActions,
         effectiveDuration = this.effectiveDuration,
         status = this.status,
         definitions = this.definitions,
@@ -451,22 +450,6 @@ P.doSimpleUpdate = function (items = Ωempty) {
 
     // We call the `action` attribute function (if it is defined) at the completion of every update.
     if (action) action();
-};
-
-// `engineActions` - internal function to run built-in easing engines
-// + __engine__ - String name of the required easing. All built-in easing engines are defined in the `core/utilities` file
-// + __start__ - the `effectiveStart` value, in milliseconds.
-// + __change__ - the time in milliseconds that this animation will take (`effectiveEnd - effectiveStart`).
-// + __position__ - the time elapsed since this Tween started running
-//
-// Scrawl-canvas easing engines use the following metaphor to define their names:
-// + `out` indicates an acceleration. Think of a train leaving the station.
-// + `in` indicates a deceleration. Think of a train arriving the station.
-// + For the legacy engines, igher numbers indicates a more intense change between starting, middle and ending speeds
-P.engineActions = function(engine, start, change, position) {
-
-    const e = (null != easeEngines[engine]) ? engine : LINEAR;
-    return start + (change * easeEngines[e](position));
 };
 
 // `setDefinitions`, `clearDefinitions`
@@ -539,7 +522,7 @@ P.setDefinitionsValues = function () {
                 };
             }
             else if (isa_fn(def.engine)) {
-                
+
                 easing = def.engine;
                 compute = (p) => {
 

@@ -155,7 +155,7 @@ P.set = function (items = Ωempty) {
 
 // `getEndTime` - Ticker-related help function
 P.getEndTime = function () {
-    
+
     return this.effectiveTime;
 };
 
@@ -173,7 +173,7 @@ P.update = function (items) {
         const t = animationtickers[this.ticker],
         effDur = t ? t.effectiveDuration : 0,
         backThreshold = effDur - effectiveTime;
-    
+
         if (reverseTick >= backThreshold) {
 
             // moving backwards crossing the point → revert

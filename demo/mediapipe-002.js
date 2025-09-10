@@ -91,7 +91,7 @@ scrawl.makePicture({
 
 // Base Cell background image
 // + We apply filters to the background image, and stamp it onto the base cell last (with appropriate GCO)
-const background = scrawl.makePicture({
+scrawl.makePicture({
 
     name: name('background-picture'),
     asset: videoFeedCell,
