@@ -313,31 +313,24 @@ P.sortSubscribers = function () {
 
         const buckets = requestArray();
 
-        let i, iz, obj, eTime;
+        let i, sub;
 
         for (i = 0; i < len; i++) {
 
-            obj = subs[i];
+            sub = tween[subs[i]];
 
-            eTime = _floor(obj.effectiveTime) || 0;
-
-            if (!buckets[eTime]) buckets[eTime] = requestArray();
-
-            buckets[eTime].push(obj);
+            if (sub) buckets.push(sub);
         }
+
+        if (buckets.length > 1) buckets.sort((a, b) => a.effectiveTime - b.effectiveTime);
 
         subs.length = 0;
 
-        for (i = 0, iz = buckets.length; i < iz; i++) {
+        for (i = 0; i < buckets.length; i++) {
 
-            obj = buckets[i];
-
-            if (obj) {
-
-                subs.push(...obj);
-                releaseArray(obj);
-            }
+            subs.push(buckets[i].name);
         }
+
         releaseArray(buckets);
     }
     this.repopulateSubscriberObjects();
@@ -795,7 +788,7 @@ makeAnimation({
 
             for (i = 0, iz = tickerAnimations.length; i < iz; i++) {
 
-                obj = tickerAnimations[i];
+                obj = animationtickers[tickerAnimations[i]];
 
                 if (obj) {
 
@@ -803,7 +796,7 @@ makeAnimation({
 
                     if (!buckets[order]) buckets[order] = requestArray();
 
-                    buckets[order].push(obj);
+                    buckets[order].push(obj.name);
                 }
             }
             tickerAnimations.length = 0;

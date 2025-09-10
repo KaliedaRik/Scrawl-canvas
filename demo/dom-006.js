@@ -207,6 +207,7 @@ scrawl.makeAction({
 
 }).clone({
 
+    // Set the color as soon as the action's ticker starts to run
     name: name('purple_2'),
     time: '0%',
     action: function () { element.set(purple) },
@@ -342,8 +343,7 @@ console.log(scrawl.findTween(name('mySecondClonedTween')).saveAsPacket())
 // [
 //     "mystack-mySecondClonedTween",
 //     "Tween",
-//     "tween",
-//     {
+//     "tween",{
 //         "name":"mystack-mySecondClonedTween",
 //         "ticker":"mystack-mySecondClonedTween_ticker",
 //         "action":"~~~",
@@ -352,16 +352,15 @@ console.log(scrawl.findTween(name('mySecondClonedTween')).saveAsPacket())
 //         "onHalt":"~~~\n        if (myTracker) myTracker.send('event', 'Tween state', 'halt', `Tween ${this.name} on ${this.ticker}`)\n    ",
 //         "onResume":"~~~\n        if (myTracker) myTracker.send('event', 'Tween state', 'resume', `Tween ${this.name} on ${this.ticker}`)\n    ",
 //         "completeAction":"~~~",
-//         "targets":[],
-//         "definitions":[
-//             {
-//                 "attribute":"roll",
-//                 "start":-40,"end":320
-//             }
-//         ]
+//         "targets":["mystack-mythirdelement"],
+//         "definitions":[{
+//             "attribute":"roll",
+//             "start":-40,
+//             "end":320,
+//             "engine":"linear"
+//         }]
 //     }
 // ]
-
 
 // Test Ticker object packet
 console.log(modelTicker.saveAsPacket());

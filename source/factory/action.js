@@ -5,7 +5,7 @@
 
 
 // #### Imports
-import { constructors } from '../core/library.js';
+import { constructors, animationtickers } from '../core/library.js';
 
 import { doCreate, mergeOver, pushUnique, xt, λnull, Ωempty } from '../helper/utilities.js';
 
@@ -32,7 +32,7 @@ const Action = function (items = Ωempty) {
     this.action = λnull;
     this.revert = λnull;
 
-    this.triggered = null;
+    this.triggered = false;
 
     this.set(items);
 
@@ -155,6 +155,7 @@ P.set = function (items = Ωempty) {
 
 // `getEndTime` - Ticker-related help function
 P.getEndTime = function () {
+    
     return this.effectiveTime;
 };
 
@@ -166,26 +167,32 @@ P.update = function (items) {
     const { tick, reverseTick, willLoop } = items;
     const { reversed, effectiveTime, triggered } = this;
 
+    // In reverse, measure from the end of the ticker
     if (reversed) {
 
-        if (reverseTick >= effectiveTime) {
+        const t = animationtickers[this.ticker],
+        effDur = t ? t.effectiveDuration : 0,
+        backThreshold = effDur - effectiveTime;
+    
+        if (reverseTick >= backThreshold) {
 
+            // moving backwards crossing the point → revert
             if (!triggered) {
 
-                this.action();
+                this.revert();
                 this.triggered = true;
             }
         }
-        else {
+        // moving back past the point in the other direction → action (re-apply)
+        else if (triggered) {
 
-            if (triggered) {
-
-                this.revert();
-                this.triggered = false;
-            }
+            this.action();
+            this.triggered = false;
         }
     }
+    // Forwards: crossing point → action; crossing back (e.g. loop/seek) → revert
     else {
+
         if (tick >= effectiveTime) {
 
             if (!triggered) {
@@ -194,13 +201,10 @@ P.update = function (items) {
                 this.triggered = true;
             }
         }
-        else {
+        else if (triggered) {
 
-            if (triggered) {
-
-                this.revert();
-                this.triggered = false;
-            }
+            this.revert();
+            this.triggered = false;
         }
     }
 

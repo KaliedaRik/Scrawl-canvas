@@ -5,7 +5,7 @@
 // #### Imports
 import { animationtickers, constructors } from '../core/library.js';
 
-import { convertTime, doCreate, easeEngines, mergeOver, pushUnique, xt, xtGet, xto, λnull, Ωempty } from '../helper/utilities.js';
+import { convertTime, doCreate, easeEngines, isa_fn, mergeOver, pushUnique, xt, xtGet, xto, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeTicker } from './ticker.js';
 
@@ -21,11 +21,9 @@ const setObjectsHold = {};
 
 const getSetObjectKey = (defs) => {
 
-    let response = '';
+    if (!defs || !defs.length) return '|';
 
-    defs.forEach(d => response += d.attribute);
-
-    return response;
+    return '|' + defs.map(d => d.attribute).join('|') + '|';
 };
 
 const getSetObject = (key) => {
@@ -170,7 +168,7 @@ P.finalizePacketOut = function (copy) {
         res.start = d.start;
         res.end = d.end;
 
-        if (d.engine && d.engine.substring) res.engine = d.engine.substring;
+        if (d.engine && d.engine.substring) res.engine = d.engine;
         else {
 
             if (xt(d.engine) && d.engine != null) {
@@ -422,24 +420,24 @@ P.doSimpleUpdate = function (items = Ωempty) {
 
     let progress;
 
-    const effectiveTick = (this.reversed) ? items.reverseTick - starts : items.tick - starts;
+    const end = starts + effectiveDuration;
+    let elapsed;
 
-    if (effectiveDuration && !status) progress = effectiveTick / effectiveDuration;
+    if (this.reversed) elapsed = end - items.tick;
+    else elapsed = items.tick - starts;
+
+    if (effectiveDuration && !status) {
+
+        if (elapsed <= 0) progress = 0;
+        else if (elapsed >= effectiveDuration) progress = 1;
+        else progress = (elapsed / effectiveDuration);
+    }
     else progress = (status > 0) ? 1 : 0;
 
-    for (let i = 0, iz = definitions.length, val, def, engine; i < iz; i++) {
+    for (let i = 0, iz = definitions.length, val, def; i < iz; i++) {
 
         def = definitions[i];
-        engine = def.engine;
-
-        // Invoke the appropriate easing function for this particular definition object
-        if (engine.substring) val = actions(engine, def.effectiveStart, def.effectiveChange, progress);
-        else val = engine(def.effectiveStart, def.effectiveChange, progress);
-
-        if (def.integer) val = _round(val);
-
-        if (def.suffix) val += def.suffix;
-
+        val = def.compute(progress);
         setObj[def.attribute] = val;
     }
 
@@ -505,13 +503,62 @@ P.setDefinitionsValues = function () {
             temp = parseDefinitionsValue(def.start);
             def.effectiveStart = temp[1];
             def.suffix = temp[0];
+
             temp = parseDefinitionsValue(def.end);
             def.effectiveEnd = temp[1];
 
-            // The default easing function is `linear`
-            if (!xt(def.engine)) def.engine = LINEAR;
-
             def.effectiveChange = def.effectiveEnd - def.effectiveStart;
+
+            const start  = def.effectiveStart;
+            const change = def.effectiveChange;
+            const integer = !!def.integer;
+            const suffix  = def.suffix;
+
+            let compute, easing;
+
+            if (!xt(def.engine)) {
+
+                easing = easeEngines[LINEAR];
+                compute = (p) => {
+
+                    let v = start + change * easing(p);
+                    if (integer) v = _round(v);
+                    return suffix ? (v + suffix) : v;
+                };
+                // keep def.engine as string for packets
+                def.engine = LINEAR;
+            }
+            else if (def.engine.substring) {
+
+                easing = easeEngines[def.engine] || easeEngines[LINEAR];
+                compute = (p) => {
+
+                    let v = start + change * easing(p);
+                    if (integer) v = _round(v);
+                    return suffix ? (v + suffix) : v;
+                };
+            }
+            else if (isa_fn(def.engine)) {
+                
+                easing = def.engine;
+                compute = (p) => {
+
+                    let v = easing(start, change, p);
+                    if (integer) v = _round(v);
+                    return suffix ? (v + suffix) : v;
+                };
+            }
+            else {
+
+                const easing = easeEngines[LINEAR];
+                compute = (p) => {
+
+                    let v = start + change * easing(p);
+                    if (integer) v = _round(v);
+                    return suffix ? (v + suffix) : v;
+                };
+            }
+            def.compute = compute;
         }
     }
     return this;
@@ -527,10 +574,13 @@ P.parseDefinitionsValue = function (item) {
         if (item.toFixed) result[1] = item;
         else if (item.substring) {
 
-            const a = item.match(/^-?\d+\.?\d*(\D*)/);
+            const m = item.match(/^(-?\d*\.?\d+)(\D*)$/);
 
-            if (xt(a[0])) result[1] = parseFloat(a);
-            if (xt(a[1])) result[0] = a[1];
+            if (m) {
+
+                result[1] = parseFloat(m[1]);
+                result[0] = m[2] || ZERO_STR;
+            }
         }
     }
     return result;
