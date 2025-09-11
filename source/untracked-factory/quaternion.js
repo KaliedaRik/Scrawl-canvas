@@ -1,11 +1,5 @@
 // # Quaternion factory
 // Scrawl-canvas uses quaternion objects for some of its calculations - in particular for calculating DOM element 3D rotation values. These objects are not stored in the library; rather, they are kept in a __quaternion pool__ and pulled from it when required.
-//
-// TODO: there's errors in the math here! See in particular Demo [Snippets-003](../../demo/snippets-003.html) to experiment:
-// + Pitch always appears to rotate with reference to the element. Yaw and roll, however, seem to rotate with reference to the stack frame, or the element - or possibly a combination of both - dependant on the values of the other euler attributes.
-// + `quaternionMultiply` is almost certainly wrong - caused by trying to convert code meant for a y-axis-upwards frame to code that works in a y-axis-downwards frame
-// + The `setFromEuler` function is also (probably) wrong
-// + I hate quaternions!
 
 
 // #### Imports
@@ -25,7 +19,7 @@ const _acos = Math.acos;
 // #### Quaternion constructor
 const Quaternion = function (items = Ωempty) {
 
-    this.n = items.n || 1;
+    this.n = isa_number(items.n) ? items.n : 1;
     this.v = makeVector();
 
     this.set(items);
@@ -62,21 +56,37 @@ P.set = function (obj = Ωempty) {
 
     if (isa_quaternion(obj)) return this.setFromQuaternion(obj);
 
-    if (xto(obj.pitch, obj.yaw, obj.roll)) return this.setFromEuler(obj);
+    if (xto(obj.pitch, obj.yaw, obj.roll) || xto(obj.x, obj.y, obj.z)) return this.setFromEuler(obj);
 
-    const tv = this.v,
-        v = (xt(obj.vector) || xt(obj.v)) ? (obj.vector || obj.v) : false,
-        n = (xt(obj.scalar) || xt(obj.n)) ? (obj.scalar || obj.n || 0) : false;
+    const tv = this.v;
+    const hasVec = xt(obj.vector) || xt(obj.v);
+    const v = hasVec ? (obj.vector || obj.v) : Ωempty;
 
-    const x = (v) ? (v.x || 0) : obj.x || false,
-        y = (v) ? (v.y || 0) : obj.y || false,
-        z = (v) ? (v.z || 0) : obj.z || false;
+    // scalar (n)
+    if (xto(obj.scalar, obj.n)) {
 
-    this.n = (isa_number(n)) ? n : this.n;
+        const nval = xt(obj.scalar) ? obj.scalar : obj.n;
+        if (isa_number(nval)) this.n = nval;
+    }
 
-    tv.x = (isa_number(x)) ? x : tv.x;
-    tv.y = (isa_number(y)) ? y : tv.y;
-    tv.z = (isa_number(z)) ? z : tv.z;
+    // vector components (set only if provided; zero is valid)
+    if (xto(v.x, obj.x)) {
+
+        const x = hasVec ? v.x : obj.x;
+        if (isa_number(x)) tv.x = x;
+    }
+
+    if (xto(v.y, obj.y)) {
+
+        const y = hasVec ? v.y : obj.y;
+        if (isa_number(y)) tv.y = y;
+    }
+
+    if (xto(v.z, obj.z)) {
+
+        const z = hasVec ? v.z : obj.z;
+        if (isa_number(z)) tv.z = z;
+    }
 
     return this;
 };
@@ -112,13 +122,14 @@ P.setFromEuler = function (items = Ωempty) {
         s2 = _sin( yaw / 2 ),
         s3 = _sin( roll / 2 );
 
-    tv.x = s1 * c2 * c3 + c1 * s2 * s3;
-    tv.y = c1 * s2 * c3 + s1 * c2 * s3;
-    tv.z = c1 * c2 * s3 - s1 * s2 * c3;
+    // Standard intrinsic XYZ (pitch = x, yaw = y, roll = z)
+    tv.x =  s1 * c2 * c3 + c1 * s2 * s3;
+    tv.y =  c1 * s2 * c3 - s1 * c2 * s3;
+    tv.z =  c1 * c2 * s3 + s1 * s2 * c3;
 
     this.n = c1 * c2 * c3 - s1 * s2 * s3;
 
-    return this;
+    return this.normalize();
 };
 
 
@@ -188,19 +199,19 @@ P.quaternionMultiply = function (item) {
     return this;
 };
 
-// Retrieve the Quaternion's current angle (returns a Number representing degrees, not radians)
+// Retrieve the Quaternion's current angle. Returns radians by default.
+// + Pass `true` to get degrees.
 P.getAngle = function (degree) {
 
-    let result;
+    // Clamp to handle tiny FP drift; normalize not required but helps.
+    const w = Math.min(1, Math.max(-1, this.n));
 
-    degree = (xt(degree)) ? degree : false;
+    let result = 2 * _acos(w);
 
-    result = 2 * _acos(this.n);
+    const asDegrees = degree === true;
 
-    if(degree){
+    if (asDegrees) result *= (1 / _radian);
 
-        result *= (1 / _radian);
-    }
     return correctForZero(result);
 };
 
@@ -215,6 +226,8 @@ P.quaternionRotate = function (item) {
         this.setFromQuaternion(q4.quaternionMultiply(q5));
 
         releaseQuaternion(q4, q5);
+
+        this.normalize();
     }
     return this
 };
@@ -229,9 +242,9 @@ export const requestQuaternion = function (items) {
 
     if (!quaternionPool.length) quaternionPool.push(makeQuaternion());
 
-    const q = quaternionPool.shift();
+    const q = quaternionPool.pop();
 
-    q.set(items);
+    q.zero().set(items);
 
     return q
 };
