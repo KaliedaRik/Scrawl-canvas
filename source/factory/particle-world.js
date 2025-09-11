@@ -26,8 +26,6 @@ const World = function (items = Ωempty) {
     this.makeName(items.name);
     this.register();
 
-    this.set(this.defs);
-
     const keytypes = items.keytypes || {};
     if (!keytypes.gravity) keytypes.gravity = T_VECTOR;
     if (!items.gravity) items.gravity = [0, 9.81, 0];
@@ -43,6 +41,8 @@ const World = function (items = Ωempty) {
     }
 
     this.initializeAttributes(keytypes);
+
+    this.set(this.defs);
 
     this.set(items);
 

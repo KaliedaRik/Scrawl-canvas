@@ -21,7 +21,7 @@
 // ]
 // ```
 //
-// Because of the number of ParticleHistory arrays that can be generated and discarded in even a simple particle physics animation, Scrawl-canvas includes functionality to pool and reuse ParticleHistory arrays. The exported functions `requestParticleHistoryObject` and `releaseParticleHistoryObject` give us access to the pool mechanism.
+// Because of the number of ParticleHistory arrays that can be generated and discarded in even a simple particle physics animation, Scrawl-canvas includes functionality to pool and reuse ParticleHistory arrays. The exported functions `requestParticleHistory` and `releaseParticleHistory` give us access to the pool mechanism.
 
 
 // #### Imports
@@ -76,7 +76,7 @@ export const requestParticleHistory = function () {
 
     if (!particleHistoryPool.length) particleHistoryPool.push(new ParticleHistory());
 
-    return particleHistoryPool.shift();
+    return particleHistoryPool.pop();
 };
 
 // `exported function` - return a ParticleHistory array to the history pool. Failing to return arrays to the pool may lead to more inefficient code and possible memory leaks.
@@ -90,7 +90,7 @@ export const releaseParticleHistory = function (...args) {
             particleHistoryPool.push(h);
 
             // Do not keep excessive numbers of under-utilised arrays in the pool
-            if (particleHistoryPool.length > 100) particleHistoryPool.length = 0;
+            if (particleHistoryPool.length > 200) particleHistoryPool.length -= 100;
         }
     });
 };

@@ -450,7 +450,7 @@ P.prepareStamp = function () {
 
     let generatorChoke = this.generatorChoke;
 
-    // Create thew generator choke, if necessary
+    // Create the generator choke, if necessary
     if (!generatorChoke) {
 
         this.generatorChoke = generatorChoke = now;
@@ -525,14 +525,40 @@ P.addParticles = function (req) {
         return correctForZero(item + ((_random() * itemVar * 2) - itemVar));
     };
 
+    // const velocityCalc = function (item, itemVar, min) {
+
+    //     let val = correctForZero(item + (_random() * itemVar));
+
+    //     while (_abs(val) < min) {
+
+    //         val = correctForZero(item + (_random() * itemVar));
+    //     }
+
+    //     return val;
+    // };
+
     const velocityCalc = function (item, itemVar, min) {
 
-        let val = correctForZero(item + (_random() * itemVar));
+        // Fast path
+        if (min <= 0) return correctForZero(item + (_random() * itemVar));
 
-        while (_abs(val) < min) {
+        let val = 0,
+            attempts = 0,
+            sign;
+
+        do {
 
             val = correctForZero(item + (_random() * itemVar));
-        }
+
+            attempts += 1;
+
+            // Fallback: guarantee at least |min|, randomize sign
+            if (attempts > 20) {
+
+                sign = _random() < 0.5 ? -1 : 1;
+                return sign * min;
+            }
+        } while (_abs(val) < min);
 
         return val;
     };
@@ -601,7 +627,8 @@ P.addParticles = function (req) {
                     engine,
                     forces,
 
-                    mass: calc(mass, massVariation),
+                    // mass: calc(mass, massVariation),
+                    mass: _abs(calc(mass, massVariation)) || 1e-6,
 
                     fill: fillColorFactory.getRangeColor(_random()),
                     stroke: strokeColorFactory.getRangeColor(_random()),

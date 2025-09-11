@@ -228,7 +228,7 @@ P.processPacketOut = function (key, value, incl) {
 
     let result = true;
 
-    if(!incl.includes(key) < 0 && value === this.defs[key]) result = false;
+    if(!incl.includes(key) && value === this.defs[key]) result = false;
 
     return result;
 };

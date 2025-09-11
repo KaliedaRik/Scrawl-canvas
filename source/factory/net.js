@@ -573,10 +573,10 @@ const generators = {
         if (host && rows > 0 && columns > 0) {
 
             const [x, y] = this.currentStampPosition;
-            const [, height] = host.currentDimensions;
+            const [width, height] = host.currentDimensions;
 
             const deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
-            const deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
+            const deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * width : columnDistance;
 
             let dx, dy, p, i, j;
 
@@ -651,10 +651,10 @@ const generators = {
         if (host && rows > 0 && columns > 0) {
 
             const [x, y] = this.currentStampPosition;
-            const [, height] = host.currentDimensions;
+            const [width, height] = host.currentDimensions;
 
             const deltaR = (rowDistance.substring) ? (parseFloat(rowDistance) / 100) * height : rowDistance;
-            const deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * height : columnDistance;
+            const deltaC = (columnDistance.substring) ? (parseFloat(columnDistance) / 100) * width : columnDistance;
 
             let dx, dy, p, i, j;
 

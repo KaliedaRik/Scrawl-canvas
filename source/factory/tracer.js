@@ -39,10 +39,10 @@ const Tracer = function (items = Ωempty) {
     // As part of its `stamp` functionality the Tracer entity will invoke the `stampAction` function. If not supplied, the entity will not display anything on the canvas.
     this.stampAction = λnull;
 
+    if (!items.group) items.group = currentGroup;
+
     // Tracer entitys use just one Particle, which gets initialized here and stored in the `trace` attribute
     this.trace = makeParticle(items);
-
-    if (!items.group) items.group = currentGroup;
 
     this.set(items);
 
@@ -93,7 +93,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
-P.packetObjects = pushUnique(P.packetObjects, ['artefact', 'particle']);
+P.packetObjects = pushUnique(P.packetObjects, ['artefact', 'trace']);
 P.packetFunctions = pushUnique(P.packetFunctions, ['stampAction']);
 
 P.finalizePacketOut = function (copy) {

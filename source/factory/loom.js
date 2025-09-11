@@ -74,7 +74,6 @@ const Loom = function (items = Ωempty) {
     this.fromPathData = [];
     this.toPathData = [];
 
-    this.watchFromPath = null;
     this.watchIndex = -1;
     this.engineInstructions = [];
     this.engineDeltaLengths = [];
@@ -681,29 +680,27 @@ P.update = function () {
 // + This is where we need to check whether we need to recalculate the path data which we'll use later to build the Loom entity's output image.
 // + We only need to recalculate the path data on the initial render, and afterwards when the __dirtyPathData__ flag has been set.
 // + If we perform the recalculation, then we need to make sure to set the __dirtyOutput__ flag, which will trigger the output image build.
-P.prepareStamp = function() {
+//
+// `prepareStamp` - function called as part of the Display cycle `compile` step.
+P.prepareStamp = function () {
 
     const fPath = this.fromPath,
         tPath = this.toPath;
 
-    // Sanity check 1
-    // + `getBoundingBox` will recalculate and set the `dirtyPathData` flag
-    // + if paths have set the Loom's `dirtyStart` flag
+    // Sanity check 1 — also recalculates bounding box if needed
     const [startX, startY] = this.getBoundingBox();
 
-    // Sanity check 2
-    // + we can set the `dirtyPathData` ourselves if paths `start/end` coordinates have changed
-    // + in case Shape path `roll/scale/flip/etc` updates don't get messaged to the Loom entity
-    if (!this.dirtyPathData) {
+    // Sanity check 2 — if end points moved, mark path data dirty
+    if (!this.dirtyPathData && fPath && tPath) {
 
-        const {x: testFromStartX, y: testFromStartY} = fPath.getPathPositionData(0);
-        const {x: testFromEndX, y: testFromEndY} = fPath.getPathPositionData(1);
-        const {x: testToStartX, y: testToStartY} = tPath.getPathPositionData(0);
-        const {x: testToEndX, y: testToEndY} = tPath.getPathPositionData(1);
+        const { x: fSx, y: fSy } = fPath.getPathPositionData(0);
+        const { x: fEx, y: fEy } = fPath.getPathPositionData(1);
+        const { x: tSx, y: tSy } = tPath.getPathPositionData(0);
+        const { x: tEx, y: tEy } = tPath.getPathPositionData(1);
 
-        const localPathTests = [testFromStartX, testFromStartY, testFromEndX, testFromEndY, testToStartX, testToStartY, testToEndX, testToEndY];
+        const localPathTests = [fSx, fSy, fEx, fEy, tSx, tSy, tEx, tEy];
 
-        if (!this.pathTests || this.pathTests.some((item, index) => item !== localPathTests[index])) {
+        if (!this.pathTests || this.pathTests.some((v, i) => v !== localPathTests[i])) {
 
             this.pathTests = localPathTests;
             this.dirtyPathData = true;
@@ -714,66 +711,72 @@ P.prepareStamp = function() {
 
         this.dirtyPathData = false;
 
+        // Invalidate cached render instructions
         this.watchIndex = -1;
         this.engineInstructions.length = 0;
         this.engineDeltaLengths.length = 0;
 
-        const fromPathData = this.fromPathData;
+        const fromPathData = this.fromPathData,
+            toPathData   = this.toPathData;
+
         fromPathData.length = 0;
+        toPathData.length   = 0;
 
-        const toPathData = this.toPathData;
-        toPathData.length = 0;
+        if (fPath && tPath) {
 
-        if(fPath && tPath) {
-
-            const fPathLength = _ceil(fPath.length),
-                tPathLength = _ceil(tPath.length);
+            // Decide table resolution (and input size).
+            // + Sample both paths uniformly at 'pathSteps' points.
+            const fPathLength = _ceil(fPath.length);
+            const tPathLength = _ceil(tPath.length);
 
             const pathSteps = this.setSourceDimension(_max(fPathLength, tPathLength) * this.sourceExpansionFactor);
 
-            const fPathStart = this.fromPathStart,
-                fPathEnd = this.fromPathEnd,
-                tPathStart = this.toPathStart,
-                tPathEnd = this.toPathEnd,
-                pathSpeed = this.constantSpeedAlongPath;
+            // Guard: ensure at least 2 samples so we can include both ends cleanly
+            const steps = (pathSteps > 1) ? pathSteps : 2,
+                step  = 1 / (steps - 1);  // uniform [0..1] with both endpoints
 
-            let fPartial, tPartial;
+            const pathSpeed = this.constantSpeedAlongPath;
 
-            if (fPathStart < fPathEnd) fPartial = fPathEnd - fPathStart;
-            else fPartial = fPathEnd + (1 - fPathStart);
-            if (fPartial < 0.005) fPartial = 0.005;
+            // Build sampling tables with exactly `steps` entries.
+            for (let i = 0; i < steps; i++) {
 
-            if (tPathStart < tPathEnd) tPartial = tPathEnd - tPathStart;
-            else tPartial = tPathEnd + (1 - tPathStart);
-            if (tPartial < 0.005) tPartial = 0.005;
+                // ensure the last sample is exactly 1.0 to avoid FP drift
+                const cursor = (i === steps - 1) ? 1 : i * step;
 
-            const minPartial = _ceil(_min(fPartial, tPartial)),
-                pathDelta = 1 / (pathSteps * (1 / minPartial));
+                let p = fPath.getPathPositionData(cursor, pathSpeed);
+                fromPathData.push([p.x - startX, p.y - startY]);
 
-            let x, y, cursor;
-
-            for (cursor = 0; cursor <= 1; cursor += pathDelta) {
-
-                ({x, y} = fPath.getPathPositionData(cursor, pathSpeed));
-                fromPathData.push([x - startX, y - startY]);
-
-                ({x, y} = tPath.getPathPositionData(cursor, pathSpeed));
-                toPathData.push([x - startX, y - startY]);
+                p = tPath.getPathPositionData(cursor, pathSpeed);
+                toPathData.push([p.x - startX, p.y - startY]);
             }
 
-            this.fromPathSteps = fPartial / minPartial;
-            this.toPathSteps = tPartial / minPartial;
+            // Compute the fractional span (0..1) required to traverse on each path.
+            // + Stash these as per-row increments (cleanOutput adds them in table-index space).
+            let fStart = this.fromPathStart, fEnd = this.fromPathEnd,
+                tStart = this.toPathStart,   tEnd = this.toPathEnd,
+                fPartial = (fEnd >= fStart) ? (fEnd - fStart) : (1 - fStart + fEnd),
+                tPartial = (tEnd >= tStart) ? (tEnd - tStart) : (1 - tStart + tEnd);
 
-            this.watchFromPath = (this.fromPathSteps === 1) ? true : false;
+            if (fPartial < 0.005) fPartial = 0.005;
+            if (tPartial < 0.005) tPartial = 0.005;
+
+            // Because fromPathData.length === sourceDimension === steps,
+            // a per-row increment of `partial` in index space is correct.
+            this.fromPathSteps = fPartial;
+            this.toPathSteps   = tPartial;
+
+            // Which path reaches the end first?
+            this.watchFromPath = (fPartial <= tPartial);
 
             this.dirtyOutput = true;
         }
         else this.dirtyPathData = true;
     }
 
-    // `prepareStampTabsHelper` is defined in the `mixin/hidden-dom-elements.js` file - handles updates to anchor and button objects
+    // Hidden DOM elements housekeeping
     this.prepareStampTabsHelper();
 };
+
 
 // `setSourceDimension` - internal function called by `prepareStamp`.
 // + We make the source dimensions a square of the longest path length
@@ -1275,7 +1278,7 @@ P.doStroke = function (engine) {
             host.rotateDestination(engine, fStart[0], fStart[1], fPath);
             engine.stroke(fPath.pathObject);
 
-            host.rotateDestination(engine, tStart[0], tStart[1], fPath);
+            host.rotateDestination(engine, tStart[0], tStart[1], tPath);
             engine.stroke(tPath.pathObject);
 
             engine.setTransform(1, 0, 0, 1, 0, 0);
