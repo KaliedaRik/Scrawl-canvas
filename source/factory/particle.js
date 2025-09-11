@@ -394,7 +394,7 @@ export const requestParticle = function (items) {
     v.initialPosition.zero();
     v.history.length = 0;
     v.forces.length = 0;
-    
+
     v.set(items);
 
     return v

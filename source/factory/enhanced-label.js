@@ -1174,8 +1174,6 @@ P.assessTextForStyle = function () {
         if (oldVal !== newVal) unitSet.highlightStyle = newVal;
 
         oldVal = currentTextStyle.lineWidth;
-        // newVal = parseFloat(nodeVals.getPropertyValue('--SC-stroke-width'));
-        // if (oldVal !== newVal) unitSet.lineWidth = newVal;
         raw = parseFloat(nodeVals.getPropertyValue('--SC-stroke-width'));
         if (_isFinite(raw) && oldVal !== raw) unitSet.lineWidth = raw;
 
@@ -1318,8 +1316,8 @@ P.measureTextUnits = function () {
     const mycell = requestCell(),
         engine = mycell.engine;
 
-    let res, chars, charType, style, len, 
-        nextUnit, nextStyle, nextChars, nextType, nextLen, 
+    let res, chars, charType, style, len,
+        nextUnit, nextStyle, nextChars, nextType, nextLen,
         unkernedLen, scale;
 
     const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
@@ -1342,7 +1340,6 @@ P.measureTextUnits = function () {
 
             scale = layoutTemplate ? layoutTemplate.currentScale || 1 : 1;
             t.len += currentTextStyle.wordSpaceValue * scale;
-            // t.len += currentTextStyle.wordSpaceValue;
         }
 
         // Prep soft hyphens
@@ -3143,9 +3140,6 @@ P.createTextCellsForSpace = function (host) {
 
                         [x, y] = startData;
                         [dx, dy] = startCorrection;
-
-                        // dx = _floor(dx);
-                        // dy = _floor(dy);
 
                         cos = _cos(startRotation);
                         sin = _sin(startRotation);

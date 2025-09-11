@@ -676,7 +676,7 @@ export default function (P = Ωempty) {
             // Extract first family after the size token
             const afterSize = font.replace(/^[^ ]+\s+/, '');
             const firstFamily = afterSize.split(',')[0].trim().replace(/^['"]|['"]$/g, '').toLowerCase();
-            if (SYSTEM_FONTS.includes(firstFamily)) { 
+            if (SYSTEM_FONTS.includes(firstFamily)) {
 
                 this.currentFontIsLoaded = true;
                 return;

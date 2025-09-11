@@ -525,18 +525,6 @@ P.addParticles = function (req) {
         return correctForZero(item + ((_random() * itemVar * 2) - itemVar));
     };
 
-    // const velocityCalc = function (item, itemVar, min) {
-
-    //     let val = correctForZero(item + (_random() * itemVar));
-
-    //     while (_abs(val) < min) {
-
-    //         val = correctForZero(item + (_random() * itemVar));
-    //     }
-
-    //     return val;
-    // };
-
     const velocityCalc = function (item, itemVar, min) {
 
         // Fast path

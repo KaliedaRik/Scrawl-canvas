@@ -116,7 +116,7 @@ P.applySpring = function () {
     const dPos = requestVector(toPos).vectorSubtract(fromPos);
     const len = dPos.getMagnitude();
 
-    if (!len) { 
+    if (!len) {
 
         releaseVector(dPos);
         return;

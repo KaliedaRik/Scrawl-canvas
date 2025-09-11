@@ -733,14 +733,14 @@ P.prepareStamp = function () {
 
             // Guard: ensure at least 2 samples so we can include both ends cleanly
             const steps = (pathSteps > 1) ? pathSteps : 2,
-                step  = 1 / (steps - 1);  // uniform [0..1] with both endpoints
+                step  = 1 / (steps - 1);
 
             const pathSpeed = this.constantSpeedAlongPath;
 
             // Build sampling tables with exactly `steps` entries.
             for (let i = 0; i < steps; i++) {
 
-                // ensure the last sample is exactly 1.0 to avoid FP drift
+                // Ensure the last sample is exactly 1.0 to avoid FP drift
                 const cursor = (i === steps - 1) ? 1 : i * step;
 
                 let p = fPath.getPathPositionData(cursor, pathSpeed);
@@ -752,16 +752,15 @@ P.prepareStamp = function () {
 
             // Compute the fractional span (0..1) required to traverse on each path.
             // + Stash these as per-row increments (cleanOutput adds them in table-index space).
-            let fStart = this.fromPathStart, fEnd = this.fromPathEnd,
-                tStart = this.toPathStart,   tEnd = this.toPathEnd,
-                fPartial = (fEnd >= fStart) ? (fEnd - fStart) : (1 - fStart + fEnd),
+            const fStart = this.fromPathStart, fEnd = this.fromPathEnd,
+                tStart = this.toPathStart,   tEnd = this.toPathEnd
+
+            let fPartial = (fEnd >= fStart) ? (fEnd - fStart) : (1 - fStart + fEnd),
                 tPartial = (tEnd >= tStart) ? (tEnd - tStart) : (1 - tStart + tEnd);
 
             if (fPartial < 0.005) fPartial = 0.005;
             if (tPartial < 0.005) tPartial = 0.005;
 
-            // Because fromPathData.length === sourceDimension === steps,
-            // a per-row increment of `partial` in index space is correct.
             this.fromPathSteps = fPartial;
             this.toPathSteps   = tPartial;
 
