@@ -192,9 +192,35 @@ P.measureFont = function () {
 
     const ratio = fontSizeValue / 100;
 
+    // If spacing is active, compute width manually (fallback)
+    let width = _ceil(_abs(actualBoundingBoxLeft) + _abs(actualBoundingBoxRight));
+
+    if ((letterSpaceValue !== 0 || wordSpaceValue !== 0) && this.text) {
+
+        const cell2 = requestCell();
+        const ctx = cell2.engine;
+
+        ctx.font = defaultTextStyle.canvasFont;
+        ctx.textAlign = LEFT;
+        ctx.textBaseline = TOP;
+
+        let total = 0;
+
+        const t = this.text;
+
+        for (let i = 0; i < t.length; i++) {
+
+            const ch = t[i];
+            total += ctx.measureText(ch).width;
+            if (i < t.length - 1) total += (letterSpaceValue + (ch === ' ' ? wordSpaceValue : 0)) * currentScale;
+        }
+        width = _ceil(total);
+        releaseCell(cell2);
+    }
+
     if (dimensions) {
 
-        dimensions[0] = _ceil(_abs(actualBoundingBoxLeft) + _abs(actualBoundingBoxRight));
+        dimensions[0] = width;
         dimensions[1] = meta.height * ratio * currentScale;
     }
 
@@ -360,7 +386,7 @@ P.stampPositioningHelper = function () {
     const x = -currentHandle[0],
         y = -currentHandle[1] + fontVerticalOffset * currentScale;
 
-    return [text, _floor(x), _floor(y)];
+    return [text, x, y];
 }
 
 // `underlineEngine` - internal helper function

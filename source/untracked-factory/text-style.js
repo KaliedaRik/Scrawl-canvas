@@ -213,6 +213,10 @@ P.finalizePacketOut = function (copy) {
     if (fill && !fill.substring) copy.fillStyle = fill.name;
     if (stroke && !stroke.substring) copy.strokeStyle = stroke.name;
 
+    // Ensure CSS-like strings are exported
+    if (copy.letterSpacing == null && this.letterSpacing != null) copy.letterSpacing = this.letterSpacing;
+    if (copy.wordSpacing == null && this.wordSpacing != null) copy.wordSpacing = this.wordSpacing;
+
     return copy;
 };
 

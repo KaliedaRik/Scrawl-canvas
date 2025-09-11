@@ -276,7 +276,7 @@ P.processFactoryPacketOut = function (key, value, incs) {
 
     let result = true;
 
-    if(!incs.indexOf(key) && value === this.defs[key]) result = false;
+    if(!incs.includes(key) && value === this.defs[key]) result = false;
 
     return result;
 };
@@ -589,7 +589,7 @@ P.getTextHandleY = function (val, size, font) {
     if (val === MIDDLE) return (dim / 2) * scale;
     if (!_isFinite(parseFloat(val))) return 0;
 
-    return (parseFloat(val) / 100) * dim;
+    return (parseFloat(val) / 100) * dim * scale;
 };
 
 // `getTextOffset` - Calculate the horizontal offset required for a given TextUnit
@@ -1108,7 +1108,7 @@ P.assessTextForStyle = function () {
         const nodeVals = _computed(node.parentNode);
 
         const unitSet = {};
-        let oldVal, newVal;
+        let oldVal, newVal, raw;
 
         oldVal = currentTextStyle.direction;
         newVal = nodeVals.getPropertyValue('direction');
@@ -1165,7 +1165,8 @@ P.assessTextForStyle = function () {
         if (oldVal !== newVal) unitSet.fillStyle = newVal;
 
         oldVal = currentTextStyle.includeHighlight;
-        newVal = !!nodeVals.getPropertyValue('--SC-include-highlight');
+        raw = nodeVals.getPropertyValue('--SC-include-highlight').trim().toLowerCase();
+        newVal = (raw === 'true' || raw === '1');
         if (oldVal !== newVal) unitSet.includeHighlight = newVal;
 
         oldVal = currentTextStyle.highlightStyle;
@@ -1173,44 +1174,48 @@ P.assessTextForStyle = function () {
         if (oldVal !== newVal) unitSet.highlightStyle = newVal;
 
         oldVal = currentTextStyle.lineWidth;
-        newVal = parseFloat(nodeVals.getPropertyValue('--SC-stroke-width'));
-        if (oldVal !== newVal) unitSet.lineWidth = newVal;
+        // newVal = parseFloat(nodeVals.getPropertyValue('--SC-stroke-width'));
+        // if (oldVal !== newVal) unitSet.lineWidth = newVal;
+        raw = parseFloat(nodeVals.getPropertyValue('--SC-stroke-width'));
+        if (_isFinite(raw) && oldVal !== raw) unitSet.lineWidth = raw;
 
         oldVal = currentTextStyle.includeOverline;
-        newVal = !!nodeVals.getPropertyValue('--SC-include-overline');
+        raw = nodeVals.getPropertyValue('--SC-include-overline').trim().toLowerCase();
+        newVal = (raw === 'true' || raw === '1');
         if (oldVal !== newVal) unitSet.includeOverline = newVal;
 
         oldVal = currentTextStyle.overlineOffset;
-        newVal = parseFloat(nodeVals.getPropertyValue('--SC-overline-offset'));
-        if (oldVal !== newVal) unitSet.overlineOffset = newVal;
+        raw = parseFloat(nodeVals.getPropertyValue('--SC-overline-offset'));
+        if (_isFinite(raw) && oldVal !== raw) unitSet.overlineOffset = raw;
 
         oldVal = currentTextStyle.overlineStyle;
         newVal = nodeVals.getPropertyValue('--SC-overline-style');
         if (oldVal !== newVal) unitSet.overlineStyle = newVal;
 
         oldVal = currentTextStyle.overlineWidth;
-        newVal = parseFloat(nodeVals.getPropertyValue('--SC-overline-width'));
-        if (oldVal !== newVal) unitSet.overlineWidth = newVal;
+        raw = parseFloat(nodeVals.getPropertyValue('--SC-overline-width'));
+        if (_isFinite(raw) && oldVal !== raw) unitSet.overlineWidth = raw;
 
         oldVal = currentTextStyle.includeUnderline;
-        newVal = !!nodeVals.getPropertyValue('--SC-include-underline');
+        raw = nodeVals.getPropertyValue('--SC-include-underline').trim().toLowerCase();
+        newVal = (raw === 'true' || raw === '1');
         if (oldVal !== newVal) unitSet.includeUnderline = newVal;
 
         oldVal = currentTextStyle.underlineGap;
-        newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-gap'));
-        if (oldVal !== newVal) unitSet.underlineGap = newVal;
+        raw = parseFloat(nodeVals.getPropertyValue('--SC-underline-gap'));
+        if (_isFinite(raw) && oldVal !== raw) unitSet.underlineGap = raw;
 
         oldVal = currentTextStyle.underlineOffset;
-        newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-offset'));
-        if (oldVal !== newVal) unitSet.underlineOffset = newVal;
+        raw = parseFloat(nodeVals.getPropertyValue('--SC-underline-offset'));
+        if (_isFinite(raw) && oldVal !== raw) unitSet.underlineOffset = raw;
 
         oldVal = currentTextStyle.underlineStyle;
         newVal = nodeVals.getPropertyValue('--SC-underline-style');
         if (oldVal !== newVal) unitSet.underlineStyle = newVal;
 
         oldVal = currentTextStyle.underlineWidth;
-        newVal = parseFloat(nodeVals.getPropertyValue('--SC-underline-width'));
-        if (oldVal !== newVal) unitSet.underlineWidth = newVal;
+        raw = parseFloat(nodeVals.getPropertyValue('--SC-underline-width'));
+        if (_isFinite(raw) && oldVal !== raw) unitSet.underlineWidth = raw;
 
         oldVal = currentTextStyle.method;
         newVal = nodeVals.getPropertyValue('--SC-method');
@@ -1225,16 +1230,16 @@ P.assessTextForStyle = function () {
         if (oldVal !== newVal) unitSet.localHandleY = newVal;
 
         oldVal = localState.localOffsetX;
-        newVal = parseFloat(nodeVals.getPropertyValue('--SC-local-offset-x'));
-        if (oldVal !== newVal) unitSet.localOffsetX = newVal;
+        raw = parseFloat(nodeVals.getPropertyValue('--SC-local-offset-x'));
+        if (_isFinite(raw) && oldVal !== raw) unitSet.localOffsetX = raw;
 
         oldVal = localState.localOffsetY;
-        newVal = parseFloat(nodeVals.getPropertyValue('--SC-local-offset-y'));
-        if (oldVal !== newVal) unitSet.localOffsetY = newVal;
+        raw = parseFloat(nodeVals.getPropertyValue('--SC-local-offset-y'));
+        if (_isFinite(raw) && oldVal !== raw) unitSet.localOffsetY = raw;
 
         oldVal = localState.localAlignment;
-        newVal = parseFloat(nodeVals.getPropertyValue('--SC-local-alignment'));
-        if (oldVal !== newVal) unitSet.localAlignment = newVal;
+        raw = parseFloat(nodeVals.getPropertyValue('--SC-local-alignment'));
+        if (_isFinite(raw) && oldVal !== raw) unitSet.localAlignment = raw;
 
         unit.set(unitSet);
         unit.style.set(unitSet, true);
@@ -1307,12 +1312,15 @@ P.measureTextUnits = function () {
         textUnits,
         truncateString,
         breakTextOnSpaces,
+        layoutTemplate,
     } = this;
 
     const mycell = requestCell(),
         engine = mycell.engine;
 
-    let res, chars, charType, style, len, nextUnit, nextStyle, nextChars, nextType, nextLen, unkernedLen;
+    let res, chars, charType, style, len, 
+        nextUnit, nextStyle, nextChars, nextType, nextLen, 
+        unkernedLen, scale;
 
     const currentTextStyle = this.makeWorkingTextStyle(defaultTextStyle);
     this.setEngineFromWorkingTextStyle(currentTextStyle, Ωempty, state, mycell);
@@ -1332,7 +1340,9 @@ P.measureTextUnits = function () {
         // Add word spacing to space chars
         if (charType === TEXT_TYPE_SPACE) {
 
-            t.len += currentTextStyle.wordSpaceValue;
+            scale = layoutTemplate ? layoutTemplate.currentScale || 1 : 1;
+            t.len += currentTextStyle.wordSpaceValue * scale;
+            // t.len += currentTextStyle.wordSpaceValue;
         }
 
         // Prep soft hyphens
@@ -3134,8 +3144,8 @@ P.createTextCellsForSpace = function (host) {
                         [x, y] = startData;
                         [dx, dy] = startCorrection;
 
-                        dx = _floor(dx);
-                        dy = _floor(dy);
+                        // dx = _floor(dx);
+                        // dy = _floor(dy);
 
                         cos = _cos(startRotation);
                         sin = _sin(startRotation);
