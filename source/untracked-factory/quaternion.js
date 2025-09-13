@@ -254,10 +254,7 @@ export const releaseQuaternion = function (...args) {
 
     args.forEach(q => {
 
-        if (q && q.type === T_QUATERNION) {
-
-            quaternionPool.push(q.zero());
-        }
+        if (q && q.type === T_QUATERNION) quaternionPool.push(q);
     });
 };
 
