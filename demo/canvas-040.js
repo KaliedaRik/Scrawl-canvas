@@ -384,6 +384,10 @@ const japan = arrow.clone({
 //
 // To solve these issues, we create a World object and define the `progress` attribute there; at the same time we can define its setter function to both calculate and update the Shape entitys' `lineDashOffset` attribute and also update the web page's progress input field.
 
+const dom = scrawl.initializeDomInputs([
+    ['input', 'progress', '0'],
+]);
+
 const myWorld = scrawl.makeWorld({
 
     name: name('demo-world'),
@@ -458,11 +462,6 @@ const myTween = scrawl.makeTween({
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
-const dom = scrawl.initializeDomInputs([
-    ['input', 'progress', '0'],
-]);
-
-
 const report = reportSpeed('#reportmessage', function () {
 
     return `

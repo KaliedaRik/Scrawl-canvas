@@ -1,6 +1,7 @@
 // # Shared variables
 export const _abs = Math.abs;
 export const _assign = Object.assign;
+export const _acos = Math.acos;
 export const _atan2 = Math.atan2;
 export const _ceil = Math.ceil;
 export const _computed = window.getComputedStyle;
@@ -31,6 +32,7 @@ export const _round = Math.round;
 export const _setPrototypeOf = Object.setPrototypeOf;
 export const _sin = Math.sin;
 export const _sqrt = Math.sqrt;
+export const _tan = Math.tan;
 export const _tick = 16 / 1000;
 export const _values = Object.values;
 
