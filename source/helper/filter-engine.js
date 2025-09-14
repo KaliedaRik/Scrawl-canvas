@@ -22,7 +22,7 @@ import { makeColor } from '../factory/color.js';
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _ceil, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
 const _exp = Math.exp,
@@ -788,54 +788,6 @@ P.getMatrixOffsets = function (mWidth, mHeight, mX, mY, image) {
     return res;
 };
 
-// `checkChannelLevelsParameters` - divide each channel into discrete sequences of pixels
-P.checkChannelLevelsParameters = function (f) {
-
-    const doCheck = function (v, isHigh = false) {
-
-        if (v.toFixed) {
-            if (v < 0) return [LOW_ARRAY];
-            if (v > 255) return [HIGH_ARRAY];
-            if (!_isFinite(v)) return (isHigh) ? [HIGH_ARRAY] : [LOW_ARRAY];
-            return [[0, 255, v]];
-        }
-
-        if (v.substring) {
-            v = v.split(ARG_SPLITTER);
-        }
-
-        if (_isArray(v)) {
-
-            if (!v.length) return v;
-            if (_isArray(v[0])) return v;
-
-            v = v.map(s => parseInt(s, 10));
-            v.sort((a, b) => a - b);
-
-            if (v.length == 1) return [[0, 255, v[0]]];
-
-            const res = [];
-            let starts, ends, i, iz;
-
-            for (i = 0, iz = v.length; i < iz; i++) {
-
-                starts = 0;
-                ends = 255;
-                if (i !== 0) starts = _ceil(v[i - 1] + ((v[i] - v[i - 1]) / 2));
-                if (i !== iz - 1) ends = _floor(v[i] + ((v[i + 1] - v[i]) / 2));
-
-                res.push([starts, ends, v[i]]);
-            }
-            return res;
-        }
-        return (isHigh) ? [HIGH_ARRAY] : [LOW_ARRAY];
-    }
-    f.red = doCheck(f.red);
-    f.green = doCheck(f.green);
-    f.blue = doCheck(f.blue);
-    f.alpha = doCheck(f.alpha, true);
-};
-
 // `cacheOutput` - insert an action function's output into the filter engine's cache
 P.cacheOutput = function (name, obj) {
 
@@ -1070,22 +1022,52 @@ P.processResults = function (store, incoming, ratio) {
     const sData = store.data,
         iData = incoming.data;
 
-    let antiRatio, i, iz;
+    // Clamp ratio defensively
+    if (ratio <= 0) return;
 
-    if (ratio === 1) {
+    if (ratio >= 1) {
 
         sData.set(iData);
-
         return;
     }
-    if (ratio > 0) {
 
-        antiRatio = 1 - ratio;
+    // If source and destination are literally the same bytes, nothing to do.
+    if (sData.buffer === iData.buffer && sData.byteOffset === iData.byteOffset && sData.byteLength === iData.byteLength) return;
 
-        for (i = 0, iz = sData.length; i < iz; i++) {
+    // Convert to fixed-point [0..255]
+    const k  = (ratio * 255 + 0.5) | 0,
+        ak = 255 - k;
 
-            sData[i] = (sData[i] * antiRatio) + (iData[i] * ratio);
-        }
+    // Blend 4 channels at a time via 32-bit views
+    const nPixels = sData.byteLength >>> 2,
+        s32 = new Uint32Array(sData.buffer, sData.byteOffset, nPixels),
+        i32 = new Uint32Array(iData.buffer, iData.byteOffset, nPixels);
+
+    // Lane mask: operate on (R,B) in low 16s and (G,A) in high 16s separately
+    // + M selects bytes 0 and 2 in each 32-bit word
+    // + ROUND is per-lane rounding before >> 8
+    const M = 0x00FF00FF,
+        ROUND = 0x00800080;
+
+    let sv, iv, s_lo, s_hi, i_lo, i_hi, o_lo, o_hi;
+
+    for (let p = 0, pz = s32.length | 0; p < pz; p++) {
+
+        sv = s32[p];
+        iv = i32[p];
+
+        // Split into two 16-bit lanes: low bytes (R,B), high bytes (G,A)
+        s_lo = sv & M;
+        s_hi = (sv >>> 8) & M;
+        i_lo = iv & M;
+        i_hi = (iv >>> 8) & M;
+
+        // Per-lane blend with fixed-point 8.8
+        o_lo = (((s_lo * ak) + (i_lo * k) + ROUND) >>> 8) & M;
+        o_hi = (((s_hi * ak) + (i_hi * k) + ROUND) >>> 8) & M;
+
+        // Repack lanes back to RGBA
+        s32[p] = ((o_hi << 8) & 0xFF00FF00) | o_lo;
     }
 };
 
@@ -1341,8 +1323,11 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        // 32-bit pixel views over the SAME buffers (respecting byteOffset/length)
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -1355,54 +1340,64 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let divisor = 0;
-        if (includeRed) divisor++;
-        if (includeGreen) divisor++;
-        if (includeBlue) divisor++;
+        // Precompute divisor (how many channels contribute to the average)
+        const divisor = (includeRed ? 1 : 0) + (includeGreen ? 1 : 0) + (includeBlue ? 1 : 0);
 
-        let i, avg, r, g, b, a;
+        // Fast path flags (turned into ints to help JIT)
+        const incR = includeRed  | 0,
+            incG = includeGreen | 0,
+            incB = includeBlue | 0,
+            excR = excludeRed | 0,
+            excG = excludeGreen | 0,
+            excB = excludeBlue | 0;
 
-        for (i = 0; i < len; i += 4) {
+        // Walk one pixel per iteration
+        let p, rgba, r, g, b, a, rOut, gOut, bOut, sum, avg;
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        for (p = 0; p < src32.length; p++) {
 
-            if (iData[a]) {
+            rgba = src32[p];
 
-                if (divisor) {
+            // Unpack channels (little-endian: R,G,B,A in least→most significant bytes)
+            r =  rgba & 0xff;
+            g = (rgba >>>  8) & 0xff;
+            b = (rgba >>> 16) & 0xff;
+            a = (rgba >>> 24) & 0xff;
 
-                    avg = 0;
+            // If fully transparent, copy pixel exactly
+            if (a === 0) {
 
-                    if (includeRed) avg += iData[r];
-                    if (includeGreen) avg += iData[g];
-                    if (includeBlue) avg += iData[b];
-
-                    avg = _floor(avg / divisor);
-
-                    oData[r] = (excludeRed) ? 0 : avg;
-                    oData[g] = (excludeGreen) ? 0 : avg;
-                    oData[b] = (excludeBlue) ? 0 : avg;
-                    oData[a] = iData[a];
-                }
-                else {
-
-                    oData[r] = (excludeRed) ? 0 : iData[r];
-                    oData[g] = (excludeGreen) ? 0 : iData[g];
-                    oData[b] = (excludeBlue) ? 0 : iData[b];
-                    oData[a] = iData[a];
-                }
+                out32[p] = rgba;
+                continue;
             }
+
+            if (divisor) {
+
+                // Sum only the included channels
+                sum = (incR ? r : 0) + (incG ? g : 0) + (incB ? b : 0);
+
+                // Integer average (floor). Using |0 for fast truncation.
+                avg = (sum / divisor) | 0;
+
+                // Apply exclude flags: excluded → 0, otherwise the average
+                rOut = excR ? 0 : avg;
+                gOut = excG ? 0 : avg;
+                bOut = excB ? 0 : avg;
+            } 
             else {
 
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = iData[a];
+                // No channels included for averaging:
+                // keep original channels unless excluded (then set to 0)
+                rOut = excR ? 0 : r;
+                gOut = excG ? 0 : g;
+                bOut = excB ? 0 : b;
             }
+
+            // Repack to one 32-bit pixel. >>>0 ensures unsigned.
+            out32[p] = ((a << 24) | (bOut << 16) | (gOut << 8) | (rOut << 0)) >>> 0;
         }
 
+        // Blend/route like the original
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
@@ -2484,44 +2479,250 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
             ranges = [],
+            featherRed = 0,
+            featherGreen = 0,
+            featherBlue  = 0,
             lineOut,
         } = requirements;
 
-        let r, g, b, a, vr, vg, vb, i, iz, j, flag;
+        // Helper functions
+        const clamp8 = v => (v < 0 ? 0 : v > 255 ? 255 : v | 0);
 
-        for (j = 0; j < len; j += 4) {
+        const posNumOr0 = v => {
 
-            flag = false;
+            const n = +v;
+            return (_isFinite(n) && n >= 0) ? n : 0;
+        };
 
-            r = j;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        const normRanges = (() => {
 
-            vr = iData[r];
-            vg = iData[g];
-            vb = iData[b];
+            const res = [];
+
+            let i, iz, r, minR, minG, minB, maxR, maxG, maxB, t;
 
             for (i = 0, iz = ranges.length; i < iz; i++) {
 
-                const [minR, minG, minB, maxR, maxG, maxB] = ranges[i];
+                r = ranges[i];
+                if (!r || r.length < 6) continue;
 
-                if (vr >= minR && vr <= maxR && vg >= minG && vg <= maxG && vb >= minB && vb <= maxB) {
-                    flag = true;
-                    break;
+                [minR, minG, minB, maxR, maxG, maxB] = r;
+
+                if (!(_isFinite(minR) && _isFinite(minG) && _isFinite(minB) && _isFinite(maxR) && _isFinite(maxG) && _isFinite(maxB))) continue;
+
+                minR |= 0;
+                minG |= 0;
+                minB |= 0;
+                maxR |= 0;
+                maxG |= 0;
+                maxB |= 0;
+
+                if (minR > maxR) {
+
+                    t = minR;
+                    minR = maxR;
+                    maxR = t;
+                }
+                
+                if (minG > maxG) {
+
+                    t = minG;
+                    minG = maxG;
+                    maxG = t;
+                }
+                
+                if (minB > maxB) {
+
+                    t = minB;
+                    minB = maxB;
+                    maxB = t;
                 }
 
+
+                res.push([clamp8(minR), clamp8(minG), clamp8(minB), clamp8(maxR), clamp8(maxG), clamp8(maxB)]);
             }
-            oData[r] = vr;
-            oData[g] = vg;
-            oData[b] = vb;
-            oData[a] = (flag) ? 0 : iData[a];
+            return res;
+        })();
+
+        // If no ranges, just copy
+        if (normRanges.length === 0) out32.set(src32);
+        
+        else {
+
+            // Feather widths (validated: must be numbers >= 0; clamp to 0..255 and int)
+            const fR = clamp8(posNumOr0(featherRed)),
+                fG = clamp8(posNumOr0(featherGreen)),
+                fB = clamp8(posNumOr0(featherBlue));
+
+            // Cache keys
+            const keyBase = JSON.stringify(normRanges),
+                bitKey = `chroma-bitset::${keyBase}`,
+                fKey = `chroma-feather::${fR}_${fG}_${fB}::${keyBase}`;
+
+            // Hard-key path (all feathers zero)
+            if ((fR | fG | fB) === 0) {
+
+                let pack = getWorkstoreItem(bitKey);
+
+                if (!pack) {
+
+                    const n = normRanges.length | 0,
+                        words = (n + 31) >>> 5;
+
+                    const rMasks = Array.from({ length: words }, () => new Uint32Array(256)),
+                        gMasks = Array.from({ length: words }, () => new Uint32Array(256)),
+                        bMasks = Array.from({ length: words }, () => new Uint32Array(256));
+
+                    let k, w, bit, minR, minG, minB, maxR, maxG, maxB, v;
+
+                    for (k = 0; k < n; k++) {
+
+                        w = k >>> 5;
+                        bit = 1 << (k & 31);
+                        
+                        [minR, minG, minB, maxR, maxG, maxB] = normRanges[k];
+                        
+                        for (let v = minR; v <= maxR; v++) {
+
+                            rMasks[w][v] |= bit;
+                        }
+                        for (let v = minG; v <= maxG; v++) {
+
+                            gMasks[w][v] |= bit;
+                        }
+                        for (let v = minB; v <= maxB; v++) {
+
+                            bMasks[w][v] |= bit;
+                        }
+                    }
+
+                    pack = { words, rMasks, gMasks, bMasks };
+                    setWorkstoreItem(bitKey, pack);
+                }
+
+                const { words, rMasks, gMasks, bMasks } = pack;
+
+                let p, pz, rgba, r, g, b, a, hit, w;
+
+                for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                    rgba = src32[p];
+                    r = rgba & 0xFF;
+                    g = (rgba >>> 8) & 0xFF;
+                    b = (rgba >>> 16) & 0xFF;
+                    a = (rgba >>> 24) & 0xFF;
+
+                    hit = 0;
+
+                    for (let w = 0; w < words; w++) {
+
+                        if ((rMasks[w][r] & gMasks[w][g] & bMasks[w][b]) !== 0) {
+
+                            hit = 1; break;
+                        }
+                    }
+                    if (hit) a = 0;
+
+                    out32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
+                }
+            }
+
+            // feathered path (any feather > 0)
+            else {
+
+                let fpack = getWorkstoreItem(fKey);
+
+                if (!fpack) {
+
+                    const n = normRanges.length | 0;
+
+                    const makeLUT = (min, max, F) => {
+
+                        const lut = new Uint8Array(256);
+
+                        if (F <= 0) {
+
+                            for (let v = 0; v < 256; v++) {
+
+                                lut[v] = (v < min || v > max) ? 0 : 255;
+                            }
+                            return lut;
+                        }
+
+                        const lo = _max(0, min - F),
+                            hi = _min(255, max + F);
+
+                        let v, w;
+
+                        for (v = 0; v < 256; v++) {
+
+                            if (v < lo || v > hi) w = 0;
+                            else if (v < min) w = ((v - (min - F)) * 255 / F) | 0;
+                            else if (v > max) w = (((max + F) - v) * 255 / F) | 0;
+                            else w = 255;
+
+                            lut[v] = w < 0 ? 0 : (w > 255 ? 255 : w);
+                        }
+                        return lut;
+                    };
+
+                    const rLUTs = new Array(n),
+                        gLUTs = new Array(n),
+                        bLUTs = new Array(n);
+
+                    let k, minR, minG, minB, maxR, maxG, maxB;
+
+                    for (k = 0; k < n; k++) {
+
+                        [minR, minG, minB, maxR, maxG, maxB] = normRanges[k];
+
+                        rLUTs[k] = makeLUT(minR, maxR, fR);
+                        gLUTs[k] = makeLUT(minG, maxG, fG);
+                        bLUTs[k] = makeLUT(minB, maxB, fB);
+                    }
+                    fpack = { rLUTs, gLUTs, bLUTs };
+                    setWorkstoreItem(fKey, fpack);
+                }
+
+                const { rLUTs, gLUTs, bLUTs } = fpack,
+                    nRanges = rLUTs.length | 0;
+
+                let p, pz, rgba, r, g, b, a, wMax, k, w, na;
+
+                for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                    rgba = src32[p];
+
+                    r = rgba & 0xFF;
+                    g = (rgba >>> 8) & 0xFF;
+                    b = (rgba >>> 16) & 0xFF;
+                    a = (rgba >>> 24) & 0xFF;
+
+                    wMax = 0;
+
+                    for (k = 0; k < nRanges; k++) {
+
+                        w = _min(rLUTs[k][r], gLUTs[k][g], bLUTs[k][b]);
+
+                        if (w > wMax) {
+
+                            wMax = w;
+                            if (wMax === 255) break;
+                        }
+                    }
+
+                    const na = ((a * (255 - wMax) + 128) >> 8) & 0xFF;
+
+                    out32[p] = ((na << 24) | (b << 16) | (g << 8) | r) >>> 0;
+                }
+            }
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -3789,45 +3990,48 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        // 32-bit views over the same buffers (respecting byteOffset/length)
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
         const {
             opacity = 1,
-            lineOut,
+            lineOut
         } = requirements;
 
-        const gVal = this.getGrayscaleValue;
+        let rgba, r, g, b, a, gray;
 
-        let r, g, b, a, i, gray;
+        for (let p = 0, pz = src32.length | 0; p < pz; p++) {
 
-        for (i = 0; i < len; i += 4) {
+            rgba = src32[p];
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            r = rgba & 0xff;
+            g = (rgba >>> 8) & 0xff;
+            b = (rgba >>> 16) & 0xff;
+            a = (rgba >>> 24) & 0xff;
 
-            gray = gVal(iData[r], iData[g], iData[b]);
+            gray = (r * 54 + g * 183 + b * 19) >> 8;
 
-            oData[r] = gray;
-            oData[g] = gray;
-            oData[b] = gray;
-            oData[a] = iData[a];
+            out32[p] = ((a << 24) | (gray << 16) | (gray << 8) | gray) >>> 0;
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __invert-channels__ - For each pixel, subtracts its current channel values - when included - from 255.
+// // __invert-channels__ - For each pixel, subtracts its current channel values - when included - from 255.
     [INVERT_CHANNELS]: function (requirements) {
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        // 32-bit views over the same buffers (respect byteOffset/length)
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -3838,19 +4042,15 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let r, g, b, a, i;
+        const mask = (includeRed ? 0x000000FF : 0) | (includeGreen ? 0x0000FF00 : 0) | (includeBlue ? 0x00FF0000 : 0) | (includeAlpha ? 0xFF000000 : 0);
 
-        for (i = 0; i < len; i += 4) {
+        if (mask === 0) out32.set(src32);
+        else {
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
 
-            oData[r] = (includeRed) ? 255 - iData[r] : iData[r];
-            oData[g] = (includeGreen) ? 255 - iData[g] : iData[g];
-            oData[b] = (includeBlue) ? 255 - iData[b] : iData[b];
-            oData[a] = (includeAlpha) ? 255 - iData[a] : iData[a];
+                out32[p] = src32[p] ^ mask;
+            }
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -3860,47 +4060,126 @@ P.theBigActionsObject = {
 // __lock-channels-to-levels__ - Produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value.
     [LOCK_CHANNELS_TO_LEVELS]: function (requirements) {
 
-        const getLCTLValue = function (val, levels) {
+        // -- helpers --
+        const normalizeLevels = (spec) => {
 
-            if (!levels.length) return val;
+            let arr;
 
-            for (let j = 0, jz = levels.length; j < jz; j++) {
+            if (spec == null) arr = [];
+            else if (spec.toFixed) arr = [spec];
+            else if (spec.substring) {
 
-                const [start, end, level] = levels[j];
-                if (val >= start && val <= end) return level;
+                arr = (spec.match(/-?\d+/g) || []).map(n => +n);
             }
+            else if (_isArray(spec)) arr = spec.map(n => +n);
+            else arr = [];
+
+            const seen = new Uint8Array(256),
+                out = [];
+
+            for (let i = 0, iz = arr.length, v; i < iz; i++) {
+
+                v = arr[i];
+                
+                if (!_isFinite(v)) continue;
+
+                v = v < 0 ? 0 : v > 255 ? 255 : v | 0;
+
+                if (!seen[v]) {
+
+                    seen[v] = 1;
+                    out.push(v);
+                }
+            }
+
+            out.sort((a, b) => a - b);
+
+            return out;
         };
 
-        this.checkChannelLevelsParameters(requirements);
+        const buildLUT = (levels) => {
+
+            const lut = new Uint8ClampedArray(256);
+
+            if (!levels || levels.length === 0) {
+
+                for (let v = 0; v < 256; v++) {
+
+                    lut[v] = v;
+                }
+                return lut;
+            }
+
+            if (levels.length === 1) {
+
+                const L = levels[0] | 0;
+
+                for (let v = 0; v < 256; v++) {
+
+                    lut[v] = L;
+                }
+                return lut;
+            }
+
+            for (let i = 0, iz = levels.length; i < iz; i++) {
+
+                const cur = levels[i],
+                    start = (i === 0) ? 0 : _ceil((levels[i - 1] + cur) * 0.5),
+                    end = (i === iz - 1) ? 255 : _floor((cur + levels[i + 1]) * 0.5);
+
+                for (let v = start; v <= end; v++) {
+
+                    lut[v] = cur;
+                }
+            }
+            return lut;
+        };
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
         const {
             opacity = 1,
-            red = [0],
+            red   = [0],
             green = [0],
-            blue = [0],
+            blue  = [0],
             alpha = [255],
             lineOut,
         } = requirements;
 
-        let r, g, b, a, i;
+        // Normalize and build LUTs
+        const rLevels = normalizeLevels(red),
+            gLevels = normalizeLevels(green),
+            bLevels = normalizeLevels(blue),
+            aLevels = normalizeLevels(alpha);
 
-        for (i = 0; i < len; i += 4) {
+        const lutR = buildLUT(rLevels),
+            lutG = (green === red)  ? lutR : buildLUT(gLevels),
+            lutB = (blue  === red)  ? lutR : (blue === green ? lutG : buildLUT(bLevels)),
+            lutA = buildLUT(aLevels);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        let p, pz, rgba, r, g, b, a, nr, ng, nb, na;
 
-            oData[r] = getLCTLValue(iData[r], red);
-            oData[g] = getLCTLValue(iData[g], green);
-            oData[b] = getLCTLValue(iData[b], blue);
-            oData[a] = getLCTLValue(iData[a], alpha);
+        for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+
+            rgba = src32[p];
+
+            r = rgba & 0xFF;
+            g = (rgba >>> 8) & 0xFF;
+            b = (rgba >>> 16) & 0xFF;
+            a = (rgba >>> 24) & 0xFF;
+
+            nr = lutR[r];
+            ng = lutG[g];
+            nb = lutB[b];
+            na = lutA[a];
+
+            out32[p] = ((na << 24) | (nb << 16) | (ng << 8) | nr) >>> 0;
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -4221,68 +4500,113 @@ P.theBigActionsObject = {
     },
 
 // __modulate-channels__ - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at that pixel's grayscale values. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value.
-    [MODULATE_CHANNELS]: function (requirements) {
+[MODULATE_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+    const [input, output] = this.getInputAndOutputLines(requirements);
 
-        const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+    const iData = input.data,
+        oData = output.data;
 
-        const {
-            opacity = 1,
-            red = 1,
-            green = 1,
-            blue = 1,
-            alpha = 1,
-            saturation = false,
-            lineOut,
-        } = requirements;
+    const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+        out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
-        let r, g, b, a, gray, vr, vg, vb, i;
+    const {
+        opacity = 1,
+        red = 1,
+        green = 1,
+        blue = 1,
+        alpha = 1,
+        saturation = false,
+        lineOut,
+    } = requirements;
 
-        if (saturation) {
+    // Convert scales to 8.8 fixed-point (round to nearest)
+    const rK = (red * 256 + 0.5) | 0,
+        gK = (green * 256 + 0.5) | 0,
+        bK = (blue * 256 + 0.5) | 0,
+        aK = (alpha * 256 + 0.5) | 0;
 
-            const gVal = this.getGrayscaleValue;
+    let p, pz, rgba, r, g, b, a;
 
-            for (i = 0; i < len; i += 4) {
+    // Fast identity: nothing changes (and no saturation)
+    if (!saturation && rK === 256 && gK === 256 && bK === 256 && aK === 256) out32.set(src32);
+    
+    else if (!saturation) {
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+        // Plain per-channel modulation
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-                vr = iData[r];
-                vg = iData[g];
-                vb = iData[b];
+            rgba = src32[p];
 
-                gray = gVal(vr, vg, vb);
+            r = rgba & 0xff;
+            g = (rgba >>>  8) & 0xff;
+            b = (rgba >>> 16) & 0xff;
+            a = (rgba >>> 24) & 0xff;
 
-                oData[r] = gray + ((vr - gray) * red);
-                oData[g] = gray + ((vg - gray) * green);
-                oData[b] = gray + ((vb - gray) * blue);
-                oData[a] = iData[a] * alpha;
-            }
+            // v' = round(v * k/256)
+            r = (r * rK + 128) >> 8;
+            if (r < 0) r = 0;
+            else if (r > 255) r = 255;
+
+            g = (g * gK + 128) >> 8;
+            if (g < 0) g = 0;
+            else if (g > 255) g = 255;
+
+            b = (b * bK + 128) >> 8;
+            if (b < 0) b = 0;
+            else if (b > 255) b = 255;
+
+            a = (a * aK + 128) >> 8;
+            if (a < 0) a = 0;
+            else if (a > 255) a = 255;
+
+            out32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
         }
-        else {
+    } 
 
-            for (i = 0; i < len; i += 4) {
+    else {
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+        let r0, g0, b0, gray;
 
-                oData[r] = iData[r] * red;
-                oData[g] = iData[g] * green;
-                oData[b] = iData[b] * blue;
-                oData[a] = iData[a] * alpha;
-            }
+        // Saturation mode: start from gray, then lerp toward original per channel
+        for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+
+            rgba = src32[p];
+
+            r0 = rgba & 0xff;
+            g0 = (rgba >>> 8) & 0xff;
+            b0 = (rgba >>> 16) & 0xff;
+            a  = (rgba >>> 24) & 0xff;
+
+            // Rec.709 gray
+            gray = (r0 * 54 + g0 * 183 + b0 * 19) >> 8;
+
+            // new = gray + (orig - gray) * scale
+            r = gray + (((r0 - gray) * rK + 128) >> 8);
+            g = gray + (((g0 - gray) * gK + 128) >> 8);
+            b = gray + (((b0 - gray) * bK + 128) >> 8);
+            a = (a * aK + 128) >> 8;
+
+            // Clamp
+            if (r < 0) r = 0;
+            else if (r > 255) r = 255;
+
+            if (g < 0) g = 0;
+            else if (g > 255) g = 255;
+            
+            if (b < 0) b = 0;
+            else if (b > 255) b = 255;
+            
+            if (a < 0) a = 0;
+            else if (a > 255) a = 255;
+
+            out32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
         }
+    }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
-    },
+    if (lineOut) this.processResults(output, input, 1 - opacity);
+    else this.processResults(this.cache.work, output, opacity);
+},
 
 // __modulate-ok-channels__ - Multiplies each of the OKLAB channels by a given amount. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow).
     [MODULATE_OK_CHANNELS]: function (requirements) {
@@ -5420,8 +5744,11 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        // 32-bit pixel views that respect byteOffset/length
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -5433,19 +5760,49 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let r, g, b, a, i;
+        // Clamp level to [0, 255] and make it an int
+        const L = level < 0 ? 0 : level > 255 ? 255 : (level | 0);
 
-        for (i = 0; i < len; i += 4) {
+        const Rm = includeRed   ? 0x000000FF : 0,
+            Gm = includeGreen ? 0x0000FF00 : 0,
+            Bm = includeBlue  ? 0x00FF0000 : 0,
+            Am = includeAlpha ? 0xFF000000 : 0;
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        // Mask that zeroes the included channels; keeps others intact
+        const clearMask = (~(Rm | Gm | Bm | Am)) >>> 0;
 
-            oData[r] = (includeRed) ? level : iData[r];
-            oData[g] = (includeGreen) ? level : iData[g];
-            oData[b] = (includeBlue) ? level : iData[b];
-            oData[a] = (includeAlpha) ? level : iData[a];
+        // Mask that sets included channels to 'level'
+        const setMask = (includeRed ? (L <<  0) : 0) | (includeGreen ? (L <<  8) : 0) | (includeBlue  ? (L << 16) : 0) | (includeAlpha ? ((L & 255) << 24) : 0);
+
+        // Fast fill cases:
+        // + If no channels included: just copy
+        // + If all channels included: build one constant pixel and fill
+        if ((Rm | Gm | Bm | Am) === 0) {
+
+            // nothing to change
+            for (let p = 0; p < src32.length; p++) {
+
+                out32[p] = src32[p];
+            }
+        } 
+        else if ((Rm | Gm | Bm | Am) === 0xFFFFFFFF >>> 0) {
+
+            // all channels forced to level
+            const constantPixel = setMask >>> 0;
+
+            for (let p = 0; p < out32.length; p++) {
+
+                out32[p] = constantPixel;
+            }
+        } 
+        else {
+
+            // General case: clear included bits, then OR in the level
+            for (let p = 0; p < src32.length; p++) {
+
+                const src = src32[p];
+                out32[p] = (src & clearMask) | setMask;
+            }
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -5463,48 +5820,97 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
             red = 1,
             green = 1,
             blue = 1,
-            clamp = DOWN,
             lineOut,
         } = requirements;
 
-        let r, g, b, a, i;
+        let clamp = requirements.clamp;
+        if (!CLAMP_VALUES.includes(clamp)) clamp = DOWN;
 
-        for (i = 0; i < len; i += 4) {
+        // Fast identity path: divisors == 1 => no change for any mode
+        if (red === 1 && green === 1 && blue === 1) out32.set(src32);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        else {
 
-            switch (clamp) {
+            const makeLUT = (d) => {
 
-                case UP :
-                    oData[r] = _ceil(iData[r] / red) * red;
-                    oData[g] = _ceil(iData[g] / green) * green;
-                    oData[b] = _ceil(iData[b] / blue) * blue;
-                    break;
+                const div = d > 0 ? d : 1;
 
-                case ROUND :
-                    oData[r] = _round(iData[r] / red) * red;
-                    oData[g] = _round(iData[g] / green) * green;
-                    oData[b] = _round(iData[b] / blue) * blue;
-                    break;
+                // Power-of-two fast path for DOWN
+                if (clamp === DOWN && (div & (div - 1)) === 0) {
 
-                default :
-                    oData[r] = _floor(iData[r] / red) * red;
-                    oData[g] = _floor(iData[g] / green) * green;
-                    oData[b] = _floor(iData[b] / blue) * blue;
-                    break;
+                    const mask = ~(div - 1) & 0xFF,
+                        lut = new Uint8Array(256);
+
+                    for (let v = 0; v < 256; v++) {
+
+                        lut[v] = v & mask;
+                    }
+                    return lut;
+                }
+
+                const lut = new Uint8ClampedArray(256);
+
+                if (div === 1) {
+
+                    for (let v = 0; v < 256; v++) lut[v] = v;
+                    return lut;
+                }
+
+                if (clamp === UP) {
+
+                    for (let v = 0; v < 256; v++) {
+
+                        lut[v] = _ceil(v / div) * div;
+                    }
+                }
+                else if (clamp === ROUND) {
+
+                    for (let v = 0; v < 256; v++) {
+
+                        lut[v] = _round(v / div) * div;
+                    }
+                } 
+                else {
+
+                    for (let v = 0; v < 256; v++) {
+
+                        lut[v] = _floor(v / div) * div;
+                    }
+                }
+                return lut;
+            };
+
+            const lutR = makeLUT(red),
+                lutG = (green === red) ? lutR : makeLUT(green),
+                lutB = (blue  === red) ? lutR : (blue === green ? lutG : makeLUT(blue));
+
+            let p, pz, rgba, r, g, b, a, nr, ng, nb;
+
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                rgba = src32[p];
+
+                r = rgba & 0xff;
+                g = (rgba >>> 8) & 0xff;
+                b = (rgba >>> 16) & 0xff;
+                a = (rgba >>> 24) & 0xff;
+
+                nr = lutR[r];
+                ng = lutG[g];
+                nb = lutB[b];
+
+                out32[p] = ((a << 24) | (nb << 16) | (ng << 8) | nr) >>> 0;
             }
-            oData[a] = iData[a];
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -5853,8 +6259,10 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -5870,23 +6278,42 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let r, g, b, a, i, vr, vg, vb;
+        const c00 = +redInRed,
+            c01 = +greenInRed,
+            c02 = +blueInRed,
+            c10 = +redInGreen,
+            c11 = +greenInGreen,
+            c12 = +blueInGreen,
+            c20 = +redInBlue,
+            c21 = +greenInBlue,
+            c22 = +blueInBlue;
 
-        for (i = 0; i < len; i += 4) {
+        const isIdentity = (c00 === 1 && c11 === 1 && c22 === 1 && c01 === 0 && c02 === 0 && c10 === 0 && c12 === 0 && c20 === 0 && c21 === 0);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        if (isIdentity) out32.set(src32);
+        else {
 
-            vr = iData[r];
-            vg = iData[g];
-            vb = iData[b];
+            let rgba, r, g, b, a, nr, ng, nb;
 
-            oData[r] = _floor((vr * redInRed) + (vg * greenInRed) + (vb * blueInRed));
-            oData[g] = _floor((vr * redInGreen) + (vg * greenInGreen) + (vb * blueInGreen));
-            oData[b] = _floor((vr * redInBlue) + (vg * greenInBlue) + (vb * blueInBlue));
-            oData[a] = iData[a];
+            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                rgba = src32[p];
+
+                r =  rgba & 0xff;
+                g = (rgba >>> 8) & 0xff;
+                b = (rgba >>> 16) & 0xff;
+                a = (rgba >>> 24) & 0xff;
+
+                nr = _floor(r * c00 + g * c01 + b * c02);
+                ng = _floor(r * c10 + g * c11 + b * c12);
+                nb = _floor(r * c20 + g * c21 + b * c22);
+
+                nr = nr < 0 ? 0 : nr > 255 ? 255 : nr;
+                ng = ng < 0 ? 0 : ng > 255 ? 255 : ng;
+                nb = nb < 0 ? 0 : nb > 255 ? 255 : nb;
+
+                out32[p] = ((a << 24) | (nb << 16) | (ng << 8) | nr) >>> 0;
+            }
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);

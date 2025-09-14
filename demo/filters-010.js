@@ -53,7 +53,12 @@ const report = reportSpeed('#reportmessage', function () {
 
     return `
     (Low color: ${dom.lowColor.value}, High color: ${dom.highColor.value})
+
+    Feather (overides channels): ${dom.feather.value}
+        Feather channels - red: ${dom.featherRed.value}, green: ${dom.featherGreen.value}, blue: ${dom.featherBlue.value}
+
     Range: [${myFilter.ranges}] → [${myFilter.actions[0].ranges}]
+
     Opacity: ${dom.opacity.value}`;
 });
 
@@ -73,15 +78,37 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'lowColor', '#000000'],
     ['input', 'highColor', '#5c7f5c'],
     ['input', 'opacity', '1'],
+    ['input', 'feather', '0'],
+    ['input', 'featherRed', '0'],
+    ['input', 'featherGreen', '0'],
+    ['input', 'featherBlue', '0'],
 ]);
 
 // Handle color input
 const interpretColors = () => myFilter.set({ ranges: [[dom.lowColor.value, dom.highColor.value]] });
 scrawl.addNativeListener(['input', 'change'], interpretColors, '.controlItem');
 
-// Handle opacity input
-const handleOpacity = () => myFilter.set({ opacity: parseFloat(dom.opacity.value) });
-scrawl.addNativeListener(['input', 'change'], handleOpacity, '#opacity');
+// Setup form observer functionality
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: myFilter,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        feather: ['feather', 'round'],
+        featherRed: ['featherRed', 'round'],
+        featherGreen: ['featherGreen', 'round'],
+        featherBlue: ['featherBlue', 'round'],
+
+        opacity: ['opacity', 'float'],
+    },
+});
 
 
 // #### Drag-and-Drop image loading functionality

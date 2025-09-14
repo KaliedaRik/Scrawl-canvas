@@ -74,6 +74,7 @@ export const CENTER = 'center';
 export const CHANNELS_TO_ALPHA = 'channels-to-alpha';
 export const CHROMA = 'chroma';
 export const CLAMP_CHANNELS = 'clamp-channels';
+export const CLAMP_VALUES = ['down', 'round', 'up'];
 export const CLEAR = 'clear';
 export const CLICK = 'click';
 export const CLICK_ACTION = 'clickAction';
