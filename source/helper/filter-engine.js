@@ -1116,41 +1116,76 @@ P.transferDataUnchanged = function (oData, iData, len) {
 P.theBigActionsObject = {
 
 // __alpha-to-channels__ - Copies the alpha channel value over to the selected value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero.
+// __alpha-to-channels__ (32-bit view + byte masks)
     [ALPHA_TO_CHANNELS]: function (requirements) {
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
-            includeRed = true,
+            includeRed   = true,
             includeGreen = true,
-            includeBlue = true,
-            excludeRed = true,
+            includeBlue  = true,
+            excludeRed   = true,
             excludeGreen = true,
-            excludeBlue = true,
+            excludeBlue  = true,
             lineOut,
         } = requirements;
 
-        let r, g, b, a, aVal, i;
+        const Rb = 0x000000FF,
+            Gb = 0x0000FF00,
+            Bb = 0x00FF0000;
 
-        for (i = 0; i < len; i += 4) {
+        // Channels to receive alpha
+        const incMask = (includeRed ? Rb : 0) | (includeGreen ? Gb : 0) | (includeBlue ? Bb : 0);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
-            aVal = iData[a];
+        // Channels to zero (only when NOT included)
+        const zeroMask = (!includeRed && excludeRed   ? Rb : 0) | (!includeGreen && excludeGreen ? Gb : 0) | (!includeBlue && excludeBlue  ? Bb : 0);
 
-            if (aVal) {
+        // Fast path: if we’re not changing RGB at all, only set A=255 for nonzero A
+        const onlyAlphaTo255 = (incMask | zeroMask) === 0;
 
-                oData[r] = (includeRed) ? aVal : ((excludeRed) ? 0 : iData[r]);
-                oData[g] = (includeGreen) ? aVal : ((excludeGreen) ? 0 : iData[g]);
-                oData[b] = (includeBlue) ? aVal : ((excludeBlue) ? 0 : iData[b]);
-                oData[a] = 255;
+        if (onlyAlphaTo255) {
+
+            for (let p = 0, pz = src32.length | 0, s, a; p < pz; p++) {
+
+                s = src32[p];
+                a = (s >>> 24) & 0xFF;
+
+                if (a === 0) continue;
+
+                out32[p] = (s & 0x00FFFFFF) | 0xFF000000;
+            }
+        }
+        else {
+
+            const rgbMask = 0x00FFFFFF;
+
+            let p, pz, s, a, rgb, aRGB;
+
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                s = src32[p];
+                a = (s >>> 24) & 0xFF;
+
+                if (a === 0) continue;
+
+                rgb = s & rgbMask;
+
+                if (zeroMask) rgb &= ~zeroMask;
+
+                if (incMask) {
+
+                    aRGB = (a * 0x00010101) & rgbMask;
+                    rgb = (rgb & ~incMask) | (aRGB & incMask);
+                }
+                out32[p] = 0xFF000000 | rgb;
             }
         }
 
@@ -2423,50 +2458,65 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
-            includeRed = true,
+            includeRed   = true,
             includeGreen = true,
-            includeBlue = true,
+            includeBlue  = true,
             lineOut,
         } = requirements;
 
-        let divisor = 0;
-        if (includeRed) divisor++;
-        if (includeGreen) divisor++;
-        if (includeBlue) divisor++;
+        const incR = includeRed ? 1 : 0,
+            incG = includeGreen ? 1 : 0,
+            incB = includeBlue ? 1 : 0,
+            div  = incR + incG + incB;
 
-        let r, g, b, a, vr, vg, vb, i, sum;
+        if (div === 0) out32.set(src32);
+        else {
 
-        for (i = 0; i < len; i += 4) {
+            let sumDiv3LUT = null;
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            if (div === 3) {
 
-            vr = iData[r];
-            vg = iData[g];
-            vb = iData[b];
+                sumDiv3LUT = getWorkstoreItem('cta::sumDiv3');
 
-            oData[r] = vr;
-            oData[g] = vg;
-            oData[b] = vb;
+                if (!sumDiv3LUT) {
 
-            if (divisor) {
+                    sumDiv3LUT = new Uint8Array(766);
 
-                sum = 0;
+                    for (let s = 0; s <= 765; s++) {
 
-                if (includeRed) sum += vr;
-                if (includeGreen) sum += vg;
-                if (includeBlue) sum += vb;
-
-                oData[a] = _floor(sum / divisor);
+                        sumDiv3LUT[s] = Math.floor(s / 3) & 0xFF;
+                    }
+                    setWorkstoreItem('cta::sumDiv3', sumDiv3LUT);
+                }
             }
-            else oData[a] = iData[a];
+
+            let p, pz, s, r, g, b, aNew, sum;
+
+            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                s = src32[p];
+
+                r = s & 0xFF;
+                g = (s >>> 8) & 0xFF;
+                b = (s >>> 16) & 0xFF;
+
+                if (div === 1) aNew = incR ? r : (incG ? g : b);
+                else if (div === 2) {
+
+                    const sum = (incR ? r : 0) + (incG ? g : 0) + (incB ? b : 0);
+                    aNew = sum >>> 1;
+                }
+                else aNew = sumDiv3LUT[r + g + b];
+
+                out32[p] = (s & 0x00FFFFFF) | (aNew << 24);
+            }
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -2735,8 +2785,11 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        // 32-bit pixel views
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -2749,40 +2802,81 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const dR = highRed - lowRed,
-            dG = highGreen - lowGreen,
-            dB = highBlue - lowBlue;
+        const c8 = v => (v < 0 ? 0 : v > 255 ? 255 : v | 0);
 
-        let r, g, b, a, vr, vg, vb, va, i;
+        const lr = c8(lowRed),
+            lg = c8(lowGreen),
+            lb = c8(lowBlue),
+            hr = c8(highRed),
+            hg = c8(highGreen),
+            hb = c8(highBlue);
 
-        for (i = 0; i < len; i += 4) {
+        const idR = (lr === 0 && hr === 255),
+            idG = (lg === 0 && hg === 255),
+            idB = (lb === 0 && hb === 255);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        if (idR && idG && idB)  out32.set(src32);
+        else {
 
-            vr = iData[r];
-            vg = iData[g];
-            vb = iData[b];
-            va = iData[a];
+            const keyR = `clampch::R:${lr},${hr}`,
+                keyG = `clampch::G:${lg},${hg}`,
+                keyB = `clampch::B:${lb},${hb}`;
 
-            if (va) {
+            let lutR = idR ? null : getWorkstoreItem(keyR),
+                lutG = idG ? null : getWorkstoreItem(keyG),
+                lutB = idB ? null : getWorkstoreItem(keyB);
 
-                vr /= 255;
-                vg /= 255;
-                vb /= 255;
+            const buildLUT = (lo, hi) => {
 
-                oData[r] = lowRed + (vr * dR);
-                oData[g] = lowGreen + (vg * dG);
-                oData[b] = lowBlue + (vb * dB);
+                const d = hi - lo,
+                    lut = new Uint8ClampedArray(256);
+
+                for (let v = 0; v < 256; v++) {
+
+                    lut[v] = lo + (v * d) / 255;
+                }
+                return lut;
+            };
+
+            if (!idR && !lutR) {
+
+                lutR = buildLUT(lr, hr);
+                setWorkstoreItem(keyR, lutR);
             }
-            else {
-                oData[r] = vr;
-                oData[g] = vg;
-                oData[b] = vb;
+            if (!idG && !lutG) {
+
+                lutG = buildLUT(lg, hg);
+                setWorkstoreItem(keyG, lutG);
             }
-            oData[a] = va;
+            if (!idB && !lutB) {
+
+                lutB = buildLUT(lb, hb);
+                setWorkstoreItem(keyB, lutB);
+            }
+
+            let p, pz, s, a, r, g, b, nr, ng, nb;
+
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                s = src32[p];
+
+                r = s & 0xFF;
+                g = (s >>> 8) & 0xFF;
+                b = (s >>> 16) & 0xFF;
+                a = (s >>> 24) & 0xFF;
+
+                if (a === 0) {
+
+                    out32[p] = s;
+                    continue;
+                }
+
+                nr = idR ? r : lutR[r];
+                ng = idG ? g : lutG[g];
+                nb = idB ? b : lutB[b];
+
+                out32[p] = ((a << 24) | (nb << 16) | (ng << 8) | nr) >>> 0;
+            }
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -2792,20 +2886,13 @@ P.theBigActionsObject = {
 // __colors-to-alpha__ - Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the "red", "green" and "blue" arguments. The sensitivity of the effect can be manipulated using the "transparentAt" and "opaqueAt" values, both of which lie in the range 0-1.
     [COLORS_TO_ALPHA]: function (requirements) {
 
-        const getCTAValue = function (dr, dg, db) {
-
-            const diff = (_abs(red - dr) + _abs(green - dg) + _abs(blue - db)) / 3;
-
-            if (diff < transparent) return 0;
-            if (diff > opaque) return 255;
-            return ((diff - transparent) / range) * 255;
-        };
-
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -2817,31 +2904,86 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const maxDiff = _max(((red + green + blue) / 3), (((255 - red) + (255 - green) + (255 - blue)) / 3)),
-            transparent = transparentAt * maxDiff,
-            opaque = opaqueAt * maxDiff,
-            range = opaque - transparent;
+        // Helper functions
+        const clamp8 = v => (v < 0 ? 0 : v > 255 ? 255 : v | 0);
 
-        let r, g, b, a, vr, vg, vb, i;
+        const clamp01 = v => {
 
-        for (i = 0; i < len; i += 4) {
+            const n = +v;
+            return _isFinite(n) ? (n < 0 ? 0 : n > 1 ? 1 : n) : 0;
+        };
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        const R = clamp8(red),
+            G = clamp8(green),
+            B = clamp8(blue);
 
-            if (iData[a]) {
+        const tAt = clamp01(transparentAt),
+            oAt = clamp01(opaqueAt);
 
-                vr = iData[r];
-                vg = iData[g];
-                vb = iData[b];
+        const key = `cta::${R},${G},${B}::${tAt},${oAt}`;
 
-                oData[r] = vr;
-                oData[g] = vg;
-                oData[b] = vb;
-                oData[a] = getCTAValue(vr, vg, vb);
+        // Try workstore
+        let pack = getWorkstoreItem(key);
+
+        if (!pack) {
+
+            const diffR = new Uint16Array(256),
+                diffG = new Uint16Array(256),
+                diffB = new Uint16Array(256);
+
+            for (let v = 0; v < 256; v++) {
+
+                diffR[v] = Math.abs(v - R);
+                diffG[v] = Math.abs(v - G);
+                diffB[v] = Math.abs(v - B);
             }
+
+            const sumRef = R + G + B,
+                maxDiff3 = _max(sumRef, 765 - sumRef);
+
+            const tScaled = (tAt * maxDiff3) | 0,
+                oScaled = (oAt * maxDiff3) | 0;
+
+            let rangeScaled = oScaled - tScaled;
+
+            const binaryStep = (rangeScaled <= 0);
+
+            if (binaryStep) rangeScaled = 1;
+
+            pack = { diffR, diffG, diffB, tScaled, oScaled, rangeScaled, binaryStep };
+
+            setWorkstoreItem(key, pack);
+        }
+
+        const { diffR, diffG, diffB, tScaled, oScaled, rangeScaled, binaryStep } = pack;
+
+        // Copy frame once; we’ll overwrite alpha only for the pixels we touch.
+        out32.set(src32);
+
+        let p, pz, rgba, a, r, g, b, sumDiff, na;
+
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+            rgba = src32[p];
+            a = (rgba >>> 24) & 0xFF;
+
+            if (a === 0) continue;
+
+            r = rgba & 0xFF;
+            g = (rgba >>> 8) & 0xFF;
+            b = (rgba >>> 16) & 0xFF;
+
+            sumDiff = diffR[r] + diffG[g] + diffB[b];
+
+            if (sumDiff < tScaled) na = 0;
+            else if (sumDiff > oScaled) na = 255;
+            else if (binaryStep) na = (sumDiff > tScaled) ? 255 : 0;
+            else na = (((sumDiff - tScaled) * 255 + (rangeScaled >> 1)) / rangeScaled) | 0;
+            
+            if (na < 0) na = 0;
+            else if (na > 255) na = 255;
+
+            out32[p] = (out32[p] & 0x00FFFFFF) | (na << 24);
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -3560,8 +3702,10 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -3573,26 +3717,24 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let i, c, a;
+        const clamp8 = v => (v < 0 ? 0 : v > 255 ? 255 : v | 0);
 
-        for (i = 0; i < len; i += 4) {
+        const R = clamp8(red),
+            G = clamp8(green),
+            B = clamp8(blue),
+            A = clamp8(alpha);
 
-            a = i + 3;
+        // Precompute packed color
+        const baseRGB = (B << 16) | (G << 8) | R,
+            packedWithA = ((A << 24) | baseRGB) >>> 0;
 
-            if (iData[a]) {
+        for (let p = 0, pz = src32.length | 0, s, a; p < pz; p++) {
+        
+            s = src32[p];
+            a = (s >>> 24) & 0xFF;
 
-                c = i;
-                oData[c] = red;
-
-                c++;
-                oData[c] = green;
-
-                c++;
-                oData[c] = blue;
-
-                c++;
-                oData[c] = (excludeAlpha) ? iData[a] : alpha;
-            }
+            if (a === 0) out32[p] = s;
+            else out32[p] = excludeAlpha ? (((a << 24) | baseRGB) >>> 0) : packedWithA;
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -3857,6 +3999,17 @@ P.theBigActionsObject = {
     },
 
 // __glitch__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
+//
+// NOTE: this filter is deprecated. No further work is planned to maintain or improve it. INstead, the plan is to replace this filter with a set of loosely linked glitch effect filters covering:
+// + **Row/Column Displace** - band-based shifts with seed/seedDelta and edgeMode (transparent / wrap / clamp).
+// + **Channel Split/Drift** - per-channel offsets (optional blur for chroma bleed).
+// + **Slice Repeat / Dropout** - duplicate or zero spans for tear/gap artifacts.
+// + **Block Corrupt** - copy/permute fixed-size tiles (macroblock vibe).
+// + **Quantize/Posterize** - use the existing STEP_CHANNELS filter.
+// + **Banding** - deliberate bit-depth reduction (optional dithering).
+// + **Noise overlays** - grain, RF snow, line hum - see the RANDOM_NOISE filter, which already implements (some of) this functionality.
+// + **Scanline mod** - per-row brightness modulation (e.g., sinusoidal).
+// + **Color-space glitch** - wrong YCbCr matrix or 4:2:0 bleed/smear.
     [GLITCH]: function (requirements) {
 
         const [input, output] = this.getInputAndOutputLines(requirements);
@@ -4229,8 +4382,10 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -4239,43 +4394,62 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        if (gradient) {
+        if (!gradient) out32.set(src32);
+        else {
 
-            let i, avg, r, g, b, a, v;
+            const gradBytes = this.getGradientData(gradient);
 
-            const rainbowData = this.getGradientData(gradient);
+            if (!gradBytes || gradBytes.length < 1024) out32.set(src32);
+            else {
 
-            if (rainbowData.length) {
+                const grad32 = new Uint32Array(gradBytes.buffer, gradBytes.byteOffset, 256);
 
-                const gVal = this.getGrayscaleValue;
+                let sumLUT;
+                if (!useNaturalGrayscale) {
 
-                for (i = 0; i < len; i += 4) {
+                    sumLUT = getWorkstoreItem('mapgrad::sumLUT03333');
 
-                    r = i;
-                    g = r + 1;
-                    b = g + 1;
-                    a = b + 1;
+                    if (!sumLUT) {
 
-                    if (iData[a]) {
+                        sumLUT = new Uint8Array(766);
 
-                        if (useNaturalGrayscale) avg = gVal(iData[r], iData[g], iData[b]);
-                        else avg = _floor((0.3333 * iData[r]) + (0.3333 * iData[g]) + (0.3333 * iData[b]));
+                        for (let s = 0; s <= 765; s++) {
 
-                        v = avg * 4;
-
-                        oData[r] = rainbowData[v];
-                        v++;
-                        oData[g] = rainbowData[v];
-                        v++;
-                        oData[b] = rainbowData[v];
-                        v++;
-                        oData[a] = rainbowData[v];
+                            sumLUT[s] = Math.floor(0.3333 * s) & 0xFF;
+                        }
+                        setWorkstoreItem('mapgrad::sumLUT03333', sumLUT);
                     }
                 }
+
+                let p, pz, s, a, r, g, b, gray, sum;
+
+                for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                    s = src32[p];
+                    a = (s >>> 24) & 0xFF;
+
+                    if (a === 0) {
+
+                        out32[p] = s;
+                        continue;
+                    }
+
+                    r = s & 0xFF;
+                    g = (s >>> 8) & 0xFF;
+                    b = (s >>> 16) & 0xFF;
+
+                    let gray;
+
+                    if (useNaturalGrayscale) gray = (r * 54 + g * 183 + b * 19) >> 8;
+                    else {
+
+                        const sum = r + g + b;
+                        gray = sumLUT[sum];
+                    }
+                    out32[p] = grad32[gray];
+                }
             }
-            else this.transferDataUnchanged(oData, iData, len);
         }
-        else this.transferDataUnchanged(oData, iData, len);
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
@@ -4818,7 +4992,12 @@ P.theBigActionsObject = {
 
         const iData = input.data,
             oData = output.data,
-            len = iData.length;
+            width  = input.width  | 0,
+            height = input.height | 0;
+
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -4833,98 +5012,94 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        if (!(offsetRedX || offsetGreenX || offsetBlueX || offsetAlphaX || offsetRedY || offsetGreenY || offsetBlueY || offsetAlphaY)) {
-
-            this.transferDataUnchanged(oData, iData, len);
-        }
+        if (!(offsetRedX || offsetGreenX || offsetBlueX || offsetAlphaX || offsetRedY || offsetGreenY || offsetBlueY || offsetAlphaY)) out32.set(src32);
         else {
 
-            const width = input.width,
-                height = input.height,
-                rowStride = width << 2;
+            const rowStridePx = width | 0;
 
-            // Simple = same offset for all channels
             const simple = offsetRedX === offsetGreenX && offsetRedX === offsetBlueX && offsetRedX === offsetAlphaX && offsetRedY === offsetGreenY && offsetRedY === offsetBlueY && offsetRedY === offsetAlphaY;
 
             if (simple) {
 
-                const dx = offsetRedX,
-                    dy = offsetRedY;
+                const dx = offsetRedX | 0,
+                    dy = offsetRedY | 0;
 
-                let y, ty, xStart, xEnd, pixels, srcStart, destStart;
+                let y, ty, xStart, xEnd, n, srcRowBase, destRowBase;
 
-                // Copy rows with a single typed-array slice per row (fast, identical output)
                 for (y = 0; y < height; y++) {
 
                     ty = y + dy;
-
                     if (ty < 0 || ty >= height) continue;
 
-                    xStart = (dx < 0) ? -dx : 0;
-                    xEnd = (dx > 0) ? (width - dx) : width;
+                    xStart = dx < 0 ? -dx : 0;
+                    xEnd = dx > 0 ? width - dx : width;
+                    n = (xEnd - xStart) | 0;
 
-                    if (xEnd <= xStart) continue;
+                    if (n <= 0) continue;
 
-                    pixels = xEnd - xStart;
-                    srcStart = (y * rowStride) + (xStart << 2);
-                    destStart = (ty * rowStride) + ((xStart + dx) << 2);
+                    srcRowBase = (y  * rowStridePx + xStart) | 0;
+                    destRowBase = (ty * rowStridePx + xStart + dx) | 0;
 
-                    oData.set(iData.subarray(srcStart, srcStart + (pixels << 2)), destStart);
+                    // copy whole run of pixels
+                    out32.set(src32.subarray(srcRowBase, srcRowBase + n), destRowBase);
                 }
             }
             else {
 
-                let y, rowBase, inBase, x, rx, ry, gx, gy, bx, by, ax, ay, out;
+                out32.fill(0);
 
-                for (y = 0; y < height; y++) {
+                const copyChannel = (dx, dy, shift) => {
 
-                    rowBase = y * rowStride;
+                    dx |= 0; dy |= 0;
 
-                    for (x = 0; x < width; x++) {
+                    if (dx === 0 && dy === 0) {
 
-                        inBase = rowBase + (x << 2);
+                        const cm = (0xFF << shift) >>> 0,
+                            ncm = (~cm) >>> 0;
+                        
+                        let p, pz, s, v;
 
-                        // Red
-                        rx = x + offsetRedX;
-                        ry = y + offsetRedY;
+                        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-                        if (rx >= 0 && rx < width && ry >= 0 && ry < height) {
-
-                            out = ((ry * width) + rx) << 2;
-                            oData[out] = iData[inBase];
+                            s = src32[p];
+                            v = out32[p];
+                            out32[p] = (v & ncm) | (s & cm);
                         }
+                        return;
+                    }
 
-                        // Green
-                        gx = x + offsetGreenX;
-                        gy = y + offsetGreenY;
+                    const cm = (0xFF << shift) >>> 0,
+                        ncm = (~cm) >>> 0;
 
-                        if (gx >= 0 && gx < width && gy >= 0 && gy < height) {
+                    let y, ty, xStart, xEnd, n, src, dst, v, s, k;
 
-                            out = ((gy * width) + gx) << 2;
-                            oData[out + 1] = iData[inBase + 1];
-                        }
+                    for (y = 0; y < height; y++) {
 
-                        // Blue
-                        bx = x + offsetBlueX;
-                        by = y + offsetBlueY;
+                        ty = y + dy;
+                        if (ty < 0 || ty >= height) continue;
 
-                        if (bx >= 0 && bx < width && by >= 0 && by < height) {
+                        xStart = dx < 0 ? -dx : 0;
+                        xEnd = dx > 0 ? width - dx : width;
+                        n = (xEnd - xStart) | 0;
 
-                            out = ((by * width) + bx) << 2;
-                            oData[out + 2] = iData[inBase + 2];
-                        }
+                        if (n <= 0) continue;
 
-                        // Alpha
-                        ax = x + offsetAlphaX;
-                        ay = y + offsetAlphaY;
+                        src = (y * rowStridePx + xStart) | 0;
+                        dst = (ty * rowStridePx + xStart + dx) | 0;
 
-                        if (ax >= 0 && ax < width && ay >= 0 && ay < height) {
+                        for (k = 0; k < n; k++, src++, dst++) {
 
-                            out = ((ay * width) + ax) << 2;
-                            oData[out + 3] = iData[inBase + 3];
+                            v = out32[dst];
+                            s = src32[src];
+                            out32[dst] = (v & ncm) | (s & cm);
                         }
                     }
-                }
+                };
+
+                copyChannel(offsetRedX, offsetRedY, 0);
+                copyChannel(offsetGreenX, offsetGreenY, 8);
+                copyChannel(offsetBlueX, offsetBlueY, 16);
+                copyChannel(offsetAlphaX, offsetAlphaY, 24);
             }
         }
 
@@ -5131,13 +5306,16 @@ P.theBigActionsObject = {
 
         const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            iWidth = input.width;
+            width  = input.width | 0,
+            height = input.height | 0;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
-            width = 1,
-            height = 1,
+            width: boxW = 1,
+            height: boxH = 1,
             level = 0.5,
             seed = DEFAULT_SEED,
             noiseType = RANDOM,
@@ -5150,89 +5328,155 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
+        const totalPx = src32.length | 0;
+
         const rnd = this.getRandomNumbers({
             seed,
-            length: _ceil((len / 4) * 3),
-            imgWidth: iWidth,
+            length: Math.ceil(totalPx * 3),
+            imgWidth: width,
             type: noiseType,
         });
 
-        let rndCursor = -1,
-            rndLevel,
-            rndWidth,
-            rndHeight,
-            r, g, b, a, i, dw, dh, source;
+        let rp = 0;
 
-        const halfWidth = width / 2,
-            halfHeight = height / 2;
+        const halfW = boxW * 0.5,
+            halfH = boxH * 0.5;
 
-        for (i = 0; i < len; i += 4) {
+        const incMask = (includeRed ? 0x000000FF : 0) | (includeGreen ? 0x0000FF00 : 0) | (includeBlue ? 0x00FF0000 : 0) | (includeAlpha ? 0xFF000000 : 0);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        const allIncluded = (incMask === 0xFFFFFFFF >>> 0),
+            needAlphaCheck = excludeTransparentPixels;
 
-            if (noiseType === RANDOM) {
+        if (allIncluded) {
 
-                rndLevel = rnd[++rndCursor];
-                rndWidth = rnd[++rndCursor];
-                rndHeight = rnd[++rndCursor];
-            }
-            else {
+            let p, pz, rLevel, rWx, rHy, t, sPix, dw, dh, q, aP, aQ;
 
-                const temp = rnd[++rndCursor];
-                rndLevel = temp;
-                rndWidth = temp;
-                rndHeight = temp;
-            }
+            for (p = 0, pz = totalPx; p < pz; p++) {
 
-            if (rndLevel < level) {
+                if (noiseType === RANDOM) {
 
-                dw = _floor((rndWidth * width) - halfWidth);
-                dh = _floor((rndHeight * height) - halfHeight);
-
-                source = i + ((dh * iWidth) + dw) * 4;
-
-                if (noWrap && (source < 0 || source >= len)) {
-
-                    oData[r] = iData[r];
-                    oData[g] = iData[g];
-                    oData[b] = iData[b];
-                    oData[a] = iData[a];
+                    rLevel = rnd[rp++];
+                    rWx = rnd[rp++];
+                    rHy = rnd[rp++];
                 }
                 else {
 
-                    if (source < 0) source += len;
-                    else if (source >= len) source -= len;
+                    t = rnd[rp++];
+                    rLevel = t;
+                    rWx = t;
+                    rHy = t;
+                }
 
-                    if (excludeTransparentPixels && (!iData[a] || !iData[source + 3])) {
+                sPix = src32[p];
 
-                        oData[r] = iData[r];
-                        oData[g] = iData[g];
-                        oData[b] = iData[b];
-                        oData[a] = iData[a];
-                    }
-                    else {
+                if (rLevel >= level) {
 
-                        oData[r] = (includeRed) ? iData[source] : iData[r];
-                        source++;
-                        oData[g] = (includeGreen) ? iData[source] : iData[g];
-                        source++;
-                        oData[b] = (includeBlue) ? iData[source] : iData[b];
-                        source++;
-                        oData[a] = (includeAlpha) ? iData[source] : iData[a];
+                    out32[p] = sPix;
+                    continue;
+                }
+
+                dw = _floor(rWx * boxW - halfW) | 0;
+                dh = _floor(rHy * boxH - halfH) | 0;
+
+                q = p + dh * width + dw;
+
+                if (noWrap) {
+
+                    if (q < 0 || q >= totalPx) {
+
+                        out32[p] = sPix;
+                        continue;
                     }
                 }
-            }
-            else {
+                else {
 
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = iData[a];
+                    if (q < 0) q += totalPx;
+                    else if (q >= totalPx) q -= totalPx;
+                }
+
+                if (needAlphaCheck) {
+
+                    aP = (sPix >>> 24) & 0xFF;
+                    aQ = (src32[q] >>> 24) & 0xFF;
+
+                    if (aP === 0 || aQ === 0) {
+
+                        out32[p] = sPix;
+                        continue;
+                    }
+                }
+                out32[p] = src32[q];
             }
         }
+
+        // General path: merge selected bytes from sampled pixel into original
+        else {
+
+            const notIncMask = (~incMask) >>> 0;
+
+            let p, pz, rLevel, rWx, rHy, t, orig, dw, dh, q, aP, aQ, sampled;
+
+            for (p = 0, pz = totalPx; p < pz; p++) {
+
+                if (noiseType === RANDOM) {
+
+                    rLevel = rnd[rp++];
+                    rWx = rnd[rp++];
+                    rHy = rnd[rp++];
+                }
+                else {
+
+                    t = rnd[rp++];
+                    rLevel = t;
+                    rWx = t;
+                    rHy = t;
+                }
+
+                orig = src32[p];
+
+                if (rLevel >= level) {
+
+                    out32[p] = orig;
+                    continue;
+                }
+
+                dw = _floor(rWx * boxW - halfW) | 0;
+                dh = _floor(rHy * boxH - halfH) | 0;
+
+                q = p + dh * width + dw;
+
+                if (noWrap) {
+
+                    if (q < 0 || q >= totalPx) {
+
+                        out32[p] = orig;
+                        continue;
+                    }
+                }
+                else {
+
+                    if (q < 0) q += totalPx;
+                    else if (q >= totalPx) q -= totalPx;
+                }
+
+                if (needAlphaCheck) {
+
+                    aP = (orig >>> 24) & 0xFF;
+                    aQ = (src32[q] >>> 24) & 0xFF;
+                    
+                    if (aP === 0 || aQ === 0) {
+
+                        out32[p] = orig;
+                        continue;
+                    }
+                }
+
+                sampled = src32[q];
+
+                out32[p] = (orig & notIncMask) | (sampled & incMask);
+            }
+        }
+
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
