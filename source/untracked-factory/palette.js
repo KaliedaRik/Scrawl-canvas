@@ -48,7 +48,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, easeEngines, isa_fn, mergeOver, pushUnique, xt, xta, λfirstArg, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, easeEngines, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λfirstArg, λnull, Ωempty } from '../helper/utilities.js';
 
 import { getWorkstoreItem, setWorkstoreItem, checkForWorkstoreItem } from '../helper/workstore.js';
 
@@ -57,7 +57,7 @@ import { makeColor } from '../factory/color.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _assign, _entries, _floor, _isArray, _isFinite, _keys, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES_SET, LINEAR, RGB, SPACE, T_PALETTE, WHITE } from '../helper/shared-vars.js';
+import { _assign, _entries, _floor, _isArray, _isFinite, _keys, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES_SET, LINEAR, RGB, T_PALETTE, WHITE } from '../helper/shared-vars.js';
 
 // Local constants
 const PALETTE = 'palette';
@@ -69,18 +69,15 @@ const Palette = function (items = Ωempty) {
     this.makeName(items.name);
     this.register();
 
-    this.factory = makeColor({
-
-        name: `${this.name}-color-factory`,
-    });
+    this.factory = makeColor({ name: `${this.name}-color-factory` });
 
     this.set(this.defs);
 
-    this.colors = items.colors || {'0 ': [0,0,0,1], '999 ': [255,255,255,1]};
-
+    this.colors = {};
     this.stops = Array(1000).fill(BLANK);
-
     this.easingFunction = λfirstArg;
+
+    if (items.colors == null) items.colors = [[0, BLACK], [999, WHITE]];
 
     this.set(items);
 
@@ -109,9 +106,6 @@ const defaultAttributes = {
 
 // The __stops__ array is a fixed Array of length 1000 containing color strings for each index.
     stops: null,
-
-// If the __cyclic__ flag is set, then we know to calculate appropriate stop values between the last key color and the first key color, thus allowing for smooth crossing of the 1 -> 0 stops boundary
-    cyclic: false,
 
 // The __easing__ and __easingFunction__ attributes affect represents a transformation that will be applied to a copy of the color stops Array - this allows us to create non-linear gradients
     easing: LINEAR,
@@ -170,9 +164,14 @@ G.colors = function () {
 
         const colorSpace = f.colorSpace;
 
-        for (const [key, value] of _entries(this.colors)) {
+        const entries = _entries(this.colors)
+            .map(([k, v]) => [parseInt(k, 10), v])
+            .filter(([k, v]) => _isFinite(k) && k >= 0 && k <= 999 && v && v.length >= 3)
+            .sort((a, b) => a[0] - b[0]);
 
-            res.push([parseInt(key, 10), f.buildColorString(...value, colorSpace)]);
+        for (const [key, value] of entries) {
+
+            res.push([key, f.buildColorString(...value, colorSpace)]);
         }
     }
     else res.push([0, BLACK], [999, WHITE]);
@@ -182,24 +181,62 @@ G.colors = function () {
 
 S.colors = function (item) {
 
-    if (_isArray(item)) {
+    const isArr = _isArray(item);
 
-        const f = this.factory,
-            newCols = {},
-            colorSpace = f.colorSpace.toLowerCase();
+    const ok = isArr ? this.checkColorsArrayInput(item) : this.checkColorsObjectInput(item);
 
-        item.forEach(c => {
+    const f = this.factory,
+        colorSpace = f.colorSpace.toLowerCase();
 
-            const [pos, col] = c;
-            if (pos.toFixed && col.substring) {
+    let newColors = {};
 
-                f.convert(col);
-                newCols[`${pos} `] = [...f[colorSpace]];
-            }
-        });
-        this.colors = newCols;
-        this.dirtyPalette = true;
+    // Fallback: black→white
+    if (!ok) {
+
+        console.warn(`Palette '${this.name}': invalid colors input; require array of [index,color] or object with indices 0..999 - setting palette to black-white.`);
+
+        newColors = this.generateDefaultPalette();
     }
+    else if (isArr) {
+
+        for (const pair of item) {
+
+            const [key, val] = pair;
+
+            if (val && val.substring) {
+
+                f.convert(val);
+                newColors[key|0] = [...f[colorSpace]]; // coerce to int
+            }
+        }
+    }
+    else {
+
+        for (const [key, val] of _entries(item)) {
+
+            if (val && val.substring) {
+
+                const p = parseInt(key, 10);
+
+                if (_isFinite(p)) {
+
+                    f.convert(val);
+                    newColors[p] = [...f[colorSpace]];
+                }
+            }
+        }
+    }
+
+    const check = _keys(newColors);
+    if (check.length < 2) {
+
+        console.warn(`Palette '${this.name}': at least two distinct color stops are required (got ${check.length}). Setting palette to black-white.`);
+
+        newColors = this.generateDefaultPalette();
+    }
+
+    this.colors = newColors;
+    this.dirtyPalette = true;
 };
 
 // __easing__, __easingFunction__ - the easing to be applied to the gradient
@@ -250,25 +287,28 @@ S.colorSpace = function (item) {
 
         if (INT_COLOR_SPACES_SET.has(ITM)) {
 
-            const oldColors = _assign({}, this.colors);
-
-            const oldSpace = this.factory.colorSpace;
+            const oldColors = _assign({}, this.colors),
+                oldSpace = this.factory.colorSpace,
+                newColors = {};
 
             this.factory.set({ colorSpace: ITM });
+            
+            for (const [key, val] of _entries(oldColors)) {
 
-            for (const [key, value] of _entries(oldColors)) {
+                const idx = parseInt(key, 10);
 
-                const color = this.factory.buildColorString(...value, oldSpace);
+                if (!_isFinite(idx) || idx < 0 || idx > 999) continue;
 
-                this.factory.setColor(color);
+                const css = this.factory.buildColorString(...val, oldSpace);
 
-                this.colors[key].length = 0
-                this.colors[key].push(...this.factory[itm]);
+                this.factory.setColor(css);
+                newColors[idx] = [...this.factory[itm]];
             }
+            this.colors = newColors;
             this.dirtyPalette = true;
         }
     }
-}
+};
 
 G.returnColorAs = function () {
 
@@ -299,6 +339,56 @@ S.stops = λnull;
 
 
 // #### Prototype functions
+//
+// Validate: object input { "0": "rgb(...)", 999: "#fff", ... }
+P.checkColorsObjectInput = function (item) {
+
+    if (!item || !isa_obj(item)) return false;
+
+    for (const [k, v] of _entries(item)) {
+
+        const p = parseInt(k, 10);
+
+        if (!_isFinite(p)) return false;
+        if (!Number.isInteger(p)) return false;
+        if (p < 0 || p > 999) return false;
+        if (!(v && v.substring)) return false;
+    }
+    return true;
+};
+
+// Validate: array input [ [0,'#000'], [999,'#fff'] ]
+P.checkColorsArrayInput = function (item) {
+
+    if (!item || !_isArray(item)) return false;
+
+    for (const pair of item) {
+
+        if (!_isArray(pair) || pair.length < 2) return false;
+
+        const [p, v] = pair;
+
+        if (!Number.isInteger(p)) return false;
+        if (p < 0 || p > 999) return false;
+        if (!(v && v.substring)) return false;
+    }
+    return true;
+};
+
+P.generateDefaultPalette = function () {
+
+    const newColors = {},
+        f = this.factory,
+        colorSpace = f.colorSpace.toLowerCase();
+
+    f.convert(BLACK);
+    newColors[0] = [...f[colorSpace]];
+    
+    f.convert(WHITE);
+    newColors[999] = [...f[colorSpace]];
+
+    return newColors;
+};
 
 // `getColorSpace` - returns the color factory's current colorSpace value
 P.getColorSpace = function () {
@@ -314,6 +404,7 @@ P.getReturnColorAs = function () {
 };
 
 // `recalculateStopColors` - populate the stops Array with CSS color Strings, as determined by colors stored in the `colors` object
+// + Be aware that if color stops have not been set at index 0, or index 999, the indices between 0 to start, and between end to 999, will remain transparent black.
 P.recalculateStopColors = function () {
 
     if (this.dirtyPalette) {
@@ -327,30 +418,43 @@ P.recalculateStopColors = function () {
 
         const { colorSpace } = factory;
 
-        const colorKeys = _keys(colors).map(n => parseInt(n, 10)).sort((a, b) => a - b);
+        const colorKeys = _keys(colors)
+            .map(n => parseInt(n, 10))
+            .filter(n => _isFinite(n) && n >= 0 && n <= 999 && colors[n])
+            .sort((a, b) => a - b);
 
-        let currentKey = colorKeys[0],
-            nextKey, currentVals, nextVals, diff, i, iz, j;
+        if (colorKeys.length < 2) {
 
-        const [b, c, d, a] = colors[`${currentKey} `];
+            console.warn(`Palette '${this.name}': needs at least 2 stops to build gradient (found ${colorKeys.length})`);
 
-        stops[currentKey] = factory.returnColorFromValues(b, c, d, a);
+            this.dirtyPalette = false;
 
-        for (i = 0, iz = colorKeys.length - 1; i < iz; i++) {
+        }
+        else {
 
-            currentKey = colorKeys[i];
-            nextKey = colorKeys[i + 1];
-            currentVals = colors[`${currentKey} `];
-            nextVals = colors[`${nextKey} `];
+            let currentKey = colorKeys[0],
+                nextKey, currentVals, nextVals, diff, i, iz, j;
 
-            factory.setMinimumColor(factory.buildColorString(...currentVals, colorSpace));
-            factory.setMaximumColor(factory.buildColorString(...nextVals, colorSpace));
+            const [b, c, d, a] = colors[currentKey];
 
-            diff = nextKey - currentKey;
+            stops[currentKey] = factory.returnColorFromValues(b, c, d, a);
 
-            for (j = currentKey + 1; j <= nextKey; j++) {
+            for (i = 0, iz = colorKeys.length - 1; i < iz; i++) {
 
-                stops[j] = factory.getRangeColor((j - currentKey) / diff, true);
+                currentKey = colorKeys[i];
+                nextKey = colorKeys[i + 1];
+                currentVals = colors[currentKey];
+                nextVals = colors[nextKey];
+
+                factory.setMinimumColor(factory.buildColorString(...currentVals, colorSpace));
+                factory.setMaximumColor(factory.buildColorString(...nextVals, colorSpace));
+
+                diff = nextKey - currentKey;
+
+                for (j = currentKey + 1; j <= nextKey; j++) {
+
+                    stops[j] = factory.getRangeColor((j - currentKey) / diff, true);
+                }
             }
         }
     }
@@ -368,10 +472,9 @@ P.updateColor = function (index, color) {
 
         index = (index.substring) ? parseInt(index, 10) : _floor(index);
 
-        if (index >= 0 && index < 1000) {
+        if (_isFinite(index) && index >= 0 && index < 1000 && color && color.substring) {
 
             f.convert(color);
-            index += SPACE;
             this.colors[index] = [...f[colorSpace]];
             this.dirtyPalette = true;
         }
@@ -386,11 +489,16 @@ P.removeColor = function (index) {
 
         index = (index.substring) ? parseInt(index, 10) : _floor(index);
 
-        if (index >= 0 && index < 1000) {
+        if (_isFinite(index) && index >= 0 && index < 1000) {
 
-            index += SPACE;
-            delete this.colors[index];
-            this.dirtyPalette = true;
+            const count = _keys(this.colors).length;
+
+            if (this.colors[index] != null && count <= 2) console.warn(`Palette '${this.name}': cannot remove stop ${index}; a palette must keep at least two stops.`);
+            else {
+
+                delete this.colors[index];
+                this.dirtyPalette = true;
+            }
         }
     }
 };
@@ -405,7 +513,7 @@ P.getStopData = function (gradient, start, end, cycle) {
 
     const { stops } = this;
 
-    if (this.dirtyPaletteData || !checkForWorkstoreItem()) {
+    if (this.dirtyPaletteData || !checkForWorkstoreItem(workstoreName)) {
 
         this.dirtyPaletteData = false;
 

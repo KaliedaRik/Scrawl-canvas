@@ -24,11 +24,11 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 import { makePalette } from '../untracked-factory/palette.js';
 
 // Shared constants
-import { _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, END, LEFT, LINEAR, NAME, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, END, LEFT, LINEAR, NAME, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../helper/shared-vars.js';
 
 // Local constants
 const COLORS = 'colors',
-    PALETTE_KEYS = ['colors', 'cyclic', 'stops'];
+    PALETTE_KEYS = ['colors', 'stops'];
 
 
 // Create an animation to handle automated delta gradient animation
@@ -117,7 +117,7 @@ export default function (P = Ωempty) {
 
         if (xt(items.precision)) copy.precision = items.precision;
         else if (this.palette && xt(this.palette.precision)) copy.precision = this.palette.precision;
-        else copy.precision = 0;
+        else copy.precision = 25;
 
         if (items.colorSpace) copy.colorSpace = items.colorSpace;
         else if (this.palette) copy.colorSpace = this.palette.getColorSpace();
@@ -278,31 +278,27 @@ export default function (P = Ωempty) {
 // `paletteStart` - argument must be a positive integer Number in the range 0 - 999
     S.paletteStart = function (item) {
 
-        if (item.toFixed && this.palette) {
+        if (_isFinite(item) && this.palette) {
 
-            this.paletteStart = item;
+            let p = _floor(item);
 
-            if(item < 0 || item > 999) {
+            if (p < 0 || p > 999) p = (p > 500) ? 999 : 0;
+            this.paletteStart = p;
 
-                this.paletteStart = (item > 500) ? 999 : 0;
-            }
             this.palette.updateData();
         }
     };
     D.paletteStart = function (item) {
 
-        let p;
+        if (_isFinite(item) && this.palette) {
 
-        if (item.toFixed && this.palette) {
-
-            p = this.paletteStart + item;
+            let p = _floor(this.paletteStart + item);
 
             if (p < 0 || p > 999) {
 
-                if (this.cyclePalette) p = (p > 500) ? p - 1000 : p + 1000;
-                else p = (item > 500) ? 999 : 0;
+                if (this.cyclePalette) p = ((p % 1000) + 1000) % 1000;
+                else p = (p > 500) ? 999 : 0;
             }
-
             this.paletteStart = p;
             this.palette.updateData();
         }
@@ -312,29 +308,28 @@ export default function (P = Ωempty) {
 // `paletteEnd` - argument must be a positive integer Number in the range 0 - 999
     S.paletteEnd = function (item) {
 
-        if (item.toFixed && this.palette) {
+        if (_isFinite(item) && this.palette) {
 
-            this.paletteEnd = item;
+            let p = _floor(item);
 
-            if (item < 0 || item > 999) this.paletteEnd = (item > 500) ? 999 : 0;
+            if (p < 0 || p > 999) p = (p > 500) ? 999 : 0;
+            this.paletteEnd = p;
+
             this.palette.updateData();
         }
     };
 
     D.paletteEnd = function (item) {
 
-        let p;
+        if (_isFinite(item) && this.palette) {
 
-        if (item.toFixed && this.palette) {
-
-            p = this.paletteEnd + item;
+            let p = _floor(this.paletteEnd + item);
 
             if (p < 0 || p > 999) {
 
-                if (this.cyclePalette) p = (p > 500) ? p - 1000 : p + 1000;
-                else p = (item > 500) ? 999 : 0;
+                if (this.cyclePalette) p = ((p % 1000) + 1000) % 1000;
+                else p = (p > 500) ? 999 : 0;
             }
-
             this.paletteEnd = p;
             this.palette.updateData();
         }
@@ -412,15 +407,18 @@ export default function (P = Ωempty) {
                 return (typeof val !== UNDEF) ? val : def;
             }
 
-            def = palette.defs[item];
+            if (palette) {
 
-            if (typeof def !== UNDEF) {
+                def = palette.defs[item];
 
-                val = palette[item];
-                return (typeof val !== UNDEF) ? val : def;
+                if (typeof def !== UNDEF) {
+
+                    val = palette[item];
+                    return (typeof val !== UNDEF) ? val : def;
+                }
             }
-            else return undefined;
         }
+        return undefined
     };
 
 
@@ -511,7 +509,7 @@ export default function (P = Ωempty) {
                         predefined = paletteSetters[key];
 
                         if (predefined) predefined.call(palette, value);
-                        else if (typeof paletteDefs[key] !== UNDEF) palette[key] = addStrings(this[key], value);
+                        else if (typeof paletteDefs[key] !== UNDEF) palette[key] = addStrings(palette[key], value);
                     }
                 }
             }

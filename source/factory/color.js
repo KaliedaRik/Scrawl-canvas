@@ -116,6 +116,8 @@ const engine = element.getContext(_2D, {
 engine.globalAlpha = 1;
 engine.globalCompositeOperation = SOURCE_OVER;
 
+const clamp8 = (v) => (v < 0 ? 0 : (v > 255 ? 255 : v | 0));
+
 // #### Color constructor
 const Color = function (items = Ωempty) {
 
@@ -652,7 +654,7 @@ P.checkColor = function (item) {
 
         this.colorSpace = colSpace;
 
-        this.returnColorAs = colSpace;
+        this.returnColorAs = (colSpace === XYZ) ? RGB : colSpace;
 
         this.convert(item);
 
@@ -829,10 +831,10 @@ P.getHueValue = function (hue) {
 // `getColorValuesFromString` - internal helper function
 P.getColorValuesFromString = function(str, col) {
 
-    str = str.replace(col, ZERO_STR);
-    str = str.replace('(', ZERO_STR);
-    str = str.replace(')', ZERO_STR);
-    str = str.replace('/', ZERO_STR);
+    str = str.replace(col, ZERO_STR)
+        .replace('(', ZERO_STR)
+        .replace(')', ZERO_STR)
+        .replace(/\//g, ZERO_STR);
 
     const res = str.split(SPACE).filter(e => e != null && e !== ZERO_STR);
 
@@ -976,7 +978,7 @@ P.extractFromOklchColorString = function (color) {
 
     const vals = getColorValuesFromString(color, _OKLCH);
 
-    b = b = (vals[0].includes(PC)) ? parseFloat(vals[0]) / 100 : parseFloat(vals[0]);
+    b = (vals[0].includes(PC)) ? parseFloat(vals[0]) / 100 : parseFloat(vals[0]);
     if (b > 1) b = 1;
     if (b < 0) b = 0;
 
@@ -990,137 +992,168 @@ P.extractFromOklchColorString = function (color) {
     return [a, b, c, d];
 };
 
-// `convert` - internal function. Takes a color string and converts it into a variety of color space values. Makes use of the following functions:
-// + `convertHSLtoRGB`, `convertRGBtoHSL`
-// + `convertHWBtoRGB`, `convertRGBtoHWB`, `convertRGBHtoHWB`
-// + `convertXYZtoRGB`, `convertRGBtoXYZ`
-// + `convertXYZtoLAB`, `convertLABtoXYZ`
-// + `convertLABtoLCH`, `convertLCHtoLAB`
-// + `convertXYZtoOKLAB`, `convertOKLABtoXYZ`
-// + `convertOKLABtoOKLCH`, `convertOKLCHtoOKLAB`
+// `convert` - internal function. Takes a color string and converts it into a variety of color space values.
 P.convert = function (color, suffix = ZERO_STR) {
 
-    // Currently converting to as many color spaces as possible - we can make this more sane by only converting for the colors we want to convert (RGB + the internal color space + the returned color space)
-
+    // Only compute what we need: RGB + (internal colorSpace) + (returnColorAs)
     color = color.toLowerCase();
 
-    const rgb = this[`rgb${suffix}`];
-    const hsl = this[`hsl${suffix}`];
-    const hwb = this[`hwb${suffix}`];
-    const xyz = this[`xyz${suffix}`];
-    const lab = this[`lab${suffix}`];
-    const lch = this[`lch${suffix}`];
-    const oklab = this[`oklab${suffix}`];
-    const oklch = this[`oklch${suffix}`];
+    const rgb = this[`rgb${suffix}`],
+        hsl = this[`hsl${suffix}`],
+        hwb = this[`hwb${suffix}`],
+        xyz = this[`xyz${suffix}`],
+        lab = this[`lab${suffix}`],
+        lch = this[`lch${suffix}`],
+        oklab = this[`oklab${suffix}`],
+        oklch = this[`oklch${suffix}`];
 
-    // Initializing defs in the constructor causes an error - this should avoid it
     if (!rgb) return this;
 
-    rgb.length = 0;
-    hsl.length = 0;
-    hwb.length = 0;
-    xyz.length = 0;
-    lab.length = 0;
-    lch.length = 0;
-    oklab.length = 0;
-    oklch.length = 0;
+    // Mark all as fresh (no stale values)
+    rgb.length = hsl.length = hwb.length = xyz.length = lab.length = lch.length = oklab.length = oklch.length = 0;
 
-    let a, b, c, d;
+    // Decide targets
+    const need = new Set([RGB, this.colorSpace, this.returnColorAs === XYZ ? RGB : this.returnColorAs]);
 
-    if (color.includes(_HWB) && !supportsHWB) {
+    // Locals we may lazily populate
+    let r, g, b, a = 1, _xyz, _lab, _lch, _oklab, _oklch, _hsl;
 
-        // Note: returns RGB colors!
-        [a, b, c, d] = this.extractFromHwbColorString(color);
+    // Identify input space (order matters to avoid 'oklab' matching 'lab')
+    const isOKLAB = color.includes(_OKLAB),
+        isOKLCH = color.includes(_OKLCH),
+        isHWB = color.includes(_HWB),
+        isLCH = !isOKLCH && color.includes(_LCH),
+        isLAB = !isOKLAB && color.includes(_LAB),
+        isXYZ = color.includes(_XYZ);
 
-        rgb.push(b, c, d, a);
-        hsl.push(...this.convertRGBtoHSL(b, c, d), a);
-        hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
-        xyz.push(...this.convertRGBtoXYZ(b, c, d), a);
-        lab.push(...this.convertXYZtoLAB(xyz[0], xyz[1], xyz[2]), a);
-        lch.push(...this.convertLABtoLCH(lab[0], lab[1], lab[2]), a);
-        oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
-        oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
+    // Step 1: establish RGB (base), parsing manually only when the browser can't
+    if (isHWB && !supportsHWB) {
+
+        // manual HWB -> RGB
+        [a, r, g, b] = this.extractFromHwbColorString(color);
     }
-    else if (color.includes(_XYZ)) {
+    else if (isXYZ) {
 
-        [a, b, c, d] = this.extractFromXyzColorString(color);
+        // xyz input is never a valid CSS color; parse then convert to RGB
+        const [a_, x, y, z] = this.extractFromXyzColorString(color);
 
-        rgb.push(...this.convertXYZtoRGB(b, c, d), a);
-        hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
-        hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
-        xyz.push(b, c, d, a);
-        lab.push(...this.convertXYZtoLAB(b, c, d), a);
-        lch.push(...this.convertLABtoLCH(lab[0], lab[1], lab[2]), a);
-        oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
-        oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
+        a = a_;
+        _xyz = [x, y, z, a];
+
+        [r, g, b] = this.convertXYZtoRGB(x, y, z);
     }
-    else if (color.includes(_OKLAB) && !supportsOKLAB) {
+    else if (isOKLAB && !supportsOKLAB) {
 
-        [a, b, c, d] = this.extractFromOklabColorString(color);
+        const [a_, L, A, B] = this.extractFromOklabColorString(color);
 
-        oklab.push(b, c, d, a);
-        oklch.push(...this.convertOKLABtoOKLCH(b, c, d), a);
-        xyz.push(...this.convertOKLABtoXYZ(b, c, d), a);
-        lab.push(...this.convertXYZtoLAB(xyz[0], xyz[1], xyz[2]), a);
-        lch.push(...this.convertLABtoLCH(lab[0], lab[1], lab[2]), a);
-        rgb.push(...this.convertXYZtoRGB(xyz[0], xyz[1], xyz[2]), a);
-        hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
-        hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
+        a = a_;
+        _oklab = [L, A, B, a];
+
+        const [x, y, z] = this.convertOKLABtoXYZ(L, A, B);
+        _xyz = [x, y, z, a];
+
+        [r, g, b] = this.convertXYZtoRGB(x, y, z);
     }
-    else if (color.includes(_OKLCH) && !supportsOKLCH) {
+    else if (isOKLCH && !supportsOKLCH) {
 
-        [a, b, c, d] = this.extractFromOklchColorString(color);
+        const [a_, L, C, H] = this.extractFromOklchColorString(color);
 
-        oklch.push(b, c, d, a);
-        oklab.push(...this.convertOKLCHtoOKLAB(b, c, d), a);
-        xyz.push(...this.convertOKLABtoXYZ(oklab[0], oklab[1], oklab[2]), a);
-        lab.push(...this.convertXYZtoLAB(xyz[0], xyz[1], xyz[2]), a);
-        lch.push(...this.convertLABtoLCH(lab[0], lab[1], lab[2]), a);
-        rgb.push(...this.convertXYZtoRGB(xyz[0], xyz[1], xyz[2]), a);
-        hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
-        hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
+        a = a_;
+        _oklch = [L, C, H, a];
+
+        const [L2, A2, B2] = this.convertOKLCHtoOKLAB(L, C, H);
+        _oklab = [L2, A2, B2, a];
+
+        const [x, y, z] = this.convertOKLABtoXYZ(L2, A2, B2);
+        _xyz = [x, y, z, a];
+
+        [r, g, b] = this.convertXYZtoRGB(x, y, z);
     }
-    else if (color.includes(_LAB) && !supportsLAB) {
+    else if (isLAB && !supportsLAB) {
 
-        [a, b, c, d] = this.extractFromLabColorString(color);
+        const [a_, L, A, B] = this.extractFromLabColorString(color);
 
-        lab.push(b, c, d, a);
-        xyz.push(...this.convertLABtoXYZ(b, c, d), a);
-        rgb.push(...this.convertXYZtoRGB(xyz[0], xyz[1], xyz[2]), a);
-        hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
-        hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
-        lch.push(...this.convertLABtoLCH(b, c, d), a);
-        oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
-        oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
+        a = a_;
+        _lab = [L, A, B, a];
+
+        const [x, y, z] = this.convertLABtoXYZ(L, A, B);
+        _xyz = [x, y, z, a];
+
+        [r, g, b] = this.convertXYZtoRGB(x, y, z);
     }
-    else if (color.includes(_LCH) && !supportsLCH) {
+    else if (isLCH && !supportsLCH) {
 
-        [a, b, c, d] = this.extractFromLchColorString(color);
+        const [a_, L, C, H] = this.extractFromLchColorString(color);
 
-        lch.push(b, c, d, a);
-        lab.push(...this.convertLCHtoLAB(b, c, d), a);
-        xyz.push(...this.convertLABtoXYZ(lab[0], lab[1], lab[2]), a);
-        rgb.push(...this.convertXYZtoRGB(xyz[0], xyz[1], xyz[2]), a);
-        hsl.push(...this.convertRGBtoHSL(rgb[0], rgb[1], rgb[2]), a);
-        hwb.push(...this.convertRGBHtoHWB(rgb[0], rgb[1], rgb[2], hsl[0]), a);
-        oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
-        oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
+        a = a_;
+        _lch = [L, C, H, a];
+
+        const [L2, A2, B2] = this.convertLCHtoLAB(L, C, H);
+        _lab = [L2, A2, B2, a];
+
+        const [x, y, z] = this.convertLABtoXYZ(L2, A2, B2);
+        _xyz = [x, y, z, a];
+
+        [r, g, b] = this.convertXYZtoRGB(x, y, z);
     }
-    // This captures everything else, including CSS `color()` strings, named colors, hex colors, etc
-    // + All these colors get processed as RGB colors
     else {
 
-        [b, c, d, a] = this.getColorFromCanvas(color);
-
-        rgb.push(b, c, d, a);
-        hsl.push(...this.convertRGBtoHSL(b, c, d), a);
-        hwb.push(...this.convertRGBHtoHWB(b, c, d, hsl[0]), a);
-        xyz.push(...this.convertRGBtoXYZ(b, c, d), a);
-        lab.push(...this.convertXYZtoLAB(xyz[0], xyz[1], xyz[2]), a);
-        lch.push(...this.convertLABtoLCH(lab[0], lab[1], lab[2]), a);
-        oklab.push(...this.convertXYZtoOKLAB(xyz[0], xyz[1], xyz[2]), a);
-        oklch.push(...this.convertOKLABtoOKLCH(oklab[0], oklab[1], oklab[2]), a);
+        // Everything else (including supported HWB/LAB/LCH/OK*) -> let the browser parse to RGB
+        [r, g, b, a] = this.getColorFromCanvas(color);
     }
+
+    // Always store RGB
+    rgb.push(r, g, b, a);
+
+    // Lazily compute + store only what we need
+    const needHSL   = need.has(HSL),
+        needHWB   = need.has(HWB),
+        needXYZ   = need.has(XYZ),
+        needLAB   = need.has(LAB),
+        needLCH   = need.has(LCH),
+        needOKLAB = need.has(OKLAB),
+        needOKLCH = need.has(OKLCH);
+
+    if (needHSL || needHWB) {
+
+        _hsl = _hsl || this.convertRGBtoHSL(r, g, b);
+    }
+    if (needHSL) {
+
+        hsl.push(_hsl[0], _hsl[1], _hsl[2], a);
+    }
+    if (needHWB) {
+
+        const hw = this.convertRGBHtoHWB(r, g, b, _hsl[0]);
+        hwb.push(hw[0], hw[1], hw[2], a);
+    }
+    if (needXYZ || needLAB || needLCH || needOKLAB || needOKLCH) {
+
+        if (!_xyz) _xyz = [...this.convertRGBtoXYZ(r, g, b), a];
+    }
+    if (needLAB || needLCH) {
+
+        if (!_lab) _lab = [...this.convertXYZtoLAB(_xyz[0], _xyz[1], _xyz[2]), a];
+    }
+    if (needLCH) {
+
+        if (!_lch) _lch = [...this.convertLABtoLCH(_lab[0], _lab[1], _lab[2]), a];
+    }
+    if (needOKLAB || needOKLCH) {
+
+        if (!_oklab) _oklab = [...this.convertRGBtoOKLAB(r, g, b), a];
+    }
+    if (needOKLCH) {
+
+        if (!_oklch) _oklch = [...this.convertOKLABtoOKLCH(_oklab[0], _oklab[1], _oklab[2]), a];
+    }
+
+    if (needXYZ) xyz.push(_xyz[0], _xyz[1], _xyz[2], a);
+    if (needLAB) lab.push(_lab[0], _lab[1], _lab[2], a);
+    if (needLCH) lch.push(_lch[0], _lch[1], _lch[2], a);
+    if (needOKLAB) oklab.push(_oklab[0], _oklab[1], _oklab[2], a);
+    if (needOKLCH) oklch.push(_oklch[0], _oklch[1], _oklch[2], a);
+
     return this;
 };
 
@@ -1128,41 +1161,81 @@ P.convert = function (color, suffix = ZERO_STR) {
 // `extractRGBfromColor` - takes a color string and returns it's RGB equivalent channel values:
 P.extractRGBfromColor = function (color) {
 
-    color = color.toLowerCase();
+    // color = color.toLowerCase();
 
-    let a, b, c, d;
+    // let a, b, c, d;
 
-    if (color.includes(_HWB) && !supportsHWB) {
+    // if (color.includes(_HWB) && !supportsHWB) {
 
-        [a, b, c, d] = this.extractFromHwbColorString(color);
-        return [b, c, d, a];
-    }
-    else if (color.includes(_XYZ)) {
+    //     [a, b, c, d] = this.extractFromHwbColorString(color);
+    //     return [b, c, d, a];
+    // }
+    // else if (color.includes(_XYZ)) {
 
-        [a, b, c, d] = this.extractFromXyzColorString(color);
-        return [...this.convertXYZtoRGB(b, c, d), a];
-    }
-    else if (color.includes(_OKLAB) && !supportsOKLAB) {
+    //     [a, b, c, d] = this.extractFromXyzColorString(color);
+    //     return [...this.convertXYZtoRGB(b, c, d), a];
+    // }
+    // else if (color.includes(_OKLAB) && !supportsOKLAB) {
 
-        [a, b, c, d] = this.extractFromOklabColorString(color);
-        return [...this.convertXYZtoRGB(...this.convertOKLABtoXYZ(b, c, d)), a];
-    }
-    else if (color.includes(_OKLCH) && !supportsOKLCH) {
+    //     [a, b, c, d] = this.extractFromOklabColorString(color);
+    //     return [...this.convertXYZtoRGB(...this.convertOKLABtoXYZ(b, c, d)), a];
+    // }
+    // else if (color.includes(_OKLCH) && !supportsOKLCH) {
 
-        [a, b, c, d] = this.extractFromOklchColorString(color);
-        return [...this.convertXYZtoRGB(...this.convertOKLABtoXYZ(...this.convertOKLCHtoOKLAB(b, c, d))), a];
-    }
-    else if (color.includes(_LAB) && !supportsLAB) {
+    //     [a, b, c, d] = this.extractFromOklchColorString(color);
+    //     return [...this.convertXYZtoRGB(...this.convertOKLABtoXYZ(...this.convertOKLCHtoOKLAB(b, c, d))), a];
+    // }
+    // else if (color.includes(_LAB) && !supportsLAB) {
 
-        [a, b, c, d] = this.extractFromLabColorString(color);
-        return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(b, c, d)), a];
-    }
-    else if (color.includes(_LCH) && !supportsLCH) {
+    //     [a, b, c, d] = this.extractFromLabColorString(color);
+    //     return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(b, c, d)), a];
+    // }
+    // else if (color.includes(_LCH) && !supportsLCH) {
 
-        [a, b, c, d] = this.extractFromLchColorString(color);
-        return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(...this.convertLCHtoLAB(b, c, d))), a];
-    }
-    else return this.getColorFromCanvas(color);
+    //     [a, b, c, d] = this.extractFromLchColorString(color);
+    //     return [...this.convertXYZtoRGB(...this.convertLABtoXYZ(...this.convertLCHtoLAB(b, c, d))), a];
+    // }
+    // else return this.getColorFromCanvas(color);
+    if (!(color && color.substring)) return [0, 0, 0, 1];
+
+    // Snapshot current arrays (tiny: 4 elements each) to avoid mutating state.
+    const rgb0   = this.rgb.slice(),
+        hsl0 = this.hsl.slice(),
+        hwb0 = this.hwb.slice(),
+        xyz0 = this.xyz.slice(),
+        lab0 = this.lab.slice(),
+        lch0 = this.lch.slice(),
+        oklab0 = this.oklab.slice(),
+        oklch0 = this.oklch.slice(),
+        cs0 = this.colorSpace,
+        ra0 = this.returnColorAs;
+
+    // Force minimal work in convert(): only RGB (plus any unavoidable intermediates).
+    this.colorSpace = RGB;
+    this.returnColorAs = RGB;
+    this.convert(color);
+
+    const outR = this.rgb[0] ?? 0,
+        outG = this.rgb[1] ?? 0,
+        outB = this.rgb[2] ?? 0,
+        outA = this.rgb[3] ?? 1;
+
+    // Restore state
+    this.rgb.length = this.hsl.length = this.hwb.length = this.xyz.length = this.lab.length = this.lch.length = this.oklab.length = this.oklch.length = 0;
+
+    this.rgb.push(...rgb0);
+    this.hsl.push(...hsl0);
+    this.hwb.push(...hwb0);
+    this.xyz.push(...xyz0);
+    this.lab.push(...lab0);
+    this.lch.push(...lch0);
+    this.oklab.push(...oklab0);
+    this.oklch.push(...oklch0);
+
+    this.colorSpace = cs0;
+    this.returnColorAs = ra0;
+
+    return [outR, outG, outB, outA];
 };
 
 // `convertRGBtoHex` - takes 3 rgb color values (range 0-255) and returns a #hex string:
@@ -1173,6 +1246,10 @@ P.convertRGBtoHex = function (red, green, blue) {
     if (blue.substring) blue = parseInt(blue, 10);
 
     if (_isFinite(red) && _isFinite(green) && _isFinite(blue)) {
+
+        red = clamp8(red);
+        green = clamp8(green);
+        blue = clamp8(blue);
 
         const r = (_0 + (red).toString(16)).slice(-2),
             g = (_0 + (green).toString(16)).slice(-2),
@@ -1192,6 +1269,7 @@ P.getColorFromCanvas = function (color) {
         a = 0;
 
     engine.clearRect(0, 0, 1, 1);
+    engine.fillStyle = BLANK;
     engine.fillStyle = color;
     engine.fillRect(0, 0, 1, 1);
 
@@ -1264,9 +1342,9 @@ P.convertRGBtoHWB = function (red, green, blue) {
 
     const hsl = this.convertRGBtoHSL(red, green, blue);
 
-    red /= 256;
-    green /= 256;
-    blue /= 256;
+    red /= 255;
+    green /= 255;
+    blue /= 255;
 
     const white = _min(red, green, blue),
         black = 1 - _max(red, green, blue);
@@ -1277,9 +1355,9 @@ P.convertRGBtoHWB = function (red, green, blue) {
 // `convertRGBHtoHWB` - internal helper function
 P.convertRGBHtoHWB = function (red, green, blue, hue) {
 
-    red /= 256;
-    green /= 256;
-    blue /= 256;
+    red /= 255;
+    green /= 255;
+    blue /= 255;
 
     const white = _min(red, green, blue),
         black = 1 - _max(red, green, blue);
@@ -1411,9 +1489,9 @@ P.convertOKLABtoRGB = function (L, A, B) {
 
     const [r_, g_, b_] = this.gam_sRGB(sRGB);
 
-    const r = _round(r_ * 255);
-    const g = _round(g_ * 255);
-    const b = _round(b_ * 255);
+    const r = clamp8(_round(r_ * 255));
+    const g = clamp8(_round(g_ * 255));
+    const b = clamp8(_round(b_ * 255));
 
     releaseArray(sRGB);
 
@@ -1446,9 +1524,9 @@ P.convertXYZtoRGB = function (x, y, z) {
     releaseArray(A, B);
 
     return [
-        _round(sRGB[0] * 255),
-        _round(sRGB[1] * 255),
-        _round(sRGB[2] * 255),
+        clamp8(_round(sRGB[0] * 255)),
+        clamp8(_round(sRGB[1] * 255)),
+        clamp8(_round(sRGB[2] * 255)),
     ];
 };
 
