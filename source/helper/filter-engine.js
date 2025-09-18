@@ -11,6 +11,8 @@ import { correctAngle, doCreate, easeEngines, isa_fn } from './utilities.js';
 
 import { checkForWorkstoreItem, getOrAddWorkstoreItem, getWorkstoreItem, setAndReturnWorkstoreItem, setWorkstoreItem } from './workstore.js';
 
+import { colorEngine } from './color-engine.js';
+
 import { makeAnimation } from '../factory/animation.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
@@ -49,6 +51,7 @@ const _exp = Math.exp,
     MONOCHROME_16 = 'monochrome-16',
     MONOCHROME_4 = 'monochrome-4',
     MONOCHROME_8 = 'monochrome-8',
+    NAIVE_GRAY_LUT = 'naive-gray-lut',
     ORDERED = 'ordered',
     OVERLAY = 'overlay',
     POINTS_ARRAY = 'points-array',
@@ -91,11 +94,6 @@ const predefinedPalette = {
 const LOW_ARRAY = new Uint8Array([0,255,0]),
     HIGH_ARRAY = new Uint8Array([0,255,255]);
 
-
-// The filter Color object - used by various filters
-export const colorEngine = makeColor({
-    name: 'SC-core-color-engine',
-});
 
 // A backdoor to retrieve the last palette used by the `reduce-palette` filter
 // + We use this in Demo filters-027 to report the colors used in the commonest colors palette
@@ -794,29 +792,6 @@ P.cacheOutput = function (name, obj) {
     this.cache[name] = obj;
 };
 
-// `getWorkstoreImageData` - acquire a zeroed ImageData of size w×h from the Workstore.
-// + Keyed by dimensions + optional logical name (stable across frames)
-// + Zeroes the buffer each time to replicate `new ImageData(w,h)` semantics
-P.getWorkstoreImageData = function (w, h, key = 'anon') {
-
-    const name = `imagedata-${w}x${h}-${key}`;
-
-    let img = getWorkstoreItem(name);
-
-    // Guard against stale/mismatched objects (or purged entries)
-    if (!img || img.width !== w || img.height !== h || img.data.length !== (w * h * 4)) {
-
-        img = new ImageData(new Uint8ClampedArray(w * h * 4), w, h);
-        setWorkstoreItem(name, img);
-    }
-    else {
-
-        // Maintain previous semantics: new ImageData(w,h) returns zeroed data
-        img.data.fill(0);
-    }
-    return img;
-};
-
 // `getInputAndOutputLines` - determine, and return, the appropriate results object for the lineIn, lineMix and lineOut values supplied to each action function when it gets invoked
 P.getInputAndOutputLines = function (requirements) {
 
@@ -855,165 +830,6 @@ P.getInputAndOutputLines = function (requirements) {
     else lineOut = cache[requirements.lineOut];
 
     return [lineIn, lineOut, lineMix];
-};
-
-// `getGrayscaleValue` - put here because this calculation is used in several different filters
-P.getGrayscaleValue = function (r, g, b) {
-
-    return _floor((0.2126 * r) + (0.7152 * g) + (0.0722 * b));
-};
-
-// `retrieveColorPointLibraries` - manages the three color point libraries. The function retrieves them from the workstore or - if they have not yet been created or have been deleted - creates, stores and returns them to the calling function.
-P.retrieveColorPointLibraries = function () {
-
-    if (!checkForWorkstoreItem(COLOR_POINT_ARRAYS)) {
-
-        setWorkstoreItem(COLOR_POINT_ARRAYS, {
-            labColorLib: new Map(),
-            lchColorLib: new Map(),
-            rgbColorLib: new Map(),
-        });
-    }
-
-    return getWorkstoreItem(COLOR_POINT_ARRAYS);
-};
-
-// `getOkColorVals` - returns an array of OKLAB/OKLCH calculated values for a given RGB color point
-// + Arguments __r, g, b__ - positive integer clamped between 0-255 - RGB red, green and blue channel values
-// + Argument __libs__ - the object returned by the `retrieveColorPointLibraries` function
-// + Return an array: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
-P.getOkColorVals = function (r, g, b, libs) {
-
-    const k = this.rgbKey(r, g, b),
-        hit = libs.rgbColorLib.get(k);
-
-    if (hit !== undefined) return hit;
-
-    const lab = colorEngine.convertRGBtoOKLAB(r, g, b),
-        lch = colorEngine.convertOKLABtoOKLCH(lab[0], lab[1], lab[2]),
-        vals = [lab[0], lab[1], lab[2], lch[1], lch[2]];
-
-    libs.rgbColorLib.set(k, vals);
-
-    libs.labColorLib.set(this.labKeyFromLab(lab[0], lab[1], lab[2]), [r, g, b]);
-    libs.lchColorLib.set(this.lchKeyFromLch(lch[0], lch[1], lch[2]),   [r, g, b]);
-
-    return vals;
-};
-
-// `getRegularColorVals` - returns an array of RGB channel values for a given OKLAB or OKLCH color point. Note that arguments must represent an OKLAB color point only, or an OKLCH color point only
-// + Argument __l__ - float number between 0 and 1 - OKLAB/OKLCH luminance value
-// + Argument __ac__ - either the OKLAB __a__ channel value (float Number `-4.0`-`4.0`, or the OKLCH __c__ channel value (positive float Number between `0`-`4.0`)
-// + Argument __bh__ - either the OKLAB __b__ channel value (float Number `-4.0`-`4.0`, or the OKLCH __h__ channel value (signed float Number generally between `0`-`360`)
-// + Argument __libs__ - the object returned by the `retrieveColorPointLibraries` function
-// + Argument __isLch__ - boolean - true if arguments represent an OKLCH color point; false otherwise (default)
-// + Return an array of RGB color values: `[r, g, b]`
-P.getRegularColorVals = function (l, ac, bh, libs, isLch = false) {
-
-    if (isLch) {
-
-        const k = this.lchKeyFromLch(l, ac, bh),
-            hit = libs.lchColorLib.get(k);
-
-        if (hit !== undefined) return hit;
-
-        const lab = colorEngine.convertOKLCHtoOKLAB(l, ac, bh),
-            rgb = colorEngine.convertOKLABtoRGB(lab[0], lab[1], lab[2]);
-
-        libs.lchColorLib.set(k, rgb);
-        libs.labColorLib.set(this.labKeyFromLab(lab[0], lab[1], lab[2]), rgb);
-
-        return rgb;
-
-    }
-    else {
-
-        const k = this.labKeyFromLab(l, ac, bh),
-            hit = libs.labColorLib.get(k);
-
-        if (hit !== undefined) return hit;
-
-        const rgb = colorEngine.convertOKLABtoRGB(l, ac, bh);
-        libs.labColorLib.set(k, rgb);
-
-        const lch = colorEngine.convertOKLABtoOKLCH(l, ac, bh);
-        libs.lchColorLib.set(this.lchKeyFromLch(lch[0], lch[1], lch[2]), rgb);
-
-        return rgb;
-    }
-};
-
-// Warning: magic numbers
-const LAB_A_SIZE = 501,
-    LAB_B_SIZE = 501,
-    LAB_STRIDE_A = LAB_B_SIZE,
-    LAB_STRIDE_L = LAB_A_SIZE * LAB_B_SIZE,
-    LCH_C_SIZE = 201,
-    LCH_H_SIZE = 540,
-    LCH_STRIDE_C = LCH_H_SIZE,
-    LCH_STRIDE_L = LCH_C_SIZE * LCH_H_SIZE,
-    MIN_AB = -0.4,
-    MAX_AB = 0.4,
-    MAKE_AB_POSITIVE = 0.4,
-    AB_GRANULARITY = 625,
-    MIN_C = 0,
-    MAX_C = 0.8,
-    C_GRANULARITY = 250,
-    H_GRANULARITY = 1.5;
-
-P.labKeyFromLab = function (l, a, b) {
-
-    const L = this.getLuminanceIndex(l);
-
-    if (a < MIN_AB) a = MIN_AB;
-    else if (a > MAX_AB) a = MAX_AB;
-
-    if (b < MIN_AB) b = MIN_AB;
-    else if (b > MAX_AB) b = MAX_AB;
-
-    const A = _floor((a + MAKE_AB_POSITIVE) * AB_GRANULARITY);
-    const B = _floor((b + MAKE_AB_POSITIVE) * AB_GRANULARITY);
-
-    return (L * LAB_STRIDE_L) + (A * LAB_STRIDE_A) + B;
-};
-
-P.lchKeyFromLch = function (l, c, h) {
-
-    const L = this.getLuminanceIndex(l);
-
-    if (c < MIN_C) c = MIN_C;
-    else if (c > MAX_C) c = MAX_C;
-
-    const C = _floor(c * C_GRANULARITY),
-        H = _floor(h * H_GRANULARITY);
-
-    return (L * LCH_STRIDE_L) + (C * LCH_STRIDE_C) + H;
-};
-
-P.rgbKey = function (r, g, b) {
-
-    return (r << 16) | (g << 8) | b;
-};
-
-// Perceptual luminance quantization: denser in midtones, coarser in highlights/shadows
-const LOW_L_CEILING = 0.4,
-    MED_L_CEILING = 0.9,
-    MIN_L = 0,
-    MAX_L = 1,
-    LOW_GRANULARITY = 250,
-    MED_GRANULARITY = 600,
-    HIGH_GRANULARITY = 1000,
-    MED_STEP = 100,
-    HIGH_STEP = 400;
-
-P.getLuminanceIndex = function (l) {
-
-    if (l < MIN_L) l = MIN_L;
-    else if (l > MAX_L) l = MAX_L;
-
-    if (l < LOW_L_CEILING) return _floor(l * LOW_GRANULARITY);
-    if (l < MED_L_CEILING) return _floor(MED_STEP + ((l - LOW_L_CEILING) * MED_GRANULARITY));
-    return _floor(HIGH_STEP + ((l - MED_L_CEILING) * HIGH_GRANULARITY));
 };
 
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
@@ -1207,7 +1023,7 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const libs = this.retrieveColorPointLibraries();
+        const libs = colorEngine.getRgbOkCache();
 
         let r, g, b, a, i, L, _r, _g, _b, alpha;
 
@@ -1226,7 +1042,7 @@ P.theBigActionsObject = {
                 if (L > 1) L = 1;
                 else if (L < 0) L = 0;
 
-                [_r, _g, _b] = this.getRegularColorVals(L, 0, 0, libs);
+                [_r, _g, _b] = colorEngine.getRgbValsForOklab(L, 0, 0, libs);
 
                 oData[r] = _r;
                 oData[g] = _g;
@@ -1553,7 +1369,7 @@ P.theBigActionsObject = {
 
         const normalCalc = (Cs, As, Cb, Ab) => (As * Cs) + (Ab * Cb * (1 - As));
 
-        const libs = this.retrieveColorPointLibraries();
+        const libs = colorEngine.getRgbOkCache();
 
         let x, y, dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA, ir, ig, ib, ia, mr, mg, mb, ma, cr, cg, cb, IL, IC, IH, ML, MC, MH;
 
@@ -1951,11 +1767,11 @@ P.theBigActionsObject = {
                             else if (!mData[ma]) copyPixel(ir, ir, iData);
                             else {
 
-                                [IL, , , IC, IH] = this.getOkColorVals(iData[ir], iData[ig], iData[ib], libs);
-                                [ML, , , MC, MH] = this.getOkColorVals(mData[mr], mData[mg], mData[mb], libs);
+                                [IL, , , IC, IH] = colorEngine.getOkValsForRgb(iData[ir], iData[ig], iData[ib], libs);
+                                [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mData[mr], mData[mg], mData[mb], libs);
 
                                 // Creates a color with the hue and saturation of the source color and the luminosity of the backdrop color.
-                                [cr, cg, cb] = this.getRegularColorVals(ML, IC, IH, libs, true);
+                                [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, IH, libs);
 
                                 oData[ir] = cr;
                                 oData[ig] = cg;
@@ -1988,11 +1804,11 @@ P.theBigActionsObject = {
                             else if (!mData[ma]) copyPixel(ir, ir, iData);
                             else {
 
-                                [IL, , , IC, IH] = this.getOkColorVals(iData[ir], iData[ig], iData[ib], libs);
-                                [ML, , , MC, MH] = this.getOkColorVals(mData[mr], mData[mg], mData[mb], libs);
+                                [IL, , , IC, IH] = colorEngine.getOkValsForRgb(iData[ir], iData[ig], iData[ib], libs);
+                                [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mData[mr], mData[mg], mData[mb], libs);
 
                                 // Creates a color with the hue of the source color and the saturation and luminosity of the backdrop color.
-                                [cr, cg, cb] = this.getRegularColorVals(ML, MC, IH, libs, true);
+                                [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, MC, IH, libs);
 
                                 oData[ir] = cr;
                                 oData[ig] = cg;
@@ -2025,11 +1841,11 @@ P.theBigActionsObject = {
                             else if (!mData[ma]) copyPixel(ir, ir, iData);
                             else {
 
-                                [IL, , , IC, IH] = this.getOkColorVals(iData[ir], iData[ig], iData[ib], libs);
-                                [ML, , , MC, MH] = this.getOkColorVals(mData[mr], mData[mg], mData[mb], libs);
+                                [IL, , , IC, IH] = colorEngine.getOkValsForRgb(iData[ir], iData[ig], iData[ib], libs);
+                                [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mData[mr], mData[mg], mData[mb], libs);
 
                                 // Creates a color with the luminosity of the source color and the hue and saturation of the backdrop color.
-                                [cr, cg, cb] = this.getRegularColorVals(IL, MC, MH, libs, true);
+                                [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, MH, libs);
 
                                 oData[ir] = cr;
                                 oData[ig] = cg;
@@ -2062,11 +1878,11 @@ P.theBigActionsObject = {
                             else if (!mData[ma]) copyPixel(ir, ir, iData);
                             else {
 
-                                [IL, , , IC, IH] = this.getOkColorVals(iData[ir], iData[ig], iData[ib], libs);
-                                [ML, , , MC, MH] = this.getOkColorVals(mData[mr], mData[mg], mData[mb], libs);
+                                [IL, , , IC, IH] = colorEngine.getOkValsForRgb(iData[ir], iData[ig], iData[ib], libs);
+                                [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mData[mr], mData[mg], mData[mb], libs);
 
                                 // Creates a color with the saturation of the source color and the hue and luminosity of the backdrop color.
-                                [cr, cg, cb] = this.getRegularColorVals(ML, IC, MH, libs, true);
+                                [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, MH, libs);
 
                                 oData[ir] = cr;
                                 oData[ig] = cg;
@@ -4353,7 +4169,7 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const libs = this.retrieveColorPointLibraries();
+        const libs = colorEngine.getRgbOkCache();
 
         let r, g, b, a, i, L;
 
@@ -4364,7 +4180,7 @@ P.theBigActionsObject = {
             b = g + 1;
             a = b + 1;
 
-            [L] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+            [L] = colorEngine.getOkValsForRgb(iData[r], iData[g], iData[b], libs);
 
             oData[r] = 0;
             oData[g] = 0;
@@ -4407,7 +4223,7 @@ P.theBigActionsObject = {
                 let sumLUT;
                 if (!useNaturalGrayscale) {
 
-                    sumLUT = getWorkstoreItem('mapgrad::sumLUT03333');
+                    sumLUT = getWorkstoreItem(NAIVE_GRAY_LUT);
 
                     if (!sumLUT) {
 
@@ -4417,7 +4233,7 @@ P.theBigActionsObject = {
 
                             sumLUT[s] = Math.floor(0.3333 * s) & 0xFF;
                         }
-                        setWorkstoreItem('mapgrad::sumLUT03333', sumLUT);
+                        setWorkstoreItem(NAIVE_GRAY_LUT, sumLUT);
                     }
                 }
 
@@ -4438,12 +4254,10 @@ P.theBigActionsObject = {
                     g = (s >>> 8) & 0xFF;
                     b = (s >>> 16) & 0xFF;
 
-                    let gray;
-
                     if (useNaturalGrayscale) gray = (r * 54 + g * 183 + b * 19) >> 8;
                     else {
 
-                        const sum = r + g + b;
+                        sum = r + g + b;
                         gray = sumLUT[sum];
                     }
                     out32[p] = grad32[gray];
@@ -4610,8 +4424,10 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -4621,51 +4437,42 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        if (channelL === 0 && channelA === 0 && channelB === 0) this.transferDataUnchanged(oData, iData, len);
+        if (channelL === 0 && channelA === 0 && channelB === 0) out32.set(src32);
         else {
 
-            const libs = this.retrieveColorPointLibraries(),
-                getOkColorVals  = this.getOkColorVals.bind(this),
-                getRegularColorVals = this.getRegularColorVals.bind(this);
+            const libs  = colorEngine.getRgbOkCache(),
+                getOk = colorEngine.getOkValsForRgb,
+                toRgb = colorEngine.getRgbValsForOklab;
 
-            let r, g, b, a, L, A, B, i, res;
+            const clamp01 = (v) => (v < 0 ? 0 : (v > 1 ? 1 : v));
+            const clampAB = (v) => (v < -0.4 ? -0.4 : (v > 0.4 ? 0.4 : v));
 
-            for (i = 0; i < len; i += 4) {
+            let s, a, r0, g0, b0, ok, L, A, B, rgb;
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
 
-                if (iData[a] === 0) {
+                s = src32[p];
 
-                    oData[r] = iData[r];
-                    oData[g] = iData[g];
-                    oData[b] = iData[b];
-                    oData[a] = 0;
+                a = (s >>> 24) & 0xff;
+                if (a === 0) {
+
+                    out32[p] = s;
                     continue;
                 }
 
-                res = getOkColorVals(iData[r], iData[g], iData[b], libs);
+                r0 = s & 0xff;
+                g0 = (s >>> 8) & 0xff;
+                b0 = (s >>> 16) & 0xff;
 
-                L = res[0] + channelL;
-                if (L < 0) L = 0;
-                else if (L > 1) L = 1;
+                ok = getOk(r0, g0, b0, libs);
 
-                A = res[1] + channelA;
-                if (A < -0.4) A = -0.4;
-                else if (A > 0.4) A = 0.4;
+                L = clamp01(ok[0] + channelL);
+                A = clampAB(ok[1] + channelA);
+                B = clampAB(ok[2] + channelB);
 
-                B = res[2] + channelB;
-                if (B < -0.4) B = -0.4;
-                else if (B > 0.4) B = 0.4;
+                rgb = toRgb(L, A, B, libs);
 
-                res = getRegularColorVals(L, A, B, libs);
-
-                oData[r] = res[0];
-                oData[g] = res[1];
-                oData[b] = res[2];
-                oData[a] = iData[a];
+                out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
             }
         }
 
@@ -4674,113 +4481,109 @@ P.theBigActionsObject = {
     },
 
 // __modulate-channels__ - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at that pixel's grayscale values. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value.
-[MODULATE_CHANNELS]: function (requirements) {
+    [MODULATE_CHANNELS]: function (requirements) {
 
-    const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-    const iData = input.data,
-        oData = output.data;
+        const iData = input.data,
+            oData = output.data;
 
-    const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
-        out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
-    const {
-        opacity = 1,
-        red = 1,
-        green = 1,
-        blue = 1,
-        alpha = 1,
-        saturation = false,
-        lineOut,
-    } = requirements;
+        const {
+            opacity = 1,
+            red = 1,
+            green = 1,
+            blue = 1,
+            alpha = 1,
+            saturation = false,
+            lineOut,
+        } = requirements;
 
-    // Convert scales to 8.8 fixed-point (round to nearest)
-    const rK = (red * 256 + 0.5) | 0,
-        gK = (green * 256 + 0.5) | 0,
-        bK = (blue * 256 + 0.5) | 0,
-        aK = (alpha * 256 + 0.5) | 0;
+        // Convert scales to 8.8 fixed-point (round to nearest)
+        const rK = (red * 256 + 0.5) | 0,
+            gK = (green * 256 + 0.5) | 0,
+            bK = (blue * 256 + 0.5) | 0,
+            aK = (alpha * 256 + 0.5) | 0;
 
-    let p, pz, rgba, r, g, b, a;
+        let p, pz, rgba, r, g, b, a;
 
-    // Fast identity: nothing changes (and no saturation)
-    if (!saturation && rK === 256 && gK === 256 && bK === 256 && aK === 256) out32.set(src32);
-    
-    else if (!saturation) {
+        // Fast identity: nothing changes (and no saturation)
+        if (!saturation && rK === 256 && gK === 256 && bK === 256 && aK === 256) out32.set(src32);
+        
+        else if (!saturation) {
 
-        // Plain per-channel modulation
-        for (p = 0, pz = src32.length | 0; p < pz; p++) {
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-            rgba = src32[p];
+                rgba = src32[p];
 
-            r = rgba & 0xff;
-            g = (rgba >>>  8) & 0xff;
-            b = (rgba >>> 16) & 0xff;
-            a = (rgba >>> 24) & 0xff;
+                r = rgba & 0xff;
+                g = (rgba >>> 8) & 0xff;
+                b = (rgba >>> 16) & 0xff;
+                a = (rgba >>> 24) & 0xff;
 
-            // v' = round(v * k/256)
-            r = (r * rK + 128) >> 8;
-            if (r < 0) r = 0;
-            else if (r > 255) r = 255;
+                r = (r * rK + 128) >> 8;
+                if (r < 0) r = 0;
+                else if (r > 255) r = 255;
 
-            g = (g * gK + 128) >> 8;
-            if (g < 0) g = 0;
-            else if (g > 255) g = 255;
+                g = (g * gK + 128) >> 8;
+                if (g < 0) g = 0;
+                else if (g > 255) g = 255;
 
-            b = (b * bK + 128) >> 8;
-            if (b < 0) b = 0;
-            else if (b > 255) b = 255;
+                b = (b * bK + 128) >> 8;
+                if (b < 0) b = 0;
+                else if (b > 255) b = 255;
 
-            a = (a * aK + 128) >> 8;
-            if (a < 0) a = 0;
-            else if (a > 255) a = 255;
+                a = (a * aK + 128) >> 8;
+                if (a < 0) a = 0;
+                else if (a > 255) a = 255;
 
-            out32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
+                out32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
+            }
+        } 
+
+        else {
+
+            let r0, g0, b0, gray;
+
+            // Saturation mode: start from gray, then lerp toward original per channel
+            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                rgba = src32[p];
+
+                r0 = rgba & 0xff;
+                g0 = (rgba >>> 8) & 0xff;
+                b0 = (rgba >>> 16) & 0xff;
+                a  = (rgba >>> 24) & 0xff;
+
+                gray = (r0 * 54 + g0 * 183 + b0 * 19) >> 8;
+
+                r = gray + (((r0 - gray) * rK + 128) >> 8);
+                g = gray + (((g0 - gray) * gK + 128) >> 8);
+                b = gray + (((b0 - gray) * bK + 128) >> 8);
+                a = (a * aK + 128) >> 8;
+
+                // Clamp
+                if (r < 0) r = 0;
+                else if (r > 255) r = 255;
+
+                if (g < 0) g = 0;
+                else if (g > 255) g = 255;
+                
+                if (b < 0) b = 0;
+                else if (b > 255) b = 255;
+                
+                if (a < 0) a = 0;
+                else if (a > 255) a = 255;
+
+                out32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
+            }
         }
-    } 
 
-    else {
-
-        let r0, g0, b0, gray;
-
-        // Saturation mode: start from gray, then lerp toward original per channel
-        for (let p = 0, pz = src32.length | 0; p < pz; p++) {
-
-            rgba = src32[p];
-
-            r0 = rgba & 0xff;
-            g0 = (rgba >>> 8) & 0xff;
-            b0 = (rgba >>> 16) & 0xff;
-            a  = (rgba >>> 24) & 0xff;
-
-            // Rec.709 gray
-            gray = (r0 * 54 + g0 * 183 + b0 * 19) >> 8;
-
-            // new = gray + (orig - gray) * scale
-            r = gray + (((r0 - gray) * rK + 128) >> 8);
-            g = gray + (((g0 - gray) * gK + 128) >> 8);
-            b = gray + (((b0 - gray) * bK + 128) >> 8);
-            a = (a * aK + 128) >> 8;
-
-            // Clamp
-            if (r < 0) r = 0;
-            else if (r > 255) r = 255;
-
-            if (g < 0) g = 0;
-            else if (g > 255) g = 255;
-            
-            if (b < 0) b = 0;
-            else if (b > 255) b = 255;
-            
-            if (a < 0) a = 0;
-            else if (a > 255) a = 255;
-
-            out32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
-        }
-    }
-
-    if (lineOut) this.processResults(output, input, 1 - opacity);
-    else this.processResults(this.cache.work, output, opacity);
-},
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
 
 // __modulate-ok-channels__ - Multiplies each of the OKLAB channels by a given amount. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow).
     [MODULATE_OK_CHANNELS]: function (requirements) {
@@ -4788,8 +4591,10 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -4799,54 +4604,44 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        if (channelL === 1 && channelA === 1 && channelB === 1) {
-
-            this.transferDataUnchanged(oData, iData, len);
-        }
+        // Fast identity
+        if (channelL === 1 && channelA === 1 && channelB === 1) out32.set(src32);
         else {
 
-            const libs = this.retrieveColorPointLibraries(),
-                getOkColorVals  = this.getOkColorVals.bind(this),
-                getRegularColorVals = this.getRegularColorVals.bind(this);
+            const libs = colorEngine.getRgbOkCache(),
+                getOk  = colorEngine.getOkValsForRgb,
+                toRgb  = colorEngine.getRgbValsForOklab;
 
-            let r, g, b, a, L, A, B, i, res;
+            const clamp01 = (v) => (v < 0 ? 0 : (v > 1 ? 1 : v)),
+                clampAB = (v) => (v < -0.4 ? -0.4 : (v > 0.4 ? 0.4 : v));
 
-            for (i = 0; i < len; i += 4) {
+            let s, a, r0, g0, b0, ok, L, A, B, rgb;
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
 
-                if (iData[a] === 0) {
+                s = src32[p];
 
-                    oData[r] = iData[r];
-                    oData[g] = iData[g];
-                    oData[b] = iData[b];
-                    oData[a] = 0;
+                a = (s >>> 24) & 0xff;
+                
+                if (a === 0) {
+
+                    out32[p] = s;
                     continue;
                 }
 
-                res = getOkColorVals(iData[r], iData[g], iData[b], libs);
+                r0 = s & 0xff;
+                g0 = (s >>> 8) & 0xff;
+                b0 = (s >>> 16) & 0xff;
 
-                L = res[0] * channelL;
-                if (L < 0) L = 0;
-                else if (L > 1) L = 1;
+                ok = getOk(r0, g0, b0, libs);
 
-                A = res[1] * channelA;
-                if (A < -0.4) A = -0.4;
-                else if (A > 0.4) A = 0.4;
+                L = clamp01(ok[0] * channelL);
+                A = clampAB(ok[1] * channelA);
+                B = clampAB(ok[2] * channelB);
 
-                B = res[2] * channelB;
-                if (B < -0.4) B = -0.4;
-                else if (B > 0.4) B = 0.4;
-
-                res = getRegularColorVals(L, A, B, libs);
-
-                oData[r] = res[0];
-                oData[g] = res[1];
-                oData[b] = res[2];
-                oData[a] = iData[a];
+                rgb = toRgb(L, A, B, libs);
+                
+                out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
             }
         }
 
@@ -4857,42 +4652,49 @@ P.theBigActionsObject = {
 // __negative__ - for each pixel: convert to OKLAB; negate A and B; invert L; convert back to RGB
     [NEGATIVE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements),
-            iData = input.data,
-            oData = output.data,
-            len = iData.length;
+        const [input, output] = this.getInputAndOutputLines(requirements);
 
-        const { opacity = 1, lineOut } = requirements;
+        const iData = input.data,
+            oData = output.data;
 
-        const libs = this.retrieveColorPointLibraries();
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
-        let i, L, A, B, _r, _g, _b;
+        const { 
+            opacity = 1,
+            lineOut
+        } = requirements;
 
-        for (i = 0; i < len; i += 4) {
+        const libs = colorEngine.getRgbOkCache(),
+            getOk  = colorEngine.getOkValsForRgb,
+            toRgb  = colorEngine.getRgbValsForOklab;
 
-            const aIdx = i + 3;
+        let rgba, r, g, b, a, ok, L, A, B, rgb;
 
-            if (iData[aIdx] === 0) {
+        for (let p = 0, pz = src32.length | 0; p < pz; p++) {
 
-                oData[i] = iData[i];
-                oData[i + 1] = iData[i + 1];
-                oData[i + 2] = iData[i + 2];
-                oData[aIdx] = 0;
+            rgba = src32[p];
+
+            r = rgba & 0xFF;
+            g = (rgba >>> 8) & 0xFF;
+            b = (rgba >>> 16) & 0xFF;
+            a = (rgba >>> 24) & 0xFF;
+
+            if (a === 0) {
+
+                out32[p] = rgba;
                 continue;
             }
 
-            [L, A, B] = this.getOkColorVals(iData[i], iData[i + 1], iData[i + 2], libs);
+            ok = getOk(r, g, b, libs);
 
-            L = 1 - L;
-            A = -A;
-            B = -B;
+            L = 1 - ok[0];
+            A = -ok[1];
+            B = -ok[2];
 
-            [_r, _g, _b] = this.getRegularColorVals(L, A, B, libs, false);
+            rgb = toRgb(L, A, B, libs);
 
-            oData[i] = _r;
-            oData[i + 1] = _g;
-            oData[i + 2] = _b;
-            oData[aIdx] = iData[aIdx];
+            out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -4921,7 +4723,7 @@ P.theBigActionsObject = {
 
         const rects = this.buildTileRects(tDim, tDim, 0, 0, input);
 
-        const gVal = this.getGrayscaleValue,
+        const gVal = colorEngine.getBestGray,
             patterns = newspaperPatterns;
 
         let t, x0, x1, y0, y1, tw, th, count, sum, y, idx, end, avg, p, p0, p1, p2, p3, ox, oy, topBand, rowBase, x, leftBand, gray;
@@ -5344,10 +5146,7 @@ P.theBigActionsObject = {
 
         const incMask = (includeRed ? 0x000000FF : 0) | (includeGreen ? 0x0000FF00 : 0) | (includeBlue ? 0x00FF0000 : 0) | (includeAlpha ? 0xFF000000 : 0);
 
-        const allIncluded = (incMask === 0xFFFFFFFF >>> 0),
-            needAlphaCheck = excludeTransparentPixels;
-
-        if (allIncluded) {
+        if (incMask === 0xFFFFFFFF >>> 0) {
 
             let p, pz, rLevel, rWx, rHy, t, sPix, dw, dh, q, aP, aQ;
 
@@ -5394,7 +5193,7 @@ P.theBigActionsObject = {
                     else if (q >= totalPx) q -= totalPx;
                 }
 
-                if (needAlphaCheck) {
+                if (excludeTransparentPixels) {
 
                     aP = (sPix >>> 24) & 0xFF;
                     aQ = (src32[q] >>> 24) & 0xFF;
@@ -5459,7 +5258,7 @@ P.theBigActionsObject = {
                     else if (q >= totalPx) q -= totalPx;
                 }
 
-                if (needAlphaCheck) {
+                if (excludeTransparentPixels) {
 
                     aP = (orig >>> 24) & 0xFF;
                     aQ = (src32[q] >>> 24) & 0xFF;
@@ -5505,7 +5304,7 @@ P.theBigActionsObject = {
 
         const noiseType = useBluenoise ? BLUENOISE : (requirements.noiseType || RANDOM);
 
-        const libs = this.retrieveColorPointLibraries();
+        const libs = colorEngine.getRgbOkCache();
 
         // Dither noise (one per pixel)
         const rnd = this.getRandomNumbers({
@@ -5578,7 +5377,7 @@ P.theBigActionsObject = {
 
             const selectedPalette = predefinedPalette[palette],
                 P = selectedPalette.length,
-                getGrayscaleValue = this.getGrayscaleValue;
+                getGray = colorEngine.getBestGray;
 
             for (let i = 0; i < len; i += 4) {
 
@@ -5590,7 +5389,7 @@ P.theBigActionsObject = {
                     const r = i,
                         g = i + 1,
                         b = i + 2,
-                        gray = getGrayscaleValue(iData[r], iData[g], iData[b]);
+                        gray = getGray(iData[r], iData[g], iData[b]);
 
                     // track best two without building arrays/sorting
                     let idx0 = -1,
@@ -5661,9 +5460,9 @@ P.theBigActionsObject = {
 
                 for (let i = 0, iz = palette.length; i < iz; i++) {
 
-                    const [eR, eG, eB] = colorEngine.getColorFromCanvas(palette[i].trim());
+                    const [eR, eG, eB] = colorEngine.extractRGBfromColorString(palette[i]);
 
-                    const ok = this.getOkColorVals(eR, eG, eB, libs),
+                    const ok = colorEngine.getOkValsForRgb(eR, eG, eB, libs),
                         PLi = (ok[0] * 100) | 0,
                         PAi = ((ok[1] + 0.4) * 125) | 0,
                         PBi = ((ok[2] + 0.4) * 125) | 0;
@@ -5684,7 +5483,7 @@ P.theBigActionsObject = {
                         g = i + 1,
                         b = i + 2;
 
-                    const ok = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+                    const ok = colorEngine.getOkValsForRgb(iData[r], iData[g], iData[b], libs);
 
                     const ILi = (ok[0] * 100) | 0,
                         IAi = ((ok[1] + 0.4) * 125) | 0,
@@ -5746,7 +5545,7 @@ P.theBigActionsObject = {
 
             } else {
 
-                const ok = this.getOkColorVals(r, g, b, libs),
+                const ok = colorEngine.getOkValsForRgb(r, g, b, libs),
                     ILi = (ok[0] * 100) | 0,
                     IAi = ((ok[1] + 0.4) * 125) | 0,
                     IBi = ((ok[2] + 0.4) * 125) | 0;
@@ -5909,72 +5708,64 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-              oData = output.data,
-              len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
-            lineOut
+            lineOut,
         } = requirements;
 
         let { angle = 0 } = requirements;
 
-        // Normalize once to [0, 360)
         angle = ((angle % 360) + 360) % 360;
 
-        if (angle === 0) this.transferDataUnchanged(oData, iData, len);
+        if (angle === 0) out32.set(src32);
         else {
 
-            const libs = this.retrieveColorPointLibraries(),
-                getOkColorVals = this.getOkColorVals.bind(this),
-                getRegularColorVals = this.getRegularColorVals.bind(this);
+            const libs = colorEngine.getRgbOkCache(),
+                getOk = colorEngine.getOkValsForRgb,
+                toRgb = colorEngine.getRgbValsForOklch;
 
             const CHROMA_EPS = 1e-4;
 
-            let r, g, b, a, i, res, L, C, H;
+            let rgba, r, g, b, a, ok, L, C, H, rgb;
 
-            for (i = 0; i < len; i += 4) {
+            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+                rgba = src32[p];
 
-                // Fully transparent → copy & continue
-                if (iData[a] === 0) {
+                a = rgba >>> 24;
 
-                    oData[r] = iData[r];
-                    oData[g] = iData[g];
-                    oData[b] = iData[b];
-                    oData[a] = 0;
+                if (a === 0) {
+
+                    out32[p] = rgba;
                     continue;
                 }
 
-                res = getOkColorVals(iData[r], iData[g], iData[b], libs);
+                r = rgba & 0xFF;
+                g = (rgba >>> 8) & 0xFF;
+                b = (rgba >>> 16) & 0xFF;
 
-                L = res[0];
-                C = res[3];
-                H = res[4] + angle;
+                ok = getOk(r, g, b, libs);
 
-                // Grays (C≈0) unaffected by hue rotation → copy and skip
+                L = ok[0];
+                C = ok[3];
+
                 if (C < CHROMA_EPS) {
 
-                    oData[r] = iData[r];
-                    oData[g] = iData[g];
-                    oData[b] = iData[b];
-                    oData[a] = iData[a];
+                    out32[p] = rgba;
                     continue;
                 }
 
-                // Wrap once; angle already normalized
+                H = ok[4] + angle;
                 if (H >= 360) H -= 360;
 
-                res = getRegularColorVals(L, C, H, libs, true);
+                rgb = colorEngine.getRgbValsForOklch(L, C, H, libs);
 
-                oData[r] = res[0];
-                oData[g] = res[1];
-                oData[b] = res[2];
-                oData[a] = iData[a];
+                out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
             }
         }
 
@@ -6332,8 +6123,10 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -6355,65 +6148,140 @@ P.theBigActionsObject = {
         const [lowR, lowG, lowB, lowA] = low;
         const [highR, highG, highB, highA] = high;
 
-        const gVal = this.getGrayscaleValue;
+        let lvl = level | 0;
+        if (lvl < 0) lvl = 0; else if (lvl > 255) lvl = 255;
 
-        let r, g, b, a, i, pr, pg, pb, pa, gray;
+        const gray709 = (r, g, b) => (r * 54 + g * 183 + b * 19) >> 8;
 
-        for (i = 0; i < len; i += 4) {
+        const packLowRGB = ((lowB  & 0xFF) << 16) | ((lowG  & 0xFF) << 8) | (lowR  & 0xFF);
+        const packHighRGB = ((highB & 0xFF) << 16) | ((highG & 0xFF) << 8) | (highR & 0xFF);
+        const packLowRGBA = ((lowA  & 0xFF) << 24) | packLowRGB;
+        const packHighRGBA = ((highA & 0xFF) << 24) | packHighRGB;
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        if (useMixedChannel) {
 
-            pr = iData[r];
-            pg = iData[g];
-            pb = iData[b];
-            pa = iData[a];
+            if (includeRed && includeGreen && includeBlue) {
 
-            if (useMixedChannel) {
+                let rgba, r, g, b, a, gray, rgbPacked;
 
-                gray = gVal(pr, pg, pb);
+                if (includeAlpha) {
 
-                if (gray < level) {
+                    for (let p = 0, pz = src32.length | 0; p < pz; p++) {
 
-                    oData[r] = (includeRed) ? lowR : pr;
-                    oData[g] = (includeGreen) ? lowG : pg;
-                    oData[b] = (includeBlue) ? lowB : pb;
-                    oData[a] = (includeAlpha) ? lowA : pa;
+                        rgba = src32[p];
+
+                        r = rgba & 0xFF;
+                        g = (rgba >>> 8) & 0xFF;
+                        b = (rgba >>> 16) & 0xFF;
+
+                        gray = gray709(r, g, b);
+
+                        out32[p] = (gray < lvl) ? packLowRGBA : packHighRGBA;
+                    }
                 }
                 else {
 
-                    oData[r] = (includeRed) ? highR : pr;
-                    oData[g] = (includeGreen) ? highG : pg;
-                    oData[b] = (includeBlue) ? highB : pb;
-                    oData[a] = (includeAlpha) ? highA : pa;
+                    for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                        rgba = src32[p];
+
+                        r = rgba & 0xFF;
+                        g = (rgba >>> 8) & 0xFF;
+                        b = (rgba >>> 16) & 0xFF;
+                        a =  rgba >>> 24;
+
+                        gray = gray709(r, g, b);
+                        rgbPacked = (gray < lvl) ? packLowRGB : packHighRGB;
+
+                        out32[p] = ((a & 0xFF) << 24) | rgbPacked;
+                    }
+                }
+
+            }
+            else {
+
+                let pr, pg, pb, pa, cg, cb, ca, gray;
+
+                for (let i = 0, iz = iData.length | 0; i < iz; i += 4) {
+
+                    cg = i + 1;
+                    cb = i + 2;
+                    ca = i + 3;
+
+                    pr = iData[i];
+                    pg = iData[cg];
+                    pb = iData[cb];
+                    pa = iData[ca];
+
+                    gray = gray709(pr, pg, pb);
+
+                    if (gray < lvl) {
+
+                        oData[i] = includeRed ? lowR : pr;
+                        oData[cg] = includeGreen ? lowG : pg;
+                        oData[cb] = includeBlue ? lowB : pb;
+                        oData[ca] = includeAlpha ? lowA : pa;
+                    }
+                    else {
+
+                        oData[i] = includeRed ? highR : pr;
+                        oData[cg] = includeGreen ? highG : pg;
+                        oData[cb] = includeBlue ? highB : pb;
+                        oData[ca] = includeAlpha ? highA : pa;
+                    }
+                }
+            }
+
+        }
+        else {
+
+            if (includeRed && includeGreen && includeBlue && includeAlpha) {
+
+                let pr, pg, pb, pa, rOut, gOut, bOut, aOut, cg, cb, ca;
+
+                for (let p = 0, pz = src32.length | 0, i = 0; p < pz; p++, i += 4) {
+
+                    cg = i + 1;
+                    cb = i + 2;
+                    ca = i + 3;
+
+                    pr = iData[i];
+                    pg = iData[cg];
+                    pb = iData[cb];
+                    pa = iData[ca];
+
+                    rOut = (pr < red) ? lowR : highR;
+                    gOut = (pg < green) ? lowG : highG;
+                    bOut = (pb < blue) ? lowB : highB;
+                    aOut = (pa < alpha) ? lowA : highA;
+
+                    out32[p] = ((aOut & 0xFF) << 24) | ((bOut & 0xFF) << 16) | ((gOut & 0xFF) << 8) | (rOut & 0xFF);
                 }
             }
             else {
 
-                if (includeRed) {
-                    oData[r] = (pr < red) ? lowR : highR;
-                }
-                else oData[r] = pr;
+                let pr, pg, pb, pa, cg, cb, ca;
 
-                if (includeGreen) {
-                    oData[g] = (pg < green) ? lowG : highG;
-                }
-                else oData[g] = pg;
+                for (let i = 0, len = iData.length | 0; i < len; i += 4) {
 
-                if (includeBlue) {
-                    oData[b] = (pb < blue) ? lowB : highB;
-                }
-                else oData[b] = pb;
+                    cg = i + 1;
+                    cb = i + 2;
+                    ca = i + 3;
 
-                if (includeAlpha) {
-                    oData[a] = (pa < alpha) ? lowA : highA;
+                    pr = iData[i];
+                    pg = iData[cg];
+                    pb = iData[cb];
+                    pa = iData[ca];
+
+                    oData[i]   = includeRed   ? ((pr < red)   ? lowR  : highR) : pr;
+                    oData[cg] = includeGreen ? ((pg < green) ? lowG  : highG) : pg;
+                    oData[cb] = includeBlue  ? ((pb < blue)  ? lowB  : highB) : pb;
+                    oData[ca] = includeAlpha ? ((pa < alpha) ? lowA  : highA) : pa;
                 }
-                else oData[a] = pa;
             }
         }
 
+        // Single processing call at the end
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
@@ -6611,7 +6479,7 @@ P.theBigActionsObject = {
             weights.fill(0);
         }
 
-        const gVal = this.getGrayscaleValue;
+        const gVal = colorEngine.getBestGray;
 
         let i, r, g, b, a, red, green, blue, alpha, gray, all, allR, allG, allB;
 
@@ -6684,5 +6552,3 @@ constructors.FilterEngine = FilterEngine;
 
 // Create a singleton filter engine, for export and use within this code base
 export const filterEngine = new FilterEngine();
-
-

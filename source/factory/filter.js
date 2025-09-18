@@ -12,12 +12,12 @@ import { cell, constructors, entity, group, styles } from '../core/library.js';
 import { addStrings, doCreate, generateUuid, mergeOver, removeItem, Ωempty } from '../helper/utilities.js';
 
 import { makeGradient } from './gradient.js';
-import { colorEngine } from '../helper/filter-engine.js';
+import { colorEngine } from '../helper/color-engine.js';
 
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NORMAL, OFFSET, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+import { _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NORMAL, OFFSET, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const EMBOSS_WORK = 'emboss-work',
@@ -608,7 +608,7 @@ const setActionsArray = {
 
                         range.forEach(col => {
 
-                            const [r, g, b] = colorEngine.extractRGBfromColor(col);
+                            const [r, g, b] = colorEngine.extractRGBfromColorString(col);
                             res.push(r, g, b);
                         });
                     }
@@ -639,7 +639,7 @@ const setActionsArray = {
 
         if (f.reference != null) {
 
-            [red, green, blue] = colorEngine.extractRGBfromColor(f.reference);
+            [red, green, blue] = colorEngine.extractRGBfromColorString(f.reference);
 
             f.red = red;
             f.green = green;
@@ -674,7 +674,7 @@ const setActionsArray = {
 
         if (f.lowColor != null) {
 
-            [lowRed, lowGreen, lowBlue] = colorEngine.extractRGBfromColor(f.lowColor);
+            [lowRed, lowGreen, lowBlue] = colorEngine.extractRGBfromColorString(f.lowColor);
 
             f.lowRed = lowRed;
             f.lowGreen = lowGreen;
@@ -685,7 +685,7 @@ const setActionsArray = {
 
         if (f.highColor != null) {
 
-            [highRed, highGreen, highBlue] = colorEngine.extractRGBfromColor(f.highColor);
+            [highRed, highGreen, highBlue] = colorEngine.extractRGBfromColorString(f.highColor);
 
             f.highRed = highRed;
             f.highGreen = highGreen;
@@ -876,7 +876,7 @@ const setActionsArray = {
 
         if (f.reference != null) {
 
-            [red, green, blue, alpha] = colorEngine.extractRGBfromColor(f.reference);
+            [red, green, blue, alpha] = colorEngine.extractRGBfromColorString(f.reference);
 
             alpha = _round(alpha * 255);
 
@@ -1399,7 +1399,7 @@ const setActionsArray = {
 
         if (f.lowColor != null) {
 
-            [lowRed, lowGreen, lowBlue, lowAlpha] = colorEngine.extractRGBfromColor(f.lowColor);
+            [lowRed, lowGreen, lowBlue, lowAlpha] = colorEngine.extractRGBfromColorString(f.lowColor);
 
             lowAlpha = _round(lowAlpha * 255);
 
@@ -1415,7 +1415,7 @@ const setActionsArray = {
 
         if (f.highColor != null) {
 
-            [highRed, highGreen, highBlue, highAlpha] = colorEngine.extractRGBfromColor(f.highColor);
+            [highRed, highGreen, highBlue, highAlpha] = colorEngine.extractRGBfromColorString(f.highColor);
 
             highAlpha = _round(highAlpha * 255);
 
@@ -1489,7 +1489,7 @@ const setActionsArray = {
 
         if (f.redColor != null) {
 
-            [redInRed, greenInRed, blueInRed] = colorEngine.extractRGBfromColor(f.redColor);
+            [redInRed, greenInRed, blueInRed] = colorEngine.extractRGBfromColorString(f.redColor);
 
             redInRed /= 255;
             greenInRed /= 255;
@@ -1504,7 +1504,7 @@ const setActionsArray = {
 
         if (f.greenColor != null) {
 
-            [redInGreen, greenInGreen, blueInGreen] = colorEngine.extractRGBfromColor(f.greenColor);
+            [redInGreen, greenInGreen, blueInGreen] = colorEngine.extractRGBfromColorString(f.greenColor);
 
             redInGreen /= 255;
             greenInGreen /= 255;
@@ -1519,7 +1519,7 @@ const setActionsArray = {
 
         if (f.blueColor != null) {
 
-            [redInBlue, greenInBlue, blueInBlue] = colorEngine.extractRGBfromColor(f.blueColor);
+            [redInBlue, greenInBlue, blueInBlue] = colorEngine.extractRGBfromColorString(f.blueColor);
 
             redInBlue /= 255;
             greenInBlue /= 255;

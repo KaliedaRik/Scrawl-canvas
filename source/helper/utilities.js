@@ -122,16 +122,7 @@ export const convertTime = (item) => {
 
 
 // __correctAngle__ makes sure any degree-based angle is in the range `0-360`
-export const correctAngle = (item) => {
-
-    if (!_isFinite(item)) return 0;
-
-    item = item % 360;
-
-    if (item < 0) item += 360;
-
-    return item;
-};
+export const correctAngle = (h) => ((h % 360) + 360) % 360;
 
 
 // __correctForZero__ checks and corrects for minor deviations from zero (eNumbers)
