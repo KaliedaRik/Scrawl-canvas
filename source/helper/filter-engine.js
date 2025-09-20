@@ -19,12 +19,10 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 
 import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
-import { makeColor } from '../factory/color.js';
-
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _ceil, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _cbrt, _ceil, _floor, _isArray, _isFinite, _max, _min, _pow, _round, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
 const _exp = Math.exp,
@@ -101,6 +99,101 @@ let lastUsedReducePalette = 'black-white';
 const setLastUsedReducePalette = (val) => lastUsedReducePalette = val;
 export const getLastUsedReducePalette = () => lastUsedReducePalette;
 
+
+// A small generally-available LUT for oklab gray 
+const LUMINANCE_OKLAB_GRAY_LUT = 'alpha-to-luminance-oklab-gray-lut-256';
+
+const getOklabGrayLut = () => {
+
+    let lut = getWorkstoreItem(LUMINANCE_OKLAB_GRAY_LUT);
+
+    if (lut != null) return lut;
+
+    else {
+
+        const libs = colorEngine.getRgbOkCache();
+        lut = new Uint32Array(256);
+
+        for (let a = 0; a < 256; a++) {
+
+            let L = a / 256;
+            if (L > 1) L = 1;
+            else if (L < 0) L = 0;
+
+            const [r, g, b] = colorEngine.getRgbValsForOklab(L, 0, 0, libs);
+
+            lut[a] = (255 << 24) | (b << 16) | (g << 8) | r;
+        }
+        setWorkstoreItem(LUMINANCE_OKLAB_GRAY_LUT, lut);
+
+        return lut;
+    }
+};
+
+// sRGB -> linear LUT (256)
+const SRGB_TO_LINEAR_LUT = 'srgb-linear-lut-256';
+const getLinearSrgbLut = () => {
+
+    let lut = getWorkstoreItem(SRGB_TO_LINEAR_LUT);
+
+    if (lut) return lut;
+
+    lut = new Float32Array(256);
+
+    for (let i = 0; i < 256; i++) {
+
+        const cs = i / 255;
+        lut[i] = (cs <= 0.04045) ? (cs / 12.92) : _pow((cs + 0.055) / 1.055, 2.4);
+    }
+
+    setWorkstoreItem(SRGB_TO_LINEAR_LUT, lut);
+    
+    return lut;
+};
+
+// Precomputed per-channel contributions to l,m,s (OKLab forward matrices)
+// + l = Lr[r] + Lg[g] + Lb[b]; etc (Nine 256-entry tables; ~9 KB total)
+const OKLAB_L_FROM_SRGB_TABLES = 'oklab-L-from-srgb-9tables';
+const getOklabLTables = () => {
+
+    let lut = getWorkstoreItem(OKLAB_L_FROM_SRGB_TABLES);
+    if (lut) return lut;
+
+    const s2l = getLinearSrgbLut();
+
+    const Lr = new Float32Array(256),
+        Lg = new Float32Array(256),
+        Lb = new Float32Array(256),
+        Mr = new Float32Array(256),
+        Mg = new Float32Array(256),
+        Mb = new Float32Array(256),
+        Sr = new Float32Array(256),
+        Sg = new Float32Array(256),
+        Sb = new Float32Array(256);
+
+    for (let i = 0, v; i < 256; i++) {
+
+        v = s2l[i];
+
+        Lr[i] = 0.4122214708 * v;
+        Lg[i] = 0.5363325363 * v;
+        Lb[i] = 0.0514459929 * v;
+
+        Mr[i] = 0.2119034982 * v;
+        Mg[i] = 0.6806995451 * v;
+        Mb[i] = 0.1073969566 * v;
+
+        Sr[i] = 0.0883024619 * v;
+        Sg[i] = 0.2817188376 * v;
+        Sb[i] = 0.6299787005 * v;
+    }
+
+    lut = { Lr, Lg, Lb, Mr, Mg, Mb, Sr, Sg, Sb };
+
+    setWorkstoreItem(OKLAB_L_FROM_SRGB_TABLES, lut);
+
+    return lut;
+};
 
 // #### FilterEngine constructor
 const FilterEngine = function () {
@@ -684,67 +777,6 @@ P.buildVerticalBlur = function (gridWidth, gridHeight, radius) {
     return verticalRanges;
 };
 
-// `buildMatrixGrid` - creates an Array of Arrays detailing which pixels contribute to each pixel's matrix calculation. Resulting object will be cached in the store
-P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
-
-    const { cache } = this;
-
-    if (!image) image = cache.source;
-
-    const { width:iWidth, height:iHeight, data } = image;
-
-    if (mWidth == null || mWidth < 1) mWidth = 1;
-    if (mHeight == null || mHeight < 1) mHeight = 1;
-
-    if (mX == null || mX < 0) mX = 0;
-    else if (mX >= mWidth) mX = mWidth - 1;
-
-    if (mY == null || mY < 0) mY = 0;
-    else if (mY >= mHeight) mY = mHeight - 1;
-
-    const name = `matrix-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`,
-        itemInWorkstore = getWorkstoreItem(name);
-
-    if (itemInWorkstore) return itemInWorkstore;
-
-    const dataLength = data.length,
-        cellsTemplate = [],
-        grid = [];
-
-    let x, xz, y, yz, i, iz, pos, cell, val;
-
-    for (y = -mY, yz = mHeight - mY; y < yz; y++) {
-
-        for (x = -mX, xz = mWidth - mX; x < xz; x++) {
-
-            cellsTemplate.push(((y * iWidth) + x) * 4);
-        }
-    }
-
-    for (y = 0; y < iHeight; y++) {
-
-        for (x = 0; x < iWidth; x++) {
-
-            pos = ((y * iWidth) + x) * 4;
-            cell = [];
-
-            for (i = 0, iz = cellsTemplate.length; i < iz; i++) {
-
-                val = pos + cellsTemplate[i];
-
-                if (val < 0) val += dataLength;
-                else if (val >= dataLength) val -= dataLength;
-
-                cell.push(val);
-            }
-            grid.push(cell);
-        }
-    }
-
-    setWorkstoreItem(name, grid);
-    return grid;
-};
-
 P.getMatrixOffsets = function (mWidth, mHeight, mX, mY, image) {
 
     if (!image) image = this.cache.source;
@@ -1015,47 +1047,27 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
             lineOut,
         } = requirements;
 
-        const libs = colorEngine.getRgbOkCache();
+        const lut = getOklabGrayLut();
 
-        let r, g, b, a, i, L, _r, _g, _b, alpha;
+        const RGB_MASK = 0x00FFFFFF;
 
-        for (i = 0; i < len; i += 4) {
+        for (let p = 0, pz = src32.length | 0, s, a; p < pz; p++) {
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            s = src32[p];
+            a = (s >>> 24) & 0xFF;
 
-            alpha = iData[a];
-
-            if (alpha) {
-
-                L = alpha / 256;
-                if (L > 1) L = 1;
-                else if (L < 0) L = 0;
-
-                [_r, _g, _b] = colorEngine.getRgbValsForOklab(L, 0, 0, libs);
-
-                oData[r] = _r;
-                oData[g] = _g;
-                oData[b] = _b;
-                oData[a] = 255;
-            }
-            else {
-
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = 0;
-            }
+            if (a === 0) out32[p] = s & RGB_MASK;
+            else out32[p] = lut[a];
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -1933,7 +1945,6 @@ P.theBigActionsObject = {
     },
 
 // __blur__ - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect.
-// Note that this filter is expensive, thus much slower to complete compared to other filter effects. Where possible, memoize the results this filter produces.
     [BLUR]: function (requirements) {
 
         const [input, output] = this.getInputAndOutputLines(requirements);
@@ -2749,9 +2760,9 @@ P.theBigActionsObject = {
 
             for (let v = 0; v < 256; v++) {
 
-                diffR[v] = Math.abs(v - R);
-                diffG[v] = Math.abs(v - G);
-                diffB[v] = Math.abs(v - B);
+                diffR[v] = _abs(v - R);
+                diffG[v] = _abs(v - G);
+                diffB[v] = _abs(v - B);
             }
 
             const sumRef = R + G + B,
@@ -3152,87 +3163,307 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the "level" attribute. Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags.
+// __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. 
+// + The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments.
+// + The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the "level" attribute.
+// + Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags.
     [CORRODE]: function (requirements) {
-
-        const doCalculations = function (data, matrix, offset) {
-
-            let max = 0,
-                min = 255,
-                v, c;
-
-            const matlen = matrix.length;
-
-            for (c = 0; c < matlen; c++) {
-
-                v = data[matrix[c] + offset];
-
-                if (v < min) min = v;
-                else if (v > max) max = v;
-            }
-
-            switch (operation) {
-
-                case 'lowest' :
-                    return min;
-
-                case 'highest' :
-                    return max;
-
-                default :
-                    return _floor(min + ((max - min) / 2));
-            }
-        };
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
-            len = iData.length;
+            len   = iData.length;
+
+        const width  = input.width  | 0,
+            height = input.height | 0;
 
         const {
             opacity = 1,
-            includeRed = false,
+            includeRed   = false,
             includeGreen = false,
-            includeBlue = false,
+            includeBlue  = false,
             includeAlpha = true,
-            operation = MEAN,
+            operation    = MEAN,
             lineOut,
         } = requirements;
 
-        let width = requirements.width;
-        if (!_isFinite(width) || width < 1) width = 3;
-        width = _floor(width);
+        let kW = requirements.width;
+        if (!_isFinite(kW) || kW < 1) kW = 3;
+        kW = _floor(kW);
+        
+        let kH = requirements.height;
+        if (!_isFinite(kH) || kH < 1) kH = 3;
+        kH = _floor(kH);
+        
+        let offX = requirements.offsetX;
+        if (!_isFinite(offX) || offX < 0) offX = (kW >> 1);
+        offX = _floor(offX);
+        
+        let offY = requirements.offsetY;
+        if (!_isFinite(offY) || offY < 0) offY = (kH >> 1);
+        offY = _floor(offY);
 
-        let height = requirements.height;
-        if (!_isFinite(height) || height < 1) height = 3;
-        height = _floor(height);
+        if (kW === 1 && kH === 1 && offX === 0 && offY === 0) this.transferDataUnchanged(oData, iData, len);
+        else {
 
-        let offsetX = requirements.offsetX;
-        if (!_isFinite(offsetX) || offsetX < 1) offsetX = 1;
-        offsetX = _floor(offsetX);
+            const left = offX | 0,
+                right = (kW - offX - 1) | 0,
+                top = offY | 0,
+                bottom = (kH - offY - 1) | 0;
 
-        let offsetY = requirements.offsetY;
-        if (!_isFinite(offsetY) || offsetY < 1) offsetY = 1;
-        offsetY = _floor(offsetY);
+            const x0 = left,
+                x1 = (width - right) | 0,
+                y0 = top,
+                y1 = (height - bottom) | 0;
 
-        const grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
+            const nameQx = `corrode-deque-x-${width}`;
+            let Qx = getWorkstoreItem(nameQx);
+            if (!Qx) {
 
-        const m = _floor(len / 4);
+                Qx = new Int32Array(width);
+                setWorkstoreItem(nameQx, Qx);
+            }
 
-        let r, g, b, a, i;
+            const nameQy = `corrode-deque-y-${height}`;
+            let Qy = getWorkstoreItem(nameQy);
+            if (!Qy) {
 
-        for (i = 0; i < m; i++) {
+                Qy = new Int32Array(height);
+                setWorkstoreItem(nameQy, Qy);
+            }
 
-            r = i * 4;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            const midMin = new Uint8ClampedArray(len);
+            const midMax = (operation === 'lowest') ? null : new Uint8ClampedArray(len);
 
-            oData[r] = (includeRed) ? doCalculations(iData, grid[i], 0) : iData[r];
-            oData[g] = (includeGreen) ? doCalculations(iData, grid[i], 1) : iData[g];
-            oData[b] = (includeBlue) ? doCalculations(iData, grid[i], 2) : iData[b];
-            oData[a] = (includeAlpha) ? doCalculations(iData, grid[i], 3) : iData[a];
+            const rowScan = (src, rowBase, xs, xe, ch, wantMin) => {
+
+                let m = wantMin ? 255 : 0,
+                    v;
+
+                const base = rowBase + ch;
+
+                for (let x = xs; x <= xe; x++) {
+
+                    v = src[base + (x << 2)];
+                    if (wantMin ? (v < m) : (v > m)) m = v;
+                }
+                return m;
+            };
+
+            const colScan = (src, xs, ys, ye, ch, wantMin) => {
+
+                let m = wantMin ? 255 : 0,
+                    v;
+
+                const base = (xs << 2) + ch,
+                    stride = width << 2;
+
+                let idx = (ys * stride) + base;
+
+                for (let y = ys; y <= ye; y++) {
+
+                    const v = src[idx];
+                    if (wantMin ? (v < m) : (v > m)) m = v;
+                    idx += stride;
+                }
+                return m;
+            };
+
+            const horizontalPass = (src, dst, ch, wantMin) => {
+
+                const w = width,
+                    h = height,
+                    fullW = left + right + 1;
+
+                let y, rowBase, x, xs, xe, head, tail, v, qx, qv, leftEdge, center;
+
+                for (y = 0; y < h; y++) {
+
+                    rowBase = (y * w) << 2;
+
+                    for (x = 0; x < x0; x++) {
+
+                        xs = 0;
+                        xe = Math.min(w - 1, x + right);
+                        dst[rowBase + (x << 2) + ch] = rowScan(src, rowBase, xs, xe, ch, wantMin);
+                    }
+
+                    if (x1 > x0) {
+
+                        head = 0;
+                        tail = -1;
+
+                        for (x = 0; x < w; x++) {
+                        
+                            v = src[rowBase + (x << 2) + ch];
+
+                            while (tail >= head) {
+
+                                qx = Qx[tail];
+                                qv = src[rowBase + (qx << 2) + ch];
+
+                                if (wantMin ? (v <= qv) : (v >= qv)) tail--;
+                                else break;
+                            }
+
+                            Qx[++tail] = x;
+
+                            leftEdge = x - fullW + 1;
+
+                            while (head <= tail && Qx[head] < leftEdge) head++;
+
+                            if (x >= fullW - 1) {
+
+                                const center = x - right;
+
+                                if (center >= x0 && center < x1) {
+
+                                    const qx = Qx[head];
+                                    dst[rowBase + (center << 2) + ch] = src[rowBase + (qx << 2) + ch];
+                                }
+                            }
+                        }
+                    }
+
+                    for (x = x1; x < w; x++) {
+
+                        xs = _max(0, x - left);
+                        xe = w - 1;
+                        dst[rowBase + (x << 2) + ch] = rowScan(src, rowBase, xs, xe, ch, wantMin);
+                    }
+                }
+            };
+
+            const verticalPass = (src, dst, ch, wantMin) => {
+
+                const w = width,
+                    h = height,
+                    fullH = top + bottom + 1,
+                    stride = w << 2;
+
+                let x, ys, ye, head, tail, y, idx, v, qx, qv, topEdge, center, qy;
+
+                for (x = 0; x < w; x++) {
+
+                    for (y = 0; y < y0; y++) {
+
+                        ys = 0;
+                        ye = _min(h - 1, y + bottom);
+                        dst[(y * stride) + (x << 2) + ch] = colScan(src, x, ys, ye, ch, wantMin);
+                    }
+
+                    if (y1 > y0) {
+
+                        head = 0;
+                        tail = -1;
+                        
+                        for (y = 0; y < h; y++) {
+
+                            idx = (y * stride) + (x << 2) + ch;
+                            v = src[idx];
+
+                            while (tail >= head) {
+
+                                qy = Qy[tail];
+                                qv = src[(qy * stride) + (x << 2) + ch];
+
+                                if (wantMin ? (v <= qv) : (v >= qv)) tail--;
+                                else break;
+                            }
+
+                            Qy[++tail] = y;
+
+                            topEdge = y - fullH + 1;
+
+                            while (head <= tail && Qy[head] < topEdge) head++;
+
+                            if (y >= fullH - 1) {
+
+                                center = y - bottom;
+
+                                if (center >= y0 && center < y1) {
+
+                                    qy = Qy[head];
+
+                                    dst[(center * stride) + (x << 2) + ch] = src[(qy * stride) + (x << 2) + ch];
+                                }
+                            }
+                        }
+                    }
+
+                    for (y = y1; y < h; y++) {
+
+                        ys = _max(0, y - top);
+                        ye = h - 1;
+                        dst[(y * stride) + (x << 2) + ch] = colScan(src, x, ys, ye, ch, wantMin);
+                    }
+                }
+            };
+
+            const doR = !!includeRed, doG = !!includeGreen, doB = !!includeBlue, doA = !!includeAlpha;
+
+            if (doA && !doR && !doG && !doB) {
+
+                oData.set(iData);
+
+                if (operation === 'lowest' || operation === 'mean') horizontalPass(iData, midMin, 3, true);
+                if (operation === 'highest' || operation === 'mean') horizontalPass(iData, midMax || midMin, 3, false);
+
+                if (operation === 'lowest') verticalPass(midMin, oData, 3, true);
+                else if (operation === 'highest') verticalPass(midMax, oData, 3, false);
+                else {
+
+                    const tmpMin = new Uint8ClampedArray(len),
+                        tmpMax = new Uint8ClampedArray(len);
+
+                    verticalPass(midMin, tmpMin, 3, true);
+                    verticalPass(midMax, tmpMax, 3, false);
+
+                    for (let i = 3; i < len; i += 4) {
+
+                        oData[i] = (tmpMin[i] + tmpMax[i]) >> 1;
+                    }
+                }
+            }
+            else {
+
+                oData.set(iData);
+
+                const runForChannel = (ch) => {
+
+                    if (operation === 'lowest') {
+
+                        horizontalPass(iData,  midMin, ch, true);
+                        verticalPass(midMin, oData,  ch, true);
+                    }
+                    else if (operation === 'highest') {
+
+                        horizontalPass(iData,  midMin, ch, false);
+                        verticalPass(midMin, oData,  ch, false);
+                    }
+                    else {
+
+                        const tmpVMin = new Uint8ClampedArray(len),
+                            tmpVMax = new Uint8ClampedArray(len);
+
+                        horizontalPass(iData, midMin, ch, true);
+                        horizontalPass(iData, midMax, ch, false);
+                        verticalPass  (midMin, tmpVMin, ch, true);
+                        verticalPass  (midMax, tmpVMax, ch, false);
+
+                        for (let i = ch; i < len; i += 4) {
+
+                            oData[i] = (tmpVMin[i] + tmpVMax[i]) >> 1;
+                        }
+                    }
+                };
+
+                if (doR) runForChannel(0);
+                if (doG) runForChannel(1);
+                if (doB) runForChannel(2);
+                if (doA) runForChannel(3);
+            }
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -3896,8 +4127,8 @@ P.theBigActionsObject = {
 
                     shiftR = (offsetRedMin + _floor(rnd[++rndCursor] * redRange)) * 4;
                     shiftG = (offsetGreenMin + _floor(rnd[++rndCursor] * greenRange)) * 4;
-                    shiftB= (offsetBlueMin + _floor(rnd[++rndCursor] * blueRange)) * 4;
-                    shiftA= (offsetAlphaMin + _floor(rnd[++rndCursor] * alphaRange)) * 4;
+                    shiftB = (offsetBlueMin + _floor(rnd[++rndCursor] * blueRange)) * 4;
+                    shiftA = (offsetAlphaMin + _floor(rnd[++rndCursor] * alphaRange)) * 4;
 
                     for (j = 0; j < step; j++) {
 
@@ -4128,8 +4359,8 @@ P.theBigActionsObject = {
             aLevels = normalizeLevels(alpha);
 
         const lutR = buildLUT(rLevels),
-            lutG = (green === red)  ? lutR : buildLUT(gLevels),
-            lutB = (blue  === red)  ? lutR : (blue === green ? lutG : buildLUT(bLevels)),
+            lutG = (green === red) ? lutR : buildLUT(gLevels),
+            lutB = (blue  === red) ? lutR : (blue === green ? lutG : buildLUT(bLevels)),
             lutA = buildLUT(aLevels);
 
         let p, pz, rgba, r, g, b, a, nr, ng, nb, na;
@@ -4161,31 +4392,53 @@ P.theBigActionsObject = {
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
             lineOut,
         } = requirements;
 
-        const libs = colorEngine.getRgbOkCache();
+        // Precomputed tables (adds-only in hot loop)
+        const { Lr, Lg, Lb, Mr, Mg, Mb, Sr, Sg, Sb } = getOklabLTables();
 
-        let r, g, b, a, i, L;
+        let s, r8, g8, b8, l, m, s3, l_, m_, s_, L, A;
 
-        for (i = 0; i < len; i += 4) {
+        for (let p = 0, pz = src32.length | 0; p < pz; p++) {
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            s = src32[p];
 
-            [L] = colorEngine.getOkValsForRgb(iData[r], iData[g], iData[b], libs);
+            // Extract 8-bit channels (little-endian RGBA -> 0xAABBGGRR)
+            r8 = s & 0xFF;
+            g8 = (s >>> 8) & 0xFF;
+            b8 = (s >>> 16) & 0xFF;
 
-            oData[r] = 0;
-            oData[g] = 0;
-            oData[b] = 0;
-            oData[a] = _floor(L * 256);
+            // Linear LMS sums via lookup (no multiplies)
+            l = Lr[r8] + Lg[g8] + Lb[b8];
+            m = Mr[r8] + Mg[g8] + Mb[b8];
+            s3 = Sr[r8] + Sg[g8] + Sb[b8];
+
+            // Cube roots
+            l_ = _cbrt(l);
+            m_ = _cbrt(m);
+            s_ = _cbrt(s3);
+
+            // OKLab L from (l_, m_, s_)
+            L = (0.2104542553 * l_) + (0.7936177850 * m_) - (0.0040720468 * s_);
+
+            // Clamp to [0,1]
+            if (L < 0) L = 0;
+            else if (L > 1) L = 1;
+
+            // Alpha = floor(L * 256); clamp to 255 to avoid wrap in packed write
+            A = (L * 256) | 0;
+            if (A > 255) A = 255;
+
+            // Pack RGBA for little-endian Uint32Array: RGB=0, A=A
+            out32[p] = (A << 24) >>> 0;
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -6126,7 +6379,7 @@ P.theBigActionsObject = {
             oData = output.data;
 
         const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
-            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -6145,143 +6398,64 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const [lowR, lowG, lowB, lowA] = low;
-        const [highR, highG, highB, highA] = high;
+        // Clamp once
+        const clamp8 = v => (v < 0 ? 0 : (v > 255 ? 255 : v | 0));
 
-        let lvl = level | 0;
-        if (lvl < 0) lvl = 0; else if (lvl > 255) lvl = 255;
+        const lvl = clamp8(level),
+            rT = clamp8(red),
+            gT = clamp8(green),
+            bT = clamp8(blue),
+            aT = clamp8(alpha);
 
-        const gray709 = (r, g, b) => (r * 54 + g * 183 + b * 19) >> 8;
+        const lowR = clamp8(low[0]),
+            lowG = clamp8(low[1]),
+            lowB = clamp8(low[2]),
+            lowA = clamp8(low[3]),
+            highR = clamp8(high[0]),
+            highG = clamp8(high[1]),
+            highB = clamp8(high[2]),
+            highA = clamp8(high[3]);
 
-        const packLowRGB = ((lowB  & 0xFF) << 16) | ((lowG  & 0xFF) << 8) | (lowR  & 0xFF);
-        const packHighRGB = ((highB & 0xFF) << 16) | ((highG & 0xFF) << 8) | (highR & 0xFF);
-        const packLowRGBA = ((lowA  & 0xFF) << 24) | packLowRGB;
-        const packHighRGBA = ((highA & 0xFF) << 24) | packHighRGB;
+        let rgba, r, g, b, a, ro, go, bo, ao, gray;
 
-        if (useMixedChannel) {
+        for (let p = 0, pz = src32.length | 0; p < pz; p++) {
 
-            if (includeRed && includeGreen && includeBlue) {
+            rgba = src32[p];
 
-                let rgba, r, g, b, a, gray, rgbPacked;
+            r = rgba & 0xFF;
+            g = (rgba >>> 8) & 0xFF;
+            b = (rgba >>> 16) & 0xFF;
+            a = (rgba >>> 24) & 0xFF;
 
-                if (includeAlpha) {
+            if (useMixedChannel) {
 
-                    for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+                gray = (r * 54 + g * 183 + b * 19) >> 8;
 
-                        rgba = src32[p];
+                if (gray < lvl) {
 
-                        r = rgba & 0xFF;
-                        g = (rgba >>> 8) & 0xFF;
-                        b = (rgba >>> 16) & 0xFF;
-
-                        gray = gray709(r, g, b);
-
-                        out32[p] = (gray < lvl) ? packLowRGBA : packHighRGBA;
-                    }
+                    ro = includeRed ? lowR  : r;
+                    go = includeGreen ? lowG  : g;
+                    bo = includeBlue ? lowB  : b;
+                    ao = includeAlpha ? lowA  : a;
                 }
                 else {
 
-                    for (let p = 0, pz = src32.length | 0; p < pz; p++) {
-
-                        rgba = src32[p];
-
-                        r = rgba & 0xFF;
-                        g = (rgba >>> 8) & 0xFF;
-                        b = (rgba >>> 16) & 0xFF;
-                        a =  rgba >>> 24;
-
-                        gray = gray709(r, g, b);
-                        rgbPacked = (gray < lvl) ? packLowRGB : packHighRGB;
-
-                        out32[p] = ((a & 0xFF) << 24) | rgbPacked;
-                    }
-                }
-
-            }
-            else {
-
-                let pr, pg, pb, pa, cg, cb, ca, gray;
-
-                for (let i = 0, iz = iData.length | 0; i < iz; i += 4) {
-
-                    cg = i + 1;
-                    cb = i + 2;
-                    ca = i + 3;
-
-                    pr = iData[i];
-                    pg = iData[cg];
-                    pb = iData[cb];
-                    pa = iData[ca];
-
-                    gray = gray709(pr, pg, pb);
-
-                    if (gray < lvl) {
-
-                        oData[i] = includeRed ? lowR : pr;
-                        oData[cg] = includeGreen ? lowG : pg;
-                        oData[cb] = includeBlue ? lowB : pb;
-                        oData[ca] = includeAlpha ? lowA : pa;
-                    }
-                    else {
-
-                        oData[i] = includeRed ? highR : pr;
-                        oData[cg] = includeGreen ? highG : pg;
-                        oData[cb] = includeBlue ? highB : pb;
-                        oData[ca] = includeAlpha ? highA : pa;
-                    }
-                }
-            }
-
-        }
-        else {
-
-            if (includeRed && includeGreen && includeBlue && includeAlpha) {
-
-                let pr, pg, pb, pa, rOut, gOut, bOut, aOut, cg, cb, ca;
-
-                for (let p = 0, pz = src32.length | 0, i = 0; p < pz; p++, i += 4) {
-
-                    cg = i + 1;
-                    cb = i + 2;
-                    ca = i + 3;
-
-                    pr = iData[i];
-                    pg = iData[cg];
-                    pb = iData[cb];
-                    pa = iData[ca];
-
-                    rOut = (pr < red) ? lowR : highR;
-                    gOut = (pg < green) ? lowG : highG;
-                    bOut = (pb < blue) ? lowB : highB;
-                    aOut = (pa < alpha) ? lowA : highA;
-
-                    out32[p] = ((aOut & 0xFF) << 24) | ((bOut & 0xFF) << 16) | ((gOut & 0xFF) << 8) | (rOut & 0xFF);
+                    ro = includeRed ? highR : r;
+                    go = includeGreen ? highG : g;
+                    bo = includeBlue ? highB : b;
+                    ao = includeAlpha ? highA : a;
                 }
             }
             else {
 
-                let pr, pg, pb, pa, cg, cb, ca;
-
-                for (let i = 0, len = iData.length | 0; i < len; i += 4) {
-
-                    cg = i + 1;
-                    cb = i + 2;
-                    ca = i + 3;
-
-                    pr = iData[i];
-                    pg = iData[cg];
-                    pb = iData[cb];
-                    pa = iData[ca];
-
-                    oData[i]   = includeRed   ? ((pr < red)   ? lowR  : highR) : pr;
-                    oData[cg] = includeGreen ? ((pg < green) ? lowG  : highG) : pg;
-                    oData[cb] = includeBlue  ? ((pb < blue)  ? lowB  : highB) : pb;
-                    oData[ca] = includeAlpha ? ((pa < alpha) ? lowA  : highA) : pa;
-                }
+                ro = includeRed ? (r < rT ? lowR : highR) : r;
+                go = includeGreen ? (g < gT ? lowG : highG) : g;
+                bo = includeBlue ? (b < bT ? lowB : highB) : b;
+                ao = includeAlpha ? (a < aT ? lowA : highA) : a;
             }
+            out32[p] = ((ao << 24) | (bo << 16) | (go << 8) | ro) >>> 0;
         }
 
-        // Single processing call at the end
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },

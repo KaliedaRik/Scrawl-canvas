@@ -180,6 +180,12 @@ export const interpolate = function (val, min, max) {
     return min + val * (max - min);
 };
 
+// `clamp8` - Clamp 8-bit output to between 0 and 255 integers
+export const clamp8 = (v) => (v < 0 ? 0 : (v > 255 ? 255 : v | 0));
+
+// `clamp` - a generic clamping function
+export const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+
 // __isa_boolean__ checks to make sure the argument is a boolean
 export const isa_boolean = item => (typeof item === BOOLEAN) ? true : false;
 

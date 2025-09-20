@@ -79,7 +79,6 @@ const piccy = scrawl.makePicture({
     copyDimensions: ['100%', '100%'],
 
     filters: [name('luminanceToAlpha')],
-    memoizeFilterOutput: true,
 });
 
 piccy.clone({
@@ -213,7 +212,7 @@ scrawl.makeRender({
 // #### User interaction
 // Setup form
 const dom = scrawl.initializeDomInputs([
-    ['select', 'memoizeFilterOutput', 1],
+    ['select', 'memoizeFilterOutput', 0],
 ]);
 
 

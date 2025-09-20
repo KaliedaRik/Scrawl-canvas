@@ -4,7 +4,7 @@
 
 import { constructors } from '../core/library.js';
 
-import { correctAngle, doCreate } from './utilities.js';
+import { clamp, clamp8, correctAngle, doCreate } from './utilities.js';
 
 import { checkForWorkstoreItem, getWorkstoreItem, setWorkstoreItem } from './workstore.js';
 
@@ -107,13 +107,14 @@ const FAIL = [0, 0, 0, 0],
     LAB = 'lab',
     LCH = 'lch',
     OKLAB = 'oklab',
-    OKLCH = 'oklch';
+    OKLCH = 'oklch',
+    XYZ = 'xyz';
 
-// `clamp8` - (internal function) Clamp 8-bit output to between 0 and 255 integers
-const clamp8 = (v) => (v < 0 ? 0 : (v > 255 ? 255 : v | 0));
+// // `clamp8` - (internal function) Clamp 8-bit output to between 0 and 255 integers
+// const clamp8 = (v) => (v < 0 ? 0 : (v > 255 ? 255 : v | 0));
 
-// `clamp` - a generic clamping function
-const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+// // `clamp` - a generic clamping function
+// const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
 
 // A small pool of reusable objects, for returning results from helper functions
 const helperResultsPool = [];
@@ -884,16 +885,18 @@ const getColorStringsCache = function () {
 
 const parseColorStringFromCanvas = (input) => {
 
-    const key = input.trim();
-    const cache = getColorStringsCache();
-    const hit = cache.get(key);
+    const key = input.trim(),
+        cache = getColorStringsCache(),
+        hit = cache.get(key);
 
     if (hit) return hit;
 
     const prev = engine.fillStyle;
     engine.fillStyle = '#010203';
+
     const baseline = engine.fillStyle;
     engine.fillStyle = key;
+
     const applied = engine.fillStyle;
 
     if (applied === baseline && key !== baseline) {
@@ -933,8 +936,8 @@ const getColorValuesFromString = P.getColorValuesFromString = function (input) {
 
     if (s.includes('#')) {
 
-        const rgba = parseHexToRGBA(input);
-        return asResult(RGB, rgba);
+        const vals = parseHexToRGBA(input);
+        return asResult(RGB, vals);
     }
 
     if (s.includes('oklch(')) {
@@ -963,30 +966,30 @@ const getColorValuesFromString = P.getColorValuesFromString = function (input) {
 
     if (s.includes('rgb(') || s.includes('rgba(')) {
 
-        const rgba = parseRgbFunctionToRGBA(input);
-        return asResult(RGB, rgba);
+        const vals = parseRgbFunctionToRGBA(input);
+        return asResult(RGB, vals);
     }
 
     if (s.includes('hsl(') || s.includes('hsla(')) {
 
-        const hsla = parseHslFunctionToHSLA(input);
-        return asResult(HSL, hsla);
+        const vals = parseHslFunctionToHSLA(input);
+        return asResult(HSL, vals);
     }
 
     if (s.includes('hwb(')) {
 
-        const hwba = parseHwbFunctionToHWBA(input);
-        return asResult(HWB, hwba);
+        const vals = parseHwbFunctionToHWBA(input);
+        return asResult(HWB, vals);
     }
 
     if (s.includes('color(')) {
 
-        const rgba = parseColorStringFromCanvas(input);
-        return asResult(RGB, rgba);
+        const vals = parseColorStringFromCanvas(input);
+        return asResult(RGB, vals);
     }
 
-    const rgba = parseColorStringFromCanvas(input);
-    return asResult(RGB, rgba);
+    const vals = parseColorStringFromCanvas(input);
+    return asResult(RGB, vals);
 };
 
 // `extractRGBfromColorString`
@@ -1041,28 +1044,35 @@ P.buildColorStringFromData = function (data) {
             return `hwb(${H} ${W}% ${B}% / ${a})`;
 
         case LAB: 
-            L  = clamp(c1, 0, 100);
+            L = clamp(c1, 0, 100);
             A = clamp(c2, -125, 125);
             B = clamp(c3, -125, 125);
             return `lab(${L}% ${A} ${B} / ${a})`;
 
         case LCH: 
             L = clamp(c1, 0, 100);
-            C = clamp(c2, 0, 150);
+            C = clamp(c2, 0, 230);
             H = correctAngle(c3);
             return `lch(${L}% ${C} ${H} / ${a})`;
 
         case OKLAB: 
-            L  = clamp(c1, 0, 100);
+            L = clamp(c1, 0, 1) * 100;
             A = clamp(c2, -0.4, 0.4);
             B = clamp(c3, -0.4, 0.4);
             return `oklab(${L}% ${A} ${B} / ${a})`;
 
         case OKLCH: 
-            L = clamp(c1, 0, 100);
+            L = clamp(c1, 0, 1) * 100;
             C = clamp(c2, 0, 0.4);
             H = correctAngle(c3);
             return `oklch(${L}% ${C} ${H} / ${a})`;
+
+        case XYZ:
+            const [lStar, aStar, bStar] = convertXYZtoLAB(c1, c2, c3);
+            L = clamp(lStar, 0, 100);
+            A = clamp(aStar, -125, 125);
+            B = clamp(bStar, -125, 125);
+            return `lab(${L}% ${A} ${B} / ${a})`;
 
         default:
             return BLANK;
@@ -1258,7 +1268,7 @@ for (let i = 0, v, e; i <= 4096; i++) {
 
     v = i / 4096;
 
-    e = (v <= 0.0031308) ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055;
+    e = (v <= 0.0031308) ? 12.92 * v : 1.055 * _pow(v, 1 / 2.4) - 0.055;
 
     LINEAR12_TO_SRGB8[i] = (e * 255 + 0.5) | 0;
 }
@@ -1275,6 +1285,92 @@ const encodeLinearToSRGB8 = (lin) => {
     else if (idx > 4096) idx = 4096;
 
     return LINEAR12_TO_SRGB8[idx];
+};
+
+const xyzToLinearSRGB = (x, y, z) => ([
+    3.2409699419045213 * x + -1.5373831775700935 * y + -0.4986107602930033 * z,
+    -0.9692436362808798 * x +  1.8759675015077206 * y +  0.04155505740717561 * z,
+    0.05563007969699361* x + -0.20397695888897657* y +  1.0569715142428786  * z
+]);
+
+const inSRGBGamut = (r, g, b) => r >= 0 && r <= 1 && g >= 0 && g <= 1 && b >= 0 && b <= 1;
+
+const fitLABtoSRGB = (L, a, b) => {
+
+    let [x, y, z] = convertLABtoXYZ(L, a, b),
+        [r, g, bl] = xyzToLinearSRGB(x, y, z);
+
+    if (inSRGBGamut(r, g, bl)) return [L, a, b];
+
+    let lo = 0,
+        hi = 1;
+
+    for (let i = 0; i < 8; i++) {
+
+        const s = (lo + hi) * 0.5;
+
+        [x, y, z] = convertLABtoXYZ(L, a * s, b * s);
+        [r, g, bl] = xyzToLinearSRGB(x, y, z);
+
+        if (inSRGBGamut(r, g, bl)) lo = s;
+        else hi = s;
+    }
+
+    return [L, a * lo, b * lo];
+};
+
+const fitLCHtoSRGB = (L, C, h) => {
+
+    const a = C * _cos(h * _radian),
+        b = C * _sin(h * _radian);
+
+    return fitLABtoSRGB(L, a, b);
+};
+
+const oklabToLinearSRGB = (L, A, B) => {
+
+    const l_ = L + 0.3963377774 * A + 0.2158037573 * B,
+        m_ = L - 0.1055613458 * A - 0.0638541728 * B,
+        s_ = L - 0.0894841775 * A - 1.2914855480 * B;
+
+    const l = l_ * l_ * l_,
+        m = m_ * m_ * m_,
+        s = s_ * s_ * s_;
+
+    return [
+        4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+        -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+        -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s,
+    ];
+};
+
+const fitOKLABtoSRGB = (L, A, B) => {
+
+    let [r, g, bl] = oklabToLinearSRGB(L, A, B);
+
+    if (inSRGBGamut(r, g, bl)) return [L, A, B];
+
+    let lo = 0,
+        hi = 1;
+
+    for (let i = 0; i < 8; i++) {
+
+        const s = (lo + hi) * 0.5;
+        [r, g, bl] = oklabToLinearSRGB(L, A * s, B * s);
+
+        if (inSRGBGamut(r, g, bl)) lo = s;
+        else hi = s;
+    }
+
+    return [L, A * lo, B * lo];
+};
+
+const fitOKLCHtoSRGB = (L, C, h) => {
+
+    const A = C * _cos(h * _radian),
+        B = C * _sin(h * _radian);
+
+    return fitOKLABtoSRGB(L, A, B);
 };
 
 
@@ -1657,72 +1753,168 @@ const convertColorData = P.convertColorData = function (input, output) {
 //        LCH      OKLCH
 // 
 // ```
+// conversionTree — now includes XYZ as a top-level branch and as a target in all branches
 const conversionTree = {
 
     [RGB]: {
-        [RGB]: (a, b, c) => [a, b, c],
-        [HSL]: (a, b, c) => convertRGBtoHSL(a, b, c),
-        [HWB]: (a, b, c) => convertRGBtoHWB(a, b, c),
-        [LAB]: (a, b, c) => convertXYZtoLAB(...convertRGBtoXYZ(a, b, c)),
-        [LCH]: (a, b, c) => convertLABtoLCH(...convertXYZtoLAB(...convertRGBtoXYZ(a, b, c))),
-        [OKLAB]: (a, b, c) => convertRGBtoOKLAB(a, b, c),
-        [OKLCH]: (a, b, c) => convertOKLABtoOKLCH(...convertRGBtoOKLAB(a, b, c)),
+        [RGB]:  (a,b,c) => [a,b,c],
+        [HSL]:  (a,b,c) => convertRGBtoHSL(a,b,c),
+        [HWB]:  (a,b,c) => convertRGBtoHWB(a,b,c),
+        [XYZ]:  (a,b,c) => convertRGBtoXYZ(a,b,c),
+        [LAB]:  (a,b,c) => convertXYZtoLAB(...convertRGBtoXYZ(a,b,c)),
+        [LCH]:  (a,b,c) => convertLABtoLCH(...convertXYZtoLAB(...convertRGBtoXYZ(a,b,c))),
+        [OKLAB]:(a,b,c) => convertRGBtoOKLAB(a,b,c),
+        [OKLCH]:(a,b,c) => convertOKLABtoOKLCH(...convertRGBtoOKLAB(a,b,c)),
     },
+
     [HSL]: {
-        [RGB]: (a, b, c) => convertHSLtoRGB(a, b, c),
-        [HSL]: (a, b, c) => [a, b, c],
-        [HWB]: (a, b, c) => convertRGBtoHWB(...convertHSLtoRGB(a, b, c)),
-        [LAB]: (a, b, c) => convertXYZtoLAB(...convertRGBtoXYZ(...convertHSLtoRGB(a, b, c))),
-        [LCH]: (a, b, c) => convertLABtoLCH(...convertXYZtoLAB(...convertRGBtoXYZ(...convertHSLtoRGB(a, b, c)))),
-        [OKLAB]: (a, b, c) => convertRGBtoOKLAB(...convertHSLtoRGB(a, b, c)),
-        [OKLCH]: (a, b, c) => convertOKLABtoOKLCH(...convertRGBtoOKLAB(...convertHSLtoRGB(a, b, c))),
+        [RGB]:  (a,b,c) => convertHSLtoRGB(a,b,c),
+        [HSL]:  (a,b,c) => [a,b,c],
+        [HWB]:  (a,b,c) => convertRGBtoHWB(...convertHSLtoRGB(a,b,c)),
+        [XYZ]:  (a,b,c) => convertRGBtoXYZ(...convertHSLtoRGB(a,b,c)),
+        [LAB]:  (a,b,c) => convertXYZtoLAB(...convertRGBtoXYZ(...convertHSLtoRGB(a,b,c))),
+        [LCH]:  (a,b,c) => convertLABtoLCH(...convertXYZtoLAB(...convertRGBtoXYZ(...convertHSLtoRGB(a,b,c)))),
+        [OKLAB]:(a,b,c) => convertRGBtoOKLAB(...convertHSLtoRGB(a,b,c)),
+        [OKLCH]:(a,b,c) => convertOKLABtoOKLCH(...convertRGBtoOKLAB(...convertHSLtoRGB(a,b,c))),
     },
+
     [HWB]: {
-        [RGB]: (a, b, c) => convertHWBtoRGB(a, b, c),
-        [HSL]: (a, b, c) => convertRGBtoHSL(...convertHWBtoRGB(a, b, c)),
-        [HWB]: (a, b, c) => [a, b, c],
-        [LAB]: (a, b, c) => convertXYZtoLAB(...convertRGBtoXYZ(...convertHWBtoRGB(a, b, c))),
-        [LCH]: (a, b, c) => convertLABtoLCH(...convertXYZtoLAB(...convertRGBtoXYZ(...convertHWBtoRGB(a, b, c)))),
-        [OKLAB]: (a, b, c) => convertRGBtoOKLAB(...convertHWBtoRGB(a, b, c)),
-        [OKLCH]: (a, b, c) => convertOKLABtoOKLCH(...convertRGBtoOKLAB(...convertHWBtoRGB(a, b, c))),
+        [RGB]:  (a,b,c) => convertHWBtoRGB(a,b,c),
+        [HSL]:  (a,b,c) => convertRGBtoHSL(...convertHWBtoRGB(a,b,c)),
+        [HWB]:  (a,b,c) => [a,b,c],
+        [XYZ]:  (a,b,c) => convertRGBtoXYZ(...convertHWBtoRGB(a,b,c)),
+        [LAB]:  (a,b,c) => convertXYZtoLAB(...convertRGBtoXYZ(...convertHWBtoRGB(a,b,c))),
+        [LCH]:  (a,b,c) => convertLABtoLCH(...convertXYZtoLAB(...convertRGBtoXYZ(...convertHWBtoRGB(a,b,c)))),
+        [OKLAB]:(a,b,c) => convertRGBtoOKLAB(...convertHWBtoRGB(a,b,c)),
+        [OKLCH]:(a,b,c) => convertOKLABtoOKLCH(...convertRGBtoOKLAB(...convertHWBtoRGB(a,b,c))),
     },
+
+    [XYZ]: {
+        [RGB]:  (x,y,z) => convertXYZtoRGB(x,y,z),
+        [HSL]:  (x,y,z) => convertRGBtoHSL(...convertXYZtoRGB(x,y,z)),
+        [HWB]:  (x,y,z) => convertRGBtoHWB(...convertXYZtoRGB(x,y,z)),
+        [XYZ]:  (x,y,z) => [x,y,z],
+        [LAB]:  (x,y,z) => convertXYZtoLAB(x,y,z),
+        [LCH]:  (x,y,z) => convertLABtoLCH(...convertXYZtoLAB(x,y,z)),
+        [OKLAB]:(x,y,z) => convertXYZtoOKLAB(x,y,z),
+        [OKLCH]:(x,y,z) => convertOKLABtoOKLCH(...convertXYZtoOKLAB(x,y,z)),
+    },
+
     [LAB]: {
-        [RGB]: (a, b, c) => convertXYZtoRGB(...convertLABtoXYZ(a, b, c)),
-        [HSL]: (a, b, c) => convertRGBtoHSL(...convertXYZtoRGB(...convertLABtoXYZ(a, b, c))),
-        [HWB]: (a, b, c) => convertRGBtoHWB(...convertXYZtoRGB(...convertLABtoXYZ(a, b, c))),
-        [LAB]: (a, b, c) => [a, b, c],
-        [LCH]: (a, b, c) => convertLABtoLCH(a, b, c),
-        [OKLAB]: (a, b, c) => convertXYZtoOKLAB(...convertLABtoXYZ(a, b, c)),
-        [OKLCH]: (a, b, c) => convertOKLABtoOKLCH(...convertXYZtoOKLAB(...convertLABtoXYZ(a, b, c))),
+        [RGB]:  (a,b,c) => convertXYZtoRGB(...convertLABtoXYZ(a,b,c)),
+        [HSL]:  (a,b,c) => convertRGBtoHSL(...convertXYZtoRGB(...convertLABtoXYZ(a,b,c))),
+        [HWB]:  (a,b,c) => convertRGBtoHWB(...convertXYZtoRGB(...convertLABtoXYZ(a,b,c))),
+        [XYZ]:  (a,b,c) => convertLABtoXYZ(a,b,c),
+        [LAB]:  (a,b,c) => [a,b,c],
+        [LCH]:  (a,b,c) => convertLABtoLCH(a,b,c),
+        [OKLAB]:(a,b,c) => convertXYZtoOKLAB(...convertLABtoXYZ(a,b,c)),
+        [OKLCH]:(a,b,c) => convertOKLABtoOKLCH(...convertXYZtoOKLAB(...convertLABtoXYZ(a,b,c))),
     },
+
     [LCH]: {
-        [RGB]: (a, b, c) => convertXYZtoRGB(...convertLABtoXYZ(...convertLCHtoLAB(a, b, c))),
-        [HSL]: (a, b, c) => convertRGBtoHSL(...convertXYZtoRGB(...convertLABtoXYZ(...convertLCHtoLAB(a, b, c)))),
-        [HWB]: (a, b, c) => convertRGBtoHWB(...convertXYZtoRGB(...convertLABtoXYZ(...convertLCHtoLAB(a, b, c)))),
-        [LAB]: (a, b, c) => convertLCHtoLAB(a, b, c),
-        [LCH]: (a, b, c) => [a, b, c],
-        [OKLAB]: (a, b, c) => convertXYZtoOKLAB(...convertLABtoXYZ(...convertLCHtoLAB(a, b, c))),
-        [OKLCH]: (a, b, c) => convertOKLABtoOKLCH(...convertXYZtoOKLAB(...convertLABtoXYZ(...convertLCHtoLAB(a, b, c)))),
+        [RGB]:  (a,b,c) => convertXYZtoRGB(...convertLABtoXYZ(...convertLCHtoLAB(a,b,c))),
+        [HSL]:  (a,b,c) => convertRGBtoHSL(...convertXYZtoRGB(...convertLABtoXYZ(...convertLCHtoLAB(a,b,c)))),
+        [HWB]:  (a,b,c) => convertRGBtoHWB(...convertXYZtoRGB(...convertLABtoXYZ(...convertLCHtoLAB(a,b,c)))),
+        [XYZ]:  (a,b,c) => convertLABtoXYZ(...convertLCHtoLAB(a,b,c)),
+        [LAB]:  (a,b,c) => convertLCHtoLAB(a,b,c),
+        [LCH]:  (a,b,c) => [a,b,c],
+        [OKLAB]:(a,b,c) => convertXYZtoOKLAB(...convertLABtoXYZ(...convertLCHtoLAB(a,b,c))),
+        [OKLCH]:(a,b,c) => convertOKLABtoOKLCH(...convertXYZtoOKLAB(...convertLABtoXYZ(...convertLCHtoLAB(a,b,c)))),
     },
+
     [OKLAB]: {
-        [RGB]: (a, b, c) => convertOKLABtoRGB(a, b, c),
-        [HSL]: (a, b, c) => convertRGBtoHSL(...convertOKLABtoRGB(a, b, c)),
-        [HWB]: (a, b, c) => convertRGBtoHWB(...convertOKLABtoRGB(a, b, c)),
-        [LAB]: (a, b, c) => convertXYZtoLAB(...convertOKLABtoXYZ(a, b, c)),
-        [LCH]: (a, b, c) => convertLABtoLCH(...convertXYZtoLAB(...convertOKLABtoXYZ(a, b, c))),
-        [OKLAB]: (a, b, c) => [a, b, c],
-        [OKLCH]: (a, b, c) => convertOKLABtoOKLCH(a, b, c),
+        [RGB]:  (a,b,c) => convertOKLABtoRGB(a,b,c),
+        [HSL]:  (a,b,c) => convertRGBtoHSL(...convertOKLABtoRGB(a,b,c)),
+        [HWB]:  (a,b,c) => convertRGBtoHWB(...convertOKLABtoRGB(a,b,c)),
+        [XYZ]:  (a,b,c) => convertOKLABtoXYZ(a,b,c),
+        [LAB]:  (a,b,c) => convertXYZtoLAB(...convertOKLABtoXYZ(a,b,c)),
+        [LCH]:  (a,b,c) => convertLABtoLCH(...convertXYZtoLAB(...convertOKLABtoXYZ(a,b,c))),
+        [OKLAB]:(a,b,c) => [a,b,c],
+        [OKLCH]:(a,b,c) => convertOKLABtoOKLCH(a,b,c),
     },
+
     [OKLCH]: {
-        [RGB]: (a, b, c) => convertOKLABtoRGB(...convertOKLCHtoOKLAB(a, b, c)),
-        [HSL]: (a, b, c) => convertRGBtoHSL(...convertOKLABtoRGB(...convertOKLCHtoOKLAB(a, b, c))),
-        [HWB]: (a, b, c) => convertRGBtoHWB(...convertOKLABtoRGB(...convertOKLCHtoOKLAB(a, b, c))),
-        [LAB]: (a, b, c) => convertXYZtoLAB(...convertOKLABtoXYZ(...convertOKLCHtoOKLAB(a, b, c))),
-        [LCH]: (a, b, c) => convertLABtoLCH(...convertXYZtoLAB(...convertOKLABtoXYZ(...convertOKLCHtoOKLAB(a, b, c)))),
-        [OKLAB]: (a, b, c) => convertOKLCHtoOKLAB(a, b, c),
-        [OKLCH]: (a, b, c) => [a, b, c],
+        [RGB]:  (a,b,c) => convertOKLABtoRGB(...convertOKLCHtoOKLAB(a,b,c)),
+        [HSL]:  (a,b,c) => convertRGBtoHSL(...convertOKLABtoRGB(...convertOKLCHtoOKLAB(a,b,c))),
+        [HWB]:  (a,b,c) => convertRGBtoHWB(...convertOKLABtoRGB(...convertOKLCHtoOKLAB(a,b,c))),
+        [XYZ]:  (a,b,c) => convertOKLABtoXYZ(...convertOKLCHtoOKLAB(a,b,c)),
+        [LAB]:  (a,b,c) => convertXYZtoLAB(...convertOKLABtoXYZ(...convertOKLCHtoOKLAB(a,b,c))),
+        [LCH]:  (a,b,c) => convertLABtoLCH(...convertXYZtoLAB(...convertOKLABtoXYZ(...convertOKLCHtoOKLAB(a,b,c)))),
+        [OKLAB]:(a,b,c) => convertOKLCHtoOKLAB(a,b,c),
+        [OKLCH]:(a,b,c) => [a,b,c],
     },
 };
+
+
+
+
+
+// const conversionTree = {
+
+//     [RGB]: {
+//         [RGB]: (a, b, c) => [a, b, c],
+//         [HSL]: (a, b, c) => convertRGBtoHSL(a, b, c),
+//         [HWB]: (a, b, c) => convertRGBtoHWB(a, b, c),
+//         [LAB]: (a, b, c) => convertXYZtoLAB(...convertRGBtoXYZ(a, b, c)),
+//         [LCH]: (a, b, c) => convertLABtoLCH(...convertXYZtoLAB(...convertRGBtoXYZ(a, b, c))),
+//         [OKLAB]: (a, b, c) => convertRGBtoOKLAB(a, b, c),
+//         [OKLCH]: (a, b, c) => convertOKLABtoOKLCH(...convertRGBtoOKLAB(a, b, c)),
+//     },
+//     [HSL]: {
+//         [RGB]: (a, b, c) => convertHSLtoRGB(a, b, c),
+//         [HSL]: (a, b, c) => [a, b, c],
+//         [HWB]: (a, b, c) => convertRGBtoHWB(...convertHSLtoRGB(a, b, c)),
+//         [LAB]: (a, b, c) => convertXYZtoLAB(...convertRGBtoXYZ(...convertHSLtoRGB(a, b, c))),
+//         [LCH]: (a, b, c) => convertLABtoLCH(...convertXYZtoLAB(...convertRGBtoXYZ(...convertHSLtoRGB(a, b, c)))),
+//         [OKLAB]: (a, b, c) => convertRGBtoOKLAB(...convertHSLtoRGB(a, b, c)),
+//         [OKLCH]: (a, b, c) => convertOKLABtoOKLCH(...convertRGBtoOKLAB(...convertHSLtoRGB(a, b, c))),
+//     },
+//     [HWB]: {
+//         [RGB]: (a, b, c) => convertHWBtoRGB(a, b, c),
+//         [HSL]: (a, b, c) => convertRGBtoHSL(...convertHWBtoRGB(a, b, c)),
+//         [HWB]: (a, b, c) => [a, b, c],
+//         [LAB]: (a, b, c) => convertXYZtoLAB(...convertRGBtoXYZ(...convertHWBtoRGB(a, b, c))),
+//         [LCH]: (a, b, c) => convertLABtoLCH(...convertXYZtoLAB(...convertRGBtoXYZ(...convertHWBtoRGB(a, b, c)))),
+//         [OKLAB]: (a, b, c) => convertRGBtoOKLAB(...convertHWBtoRGB(a, b, c)),
+//         [OKLCH]: (a, b, c) => convertOKLABtoOKLCH(...convertRGBtoOKLAB(...convertHWBtoRGB(a, b, c))),
+//     },
+//     [LAB]: {
+//         [RGB]: (a, b, c) => convertXYZtoRGB(...convertLABtoXYZ(a, b, c)),
+//         [HSL]: (a, b, c) => convertRGBtoHSL(...convertXYZtoRGB(...convertLABtoXYZ(a, b, c))),
+//         [HWB]: (a, b, c) => convertRGBtoHWB(...convertXYZtoRGB(...convertLABtoXYZ(a, b, c))),
+//         [LAB]: (a, b, c) => [a, b, c],
+//         [LCH]: (a, b, c) => convertLABtoLCH(a, b, c),
+//         [OKLAB]: (a, b, c) => convertXYZtoOKLAB(...convertLABtoXYZ(a, b, c)),
+//         [OKLCH]: (a, b, c) => convertOKLABtoOKLCH(...convertXYZtoOKLAB(...convertLABtoXYZ(a, b, c))),
+//     },
+//     [LCH]: {
+//         [RGB]: (a, b, c) => convertXYZtoRGB(...convertLABtoXYZ(...convertLCHtoLAB(a, b, c))),
+//         [HSL]: (a, b, c) => convertRGBtoHSL(...convertXYZtoRGB(...convertLABtoXYZ(...convertLCHtoLAB(a, b, c)))),
+//         [HWB]: (a, b, c) => convertRGBtoHWB(...convertXYZtoRGB(...convertLABtoXYZ(...convertLCHtoLAB(a, b, c)))),
+//         [LAB]: (a, b, c) => convertLCHtoLAB(a, b, c),
+//         [LCH]: (a, b, c) => [a, b, c],
+//         [OKLAB]: (a, b, c) => convertXYZtoOKLAB(...convertLABtoXYZ(...convertLCHtoLAB(a, b, c))),
+//         [OKLCH]: (a, b, c) => convertOKLABtoOKLCH(...convertXYZtoOKLAB(...convertLABtoXYZ(...convertLCHtoLAB(a, b, c)))),
+//     },
+//     [OKLAB]: {
+//         [RGB]: (a, b, c) => convertOKLABtoRGB(a, b, c),
+//         [HSL]: (a, b, c) => convertRGBtoHSL(...convertOKLABtoRGB(a, b, c)),
+//         [HWB]: (a, b, c) => convertRGBtoHWB(...convertOKLABtoRGB(a, b, c)),
+//         [LAB]: (a, b, c) => convertXYZtoLAB(...convertOKLABtoXYZ(a, b, c)),
+//         [LCH]: (a, b, c) => convertLABtoLCH(...convertXYZtoLAB(...convertOKLABtoXYZ(a, b, c))),
+//         [OKLAB]: (a, b, c) => [a, b, c],
+//         [OKLCH]: (a, b, c) => convertOKLABtoOKLCH(a, b, c),
+//     },
+//     [OKLCH]: {
+//         [RGB]: (a, b, c) => convertOKLABtoRGB(...convertOKLCHtoOKLAB(a, b, c)),
+//         [HSL]: (a, b, c) => convertRGBtoHSL(...convertOKLABtoRGB(...convertOKLCHtoOKLAB(a, b, c))),
+//         [HWB]: (a, b, c) => convertRGBtoHWB(...convertOKLABtoRGB(...convertOKLCHtoOKLAB(a, b, c))),
+//         [LAB]: (a, b, c) => convertXYZtoLAB(...convertOKLABtoXYZ(...convertOKLCHtoOKLAB(a, b, c))),
+//         [LCH]: (a, b, c) => convertLABtoLCH(...convertXYZtoLAB(...convertOKLABtoXYZ(...convertOKLCHtoOKLAB(a, b, c)))),
+//         [OKLAB]: (a, b, c) => convertOKLCHtoOKLAB(a, b, c),
+//         [OKLCH]: (a, b, c) => [a, b, c],
+//     },
+// };
 
 
 // #### Factory
