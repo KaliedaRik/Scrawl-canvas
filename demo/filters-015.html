@@ -63,35 +63,35 @@
 
   <div class="controls">
 
-    <div class="orange label">Points value</div>
+    <div class="orange label">Tile mode</div>
     <div class="orange">
-      <select class="controlItem" id="points">
-        <option value="rect-grid">Rectangular grid (predefined)</option>
-        <option value="hex-grid">Hexagonal grid (predefined)</option>
-        <option value="random">Random points</option>
+      <select class="controlItem" id="mode">
+        <option value="rect">Rectangles (rect)</option>
+        <option value="hex">Hexagons (hex)</option>
+        <option value="random">Random points (random)</option>
       </select>
     </div>
 
-    <div class="yellow label">Tile radius (hex)</div>
-    <div class="yellow"><input class="controlItem" id="tile_radius" type="range" value="14" min="1" max="200" step="1" /></div>
+    <div class="yellow label">[Hex] radius</div>
+    <div class="yellow"><input class="controlItem" id="hexRadius" type="range" value="14" min="1" max="100" step="1" /></div>
 
-    <div class="yellow label">Tile width</div>
-    <div class="yellow"><input class="controlItem" id="tile_width" type="range" value="20" min="1" max="200" step="1" /></div>
+    <div class="yellow label">[Rect] width</div>
+    <div class="yellow"><input class="controlItem" id="rectWidth" type="range" value="20" min="1" max="200" step="1" /></div>
 
-    <div class="yellow label">Tile height</div>
-    <div class="yellow"><input class="controlItem" id="tile_height" type="range" value="20" min="1" max="200" step="1" /></div>
+    <div class="yellow label">[Rect] height</div>
+    <div class="yellow"><input class="controlItem" id="rectHeight" type="range" value="20" min="1" max="200" step="1" /></div>
 
-    <div class="yellow label">Origin offset X</div>
-    <div class="yellow"><input class="controlItem" id="offset_x" type="range" value="200" min="0" max="400" step="1" /></div>
+    <div class="yellow label">[Rect, Hex] origin X</div>
+    <div class="yellow"><input class="controlItem" id="originX" type="range" value="200" min="0" max="400" step="1" /></div>
 
-    <div class="yellow label">Origin offset Y</div>
-    <div class="yellow"><input class="controlItem" id="offset_y" type="range" value="200" min="0" max="400" step="1" /></div>
+    <div class="yellow label">[Rect, Hex] origin Y</div>
+    <div class="yellow"><input class="controlItem" id="originY" type="range" value="200" min="0" max="400" step="1" /></div>
 
-    <div class="yellow label">Rotation angle</div>
+    <div class="yellow label">[Rect, Hex] Rotation angle</div>
     <div class="yellow"><input class="controlItem" id="angle" type="range" value="0" min="0" max="360" step="1" /></div>
 
-    <div class="yellow label">Random points</div>
-    <div class="yellow"><input class="controlItem" id="random_points" type="range" value="20" min="5" max="200" step="1" /></div>
+    <div class="yellow label">[Random] Random count</div>
+    <div class="yellow"><input class="controlItem" id="randomCount" type="range" value="100" min="10" max="200" step="1" /></div>
 
     <div class="pink label">Include red</div>
     <div class="pink">

@@ -22,7 +22,7 @@ import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coord
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _cbrt, _ceil, _floor, _isArray, _isFinite, _max, _min, _pow, _round, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _cbrt, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _pow, _round, _sin, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
 const _exp = Math.exp,
@@ -42,6 +42,7 @@ const _exp = Math.exp,
     GRAY_PALETTES = ['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'],
     HARD_LIGHT = 'hard-light',
     HEX_GRID = 'hex-grid',
+    HEX = 'hex',
     HUE = 'hue',
     LIGHTEN = 'lighten',
     LIGHTER = 'lighter',
@@ -53,7 +54,9 @@ const _exp = Math.exp,
     ORDERED = 'ordered',
     OVERLAY = 'overlay',
     POINTS_ARRAY = 'points-array',
+    POINTS = 'points',
     RANDOM_POINTS = 'random-points',
+    RECT = 'rect',
     SATURATION = 'saturation',
     SCREEN = 'screen',
     SOFT_LIGHT = 'soft-light',
@@ -396,287 +399,383 @@ P.buildTileRects = function (tileWidth, tileHeight, offsetX, offsetY, image) {
     return out;
 };
 
-// `buildGeneralTileSets` - separate the available space into a set of groups (tiles) and assign pixels to each group. Each tile centers on a `point` - an x/y coordinate; the calculations assign each pixel in the image to the group whose point it is closest to. Resulting object will be cached in the store
-// + Used by the `tile` filter, but separated out as the data it generates may have uses elsewhere
-P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, seed, image) {
+// Build a compact label map (per-pixel tile id) instead of arrays of pixel indices.
+P.buildGeneralTileLabels = function (requirements, image) {
 
     const { cache } = this;
-
     if (!image) image = cache.source;
-    const { width:iWidth, height:iHeight } = image;
 
-    if (iWidth && iHeight) {
-
-        let tileW = 1,
-            tileH = 1,
-            tileR = 1,
-            offX = 0,
-            offY = 0,
-            ang = 0,
-            req = UNSET;
-
-        // The `pointVals` data can be supplied in a number of different formats:
-        // + As a String: `'rect-grid'` - the function will calculate a set of suitable points based on the source image's dimensions, and the user-defined `tileWidth`, `tileHeight`, `offsetX`, `offsetY` and `angle` arguments. This results in a rectangular grid of tiles (at most dimensions) which can be rotated to the required angle.
-        // + As a String: `'hex-grid'` - the function will calculate a set of suitable points based on the source image's dimensions, and the user-defined `tileHeight`, `tileRadius`, `offsetX`, `offsetY` and `angle` arguments. This results in a hexagonal grid of tiles (at most dimensions) which can be rotated to the required angle. The shape of the hexagons in the grid depend on the interplay between the `tileHeight` and `tileRadius` values.
-        // + As a positive integer Number - this is a request by the user for the function to semi-randomly generate a set of points to the given value, constrained to an area determined by the `tileRadius`, `offsetX`, `offsetY` and `angle` arguments. Unlike other versions, this version will only include pixels within the bounds of circle of the given radius centered on the supplied offset coordinate values. To vary the randomness of point generation, the user can supply a `seed` argument, used when initializing the pseudo-random number generator.
-        // + As an Array of Numbers, which represent user-defined points across the image. Pixel selection for each point is constrained by the supplied `tileRadius`, `offsetX` and `offsetY` arguments.
-        if (pointVals.substring) req = pointVals;
-        else if (_isArray(pointVals)) req = POINTS_ARRAY;
-        else if (_isFinite(pointVals)) req = RANDOM_POINTS;
-
-        if (req === UNSET) return [];
-
-        // The `tileWidth`, `tileHeight`, `tileRadius`, `offsetX` and `offsetY` arguments can be supplied as absolute Number values (in px), or as a String % value relative to the source image dimensions.
-        // + `tileRadius` is relative to the source image's width
-        if (tileWidth.substring) tileW = _round((parseFloat(tileWidth) / 100) * iWidth);
-        else if (_isFinite(tileWidth)) tileW = tileWidth;
-        if (tileW < 1) tileW = 1;
-
-        if (tileHeight.substring) tileH = _round((parseFloat(tileHeight) / 100) * iHeight);
-        else if (_isFinite(tileHeight)) tileH = tileHeight;
-        if (tileH < 1) tileH = 1;
-
-        if (tileRadius.substring) tileR = _round((parseFloat(tileRadius) / 100) * iWidth);
-        else if (_isFinite(tileRadius)) tileR = tileRadius;
-        if (tileR < 1) tileR = 1;
-
-        if (offsetX.substring) offX = _round((parseFloat(offsetX) / 100) * iWidth);
-        else if (_isFinite(offsetX)) offX = offsetX;
-        if (offX < 0) offX = 0;
-        else if (offX >= iWidth) offX = iWidth - 1;
-
-        if (offsetY.substring) offY = _round((parseFloat(offsetY) / 100) * iHeight);
-        else if (_isFinite(offsetY)) offY = offsetY;
-        if (offY < 0) offY = 0;
-        else if (offY >= iHeight) offY = iHeight - 1;
-
-        // The `angle` argument is the rotation applied to the points (using the offset coordinate as the rotation point), measured in degrees.
-        if (_isFinite(angle)) ang = angle;
-
-        let name = `${req}-tileset-${iWidth}-${iHeight}-${tileW}-${tileH}-${tileR}-${offX}-${offY}-${ang}`;
-        if (req === POINTS_ARRAY) name += `-${pointVals.join(ARG_SPLITTER)}`;
-        else if (req === RANDOM_POINTS) name += `-${pointVals}-${seed}`;
-
-        const itemInWorkstore = getWorkstoreItem(name);
-
-        if (itemInWorkstore) return itemInWorkstore;
-
-        if (req === RECT_GRID && tileW === 1 && tileH === 1) return getOrAddWorkstoreItem(name);
-
-        const coord = requestCoordinate(),
-            origin = [offX, offY],
-            test = [0, 0];
-
-        let tiles = [],
-            points;
-
-        const referencePoints = [],
-            neighbourPoints = [];
-
-        let h, hz, w, wz, x, xz, y, yz,
-            pointsName = ZERO_STR;
-
-        // Check to stop the hex grid breaking when user supplies an inappropriately low `tileHeight` argument value, compared to the value supplied in the `tileRadius` argument.
-        if (req === HEX_GRID && tileH / tileR < 1.05) tileH = tileR * 1.05;
-
-        const halfW = _floor(tileW / 2),
-            halfH = _floor(tileH / 2),
-            doubleR = tileR * 2,
-            hexDown = _round((tileH / tileR) * tileR);
-
-        let i, iz, cursor, ref,
-            counter = 0,
-            hexOffset = 0;
-
-        switch (req) {
-
-            case RECT_GRID :
-
-                pointsName = `rect-grid-points-${iWidth}-${iHeight}-${tileW}-${tileH}-${offX}-${offY}`;
-                points = getWorkstoreItem(pointsName);
-
-                if (!points) {
-
-                    const newPoints = [];
-
-                    // Generates a set of initial points in an overlarge grid (for square tiles)
-                    for (y = offY - (iHeight * 2) + halfH, yz = offY + (iHeight * 2) + halfH; y < yz; y += tileH) {
-
-                        for (x = offX - (iWidth * 2) + halfW, xz = offX + (iWidth * 2) + halfW; x < xz; x += tileW) {
-
-                            newPoints.push(x, y);
-                        }
-                    }
-
-                    points = getOrAddWorkstoreItem(pointsName, newPoints);
-                }
-                break;
-
-            case HEX_GRID :
-
-                pointsName = `hex-grid-points-${iWidth}-${iHeight}-${tileR}-${offX}-${offY}`;
-                points = getWorkstoreItem(pointsName);
-
-                if (!points) {
-
-                    const newPoints = [];
-
-                    // Generates a set of initial points in an overlarge grid (for hexagonal tiles)
-                    counter = 0;
-                    for (y = offY - (iHeight * 2) + tileR, yz = offY + (iHeight * 2) + tileR; y < yz; y += hexDown) {
-
-                        hexOffset = (counter % 2 === 0) ? tileR : 0;
-
-                        for (x = offX - (iWidth * 2) + tileR + hexOffset, xz = offX + (iWidth * 2) + tileR; x < xz; x += doubleR) {
-
-                            newPoints.push(x, y);
-                        }
-                        counter++;
-                    }
-
-                    points = getOrAddWorkstoreItem(pointsName, newPoints);
-                }
-                tileW = doubleR * 2;
-                tileH = hexDown * 2;
-                break;
-
-            case RANDOM_POINTS :
-
-                pointsName = `random-points-${iWidth}-${iHeight}-${tileR}-${offX}-${offY}-${pointVals}-${seed}`;
-                points = getWorkstoreItem(pointsName);
-
-                if (!points) {
-
-                    const newPoints = [];
-
-                    // Generates a set of initial random points withing the given constraints
-                    const rnd = this.getRandomNumbers({
-                        seed,
-                        length: pointVals * 3,
-                    });
-                    let rndCursor = -1;
-
-                    for (i = 0; i < pointVals; i++) {
-
-                        coord.zero().add([rnd[++rndCursor], rnd[++rndCursor]]).rotate(rnd[++rndCursor] * 360).rotate(ang).scalarMultiply(tileR);
-
-                        [x, y] = coord;
-                        newPoints.push(_round(x), _round(y));
-                    }
-
-                    points = getOrAddWorkstoreItem(pointsName, newPoints);
-                }
-                tileW = tileR;
-                tileH = tileR;
-                break;
-
-            case POINTS_ARRAY :
-
-                pointsName = `defined-points-${iWidth}-${iHeight}-${tileR}-${pointVals.join(ARG_SPLITTER)}`;
-                points = getWorkstoreItem(pointsName);
-
-                if (!points) {
-
-                    // User-generated points are not pre-processed. Note that the positioning of these points is relative to the offset coordinate values; users, when generating the point values, need to take this into account otherwise the end result may unexpectedly move towards (or beyond) the bottom-right part of the final image.
-                    const newPoints = [...pointVals];
-
-                    points = getOrAddWorkstoreItem(pointsName, newPoints);
-                }
-
-                tileW = tileR;
-                tileH = tileR;
-                break;
-        }
-
-        // Go through initial set of points
-        counter = 0;
-
-        for (i = 0, iz = points.length; i < iz; i += 2) {
-
-            test[0] = points[i];
-            test[1] = points[i + 1];
-
-            coord.zero().add(test).rotate(ang).add(origin);
-
-            [x, y] = coord;
-            x = _round(x);
-            y = _round(y);
-
-            if ((x > -tileW) && (x < iWidth + tileW) && (y > -tileH) && (y < iHeight + tileH)) {
-
-                cursor = ((iWidth * 2) * (iHeight * 2)) + ((y + _floor(iHeight / 2)) * iWidth) + (x + _floor(iWidth / 2));
-
-                referencePoints[counter] = [x, y, cursor];
-                tiles[cursor] = [];
-
-                for (h = y - tileH, hz = y + tileH; h < hz; h++) {
-
-                    for (w = x - tileW, wz = x + tileW; w < wz; w++) {
-
-                        if (w >= 0 && w < iWidth && h >= 0 && h < iHeight) {
-
-                            if (req === RANDOM_POINTS) {
-
-                                if (coord.zero().subtract(origin).add([w, h]).getMagnitude() > tileR) continue;
-                            }
-
-                            ref = (h * iWidth) + w;
-                            if (!neighbourPoints[ref]) neighbourPoints[ref] = [];
-                            neighbourPoints[ref].push(counter);
-                        }
-                    }
-                }
-                counter++;
-            }
-        }
-
-        // Sanity check, in case none of the points survived the previous manipulation
-        if (!referencePoints.length) return referencePoints;
-
-        // Assign pixels to tile buckets
-        let minref, minlen, pixel, pixelRefs, distance;
-
-        for (h = 0; h < iHeight; h++) {
-
-            for (w = 0; w < iWidth; w++) {
-
-                pixel = (h * iWidth) + w;
-
-                test[0] = w;
-                test[1] = h;
-
-                pixelRefs = neighbourPoints[pixel];
-                minref = -1;
-                minlen = 0;
-
-                if (pixelRefs) {
-
-                    pixelRefs.forEach(r => {
-
-                        [x, y, cursor] = referencePoints[r];
-
-                        distance = coord.zero().add(test).subtract([x, y]).getMagnitude();
-
-                        if (minref < 0 || distance < minlen) {
-
-                            minref = cursor;
-                            minlen = distance;
-                        }
-                    });
-                }
-                if (minref >= 0) tiles[minref].push(pixel);
-            }
-        }
-
-        releaseCoordinate(coord);
-
-        // Filter the tiles Array to remove undefined indexes, then stash the result in the workstore (for future quick-serve) and return the array.
-        tiles = tiles.filter(t => t != null);
-
-        setWorkstoreItem(name, tiles);
-        return tiles;
+    const iWidth = image.width | 0,
+        iHeight = image.height | 0,
+        nPix = (iWidth * iHeight) | 0;
+
+    if (!iWidth || !iHeight) return { labels: new Int32Array(0), nTiles: 0, mode: 'rect' };
+
+    const {
+        mode = RECT,
+        originX = 0,
+        originY = 0,
+        angle = 0,
+        rectWidth = 10,
+        rectHeight = 10,
+        hexRadius = 5,
+        randomCount = 20,
+        seed = DEFAULT_SEED,
+        pointsData = [],
+    } = requirements || {};
+
+    let ox = (_isFinite(originX) ? originX : 0) | 0;
+    let oy = (_isFinite(originY) ? originY : 0) | 0;
+
+    // Cache key - a small stable key; for "points" we avoid dumping the full array into the key
+    let key = `tiles-v2-${mode}-${iWidth}-${iHeight}-${ox}-${oy}-${_round(angle*1000)}`;
+
+    let w, h, r, c, sd, arr, len;
+
+    if (mode === RECT) {
+
+        w = _max(1, _isFinite(rectWidth) ? rectWidth  | 0 : 1);
+        h = _max(1, _isFinite(rectHeight) ? rectHeight | 0 : 1);
+        key += `-rect-${w}-${h}`;
     }
-    return [];
+    else if (mode === HEX) {
+
+        r = _max(1, _isFinite(hexRadius) ? hexRadius | 0 : 1);
+        key += `-hex-${r}`;
+    }
+    else if (mode === RANDOM) {
+
+        c = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
+        sd = seed || DEFAULT_SEED;
+        key += `-rnd-${c}-${sd}`;
+    }
+    else if (mode === POINTS) {
+
+        arr = _isArray(pointsData) ? pointsData : [];
+        len = (arr && arr.length) | 0;
+
+        // rolling checksum to detect changes cheaply
+        let hash = 2166136261 | 0;
+        for (let i = 0; i < len; i += _max(1, (len / 64) | 0)) {
+            hash ^= (arr[i] | 0);
+            hash = (hash * 16777619) | 0;
+        }
+        key += `-pts-${len}-${hash >>> 0}`;
+    }
+
+    const cached = getWorkstoreItem(key);
+    if (cached) return cached;
+
+    // Utility: inverse rotation (for lattice modes)
+    const toRad = angle * Math.PI / 180;
+    const cosNeg = _cos(-toRad), sinNeg = _sin(-toRad);
+
+    // Output labels
+    const labels = new Int32Array(nPix);
+    let nTiles = 0;
+
+    if (mode === RECT) {
+
+        if (w < 1) w = 1;
+        if (h < 1) h = 1;
+
+        // Project four corners to grid space to get stable index ranges
+        const corners = [[0,0],[iWidth-1,0],[0,iHeight-1],[iWidth-1,iHeight-1]];
+
+        let iMin =  1e9,
+            iMax = -1e9,
+            jMin =  1e9,
+            jMax = -1e9,
+            dx, dy, xp, yp, iIdx, jIdx, ii, jj, p, y, x;
+
+        for (let c = 0; c < 4; c++) {
+
+            dx = corners[c][0] - ox;
+            dy = corners[c][1] - oy;
+            xp =  cosNeg * dx - sinNeg * dy; // inverse-rotated into lattice space
+            yp =  sinNeg * dx + cosNeg * dy;
+            iIdx = _round(xp / w - 0.5);
+            jIdx = _round(yp / h - 0.5);
+
+            if (iIdx < iMin) iMin = iIdx; if (iIdx > iMax) iMax = iIdx;
+            if (jIdx < jMin) jMin = jIdx; if (jIdx > jMax) jMax = jIdx;
+        }
+
+        const nI = (iMax - iMin + 1) | 0;
+        const nJ = (jMax - jMin + 1) | 0;
+
+        nTiles = (nI * nJ) | 0;
+
+        p = 0;
+
+        for (y = 0; y < iHeight; y++) {
+            
+            dy = y - oy;
+            
+            for (x = 0; x < iWidth; x++, p++) {
+
+                dx = x - ox;
+                xp = cosNeg * dx - sinNeg * dy;
+                yp = sinNeg * dx + cosNeg * dy;
+                iIdx = _round(xp / w - 0.5);
+                jIdx = _round(yp / h - 0.5);
+                ii = (iIdx - iMin) | 0;
+                jj = (jIdx - jMin) | 0;
+                labels[p] = (jj * nI + ii) | 0;
+            }
+        }
+
+        const res = { labels, nTiles, mode: RECT };
+        setWorkstoreItem(key, res);
+
+        return res;
+    }
+
+    if (mode === HEX) {
+
+        let s = _isFinite(hexRadius) ? hexRadius | 0 : 1;
+        if (s < 1) s = 1;
+
+        const invA = _sqrt(3) / 3,
+            invB = 1 / 3,
+            invC = 2 / 3;
+
+        // Compute bounds by projecting corners into lattice space and rounding
+        const corners = [
+            [0, 0],
+            [iWidth-1, 0],
+            [0, iHeight-1],
+            [iWidth-1, iHeight-1]
+        ];
+
+        let qMin = 1e9,
+            qMax = -1e9,
+            rMin = 1e9,
+            rMax = -1e9;
+
+        const roundCube = (x, y, z) => {
+
+            let rx = _round(x),
+                ry = _round(y),
+                rz = _round(z);
+
+            const dx = _abs(rx - x),
+                dy = _abs(ry - y),
+                dz = _abs(rz - z);
+
+            if (dx > dy && dx > dz) rx = -ry - rz;
+            else if (dy > dz) ry = -rx - rz;
+            else rz = -rx - ry;
+
+            return [rx, rz];
+        };
+
+        let dx, dy, xp, yp, qf, rf, xf, zf, yf, qi, ri, qq, rr, p, y, x;
+
+        for (let c = 0; c < 4; c++) {
+
+            dx = corners[c][0] - ox;
+            dy = corners[c][1] - oy;
+
+            xp =  cosNeg * dx - sinNeg * dy;
+            yp =  sinNeg * dx + cosNeg * dy;
+
+            qf = (invA * xp - invB * yp) / s;
+            rf = (invC * yp) / s;
+
+            xf = qf;
+            zf = rf;
+            yf = -xf - zf;
+
+            [qi, ri] = roundCube(xf, yf, zf);
+
+            if (qi < qMin) qMin = qi;
+            if (qi > qMax) qMax = qi;
+            if (ri < rMin) rMin = ri;
+            if (ri > rMax) rMax = ri;
+        }
+
+        // Add a small guard to ensure full coverage
+        qMin -= 1;
+        rMin -= 1;
+        qMax += 1;
+        rMax += 1;
+
+        const nQ = (qMax - qMin + 1) | 0,
+            nR = (rMax - rMin + 1) | 0;
+
+        nTiles = (nQ * nR) | 0;
+
+        p = 0;
+
+        for (y = 0; y < iHeight; y++) {
+            
+            dy = y - oy;
+            
+            for (x = 0; x < iWidth; x++, p++) {
+                
+                dx = x - ox;
+                xp =  cosNeg * dx - sinNeg * dy;
+                yp =  sinNeg * dx + cosNeg * dy;
+
+                qf = (invA * xp - invB * yp) / s;
+                rf = (invC * yp) / s;
+
+                xf = qf, zf = rf, yf = -xf - zf;
+                [qi, ri] = roundCube(xf, yf, zf);
+
+                qq = (qi - qMin) | 0;
+                rr = (ri - rMin) | 0;
+
+                labels[p] = (rr * nQ + qq) | 0;
+            }
+        }
+
+        const res = { labels, nTiles, mode: HEX };
+        setWorkstoreItem(key, res);
+
+        return res;
+    }
+
+    const seeds = [];
+
+    if (mode === RANDOM) {
+
+        let count = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
+        if (count < 10) count = 10;
+
+        const rng = seededRandomNumberGenerator(seed);
+
+        let x, y;
+
+        for (let i = 0; i < count; i++) {
+
+            x = (rng.random() * iWidth)  | 0;
+            y = (rng.random() * iHeight) | 0;
+
+            seeds.push(x, y);
+        }
+    }
+    else if (mode === POINTS) {
+
+        const arr = _isArray(pointsData) ? pointsData : [];
+
+        let x, y;
+
+        for (let i = 0, iz = arr.length; i < iz; i += 2) {
+
+            x = arr[i] | 0;
+            y = arr[i + 1] | 0;
+
+            if (x >= 0 && x < iWidth && y >= 0 && y < iHeight) seeds.push(x, y);
+        }
+    }
+
+    const nSeeds = (seeds.length / 2) | 0;
+
+    if (!nSeeds) {
+
+        const res = { labels: new Int32Array(nPix), nTiles: 0, mode };
+        setWorkstoreItem(key, res);
+
+        return res;
+    }
+
+    // Spatial hash parameters: choose cell so ~1 seed per cell
+    let cell = _floor(_sqrt((iWidth * iHeight) / nSeeds));
+    if (cell < 4) cell = 4;
+
+    const gridCols = ((iWidth + cell - 1) / cell) | 0,
+        gridRows = ((iHeight + cell - 1) / cell) | 0;
+
+    const head = new Int32Array(gridCols * gridRows);
+    head.fill(-1);
+
+    const next = new Int32Array(nSeeds);
+    next.fill(-1);
+
+    // Insert seeds (clamp to grid)
+    let sx, sy, gx, gy, g;
+
+    for (let s = 0; s < nSeeds; s++) {
+
+        sx = seeds[(s << 1)];
+        sy = seeds[(s << 1) + 1];
+
+        let gx = (sx / cell) | 0;
+        if (gx < 0) gx = 0;
+        else if (gx >= gridCols) gx = gridCols - 1;
+
+        let gy = (sy / cell) | 0;
+        if (gy < 0) gy = 0;
+        else if (gy >= gridRows) gy = gridRows - 1;
+        
+        g = gy * gridCols + gx;
+        
+        next[s] = head[g];
+        
+        head[g] = s;
+    }
+
+    // Nearest seed per pixel (search 3×3 neighborhood with clamp)
+    let p = 0;
+
+    let best, bestD, y, x, gy2, gx2, dx, dy, d2, s;
+
+    for (y = 0; y < iHeight; y++) {
+
+        for (x = 0; x < iWidth; x++, p++) {
+
+            gx = (x / cell) | 0;
+            if (gx < 0) gx = 0;
+            else if (gx >= gridCols) gx = gridCols - 1;
+            
+            gy = (y / cell) | 0;
+            if (gy < 0) gy = 0;
+            else if (gy >= gridRows) gy = gridRows - 1;
+
+            best = -1,
+            bestD = Infinity;
+
+            for (oy = -1; oy <= 1; oy++) {
+
+                gy2 = gy + oy;
+                if (gy2 < 0 || gy2 >= gridRows) continue;
+                
+                for (ox = -1; ox <= 1; ox++) {
+                    
+                    const gx2 = gx + ox;
+                    if (gx2 < 0 || gx2 >= gridCols) continue;
+
+                    s = head[gy2 * gridCols + gx2];
+                    while (s !== -1) {
+                    
+                        sx = seeds[(s << 1)];
+                        sy = seeds[(s << 1) + 1];
+                        dx = x - sx, dy = y - sy;
+                        
+                        d2 = dx * dx + dy * dy;
+                        
+                        if (d2 < bestD) {
+
+                            bestD = d2;
+                            best = s;
+                        }
+                        
+                        s = next[s];
+                    }
+                }
+            }
+            labels[p] = best;
+        }
+    }
+
+    nTiles = nSeeds;
+
+    const res = { labels, nTiles, mode };
+    setWorkstoreItem(key, res);
+
+    return res;
 };
 
 // `getBlurPrefixBuffers` Prefix buffers for blur filter (inclusive prefix sums).
@@ -973,16 +1072,16 @@ P.theBigActionsObject = {
             oData = output.data;
 
         const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
-            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
         const {
             opacity = 1,
-            includeRed   = true,
+            includeRed = true,
             includeGreen = true,
-            includeBlue  = true,
-            excludeRed   = true,
+            includeBlue = true,
+            excludeRed = true,
             excludeGreen = true,
-            excludeBlue  = true,
+            excludeBlue = true,
             lineOut,
         } = requirements;
 
@@ -1081,8 +1180,8 @@ P.theBigActionsObject = {
 
         const iData = input.data,
             oData = output.data,
-            len   = iData.length,
-            width  = input.width,
+            len = iData.length,
+            width = input.width,
             height = input.height;
 
         const {
@@ -1223,7 +1322,7 @@ P.theBigActionsObject = {
 
             // Unpack channels (little-endian: R,G,B,A in least→most significant bytes)
             r =  rgba & 0xff;
-            g = (rgba >>>  8) & 0xff;
+            g = (rgba >>> 8) & 0xff;
             b = (rgba >>> 16) & 0xff;
             a = (rgba >>> 24) & 0xff;
 
@@ -1250,7 +1349,7 @@ P.theBigActionsObject = {
             else {
 
                 // No channels included for averaging:
-                // keep original channels unless excluded (then set to 0)
+                // + keep original channels unless excluded (then set to 0)
                 rOut = excR ? 0 : r;
                 gOut = excG ? 0 : g;
                 bOut = excB ? 0 : b;
@@ -1270,65 +1369,15 @@ P.theBigActionsObject = {
 // + Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     [BLEND]: function (requirements) {
 
-        const copyPixel = function (fr, tr, data) {
-
-            const fg = fr + 1,
-                fb = fg + 1,
-                fa = fb + 1,
-                tg = tr + 1,
-                tb = tg + 1,
-                ta = tb + 1;
-
-            oData[tr] = data[fr];
-            oData[tg] = data[fg];
-            oData[tb] = data[fb];
-            oData[ta] = data[fa];
-        };
-
-        const getLinePositions = function (x, y) {
-
-            const ix = x,
-                iy = y,
-                mx = x - offsetX,
-                my = y - offsetY;
-
-            let mPos = -1;
-
-            const iPos = ((iy * iWidth) + ix) * 4;
-
-            if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = ((my * mWidth) + mx) * 4;
-
-            return [iPos, mPos];
-        };
-
-        const getChannelNormals = function (irn, mrn) {
-
-            const ign = irn + 1,
-                ibn = ign + 1,
-                ian = ibn + 1,
-                mgn = mrn + 1,
-                mbn = mgn + 1,
-                man = mbn + 1;
-
-            return [
-                iData[irn] / 255,
-                iData[ign] / 255,
-                iData[ibn] / 255,
-                iData[ian] / 255,
-                mData[mrn] / 255,
-                mData[mgn] / 255,
-                mData[mbn] / 255,
-                mData[man] / 255
-            ];
-        };
-
-        const alphaCalc = (dA, mA) => (dA + (mA * (1 - dA))) * 255;
-
         const [input, output, mix] = this.getInputAndOutputLines(requirements);
 
-        const {width:iWidth, height:iHeight, data:iData} = input;
-        const {data:oData} = output;
-        const {width:mWidth, height:mHeight, data:mData} = mix;
+        const iWidth  = input.width  | 0,
+            iHeight = input.height | 0,
+            iData = input.data,
+            mWidth  = mix.width | 0,
+            mHeight = mix.height | 0,
+            mData = mix.data,
+            oData = output.data;
 
         const {
             opacity = 1,
@@ -1338,606 +1387,258 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        // Pixel calculations
-        const colorburnCalc = (din, dmix) => {
-            if (dmix === 1) return 255;
-            else if (din === 0) return 0;
-            return (1 - _min(1, ((1 - dmix) / din ))) * 255;
-        };
+        if (!iWidth || !iHeight) {
 
-        const colordodgeCalc = (din, dmix) => {
-            if (dmix === 0) return 0;
-            else if (din === 1) return 255;
-            return _min(1, (dmix / (1 - din))) * 255;
-        };
+            if (lineOut) this.processResults(output, input, 1 - opacity);
+            else this.processResults(this.cache.work, output, opacity);
+            return;
+        }
 
-        const darkenCalc = (din, dmix) => (din < dmix) ? din : dmix;
+        // Baseline: outside overlap should be the input
+        oData.set(iData);
 
-        const differenceCalc = (din, dmix) => _abs(din - dmix) * 255;
+        // Overlap rectangle (dest coords where mix contributes)
+        const x0 = (offsetX > 0 ? offsetX : 0) | 0;
+        const y0 = (offsetY > 0 ? offsetY : 0) | 0;
+        const x1 = Math.min(iWidth,  offsetX + mWidth)  | 0;
+        const y1 = Math.min(iHeight, offsetY + mHeight) | 0;
 
-        const exclusionCalc = (din, dmix) => (din + dmix - (2 * dmix * din)) * 255;
+        const hasOverlap = (x1 > x0) && (y1 > y0);
+        if (!hasOverlap) {
+            if (lineOut) this.processResults(output, input, 1 - opacity);
+            else this.processResults(this.cache.work, output, opacity);
+            return;
+        }
 
-        const hardlightCalc = (din, dmix) => (din <= 0.5) ? (din * dmix) * 255 : (dmix + (din - (dmix * din))) * 255;
+        // Normalization constants
+        const inv255 = 1 / 255;
 
-        const lightenCalc = (din, dmix) => (din > dmix) ? din : dmix;
+        const f_colorburn = (S, B) => (S === 0 ? 0 : (B === 1 ? 255 : (1 - _min(1, (1 - B) / S)) * 255));
 
-        const lighterCalc = (din, dmix) => (din + dmix) * 255;
+        const f_colordodge = (S, B) => (S === 1 ? 255 : (B === 0 ? 0 : _min(1, B / (1 - S)) * 255));
 
-        const multiplyCalc = (din, dmix) => din * dmix * 255;
+        const f_darken = (S, B) => (_min(S, B) * 255);
 
-        const overlayCalc = (din, dmix) => (din >= 0.5) ? (din * dmix) * 255 : (dmix + (din - (dmix * din))) * 255;
-
-        const screenCalc = (din, dmix) => (dmix + (din - (dmix * din))) * 255;
-
-        const softlightCalc = (din, dmix) => {
-            const d = (dmix <= 0.25) ?
-                ((((16 * dmix) - 12) * dmix) + 4) * dmix :
-                _sqrt(dmix);
-
-            if (din <= 0.5) return (dmix - ((1 - (2 * din)) * dmix * (1 - dmix))) * 255;
-            return (dmix + (((2 * din) - 1) * (d - dmix))) * 255;
-        };
-
-
-        const normalCalc = (Cs, As, Cb, Ab) => (As * Cs) + (Ab * Cb * (1 - As));
+        const D = b => (b <= 0.25 ? (((16 * b - 12) * b) + 4) * b : _sqrt(b));
 
         const libs = colorEngine.getRgbOkCache();
 
-        let x, y, dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA, ir, ig, ib, ia, mr, mg, mb, ma, cr, cg, cb, IL, IC, IH, ML, MC, MH;
+        // Row strides
+        const rowI = iWidth  << 2,
+            rowM = mWidth  << 2,
+            rowO = rowI;
 
-        switch (blend) {
+        // Starting mix coords
+        const mx0 = (x0 - offsetX) | 0,
+            my0 = (y0 - offsetY) | 0;
 
-            case COLOR_BURN :
+        // Inner loop helpers for OKLCH modes
+        const doOK = (mode, ir, ig, ib, mr, mg, mb) => {
 
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
+            let IL, IC, IH, ML, MC, MH, cr, cg, cb;
 
-                        [ir, mr] = getLinePositions(x, y);
+            [IL, , , IC, IH] = colorEngine.getOkValsForRgb(ir, ig, ib, libs);
+            [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mr, mg, mb, libs);
 
-                        ia = ir + 3;
-                        ma = mr + 3;
+            switch (mode) {
 
-                        if (iData[ia]) {
+                case COLOR:
+                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, IH, libs);
+                    break;
 
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
+                case HUE:
+                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, MC, IH, libs);
+                    break;
 
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                case LUMINOSITY:
+                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, MH, libs);
+                    break;
 
-                                ig = ir + 1;
-                                ib = ig + 1;
+                case SATURATION:
+                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, MH, libs);
+                    break;
+            }
+            return [cr, cg, cb];
+        };
 
-                                oData[ir] = colorburnCalc(dinR, dmixR);
-                                oData[ig] = colorburnCalc(dinG, dmixG);
-                                oData[ib] = colorburnCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
+        // Process overlap
+        let y, my, iRow, oRow, mRow,
+            x, mx, iIdx, mIdx, oIdx,
+            ir, ig, ib, ia8, mr, mg, mb, ma8,
+            As, Ab, br, bg, bb,
+            Fr, Fg, Fb, Sr, Sg, Sb, Br, Bg, Bb,
+            k, oneMinusAs, oneMinusAb, R, G, B, A;
+
+        for (y = y0, my = my0; y < y1; y++, my++) {
+
+            iRow = (y * rowI) | 0;
+            oRow = (y * rowO) | 0;
+            mRow = (my * rowM) | 0;
+
+            for (x = x0, mx = mx0; x < x1; x++, mx++) {
+
+                iIdx = iRow + ((x  << 2) | 0);
+                mIdx = mRow + ((mx << 2) | 0);
+                oIdx = oRow + ((x  << 2) | 0);
+
+                ia8 = iData[iIdx + 3];
+                ma8 = mData[mIdx + 3];
+
+                if (ia8 === 0) continue;
+                if (ma8 === 0) continue;
+
+                ir = iData[iIdx];
+                ig = iData[iIdx + 1];
+                ib = iData[iIdx + 2];
+                mr = mData[mIdx];
+                mg = mData[mIdx + 1];
+                mb = mData[mIdx + 2];
+
+                As = ia8 * inv255;
+                Ab = ma8 * inv255;
+
+                if (blend === COLOR || blend === HUE || blend === LUMINOSITY || blend === SATURATION) {
+
+                    [br, bg, bb] = doOK(blend, ir, ig, ib, mr, mg, mb);
+
+                    Fr = br * inv255;
+                    Fg = bg * inv255;
+                    Fb = bb * inv255;
+                    Sr = ir * inv255;
+                    Sg = ig * inv255;
+                    Sb = ib * inv255;
+                    Br = mr * inv255;
+                    Bg = mg * inv255;
+                    Bb = mb * inv255;
+
+                    k = As * Ab;
+                    oneMinusAs = 1 - As;
+                    oneMinusAb = 1 - Ab;
+
+                    R = Sr * oneMinusAb + Br * oneMinusAs + Fr * k;
+                    G = Sg * oneMinusAb + Bg * oneMinusAs + Fg * k;
+                    B = Sb * oneMinusAb + Bb * oneMinusAs + Fb * k;
+                    A = As + Ab - As * Ab;
+
+                    oData[oIdx] = (R * 255) | 0;
+                    oData[oIdx + 1] = (G * 255) | 0;
+                    oData[oIdx + 2] = (B * 255) | 0;
+                    oData[oIdx + 3] = (A * 255) | 0;
                 }
-                break;
+                else {
 
-            case COLOR_DODGE :
+                    Sr = ir * inv255;
+                    Sg = ig * inv255;
+                    Sb = ib * inv255;
 
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
+                    Br = mr * inv255;
+                    Bg = mg * inv255;
+                    Bb = mb * inv255;
 
-                        [ir, mr] = getLinePositions(x, y);
+                    switch (blend) {
 
-                        ia = ir + 3;
-                        ma = mr + 3;
+                        case COLOR_BURN:
+                            Fr = f_colorburn(Sr, Br) * inv255;
+                            Fg = f_colorburn(Sg, Bg) * inv255;
+                            Fb = f_colorburn(Sb, Bb) * inv255;
+                            break;
 
-                        if (iData[ia]) {
+                        case COLOR_DODGE:
+                            Fr = f_colordodge(Sr, Br) * inv255;
+                            Fg = f_colordodge(Sg, Bg) * inv255;
+                            Fb = f_colordodge(Sb, Bb) * inv255;
+                            break;
 
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
+                        case DARKEN:
+                            Fr = _min(Sr, Br);
+                            Fg = _min(Sg, Bg);
+                            Fb = _min(Sb, Bb);
+                            break;
 
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                        case LIGHTEN:
+                            Fr = _max(Sr, Br);
+                            Fg = _max(Sg, Bg);
+                            Fb = _max(Sb, Bb);
+                            break;
 
-                                ig = ir + 1;
-                                ib = ig + 1;
+                        case LIGHTER:
+                            Fr = _min(1, Sr + Br);
+                            Fg = _min(1, Sg + Bg);
+                            Fb = _min(1, Sb + Bb);
+                            break;
 
-                                oData[ir] = colordodgeCalc(dinR, dmixR);
-                                oData[ig] = colordodgeCalc(dinG, dmixG);
-                                oData[ib] = colordodgeCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
+                        case MULTIPLY:
+                            Fr = Sr * Br;
+                            Fg = Sg * Bg;
+                            Fb = Sb * Bb;
+                            break;
+
+                        case SCREEN:
+                            Fr = Br + Sr - Br * Sr;
+                            Fg = Bg + Sg - Bg * Sg;
+                            Fb = Bb + Sb - Bb * Sb;
+                            break;
+
+                        case DIFFERENCE:
+                            Fr = _abs(Sr - Br);
+                            Fg = _abs(Sg - Bg);
+                            Fb = _abs(Sb - Bb);
+                            break;
+
+                        case EXCLUSION:
+                            Fr = Sr + Br - 2 * Sr * Br;
+                            Fg = Sg + Bg - 2 * Sg * Bg;
+                            Fb = Sb + Bb - 2 * Sb * Bb;
+                            break;
+
+                        case OVERLAY:
+                            Fr = (Br <= 0.5 ? 2 * Sr * Br : 1 - 2 * (1 - Sr) * (1 - Br));
+                            Fg = (Bg <= 0.5 ? 2 * Sg * Bg : 1 - 2 * (1 - Sg) * (1 - Bg));
+                            Fb = (Bb <= 0.5 ? 2 * Sb * Bb : 1 - 2 * (1 - Sb) * (1 - Bb));
+                            break;
+
+                        case HARD_LIGHT:
+                            Fr = (Sr <= 0.5 ? 2 * Sr * Br : 1 - 2 * (1 - Sr) * (1 - Br));
+                            Fg = (Sg <= 0.5 ? 2 * Sg * Bg : 1 - 2 * (1 - Sg) * (1 - Bg));
+                            Fb = (Sb <= 0.5 ? 2 * Sb * Bb : 1 - 2 * (1 - Sb) * (1 - Bb));
+                            break;
+
+                        case SOFT_LIGHT:
+
+                            Fr = (Sr <= 0.5)
+                                ? (Br - (1 - 2 * Sr) * Br * (1 - Br))
+                                : (Br + (2 * Sr - 1) * (D(Br) - Br));
+
+                            Fg = (Sg <= 0.5)
+                                ? (Bg - (1 - 2 * Sg) * Bg * (1 - Bg))
+                                : (Bg + (2 * Sg - 1) * (D(Bg) - Bg));
+                            
+                            Fb = (Sb <= 0.5)
+                                ? (Bb - (1 - 2 * Sb) * Bb * (1 - Bb))
+                                : (Bb + (2 * Sb - 1) * (D(Bb) - Bb));
+
+                            break;
+
+                        default:
+                            Fr = Sr;
+                            Fg = Sg;
+                            Fb = Sb;
                     }
-                }
-                break;
 
-            case DARKEN :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-                        ma = mr + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-                                mg = mr + 1;
-                                mb = mg + 1;
-
-                                oData[ir] = darkenCalc(iData[ir], mData[mr]);
-                                oData[ig] = darkenCalc(iData[ig], mData[mg]);
-                                oData[ib] = darkenCalc(iData[ib], mData[mb]);
-                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case DIFFERENCE :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = differenceCalc(dinR, dmixR);
-                                oData[ig] = differenceCalc(dinG, dmixG);
-                                oData[ib] = differenceCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case EXCLUSION :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = exclusionCalc(dinR, dmixR);
-                                oData[ig] = exclusionCalc(dinG, dmixG);
-                                oData[ib] = exclusionCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case HARD_LIGHT :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = hardlightCalc(dinR, dmixR);
-                                oData[ig] = hardlightCalc(dinG, dmixG);
-                                oData[ib] = hardlightCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case LIGHTEN :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ir]) copyPixel(mr, ir, mData);
-                            else {
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-                                mg = mr + 1;
-                                mb = mg + 1;
-                                ma = mb + 1;
-
-                                oData[ir] = lightenCalc(iData[ir], mData[mr]);
-                                oData[ig] = lightenCalc(iData[ig], mData[mg]);
-                                oData[ib] = lightenCalc(iData[ib], mData[mb]);
-                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case LIGHTER :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = lighterCalc(dinR, dmixR);
-                                oData[ig] = lighterCalc(dinG, dmixG);
-                                oData[ib] = lighterCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case MULTIPLY :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-                        ma = mr + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = multiplyCalc(dinR, dmixR);
-                                oData[ig] = multiplyCalc(dinG, dmixG);
-                                oData[ib] = multiplyCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case OVERLAY :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = overlayCalc(dinR, dmixR);
-                                oData[ig] = overlayCalc(dinG, dmixG);
-                                oData[ib] = overlayCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case SCREEN :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = screenCalc(dinR, dmixR);
-                                oData[ig] = screenCalc(dinG, dmixG);
-                                oData[ib] = screenCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case SOFT_LIGHT :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-                        ma = mr + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = softlightCalc(dinR, dmixR);
-                                oData[ig] = softlightCalc(dinG, dmixG);
-                                oData[ib] = softlightCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case COLOR :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ig = ir + 1;
-                        ib = ig + 1;
-                        ia = ib + 1;
-                        mg = mr + 1;
-                        mb = mg + 1;
-                        ma = mb + 1;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [IL, , , IC, IH] = colorEngine.getOkValsForRgb(iData[ir], iData[ig], iData[ib], libs);
-                                [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mData[mr], mData[mg], mData[mb], libs);
-
-                                // Creates a color with the hue and saturation of the source color and the luminosity of the backdrop color.
-                                [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, IH, libs);
-
-                                oData[ir] = cr;
-                                oData[ig] = cg;
-                                oData[ib] = cb;
-                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case HUE :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ig = ir + 1;
-                        ib = ig + 1;
-                        ia = ib + 1;
-                        mg = mr + 1;
-                        mb = mg + 1;
-                        ma = mb + 1;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [IL, , , IC, IH] = colorEngine.getOkValsForRgb(iData[ir], iData[ig], iData[ib], libs);
-                                [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mData[mr], mData[mg], mData[mb], libs);
-
-                                // Creates a color with the hue of the source color and the saturation and luminosity of the backdrop color.
-                                [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, MC, IH, libs);
-
-                                oData[ir] = cr;
-                                oData[ig] = cg;
-                                oData[ib] = cb;
-                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case LUMINOSITY :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ig = ir + 1;
-                        ib = ig + 1;
-                        ia = ib + 1;
-                        mg = mr + 1;
-                        mb = mg + 1;
-                        ma = mb + 1;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [IL, , , IC, IH] = colorEngine.getOkValsForRgb(iData[ir], iData[ig], iData[ib], libs);
-                                [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mData[mr], mData[mg], mData[mb], libs);
-
-                                // Creates a color with the luminosity of the source color and the hue and saturation of the backdrop color.
-                                [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, MH, libs);
-
-                                oData[ir] = cr;
-                                oData[ig] = cg;
-                                oData[ib] = cb;
-                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case SATURATION :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ig = ir + 1;
-                        ib = ig + 1;
-                        ia = ib + 1;
-                        mg = mr + 1;
-                        mb = mg + 1;
-                        ma = mb + 1;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [IL, , , IC, IH] = colorEngine.getOkValsForRgb(iData[ir], iData[ig], iData[ib], libs);
-                                [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mData[mr], mData[mg], mData[mb], libs);
-
-                                // Creates a color with the saturation of the source color and the hue and luminosity of the backdrop color.
-                                [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, MH, libs);
-
-                                oData[ir] = cr;
-                                oData[ig] = cg;
-                                oData[ib] = cb;
-                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            default:
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-                                mg = mr + 1;
-                                mb = mg + 1;
-                                ma = mb + 1;
-
-                                dinA = iData[ia] / 255;
-                                dmixA = mData[ma] / 255;
-
-                                oData[ir] = normalCalc(iData[ir], dinA, mData[mr], dmixA);
-                                oData[ig] = normalCalc(iData[ig], dinA, mData[mg], dmixA);
-                                oData[ib] = normalCalc(iData[ib], dinA, mData[mb], dmixA);
-                                oData[ia] = alphaCalc(dinA, dmixA)
-                            }
-                        }
-                    }
-                }
+                k = As * Ab;
+                oneMinusAs = 1 - As;
+                oneMinusAb = 1 - Ab;
+
+                R = Sr * oneMinusAb + Br * oneMinusAs + Fr * k;
+                G = Sg * oneMinusAb + Bg * oneMinusAs + Fg * k;
+                B = Sb * oneMinusAb + Bb * oneMinusAs + Fb * k;
+                A = As + Ab - As * Ab;
+
+                oData[oIdx] = (R * 255) | 0;
+                oData[oIdx + 1] = (G * 255) | 0;
+                oData[oIdx + 2] = (B * 255) | 0;
+                oData[oIdx + 3] = (A * 255) | 0;                }
+            }
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -2820,343 +2521,205 @@ P.theBigActionsObject = {
 // __compose__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the "compose" argument; permitted values are: 'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', 'xor', or 'lighter'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     [COMPOSE]: function (requirements) {
 
-        const copyPixel = function (fr, tr, data) {
-
-            const fg = fr + 1,
-                fb = fg + 1,
-                fa = fb + 1,
-                tg = tr + 1,
-                tb = tg + 1,
-                ta = tb + 1;
-
-            oData[tr] = data[fr];
-            oData[tg] = data[fg];
-            oData[tb] = data[fb];
-            oData[ta] = data[fa];
-        };
-
-        const getLinePositions = function (x, y) {
-
-            const ix = x,
-                iy = y,
-                mx = x - offsetX,
-                my = y - offsetY;
-
-            let mp = -1;
-
-            const ip = ((iy * iWidth) + ix) * 4;
-
-            if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mp = ((my * mWidth) + mx) * 4;
-
-            return [ip, mp];
-        };
-
         const [input, output, mix] = this.getInputAndOutputLines(requirements);
 
-        const {width:iWidth, height:iHeight, data:iData} = input;
-        const {data:oData} = output;
-        const {width:mWidth, height:mHeight, data:mData} = mix;
+        const iWidth  = input.width | 0,
+            iHeight = input.height | 0,
+            iData = input.data,
+            mWidth  = mix.width | 0,
+            mHeight = mix.height | 0,
+            mData = mix.data,
+            oData   = output.data;
 
         const {
             opacity = 1,
-            compose = ZERO_STR,
+            compose = SOURCE_OVER,
             offsetX = 0,
             offsetY = 0,
             lineOut,
         } = requirements;
 
-        // Pixel calculations
-        const sAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * mAlpha) + (mAlpha * mColor * (1 - iAlpha));
+        // Early outs
+        if (!iWidth || !iHeight) {
 
-        const sInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
+            if (lineOut) this.processResults(output, input, 1 - opacity);
+            else this.processResults(this.cache.work, output, opacity);
+            return;
+        }
 
-        const sOutCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * (1 - mAlpha);
+        const x0 = (offsetX > 0 ? offsetX : 0) | 0,
+            y0 = (offsetY > 0 ? offsetY : 0) | 0,
+            x1 = _min(iWidth, offsetX + mWidth) | 0,
+            y1 = _min(iHeight, offsetY + mHeight) | 0;
 
-        const dAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * iAlpha);
-
-        const dOverCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor);
-
-        const dInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
-
-        const dOutCalc = (mColor, iAlpha, mAlpha) => mAlpha * mColor * (1 - iAlpha);
-
-        const xorCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * (1 - iAlpha));
-
-        const sOverCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor) + (mAlpha * mColor * (1 - iAlpha));
-
-        let ir, ig, ib, ia, mr, mg, mb, ma, x, y, dinA, dmixA;
+        const hasOverlap = (x1 > x0) && (y1 > y0);
 
         switch (compose) {
 
-            case SOURCE_ONLY :
-                output.data.set(iData);
-                break;
+            case SOURCE_ONLY:
 
-            case SOURCE_ATOP :
+                // Just copy source over wholesale and finish
+                oData.set(iData);
+                if (lineOut) this.processResults(output, input, 1 - opacity);
+                else this.processResults(this.cache.work, output, opacity);
+                return;
 
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
+            case SOURCE_OVER:
+            case SOURCE_OUT:
+            case DESTINATION_OVER:
+            case DESTINATION_ATOP:
+            case XOR:
 
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr >= 0) {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = sAtopCalc(iData[ir], dinA, mData[mr], dmixA);
-                            oData[ig] = sAtopCalc(iData[ig], dinA, mData[mg], dmixA);
-                            oData[ib] = sAtopCalc(iData[ib], dinA, mData[mb], dmixA);
-                            oData[ia] = ((dinA * dmixA) + (dmixA * (1 - dinA))) * 255;
-                        }
-                    }
-                }
-                break;
-
-            case SOURCE_IN :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr >= 0) {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            ma = mr + 3;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = sInCalc(iData[ir], dinA, dmixA);
-                            oData[ig] = sInCalc(iData[ig], dinA, dmixA);
-                            oData[ib] = sInCalc(iData[ib], dinA, dmixA);
-                            oData[ia] = dinA * dmixA * 255;
-                        }
-                    }
-                }
-                break;
-
-            case SOURCE_OUT :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            ma = mr + 3;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = sOutCalc(iData[ir], dinA, dmixA);
-                            oData[ig] = sOutCalc(iData[ig], dinA, dmixA);
-                            oData[ib] = sOutCalc(iData[ib], dinA, dmixA);
-                            oData[ia] = dinA * (1 - dmixA) * 255;
-                        }
-                    }
-                }
-                break;
-
-            case DESTINATION_ONLY :
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr >= 0) copyPixel(mr, ir, mData);
-                    }
-                }
-                break;
-
-            case DESTINATION_ATOP :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = dAtopCalc(iData[ir], dinA, mData[mr], dmixA);
-                            oData[ig] = dAtopCalc(iData[ig], dinA, mData[mg], dmixA);
-                            oData[ib] = dAtopCalc(iData[ib], dinA, mData[mb], dmixA);
-                            oData[ia] = ((dinA * (1 - dmixA)) + (dmixA * dinA)) * 255;
-                        }
-                    }
-                }
-                break;
-
-            case DESTINATION_OVER :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = dOverCalc(iData[ir], dinA, mData[mr], dmixA);
-                            oData[ig] = dOverCalc(iData[ig], dinA, mData[mg], dmixA);
-                            oData[ib] = dOverCalc(iData[ib], dinA, mData[mb], dmixA);
-                            oData[ia] = ((dinA * (1 - dmixA)) + dmixA) * 255;
-                        }
-                    }
-                }
-                break;
-
-            case DESTINATION_IN :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr >= 0) {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = dInCalc(mData[mr], dinA, dmixA);
-                            oData[ig] = dInCalc(mData[mg], dinA, dmixA);
-                            oData[ib] = dInCalc(mData[mb], dinA, dmixA);
-                            oData[ia] = dinA * dmixA * 255;
-                        }
-                    }
-                }
-                break;
-
-            case DESTINATION_OUT :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr >= 0) {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = dOutCalc(mData[mr], dinA, dmixA);
-                            oData[ig] = dOutCalc(mData[mg], dinA, dmixA);
-                            oData[ib] = dOutCalc(mData[mb], dinA, dmixA);
-                            oData[ia] = dmixA * (1 - dinA) * 255;
-                        }
-                    }
-                }
-                break;
-
-            case CLEAR :
-                break;
-
-            case XOR :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = xorCalc(iData[ir], dinA, mData[mr], dmixA);
-                            oData[ig] = xorCalc(iData[ig], dinA, mData[mg], dmixA);
-                            oData[ib] = xorCalc(iData[ib], dinA, mData[mb], dmixA);
-                            oData[ia] = ((dinA * (1 - dmixA)) + (dmixA * (1 - dinA))) * 255;
-                        }
-                    }
-                }
+                oData.set(iData);
                 break;
 
             default:
+                break;
+        }
 
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
+        // If no overlap, we're done (baseline already correct)
+        if (!hasOverlap || compose === CLEAR) {
 
-                        [ir, mr] = getLinePositions(x, y);
+            if (lineOut) this.processResults(output, input, 1 - opacity);
+            else this.processResults(this.cache.work, output, opacity);
+            return;
+        }
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else {
+        // Blend only over overlap rows
+        // + Helpers use normalized alphas (ia, ma in [0..1])
+        const blend_sourceAtop = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs * ma) + (ma * Cd * (1 - ia));
+        const blend_sourceIn = (Cs, As,ia, ma) => ia * Cs * ma;
+        const blend_sourceOut = (Cs, As, ia, ma) => ia * Cs * (1 - ma);
 
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
+        const blend_destAtop = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs * (1 - ma)) + (ma * Cd * ia);
+        const blend_destOver = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs * (1 - ma)) + (ma * Cd);
+        const blend_destIn = (Cd, Ad, ia, ma) => ia * Cd * ma;
+        const blend_destOut = (Cd, Ad, ia, ma) => ma * Cd * (1 - ia);
 
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
+        const blend_xor = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs * (1 - ma)) + (ma * Cd * (1 - ia));
+        const blend_sourceOver = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs) + (ma * Cd * (1 - ia));
 
-                            oData[ir] = sOverCalc(iData[ir], dinA, mData[mr], dmixA);
-                            oData[ig] = sOverCalc(iData[ig], dinA, mData[mg], dmixA);
-                            oData[ib] = sOverCalc(iData[ib], dinA, mData[mb], dmixA);
-                            oData[ia] = (dinA + (dmixA * (1 - dinA))) * 255;
-                        }
-                    }
+        // Process overlap area
+        const rowStrideI = iWidth << 2,
+            rowStrideM = mWidth << 2,
+            rowStrideO = rowStrideI;
+
+        // Starting mix offsets
+        const mx0 = (x0 - offsetX) | 0,
+            my0 = (y0 - offsetY) | 0;
+
+        let y, my, iRow, oRow, mRow, x, mx, iIdx, mIdx, oIdx,
+            ir, ig, ib, ia8, mr, mg, mb, ma8, or, og, ob, oa, ia, ma;
+
+        for (y = y0, my = my0; y < y1; y++, my++) {
+
+            iRow = (y * rowStrideI) | 0;
+            oRow = (y * rowStrideO) | 0;
+            mRow = (my * rowStrideM) | 0;
+
+            // Scan across overlap
+            for (x = x0, mx = mx0; x < x1; x++, mx++) {
+
+                iIdx = iRow + ((x << 2) | 0);
+                mIdx = mRow + ((mx << 2) | 0);
+                oIdx = oRow + ((x  << 2) | 0);
+
+                ir = iData[iIdx];
+                ig = iData[iIdx + 1];
+                ib = iData[iIdx + 2];
+                ia8 = iData[iIdx + 3];
+                
+                mr = mData[mIdx];
+                mg = mData[mIdx + 1];
+                mb = mData[mIdx + 2];
+                ma8 = mData[mIdx + 3];
+
+                // Normalize alphas once
+                ia = ia8 * (1 / 255);
+                ma = ma8 * (1 / 255);
+
+                switch (compose) {
+
+                    case SOURCE_ATOP:
+                        or = blend_sourceAtop(ir, ia, mr, ma, ia, ma);
+                        og = blend_sourceAtop(ig, ia, mg, ma, ia, ma);
+                        ob = blend_sourceAtop(ib, ia, mb, ma, ia, ma);
+                        oa = ((ia * ma) + (ma * (1 - ia))) * 255;
+                        break;
+
+                    case SOURCE_IN:
+                        or = blend_sourceIn(ir, ia, ia, ma);
+                        og = blend_sourceIn(ig, ia, ia, ma);
+                        ob = blend_sourceIn(ib, ia, ia, ma);
+                        oa = (ia * ma) * 255;
+                        break;
+
+                    case SOURCE_OUT:
+                        // Baseline already contains input; overwrite inside overlap
+                        or = blend_sourceOut(ir, ia, ia, ma);
+                        og = blend_sourceOut(ig, ia, ia, ma);
+                        ob = blend_sourceOut(ib, ia, ia, ma);
+                        oa = ia * (1 - ma) * 255;
+                        break;
+
+                    case DESTINATION_ONLY:
+                        // Just copy mix into output (within overlap). Outside remained transparent.
+                        or = mr; og = mg; ob = mb; oa = ma8;
+                        break;
+
+                    case DESTINATION_ATOP:
+                        or = blend_destAtop(ir, ia, mr, ma, ia, ma);
+                        og = blend_destAtop(ig, ia, mg, ma, ia, ma);
+                        ob = blend_destAtop(ib, ia, mb, ma, ia, ma);
+                        oa = ((ia * (1 - ma)) + (ma * ia)) * 255;
+                        break;
+
+                    case DESTINATION_OVER:
+                        or = blend_destOver(ir, ia, mr, ma, ia, ma);
+                        og = blend_destOver(ig, ia, mg, ma, ia, ma);
+                        ob = blend_destOver(ib, ia, mb, ma, ia, ma);
+                        oa = ((ia * (1 - ma)) + ma) * 255;
+                        break;
+
+                    case DESTINATION_IN:
+                        or = blend_destIn(mr, ma, ia, ma);
+                        og = blend_destIn(mg, ma, ia, ma);
+                        ob = blend_destIn(mb, ma, ia, ma);
+                        oa = ia * ma * 255;
+                        break;
+
+                    case DESTINATION_OUT:
+                        or = blend_destOut(mr, ma, ia, ma);
+                        og = blend_destOut(mg, ma, ia, ma);
+                        ob = blend_destOut(mb, ma, ia, ma);
+                        oa = ma * (1 - ia) * 255;
+                        break;
+
+                    case XOR:
+                        // Baseline outside overlap is input; inside we compute XOR
+                        or = blend_xor(ir, ia, mr, ma, ia, ma);
+                        og = blend_xor(ig, ia, mg, ma, ia, ma);
+                        ob = blend_xor(ib, ia, mb, ma, ia, ma);
+                        oa = ((ia * (1 - ma)) + (ma * (1 - ia))) * 255;
+                        break;
+
+                    case CLEAR:
+                        // (already early-returned)
+                        or = 0; og = 0; ob = 0; oa = 0;
+                        break;
+
+                    default:
+                        or = blend_sourceOver(ir, ia, mr, ma, ia, ma);
+                        og = blend_sourceOver(ig, ia, mg, ma, ia, ma);
+                        ob = blend_sourceOver(ib, ia, mb, ma, ia, ma);
+                        oa = (ia + (ma * (1 - ia))) * 255;
                 }
+
+                oData[oIdx] = or;
+                oData[oIdx + 1] = og;
+                oData[oIdx + 2] = ob;
+                oData[oIdx + 3] = oa;
+            }
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -3180,11 +2743,11 @@ P.theBigActionsObject = {
 
         const {
             opacity = 1,
-            includeRed   = false,
+            includeRed = false,
             includeGreen = false,
-            includeBlue  = false,
+            includeBlue = false,
             includeAlpha = true,
-            operation    = MEAN,
+            operation = MEAN,
             lineOut,
         } = requirements;
 
@@ -3227,14 +2790,15 @@ P.theBigActionsObject = {
 
             const nameQy = `corrode-deque-y-${height}`;
             let Qy = getWorkstoreItem(nameQy);
+
             if (!Qy) {
 
                 Qy = new Int32Array(height);
                 setWorkstoreItem(nameQy, Qy);
             }
 
-            const midMin = new Uint8ClampedArray(len);
-            const midMax = (operation === 'lowest') ? null : new Uint8ClampedArray(len);
+            const midMin = new Uint8ClampedArray(len),
+                midMax = (operation === 'lowest') ? null : new Uint8ClampedArray(len);
 
             const rowScan = (src, rowBase, xs, xe, ch, wantMin) => {
 
@@ -3401,7 +2965,10 @@ P.theBigActionsObject = {
                 }
             };
 
-            const doR = !!includeRed, doG = !!includeGreen, doB = !!includeBlue, doA = !!includeAlpha;
+            const doR = !!includeRed,
+                doG = !!includeGreen,
+                doB = !!includeBlue,
+                doA = !!includeAlpha;
 
             if (doA && !doR && !doG && !doB) {
 
@@ -4047,7 +3614,7 @@ P.theBigActionsObject = {
 
 // __glitch__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
 //
-// NOTE: this filter is deprecated. No further work is planned to maintain or improve it. INstead, the plan is to replace this filter with a set of loosely linked glitch effect filters covering:
+// NOTE: this filter is deprecated. No further work is planned to maintain or improve it. Instead, the plan is to replace this filter with a set of loosely linked glitch effect filters covering:
 // + **Row/Column Displace** - band-based shifts with seed/seedDelta and edgeMode (transparent / wrap / clamp).
 // + **Channel Split/Drift** - per-channel offsets (optional blur for chroma bleed).
 // + **Slice Repeat / Dropout** - duplicate or zero spans for tear/gap artifacts.
@@ -5287,70 +4854,52 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __process-image__ - Add an asset to the filter, which can then be used by other filters as either their `lineIn` or `lineMix` inputs.
-// + `asset` - the String name of the asset object. The asset must be pre-loaded before it can be included in the filter; where things go wrong, the system will attempt to load a 1x1 transparent pixel in place of the asset.
-// + `width` and `height` - arguments are measured in integer Number pixels, or % strings (relative to the source entity/Group/Cell dimensions).
-// + `copyX`, `copyY`, `copyWidth`, `copyHeight` - the start and dimensions of the area of the image to be used in the filter; values are integer Number pixels, or % strings relative to the image's natural dimensions.
-// + If the image's dimensions differ from the source entity/Group/Cell dimensions then, where a given dimension is smaller than source, that dimension will be centered; where the image dimension is larger then that dimension will be pinned to the top, or left.
-// + Filters will run faster when the asset's dimensions match the dimensions of the entity/Group/Cell to which the filter is being applied.
-// + `lineOut` - required. The image will be stored in the filter engine's cache using this name. Be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset's data.
-// + Assets are loaded into the filter engine each time the filter runs and are not persisted when the filter completes.
-// + Adding assets to a filter chain will very often disable filter memoization functionality!
+// __process-image__ - expects preprocessor to have stored an ImageData in the workstore under `identifier`.
     [PROCESS_IMAGE]: function (requirements) {
 
-        const {identifier, lineOut} = requirements;
+        const { identifier, lineOut } = requirements;
+        if (!(lineOut && lineOut.substring && lineOut.length)) return;
 
-        if (lineOut && lineOut.substring && lineOut.length) {
+        const item = getWorkstoreItem(identifier);
 
-            const assetData = getWorkstoreItem(identifier);
+        // Fall back to host-sized transparent if missing
+        const {
+            width: hostW,
+            height: hostH,
+        } = this.cache.source;
 
-            let width = assetData ? assetData.width : 1,
-                height = assetData ? assetData.height : 1,
-                data = assetData ? assetData.data : new Uint8ClampedArray(4);
+        if (item && item.width === hostW && item.height === hostH) {
 
-            if (width && height && data) {
+            // Use as-is (no clone): downstream filters treat this as read-only input
+            this.cache[lineOut] = item;
+        }
+        else {
 
-                const {width:sWidth, height:sHeight} = this.cache.source;
+            // Make an empty host-sized image and, if we have something, place what we can
+            const out = new ImageData(hostW, hostH);
 
-                if (sWidth !== width || sHeight !== height) {
+            if (item && item.data && item.width && item.height) {
 
-                    const temp = new ImageData(sWidth, sHeight),
-                        tempData = temp.data;
+                // Clamp the copy in case sizes differ (shouldn’t happen with the new preprocessor)
+                const w = _min(hostW, item.width) | 0,
+                    h = _min(hostH, item.height) | 0,
+                    src = item.data,
+                    dst = out.data,
+                    srcStride = item.width << 2,
+                    dstStride = hostW << 2,
+                    rowBytes  = w << 2;
 
-                    let tx, ty, tempCursor, inputCursor,
-                        dx = (sWidth - width) / 2,
-                        dy = (sHeight - height) / 2;
+                let s0, d0;
 
-                    if (dx < 0) dx = 0;
-                    if (dy < 0) dy = 0;
+                for (y = 0; y < h; y++) {
 
-                    for (ty = 0; ty < sHeight; ty++) {
-                        for (tx = 0; tx < sWidth; tx++) {
-
-                            if (tx < width && ty < height) {
-
-                                tempCursor = (((ty + dy) * sWidth) + (tx + dx)) * 4;
-                                inputCursor = ((ty * width) + tx) * 4;
-
-                                tempData[tempCursor] = data[inputCursor];
-                                tempCursor++;
-                                inputCursor++;
-                                tempData[tempCursor] = data[inputCursor];
-                                tempCursor++;
-                                inputCursor++;
-                                tempData[tempCursor] = data[inputCursor];
-                                tempCursor++;
-                                inputCursor++;
-                                tempData[tempCursor] = data[inputCursor];
-                            }
-                        }
-                    }
-                    data = tempData;
-                    width = sWidth;
-                    height = sHeight;
+                    s0 = (y * srcStride);
+                    d0 = (y * dstStride);
+                    
+                    dst.set(src.subarray(s0, s0 + rowBytes), d0);
                 }
-                this.cache[lineOut] = new ImageData(data, width, height);
             }
+            this.cache[lineOut] = out;
         }
     },
 
@@ -6461,78 +6010,117 @@ P.theBigActionsObject = {
     },
 
 // __tiles__ - Cover the image with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a Delauney-like output
-// + `points='rect-grid'` - generate a regular grid of tiles, where: `offsetX`, `offsetY` represent the origin coordinate from which the grid will be calculated; `tileWidth`, `tileHeight` supply the dimensions of the rectangular tiles; `angle` is the amount of tile rotation.
-// + `points='hex-grid'` - generate a hexagonal grid of tiles, where: `offsetX`, `offsetY` represent the origin coordinate from which the grid will be calculated; `tileRadius` supplies the radius for each hexagonal tile; `angle` is the amount of tile rotation.
-// + `points=50` - generate a pseudo-random set of points based on `offsetX`, `offsetY` and `tileRadius` arguments
-// + `points=[100, 100, 100, 300, 300, 100, 300, 300]` - action the points as described in the array
-// + More documentation can be found with the `buildGeneralTileSets` code, near the top of this file.
+// + Four `modes` are supported: 'rect', 'hex', 'random', 'points'
     [TILES]: function (requirements) {
-
-        const doCalculations = function (inChannel, outChannel, tile, offset) {
-
-            let avg = tile.reduce((a, v) => a + inChannel[(v * 4) + offset], 0);
-
-            avg = _floor(avg / tile.length);
-
-            for (let i = 0, iz = tile.length; i < iz; i++) {
-
-                outChannel[(tile[i] * 4) + offset] = avg;
-            }
-        }
-
-        const setOutValueToInValue = function (inChannel, outChannel, tile, offset) {
-
-            let cell;
-
-            for (let i = 0, iz = tile.length; i < iz; i++) {
-
-                cell = (tile[i] * 4) + offset;
-                outChannel[cell] = inChannel[cell];
-            }
-        };
 
         const [input, output] = this.getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+              oData = output.data,
+              len = iData.length,
+              nPix = (len >>> 2);
 
         const {
             opacity = 1,
-            tileWidth = 1,
-            tileHeight = 1,
-            tileRadius = 1,
-            offsetX = 0,
-            offsetY = 0,
-            angle = 0,
-            points = RECT_GRID,
-            seed = DEFAULT_SEED,
-            includeRed = true,
+            includeRed   = true,
             includeGreen = true,
-            includeBlue = true,
+            includeBlue  = true,
             includeAlpha = false,
             lineOut,
-        } = requirements;
+        } = requirements || {};
 
-        const tiles = this.buildGeneralTileSets(points, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, seed);
+        // Build labels via new API
+        const { labels, nTiles } = this.buildGeneralTileLabels(requirements, input);
 
-        if (!tiles.length) this.transferDataUnchanged(oData, iData, len);
+        if (!nTiles) {
+
+            this.transferDataUnchanged(oData, iData, len);
+            if (lineOut) this.processResults(output, input, 1 - opacity);
+            else this.processResults(this.cache.work, output, opacity);
+            return;
+        }
+
+        // Accumulators (reused via workstore)
+        const accKey = `tiles-acc-v2-${nTiles}`;
+
+        let acc = getWorkstoreItem(accKey);
+
+        if (!acc) {
+
+            acc = {
+                r: new Uint32Array(nTiles),
+                g: new Uint32Array(nTiles),
+                b: new Uint32Array(nTiles),
+                a: new Uint32Array(nTiles),
+                c: new Uint32Array(nTiles),
+            };
+
+            setWorkstoreItem(accKey, acc);
+        }
         else {
 
-            tiles.forEach(t => {
+            acc.r.fill(0);
+            acc.g.fill(0);
+            acc.b.fill(0);
+            acc.a.fill(0);
+            acc.c.fill(0);
+        }
 
-                if (includeRed) doCalculations(iData, oData, t, 0);
-                else setOutValueToInValue(iData, oData, t, 0);
+        const rAcc = acc.r,
+            gAcc = acc.g,
+            bAcc = acc.b,
+            aAcc = acc.a,
+            cnt = acc.c;
 
-                if (includeGreen) doCalculations(iData, oData, t, 1);
-                else setOutValueToInValue(iData, oData, t, 1);
+        // Pass 1: accumulate per tile
+        let t, c, p, i;
 
-                if (includeBlue) doCalculations(iData, oData, t, 2);
-                else setOutValueToInValue(iData, oData, t, 2);
+        for (p = 0, i = 0; p < nPix; p++, i += 4) {
 
-                if (includeAlpha) doCalculations(iData, oData, t, 3);
-                else setOutValueToInValue(iData, oData, t, 3);
-            });
+            t = labels[p];
+            
+            if (t < 0) continue;
+            
+            cnt[t]++;
+            
+            if (includeRed) rAcc[t] += iData[i    ];
+            if (includeGreen) gAcc[t] += iData[i + 1];
+            if (includeBlue) bAcc[t] += iData[i + 2];
+            if (includeAlpha) aAcc[t] += iData[i + 3];
+        }
+
+        // Averages (uint8)
+        const rAvg = includeRed ? new Uint8Array(nTiles) : null,
+            gAvg = includeGreen ? new Uint8Array(nTiles) : null,
+            bAvg = includeBlue ? new Uint8Array(nTiles) : null,
+            aAvg = includeAlpha ? new Uint8Array(nTiles) : null;
+
+        for (t = 0; t < nTiles; t++) {
+
+            c = cnt[t] || 1;
+            
+            if (includeRed) rAvg[t] = (rAcc[t] / c) | 0;
+            if (includeGreen) gAvg[t] = (gAcc[t] / c) | 0;
+            if (includeBlue) bAvg[t] = (bAcc[t] / c) | 0;
+            if (includeAlpha) aAvg[t] = (aAcc[t] / c) | 0;
+        }
+
+        // Pass 2: write out
+        for (p = 0, i = 0; p < nPix; p++, i += 4) {
+
+            t = labels[p];
+
+            if (includeRed) oData[i] = rAvg[t];
+            else oData[i] = iData[i];
+
+            if (includeGreen) oData[i + 1] = gAvg[t];
+            else oData[i + 1] = iData[i + 1];
+            
+            if (includeBlue) oData[i + 2] = bAvg[t];
+            else oData[i + 2] = iData[i + 2];
+            
+            if (includeAlpha) oData[i + 3] = aAvg[t];
+            else oData[i + 3] = iData[i + 3];
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);

@@ -281,44 +281,35 @@ export default function (P = Ωempty) {
                                     engine = mycell.engine,
                                     canvas = mycell.element;
 
-                                const hostWidthRatio = hostWidth / copyWidth,
-                                    hostHeightRatio = hostHeight / copyHeight;
+                                // Always render into a host-sized buffer; let canvas clip if the copy rect is larger
+                                canvas.width  = hostWidth;
+                                canvas.height = hostHeight;
 
-                                outputWidth = copyWidth;
-                                outputHeight = copyHeight;
+                                // Placement: center if smaller; pin to top/left if larger
+                                let dx = 0, dy = 0;
 
-                                if (hostWidthRatio < 1 || hostHeightRatio < 1) {
+                                if (copyWidth < hostWidth)  dx = ((hostWidth  - copyWidth)  / 2) | 0;
 
-                                    if (hostWidthRatio < 1 && hostHeightRatio < 1) {
-
-                                        const maxRatio = _max(hostWidthRatio, hostHeightRatio);
-                                        outputWidth = copyWidth * maxRatio;
-                                        outputHeight = copyHeight * maxRatio;
-                                    }
-                                    else if (hostWidthRatio < 1) {
-
-                                        outputWidth = copyWidth * hostWidthRatio;
-                                        outputHeight = hostHeight;
-                                    }
-                                    else {
-
-                                        outputWidth = hostWidth;
-                                        outputHeight = copyHeight * hostHeightRatio;
-                                    }
-                                }
-
-                                canvas.width = outputWidth;
-                                canvas.height = outputHeight;
+                                if (copyHeight < hostHeight) dy = ((hostHeight - copyHeight) / 2) | 0;
 
                                 engine.setTransform(1, 0, 0, 1, 0, 0);
                                 engine.globalCompositeOperation = SOURCE_OVER;
                                 engine.globalAlpha = 1;
+                                engine.imageSmoothingEnabled = false;
 
                                 const src = img.source || img.element;
 
-                                engine.drawImage(src, copyX, copyY, copyWidth, copyHeight, 0, 0, outputWidth, outputHeight);
+                                // No scaling: dest size == copy rect size; canvas clips when larger than host
+                                engine.clearRect(0, 0, hostWidth, hostHeight);
 
-                                setWorkstoreItem(obj.identifier, engine.getImageData(0, 0, outputWidth, outputHeight));
+                                engine.drawImage(
+                                  src,
+                                  copyX, copyY, copyWidth, copyHeight,
+                                  dx, dy, copyWidth, copyHeight,
+                                );
+
+                                // Store a host-sized ImageData for PROCESS_IMAGE to consume as-is
+                                setWorkstoreItem(obj.identifier, engine.getImageData(0, 0, hostWidth, hostHeight));
 
                                 releaseCell(mycell);
                             }

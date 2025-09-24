@@ -1420,6 +1420,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     gutterHeight?: number;
     gutterWidth?: number;
     height?: StringOrNumberInput;
+    hexRadius?: number,
     highAlpha?: number;
     highBlue?: number;
     highGreen?: number;
@@ -1431,6 +1432,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     lowGreen?: number;
     lowRed?: number;
     minimumColorDistance?: number;
+    mode?: 'rect' | 'hex' | 'random' | 'points';
     noWrap?: boolean;
     offsetAlphaMax?: number;
     offsetAlphaMin?: number;
@@ -1452,6 +1454,8 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     offsetRedY?: number;
     offsetX?: StringOrNumberInput;
     offsetY?: StringOrNumberInput;
+    originX?: number;
+    originY?: number;
     opacity?: number;
     opaqueAt?: number;
     passes?: number;
@@ -1461,6 +1465,9 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     radius?: number;
     radiusHorizontal?: number;
     radiusVertical?: number;
+    randomCount?: number;
+    rectHeight?: number;
+    rectWidth?: number;
     redInBlue?: number;
     redInGreen?: number;
     redInRed?: number;
@@ -1522,6 +1529,7 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     operation?: string;
     palette?: StringOrNumberInput;
     points?: StringOrNumberInput | number[];
+    pointsData?: number[];
     postProcessResults?: boolean;
     processHorizontal?: boolean;
     processVertical?: boolean;

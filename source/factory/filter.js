@@ -17,7 +17,7 @@ import { colorEngine } from '../helper/color-engine.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NORMAL, OFFSET, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NORMAL, OFFSET, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILE_MODES, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const EMBOSS_WORK = 'emboss-work',
@@ -162,6 +162,7 @@ const defaultAttributes = {
     gutterHeight: 1,
     gutterWidth: 1,
     height: 1,
+    hexRadius: 5,
     highAlpha: 255,
     highBlue: 255,
     highColor: WHITE,
@@ -180,6 +181,7 @@ const defaultAttributes = {
     lowGreen: 0,
     lowRed: 0,
     minimumColorDistance: 1000,
+    mode: 'rect',
     noiseType: RANDOM,
     noWrap: false,
     offsetAlphaX: 0,
@@ -204,19 +206,25 @@ const defaultAttributes = {
     offsetMax: 0,
     opaqueAt: 1,
     operation: MEAN,
+    originX: 0,
+    originY: 0,
     outerRadius: PC30,
     palette: BLACK_WHITE,
     passes: 1,
     passesHorizontal: 1,
     passesVertical: 1,
     points: null,
+    pointsData: null,
     postProcessResults: true,
     processHorizontal: true,
     processVertical: true,
     radius: 1,
     radiusHorizontal: 1,
     radiusVertical: 1,
+    randomCount: 10,
     ranges: null,
+    rectWidth: 10,
+    rectHeight: 10,
     red: 0,
     redInBlue: 0,
     redColor: BLACK,
@@ -1459,14 +1467,20 @@ const setActionsArray = {
             lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
-            tileWidth: (f.tileWidth != null) ? f.tileWidth : 1,
-            tileHeight: (f.tileHeight != null) ? f.tileHeight : 1,
-            tileRadius: (f.tileRadius != null) ? f.tileRadius : 1,
-            offsetX: (f.offsetX != null) ? f.offsetX : 0,
-            offsetY: (f.offsetY != null) ? f.offsetY : 0,
+
+            mode: (f.mode != null && TILE_MODES.includes(f.mode)) ? f.mode : RECT,
+
+            originX: (f.originX != null) ? f.originX : 0,
+            originY: (f.originY != null) ? f.originY : 0,
+            rectWidth: (f.rectWidth != null) ? f.rectWidth : 10,
+            rectHeight: (f.rectHeight != null) ? f.rectHeight : 10,
+            hexRadius: (f.hexRadius != null) ? f.hexRadius : 5,
+            randomCount: (f.randomCount != null) ? f.randomCount : 10,
+            pointsData: (f.pointsData != null && _isArray(f.pointsData)) ? f.pointsData : [],
+
             angle: (f.angle != null) ? f.angle : 0,
-            points: (f.points != null) ? f.points : RECT_GRID,
             seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
+
             includeRed: (f.includeRed != null) ? f.includeRed : true,
             includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
