@@ -12,7 +12,7 @@ import { checkForWorkstoreItem, setWorkstoreItem } from '../helper/workstore.js'
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 // Shared constants
-import { _abs, _floor, _isArray, _max, PROCESS_IMAGE, SOURCE_OVER, T_FILTER, T_IMAGE, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _floor, _isArray, PROCESS_IMAGE, SOURCE_OVER, T_FILTER, T_IMAGE, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants (none defined)
 
@@ -199,8 +199,7 @@ export default function (P = Ωempty) {
                     if (img) {
 
                         let width, height, snd, cnd,
-                            copyX, copyY, copyWidth, copyHeight,
-                            outputWidth, outputHeight;
+                            copyX, copyY, copyWidth, copyHeight;
 
                         if (T_IMAGE !== img.type) {
 

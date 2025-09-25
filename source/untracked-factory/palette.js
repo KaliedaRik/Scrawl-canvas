@@ -16,15 +16,15 @@
 // Scrawl-canvas overcomes this problem through the use of [Palette objects](../factory/palette.html) which separate a gradient-type style's color-stop data from its positioning data. We treat Canvas API `CanvasGradient` objects as use-once-and-dispose objects, generating them in a just-in-time fashion for each entity's `stamp` operation in the Display cycle.
 //
 // **NOTE – Why Scrawl-canvas HSL/HWB gradients don’t match CSS**
-// 
+//
 // Browsers treat hsl() and hwb() as *alternate notations of sRGB*. For gradients, CSS first resolves all stops to sRGB and then interpolates channels in RGB (premultiplied alpha). Result: CSS gradients for RGB/HSL/HWB look the same.
-// 
+//
 // Scrawl-canvas intentionally interpolates *in the declared internal space*. For HSL and HWB the code blends the cylindrical components (with shortest-arc hue wrapping), which produces more saturated, “truer HSL/HWB” midpoints than RGB-space blends. That’s why gradients built in the HSL/HWB color space tend to be more colorful, and differ from equivalent CSS gradients.
 //
 // **NOTE – Why Scrawl-canvas LCH/OKLCH gradients don’t match CSS**
-// 
+//
 // Most browsers currently render lch() and oklch() gradient stops by converting them to the *Cartesian* forms (Lab / Oklab) and then interpolating linearly in that space (premultiplied-alpha, then mapped to sRGB). Hue is only used to form a/b (or A/B), it is not interpolated as an angle; achromatic stops effectively collapse to Lab/Oklab vectors. In practice this makes CSS LCH ≈ CSS LAB and CSS OKLCH ≈ CSS OKLAB.
-// 
+//
 // Scrawl-canvas intentionally interpolates in the *cylindrical* spaces themselves: L linearly; H with shortest-arc wrapping; C linearly, with chroma gently clipped/fit to the output gamut. That preserves hue continuity and tends to produce more saturated “LCH-like / OKLCH-like” midpoints (e.g. a magenta ridge between red→blue), hence the visual difference from equivalent CSS gradients.
 
 
@@ -40,7 +40,7 @@ import { makeColor } from '../factory/color.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _assign, _entries, _floor, _isArray, _isFinite, _keys, BLACK, BLANK, LINEAR, RGB, T_PALETTE, WHITE } from '../helper/shared-vars.js';
+import { _entries, _floor, _isArray, _isFinite, _keys, BLACK, BLANK, LINEAR, RGB, T_PALETTE, WHITE } from '../helper/shared-vars.js';
 
 // Local constants
 const PALETTE = 'palette',
@@ -142,8 +142,6 @@ G.colors = function () {
         res = [];
 
     if (f) {
-
-        const colorSpace = f.colorSpace;
 
         const entries = _entries(this.colors)
             .map(([k, v]) => [parseInt(k, 10), v])

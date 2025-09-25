@@ -9,7 +9,7 @@ import { seededRandomNumberGenerator } from './random-seed.js';
 
 import { correctAngle, doCreate, easeEngines, isa_fn } from './utilities.js';
 
-import { checkForWorkstoreItem, getOrAddWorkstoreItem, getWorkstoreItem, setAndReturnWorkstoreItem, setWorkstoreItem } from './workstore.js';
+import { getOrAddWorkstoreItem, getWorkstoreItem, setAndReturnWorkstoreItem, setWorkstoreItem } from './workstore.js';
 
 import { colorEngine } from './color-engine.js';
 
@@ -24,7 +24,7 @@ import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coord
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _cbrt, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _pow, _round, _sin, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _pow, _round, _sin, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
 const _exp = Math.exp,
@@ -109,7 +109,7 @@ const setLastUsedReducePalette = (val) => lastUsedReducePalette = val;
 export const getLastUsedReducePalette = () => lastUsedReducePalette;
 
 
-// A small generally-available LUT for oklab gray 
+// A small generally-available LUT for oklab gray
 const LUMINANCE_OKLAB_GRAY_LUT = 'alpha-to-luminance-oklab-gray-lut-256';
 const getOklabGrayLut = () => {
 
@@ -159,7 +159,7 @@ const getLinearSrgbLut = () => {
         lut[i] = (cs <= 0.04045) ? (cs / 12.92) : _pow((cs + 0.055) / 1.055, 2.4);
     }
     setWorkstoreItem(SRGB_TO_LINEAR_LUT, lut);
-    
+
     return lut;
 };
 
@@ -512,7 +512,7 @@ P.buildGeneralTileLabels = function (requirements, image) {
 
             dx = corners[c][0] - ox;
             dy = corners[c][1] - oy;
-            xp =  cosNeg * dx - sinNeg * dy; // inverse-rotated into lattice space
+            xp =  cosNeg * dx - sinNeg * dy;
             yp =  sinNeg * dx + cosNeg * dy;
             iIdx = _round(xp / w - 0.5);
             jIdx = _round(yp / h - 0.5);
@@ -529,9 +529,9 @@ P.buildGeneralTileLabels = function (requirements, image) {
         p = 0;
 
         for (y = 0; y < iHeight; y++) {
-            
+
             dy = y - oy;
-            
+
             for (x = 0; x < iWidth; x++, p++) {
 
                 dx = x - ox;
@@ -633,11 +633,11 @@ P.buildGeneralTileLabels = function (requirements, image) {
         p = 0;
 
         for (y = 0; y < iHeight; y++) {
-            
+
             dy = y - oy;
-            
+
             for (x = 0; x < iWidth; x++, p++) {
-                
+
                 dx = x - ox;
                 xp =  cosNeg * dx - sinNeg * dy;
                 yp =  sinNeg * dx + cosNeg * dy;
@@ -645,7 +645,10 @@ P.buildGeneralTileLabels = function (requirements, image) {
                 qf = (invA * xp - invB * yp) / s;
                 rf = (invC * yp) / s;
 
-                xf = qf, zf = rf, yf = -xf - zf;
+                xf = qf;
+                zf = rf;
+                yf = -xf - zf;
+
                 [qi, ri] = roundCube(xf, yf, zf);
 
                 qq = (qi - qMin) | 0;
@@ -733,11 +736,11 @@ P.buildGeneralTileLabels = function (requirements, image) {
         let gy = (sy / cell) | 0;
         if (gy < 0) gy = 0;
         else if (gy >= gridRows) gy = gridRows - 1;
-        
+
         g = gy * gridCols + gx;
-        
+
         next[s] = head[g];
-        
+
         head[g] = s;
     }
 
@@ -753,40 +756,41 @@ P.buildGeneralTileLabels = function (requirements, image) {
             gx = (x / cell) | 0;
             if (gx < 0) gx = 0;
             else if (gx >= gridCols) gx = gridCols - 1;
-            
+
             gy = (y / cell) | 0;
             if (gy < 0) gy = 0;
             else if (gy >= gridRows) gy = gridRows - 1;
 
-            best = -1,
+            best = -1;
             bestD = Infinity;
 
             for (oy = -1; oy <= 1; oy++) {
 
                 gy2 = gy + oy;
                 if (gy2 < 0 || gy2 >= gridRows) continue;
-                
+
                 for (ox = -1; ox <= 1; ox++) {
-                    
-                    const gx2 = gx + ox;
+
+                    gx2 = gx + ox;
                     if (gx2 < 0 || gx2 >= gridCols) continue;
 
                     s = head[gy2 * gridCols + gx2];
 
                     while (s !== -1) {
-                    
+
                         sx = seeds[(s << 1)];
                         sy = seeds[(s << 1) + 1];
-                        dx = x - sx, dy = y - sy;
-                        
+                        dx = x - sx;
+                        dy = y - sy;
+
                         d2 = dx * dx + dy * dy;
-                        
+
                         if (d2 < bestD) {
 
                             bestD = d2;
                             best = s;
                         }
-                        
+
                         s = next[s];
                     }
                 }
@@ -1087,7 +1091,7 @@ P.getCbrtLut = function (size = 4096, maxX = 1.0) {
         lut = new Float32Array(size + 1);
 
         const step = maxX / size;
-        
+
         let i, x;
 
         for (i = 0; i <= size; i++) {
@@ -1103,7 +1107,7 @@ P.getCbrtLut = function (size = 4096, maxX = 1.0) {
 // Fast cbrt via LUT + lerp
 P.cbrtLUT = function (x, lutPack) {
 
-    let v = x;
+    const v = x;
 
     if (v <= 0) return 0;
 
@@ -1410,7 +1414,7 @@ P.theBigActionsObject = {
                 rOut = excR ? 0 : avg;
                 gOut = excG ? 0 : avg;
                 bOut = excB ? 0 : avg;
-            } 
+            }
             else {
 
                 rOut = excR ? 0 : r;
@@ -1497,10 +1501,10 @@ P.theBigActionsObject = {
 
         const doOK = (mode, ir, ig, ib, mr, mg, mb) => {
 
-            let IL, IC, IH, ML, MC, MH, cr, cg, cb;
+            const [IL, , , IC, IH] = colorEngine.getOkValsForRgb(ir, ig, ib, libs);
+            const [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mr, mg, mb, libs);
 
-            [IL, , , IC, IH] = colorEngine.getOkValsForRgb(ir, ig, ib, libs);
-            [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mr, mg, mb, libs);
+            let cr, cg, cb;
 
             switch (mode) {
 
@@ -1686,7 +1690,7 @@ P.theBigActionsObject = {
                             Fg = (Sg <= 0.5)
                                 ? (Bg - (1 - 2 * Sg) * Bg * (1 - Bg))
                                 : (Bg + (2 * Sg - 1) * (D(Bg) - Bg));
-                            
+
                             Fb = (Sb <= 0.5)
                                 ? (Bb - (1 - 2 * Sb) * Bb * (1 - Bb))
                                 : (Bb + (2 * Sb - 1) * (D(Bb) - Bb));
@@ -2183,14 +2187,14 @@ P.theBigActionsObject = {
                     minR = maxR;
                     maxR = t;
                 }
-                
+
                 if (minG > maxG) {
 
                     t = minG;
                     minG = maxG;
                     maxG = t;
                 }
-                
+
                 if (minB > maxB) {
 
                     t = minB;
@@ -2206,7 +2210,6 @@ P.theBigActionsObject = {
 
         // If no ranges, just copy
         if (normRanges.length === 0) out32.set(src32);
-        
         else {
 
             // Feather widths (validated: must be numbers >= 0; clamp to 0..255 and int)
@@ -2239,18 +2242,18 @@ P.theBigActionsObject = {
 
                         w = k >>> 5;
                         bit = 1 << (k & 31);
-                        
+
                         [minR, minG, minB, maxR, maxG, maxB] = normRanges[k];
-                        
-                        for (let v = minR; v <= maxR; v++) {
+
+                        for (v = minR; v <= maxR; v++) {
 
                             rMasks[w][v] |= bit;
                         }
-                        for (let v = minG; v <= maxG; v++) {
+                        for (v = minG; v <= maxG; v++) {
 
                             gMasks[w][v] |= bit;
                         }
-                        for (let v = minB; v <= maxB; v++) {
+                        for (v = minB; v <= maxB; v++) {
 
                             bMasks[w][v] |= bit;
                         }
@@ -2274,7 +2277,7 @@ P.theBigActionsObject = {
 
                     hit = 0;
 
-                    for (let w = 0; w < words; w++) {
+                    for (w = 0; w < words; w++) {
 
                         if ((rMasks[w][r] & gMasks[w][g] & bMasks[w][b]) !== 0) {
 
@@ -2582,7 +2585,7 @@ P.theBigActionsObject = {
             else if (sumDiff > oScaled) na = 255;
             else if (binaryStep) na = (sumDiff > tScaled) ? 255 : 0;
             else na = (((sumDiff - tScaled) * 255 + (rangeScaled >> 1)) / rangeScaled) | 0;
-            
+
             if (na < 0) na = 0;
             else if (na > 255) na = 255;
 
@@ -2703,7 +2706,7 @@ P.theBigActionsObject = {
                 ig = iData[iIdx + 1];
                 ib = iData[iIdx + 2];
                 ia8 = iData[iIdx + 3];
-                
+
                 mr = mData[mIdx];
                 mg = mData[mIdx + 1];
                 mb = mData[mIdx + 2];
@@ -2801,7 +2804,7 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. 
+// __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values.
 // + The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments.
 // + The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the "level" attribute.
 // + Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags.
@@ -2829,15 +2832,15 @@ P.theBigActionsObject = {
         let kW = requirements.width;
         if (!_isFinite(kW) || kW < 1) kW = 3;
         kW = _floor(kW);
-        
+
         let kH = requirements.height;
         if (!_isFinite(kH) || kH < 1) kH = 3;
         kH = _floor(kH);
-        
+
         let offX = requirements.offsetX;
         if (!_isFinite(offX) || offX < 0) offX = (kW >> 1);
         offX = _floor(offX);
-        
+
         let offY = requirements.offsetY;
         if (!_isFinite(offY) || offY < 0) offY = (kH >> 1);
         offY = _floor(offY);
@@ -2902,7 +2905,7 @@ P.theBigActionsObject = {
 
                 for (y = ys; y <= ye; y++) {
 
-                    const v = src[idx];
+                    v = src[idx];
                     if (wantMin ? (v < m) : (v > m)) m = v;
                     idx += stride;
                 }
@@ -2934,7 +2937,7 @@ P.theBigActionsObject = {
                         tail = -1;
 
                         for (x = 0; x < w; x++) {
-                        
+
                             v = src[rowBase + (x << 2) + ch];
 
                             while (tail >= head) {
@@ -2954,11 +2957,11 @@ P.theBigActionsObject = {
 
                             if (x >= fullW - 1) {
 
-                                const center = x - right;
+                                center = x - right;
 
                                 if (center >= x0 && center < x1) {
 
-                                    const qx = Qx[head];
+                                    qx = Qx[head];
                                     dst[rowBase + (center << 2) + ch] = src[rowBase + (qx << 2) + ch];
                                 }
                             }
@@ -2981,7 +2984,7 @@ P.theBigActionsObject = {
                     fullH = top + bottom + 1,
                     stride = w << 2;
 
-                let x, ys, ye, head, tail, y, idx, v, qx, qv, topEdge, center, qy;
+                let x, ys, ye, head, tail, y, idx, v, qv, topEdge, center, qy;
 
                 for (x = 0; x < w; x++) {
 
@@ -2996,7 +2999,7 @@ P.theBigActionsObject = {
 
                         head = 0;
                         tail = -1;
-                        
+
                         for (y = 0; y < h; y++) {
 
                             idx = (y * stride) + (x << 2) + ch;
@@ -3419,7 +3422,7 @@ P.theBigActionsObject = {
         let p, pz, s, a;
 
         for (p = 0, pz = src32.length | 0; p < pz; p++) {
-        
+
             s = src32[p];
             a = (s >>> 24) & 0xFF;
 
@@ -3924,7 +3927,7 @@ P.theBigActionsObject = {
             for (i = 0, iz = arr.length; i < iz; i++) {
 
                 v = arr[i];
-                
+
                 if (!_isFinite(v)) continue;
 
                 v = v < 0 ? 0 : v > 255 ? 255 : v | 0;
@@ -4407,7 +4410,7 @@ P.theBigActionsObject = {
         let p, pz, rgba, r, g, b, a;
 
         if (!saturation && rK === 256 && gK === 256 && bK === 256 && aK === 256) out32.set(src32);
-        
+
         else if (!saturation) {
 
             for (p = 0, pz = src32.length | 0; p < pz; p++) {
@@ -4437,8 +4440,7 @@ P.theBigActionsObject = {
 
                 out32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
             }
-        } 
-
+        }
         else {
 
             let r0, g0, b0, gray;
@@ -4465,10 +4467,10 @@ P.theBigActionsObject = {
 
                 if (g < 0) g = 0;
                 else if (g > 255) g = 255;
-                
+
                 if (b < 0) b = 0;
                 else if (b > 255) b = 255;
-                
+
                 if (a < 0) a = 0;
                 else if (a > 255) a = 255;
 
@@ -4517,7 +4519,7 @@ P.theBigActionsObject = {
                 s = src32[p];
 
                 a = (s >>> 24) & 0xff;
-                
+
                 if (a === 0) {
 
                     out32[p] = s;
@@ -4535,7 +4537,7 @@ P.theBigActionsObject = {
                 B = clampAB(ok[2] * channelB);
 
                 rgb = toRgb(L, A, B, libs);
-                
+
                 out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
             }
         }
@@ -4555,9 +4557,9 @@ P.theBigActionsObject = {
         const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
             out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
-        const { 
+        const {
             opacity = 1,
-            lineOut
+            lineOut,
         } = requirements;
 
         const libs = colorEngine.getRgbOkCache(),
@@ -4753,7 +4755,7 @@ P.theBigActionsObject = {
 
                         const cm = (0xFF << shift) >>> 0,
                             ncm = (~cm) >>> 0;
-                        
+
                         let p, pz, s, v;
 
                         for (p = 0, pz = src32.length | 0; p < pz; p++) {
@@ -4966,11 +4968,11 @@ P.theBigActionsObject = {
 
                 let s0, d0;
 
-                for (y = 0; y < h; y++) {
+                for (let y = 0; y < h; y++) {
 
                     s0 = (y * srcStride);
                     d0 = (y * dstStride);
-                    
+
                     dst.set(src.subarray(s0, s0 + rowBytes), d0);
                 }
             }
@@ -5138,7 +5140,7 @@ P.theBigActionsObject = {
 
                     aP = (orig >>> 24) & 0xFF;
                     aQ = (src32[q] >>> 24) & 0xFF;
-                    
+
                     if (aP === 0 || aQ === 0) {
 
                         out32[p] = orig;
@@ -5653,7 +5655,7 @@ P.theBigActionsObject = {
                 H = ok[4] + angle;
                 if (H >= 360) H -= 360;
 
-                rgb = colorEngine.getRgbValsForOklch(L, C, H, libs);
+                rgb = toRgb(L, C, H, libs);
 
                 out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
             }
@@ -5709,7 +5711,7 @@ P.theBigActionsObject = {
 
                 out32[p] = src32[p];
             }
-        } 
+        }
         else if ((Rm | Gm | Bm | Am) === 0xFFFFFFFF >>> 0) {
 
             // all channels forced to level
@@ -5719,11 +5721,11 @@ P.theBigActionsObject = {
 
                 out32[p] = constantPixel;
             }
-        } 
+        }
         else {
 
             // General case: clear included bits, then OR in the level
-            for (let p = 0; p < src32.length, src; p++) {
+            for (let p = 0, src; p < src32.length; p++) {
 
                 src = src32[p];
                 out32[p] = (src & clearMask) | setMask;
@@ -5804,7 +5806,7 @@ P.theBigActionsObject = {
 
                         lut[v] = _round(v / div) * div;
                     }
-                } 
+                }
                 else {
 
                     for (let v = 0; v < 256; v++) {
@@ -6164,11 +6166,11 @@ P.theBigActionsObject = {
         for (p = 0, i = 0; p < nPix; p++, i += 4) {
 
             t = labels[p];
-            
+
             if (t < 0) continue;
-            
+
             cnt[t]++;
-            
+
             if (includeRed) rAcc[t] += iData[i    ];
             if (includeGreen) gAcc[t] += iData[i + 1];
             if (includeBlue) bAcc[t] += iData[i + 2];
@@ -6184,7 +6186,7 @@ P.theBigActionsObject = {
         for (t = 0; t < nTiles; t++) {
 
             c = cnt[t] || 1;
-            
+
             if (includeRed) rAvg[t] = (rAcc[t] / c) | 0;
             if (includeGreen) gAvg[t] = (gAcc[t] / c) | 0;
             if (includeBlue) bAvg[t] = (bAcc[t] / c) | 0;
@@ -6201,10 +6203,10 @@ P.theBigActionsObject = {
 
             if (includeGreen) oData[i + 1] = gAvg[t];
             else oData[i + 1] = iData[i + 1];
-            
+
             if (includeBlue) oData[i + 2] = bAvg[t];
             else oData[i + 2] = iData[i + 2];
-            
+
             if (includeAlpha) oData[i + 3] = aAvg[t];
             else oData[i + 3] = iData[i + 3];
         }

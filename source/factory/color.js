@@ -1,15 +1,15 @@
 // # Color factory
-// 
+//
 // **NOTE – Why Scrawl-canvas HSL/HWB gradients don’t match CSS**
-// 
+//
 // Browsers treat hsl() and hwb() as *alternate notations of sRGB*. For gradients, CSS first resolves all stops to sRGB and then interpolates channels in RGB (premultiplied alpha). Result: CSS gradients for RGB/HSL/HWB look the same.
-// 
+//
 // Scrawl-canvas intentionally interpolates *in the declared internal space*. For HSL and HWB the code blends the cylindrical components (with shortest-arc hue wrapping), which produces more saturated, “truer HSL/HWB” midpoints than RGB-space blends. That’s why gradients built in the HSL/HWB color space tend to be more colorful, and differ from equivalent CSS gradients.
 //
 // **NOTE – Why Scrawl-canvas LCH/OKLCH gradients don’t match CSS**
-// 
+//
 // Most browsers currently render lch() and oklch() gradient stops by converting them to the *Cartesian* forms (Lab / Oklab) and then interpolating linearly in that space (premultiplied-alpha, then mapped to sRGB). Hue is only used to form a/b (or A/B), it is not interpolated as an angle; achromatic stops effectively collapse to Lab/Oklab vectors. In practice this makes CSS LCH ≈ CSS LAB and CSS OKLCH ≈ CSS OKLAB.
-// 
+//
 // Scrawl-canvas intentionally interpolates in the *cylindrical* spaces themselves: L linearly; H with shortest-arc wrapping; C linearly, with chroma gently clipped/fit to the output gamut. That preserves hue continuity and tends to produce more saturated “LCH-like / OKLCH-like” midpoints (e.g. a magenta ridge between red→blue), hence the visual difference from equivalent CSS gradients.
 
 
@@ -23,7 +23,7 @@ import { colorEngine } from '../helper/color-engine.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _isArray, _isFinite, _keys, _random, _round, _values, BLACK, BLANK, INT_COLOR_SPACES, LINEAR, NAME, RGB, STYLES, T_COLOR, WHITE, } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _random, _round, _values, BLACK, BLANK, INT_COLOR_SPACES, LINEAR, NAME, RANDOM, RGB, STYLES, T_COLOR, UNDEF, WHITE } from '../helper/shared-vars.js';
 
 // Local constants
 const RET_COLOR_SPACES = ['rgb', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch'],
@@ -557,6 +557,8 @@ P.generateRandomColor = function () {
             c2 = interpolate(_random(), min[2], max[2]),
             c3 = interpolate(_random(), min[3], max[3]),
             alpha = interpolate(_random(), min[4], max[4]);
+
+        let cMin, cMax;
 
         // We need to clamp color channels to meet colorSpace requirements
         switch (colorSpace) {

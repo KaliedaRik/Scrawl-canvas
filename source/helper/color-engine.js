@@ -9,7 +9,7 @@ import { clamp, clamp8, correctAngle, doCreate } from './utilities.js';
 import { checkForWorkstoreItem, getWorkstoreItem, setWorkstoreItem } from './workstore.js';
 
 // Shared constants
-import { _2D, _abs, _atan2, _cos, _floor, _isArray, _isFinite, _max, _min, _pow, _radian, _round, _sin, _sqrt, BLANK, CANVAS, SOURCE_OVER, T_COLOR_ENGINE, ZERO_STR } from './shared-vars.js';
+import { _2D, _atan2, _cos, _floor, _isArray, _isFinite, _max, _min, _pow, _radian, _round, _sin, _sqrt, BLANK, CANVAS, SOURCE_OVER, T_COLOR_ENGINE, ZERO_STR } from './shared-vars.js';
 
 
 // #### Local dedicated canvas
@@ -152,7 +152,7 @@ const parseRgbChannel = (input) => {
         if (!_isFinite(v)) return NaN;
 
         return _round(clamp(v, 0, 100) * 255 / 100);
-    } 
+    }
     else {
 
         const v = parseFloat(input);
@@ -173,7 +173,7 @@ const parseAlphaChannel = (input) => {
         const v = parseFloat(input.slice(0, -1));
         if (!_isFinite(v)) return NaN;
         return clamp(v / 100, 0, 1);
-    } 
+    }
     else {
 
         const v = parseFloat(input);
@@ -294,7 +294,7 @@ const parseOklchChroma = (input) => {
 
     if (input === NONE) {
 
-        res.ok = true; 
+        res.ok = true;
         return res;
     }
 
@@ -320,7 +320,7 @@ const parseHexToRGBA = (input) => {
 
     if (typeof input !== STRING) return FAIL;
 
-    let s = input.trim().toLowerCase().replace(/\s+/g, ZERO_STR);
+    const s = input.trim().toLowerCase().replace(/\s+/g, ZERO_STR);
 
     if (!/^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}(?:[0-9a-f]{2})?)$/.test(s)) return FAIL;
 
@@ -394,7 +394,7 @@ const parseRgbFunctionToRGBA = (input) => {
             g = parseRgbChannel(rgbTokens[1]);
             b = parseRgbChannel(rgbTokens[2]);
             a = parseAlphaChannel(alphaPart);
-        } 
+        }
         else return FAIL;
     }
 
@@ -847,7 +847,7 @@ const parseOklchFunctionToOKLCHA = (input) => {
         }
 
         L = clamp(lRes.value, 0, 100);
-        C = cRes.value; // already clamped 0.0–0.4
+        C = cRes.value;
         h = hue;
 
         releaseHelperResult(lRes, cRes);
@@ -1006,10 +1006,9 @@ P.extractRGBfromColorString = function (item) {
 
 
 // #### Color string creation
-// `buildColorStringFromData` 
+// `buildColorStringFromData`
 // + Returns appropriate color strings from input data in the form `[space, c1, c2, c3, a]`
 // + space ∈ {'rgb','hsl','hwb','lab','lch','oklab','oklch'}
-// + c1, c2, c3 - should be 
 P.buildColorStringFromData = function (data) {
 
     if (data == null || !_isArray(data) || data.length !== 5) return BLANK;
@@ -1025,54 +1024,56 @@ P.buildColorStringFromData = function (data) {
 
     switch (space) {
 
-        case RGB: 
+        case RGB:
             R = clamp8(_round(clamp(c1, 0, 255)));
             G = clamp8(_round(clamp(c2, 0, 255)));
             B = clamp8(_round(clamp(c3, 0, 255)));
             return `rgb(${R} ${G} ${B} / ${a})`;
 
-        case HSL: 
+        case HSL:
             H = correctAngle(c1);
             S = clamp(c2, 0, 100);
             L = clamp(c3, 0, 100);
             return `hsl(${H} ${S}% ${L}% / ${a})`;
 
-        case HWB: 
+        case HWB:
             H = correctAngle(c1);
             W = clamp(c2, 0, 100);
             B = clamp(c3, 0, 100);
             return `hwb(${H} ${W}% ${B}% / ${a})`;
 
-        case LAB: 
+        case LAB:
             L = clamp(c1, 0, 100);
             A = clamp(c2, -125, 125);
             B = clamp(c3, -125, 125);
             return `lab(${L}% ${A} ${B} / ${a})`;
 
-        case LCH: 
+        case LCH:
             L = clamp(c1, 0, 100);
             C = clamp(c2, 0, 230);
             H = correctAngle(c3);
             return `lch(${L}% ${C} ${H} / ${a})`;
 
-        case OKLAB: 
+        case OKLAB:
             L = clamp(c1, 0, 1) * 100;
             A = clamp(c2, -0.4, 0.4);
             B = clamp(c3, -0.4, 0.4);
             return `oklab(${L}% ${A} ${B} / ${a})`;
 
-        case OKLCH: 
+        case OKLCH:
             L = clamp(c1, 0, 1) * 100;
             C = clamp(c2, 0, 0.4);
             H = correctAngle(c3);
             return `oklch(${L}% ${C} ${H} / ${a})`;
 
         case XYZ:
-            const [lStar, aStar, bStar] = convertXYZtoLAB(c1, c2, c3);
-            L = clamp(lStar, 0, 100);
-            A = clamp(aStar, -125, 125);
-            B = clamp(bStar, -125, 125);
-            return `lab(${L}% ${A} ${B} / ${a})`;
+            {
+                const [lStar, aStar, bStar] = convertXYZtoLAB(c1, c2, c3);
+                L = clamp(lStar, 0, 100);
+                A = clamp(aStar, -125, 125);
+                B = clamp(bStar, -125, 125);
+                return `lab(${L}% ${A} ${B} / ${a})`;
+            }
 
         default:
             return BLANK;
@@ -1285,92 +1286,6 @@ const encodeLinearToSRGB8 = (lin) => {
     else if (idx > 4096) idx = 4096;
 
     return LINEAR12_TO_SRGB8[idx];
-};
-
-const xyzToLinearSRGB = (x, y, z) => ([
-    3.2409699419045213 * x + -1.5373831775700935 * y + -0.4986107602930033 * z,
-    -0.9692436362808798 * x +  1.8759675015077206 * y +  0.04155505740717561 * z,
-    0.05563007969699361* x + -0.20397695888897657* y +  1.0569715142428786  * z
-]);
-
-const inSRGBGamut = (r, g, b) => r >= 0 && r <= 1 && g >= 0 && g <= 1 && b >= 0 && b <= 1;
-
-const fitLABtoSRGB = (L, a, b) => {
-
-    let [x, y, z] = convertLABtoXYZ(L, a, b),
-        [r, g, bl] = xyzToLinearSRGB(x, y, z);
-
-    if (inSRGBGamut(r, g, bl)) return [L, a, b];
-
-    let lo = 0,
-        hi = 1;
-
-    for (let i = 0; i < 8; i++) {
-
-        const s = (lo + hi) * 0.5;
-
-        [x, y, z] = convertLABtoXYZ(L, a * s, b * s);
-        [r, g, bl] = xyzToLinearSRGB(x, y, z);
-
-        if (inSRGBGamut(r, g, bl)) lo = s;
-        else hi = s;
-    }
-
-    return [L, a * lo, b * lo];
-};
-
-const fitLCHtoSRGB = (L, C, h) => {
-
-    const a = C * _cos(h * _radian),
-        b = C * _sin(h * _radian);
-
-    return fitLABtoSRGB(L, a, b);
-};
-
-const oklabToLinearSRGB = (L, A, B) => {
-
-    const l_ = L + 0.3963377774 * A + 0.2158037573 * B,
-        m_ = L - 0.1055613458 * A - 0.0638541728 * B,
-        s_ = L - 0.0894841775 * A - 1.2914855480 * B;
-
-    const l = l_ * l_ * l_,
-        m = m_ * m_ * m_,
-        s = s_ * s_ * s_;
-
-    return [
-        4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
-        -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
-        -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s,
-    ];
-};
-
-const fitOKLABtoSRGB = (L, A, B) => {
-
-    let [r, g, bl] = oklabToLinearSRGB(L, A, B);
-
-    if (inSRGBGamut(r, g, bl)) return [L, A, B];
-
-    let lo = 0,
-        hi = 1;
-
-    for (let i = 0; i < 8; i++) {
-
-        const s = (lo + hi) * 0.5;
-        [r, g, bl] = oklabToLinearSRGB(L, A * s, B * s);
-
-        if (inSRGBGamut(r, g, bl)) lo = s;
-        else hi = s;
-    }
-
-    return [L, A * lo, B * lo];
-};
-
-const fitOKLCHtoSRGB = (L, C, h) => {
-
-    const A = C * _cos(h * _radian),
-        B = C * _sin(h * _radian);
-
-    return fitOKLABtoSRGB(L, A, B);
 };
 
 
@@ -1654,7 +1569,9 @@ const convertXYZtoOKLAB = function (x, y, z) {
 const convertOKLABtoXYZ = function (L, A, B) {
 
     const l_ = 0.9999999984505198 * L + 0.39633779217376786 * A + 0.2158037580607588  * B;
+    // eslint-disable-next-line no-loss-of-precision
     const m_ = 1.0000000088817608 * L - 0.10556134232365635 * A - 0.0638541747717059  * B;
+    // eslint-disable-next-line no-loss-of-precision
     const s_ = 1.000000054672411  * L - 0.08948418209496576 * A - 1.2914855378640917  * B;
 
     const l = l_ * l_ * l_;
@@ -1751,7 +1668,7 @@ const convertColorData = P.convertColorData = function (input, output) {
 //        LAB      OKLAB        OKLCH
 //         |         |
 //        LCH      OKLCH
-// 
+//
 // ```
 // conversionTree — now includes XYZ as a top-level branch and as a target in all branches
 const conversionTree = {

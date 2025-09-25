@@ -71,7 +71,7 @@ P.cleanStampHandlePositionsAdditionalActions = function () {
     const box = this.localBox;
 
     if (!box || box.length < 2) return;
-    
+
     const stampHandle = this.currentStampHandlePosition;
 
     stampHandle[0] += box[0];

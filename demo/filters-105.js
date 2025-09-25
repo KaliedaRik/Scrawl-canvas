@@ -27,9 +27,6 @@ const myFilter = scrawl.makeFilter({
     name: filteredName('tiles'),
     method: 'tiles',
     mode: 'points',
-    // hexRadius: 50,
-    // offsetX: 200,
-    // offsetY: 200,
 });
 
 // Create the target entity

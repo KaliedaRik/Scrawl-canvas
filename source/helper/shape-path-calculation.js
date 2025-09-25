@@ -458,40 +458,42 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                         break;
 
                     case 'a' :
-                        const sx = x,
-                            sy = y,
-                            ex = x + p[5],
-                            ey = y + p[6];
+                        {
+                            const sx = x,
+                                sy = y,
+                                ex = x + p[5],
+                                ey = y + p[6];
 
-                        const curves = arcToCubicBeziers(
-                            sx,
-                            sy,
-                            _abs(p[0]),
-                            _abs(p[1]),
-                            p[2],
-                            p[3] ? 1 : 0,
-                            p[4] ? 1 : 0,
-                            ex,
-                            ey,
-                        );
+                            const curves = arcToCubicBeziers(
+                                sx,
+                                sy,
+                                _abs(p[0]),
+                                _abs(p[1]),
+                                p[2],
+                                p[3] ? 1 : 0,
+                                p[4] ? 1 : 0,
+                                ex,
+                                ey,
+                            );
 
-                        if (!curves.length) units[i] = [LINEAR, sx, sy, ex, ey];
-                        else {
+                            if (!curves.length) units[i] = [LINEAR, sx, sy, ex, ey];
+                            else {
 
-                            const insertAt = i,
-                                splice = [];
+                                const insertAt = i,
+                                    splice = [];
 
-                            let px = sx,
-                                py = sy;
+                                let px = sx,
+                                    py = sy;
 
-                            for (const [c1x, c1y, c2x, c2y, x2, y2] of curves) {
+                                for (const [c1x, c1y, c2x, c2y, x2, y2] of curves) {
 
-                                splice.push([BEZIER, px, py, c1x, c1y, c2x, c2y, x2, y2]);
+                                    splice.push([BEZIER, px, py, c1x, c1y, c2x, c2y, x2, y2]);
 
-                                px = x2;
-                                py = y2;
+                                    px = x2;
+                                    py = y2;
+                                }
+                                units.splice(insertAt, 1, ...splice);
                             }
-                            units.splice(insertAt, 1, ...splice);
                         }
                         break;
 
@@ -780,8 +782,9 @@ const arcToCubicBeziers = function (x1, y1, rx, ry, phi, fa, fs, x2, y2) {
         vx = (-x1p - cxp) / rxs,
         vy = (-y1p - cyp) / rys;
 
-    let theta1 = angle({x:1, y:0}, {x:ux, y:uy}),
-        dtheta = angle({x:ux, y:uy}, {x:vx, y:vy});
+    const theta1 = angle({x:1, y:0}, {x:ux, y:uy});
+
+    let dtheta = angle({x:ux, y:uy}, {x:vx, y:vy});
 
     if (!fs && dtheta > 0) dtheta -= _piDouble;
     if (fs && dtheta < 0) dtheta += _piDouble;
