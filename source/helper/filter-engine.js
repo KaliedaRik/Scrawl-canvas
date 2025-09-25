@@ -13,6 +13,8 @@ import { checkForWorkstoreItem, getOrAddWorkstoreItem, getWorkstoreItem, setAndR
 
 import { colorEngine } from './color-engine.js';
 
+import { releaseArray, requestArray } from './array-pool.js';
+
 import { makeAnimation } from '../factory/animation.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
@@ -31,7 +33,7 @@ const _exp = Math.exp,
     BLUE = 'blue',
     COLOR_BURN = 'color-burn',
     COLOR_DODGE = 'color-dodge',
-    COLOR_POINT_ARRAYS = 'color-point-arrays',
+    // COLOR_POINT_ARRAYS = 'color-point-arrays',
     CURRENT = 'current',
     DARKEN = 'darken',
     DESTINATION_ATOP = 'destination-atop',
@@ -41,7 +43,7 @@ const _exp = Math.exp,
     EXCLUSION = 'exclusion',
     GRAY_PALETTES = ['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'],
     HARD_LIGHT = 'hard-light',
-    HEX_GRID = 'hex-grid',
+    // HEX_GRID = 'hex-grid',
     HEX = 'hex',
     HUE = 'hue',
     LIGHTEN = 'lighten',
@@ -53,9 +55,9 @@ const _exp = Math.exp,
     NAIVE_GRAY_LUT = 'naive-gray-lut',
     ORDERED = 'ordered',
     OVERLAY = 'overlay',
-    POINTS_ARRAY = 'points-array',
+    // POINTS_ARRAY = 'points-array',
     POINTS = 'points',
-    RANDOM_POINTS = 'random-points',
+    // RANDOM_POINTS = 'random-points',
     RECT = 'rect',
     SATURATION = 'saturation',
     SCREEN = 'screen',
@@ -64,8 +66,12 @@ const _exp = Math.exp,
     SOURCE_ATOP = 'source-atop',
     SOURCE_ONLY = 'source-only',
     T_FILTER_ENGINE = 'FilterEngine',
-    UNSET = 'unset',
+    // UNSET = 'unset',
+    HUE_MATCH = 'hue-match',
+    CHROMA_MATCH = 'chroma-match',
     XOR = 'xor';
+
+const OK_BLENDS = [HUE, SATURATION, LUMINOSITY, COLOR, HUE_MATCH, CHROMA_MATCH];
 
 const orderedNoise = new Float32Array([0.00,0.50,0.13,0.63,0.03,0.53,0.16,0.66,0.75,0.25,0.88,0.38,0.78,0.28,0.91,0.41,0.19,0.69,0.06,0.56,0.22,0.72,0.09,0.59,0.94,0.44,0.81,0.31,0.97,0.47,0.84,0.34,0.05,0.55,0.17,0.67,0.02,0.52,0.14,0.64,0.80,0.30,0.92,0.42,0.77,0.27,0.89,0.39,0.23,0.73,0.11,0.61,0.20,0.70,0.08,0.58,0.98,0.48,0.86,0.36,0.95,0.45,0.83,0.33]);
 
@@ -92,8 +98,8 @@ const predefinedPalette = {
     [MONOCHROME_16]: [255, 238, 221, 204, 187, 170, 153, 136, 119, 102, 85, 68, 51, 34, 17, 0],
 }
 
-const LOW_ARRAY = new Uint8Array([0,255,0]),
-    HIGH_ARRAY = new Uint8Array([0,255,255]);
+// const LOW_ARRAY = new Uint8Array([0,255,0]),
+//     HIGH_ARRAY = new Uint8Array([0,255,255]);
 
 
 // A backdoor to retrieve the last palette used by the `reduce-palette` filter
@@ -105,7 +111,6 @@ export const getLastUsedReducePalette = () => lastUsedReducePalette;
 
 // A small generally-available LUT for oklab gray 
 const LUMINANCE_OKLAB_GRAY_LUT = 'alpha-to-luminance-oklab-gray-lut-256';
-
 const getOklabGrayLut = () => {
 
     let lut = getWorkstoreItem(LUMINANCE_OKLAB_GRAY_LUT);
@@ -114,16 +119,19 @@ const getOklabGrayLut = () => {
 
     else {
 
-        const libs = colorEngine.getRgbOkCache();
         lut = new Uint32Array(256);
 
-        for (let a = 0; a < 256; a++) {
+        const libs = colorEngine.getRgbOkCache();
 
-            let L = a / 256;
+        let a, L, r, g, b;
+
+        for (a = 0; a < 256; a++) {
+
+            L = a / 256;
             if (L > 1) L = 1;
             else if (L < 0) L = 0;
 
-            const [r, g, b] = colorEngine.getRgbValsForOklab(L, 0, 0, libs);
+            [r, g, b] = colorEngine.getRgbValsForOklab(L, 0, 0, libs);
 
             lut[a] = (255 << 24) | (b << 16) | (g << 8) | r;
         }
@@ -143,12 +151,13 @@ const getLinearSrgbLut = () => {
 
     lut = new Float32Array(256);
 
-    for (let i = 0; i < 256; i++) {
+    let i, cs;
 
-        const cs = i / 255;
+    for (i = 0; i < 256; i++) {
+
+        cs = i / 255;
         lut[i] = (cs <= 0.04045) ? (cs / 12.92) : _pow((cs + 0.055) / 1.055, 2.4);
     }
-
     setWorkstoreItem(SRGB_TO_LINEAR_LUT, lut);
     
     return lut;
@@ -221,6 +230,7 @@ P.action = function (packet) {
 
     const { identifier, filters, image } = packet;
     const { actions, theBigActionsObject } = this;
+
     let i, iz, actData, a;
 
     const itemInWorkstore = getWorkstoreItem(identifier);
@@ -309,18 +319,20 @@ P.getRandomNumbers = function (items = {}) {
             imgH = ((length / imgWidth) | 0),
             out = new Float32Array(length);
 
-        let p = 0;
+        let p = 0,
+            y, y0, x;
 
-        for (let y = 0; y < imgH && p < length; y++) {
+        for (y = 0; y < imgH && p < length; y++) {
 
-            const y0 = (y % dim) * dim;
+            y0 = (y % dim) * dim;
 
-            for (let x = 0; x < imgWidth && p < length; x++) {
+            for (x = 0; x < imgWidth && p < length; x++) {
 
                 out[p++] = base[y0 + (x % dim)];
             }
         }
         setWorkstoreItem(name, out);
+
         return out;
     }
     else {
@@ -332,8 +344,8 @@ P.getRandomNumbers = function (items = {}) {
 
             out[i] = engine.random();
         }
-
         setWorkstoreItem(name, out);
+
         return out;
     }
 };
@@ -370,31 +382,36 @@ P.buildTileRects = function (tileWidth, tileHeight, offsetX, offsetY, image) {
     const cached = getWorkstoreItem(name);
     if (cached) return cached;
 
-    const rects = [];
+    const rects = requestArray();
 
-    for (let j = offY - tH; j < iHeight; j += tH) {
+    let j, y0, y1, yEnd, i, x0, x1, xEnd;
 
-        const y0 = (j < 0 ? 0 : j),
-            y1 = j + tH;
+    for (j = offY - tH; j < iHeight; j += tH) {
+
+        y0 = (j < 0 ? 0 : j);
+        y1 = j + tH;
 
         if (y0 >= iHeight) break;
 
-        const yEnd = (y1 > iHeight ? iHeight : y1);
+        yEnd = (y1 > iHeight ? iHeight : y1);
 
-        for (let i = offX - tW; i < iWidth; i += tW) {
+        for (i = offX - tW; i < iWidth; i += tW) {
 
-            const x0 = (i < 0 ? 0 : i),
-                x1 = i + tW;
+            x0 = (i < 0 ? 0 : i);
+            x1 = i + tW;
 
             if (x0 >= iWidth) break;
 
-            const xEnd = (x1 > iWidth ? iWidth : x1);
+            xEnd = (x1 > iWidth ? iWidth : x1);
 
             if (x0 < xEnd && y0 < yEnd) rects.push(x0, y0, xEnd, yEnd);
         }
     }
     const out = new Int32Array(rects);
+
     setWorkstoreItem(name, out);
+
+    releaseArray(rects);
 
     return out;
 };
@@ -424,8 +441,8 @@ P.buildGeneralTileLabels = function (requirements, image) {
         pointsData = [],
     } = requirements || {};
 
-    let ox = (_isFinite(originX) ? originX : 0) | 0;
-    let oy = (_isFinite(originY) ? originY : 0) | 0;
+    let ox = (_isFinite(originX) ? originX : 0) | 0,
+        oy = (_isFinite(originY) ? originY : 0) | 0;
 
     // Cache key - a small stable key; for "points" we avoid dumping the full array into the key
     let key = `tiles-v2-${mode}-${iWidth}-${iHeight}-${ox}-${oy}-${_round(angle*1000)}`;
@@ -456,7 +473,9 @@ P.buildGeneralTileLabels = function (requirements, image) {
 
         // rolling checksum to detect changes cheaply
         let hash = 2166136261 | 0;
+
         for (let i = 0; i < len; i += _max(1, (len / 64) | 0)) {
+
             hash ^= (arr[i] | 0);
             hash = (hash * 16777619) | 0;
         }
@@ -467,11 +486,12 @@ P.buildGeneralTileLabels = function (requirements, image) {
     if (cached) return cached;
 
     // Utility: inverse rotation (for lattice modes)
-    const toRad = angle * Math.PI / 180;
-    const cosNeg = _cos(-toRad), sinNeg = _sin(-toRad);
+    const toRad = angle * Math.PI / 180,
+        cosNeg = _cos(-toRad), sinNeg = _sin(-toRad);
 
     // Output labels
     const labels = new Int32Array(nPix);
+
     let nTiles = 0;
 
     if (mode === RECT) {
@@ -501,8 +521,8 @@ P.buildGeneralTileLabels = function (requirements, image) {
             if (jIdx < jMin) jMin = jIdx; if (jIdx > jMax) jMax = jIdx;
         }
 
-        const nI = (iMax - iMin + 1) | 0;
-        const nJ = (jMax - jMin + 1) | 0;
+        const nI = (iMax - iMin + 1) | 0,
+            nJ = (jMax - jMin + 1) | 0;
 
         nTiles = (nI * nJ) | 0;
 
@@ -553,6 +573,7 @@ P.buildGeneralTileLabels = function (requirements, image) {
             rMin = 1e9,
             rMax = -1e9;
 
+        const roundCubeReturn = [0, 0];
         const roundCube = (x, y, z) => {
 
             let rx = _round(x),
@@ -567,7 +588,10 @@ P.buildGeneralTileLabels = function (requirements, image) {
             else if (dy > dz) ry = -rx - rz;
             else rz = -rx - ry;
 
-            return [rx, rz];
+            roundCubeReturn[0] = rx;
+            roundCubeReturn[1] = ry;
+
+            return roundCubeReturn;
         };
 
         let dx, dy, xp, yp, qf, rf, xf, zf, yf, qi, ri, qq, rr, p, y, x;
@@ -748,6 +772,7 @@ P.buildGeneralTileLabels = function (requirements, image) {
                     if (gx2 < 0 || gx2 >= gridCols) continue;
 
                     s = head[gy2 * gridCols + gx2];
+
                     while (s !== -1) {
                     
                         sx = seeds[(s << 1)];
@@ -902,13 +927,13 @@ P.getMatrixOffsets = function (mWidth, mHeight, mX, mY, image) {
     res = new Int32Array(mWidth * mHeight);
 
     let p = 0,
-        rowOff;
+        rowOff, y, x, yz, xz;
 
-    for (let y = -mY, yz = mHeight - mY; y < yz; y++) {
+    for (y = -mY, yz = mHeight - mY; y < yz; y++) {
 
         rowOff = (y * iWidth) << 2;
 
-        for (let x = -mX, xz = mWidth - mX; x < xz; x++) {
+        for (x = -mX, xz = mWidth - mX; x < xz; x++) {
 
             res[p++] = rowOff + (x << 2);
         }
@@ -1051,6 +1076,48 @@ P.getGradientData = function (gradient) {
     return itemInWorkstore || [];
 };
 
+// Build (once) and cache a 1-D cbrt LUT
+P.getCbrtLut = function (size = 4096, maxX = 1.0) {
+
+    const key = `oklab::cbrt::${size}::${maxX}`;
+    let lut = getWorkstoreItem(key);
+
+    if (!lut) {
+
+        lut = new Float32Array(size + 1);
+
+        const step = maxX / size;
+        
+        let i, x;
+
+        for (i = 0; i <= size; i++) {
+
+            x = i * step;
+            lut[i] = Math.cbrt(x);
+        }
+        setWorkstoreItem(key, lut);
+    }
+    return { lut, size, maxX, scale: size / maxX };
+};
+
+// Fast cbrt via LUT + lerp
+P.cbrtLUT = function (x, lutPack) {
+
+    let v = x;
+
+    if (v <= 0) return 0;
+
+    if (v >= lutPack.maxX) return lutPack.lut[lutPack.size];
+
+    const f = v * lutPack.scale,
+        i = f | 0,
+        t = f - i,
+        a = lutPack.lut[i],
+        b = lutPack.lut[i + 1];
+
+    return a + t * (b - a);
+};
+
 P.transferDataUnchanged = function (oData, iData, len) {
 
     if (len === iData.length) oData.set(iData);
@@ -1100,7 +1167,9 @@ P.theBigActionsObject = {
 
         if (onlyAlphaTo255) {
 
-            for (let p = 0, pz = src32.length | 0, s, a; p < pz; p++) {
+            let p, pz, s, a;
+
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
                 s = src32[p];
                 a = (s >>> 24) & 0xFF;
@@ -1160,7 +1229,9 @@ P.theBigActionsObject = {
 
         const RGB_MASK = 0x00FFFFFF;
 
-        for (let p = 0, pz = src32.length | 0, s, a; p < pz; p++) {
+        let p, pz, s, a;
+
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
             s = src32[p];
             a = (s >>> 24) & 0xFF;
@@ -1287,7 +1358,6 @@ P.theBigActionsObject = {
         const iData = input.data,
             oData = output.data;
 
-        // 32-bit pixel views over the SAME buffers (respecting byteOffset/length)
         const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
             out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
@@ -1320,13 +1390,11 @@ P.theBigActionsObject = {
 
             rgba = src32[p];
 
-            // Unpack channels (little-endian: R,G,B,A in least→most significant bytes)
             r =  rgba & 0xff;
             g = (rgba >>> 8) & 0xff;
             b = (rgba >>> 16) & 0xff;
             a = (rgba >>> 24) & 0xff;
 
-            // If fully transparent, copy pixel exactly
             if (a === 0) {
 
                 out32[p] = rgba;
@@ -1335,37 +1403,31 @@ P.theBigActionsObject = {
 
             if (divisor) {
 
-                // Sum only the included channels
                 sum = (incR ? r : 0) + (incG ? g : 0) + (incB ? b : 0);
 
-                // Integer average (floor). Using |0 for fast truncation.
                 avg = (sum / divisor) | 0;
 
-                // Apply exclude flags: excluded → 0, otherwise the average
                 rOut = excR ? 0 : avg;
                 gOut = excG ? 0 : avg;
                 bOut = excB ? 0 : avg;
             } 
             else {
 
-                // No channels included for averaging:
-                // + keep original channels unless excluded (then set to 0)
                 rOut = excR ? 0 : r;
                 gOut = excG ? 0 : g;
                 bOut = excB ? 0 : b;
             }
 
-            // Repack to one 32-bit pixel. >>>0 ensures unsigned.
             out32[p] = ((a << 24) | (bOut << 16) | (gOut << 8) | (rOut << 0)) >>> 0;
         }
 
-        // Blend/route like the original
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
 
 // __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations).
 // + The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'.
+// + Scrawl-canvas uses the OKLCH color space to calculate color, hue, luminosity and saturation blends, which may lead to unexpecgted results for users coming from other products. SC also includes the "missing" combinations: 'hue-match', and 'chroma-match'.
 // + Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     [BLEND]: function (requirements) {
 
@@ -1398,26 +1460,24 @@ P.theBigActionsObject = {
         oData.set(iData);
 
         // Overlap rectangle (dest coords where mix contributes)
-        const x0 = (offsetX > 0 ? offsetX : 0) | 0;
-        const y0 = (offsetY > 0 ? offsetY : 0) | 0;
-        const x1 = Math.min(iWidth,  offsetX + mWidth)  | 0;
-        const y1 = Math.min(iHeight, offsetY + mHeight) | 0;
+        const x0 = (offsetX > 0 ? offsetX : 0) | 0,
+            y0 = (offsetY > 0 ? offsetY : 0) | 0,
+            x1 = _min(iWidth,  offsetX + mWidth)  | 0,
+            y1 = _min(iHeight, offsetY + mHeight) | 0;
 
         const hasOverlap = (x1 > x0) && (y1 > y0);
         if (!hasOverlap) {
+
             if (lineOut) this.processResults(output, input, 1 - opacity);
             else this.processResults(this.cache.work, output, opacity);
             return;
         }
 
-        // Normalization constants
         const inv255 = 1 / 255;
 
         const f_colorburn = (S, B) => (S === 0 ? 0 : (B === 1 ? 255 : (1 - _min(1, (1 - B) / S)) * 255));
 
         const f_colordodge = (S, B) => (S === 1 ? 255 : (B === 0 ? 0 : _min(1, B / (1 - S)) * 255));
-
-        const f_darken = (S, B) => (_min(S, B) * 255);
 
         const D = b => (b <= 0.25 ? (((16 * b - 12) * b) + 4) * b : _sqrt(b));
 
@@ -1433,6 +1493,8 @@ P.theBigActionsObject = {
             my0 = (y0 - offsetY) | 0;
 
         // Inner loop helpers for OKLCH modes
+        const okResult = [0, 0, 0];
+
         const doOK = (mode, ir, ig, ib, mr, mg, mb) => {
 
             let IL, IC, IH, ML, MC, MH, cr, cg, cb;
@@ -1446,19 +1508,31 @@ P.theBigActionsObject = {
                     [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, IH, libs);
                     break;
 
+                case HUE_MATCH:
+                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, IH, libs);
+                    break;
+
+                case CHROMA_MATCH:
+                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, IC, MH, libs);
+                    break;
+
                 case HUE:
                     [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, MC, IH, libs);
+                    break;
+
+                case SATURATION:
+                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, MH, libs);
                     break;
 
                 case LUMINOSITY:
                     [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, MH, libs);
                     break;
 
-                case SATURATION:
-                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, MH, libs);
-                    break;
             }
-            return [cr, cg, cb];
+            okResult[0] = cr;
+            okResult[1] = cg;
+            okResult[2] = cb;
+            return okResult;
         };
 
         // Process overlap
@@ -1497,7 +1571,7 @@ P.theBigActionsObject = {
                 As = ia8 * inv255;
                 Ab = ma8 * inv255;
 
-                if (blend === COLOR || blend === HUE || blend === LUMINOSITY || blend === SATURATION) {
+                if (OK_BLENDS.includes(blend)) {
 
                     [br, bg, bb] = doOK(blend, ir, ig, ib, mr, mg, mb);
 
@@ -1625,19 +1699,20 @@ P.theBigActionsObject = {
                             Fb = Sb;
                     }
 
-                k = As * Ab;
-                oneMinusAs = 1 - As;
-                oneMinusAb = 1 - Ab;
+                    k = As * Ab;
+                    oneMinusAs = 1 - As;
+                    oneMinusAb = 1 - Ab;
 
-                R = Sr * oneMinusAb + Br * oneMinusAs + Fr * k;
-                G = Sg * oneMinusAb + Bg * oneMinusAs + Fg * k;
-                B = Sb * oneMinusAb + Bb * oneMinusAs + Fb * k;
-                A = As + Ab - As * Ab;
+                    R = Sr * oneMinusAb + Br * oneMinusAs + Fr * k;
+                    G = Sg * oneMinusAb + Bg * oneMinusAs + Fg * k;
+                    B = Sb * oneMinusAb + Bb * oneMinusAs + Fb * k;
+                    A = As + Ab - As * Ab;
 
-                oData[oIdx] = (R * 255) | 0;
-                oData[oIdx + 1] = (G * 255) | 0;
-                oData[oIdx + 2] = (B * 255) | 0;
-                oData[oIdx + 3] = (A * 255) | 0;                }
+                    oData[oIdx] = (R * 255) | 0;
+                    oData[oIdx + 1] = (G * 255) | 0;
+                    oData[oIdx + 2] = (B * 255) | 0;
+                    oData[oIdx + 3] = (A * 255) | 0;
+                }
             }
         }
 
@@ -2027,7 +2102,7 @@ P.theBigActionsObject = {
 
             let p, pz, s, r, g, b, aNew, sum;
 
-            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
                 s = src32[p];
 
@@ -2038,7 +2113,7 @@ P.theBigActionsObject = {
                 if (div === 1) aNew = incR ? r : (incG ? g : b);
                 else if (div === 2) {
 
-                    const sum = (incR ? r : 0) + (incG ? g : 0) + (incB ? b : 0);
+                    sum = (incR ? r : 0) + (incG ? g : 0) + (incB ? b : 0);
                     aNew = sum >>> 1;
                 }
                 else aNew = sumDiv3LUT[r + g + b];
@@ -2296,7 +2371,7 @@ P.theBigActionsObject = {
                         }
                     }
 
-                    const na = ((a * (255 - wMax) + 128) >> 8) & 0xFF;
+                    na = ((a * (255 - wMax) + 128) >> 8) & 0xFF;
 
                     out32[p] = ((na << 24) | (b << 16) | (g << 8) | r) >>> 0;
                 }
@@ -2803,11 +2878,11 @@ P.theBigActionsObject = {
             const rowScan = (src, rowBase, xs, xe, ch, wantMin) => {
 
                 let m = wantMin ? 255 : 0,
-                    v;
+                    v, x;
 
                 const base = rowBase + ch;
 
-                for (let x = xs; x <= xe; x++) {
+                for (x = xs; x <= xe; x++) {
 
                     v = src[base + (x << 2)];
                     if (wantMin ? (v < m) : (v > m)) m = v;
@@ -2818,14 +2893,14 @@ P.theBigActionsObject = {
             const colScan = (src, xs, ys, ye, ch, wantMin) => {
 
                 let m = wantMin ? 255 : 0,
-                    v;
+                    v, y;
 
                 const base = (xs << 2) + ch,
                     stride = width << 2;
 
                 let idx = (ys * stride) + base;
 
-                for (let y = ys; y <= ye; y++) {
+                for (y = ys; y <= ye; y++) {
 
                     const v = src[idx];
                     if (wantMin ? (v < m) : (v > m)) m = v;
@@ -3061,6 +3136,8 @@ P.theBigActionsObject = {
             }
         };
 
+        const lPosResult = [0, 0];
+
         const getLinePositions = function (x, y) {
 
             const ix = x,
@@ -3070,11 +3147,13 @@ P.theBigActionsObject = {
 
             let mPos = -1;
 
-            const iPos = ((iy * iWidth) + ix) * 4;
+            lPosResult[0] = ((iy * iWidth) + ix) * 4;
 
             if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = ((my * mWidth) + mx) * 4;
 
-            return [iPos, mPos];
+            lPosResult[1] = mPos;
+
+            return lPosResult;
         };
 
         const [input, output, mix] = this.getInputAndOutputLines(requirements);
@@ -3108,9 +3187,11 @@ P.theBigActionsObject = {
         let x, y, dx, dy, dPos, iPos, mPos;
 
         for (y = 0; y < iHeight; y++) {
+
             for (x = 0; x < iWidth; x++) {
 
                 [iPos, mPos] = getLinePositions(x, y);
+
                 if (mPos >= 0) {
 
                     dx = _floor(x + ((127 - mData[mPos + offsetForChannelX]) / 127) * scaleX);
@@ -3120,6 +3201,7 @@ P.theBigActionsObject = {
 
                         if (dx < 0) dx = 0;
                         if (dx >= iWidth) dx = iWidth - 1;
+
                         if (dy < 0) dy = 0;
                         if (dy >= iHeight) dy = iHeight - 1;
 
@@ -3132,9 +3214,7 @@ P.theBigActionsObject = {
                     }
                     copyPixel(dPos, iPos, iData);
                 }
-                else {
-                    copyPixel(iPos, iPos, iData);
-                }
+                else copyPixel(iPos, iPos, iData);
             }
         }
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -3166,6 +3246,7 @@ P.theBigActionsObject = {
             remains = ((angle % 45) / 45) * strength;
 
         const w = new Float32Array(9);
+
         w[4] = 1;
 
         if (slices === 0) {
@@ -3254,27 +3335,20 @@ P.theBigActionsObject = {
                 p21 = rowD + xC;
                 p22 = rowD + xR;
 
-                // Center alpha gate matches old behavior (skip fully transparent)
                 if (!iData[p11 + 3]) continue;
 
-                // Convolve per channel (RGB). Alpha = passthrough center.
-                // Unrolled for speed; Uint8ClampedArray will clamp on assignment.
-                r =
-                    iData[p00] * w[0] + iData[p01] * w[1] + iData[p02] * w[2] +
+                r = iData[p00] * w[0] + iData[p01] * w[1] + iData[p02] * w[2] +
                     iData[p10] * w[3] + iData[p11] * w[4] + iData[p12] * w[5] +
                     iData[p20] * w[6] + iData[p21] * w[7] + iData[p22] * w[8];
 
-                g =
-                    iData[p00 + 1] * w[0] + iData[p01 + 1] * w[1] + iData[p02 + 1] * w[2] +
+                g = iData[p00 + 1] * w[0] + iData[p01 + 1] * w[1] + iData[p02 + 1] * w[2] +
                     iData[p10 + 1] * w[3] + iData[p11 + 1] * w[4] + iData[p12 + 1] * w[5] +
                     iData[p20 + 1] * w[6] + iData[p21 + 1] * w[7] + iData[p22 + 1] * w[8];
 
-                b =
-                    iData[p00 + 2] * w[0] + iData[p01 + 2] * w[1] + iData[p02 + 2] * w[2] +
+                b = iData[p00 + 2] * w[0] + iData[p01 + 2] * w[1] + iData[p02 + 2] * w[2] +
                     iData[p10 + 2] * w[3] + iData[p11 + 2] * w[4] + iData[p12 + 2] * w[5] +
                     iData[p20 + 2] * w[6] + iData[p21 + 2] * w[7] + iData[p22 + 2] * w[8];
 
-                // Write RGB, keep alpha
                 oData[p11] = r;
                 oData[p11 + 1] = g;
                 oData[p11 + 2] = b;
@@ -3342,7 +3416,9 @@ P.theBigActionsObject = {
         const baseRGB = (B << 16) | (G << 8) | R,
             packedWithA = ((A << 24) | baseRGB) >>> 0;
 
-        for (let p = 0, pz = src32.length | 0, s, a; p < pz; p++) {
+        let p, pz, s, a;
+
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
         
             s = src32[p];
             a = (s >>> 24) & 0xFF;
@@ -3768,9 +3844,9 @@ P.theBigActionsObject = {
             lineOut
         } = requirements;
 
-        let rgba, r, g, b, a, gray;
+        let rgba, r, g, b, a, gray, p, pz;
 
-        for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
             rgba = src32[p];
 
@@ -3788,7 +3864,7 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// // __invert-channels__ - For each pixel, subtracts its current channel values - when included - from 255.
+// __invert-channels__ - For each pixel, subtracts its current channel values - when included - from 255.
     [INVERT_CHANNELS]: function (requirements) {
 
         const [input, output] = this.getInputAndOutputLines(requirements);
@@ -3827,7 +3903,6 @@ P.theBigActionsObject = {
 // __lock-channels-to-levels__ - Produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value.
     [LOCK_CHANNELS_TO_LEVELS]: function (requirements) {
 
-        // -- helpers --
         const normalizeLevels = (spec) => {
 
             let arr;
@@ -3844,7 +3919,9 @@ P.theBigActionsObject = {
             const seen = new Uint8Array(256),
                 out = [];
 
-            for (let i = 0, iz = arr.length, v; i < iz; i++) {
+            let i, iz, v;
+
+            for (i = 0, iz = arr.length; i < iz; i++) {
 
                 v = arr[i];
                 
@@ -3932,7 +4009,7 @@ P.theBigActionsObject = {
 
         let p, pz, rgba, r, g, b, a, nr, ng, nb, na;
 
-        for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
             rgba = src32[p];
 
@@ -3969,42 +4046,38 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        // Precomputed tables (adds-only in hot loop)
         const { Lr, Lg, Lb, Mr, Mg, Mb, Sr, Sg, Sb } = getOklabLTables();
 
-        let s, r8, g8, b8, l, m, s3, l_, m_, s_, L, A;
+        const { getCbrtLut, cbrtLUT } = this;
 
-        for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+        const lutPack = getCbrtLut(4096, 1.0);
+
+        let p, pz, s, r8, g8, b8, l, m, s3, l_, m_, s_, L, A;
+
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
             s = src32[p];
 
-            // Extract 8-bit channels (little-endian RGBA -> 0xAABBGGRR)
             r8 = s & 0xFF;
             g8 = (s >>> 8) & 0xFF;
             b8 = (s >>> 16) & 0xFF;
 
-            // Linear LMS sums via lookup (no multiplies)
             l = Lr[r8] + Lg[g8] + Lb[b8];
             m = Mr[r8] + Mg[g8] + Mb[b8];
             s3 = Sr[r8] + Sg[g8] + Sb[b8];
 
-            // Cube roots
-            l_ = _cbrt(l);
-            m_ = _cbrt(m);
-            s_ = _cbrt(s3);
+            l_ = cbrtLUT(l, lutPack);
+            m_ = cbrtLUT(m, lutPack);
+            s_ = cbrtLUT(s3, lutPack);
 
-            // OKLab L from (l_, m_, s_)
             L = (0.2104542553 * l_) + (0.7936177850 * m_) - (0.0040720468 * s_);
 
-            // Clamp to [0,1]
             if (L < 0) L = 0;
             else if (L > 1) L = 1;
 
-            // Alpha = floor(L * 256); clamp to 255 to avoid wrap in packed write
             A = (L * 256) | 0;
             if (A > 255) A = 255;
 
-            // Pack RGBA for little-endian Uint32Array: RGB=0, A=A
             out32[p] = (A << 24) >>> 0;
         }
 
@@ -4135,16 +4208,17 @@ P.theBigActionsObject = {
             weights[(aY * mW) + aX] = 1;
         }
         else if (!(weights instanceof Float32Array)) {
+
             weights = Float32Array.from(weights);
         }
 
         // Kernel offsets (cached)
-        const nzIdx = [],
-            nzW = [];
+        const nzIdx = requestArray(),
+            nzW = requestArray();
 
-        for (let i = 0; i < weights.length; i++) {
+        for (let i = 0, w; i < weights.length; i++) {
 
-            const w = weights[i];
+            w = weights[i];
 
             if (w !== 0) {
 
@@ -4152,6 +4226,7 @@ P.theBigActionsObject = {
                 nzW.push(w);
             }
         }
+
         const nzCount = nzIdx.length;
 
         if (nzCount === 0) this.transferDataUnchanged(oData, iData, len);
@@ -4234,6 +4309,8 @@ P.theBigActionsObject = {
             }
         }
 
+        releaseArray(nzIdx, nzW);
+
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
@@ -4267,9 +4344,9 @@ P.theBigActionsObject = {
             const clamp01 = (v) => (v < 0 ? 0 : (v > 1 ? 1 : v));
             const clampAB = (v) => (v < -0.4 ? -0.4 : (v > 0.4 ? 0.4 : v));
 
-            let s, a, r0, g0, b0, ok, L, A, B, rgb;
+            let p, pz, s, a, r0, g0, b0, ok, L, A, B, rgb;
 
-            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
                 s = src32[p];
 
@@ -4329,7 +4406,6 @@ P.theBigActionsObject = {
 
         let p, pz, rgba, r, g, b, a;
 
-        // Fast identity: nothing changes (and no saturation)
         if (!saturation && rK === 256 && gK === 256 && bK === 256 && aK === 256) out32.set(src32);
         
         else if (!saturation) {
@@ -4368,7 +4444,7 @@ P.theBigActionsObject = {
             let r0, g0, b0, gray;
 
             // Saturation mode: start from gray, then lerp toward original per channel
-            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
                 rgba = src32[p];
 
@@ -4384,7 +4460,6 @@ P.theBigActionsObject = {
                 b = gray + (((b0 - gray) * bK + 128) >> 8);
                 a = (a * aK + 128) >> 8;
 
-                // Clamp
                 if (r < 0) r = 0;
                 else if (r > 255) r = 255;
 
@@ -4435,9 +4510,9 @@ P.theBigActionsObject = {
             const clamp01 = (v) => (v < 0 ? 0 : (v > 1 ? 1 : v)),
                 clampAB = (v) => (v < -0.4 ? -0.4 : (v > 0.4 ? 0.4 : v));
 
-            let s, a, r0, g0, b0, ok, L, A, B, rgb;
+            let p, pz, s, a, r0, g0, b0, ok, L, A, B, rgb;
 
-            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
                 s = src32[p];
 
@@ -4489,9 +4564,9 @@ P.theBigActionsObject = {
             getOk  = colorEngine.getOkValsForRgb,
             toRgb  = colorEngine.getRgbValsForOklab;
 
-        let rgba, r, g, b, a, ok, L, A, B, rgb;
+        let p, pz, rgba, r, g, b, a, ok, L, A, B, rgb;
 
-        for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
             rgba = src32[p];
 
@@ -4910,8 +4985,7 @@ P.theBigActionsObject = {
 
         const iData = input.data,
             oData = output.data,
-            width  = input.width | 0,
-            height = input.height | 0;
+            width  = input.width | 0;
 
         const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
             out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
@@ -5104,6 +5178,7 @@ P.theBigActionsObject = {
 
         let { palette = BLACK_WHITE } = requirements;
 
+        // Legacy
         const noiseType = useBluenoise ? BLUENOISE : (requirements.noiseType || RANDOM);
 
         const libs = colorEngine.getRgbOkCache();
@@ -5115,6 +5190,7 @@ P.theBigActionsObject = {
             imgWidth: iWidth,
             type: noiseType,
         });
+
         let rndCursor = -1;
 
         // Validate palette
@@ -5126,25 +5202,21 @@ P.theBigActionsObject = {
         const isGray = GRAY_PALETTES.includes(palette);
         const isArrayPalette = _isArray(palette);
 
-        // Helper: pick two nearest palette entries using scaled-int OKLAB
-        // + Palette entries must be [r,g,b, PLi, PAi, PBi] where
-        // + PLi = L * 100 | 0
-        // + PAi = (a + 0.4) * 125 | 0
-        // + PBi = (b + 0.4) * 125 | 0
         function bestTwoPaletteIndices(ILi, IAi, IBi, pal) {
 
             let i0 = -1,
                 i1 = -1,
                 d0 = Infinity,
-                d1 = Infinity;
+                d1 = Infinity,
+                p, pz, e, dL, dA, dB, dsq;
 
-            for (let p = 0, pz = pal.length; p < pz; p++) {
+            for (p = 0, pz = pal.length; p < pz; p++) {
 
-                const e = pal[p],
-                    dL = ILi - e[3],
-                    dA = IAi - e[4],
-                    dB = IBi - e[5],
-                    dsq = (dL * dL) + (dA * dA) + (dB * dB);
+                e = pal[p];
+                dL = ILi - e[3];
+                dA = IAi - e[4];
+                dB = IBi - e[5];
+                dsq = (dL * dL) + (dA * dA) + (dB * dB);
 
                 if (dsq < d0) {
 
@@ -5181,28 +5253,30 @@ P.theBigActionsObject = {
                 P = selectedPalette.length,
                 getGray = colorEngine.getBestGray;
 
-            for (let i = 0; i < len; i += 4) {
+            let i, a, alpha, r, g, b, gray, idx0, idx1, d0, d1, pi, pv, d, total, propensity, test, chosen;
 
-                const a = i + 3;
-                const alpha = iData[a];
+            for (i = 0; i < len; i += 4) {
+
+                a = i + 3;
+                alpha = iData[a];
 
                 if (alpha) {
 
-                    const r = i,
-                        g = i + 1,
-                        b = i + 2,
-                        gray = getGray(iData[r], iData[g], iData[b]);
+                    r = i;
+                    g = i + 1;
+                    b = i + 2;
+                    gray = getGray(iData[r], iData[g], iData[b]);
 
                     // track best two without building arrays/sorting
-                    let idx0 = -1,
-                        idx1 = -1,
-                        d0 = Infinity,
-                        d1 = Infinity;
+                    idx0 = -1;
+                    idx1 = -1;
+                    d0 = Infinity;
+                    d1 = Infinity;
 
-                    for (let pi = 0; pi < P; pi++) {
+                    for (pi = 0; pi < P; pi++) {
 
-                        const pv = selectedPalette[pi],
-                            d = _abs(pv - gray);
+                        pv = selectedPalette[pi];
+                        d = _abs(pv - gray);
 
                         if (d < d0) {
 
@@ -5221,10 +5295,10 @@ P.theBigActionsObject = {
                         if (pi && d >= d1) break;
                     }
 
-                    const total = d0 + d1,
-                        propensity = total - d0,
-                        test = rnd[++rndCursor] * total,
-                        chosen = (test < propensity) ? selectedPalette[idx0] : selectedPalette[idx1];
+                    total = d0 + d1;
+                    propensity = total - d0;
+                    test = rnd[++rndCursor] * total;
+                    chosen = (test < propensity) ? selectedPalette[idx0] : selectedPalette[idx1];
 
                     oData[r] = chosen;
                     oData[g] = chosen;
@@ -5256,55 +5330,63 @@ P.theBigActionsObject = {
 
             let selectedPalette = predefinedPalette[name];
 
+            let i, iz, a, alpha, r, g, b, ok,
+                ILi, IAi, IBi, i0, i1, d0, d1,
+                total, propensity, test, chosen;
+
             if (!selectedPalette) {
 
                 selectedPalette = [];
 
-                for (let i = 0, iz = palette.length; i < iz; i++) {
+                let eR, eG, eB, PLi, PAi, PBi;
 
-                    const [eR, eG, eB] = colorEngine.extractRGBfromColorString(palette[i]);
+                for (i = 0, iz = palette.length; i < iz; i++) {
 
-                    const ok = colorEngine.getOkValsForRgb(eR, eG, eB, libs),
-                        PLi = (ok[0] * 100) | 0,
-                        PAi = ((ok[1] + 0.4) * 125) | 0,
-                        PBi = ((ok[2] + 0.4) * 125) | 0;
+                    [eR, eG, eB] = colorEngine.extractRGBfromColorString(palette[i]);
+
+                    ok = colorEngine.getOkValsForRgb(eR, eG, eB, libs);
+                    PLi = (ok[0] * 100) | 0;
+                    PAi = ((ok[1] + 0.4) * 125) | 0;
+                    PBi = ((ok[2] + 0.4) * 125) | 0;
 
                     selectedPalette.push([eR, eG, eB, PLi, PAi, PBi]);
                 }
                 predefinedPalette[name] = selectedPalette;
             }
 
-            for (let i = 0; i < len; i += 4) {
+            for (i = 0; i < len; i += 4) {
 
-                const a = i + 3,
-                    alpha = iData[a];
+                a = i + 3;
+                alpha = iData[a];
 
                 if (alpha) {
 
-                    const r = i,
-                        g = i + 1,
-                        b = i + 2;
+                    r = i;
+                    g = i + 1;
+                    b = i + 2;
 
-                    const ok = colorEngine.getOkValsForRgb(iData[r], iData[g], iData[b], libs);
+                    ok = colorEngine.getOkValsForRgb(iData[r], iData[g], iData[b], libs);
 
-                    const ILi = (ok[0] * 100) | 0,
-                        IAi = ((ok[1] + 0.4) * 125) | 0,
-                        IBi = ((ok[2] + 0.4) * 125) | 0;
+                    ILi = (ok[0] * 100) | 0;
+                    IAi = ((ok[1] + 0.4) * 125) | 0;
+                    IBi = ((ok[2] + 0.4) * 125) | 0;
 
-                    const [i0, i1, d0, d1] = bestTwoPaletteIndices(ILi, IAi, IBi, selectedPalette);
+                    [i0, i1, d0, d1] = bestTwoPaletteIndices(ILi, IAi, IBi, selectedPalette);
 
-                    const total = d0 + d1,
-                        propensity = total - d0,
-                        test = rnd[++rndCursor] * total;
+                    total = d0 + d1;
+                    propensity = total - d0;
+                    test = rnd[++rndCursor] * total;
 
-                    const chosen = (test < propensity) ? selectedPalette[i0] : selectedPalette[i1];
+                    chosen = (test < propensity) ? selectedPalette[i0] : selectedPalette[i1];
 
                     oData[r] = chosen[0];
                     oData[g] = chosen[1];
                     oData[b] = chosen[2];
                     oData[a] = alpha;
 
-                } else {
+                }
+                else {
+
                     ++rndCursor;
                     oData[i] = iData[i];
                     oData[i + 1] = iData[i + 1];
@@ -5312,6 +5394,7 @@ P.theBigActionsObject = {
                     oData[a] = 0;
                 }
             }
+
             setLastUsedReducePalette(palette);
 
             if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -5327,30 +5410,29 @@ P.theBigActionsObject = {
         const metadata = new Map(),
             seen = [];
 
-        // 1) collect metadata for observed colors
-        for (let i = 0; i < len; i += 4) {
+        let i, a, r, g, b, rgbIndex, row, ok, ILi, IAi, IBi;
 
-            const a = i + 3;
+        // 1) collect metadata for observed colors
+        for (i = 0; i < len; i += 4) {
+
+            a = i + 3;
 
             if (!iData[a]) continue;
 
-            const r = iData[i],
-                g = iData[i + 1],
-                b = iData[i + 2],
-                rgbIndex = getRGBIndex(r, g, b);
+            r = iData[i];
+            g = iData[i + 1];
+            b = iData[i + 2];
+            rgbIndex = getRGBIndex(r, g, b);
 
-            const row = metadata.get(rgbIndex);
+            row = metadata.get(rgbIndex);
 
-            if (row) {
+            if (row) row[0] += 1;
+            else {
 
-                row[0] += 1;
-
-            } else {
-
-                const ok = colorEngine.getOkValsForRgb(r, g, b, libs),
-                    ILi = (ok[0] * 100) | 0,
-                    IAi = ((ok[1] + 0.4) * 125) | 0,
-                    IBi = ((ok[2] + 0.4) * 125) | 0;
+                ok = colorEngine.getOkValsForRgb(r, g, b, libs);
+                ILi = (ok[0] * 100) | 0;
+                IAi = ((ok[1] + 0.4) * 125) | 0;
+                IBi = ((ok[2] + 0.4) * 125) | 0;
 
                 metadata.set(rgbIndex, [1, r, g, b, ILi, IAi, IBi]);
 
@@ -5366,28 +5448,32 @@ P.theBigActionsObject = {
             firstRow = metadata.get(seen[0]),
             selectedPalette = [ firstRow.slice() ];
 
-        for (let s = 1, sz = seen.length; s < sz; s++) {
+        let alpha, s, sz, IL, IA, IB, best2, j, P, p, dL, dA, dB, dsq, idx,
+            i0, i1, d0, d1, sd0, sd1, total, propensity, rec, test, chosen;
+
+        for (s = 1, sz = seen.length; s < sz; s++) {
 
             if (selectedPalette.length >= palette) break;
 
-            const row = metadata.get(seen[s]),
-                IL = row[4],
-                IA = row[5],
-                IB = row[6];
+            row = metadata.get(seen[s]);
+            IL = row[4];
+            IA = row[5];
+            IB = row[6];
 
             // find nearest in current palette (distance squared)
-            let best2 = Infinity;
+            best2 = Infinity;
 
-            for (let j = 0, P = selectedPalette.length; j < P; j++) {
+            for (j = 0, P = selectedPalette.length; j < P; j++) {
 
-                const p = selectedPalette[j],
-                    dL = IL - p[4],
-                    dA = IA - p[5],
-                    dB = IB - p[6],
-                    dsq = (dL * dL) + (dA * dA) + (dB * dB);
+                p = selectedPalette[j];
+                dL = IL - p[4];
+                dA = IA - p[5];
+                dB = IB - p[6];
+                dsq = (dL * dL) + (dA * dA) + (dB * dB);
 
                 if (dsq < best2) best2 = dsq;
             }
+
             if (best2 > minDist2) selectedPalette.push(row.slice());
         }
 
@@ -5402,27 +5488,27 @@ P.theBigActionsObject = {
         setLastUsedReducePalette(selectedPalette.map(item => `rgb(${item[1]} ${item[2]} ${item[3]})`));
 
         // 4) for each seen color, precompute its two best palette candidates (store totals/propensity)
-        for (let s = 0, sz = seen.length; s < sz; s++) {
+        for (s = 0, sz = seen.length; s < sz; s++) {
 
-            const idx = seen[s],
-                row = metadata.get(idx),
-                IL = row[4],
-                IA = row[5],
-                IB = row[6];
+            idx = seen[s];
+            row = metadata.get(idx);
+            IL = row[4];
+            IA = row[5];
+            IB = row[6];
 
             // find best two (squared), then sqrt winners to preserve weighting
-            let i0 = -1,
-                i1 = -1,
-                d0 = Infinity,
-                d1 = Infinity;
+            i0 = -1;
+            i1 = -1;
+            d0 = Infinity;
+            d1 = Infinity;
 
-            for (let j = 0; j < selectedPaletteLength; j++) {
+            for (j = 0; j < selectedPaletteLength; j++) {
 
-                const p = selectedPalette[j],
-                    dL = IL - p[4],
-                    dA = IA - p[5],
-                    dB = IB - p[6],
-                    dsq = dL * dL + dA * dA + dB * dB;
+                p = selectedPalette[j];
+                dL = IL - p[4];
+                dA = IA - p[5];
+                dB = IB - p[6];
+                dsq = dL * dL + dA * dA + dB * dB;
 
                 if (dsq < d0) {
 
@@ -5440,19 +5526,21 @@ P.theBigActionsObject = {
 
             // Robust fallback when there's only one palette entry (or ties)
             if (i0 === -1) {
+
                 i0 = 0;
                 d0 = 0;
             }
 
             if (i1 === -1) {
+
                 i1 = i0;
                 d1 = d0;
             }
 
-            const sd0 = _sqrt(d0),
-                sd1 = _sqrt(d1),
-                total = sd0 + sd1,
-                propensity = total - sd0;
+            sd0 = _sqrt(d0);
+            sd1 = _sqrt(d1);
+            total = sd0 + sd1;
+            propensity = total - sd0;
 
             // overwrite with compact decision record:
             // [total, propensity, candidate0Row, candidate1Row]
@@ -5465,24 +5553,24 @@ P.theBigActionsObject = {
         }
 
         // 5) apply
-        for (let i = 0; i < len; i += 4) {
+        for (i = 0; i < len; i += 4) {
 
-            const a = i + 3,
-                alpha = iData[a];
+            a = i + 3;
+            alpha = iData[a];
 
             if (alpha) {
 
-                const r = iData[i],
-                    g = iData[i + 1],
-                    b = iData[i + 2],
-                    rgbIndex = getRGBIndex(r, g, b),
+                r = iData[i];
+                g = iData[i + 1];
+                b = iData[i + 2];
+                rgbIndex = getRGBIndex(r, g, b);
 
-                    rec = metadata.get(rgbIndex),
-                    total = rec[0],
+                rec = metadata.get(rgbIndex);
+                total = rec[0];
 
-                    propensity = rec[1],
-                    test = rnd[++rndCursor] * total,
-                    chosen = (test < propensity) ? rec[2] : rec[3];
+                propensity = rec[1];
+                test = rnd[++rndCursor] * total;
+                chosen = (test < propensity) ? rec[2] : rec[3];
 
                 oData[i] = chosen[1];
                 oData[i + 1] = chosen[2];
@@ -5635,9 +5723,9 @@ P.theBigActionsObject = {
         else {
 
             // General case: clear included bits, then OR in the level
-            for (let p = 0; p < src32.length; p++) {
+            for (let p = 0; p < src32.length, src; p++) {
 
-                const src = src32[p];
+                src = src32[p];
                 out32[p] = (src & clearMask) | setMask;
             }
         }
@@ -5826,9 +5914,7 @@ P.theBigActionsObject = {
 
                         ename = `ude-${e(0)}-${e(0.1)}-${e(0.2)}-${e(0.3)}-${e(0.4)}-${e(0.5)}-${e(0.6)}-${e(0.7)}-${e(0.8)}-${e(0.9)}-${e(1)}`;
                     }
-                    else {
-                        e = (null != easeEngines[e]) ? easeEngines[e] : easeEngines['linear'];
-                    }
+                    else e = (null != easeEngines[e]) ? easeEngines[e] : easeEngines['linear'];
 
                     swirlName = `swirl-${startX}-${startY}-${innerRadius}-${outerRadius}-${angle}-${ename}-${iWidth}-${iHeight}`;
 
@@ -5881,7 +5967,7 @@ P.theBigActionsObject = {
 
                     cursor = 0;
 
-                    for (let iy = y; iy < yz; iy++) {
+                    for (iy = y; iy < yz; iy++) {
 
                         rowBase = (iy * iWidth) << 2;
 
@@ -5965,9 +6051,9 @@ P.theBigActionsObject = {
             highB = clamp8(high[2]),
             highA = clamp8(high[3]);
 
-        let rgba, r, g, b, a, ro, go, bo, ao, gray;
+        let p, pz, rgba, r, g, b, a, ro, go, bo, ao, gray;
 
-        for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
             rgba = src32[p];
 
@@ -6167,9 +6253,9 @@ P.theBigActionsObject = {
         if (isIdentity) out32.set(src32);
         else {
 
-            let rgba, r, g, b, a, nr, ng, nb;
+            let p, pz, rgba, r, g, b, a, nr, ng, nb;
 
-            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
                 rgba = src32[p];
 
