@@ -27,13 +27,13 @@ import { bluenoise } from './filter-engine-bluenoise-data.js';
 import { _abs, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _pow, _round, _sin, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
-const _exp = Math.exp,
-    _256 = 256,
+const _256 = 256,
     _256_SQUARE = 256 * 256,
+    _exp = Math.exp,
     BLUE = 'blue',
+    CHROMA_MATCH = 'chroma-match',
     COLOR_BURN = 'color-burn',
     COLOR_DODGE = 'color-dodge',
-    // COLOR_POINT_ARRAYS = 'color-point-arrays',
     CURRENT = 'current',
     DARKEN = 'darken',
     DESTINATION_ATOP = 'destination-atop',
@@ -43,9 +43,9 @@ const _exp = Math.exp,
     EXCLUSION = 'exclusion',
     GRAY_PALETTES = ['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'],
     HARD_LIGHT = 'hard-light',
-    // HEX_GRID = 'hex-grid',
     HEX = 'hex',
     HUE = 'hue',
+    HUE_MATCH = 'hue-match',
     LIGHTEN = 'lighten',
     LIGHTER = 'lighter',
     LUMINOSITY = 'luminosity',
@@ -55,9 +55,7 @@ const _exp = Math.exp,
     NAIVE_GRAY_LUT = 'naive-gray-lut',
     ORDERED = 'ordered',
     OVERLAY = 'overlay',
-    // POINTS_ARRAY = 'points-array',
     POINTS = 'points',
-    // RANDOM_POINTS = 'random-points',
     RECT = 'rect',
     SATURATION = 'saturation',
     SCREEN = 'screen',
@@ -66,9 +64,6 @@ const _exp = Math.exp,
     SOURCE_ATOP = 'source-atop',
     SOURCE_ONLY = 'source-only',
     T_FILTER_ENGINE = 'FilterEngine',
-    // UNSET = 'unset',
-    HUE_MATCH = 'hue-match',
-    CHROMA_MATCH = 'chroma-match',
     XOR = 'xor';
 
 const OK_BLENDS = [HUE, SATURATION, LUMINOSITY, COLOR, HUE_MATCH, CHROMA_MATCH];
@@ -97,9 +92,6 @@ const predefinedPalette = {
     [MONOCHROME_8]: [255, 221, 187, 153, 119, 85, 51, 0],
     [MONOCHROME_16]: [255, 238, 221, 204, 187, 170, 153, 136, 119, 102, 85, 68, 51, 34, 17, 0],
 }
-
-// const LOW_ARRAY = new Uint8Array([0,255,0]),
-//     HIGH_ARRAY = new Uint8Array([0,255,255]);
 
 
 // A backdoor to retrieve the last palette used by the `reduce-palette` filter
