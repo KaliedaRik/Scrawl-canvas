@@ -8,7 +8,7 @@ import { artefact, asset } from '../core/library.js';
 import { isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } from '../helper/utilities.js';
 
 // Shared constants
-import { CORNER_LABELS_SET, PIVOT, START, T_BEZIER, T_CELL, T_LINE, T_POLYLINE, T_QUADRATIC, ZERO_STR } from '../helper/shared-vars.js';
+import { CORNER_LABELS, PIVOT, START, T_BEZIER, T_CELL, T_LINE, T_POLYLINE, T_QUADRATIC, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants (none defined)
 
@@ -105,7 +105,7 @@ export default function (P = Ωempty) {
 // __pivotCorner__
     S.pivotCorner = function (item) {
 
-        if (CORNER_LABELS_SET.has(item)) this.pivotCorner = item;
+        if (CORNER_LABELS.includes(item)) this.pivotCorner = item;
         this.dirtyStart = true;
     };
 

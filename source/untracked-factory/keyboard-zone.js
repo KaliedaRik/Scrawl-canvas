@@ -16,7 +16,7 @@ import { mergeDiscard, λnull, Ωempty } from "../helper/utilities.js";
 import { addNativeListener, removeNativeListener } from "../core/events.js";
 
 // Shared constants
-import { $BODY, _keys, ACCEPTED_WRAPPERS_SET, NONE } from '../helper/shared-vars.js';
+import { $BODY, _keys, ACCEPTED_WRAPPERS, NONE } from '../helper/shared-vars.js';
 
 // Local constants
 const KEY_DOWN = 'keydown',
@@ -38,7 +38,7 @@ const processKeyboardZoneData = function (items = Ωempty, doAddListeners, doRem
 
     if (zone.substring) zone = artefact[zone];
 
-    if (!zone || !ACCEPTED_WRAPPERS_SET.has(zone.type)) return new Error('keyboardZone constructor - zone object is not a Stack or Canvas wrapper');
+    if (!zone || !ACCEPTED_WRAPPERS.includes(zone.type)) return new Error('keyboardZone constructor - zone object is not a Stack or Canvas wrapper');
 
     const target = zone.domElement;
 

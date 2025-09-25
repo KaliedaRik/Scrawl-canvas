@@ -14,7 +14,7 @@ import { getPixelRatio, getIgnorePixelRatio } from "./user-interaction.js";
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 // Shared constants
-import { _keys, AUTO, BLOCK, FONT_USERS_SET, NONE, T_CANVAS, ZERO_STR } from '../helper/shared-vars.js';
+import { _keys, AUTO, BLOCK, FONT_USERS, NONE, T_CANVAS, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const ignoredCssProperties = ['bottom', 'boxSizing', 'display', 'height', 'left', 'perspective', 'perspectiveOrigin', 'position', 'right', 'top', 'transform', 'transformOrigin', 'width', 'zIndex'];
@@ -203,7 +203,7 @@ export const recalculateFonts = (delay = 100) => {
 
             const ent = entity[name];
 
-            if (FONT_USERS_SET.has(ent.type)) ent.recalculateFont();
+            if (FONT_USERS.includes(ent.type)) ent.recalculateFont();
         });
     }, delay);
 };

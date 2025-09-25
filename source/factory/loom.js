@@ -26,7 +26,7 @@ import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 
 // Shared constants
-import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST_SET, NAME, SOURCE_OVER, STATE_KEYS_SET, T_GROUP, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const T_LOOM = 'Loom';
@@ -348,7 +348,7 @@ P.set = function (items = Ωempty) {
 
             if (key && key !== NAME && value != null) {
 
-                if (!STATE_KEYS_SET.has(key)) {
+                if (!STATE_KEYS.includes(key)) {
 
                     fn = setters[key];
 
@@ -392,7 +392,7 @@ P.setDelta = function (items = Ωempty) {
 
             if (key && key !== NAME && value != null) {
 
-                if (!STATE_KEYS_SET.has(key)) {
+                if (!STATE_KEYS.includes(key)) {
 
                     fn = setters[key];
 
@@ -819,7 +819,7 @@ P.setSourceDimension = function (val) {
 // + TODO: we may have to disable this functionality for the Loom entity, if we use a Web Assembly module for either the prepareStamp calculations, or to build the output image itself
 P.simpleStamp = function (host, changes) {
 
-    if (host && GOOD_HOST_SET.has(host.type)) {
+    if (host && GOOD_HOST.includes(host.type)) {
 
         this.currentHost = host;
 
@@ -842,7 +842,7 @@ P.stamp = function (force = false, host, changes) {
 
     if (force) {
 
-        if (host && GOOD_HOST_SET.has(host.type)) this.currentHost = host;
+        if (host && GOOD_HOST.includes(host.type)) this.currentHost = host;
 
         if (changes) {
 

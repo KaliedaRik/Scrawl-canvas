@@ -39,7 +39,7 @@ import { addListener, removeListener } from "../core/events.js";
 import { touchAction } from "../core/user-interaction.js";
 
 // Shared constants
-import { _isArray, $BODY, ACCEPTED_WRAPPERS_SET, DOWN, MOVE, T_CANVAS, T_GROUP, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START, UP } from "../helper/shared-vars.js";
+import { _isArray, $BODY, ACCEPTED_WRAPPERS, DOWN, MOVE, T_CANVAS, T_GROUP, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START, UP } from "../helper/shared-vars.js";
 
 // Local constants
 const DROP = 'drop',
@@ -77,7 +77,7 @@ const processDragZoneData = function (items = Ωempty, doAddListeners, doRemoveL
 
     if (zone.substring) zone = library.artefact[zone];
 
-    if (!zone || !ACCEPTED_WRAPPERS_SET.has(zone.type)) return new Error('dragZone constructor - zone object is not a Stack or Canvas wrapper');
+    if (!zone || !ACCEPTED_WRAPPERS.includes(zone.type)) return new Error('dragZone constructor - zone object is not a Stack or Canvas wrapper');
 
     const target = zone.domElement;
 

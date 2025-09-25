@@ -12,7 +12,7 @@ import { getPixelRatio } from '../core/user-interaction.js';
 import { addStrings, mergeOver, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 // Shared constants
-import { _abs, _ceil, _isFinite, _keys, _parse, ARIA_LIVE, BLACK, DATA_TAB_ORDER, DIV, HIGH, LEFT, NAME, NORMAL, POLITE, ROLE, ROUND, SPACE, STATE_KEYS_SET, TOP, T_CANVAS, T_CELL, T_LABEL, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _isFinite, _keys, _parse, ARIA_LIVE, BLACK, DATA_TAB_ORDER, DIV, HIGH, LEFT, NAME, NORMAL, POLITE, ROLE, ROUND, SPACE, STATE_KEYS, TOP, T_CANVAS, T_CELL, T_LABEL, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const DEF_SECTION_PLACEHOLDER = '§',
@@ -147,7 +147,7 @@ export default function (P = Ωempty) {
             if (fn) return fn.call(defaultTextStyle);
             else if (typeof defaultTextStyleDefs[key] != UNDEF) return defaultTextStyle[key];
         }
-        if (STATE_KEYS_SET.has(key)) {
+        if (STATE_KEYS.includes(key)) {
 
             fn = stateGetters[key];
 
@@ -200,7 +200,7 @@ export default function (P = Ωempty) {
                         if (fn) fn.call(defaultTextStyle, val);
                         else if (typeof defaultTextStyleDefs[key] !== UNDEF) defaultTextStyle[key] = val;
                     }
-                    else if (STATE_KEYS_SET.has(key)) {
+                    else if (STATE_KEYS.includes(key)) {
 
                         fn = stateSetters[key];
 
@@ -264,7 +264,7 @@ export default function (P = Ωempty) {
                         if (fn) fn.call(defaultTextStyle, val);
                         else if (typeof defaultTextStyleDefs[key] != UNDEF) defaultTextStyle[key] = addStrings(defaultTextStyle[key], val);
                     }
-                    else if (STATE_KEYS_SET.has(key)) {
+                    else if (STATE_KEYS.includes(key)) {
 
                         fn = stateSetters[key];
 

@@ -28,14 +28,14 @@ import { _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, 
 const $DATA_SCRAWL_STACK = '[data-scrawl-stack]',
     $SCRIPT = 'SCRIPT',
     DATA_SCRAWL_STACK = 'data-scrawl-stack',
-    PERMITTED_STACK_ELEMENTS_SET = new Set(['ARTICLE', 'ASIDE', 'DIV', 'FOOTER', 'HEADER', 'MAIN', 'NAV', 'SECTION']),
+    PERMITTED_STACK_ELEMENTS = ['ARTICLE', 'ASIDE', 'DIV', 'FOOTER', 'HEADER', 'MAIN', 'NAV', 'SECTION'],
     STACK = 'stack';
 
 
 // #### Stack constructor
 const Stack = function (items = Ωempty) {
 
-    if (items.domElement && PERMITTED_STACK_ELEMENTS_SET.has(items.domElement.tagName)) {
+    if (items.domElement && PERMITTED_STACK_ELEMENTS.includes(items.domElement.tagName)) {
 
         this.makeName(items.name);
         this.register();

@@ -18,7 +18,7 @@ import { makeAnimation } from "../factory/animation.js";
 import { getTrackMouse, setTrackMouse, getMouseChanged, setMouseChanged, getViewportChanged, setViewportChanged, getPrefersContrastChanged, setPrefersContrastChanged, getPrefersReducedMotionChanged, setPrefersReducedMotionChanged, getPrefersDarkColorSchemeChanged, setPrefersDarkColorSchemeChanged, getPrefersReduceTransparencyChanged, setPrefersReduceTransparencyChanged, getPrefersReduceDataChanged, setPrefersReduceDataChanged, getPrefersInvertedColorsChanged, setPrefersInvertedColorsChanged, getPrefersForcedColorsChanged, setPrefersForcedColorsChanged } from '../helper/system-flags.js';
 
 // Shared constants
-import { _floor, _isFinite, _now, _round, _values, ADD_EVENT_LISTENER, DISPLAY_P3, FONT_USERS_SET, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, SRGB, T_CANVAS, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from '../helper/shared-vars.js'
+import { _floor, _isFinite, _now, _round, _values, ADD_EVENT_LISTENER, DISPLAY_P3, FONT_USERS, MOUSE, MOUSE_DOWN, MOUSE_ENTER, MOUSE_LEAVE, MOUSE_MOVE, MOUSE_UP, MOVE, POINTER_DOWN, POINTER_ENTER, POINTER_LEAVE, POINTER_MOVE, POINTER_UP, REMOVE_EVENT_LISTENER, SRGB, T_CANVAS, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from '../helper/shared-vars.js'
 
 // Local constants
 const CHANGE = 'change',
@@ -505,7 +505,7 @@ const updateTextBasedEntitys = function () {
 
     _values(library.entity).forEach(ent => {
 
-        if (FONT_USERS_SET.has(ent.type)) ent.recalculateFont(true);
+        if (FONT_USERS.includes(ent.type)) ent.recalculateFont(true);
     });
 };
 

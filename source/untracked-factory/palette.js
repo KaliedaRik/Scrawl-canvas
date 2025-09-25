@@ -31,7 +31,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, easeEngines, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λfirstArg, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, easeEngines, isa_fn, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { getWorkstoreItem, setWorkstoreItem, checkForWorkstoreItem } from '../helper/workstore.js';
 
@@ -40,7 +40,7 @@ import { makeColor } from '../factory/color.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _assign, _entries, _floor, _isArray, _isFinite, _keys, BLACK, BLANK, FUNCTION, INT_COLOR_SPACES_SET, LINEAR, RGB, T_PALETTE, WHITE } from '../helper/shared-vars.js';
+import { _assign, _entries, _floor, _isArray, _isFinite, _keys, BLACK, BLANK, LINEAR, RGB, T_PALETTE, WHITE } from '../helper/shared-vars.js';
 
 // Local constants
 const PALETTE = 'palette',

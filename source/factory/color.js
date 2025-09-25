@@ -23,10 +23,10 @@ import { colorEngine } from '../helper/color-engine.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _isArray, _isFinite, _keys, _random, _round, _values, BLACK, BLANK, INT_COLOR_SPACES_SET, LINEAR, NAME, RGB, STYLES, T_COLOR, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _random, _round, _values, BLACK, BLANK, INT_COLOR_SPACES, LINEAR, NAME, RGB, STYLES, T_COLOR, WHITE, } from '../helper/shared-vars.js';
 
 // Local constants
-const RET_COLOR_SPACES_SET = new Set(['rgb', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch']),
+const RET_COLOR_SPACES = ['rgb', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch'],
     HSL = 'hsl',
     HWB = 'hwb',
     LAB = 'lab',
@@ -353,7 +353,7 @@ P.setColorSpaceHelper = function (item) {
 
         item = item.toLowerCase();
 
-        if (INT_COLOR_SPACES_SET.has(item)) {
+        if (INT_COLOR_SPACES.includes(item)) {
 
             if (this.colorSpace == null) this.colorSpace = item;
             else {
@@ -395,7 +395,7 @@ P.setReturnColorAsHelper = function (item) {
 
         item = item.toLowerCase();
 
-        if (RET_COLOR_SPACES_SET.has(item)) {
+        if (RET_COLOR_SPACES.includes(item)) {
 
             if (this.returnColorAs == null) this.returnColorAs = item;
             else {

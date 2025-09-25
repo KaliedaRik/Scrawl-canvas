@@ -34,7 +34,7 @@ import pathMix from './path.js';
 
 
 // Shared constants
-import { _entries, _isArray, _isFinite, _round, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, CORNER_LABELS_SET, CORNER_SELECTOR, DIV, MIMIC, MOUSE, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TRUE, ZERO_STR } from '../helper/shared-vars.js'
+import { _entries, _isArray, _isFinite, _round, ABSOLUTE, ARIA_HIDDEN, BORDER_BOX, CORNER_LABELS, CORNER_SELECTOR, DIV, MIMIC, MOUSE, PARTICLE, PATH, PC0, PC100, PIVOT, SPACE, T_STACK, TRUE, ZERO_STR } from '../helper/shared-vars.js'
 
 
 // Local constants
@@ -49,7 +49,7 @@ const BOTTOMLEFT = 'bottomLeft',
     TOPRIGHT = 'topRight';
 
 // Can be imported into stacks as elements; have hit zones/pivot points - corner elements added
-const PERMITTED_TRACKED_ELEMENTS_SET = new Set(['ARTICLE', 'ASIDE', 'DIV', 'FOOTER', 'HEADER', 'MAIN', 'NAV', 'SECTION', 'ADDRESS', 'BLOCKQUOTE', 'DL', 'FIGURE', 'FORM', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'HGROUP', 'MENU', 'METER', 'OL', 'P', 'PRE', 'PROGRESS', 'SEARCH', 'SELECT', 'TABLE', 'TEXTAREA', 'UL', 'OUTPUT']);
+const PERMITTED_TRACKED_ELEMENTS = ['ARTICLE', 'ASIDE', 'DIV', 'FOOTER', 'HEADER', 'MAIN', 'NAV', 'SECTION', 'ADDRESS', 'BLOCKQUOTE', 'DL', 'FIGURE', 'FORM', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'HGROUP', 'MENU', 'METER', 'OL', 'P', 'PRE', 'PROGRESS', 'SEARCH', 'SELECT', 'TABLE', 'TEXTAREA', 'UL', 'OUTPUT'];
 
 // #### Export function
 export default function (P = Ωempty) {
@@ -477,7 +477,7 @@ export default function (P = Ωempty) {
 
         const el = this.domElement;
 
-        if (el && !this.noUserInteraction && PERMITTED_TRACKED_ELEMENTS_SET.has(el.tagName)) {
+        if (el && !this.noUserInteraction && PERMITTED_TRACKED_ELEMENTS.includes(el.tagName)) {
 
             const pointMaker = function () {
 
@@ -601,7 +601,7 @@ export default function (P = Ωempty) {
 // `getCornerCoordinate`
     P.getCornerCoordinate = function (corner) {
 
-        if (CORNER_LABELS_SET.has(corner)) return this.checkCornerPositions(corner);
+        if (CORNER_LABELS.includes(corner)) return this.checkCornerPositions(corner);
         else return [].concat(this.currentStampPosition);
     };
 
