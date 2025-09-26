@@ -96,7 +96,7 @@ scrawl.makeRender({
 // Setup form
 const dom = scrawl.initializeDomInputs([
     ['input', 'paletteNumber', '16'],
-    ['input', 'minimumColorDistance', '650'],
+    ['input', 'minimumColorDistance', '10'],
     ['input', 'opacity', '1'],
     ['input', 'paletteString', 'rgb(255 0 0), rgb(0 255 0), rgb(0 0 255), rgb(255 255 0), rgb(0 0 0), rgb(255 255 255)'],
     ['input', 'seed', 'some-random-string-or-other'],
