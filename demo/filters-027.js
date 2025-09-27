@@ -67,7 +67,6 @@ const report = reportSpeed('#reportmessage', function () {
 
     let LUP = scrawl.getLastUsedReducePalette();
     if (Array.isArray(LUP)) LUP = LUP.join(', ');
-    console.log(LUP);
 
     return `
     Commonest colors: ${dom.paletteNumber.value}
