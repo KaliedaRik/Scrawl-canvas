@@ -30,6 +30,8 @@ const myFilter = scrawl.makeFilter({
     method: 'reducePalette',
     palette: 'black-white',
     noiseType: 'bluenoise',
+
+    minimumColorDistance: 650,
 });
 
 
@@ -64,7 +66,7 @@ const original = dithered.clone({
 const report = reportSpeed('#reportmessage', function () {
 
     let LUP = scrawl.getLastUsedReducePalette();
-    if (Array.isArray(LUP)) LUP = JSON.stringify(LUP);
+    if (Array.isArray(LUP)) LUP = LUP.join(', ');
     console.log(LUP);
 
     return `
@@ -96,7 +98,7 @@ scrawl.makeRender({
 // Setup form
 const dom = scrawl.initializeDomInputs([
     ['input', 'paletteNumber', '16'],
-    ['input', 'minimumColorDistance', '10'],
+    ['input', 'minimumColorDistance', '650'],
     ['input', 'opacity', '1'],
     ['input', 'paletteString', 'rgb(255 0 0), rgb(0 255 0), rgb(0 0 255), rgb(255 255 0), rgb(0 0 0), rgb(255 255 255)'],
     ['input', 'seed', 'some-random-string-or-other'],

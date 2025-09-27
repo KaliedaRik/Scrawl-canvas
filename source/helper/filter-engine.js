@@ -24,7 +24,7 @@ import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coord
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _ceil, _cos, _floor, _hypot, _isArray, _isFinite, _max, _min, _pow, _round, _sin, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _pow, _round, _sin, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
 const _256 = 256,
@@ -5155,118 +5155,6 @@ P.theBigActionsObject = {
 
         const getRGBIndex = (r, g, b) => (r * _256_SQUARE) + (g * _256) + b;
 
-        // Weights (squared) used in the distance
-        const wC2 = 0.8 * 0.8,
-            wH2 = 1.2 * 1.2,
-            HUE_K = 0.04,
-            inv125 = 1 / 125,
-            inv100 = 0.01;
-
-        // Workstore-backed chroma LUT for IAi,IBi in [0..100] each
-        const CHROMA_LUT_KEY = 'reducePalette:chromaLUT_IAxIB_101x101_v1';
-
-        let CHROMA_LUT = getWorkstoreItem(CHROMA_LUT_KEY);
-        if (!CHROMA_LUT) {
-
-            const lut = new Float32Array(101 * 101);
-
-            let A, af, B, bf;
-
-            for (A = 0; A <= 100; A++) {
-
-                af = A * inv125 - 0.4;
-
-                for (B = 0; B <= 100; B++) {
-
-                    bf = B * inv125 - 0.4;
-                    lut[A * 101 + B] = _hypot(af, bf);
-                }
-            }
-            CHROMA_LUT = lut;
-            setWorkstoreItem(CHROMA_LUT_KEY, CHROMA_LUT);
-        }
-
-        // Distance using precomputed floats/chroma
-        // + p1, p2 are "pre" entries: { Lf, af, bf, C }
-        const makePreFromInts = (ILi, IAi, IBi) => ({
-
-            Lf: ILi * inv100,
-            af: IAi * inv125 - 0.4,
-            bf: IBi * inv125 - 0.4,
-            C:  CHROMA_LUT[IAi * 101 + IBi]
-        });
-
-        const dist2_pre = (p1, p2) => {
-
-            const dL = p1.Lf - p2.Lf,
-                dA = p1.af - p2.af,
-                dB = p1.bf - p2.bf,
-                dAB2 = dA * dA + dB * dB,
-                dC  = p1.C - p2.C,
-                dC2 = dC * dC;
-
-            let dH2 = dAB2 - dC2;
-            if (dH2 < 0) dH2 = 0;
-
-            const Cavg = 0.5 * (p1.C + p2.C),
-                hueGain = Cavg / (Cavg + HUE_K);
-
-            return (dL * dL) + (wC2 * dC2) + (wH2 * (hueGain * hueGain) * dH2);
-        }
-
-        const best2Result = [0, 0, 0, 0];
-        const bestTwoPaletteIndices = (preSeen, palPreArr) => {
-
-            let i0 = -1,
-                i1 = -1,
-                d0 = Infinity,
-                d1 = Infinity;
-
-            let j, jz, d;
-
-            for (j = 0, jz = palPreArr.length; j < jz; j++) {
-
-                d = dist2_pre(preSeen, palPreArr[j]);
-                
-                if (d < d0) {
-                
-                    d1 = d0;
-                    i1 = i0;
-                    d0 = d;
-                    i0 = j;
-                }
-                else if (d < d1) {
-
-                    d1 = d;
-                    i1 = j;
-                }
-            }
-
-            best2Result[0] = i0;
-            best2Result[1] = i1;
-            best2Result[2] = _sqrt(d0);
-            best2Result[3] = _sqrt(d1);
-
-            return best2Result;
-        }
-
-        const uiToGateT = (minimumColorDistance) => {
-
-            const t = minimumColorDistance <= 0 
-                ? 0 
-                : minimumColorDistance >= 100 
-                ? 1 
-                : (minimumColorDistance * 0.01);
-
-            const gamma = 0.75; // make the low/mid end more responsive
-
-            return _pow(t, gamma);
-        };
-
-        const BETA_MAX = 2.2,
-            LAMBDA = 8.0;
-
-
         // Filter generics
         const [input, output] = this.getInputAndOutputLines(requirements),
             iData = input.data,
@@ -5278,7 +5166,7 @@ P.theBigActionsObject = {
             opacity = 1,
             seed = DEFAULT_SEED,
             useBluenoise = false,
-            minimumColorDistance = 100,
+            minimumColorDistance = 500,
             lineOut,
         } = requirements;
 
@@ -5305,9 +5193,52 @@ P.theBigActionsObject = {
         else if (_isArray(palette) && palette.length < 2) palette = BLACK_WHITE;
         else if (palette.toFixed && (palette < 2 || palette > 256)) palette = BLACK_WHITE;
 
-        const isGray = GRAY_PALETTES.includes(palette),
-            isArrayPalette = _isArray(palette);
+        const isGray = GRAY_PALETTES.includes(palette);
+        const isArrayPalette = _isArray(palette);
 
+        function bestTwoPaletteIndices(ILi, IAi, IBi, pal) {
+
+            let i0 = -1,
+                i1 = -1,
+                d0 = Infinity,
+                d1 = Infinity,
+                p, pz, e, dL, dA, dB, dsq;
+
+            for (p = 0, pz = pal.length; p < pz; p++) {
+
+                e = pal[p];
+                dL = ILi - e[3];
+                dA = IAi - e[4];
+                dB = IBi - e[5];
+                dsq = (dL * dL) + (dA * dA) + (dB * dB);
+
+                if (dsq < d0) {
+
+                    d1 = d0;
+                    i1 = i0;
+                    d0 = dsq;
+                    i0 = p;
+                }
+                else if (dsq < d1) {
+
+                    d1 = dsq;
+                    i1 = p;
+                }
+            }
+            // sqrt only the two winners, to preserve your weighting behavior
+            return [i0, i1, _sqrt(d0), _sqrt(d1)];
+        }
+
+        // Helper: Map legacy UI min-distance (typically 0..1000) to OKLAB-int units.
+        // + If caller already passes a small value (<=200), treat it as OKLAB-int and skip rescale.
+        function toOkIntDist2(uiValue) {
+
+            if (uiValue < 100) uiValue = 100;
+
+            const mapped = uiValue * 0.01;
+
+            return mapped * mapped;
+        }
 
         // == Grayscale palettes ==
         if (isGray) {
@@ -5386,7 +5317,6 @@ P.theBigActionsObject = {
             return;
         }
 
-
         // == Array-of-colors palette ==
         if (isArrayPalette) {
 
@@ -5396,11 +5326,7 @@ P.theBigActionsObject = {
 
             let i, iz, a, alpha, r, g, b, ok,
                 ILi, IAi, IBi, i0, i1, d0, d1,
-                total, propensity, test, chosen,
-                p, pz, row, preSeen;
-
-            const extractRGB = colorEngine.extractRGBfromColorString,
-                getOkVals = colorEngine.getOkValsForRgb;
+                total, propensity, test, chosen;
 
             if (!selectedPalette) {
 
@@ -5410,9 +5336,9 @@ P.theBigActionsObject = {
 
                 for (i = 0, iz = palette.length; i < iz; i++) {
 
-                    [eR, eG, eB] = extractRGB(palette[i]);
+                    [eR, eG, eB] = colorEngine.extractRGBfromColorString(palette[i]);
 
-                    ok = getOkVals(eR, eG, eB, libs);
+                    ok = colorEngine.getOkValsForRgb(eR, eG, eB, libs);
                     PLi = (ok[0] * 100) | 0;
                     PAi = ((ok[1] + 0.4) * 125) | 0;
                     PBi = ((ok[2] + 0.4) * 125) | 0;
@@ -5420,14 +5346,6 @@ P.theBigActionsObject = {
                     selectedPalette.push([eR, eG, eB, PLi, PAi, PBi]);
                 }
                 predefinedPalette[name] = selectedPalette;
-            }
-
-            const selectedPalettePre = new Array(selectedPalette.length);
-
-            for (p = 0, pz = selectedPalette.length; p < pz; p++) {
-
-                row = selectedPalette[p];
-                selectedPalettePre[p] = makePreFromInts(row[3], row[4], row[5]);
             }
 
             for (i = 0; i < len; i += 4) {
@@ -5441,26 +5359,25 @@ P.theBigActionsObject = {
                     g = i + 1;
                     b = i + 2;
 
-                    ok = getOkVals(iData[r], iData[g], iData[b], libs);
+                    ok = colorEngine.getOkValsForRgb(iData[r], iData[g], iData[b], libs);
 
                     ILi = (ok[0] * 100) | 0;
                     IAi = ((ok[1] + 0.4) * 125) | 0;
                     IBi = ((ok[2] + 0.4) * 125) | 0;
 
-                    preSeen = makePreFromInts(ILi, IAi, IBi);
-
-                    [i0, i1, d0, d1] = bestTwoPaletteIndices(preSeen, selectedPalettePre);
+                    [i0, i1, d0, d1] = bestTwoPaletteIndices(ILi, IAi, IBi, selectedPalette);
 
                     total = d0 + d1;
                     propensity = total - d0;
                     test = rnd[++rndCursor] * total;
-                    
+
                     chosen = (test < propensity) ? selectedPalette[i0] : selectedPalette[i1];
 
                     oData[r] = chosen[0];
                     oData[g] = chosen[1];
                     oData[b] = chosen[2];
                     oData[a] = alpha;
+
                 }
                 else {
 
@@ -5480,19 +5397,14 @@ P.theBigActionsObject = {
             return;
         }
 
-
         // == Commonest colors palette ==
+        //
+        // Use a Map keyed by rgbIndex so we only store colors that actually appear.
+        // + rgbIndex -> [count, r, g, b, ILi, IAi, IBi]
         const metadata = new Map(),
             seen = [];
 
-        let i, a, r, g, b, rgbIndex, row, ok, ILi, IAi, IBi,
-            s, sz, idx, Lf, af, bf, C, best, pr, bestScore,
-            d2, alpha, i0, i1, sd0, sd1, choiceIndex, chosenRow,
-            total, propensity, rec, test, near2, base, shortf, score,
-            winnerIdx, winnerRow, winnerPre, h, minDist2, pr_i,
-            minN, maxN, v;
-
-        let _log1p = Math.log1p;
+        let i, a, r, g, b, rgbIndex, row, ok, ILi, IAi, IBi;
 
         // 1) collect metadata for observed colors
         for (i = 0; i < len; i += 4) {
@@ -5525,189 +5437,114 @@ P.theBigActionsObject = {
         // 2) commonest first (sort only the seen colors)
         seen.sort((i1, i2) => metadata.get(i2)[0] - metadata.get(i1)[0]);
 
-        const pre = new Map();
+        // 3) generate palette, winnowing by minimumColorDistance
+        const minDist2 = toOkIntDist2(minimumColorDistance),
+            firstRow = metadata.get(seen[0]),
+            selectedPalette = [ firstRow.slice() ];
 
-        for (s = 0, sz = seen.length; s < sz; s++) {
+        let alpha, s, sz, IL, IA, IB, best2, j, P, p, dL, dA, dB, dsq, idx,
+            i0, i1, d0, d1, sd0, sd1, total, propensity, rec, test, chosen;
 
-            idx = seen[s];
-            row = metadata.get(idx);
-            ILi = row[4];
-            IAi = row[5];
-            IBi = row[6];
+        for (s = 1, sz = seen.length; s < sz; s++) {
 
-            Lf = ILi * inv100;
-            af = IAi * inv125 - 0.4;
-            bf = IBi * inv125 - 0.4;
+            if (selectedPalette.length >= palette) break;
 
-            C  = CHROMA_LUT[IAi * 101 + IBi];
+            row = metadata.get(seen[s]);
+            IL = row[4];
+            IA = row[5];
+            IB = row[6];
 
-            pre.set(idx, { Lf, af, bf, C, logw: _log1p(row[0]), count: row[0] });
-        }
+            // find nearest in current palette (distance squared)
+            best2 = Infinity;
 
-        // 3) generate palette with frequency-weighted MaxMin (soft minDist² gate)
-        const K = (+palette | 0),
-            ALPHA = 0.2;
+            for (j = 0, P = selectedPalette.length; j < P; j++) {
 
-        // Cap candidate pool by frequency to reduce work (lossless in practice)
-        const M = _min(seen.length, _max(512, 64 * K)),
-            seenCapped = seen.slice(0, M),
-            firstIdx = seenCapped[0],
-            firstRow = metadata.get(firstIdx),
-            selectedPalette = [ firstRow.slice() ],
-            palPre = [ pre.get(firstIdx) ];
+                p = selectedPalette[j];
+                dL = IL - p[4];
+                dA = IA - p[5];
+                dB = IB - p[6];
+                dsq = (dL * dL) + (dA * dA) + (dB * dB);
 
-        // Struct-of-arrays candidates (skip index 0 which is seeded)
-        const cNmax = _max(0, seenCapped.length - 1);
-
-        const CAND_KEY = 'reducePalette:candidates_v2';
-        let cand = getWorkstoreItem(CAND_KEY);
-        if (!cand || cand.size < cNmax) {
-
-            cand = {
-                idx:   new Int32Array(cNmax),
-                near2: new Float32Array(cNmax),
-                score: new Float32Array(cNmax),
-                size:  cNmax
-            };
-            setWorkstoreItem(CAND_KEY, cand);
-        }
-
-        const candIdx = cand.idx,
-            candNear2 = cand.near2,
-            candScore = cand.score;
-
-        let cN = 0;
-
-        const firstPre = palPre[0],
-            gateT = uiToGateT(minimumColorDistance),
-            beta  = 1 + (BETA_MAX - 1) * gateT;
-
-        for (s = 1, sz = seenCapped.length; s < sz; s++) {
-
-            idx = seenCapped[s];
-            pr = pre.get(idx);
-            near2 = dist2_pre(pr, firstPre);
-
-            candIdx[cN] = idx;
-            candNear2[cN] = near2;
-
-            candScore[cN] = _pow(near2, beta) * (1 + ALPHA * pr.logw);
-
-            cN++;
-        }
-
-        while (selectedPalette.length < K && cN > 0) {
-
-            minN = Infinity;
-            maxN = 0;
-
-            for (i = 0; i < cN; i++) {
-
-                v = candNear2[i];
-                if (v < minN) minN = v;
-                if (v > maxN) maxN = v;
-            }
-            minDist2 = minN + gateT * (maxN - minN) + 1e-6;
-
-            best = -1;
-            bestScore = -Infinity;
-
-            for (i = 0; i < cN; i++) {
-
-                base = candScore[i];
-                shortf = _max(0, minDist2 - candNear2[i]);
-                score = base - (LAMBDA * gateT * shortf);
-
-                if (score > bestScore) {
-
-                    bestScore = score;
-                    best = i;
-                }
+                if (dsq < best2) best2 = dsq;
             }
 
-            winnerIdx = candIdx[best];
-            winnerRow = metadata.get(winnerIdx);
-            winnerPre = pre.get(winnerIdx);
-
-            selectedPalette.push(winnerRow.slice());
-            palPre.push(winnerPre);
-
-            // remove winner by swapping tail into the hole
-            cN--;
-
-            if (best !== cN) {
-
-                candIdx[best] = candIdx[cN];
-                candNear2[best] = candNear2[cN];
-                candScore[best] = candScore[cN];
-            }
-
-            // update nearest distance & score vs the new selection
-            for (i = 0; i < cN; i++) {
-
-                pr = pre.get(candIdx[i]);
-                d2 = dist2_pre(pr, winnerPre);
-
-                if (d2 < candNear2[i]) {
-
-                    candNear2[i] = d2;
-                }
-
-                pr_i = pre.get(candIdx[i]);
-                candScore[i] = _pow(candNear2[i], beta) * (1 + ALPHA * pr_i.logw);
-            }
+            if (best2 > minDist2) selectedPalette.push(row.slice());
         }
 
-        // Fallback: ensure at least 2 entries if possible
         if (selectedPalette.length === 1 && seen.length > 1) {
 
+            // push the 2nd most common color unconditionally
             selectedPalette.push(metadata.get(seen[1]).slice());
-            palPre.push(pre.get(seen[1]));
         }
 
-        // const selectedPaletteLength = selectedPalette.length;
+        const selectedPaletteLength = selectedPalette.length;
+
         setLastUsedReducePalette(selectedPalette.map(item => `rgb(${item[1]} ${item[2]} ${item[3]})`));
 
         // 4) for each seen color, precompute its two best palette candidates (store totals/propensity)
         for (s = 0, sz = seen.length; s < sz; s++) {
 
             idx = seen[s];
-            [i0, i1, sd0, sd1] = bestTwoPaletteIndices(pre.get(idx), palPre);
+            row = metadata.get(idx);
+            IL = row[4];
+            IA = row[5];
+            IB = row[6];
 
+            // find best two (squared), then sqrt winners to preserve weighting
+            i0 = -1;
+            i1 = -1;
+            d0 = Infinity;
+            d1 = Infinity;
+
+            for (j = 0; j < selectedPaletteLength; j++) {
+
+                p = selectedPalette[j];
+                dL = IL - p[4];
+                dA = IA - p[5];
+                dB = IB - p[6];
+                dsq = dL * dL + dA * dA + dB * dB;
+
+                if (dsq < d0) {
+
+                    d1 = d0;
+                    i1 = i0;
+                    d0 = dsq;
+                    i0 = j;
+                }
+                else if (dsq < d1) {
+
+                    d1 = dsq;
+                    i1 = j;
+                }
+            }
+
+            // Robust fallback when there's only one palette entry (or ties)
+            if (i0 === -1) {
+
+                i0 = 0;
+                d0 = 0;
+            }
+
+            if (i1 === -1) {
+
+                i1 = i0;
+                d1 = d0;
+            }
+
+            sd0 = _sqrt(d0);
+            sd1 = _sqrt(d1);
             total = sd0 + sd1;
             propensity = total - sd0;
 
+            // overwrite with compact decision record:
+            // [total, propensity, candidate0Row, candidate1Row]
             metadata.set(idx, [
                 total,
                 propensity,
-                i0 | 0,
-                i1 | 0,
+                selectedPalette[i0],
+                selectedPalette[i1],
             ]);
         }
-
-        const HOT_KEY = 'reducePalette:hotCache_v1';
-        let HOT = getWorkstoreItem(HOT_KEY);
-
-        if (!HOT) {
-
-            HOT = {
-                keys: new Int32Array(256),
-                total: new Float32Array(256),
-                prop: new Float32Array(256),
-                i0: new Int16Array(256),
-                i1: new Int16Array(256),
-            };
-
-            setWorkstoreItem(HOT_KEY, HOT);
-        }
-
-        HOT.keys.fill(-1);
-
-        const hk = HOT.keys,
-            hT = HOT.total,
-            hP = HOT.prop,
-            hI0 = HOT.i0,
-            hI1 = HOT.i1;
 
         // 5) apply
         for (i = 0; i < len; i += 4) {
@@ -5722,40 +5559,19 @@ P.theBigActionsObject = {
                 b = iData[i + 2];
                 rgbIndex = getRGBIndex(r, g, b);
 
-                h = rgbIndex & 255;
+                rec = metadata.get(rgbIndex);
+                total = rec[0];
 
-                if (hk[h] === rgbIndex) {
+                propensity = rec[1];
+                test = rnd[++rndCursor] * total;
+                chosen = (test < propensity) ? rec[2] : rec[3];
 
-                    total = hT[h];
-                    propensity = hP[h];
-                    test = rnd[++rndCursor] * total;
-                    choiceIndex = (test < propensity) ? hI0[h] : hI1[h];
-                }
-                else {
-
-                    rec = metadata.get(rgbIndex);
-                    total = rec[0];
-                    propensity = rec[1];
-
-                    hk[h] = rgbIndex;
-                    hT[h] = total;
-                    hP[h] = propensity;
-                    hI0[h] = rec[2];
-                    hI1[h] = rec[3];
-
-                    test = rnd[++rndCursor] * total;
-
-                    choiceIndex = (test < propensity) ? rec[2] : rec[3];
-                }
-
-                chosenRow = selectedPalette[choiceIndex];
-
-                oData[i] = chosenRow[1];
-                oData[i + 1] = chosenRow[2];
-                oData[i + 2] = chosenRow[3];
+                oData[i] = chosen[1];
+                oData[i + 1] = chosen[2];
+                oData[i + 2] = chosen[3];
                 oData[a] = alpha;
-            }
-            else {
+
+            } else {
 
                 ++rndCursor;
                 oData[i] = iData[i];
