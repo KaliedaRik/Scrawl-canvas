@@ -35,8 +35,6 @@ const myNoise = scrawl.makeNoiseAsset({
 
     cyclePalette: true,
 
-    colorSpace: 'OKLAB',
-
     colors: [
         [0, '#000000'],
         [19, '#806e58'],
@@ -90,6 +88,10 @@ const myNoise = scrawl.makeNoiseAsset({
         [979, '#656b03'],
         [999, '#000000'],
     ],
+
+    // To note: there's a bug in the current code which will return bad data if we set the `colorSpace` to OKLAB or OKLCH **before** defining the `colors` array in the noiseAsset constructor.
+    // + The current fix is to reorder the factory input attributes so `colorSpace` (and `returnColorAs`) come after `colors`.
+    colorSpace: 'OKLCH',
 });
 
 scrawl.makePicture({

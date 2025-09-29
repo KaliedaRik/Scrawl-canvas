@@ -3,9 +3,11 @@
 
 
 // #### Imports
-import { mergeOver, Ωempty } from '../helper/utilities.js';
+import { mergeOver, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeGradient } from '../factory/gradient.js';
+
+import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 // Shared constants
 import { _floor, _now, _2D, CANVAS, PC100 } from '../helper/shared-vars.js';
@@ -20,6 +22,8 @@ export default function (P = Ωempty) {
 // #### Shared attributes
     const defaultAttributes = {
 
+// __choke__ - used to limit the number of times the assets that use this mixin repaint their display canvases.
+// + For example, the `asset-management/reaction-diffusion-asset.js` asset may run multiple iterations of its calculations in batches; we need to make sure the canvas repainting functionality does not trigger after each separate iteration.
         choke: 15,
 
 // __paletteStart__, __paletteEnd__ _pseudo-attributes_ - We don't need to use the entire palette when building a gradient; we can restrict the palette using these start and end attributes.
@@ -123,6 +127,9 @@ export default function (P = Ωempty) {
     // `installElement` - internal function, used by the constructor
     P.installElement = function (name) {
 
+        // Every asset factory that uses this mixin gets its own non-DOM-attached &lt;canvas> element primed with a 2D context engine. This canvas is used to display the visual representation of the asset:
+        // + For `asset-management/noise-asset.js`, the noise data is held internally, and a display of that data gets generated via this mixin
+        // + The same applies for `asset-management/reaction-diffusion-asset.js`
         const element = document.createElement(CANVAS);
         element.id = name;
         this.element = element;
@@ -130,16 +137,8 @@ export default function (P = Ωempty) {
             willReadFrequently: true,
         });
 
-        // The color canvas allows us to map contour-like lines across a noise or rd asset's output.
-        const color = document.createElement(CANVAS);
-        color.id = `${name}-color`;
-        color.width = 256;
-        color.height = 1;
-        this.colorElement = color;
-        this.colorEngine = this.colorElement.getContext(_2D, {
-            willReadFrequently: true,
-        });
-
+        // Asset factories like `noise-asset` and `reaction-diffusion-asset` store their output in a noise output Array of Arrays - each value is a float in the range 0.0 to 1.0. 
+        // + We can colourise this output - as we fetch it and paint it into the asset's display canvas - using a small (256px x 1px) canvas-generated gradient, where we map the color to be used for that pixel to the 256-color-long gradient where a value of 0.0 maps to color 0 and a value of 1.0 maps to color 255.
         this.gradient = makeGradient({
             name: `${name}-gradient`,
             endX: PC100,
@@ -150,6 +149,7 @@ export default function (P = Ωempty) {
             cyclePalette: false,
         });
 
+        // We choke 
         this.gradientLastUpdated = 0;
 
         return this;
@@ -207,17 +207,16 @@ export default function (P = Ωempty) {
 
                 this.dirtyOutput = false;
 
-                const {element, engine, width, height, colorEngine, gradient, choke, gradientLastUpdated } = this;
+                const {element, engine, width, height, gradient, choke, gradientLastUpdated } = this;
 
-                // Update the Canvas element's dimensions - this will also clear the canvas display
+                // Update the display element's dimensions - this will also clear the canvas display
                 element.width = width;
                 element.height = height;
 
+                // Grab an ImageData object which we can use to quickly colorize the display output
                 const img = engine.getImageData(0, 0, width, height),
                     iData = img.data,
                     len = width * height;
-
-                let i, v, c;
 
                 const now = _now();
 
@@ -228,14 +227,28 @@ export default function (P = Ωempty) {
                     this.gradientLastUpdated = now;
                 }
 
-                const lg = colorEngine.createLinearGradient(0, 0, 255, 0);
+                // We use a pool cell to generate the current gradient. Note that gradients can be manipulated and animated in various ways
+                const myCell = requestCell();
+                const { element: helperElement, engine: helperEngine } = myCell;
 
-                gradient.addStopsToGradient(lg, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
+                // Generate the gradient, and grab its display from the pool cell
+                helperElement.width = 255;
+                helperElement.height = 1;
 
-                colorEngine.fillStyle = lg;
-                colorEngine.fillRect(0, 0, 256, 1);
+                const linGrad = helperEngine.createLinearGradient(0, 0, 255, 0);
 
-                const gData = colorEngine.getImageData(0, 0, 256, 1).data;
+                gradient.addStopsToGradient(linGrad, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
+
+                helperEngine.fillStyle = linGrad;
+                helperEngine.fillRect(0, 0, 256, 1);
+
+                const gData = helperEngine.getImageData(0, 0, 256, 1).data;
+
+                // Release the pool cell back into the wild
+                releaseCell(myCell);
+
+                // Colorize the display canvas's ImageData data array
+                let i, v, c;
 
                 for (i = 0; i < len; i++) {
 
@@ -248,8 +261,14 @@ export default function (P = Ωempty) {
                     iData[++c] = gData[++v];
                     iData[++c] = gData[++v];
                 }
+
+                // Copy the updated display data back into the display canvas
                 engine.putImageData(img, 0, 0);
             }
         }
     };
+
+    // Factories using this mixin need to overwrite these function attributes with useful code specific to the way they store asset output data
+    P.checkOutputValuesExist = λnull;
+    P.getOutputValue = λnull;
 }

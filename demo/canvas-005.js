@@ -50,8 +50,10 @@ const myRadial = scrawl.makeRadialGradient({
         [699, 'green'],
         [799, 'black'],
         [899, 'lavender'],
-        [999, 'black']
+        [999, 'black'],
     ],
+
+    colorSpace: 'LAB',
 });
 
 scrawl.makeGradient({
@@ -85,6 +87,10 @@ scrawl.makeGradient({
         [949, 'papayawhip'],
         [999, 'black'],
     ],
+
+    // To note: there's a bug in the current code which will return bad data if we set the `colorSpace` to OKLAB or OKLCH **before** defining the `colors` array in the noiseAsset constructor.
+    // + The current fix is to reorder the factory input attributes so `colorSpace` (and `returnColorAs`) come after `colors`.
+    colorSpace: 'OKLAB',
 });
 
 scrawl.makeGradient({
@@ -98,8 +104,9 @@ scrawl.makeGradient({
         [505, 'red'],
         [999, 'green']
     ],
-    colorSpace: 'OKLAB',
     precision: 5,
+
+    colorSpace: 'RGB',
 });
 
 
