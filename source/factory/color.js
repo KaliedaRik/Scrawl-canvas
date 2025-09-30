@@ -16,14 +16,14 @@
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 
-import { clamp, clamp8, correctAngle, doCreate, easeEngines, interpolate, isa_fn, isa_obj, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
+import { clamp, correctAngle, doCreate, easeEngines, interpolate, isa_fn, isa_obj, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
 import { colorEngine } from '../helper/color-engine.js';
 
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _isArray, _isFinite, _keys, _random, _round, _values, BLACK, BLANK, INT_COLOR_SPACES, LINEAR, NAME, RANDOM, RGB, STYLES, T_COLOR, UNDEF, WHITE } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _random, _values, BLACK, BLANK, INT_COLOR_SPACES, LINEAR, NAME, RANDOM, RGB, STYLES, T_COLOR, UNDEF, WHITE } from '../helper/shared-vars.js';
 
 // Local constants
 const RET_COLOR_SPACES = ['rgb', 'hsl', 'hwb', 'lab', 'lch', 'oklab', 'oklch'],
@@ -362,21 +362,30 @@ P.setColorSpaceHelper = function (item) {
 
                     this.colorSpace = item;
 
-                    const maxInt = this.currentMaximumColorInternalData = colorEngine.convertColorData(this.currentMaximumColorData, this.colorSpace);
+                    // Max
+                    const maxInt = colorEngine.convertColorData(this.currentMaximumColorData, this.colorSpace);
+                    this.currentMaximumColorInternalData = maxInt;
 
-                    const maxRet = this.currentMaximumColorReturnData = colorEngine.convertColorData(maxInt, this.returnColorAs);
+                    const maxRet = colorEngine.convertColorData(maxInt, this.returnColorAs);
+                    this.currentMaximumColorReturnData = maxRet;
 
                     this.currentMaximumColorString = colorEngine.buildColorStringFromData(maxRet);
 
-                    const minInt = this.currentMinimumColorInternalData = colorEngine.convertColorData(this.currentMinimumColorData, item);
+                    // Min
+                    const minInt = colorEngine.convertColorData(this.currentMinimumColorData, item);
+                    this.currentMinimumColorInternalData = minInt;
 
-                    const minRet = this.currentMinimumColorReturnData = colorEngine.convertColorData(minInt, this.returnColorAs);
+                    const minRet = colorEngine.convertColorData(minInt, this.returnColorAs);
+                    this.currentMinimumColorReturnData = minRet;
 
                     this.currentMinimumColorString = colorEngine.buildColorStringFromData(minRet);
 
-                    const mainInt = this.currentColorInternalData = colorEngine.convertColorData(this.currentColorData, item);
+                    // Main
+                    const mainInt = colorEngine.convertColorData(this.currentColorData, item);
+                    this.currentColorInternalData = mainInt;
 
-                    const mainRet = this.currentColorReturnData = colorEngine.convertColorData(mainInt, this.returnColorAs);
+                    const mainRet = colorEngine.convertColorData(mainInt, this.returnColorAs);
+                    this.currentColorReturnData = mainRet;
 
                     this.currentColorString = colorEngine.buildColorStringFromData(mainRet);
 
@@ -403,19 +412,24 @@ P.setReturnColorAsHelper = function (item) {
                 if (item !== this.returnColorAs) {
 
                     this.returnColorAs = item;
-                    let ret;
 
-                    ret = this.currentMaximumColorReturnData = colorEngine.convertColorData(this.currentMaximumColorInternalData, this.returnColorAs);
+                    // Max
+                    const maxRet = colorEngine.convertColorData(this.currentMaximumColorInternalData, this.returnColorAs);
+                    this.currentMaximumColorReturnData = maxRet;
 
-                    this.currentMaximumColorString = colorEngine.buildColorStringFromData(ret);
+                    this.currentMaximumColorString = colorEngine.buildColorStringFromData(maxRet);
 
-                    ret = this.currentMinimumColorReturnData = colorEngine.convertColorData(this.currentMinimumColorInternalData, this.returnColorAs);
+                    // Min
+                    const minRet = colorEngine.convertColorData(this.currentMinimumColorInternalData, this.returnColorAs);
+                    this.currentMinimumColorReturnData = minRet;
 
-                    this.currentMinimumColorString = colorEngine.buildColorStringFromData(ret);
+                    this.currentMinimumColorString = colorEngine.buildColorStringFromData(minRet);
 
-                    ret = this.currentColorReturnData = colorEngine.convertColorData(this.currentColorInternalData, this.returnColorAs);
+                    // Main
+                    const mainRet = colorEngine.convertColorData(this.currentColorInternalData, this.returnColorAs);
+                    this.currentColorReturnData = mainRet;
 
-                    this.currentColorString = colorEngine.buildColorStringFromData(ret);
+                    this.currentColorString = colorEngine.buildColorStringFromData(mainRet);
 
                     this.currentRangePoint = -1;
                 }
@@ -466,13 +480,13 @@ P.getRangeColor = function (item) {
             switch (colorSpace) {
 
                 case RGB :
-                    c1 = clamp8(_round(clamp(c1, 0, 255)));
-                    c2 = clamp8(_round(clamp(c2, 0, 255)));
-                    c3 = clamp8(_round(clamp(c3, 0, 255)));
+                    c1 = clamp(c1, 0, 255);
+                    c2 = clamp(c2, 0, 255);
+                    c3 = clamp(c3, 0, 255);
                     break;
 
                 case OKLCH :
-                    c1 = clamp(c1, 0, 100);
+                    c1 = clamp(c1, 0, 1);
                     c2 = clamp(c2, 0, 0.4);
 
                     cMin = min[2];
@@ -485,7 +499,7 @@ P.getRangeColor = function (item) {
                     break;
 
                 case OKLAB :
-                    c1 = clamp(c1, 0, 100);
+                    c1 = clamp(c1, 0, 1);
                     c2 = clamp(c2, -0.4, 0.4);
                     c3 = clamp(c3, -0.4, 0.4);
                     break;
@@ -530,9 +544,11 @@ P.getRangeColor = function (item) {
 
             alpha = clamp(alpha, 0, 1);
 
-            const data = this.currentColorData = [colorSpace, c1, c2, c3, alpha];
+            const data = [colorSpace, c1, c2, c3, alpha];
+            this.currentColorInternalData = data;
 
-            const res = this.currentColorReturnData = colorEngine.convertColorData(data, returnColorAs);
+            const res = colorEngine.convertColorData(data, returnColorAs);
+            this.currentColorReturnData = res;
 
             this.currentColorString = colorEngine.buildColorStringFromData(res);
 
@@ -564,13 +580,13 @@ P.generateRandomColor = function () {
         switch (colorSpace) {
 
             case RGB :
-                c1 = clamp8(_round(clamp(c1, 0, 255)));
-                c2 = clamp8(_round(clamp(c2, 0, 255)));
-                c3 = clamp8(_round(clamp(c3, 0, 255)));
+                c1 = clamp(c1, 0, 255);
+                c2 = clamp(c2, 0, 255);
+                c3 = clamp(c3, 0, 255);
                 break;
 
             case OKLCH :
-                c1 = clamp(c1, 0, 100);
+                c1 = clamp(c1, 0, 1);
                 c2 = clamp(c2, 0, 0.4);
 
                 cMin = min[2];
@@ -583,7 +599,7 @@ P.generateRandomColor = function () {
                 break;
 
             case OKLAB :
-                c1  = clamp(c1, 0, 100);
+                c1  = clamp(c1, 0, 1);
                 c2 = clamp(c2, -0.4, 0.4);
                 c3 = clamp(c3, -0.4, 0.4);
                 break;
@@ -628,9 +644,11 @@ P.generateRandomColor = function () {
 
         alpha = clamp(alpha, 0, 1);
 
-        const data = this.currentColorData = [colorSpace, c1, c2, c3, alpha];
+        const data = [colorSpace, c1, c2, c3, alpha];
+        this.currentColorInternalData = data;
 
-        const res = this.currentColorReturnData = colorEngine.convertColorData(data, returnColorAs);
+        const res = colorEngine.convertColorData(data, returnColorAs);
+        this.currentColorReturnData = res;
 
         this.currentColorString = colorEngine.buildColorStringFromData(res);
 

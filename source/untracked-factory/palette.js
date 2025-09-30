@@ -464,7 +464,10 @@ P.getStopData = function (gradient, start, end, cycle) {
     // Option 0: in case of errors, return transparent black
     if (!gradient) return BLANK;
 
-    const workstoreName = `${this.name}-data`;
+    const { easing, precision } = this;
+
+    const colorSpace = this.factory.colorSpace,
+        workstoreName = `${this.name}-data`;
 
     const { stops } = this;
 
@@ -477,11 +480,8 @@ P.getStopData = function (gradient, start, end, cycle) {
             end = 999;
         }
 
-        const { easing, precision } = this;
-
         const keys = _keys(this.colors).map(n => parseInt(n, 10)).sort((a, b) => a - b),
             engine = isa_fn(easing) ? easing : easeEngines[easing],
-            colorSpace = this.factory.colorSpace,
             precisionTest = (!precision || (easing === LINEAR && colorSpace === RGB)) ? false : true,
             data = [];
 

@@ -137,7 +137,7 @@ export default function (P = Ωempty) {
             willReadFrequently: true,
         });
 
-        // Asset factories like `noise-asset` and `reaction-diffusion-asset` store their output in a noise output Array of Arrays - each value is a float in the range 0.0 to 1.0. 
+        // Asset factories like `noise-asset` and `reaction-diffusion-asset` store their output in a noise output Array of Arrays - each value is a float in the range 0.0 to 1.0.
         // + We can colourise this output - as we fetch it and paint it into the asset's display canvas - using a small (256px x 1px) canvas-generated gradient, where we map the color to be used for that pixel to the 256-color-long gradient where a value of 0.0 maps to color 0 and a value of 1.0 maps to color 255.
         this.gradient = makeGradient({
             name: `${name}-gradient`,
@@ -149,7 +149,6 @@ export default function (P = Ωempty) {
             cyclePalette: false,
         });
 
-        // We choke 
         this.gradientLastUpdated = 0;
 
         return this;

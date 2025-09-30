@@ -27,8 +27,6 @@ engine.globalCompositeOperation = SOURCE_OVER;
 // #### ColorEngine constructor
 const ColorEngine = function () {
 
-    console.log('Color engine started');
-
     return this;
 };
 
@@ -92,29 +90,50 @@ P.getRGBGrayscaleValue = function (r, g, b) {
 // #### Extract channel values from CSS color strings
 //
 // Helper functions
-const FAIL = [0, 0, 0, 0],
-    NONE = 'none',
+const COMMA = ',',
+    COMMA_SPLIT = /\s*,\s*/,
     DEG = 'deg',
-    RAD = 'rad',
+    FAIL = [0, 0, 0, 0],
     GRAD = 'grad',
-    TURN = 'turn',
-    COMMA = ',',
-    SLASH = '/',
-    STRING = 'string',
-    RGB = 'rgb',
     HSL = 'hsl',
+    HSL_MATCH = /^(?:hsl|hsla)\s*\(\s*([^)]+)\s*\)$/,
     HWB = 'hwb',
+    HWB_MATCH = /^hwb\s*\(\s*([^)]+)\s*\)$/,
+    INC_COLOR = 'color(',
+    INC_COLOR_FROM = 'color(from',
+    INC_COLOR_MIX = 'color-mix(',
+    INC_HASH = '#',
+    INC_HSL = 'hsl(',
+    INC_HSLA = 'hsla(',
+    INC_HWB = 'hwb(',
+    INC_LAB = 'lab(',
+    INC_LCH = 'lch(',
+    INC_OKLAB = 'oklab(',
+    INC_OKLCH = 'oklch(',
+    INC_RGB = 'rgb(',
+    INC_RGBA = 'rgba(',
     LAB = 'lab',
+    LAB_MATCH = /^lab\s*\(\s*([^)]+)\s*\)$/,
     LCH = 'lch',
+    LCH_MATCH = /^lch\s*\(\s*([^)]+)\s*\)$/,
+    MATCH_ANGLE = /[a-z%]+$/,
+    NONE = 'none',
     OKLAB = 'oklab',
     OKLCH = 'oklch',
+    PCT = '%',
+    RAD = 'rad',
+    RGB = 'rgb',
+    RGBA_MATCH = /^(?:rgb|rgba)\s*\(\s*([^)]+)\s*\)$/,
+    SLASH = '/',
+    SPACE_KILL = /\s+/g,
+    SPACE_SPLIT = /\s+/,
+    STRING = 'string',
+    TEST_HEX = /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}(?:[0-9a-f]{2})?)$/,
+    TEST_PCT = /%$/,
+    TO_DEG = 180 / Math.PI,
+    TURN = 'turn',
     XYZ = 'xyz';
 
-// // `clamp8` - (internal function) Clamp 8-bit output to between 0 and 255 integers
-// const clamp8 = (v) => (v < 0 ? 0 : (v > 255 ? 255 : v | 0));
-
-// // `clamp` - a generic clamping function
-// const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
 
 // A small pool of reusable objects, for returning results from helper functions
 const helperResultsPool = [];
@@ -127,10 +146,7 @@ const requestHelperResult = () => {
         h.value = 0;
         return h;
     }
-    else {
-
-        return { ok: false, value: 0 };
-    }
+    else return { ok: false, value: 0 };
 };
 const releaseHelperResult = (...helpers) => {
 
@@ -146,7 +162,7 @@ const parseRgbChannel = (input) => {
     input = input.trim();
     if (!input) return NaN;
 
-    if (/%$/.test(input)) {
+    if (TEST_PCT.test(input)) {
 
         const v = parseFloat(input.slice(0, -1));
         if (!_isFinite(v)) return NaN;
@@ -168,7 +184,7 @@ const parseAlphaChannel = (input) => {
     input = input.trim();
     if (!input) return NaN;
 
-    if (/%$/.test(input)) {
+    if (TEST_PCT.test(input)) {
 
         const v = parseFloat(input.slice(0, -1));
         if (!_isFinite(v)) return NaN;
@@ -186,14 +202,14 @@ const parseAlphaChannel = (input) => {
 // + Note that for the purposes of this module the keyword 'none' returns a value of `0`, not the `null` value mandated by the CSS color spec 4 documentation
 const parseAngleOrNone = (input) => {
 
-    input = input.trim();
+    input = input.trim().toLowerCase();
 
     if (!input) return NaN;
     if (input === NONE) return 0;
 
-    const unitMatch = input.match(/[a-z%]+$/);
-    const unit = unitMatch ? unitMatch[0] : ZERO_STR;
-    const num = parseFloat(input);
+    const unitMatch = input.match(MATCH_ANGLE),
+        unit = unitMatch ? unitMatch[0] : ZERO_STR,
+        num = parseFloat(input);
 
     if (!_isFinite(num)) return NaN;
 
@@ -207,7 +223,7 @@ const parseAngleOrNone = (input) => {
             break;
 
         case RAD:
-            deg = num * (180 / Math.PI);
+            deg = num * TO_DEG;
             break;
 
         case GRAD:
@@ -233,7 +249,7 @@ const parsePercentOrNone = (input) => {
 
     const res = requestHelperResult();
 
-    input = input.trim();
+    input = input.trim().toLowerCase();
 
     if (!input) return res;
 
@@ -243,8 +259,8 @@ const parsePercentOrNone = (input) => {
         return res;
     }
 
-    const isPct = /%$/.test(input);
-    const num = parseFloat(isPct ? input.slice(0, -1) : input);
+    const isPct = TEST_PCT.test(input),
+        num = parseFloat(isPct ? input.slice(0, -1) : input);
 
     if (!_isFinite(num)) return res;
 
@@ -262,7 +278,7 @@ const parseNumberOrNone = (input) => {
 
     const res = requestHelperResult();
 
-    input = input.trim();
+    input = input.trim().toLowerCase();
 
     if (!input) return res;
 
@@ -272,7 +288,7 @@ const parseNumberOrNone = (input) => {
         return res;
     }
 
-    if (input.endsWith('%')) input = input.slice(0, -1);
+    if (input.endsWith(PCT)) input = input.slice(0, -1);
 
     const v = parseFloat(input);
 
@@ -298,7 +314,7 @@ const parseOklchChroma = (input) => {
         return res;
     }
 
-    const isPct = input.endsWith('%');
+    const isPct = input.endsWith(PCT);
     if (isPct) input = input.slice(0, -1);
 
     const v = parseFloat(input);
@@ -320,9 +336,9 @@ const parseHexToRGBA = (input) => {
 
     if (typeof input !== STRING) return FAIL;
 
-    const s = input.trim().toLowerCase().replace(/\s+/g, ZERO_STR);
+    const s = input.trim().toLowerCase().replace(SPACE_KILL, ZERO_STR);
 
-    if (!/^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}(?:[0-9a-f]{2})?)$/.test(s)) return FAIL;
+    if (!TEST_HEX.test(s)) return FAIL;
 
     let h = s.slice(1);
 
@@ -345,27 +361,23 @@ const parseRgbFunctionToRGBA = (input) => {
 
     if (typeof input !== STRING) return FAIL;
 
-    const s = input.trim().toLowerCase();
-    const m = s.match(/^(?:rgb|rgba)\s*\(\s*([^)]+)\s*\)$/);
+    const s = input.trim().toLowerCase(),
+        m = s.match(RGBA_MATCH);
 
     if (!m) return FAIL;
 
     const inner = m[1].trim();
 
-    let r, g, b,
+    let tokens,
         a = 1;
 
     if (inner.includes(COMMA)) {
 
-        const parts = inner.split(/\s*,\s*/);
+        tokens = inner.split(COMMA_SPLIT);
 
-        if (parts.length !== 3 && parts.length !== 4) return FAIL;
+        if (tokens.length !== 3 && tokens.length !== 4) return FAIL;
 
-        r = parseRgbChannel(parts[0]);
-        g = parseRgbChannel(parts[1]);
-        b = parseRgbChannel(parts[2]);
-
-        if (parts.length === 4) a = parseAlphaChannel(parts[3]);
+        if (tokens.length === 4) a = parseAlphaChannel(tokens[3]);
     }
     else {
 
@@ -373,30 +385,26 @@ const parseRgbFunctionToRGBA = (input) => {
 
         if (slashSplit.length === 1) {
 
-            const rgbTokens = slashSplit[0].trim().split(/\s+/).filter(Boolean);
+            tokens = slashSplit[0].trim().split(SPACE_SPLIT).filter(Boolean);
 
-            if (rgbTokens.length !== 3) return FAIL;
-
-            r = parseRgbChannel(rgbTokens[0]);
-            g = parseRgbChannel(rgbTokens[1]);
-            b = parseRgbChannel(rgbTokens[2]);
-
+            if (tokens.length !== 3) return FAIL;
         }
         else if (slashSplit.length === 2) {
 
             const rgbPart = slashSplit[0].trim();
             const alphaPart = slashSplit[1].trim();
-            const rgbTokens = rgbPart.split(/\s+/).filter(Boolean);
+            tokens = rgbPart.split(SPACE_SPLIT).filter(Boolean);
 
-            if (rgbTokens.length !== 3 || !alphaPart) return FAIL;
+            if (tokens.length !== 3 || !alphaPart) return FAIL;
 
-            r = parseRgbChannel(rgbTokens[0]);
-            g = parseRgbChannel(rgbTokens[1]);
-            b = parseRgbChannel(rgbTokens[2]);
             a = parseAlphaChannel(alphaPart);
         }
         else return FAIL;
     }
+
+    const r = parseRgbChannel(tokens[0]),
+        g = parseRgbChannel(tokens[1]),
+        b = parseRgbChannel(tokens[2]);
 
     if (!_isFinite(r) || !_isFinite(g) || !_isFinite(b) || !_isFinite(a)) return FAIL;
 
@@ -409,40 +417,26 @@ const parseRgbFunctionToRGBA = (input) => {
 // + a is in the range 0.0 - 1.0
 const parseHslFunctionToHSLA = (input) => {
 
-    if (typeof input !== STRING) return FAIL;
+    if (!input.substring) return FAIL;
 
-    const s = input.trim().toLowerCase();
-    const m = s.match(/^(?:hsl|hsla)\s*\(\s*([^)]+)\s*\)$/);
+    const s = input.trim().toLowerCase(),
+        m = s.match(HSL_MATCH);
+
     if (!m) return FAIL;
 
     const inner = m[1].trim();
 
-    let h, sPct, lPct, a = 1;
+    let tokens,
+        a = 1;
 
     if (inner.includes(COMMA)) {
 
-        const parts = inner.split(/\s*,\s*/);
-        if (parts.length !== 3 && parts.length !== 4) return FAIL;
+        tokens = inner.split(COMMA_SPLIT);
+        if (tokens.length !== 3 && tokens.length !== 4) return FAIL;
 
-        h = parseAngleOrNone(parts[0]);
+        if (tokens.length === 4) {
 
-        const sRes = parsePercentOrNone(parts[1]);
-        const lRes = parsePercentOrNone(parts[2]);
-
-        if (!sRes.ok || !lRes.ok || !_isFinite(h)) {
-
-            releaseHelperResult(sRes, lRes);
-            return FAIL;
-        }
-
-        sPct = sRes.value;
-        lPct = lRes.value;
-
-        releaseHelperResult(sRes, lRes);
-
-        if (parts.length === 4) {
-
-            a = parseAlphaChannel(parts[3]);
+            a = parseAlphaChannel(tokens[3]);
             if (!_isFinite(a)) return FAIL;
         }
     }
@@ -452,55 +446,39 @@ const parseHslFunctionToHSLA = (input) => {
 
         if (slashSplit.length === 1) {
 
-            const tokens = slashSplit[0].trim().split(/\s+/).filter(Boolean);
+            tokens = slashSplit[0].trim().split(SPACE_SPLIT).filter(Boolean);
             if (tokens.length !== 3) return FAIL;
-
-            h = parseAngleOrNone(tokens[0]);
-
-            const sRes = parsePercentOrNone(tokens[1]);
-            const lRes = parsePercentOrNone(tokens[2]);
-            if (!sRes.ok || !lRes.ok || !_isFinite(h)) {
-
-                releaseHelperResult(sRes, lRes);
-                return FAIL;
-            }
-
-            sPct = sRes.value;
-            lPct = lRes.value;
-
-            releaseHelperResult(sRes, lRes);
         }
         else if (slashSplit.length === 2) {
 
             const left = slashSplit[0].trim();
             const right = slashSplit[1].trim();
 
-            const tokens = left.split(/\s+/).filter(Boolean);
+            tokens = left.split(SPACE_SPLIT).filter(Boolean);
 
             if (tokens.length !== 3 || !right) return FAIL;
 
-            h = parseAngleOrNone(tokens[0]);
-
-            const sRes = parsePercentOrNone(tokens[1]);
-            const lRes = parsePercentOrNone(tokens[2]);
-
-            if (!sRes.ok || !lRes.ok || !_isFinite(h)) {
-
-                releaseHelperResult(sRes, lRes);
-                return FAIL;
-            }
-
-            sPct = sRes.value;
-            lPct = lRes.value;
-
-            releaseHelperResult(sRes, lRes);
-
             a = parseAlphaChannel(right);
-
             if (!_isFinite(a)) return FAIL;
         }
         else return FAIL;
     }
+
+    const h = parseAngleOrNone(tokens[0]),
+        sRes = parsePercentOrNone(tokens[1]),
+        lRes = parsePercentOrNone(tokens[2]);
+
+    if (!sRes.ok || !lRes.ok || !_isFinite(h)) {
+
+        releaseHelperResult(sRes, lRes);
+        return FAIL;
+    }
+
+    const sPct = sRes.value,
+        lPct = lRes.value;
+
+    releaseHelperResult(sRes, lRes);
+
     return [h, sPct, lPct, a];
 };
 
@@ -513,68 +491,52 @@ const parseHwbFunctionToHWBA = (input) => {
     if (typeof input !== STRING) return FAIL;
 
     const s = input.trim().toLowerCase();
-
     if (s.includes(COMMA)) return FAIL;
 
-    const m = s.match(/^hwb\s*\(\s*([^)]+)\s*\)$/);
+    const m = s.match(HWB_MATCH);
     if (!m) return FAIL;
 
     const inner = m[1].trim();
 
-    let h, wPct, bPct, a = 1;
+    let tokens,
+        a = 1;
 
     const slashSplit = inner.split(SLASH);
 
     if (slashSplit.length === 1) {
 
-        const tokens = slashSplit[0].trim().split(/\s+/).filter(Boolean);
+        tokens = slashSplit[0].trim().split(SPACE_SPLIT).filter(Boolean);
+
         if (tokens.length !== 3) return FAIL;
-
-        h = parseAngleOrNone(tokens[0]);
-
-        const wRes = parsePercentOrNone(tokens[1]);
-        const bRes = parsePercentOrNone(tokens[2]);
-
-        if (!_isFinite(h) || !wRes.ok || !bRes.ok) {
-
-            releaseHelperResult(wRes, bRes);
-            return FAIL;
-        }
-
-        wPct = wRes.value;
-        bPct = bRes.value;
-
-        releaseHelperResult(wRes, bRes);
     }
     else if (slashSplit.length === 2) {
 
         const left = slashSplit[0].trim();
         const right = slashSplit[1].trim();
-        const tokens = left.split(/\s+/).filter(Boolean);
+        tokens = left.split(SPACE_SPLIT).filter(Boolean);
 
         if (tokens.length !== 3 || !right) return FAIL;
-
-        h = parseAngleOrNone(tokens[0]);
-
-        const wRes = parsePercentOrNone(tokens[1]);
-        const bRes = parsePercentOrNone(tokens[2]);
-
-        if (!_isFinite(h) || !wRes.ok || !bRes.ok) {
-
-            releaseHelperResult(wRes, bRes);
-            return FAIL;
-        }
-
-        wPct = wRes.value;
-        bPct = bRes.value;
-
-        releaseHelperResult(wRes, bRes);
 
         a = parseAlphaChannel(right);
         if (!_isFinite(a)) return FAIL;
 
     }
     else return FAIL;
+
+    const h = parseAngleOrNone(tokens[0]),
+        wRes = parsePercentOrNone(tokens[1]),
+        bRes = parsePercentOrNone(tokens[2]);
+
+    if (!_isFinite(h) || !wRes.ok || !bRes.ok) {
+
+        releaseHelperResult(wRes, bRes);
+        return FAIL;
+    }
+
+    const wPct = wRes.value,
+        bPct = bRes.value;
+
+    releaseHelperResult(wRes, bRes);
 
     return [h, wPct, bPct, a];
 };
@@ -589,71 +551,54 @@ const parseLabFunctionToLABA = (input) => {
     if (typeof input !== STRING) return FAIL;
 
     const s = input.trim().toLowerCase();
-
     if (s.includes(COMMA)) return FAIL;
 
-    const m = s.match(/^lab\s*\(\s*([^)]+)\s*\)$/);
+    const m = s.match(LAB_MATCH);
     if (!m) return FAIL;
 
     const inner = m[1].trim();
 
-    let L, aCh, bCh, alpha = 1;
+    let tokens,
+        alpha = 1;
 
     const slashSplit = inner.split(SLASH);
 
     if (slashSplit.length === 1) {
 
-        const tokens = slashSplit[0].trim().split(/\s+/).filter(Boolean);
+        tokens = slashSplit[0].trim().split(SPACE_SPLIT).filter(Boolean);
+
         if (tokens.length !== 3) return FAIL;
-
-        const lRes = parsePercentOrNone(tokens[0]);
-        const aRes = parseNumberOrNone(tokens[1]);
-        const bRes = parseNumberOrNone(tokens[2]);
-
-        if (!lRes.ok || !aRes.ok || !bRes.ok) {
-
-            releaseHelperResult(lRes, aRes, bRes);
-            return FAIL;
-        }
-
-        L = clamp(lRes.value, 0, 100);
-        aCh = clamp(aRes.value, -125, 125);
-        bCh = clamp(bRes.value, -125, 125);
-
-        releaseHelperResult(lRes, aRes, bRes);
     }
     else if (slashSplit.length === 2) {
 
         const left  = slashSplit[0].trim();
         const right = slashSplit[1].trim();
-        const tokens = left.split(/\s+/).filter(Boolean);
+        tokens = left.split(SPACE_SPLIT).filter(Boolean);
 
         if (tokens.length !== 3 || !right) return FAIL;
 
-        const lRes = parsePercentOrNone(tokens[0]);
-        const aRes = parseNumberOrNone(tokens[1]);
-        const bRes = parseNumberOrNone(tokens[2]);
-
-        if (!lRes.ok || !aRes.ok || !bRes.ok) {
-
-            releaseHelperResult(lRes, aRes, bRes);
-            return FAIL;
-        }
-
-        L = clamp(lRes.value, 0, 100);
-        aCh = clamp(aRes.value, -125, 125);
-        bCh = clamp(bRes.value, -125, 125);
-
-        releaseHelperResult(lRes, aRes, bRes);
-
         alpha = parseAlphaChannel(right);
-
         if (!_isFinite(alpha)) return FAIL;
-
     }
     else return FAIL;
 
-    if (!_isFinite(L) || !_isFinite(aCh) || !_isFinite(bCh) || !_isFinite(alpha)) return FAIL;
+    const lRes = parsePercentOrNone(tokens[0]),
+        aRes = parseNumberOrNone(tokens[1]),
+        bRes = parseNumberOrNone(tokens[2]);
+
+    if (!lRes.ok || !aRes.ok || !bRes.ok) {
+
+        releaseHelperResult(lRes, aRes, bRes);
+        return FAIL;
+    }
+
+    const L = clamp(lRes.value, 0, 100),
+        aCh = clamp(aRes.value, -125, 125),
+        bCh = clamp(bRes.value, -125, 125);
+
+    releaseHelperResult(lRes, aRes, bRes);
+
+    if (!_isFinite(L) || !_isFinite(aCh) || !_isFinite(bCh)) return FAIL;
 
     return [L, aCh, bCh, alpha];
 };
@@ -670,36 +615,22 @@ const parseLchFunctionToLCHA = (input) => {
     const s = input.trim().toLowerCase();
     if (s.includes(COMMA)) return FAIL;
 
-    const m = s.match(/^lch\s*\(\s*([^)]+)\s*\)$/);
+    const m = s.match(LCH_MATCH);
     if (!m) return FAIL;
 
     const inner = m[1].trim();
-    let L, C, h, a = 1;
+
+    let tokens,
+        a = 1;
 
     const slashSplit = inner.split(SLASH);
 
     if (slashSplit.length === 1 || slashSplit.length === 2) {
 
         const left = slashSplit[0].trim();
-        const tokens = left.split(/\s+/).filter(Boolean);
+        tokens = left.split(SPACE_SPLIT).filter(Boolean);
 
         if (tokens.length !== 3) return FAIL;
-
-        const lRes = parsePercentOrNone(tokens[0]);
-        const cRes = parseNumberOrNone(tokens[1]);
-        const hue  = parseAngleOrNone(tokens[2]);
-
-        if (!lRes.ok || !cRes.ok || !_isFinite(hue)) {
-
-            releaseHelperResult(lRes, cRes);
-            return FAIL;
-        }
-
-        L = clamp(lRes.value, 0, 100);
-        C = clamp(cRes.value, 0, 150);
-        h = hue;
-
-        releaseHelperResult(lRes, cRes);
 
         if (slashSplit.length === 2) {
 
@@ -712,13 +643,29 @@ const parseLchFunctionToLCHA = (input) => {
         }
     } else return FAIL;
 
-    if (!_isFinite(L) || !_isFinite(C) || !_isFinite(h) || !_isFinite(a)) return FAIL;
+    const lRes = parsePercentOrNone(tokens[0]),
+        cRes = parseNumberOrNone(tokens[1]),
+        hue  = parseAngleOrNone(tokens[2]);
+
+    if (!lRes.ok || !cRes.ok || !_isFinite(hue)) {
+
+        releaseHelperResult(lRes, cRes);
+        return FAIL;
+    }
+
+    const L = clamp(lRes.value, 0, 100),
+        C = clamp(cRes.value, 0, 150),
+        h = hue;
+
+    releaseHelperResult(lRes, cRes);
+
+    if (!_isFinite(L) || !_isFinite(C) || !_isFinite(h)) return FAIL;
 
     return [L, C, h, a];
 };
 
 // `parseOklabFunctionToOKLABA` - for `oklab()` input. Returns [L, a, b, alpha] where:
-// + L is 0–100 (percentage semantics via parsePercentOrNone)
+// + L is: 0-1 (as per standard); or 0–100 (non-standard percentage semantics)
 // + a, b are numbers in [-0.4, 0.4]; percentage inputs [-100%, 100%] map to [-0.4, 0.4]; 'none' => 0
 // + alpha is 0.0–1.0
 const parseOklabFunctionToOKLABA = (input) => {
@@ -733,83 +680,67 @@ const parseOklabFunctionToOKLABA = (input) => {
 
     const inner = m[1].trim();
 
-    let L, aCh, bCh, alpha = 1;
+    let tokens,
+        alpha = 1;
+
     const slashSplit = inner.split(SLASH);
 
     if (slashSplit.length === 1) {
 
-        const tokens = slashSplit[0].trim().split(/\s+/).filter(Boolean);
+        tokens = slashSplit[0].trim().split(SPACE_SPLIT).filter(Boolean);
         if (tokens.length !== 3) return FAIL;
 
-        const aIsPct = tokens[1].endsWith('%');
-        const bIsPct = tokens[2].endsWith('%');
+    }
+    else if (slashSplit.length === 2) {
 
-        const lRes = parsePercentOrNone(tokens[0]);
-        const aRes = parseNumberOrNone(tokens[1]);
-        const bRes = parseNumberOrNone(tokens[2]);
+        const left  = slashSplit[0].trim(),
+            right = slashSplit[1].trim();
 
-        if (!lRes.ok || !aRes.ok || !bRes.ok) {
-
-            releaseHelperResult(lRes, aRes, bRes);
-            return FAIL;
-        }
-
-        L = clamp(lRes.value, 0, 100);
-
-        let aVal = aRes.value;
-        let bVal = bRes.value;
-        if (aIsPct) aVal = aVal * 0.004;
-        if (bIsPct) bVal = bVal * 0.004;
-
-        aCh = clamp(aVal, -0.4, 0.4);
-        bCh = clamp(bVal, -0.4, 0.4);
-
-        releaseHelperResult(lRes, aRes, bRes);
-
-    } else if (slashSplit.length === 2) {
-
-        const left  = slashSplit[0].trim();
-        const right = slashSplit[1].trim();
-        const tokens = left.split(/\s+/).filter(Boolean);
+        tokens = left.split(SPACE_SPLIT).filter(Boolean);
         if (tokens.length !== 3 || !right) return FAIL;
-
-        const aIsPct = tokens[1].endsWith('%');
-        const bIsPct = tokens[2].endsWith('%');
-
-        const lRes = parsePercentOrNone(tokens[0]);
-        const aRes = parseNumberOrNone(tokens[1]);
-        const bRes = parseNumberOrNone(tokens[2]);
-
-        if (!lRes.ok || !aRes.ok || !bRes.ok) {
-
-            releaseHelperResult(lRes, aRes, bRes);
-            return FAIL;
-        }
-
-        L = clamp(lRes.value, 0, 100);
-
-        let aVal = aRes.value;
-        let bVal = bRes.value;
-        if (aIsPct) aVal = aVal * 0.004;
-        if (bIsPct) bVal = bVal * 0.004;
-
-        aCh = clamp(aVal, -0.4, 0.4);
-        bCh = clamp(bVal, -0.4, 0.4);
-
-        releaseHelperResult(lRes, aRes, bRes);
 
         alpha = parseAlphaChannel(right);
         if (!_isFinite(alpha)) return FAIL;
 
-    } else return FAIL;
+    }
+    else return FAIL;
 
-    if (!_isFinite(L) || !_isFinite(aCh) || !_isFinite(bCh) || !_isFinite(alpha)) return FAIL;
+    const lIsPct = tokens[0].endsWith('%'),
+        aIsPct = tokens[1].endsWith('%'),
+        bIsPct = tokens[2].endsWith('%');
+
+    const lRes = lIsPct ? parsePercentOrNone(tokens[0]) : parseNumberOrNone(tokens[0]),
+        aRes = parseNumberOrNone(tokens[1]),
+        bRes = parseNumberOrNone(tokens[2]);
+
+    if (!lRes.ok || !aRes.ok || !bRes.ok) {
+
+        releaseHelperResult(lRes, aRes, bRes);
+        return FAIL;
+    }
+
+    let lVal = lRes.value;
+    if (lIsPct) lVal = lVal * 0.01;
+
+    let aVal = aRes.value;
+    if (aIsPct) aVal = aVal * 0.004;
+
+    let bVal = bRes.value;
+    if (bIsPct) bVal = bVal * 0.004;
+
+    const L = clamp(lVal, 0, 1),
+        aCh = clamp(aVal, -0.4, 0.4),
+        bCh = clamp(bVal, -0.4, 0.4);
+
+    releaseHelperResult(lRes, aRes, bRes);
+
+    if (!_isFinite(L) || !_isFinite(aCh) || !_isFinite(bCh)) return FAIL;
 
     return [L, aCh, bCh, alpha];
 };
 
 // `parseOklchFunctionToOKLCHA` - for `oklch()` input. Returns [L, C, h, a] where:
-// + L is 0–100 (clamped; via parsePercentOrNone)
+// + L is: 0-1 (as per standard); or 0–100 (non-standard percentage semantics)
 // + C is 0.0–0.4 (clamped; via parseOklchChroma; 'none' => 0)
 // + h is angle in [0,360) (accepts 'none' => 0; via parseAngleOrNone)
 // + a is 0.0–1.0
@@ -818,39 +749,24 @@ const parseOklchFunctionToOKLCHA = (input) => {
     if (typeof input !== STRING) return FAIL;
 
     const s = input.trim().toLowerCase();
-
     if (s.includes(COMMA)) return FAIL;
 
     const m = s.match(/^oklch\s*\(\s*([^)]+)\s*\)$/);
     if (!m) return FAIL;
 
     const inner = m[1].trim();
-    let L, C, h, a = 1;
 
     const slashSplit = inner.split(SLASH);
+
+    let tokens,
+        a = 1;
 
     if (slashSplit.length === 1 || slashSplit.length === 2) {
 
         const left = slashSplit[0].trim();
-        const tokens = left.split(/\s+/).filter(Boolean);
+        tokens = left.split(SPACE_SPLIT).filter(Boolean);
 
         if (tokens.length !== 3) return FAIL;
-
-        const lRes = parsePercentOrNone(tokens[0]);
-        const cRes = parseOklchChroma(tokens[1]);
-        const hue  = parseAngleOrNone(tokens[2]);
-
-        if (!lRes.ok || !cRes.ok || !_isFinite(hue)) {
-
-            releaseHelperResult(lRes, cRes);
-            return FAIL;
-        }
-
-        L = clamp(lRes.value, 0, 100);
-        C = cRes.value;
-        h = hue;
-
-        releaseHelperResult(lRes, cRes);
 
         if (slashSplit.length === 2) {
 
@@ -865,14 +781,33 @@ const parseOklchFunctionToOKLCHA = (input) => {
     }
     else return FAIL;
 
-    if (!_isFinite(L) || !_isFinite(C) || !_isFinite(h) || !_isFinite(a)) return FAIL;
+    const lIsPct = tokens[0].endsWith('%');
 
-    return [L, C, h, a];
+    const lRes = lIsPct ? parsePercentOrNone(tokens[0]) : parseNumberOrNone(tokens[0]),
+        cRes = parseOklchChroma(tokens[1]),
+        hue  = parseAngleOrNone(tokens[2]);
+
+    if (!lRes.ok || !cRes.ok || !_isFinite(hue)) {
+
+        releaseHelperResult(lRes, cRes);
+        return FAIL;
+    }
+
+    const lVal = lRes.value * (lIsPct ? 0.01 : 1);
+
+    const L = clamp(lVal, 0, 1),
+        C = cRes.value;
+
+    releaseHelperResult(lRes, cRes);
+
+    if (!_isFinite(L) || !_isFinite(C) || !_isFinite(hue)) return FAIL;
+
+    return [L, C, hue, a];
 };
 
-const COLOR_STRINGS_CACHE = 'rgb-and-ok-space-color-values-cache';
 
 // `getColorStringsCache` - Manages a map of colorstring: [rgba] values. The function retrieves it from the workstore or - if it has not yet been created or has been deleted - creates, stores and returns it to the calling function.
+const COLOR_STRINGS_CACHE = 'rgb-and-ok-space-color-values-cache';
 const getColorStringsCache = function () {
 
     if (!checkForWorkstoreItem(COLOR_STRINGS_CACHE)) {
@@ -930,59 +865,59 @@ const getColorValuesFromString = P.getColorValuesFromString = function (input) {
     const s = input.trim().toLowerCase();
     if (!s) return [RGB, 0, 0, 0, 0];
 
-    if (s.includes('color-mix(') || s.includes('color(from')) return [RGB, 0, 0, 0, 0];
+    if (s.includes(INC_COLOR_MIX) || s.includes(INC_COLOR_FROM)) return [RGB, 0, 0, 0, 0];
 
     const asResult = (space, arr4) => [space, arr4[0], arr4[1], arr4[2], arr4[3]];
 
-    if (s.includes('#')) {
+    if (s.includes(INC_HASH)) {
 
         const vals = parseHexToRGBA(input);
         return asResult(RGB, vals);
     }
 
-    if (s.includes('oklch(')) {
+    if (s.includes(INC_OKLCH)) {
 
         const vals = parseOklchFunctionToOKLCHA(input);
         return asResult(OKLCH, vals);
     }
 
-    if (s.includes('oklab(')) {
+    if (s.includes(INC_OKLAB)) {
 
         const vals = parseOklabFunctionToOKLABA(input);
         return asResult(OKLAB, vals);
     }
 
-    if (s.includes('lch(')) {
+    if (s.includes(INC_LCH)) {
 
         const vals = parseLchFunctionToLCHA(input);
         return asResult(LCH, vals);
     }
 
-    if (s.includes('lab(')) {
+    if (s.includes(INC_LAB)) {
 
         const vals = parseLabFunctionToLABA(input);
         return asResult(LAB, vals);
     }
 
-    if (s.includes('rgb(') || s.includes('rgba(')) {
+    if (s.includes(INC_RGB) || s.includes(INC_RGBA)) {
 
         const vals = parseRgbFunctionToRGBA(input);
         return asResult(RGB, vals);
     }
 
-    if (s.includes('hsl(') || s.includes('hsla(')) {
+    if (s.includes(INC_HSL) || s.includes(INC_HSLA)) {
 
         const vals = parseHslFunctionToHSLA(input);
         return asResult(HSL, vals);
     }
 
-    if (s.includes('hwb(')) {
+    if (s.includes(INC_HWB)) {
 
         const vals = parseHwbFunctionToHWBA(input);
         return asResult(HWB, vals);
     }
 
-    if (s.includes('color(')) {
+    if (s.includes(INC_COLOR)) {
 
         const vals = parseColorStringFromCanvas(input);
         return asResult(RGB, vals);
@@ -1055,16 +990,16 @@ P.buildColorStringFromData = function (data) {
             return `lch(${L}% ${C} ${H} / ${a})`;
 
         case OKLAB:
-            L = clamp(c1, 0, 1) * 100;
+            L = clamp(c1, 0, 1);
             A = clamp(c2, -0.4, 0.4);
             B = clamp(c3, -0.4, 0.4);
-            return `oklab(${L}% ${A} ${B} / ${a})`;
+            return `oklab(${L} ${A} ${B} / ${a})`;
 
         case OKLCH:
-            L = clamp(c1, 0, 1) * 100;
+            L = clamp(c1, 0, 1);
             C = clamp(c2, 0, 0.4);
             H = correctAngle(c3);
-            return `oklch(${L}% ${C} ${H} / ${a})`;
+            return `oklch(${L} ${C} ${H} / ${a})`;
 
         case XYZ:
             {
