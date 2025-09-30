@@ -663,7 +663,19 @@ P.getData = function () {
     return this.currentColorString;
 };
 
+
+// #### Passing functions from the color engine through to the factory instance's API
+//
+// `buildColorStringFromData`
+// + Returns appropriate color strings from input data in the form `[space, c1, c2, c3, a]`
+// + space ∈ {'rgb','hsl','hwb','lab','lch','oklab','oklch'}
 P.buildColorStringFromData = colorEngine.buildColorStringFromData;
+
+// `extractRGBfromColorString` - returns the R, G and B channel values (0 to 255) from a valid CSS Colors level 4 string
+P.extractRGBfromColorString = colorEngine.extractRGBfromColorString
+
+// `convertRGBtoHex`
+P.convertRGBtoHex = colorEngine.convertRGBtoHex;
 
 
 // #### Factory

@@ -95,6 +95,7 @@ const COMMA = ',',
     DEG = 'deg',
     FAIL = [0, 0, 0, 0],
     GRAD = 'grad',
+    HEX = '#',
     HSL = 'hsl',
     HSL_MATCH = /^(?:hsl|hsla)\s*\(\s*([^)]+)\s*\)$/,
     HWB = 'hwb',
@@ -130,6 +131,7 @@ const COMMA = ',',
     STRING = 'string',
     TEST_HEX = /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}(?:[0-9a-f]{2})?)$/,
     TEST_PCT = /%$/,
+    TEXT_ZERO = '0',
     TO_DEG = 180 / Math.PI,
     TURN = 'turn',
     XYZ = 'xyz';
@@ -927,7 +929,7 @@ const getColorValuesFromString = P.getColorValuesFromString = function (input) {
     return asResult(RGB, vals);
 };
 
-// `extractRGBfromColorString`
+// `extractRGBfromColorString` - returns the R, G and B channel values (0 to 255) from a valid CSS Colors level 4 string
 P.extractRGBfromColorString = function (item) {
 
     const data = getColorValuesFromString(item);
@@ -1013,6 +1015,17 @@ P.buildColorStringFromData = function (data) {
         default:
             return BLANK;
     }
+};
+
+P.convertRGBtoHex = function (r, g, b) {
+
+    r = _max(0, _round(_min(255, _isFinite(r) ? r : 0)));
+    g = _max(0, _round(_min(255, _isFinite(g) ? g : 0)));
+    b = _max(0, _round(_min(255, _isFinite(b) ? b : 0)));
+
+    return HEX + [r, g, b]
+        .map(x => x.toString(16).padStart(2, TEXT_ZERO))
+        .join(ZERO_STR);
 };
 
 

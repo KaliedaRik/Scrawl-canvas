@@ -109,7 +109,7 @@ scrawl.addNativeListener(['change'], (e) => {
         const target = e.target.id,
             val = e.target.value;
 
-        let [r, g, b] = colorFactory.extractRGBfromColor(val);
+        let [r, g, b] = colorFactory.extractRGBfromColorString(val);
 
         r /= 255;
         g /= 255;
@@ -119,25 +119,25 @@ scrawl.addNativeListener(['change'], (e) => {
 
             myFilter.set({ redColor: val });
 
-            dom.redInRed.value = r.toFixed(0);
-            dom.greenInRed.value = g.toFixed(0);
-            dom.blueInRed.value = b.toFixed(0);
+            dom.redInRed.value = `${r}`;
+            dom.greenInRed.value = `${g}`;
+            dom.blueInRed.value = `${b}`;
         }
         else if ('greenColor' === target) {
 
             myFilter.set({ greenColor: val });
 
-            dom.redInGreen.value = r.toFixed(0);
-            dom.greenInGreen.value = g.toFixed(0);
-            dom.blueInGreen.value = b.toFixed(0);
+            dom.redInGreen.value = `${r}`;
+            dom.greenInGreen.value = `${g}`;
+            dom.blueInGreen.value = `${b}`;
         }
         else if ('blueColor' === target) {
 
             myFilter.set({ blueColor: val });
 
-            dom.redInBlue.value = r.toFixed(0);
-            dom.greenInBlue.value = g.toFixed(0);
-            dom.blueInBlue.value = b.toFixed(0);
+            dom.redInBlue.value = `${r}`;
+            dom.greenInBlue.value = `${g}`;
+            dom.blueInBlue.value = `${b}`;
         }
     }
 }, '.colorSelector');

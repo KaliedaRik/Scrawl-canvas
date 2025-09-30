@@ -1112,8 +1112,9 @@ interface ColorSaveInputs extends ColorFactoryInputs, SaveInputs {}
 
 interface ColorFactoryFunctions extends BaseMixinFunctions {
     clone: (item?: ColorFactoryInputs) => ColorInstance;
-    convertRGBtoHex: (red: number, green: number, blue: number) => string;
-    extractRGBfromColor: (item: string) => number[];
+    buildColorStringFromData: (space: string, red: number, green: number, blue: number, alpha: number) => string;
+    extractRGBfromColorString: (item: string) => number[];
+    convertRGBtoHex: (r: number, g: number, b: number) => string;
     generateRandomColor: DefaultStringOutputFunction;
     getCurrentColor: DefaultStringOutputFunction;
     getMaximumColor: DefaultStringOutputFunction;
