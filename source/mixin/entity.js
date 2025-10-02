@@ -582,10 +582,10 @@ export default function (P = Ωempty) {
 
                 oldGCO = state.globalCompositeOperation;
                 oldAlpha = state.globalAlpha;
-            }
 
-            state.globalCompositeOperation = SOURCE_OVER;
-            state.globalAlpha = 1;
+                state.globalCompositeOperation = SOURCE_OVER;
+                state.globalAlpha = 1;
+            }
 
             // Stamp the entity onto the pool Cell
             this.regularStamp();

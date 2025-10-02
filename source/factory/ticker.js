@@ -846,7 +846,7 @@ const requestResultObject = function () {
         });
     }
 
-    return resultObjectPool.shift();
+    return resultObjectPool.pop();
 };
 
 // `releaseResultObject`
