@@ -21,12 +21,12 @@ const name = (n) => `${namespace}-${n}`;
 const cellGradient = scrawl.makeGradient({
     name: name('blue-green'),
     endX: '100%',
+    colorSpace: 'OKLAB',
     colors: [
         [0, 'blue'],
         [500, 'gold'],
         [999, 'green']
     ],
-    colorSpace: 'OKLAB',
 });
 
 const gridGradient = scrawl.makeGradient({

@@ -287,7 +287,7 @@ P.setTileSourceTo = function (index, obj) {
 // + Object will be replaced with `null`
 P.removeTileSource = function (index) {
 
-    if (isa_number(index) && index) {
+    if (_isFinite(index)) {
 
         this.tileSources[index] = null;
 
@@ -304,7 +304,7 @@ P.getTileSource = function (row, col) {
     if (isa_number(row)) {
 
         if (!isa_number(col)) return this.tileFill[row];
-        else return this.tileFill[(row * this.rows) + col];
+        else return this.tileFill[(row * this.columns) + col];
     }
 };
 
@@ -408,7 +408,9 @@ P.cleanPathObject = function () {
 // + If you are not a fan of long, complex functions ... look away now!
 P.performFill = function (engine) {
 
-    if (this.scale > 0) {
+    const currentScale = this.currentScale || 0;
+
+    if (currentScale > 0) {
 
         // Grab the current engine values for various things
         engine.save();
@@ -424,8 +426,7 @@ P.performFill = function (engine) {
             tileVirtualCoords = this.tileVirtualCoordinates,
             winding = this.winding,
             tileWidth = this.currentTileWidth,
-            tileHeight = this.currentTileHeight,
-            scale = this.scale;
+            tileHeight = this.currentTileHeight;
 
         const dims = this.currentDimensions;
 
@@ -472,8 +473,8 @@ P.performFill = function (engine) {
 
                         if (currentPicture.simpleStamp) {
 
-                            compCanvas.width = dims[0] * scale;
-                            compCanvas.height = dims[1] * scale;
+                            compCanvas.width = dims[0] * currentScale;
+                            compCanvas.height = dims[1] * currentScale;
                             compEngine.globalCompositeOperation = SOURCE_OVER;
                             compEngine.fillStyle = BLACK;
 
@@ -487,8 +488,8 @@ P.performFill = function (engine) {
                             currentPicture.simpleStamp(composer, {
                                 startX: 0,
                                 startY: 0,
-                                width: dims[0] * scale,
-                                height: dims[1] * scale,
+                                width: dims[0] * currentScale,
+                                height: dims[1] * currentScale,
                                 method: FILL,
                             });
 
@@ -579,12 +580,11 @@ P.performFill = function (engine) {
                         if (currentPicture.simpleStamp) {
 
                             const handle = this.currentStampHandlePosition,
-                                scale = this.currentScale,
-                                x = handle[0] * scale,
-                                y = handle[1] * scale;
+                                x = handle[0] * currentScale,
+                                y = handle[1] * currentScale;
 
-                            compCanvas.width = dims[0] * scale;
-                            compCanvas.height = dims[1] * scale;
+                            compCanvas.width = dims[0] * currentScale;
+                            compCanvas.height = dims[1] * currentScale;
                             compEngine.globalCompositeOperation = SOURCE_OVER;
                             compEngine.strokeStyle = BLACK;
                             compEngine.translate(x, y);
@@ -606,8 +606,8 @@ P.performFill = function (engine) {
                             currentPicture.simpleStamp(composer, {
                                 startX: 0,
                                 startY: 0,
-                                width: dims[0] * scale,
-                                height: dims[1] * scale,
+                                width: dims[0] * currentScale,
+                                height: dims[1] * currentScale,
                                 method: FILL,
                             });
 
