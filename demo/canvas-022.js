@@ -85,8 +85,29 @@ const myGrid = scrawl.makeGrid({
 });
 
 
+// Testing to make sure artefacts can pivot to a Grid tile
+const bunny = scrawl.makePicture({
+
+    name: name('bunny'),
+    imageSource: 'img/bunny.png',
+
+    dimensions: [26, 37],
+    copyDimensions: [26, 37],
+
+    start: [20, 20],
+    handle: ['center', 'center'],
+
+    pivot: myGrid,
+    pivotIndex: 0,
+    addPivotRotation: true,
+    lockTo: 'pivot',
+});
+
+
 // #### User interaction
 // Function to check for mouse position hits over the Grid entity, and adapt it accordingly
+let currentSelection = '';
+
 let hitReport = '';
 const checkHitTiles = () => {
 
@@ -96,10 +117,75 @@ const checkHitTiles = () => {
 
     if (typeof hits !== 'boolean' && hits) {
 
-        myGrid.setTilesTo(hits.tiles, 1);
-        hitReport = `Hits - x: ${hits.x}, y: ${hits.y}, tiles: ${hits.tiles.join(', ')}`;
+        console.log(hits);
+
+        const index = hits.tiles[0];
+
+        switch (currentSelection) {
+
+            case 'row' :
+                {
+                    const row = myGrid.rowIndex(index);
+                    myGrid.fillRow({row, index: 1});
+                }
+                break;
+
+            case 'col' :
+                {
+                    const column = myGrid.columnIndex(index);
+                    myGrid.fillColumn({column, index: 1});
+                }
+                break;
+
+            case 'row-col' :
+                {
+                    const [row, column] = myGrid.positionIndices(index);
+                    myGrid.fillRow({row, index: 1});
+                    myGrid.fillColumn({column, index: 1});
+                }
+                break;
+
+            case 'block' :
+                {
+                    const [row, column] = myGrid.positionIndices(index);
+
+                    let rowStart = row - 1,
+                        rowEnd = row + 1,
+                        columnStart = column - 1,
+                        columnEnd = column + 1,
+                        rows = myGrid.get('rows'),
+                        columns = myGrid.get('columns');
+
+                    if (rowStart < 0) rowStart = 0;
+                    if (rowEnd >= rows) rowEnd = rows - 1;
+                    if (columnStart < 0) columnStart = 0;
+                    if (columnEnd >= columns) columnEnd = columns - 1;
+
+                    myGrid.fillRect({rowStart, rowEnd, columnStart, columnEnd, index: 1});
+                }
+                break;
+
+            default :
+                myGrid.setTilesTo(hits.tiles, 1);
+        }
+
+        bunny.set({
+            lockTo: 'pivot',
+            addPivotRotation: true,
+            pivotIndex: index,
+        });
+
+        hitReport = `Hits - tile: ${hits.tiles.join(', ')} (x: ${hits.x}, y: ${hits.y})`;
     }
-    else hitReport = 'Hits - none reported';
+    else {
+
+        bunny.set({ 
+            lockTo: 'start',
+            addPivotRotation: false,
+        });
+
+        hitReport = 'Hits - none reported';
+    }
 };
 
 // For this demo we will suppress touchmove functionality over the canvas
@@ -131,7 +217,8 @@ const report = reportSpeed('#reportmessage', function () {
     Handle - x: ${handleX}, y: ${handleY}
     Offset - x: ${offsetX}, y: ${offsetY}
     Roll: ${roll}; Scale: ${scale}
-    canvas.here - x: ${here.x}, y: ${here.y}; ${hitReport}`;
+    canvas.here - x: ${here.x}, y: ${here.y}
+    ${hitReport}`;
 });
 
 
@@ -198,6 +285,9 @@ scrawl.makeUpdater({
 
         upend: ['flipUpend', 'boolean'],
         reverse: ['flipReverse', 'boolean'],
+
+        horizontalPivotPosition: ['horizontalPivotPosition', 'raw'],
+        verticalPivotPosition: ['verticalPivotPosition', 'raw'],
     },
 });
 
@@ -311,6 +401,15 @@ const updateGridStroke = (e) => {
 };
 scrawl.addNativeListener(['input', 'change'], updateGridStroke, '#gridStroke');
 
+const updateSelection = (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+    currentSelection = e.target.value;
+};
+scrawl.addNativeListener(['input', 'change'], updateSelection, '#selection');
+
 
 // Setup form
 scrawl.initializeDomInputs([
@@ -344,6 +443,9 @@ scrawl.initializeDomInputs([
     ['select', 'start_xString', 1],
     ['select', 'start_yString', 1],
     ['select', 'upend', 0],
+    ['select', 'selection', 0],
+    ['select', 'horizontalPivotPosition', 0],
+    ['select', 'verticalPivotPosition', 0],
 ]);
 
 

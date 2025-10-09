@@ -130,7 +130,7 @@ import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../untrack
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 // Shared constants
-import { _isArray, _isFinite, _keys, _parse, _values, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, LEFT, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, T_ENHANCED_LABEL, T_CELL, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _parse, _values, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, LEFT, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, T_ENHANCED_LABEL, T_CELL, T_GRID, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const HANDLE = 'handle',
@@ -1411,6 +1411,12 @@ export default function (P = Ωempty) {
                             if (textIndex != null) coord.setFromArray(textIndex);
                             else coord.setFromArray(start).add(offset);
                         }
+                    }
+
+                    // When the pivot is a Polyline entity, need also to confirm which pin to use (default 0)
+                    else if (pivot.type === T_GRID) {
+
+                        coord.setFromArray(pivot.getTilePivotCoordsAt(pivotIndex));
                     }
 
                     // Everything else

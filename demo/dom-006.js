@@ -343,7 +343,8 @@ console.log(scrawl.findTween(name('mySecondClonedTween')).saveAsPacket())
 // [
 //     "mystack-mySecondClonedTween",
 //     "Tween",
-//     "tween",{
+//     "tween",
+//     {
 //         "name":"mystack-mySecondClonedTween",
 //         "ticker":"mystack-mySecondClonedTween_ticker",
 //         "action":"~~~",

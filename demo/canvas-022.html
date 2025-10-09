@@ -47,36 +47,36 @@
     <div class="pink"><input class="controlItem" id="rowGutter" type="range" value="1" min="0" max="5" step="0.1" /></div>
     <div class="pink">&nbsp;</div>
 
-    <div class="pink label">Grid width</div>
-    <div class="pink">n% <input class="controlItem" id="relativeWidth" type="range" value="50" min="10" max="90" step="0.1" /></div>
-    <div class="pink">n <input class="controlItem" id="absoluteWidth" type="range" value="300" min="0" max="600" step="1" /></div>
+    <div class="yellow label">Grid width</div>
+    <div class="yellow">n% <input class="controlItem" id="relativeWidth" type="range" value="50" min="10" max="90" step="0.1" /></div>
+    <div class="yellow">n <input class="controlItem" id="absoluteWidth" type="range" value="300" min="0" max="600" step="1" /></div>
 
-    <div class="pink label">Grid height</div>
-    <div class="pink">n% <input class="controlItem" id="relativeHeight" type="range" value="50" min="10" max="90" step="0.1" /></div>
-    <div class="pink">n <input class="controlItem" id="absoluteHeight" type="range" value="200" min="0" max="400" step="1" /></div>
+    <div class="yellow label">Grid height</div>
+    <div class="yellow">n% <input class="controlItem" id="relativeHeight" type="range" value="50" min="10" max="90" step="0.1" /></div>
+    <div class="yellow">n <input class="controlItem" id="absoluteHeight" type="range" value="200" min="0" max="400" step="1" /></div>
 
-    <div class="pink label">Base fill</div>
-    <div class="pink"><select class="controlItem" id="baseFill">
+    <div class="blue label">Base fill</div>
+    <div class="blue"><select class="controlItem" id="baseFill">
         <option value="blueSource">Blue</option>
         <option value="redSource">Red</option>
         <option value="cellGradientSource">Canvas gradient</option>
         <option value="gridGradientSource">Grid gradient</option>
       </select>
     </div>
-    <div class="pink">&nbsp;</div>
+    <div class="blue">&nbsp;</div>
 
-    <div class="pink label">Highlight fill</div>
-    <div class="pink"><select class="controlItem" id="highlightFill">
+    <div class="blue label">Highlight fill</div>
+    <div class="blue"><select class="controlItem" id="highlightFill">
         <option value="blueSource">Blue</option>
         <option value="redSource">Red</option>
         <option value="cellGradientSource">Canvas gradient</option>
         <option value="gridGradientSource">Grid gradient</option>
       </select>
     </div>
-    <div class="pink">&nbsp;</div>
+    <div class="blue">&nbsp;</div>
 
-    <div class="pink label">Grid lines stroke</div>
-    <div class="pink"><select class="controlItem" id="gridStroke">
+    <div class="blue label">Grid lines stroke</div>
+    <div class="blue"><select class="controlItem" id="gridStroke">
         <option value="">Grey</option>
         <option value="base">Base fill</option>
         <option value="highlight">Highlight fill</option>
@@ -86,10 +86,36 @@
         <option value="gridGradientSource">Grid gradient</option>
       </select>
     </div>
-    <div class="pink">&nbsp;</div>
-    <div class="pink">&nbsp;</div>
-    <div class="pink">&nbsp;</div>
-    <div class="pink">&nbsp;</div>
+    <div class="blue">&nbsp;</div>
+    <div class="bluegreen label">Selection</div>
+    <div class="bluegreen">
+      <select class="controlItem" id="selection">
+        <option value="tile">Tile</option>
+        <option value="row">Row</option>
+        <option value="col">Column</option>
+        <option value="row-col">Row + Column</option>
+        <option value="block">Block</option>
+      </select>
+    </div>
+    <div class="bluegreen">&nbsp;</div>
+    <div class="bluegreen label">Horiz. pivot</div>
+    <div class="bluegreen">
+      <select class="controlItem" id="horizontalPivotPosition">
+        <option value="left">Left</option>
+        <option value="center">Center</option>
+        <option value="right">Right</option>
+      </select>
+    </div>
+    <div class="bluegreen">&nbsp;</div>
+    <div class="bluegreen label">Vert. pivot</div>
+    <div class="bluegreen">
+      <select class="controlItem" id="verticalPivotPosition">
+        <option value="top">Top</option>
+        <option value="center">Center</option>
+        <option value="bottom">Bottom</option>
+      </select>
+    </div>
+    <div class="bluegreen">&nbsp;</div>
   </div>
 
   <canvas 

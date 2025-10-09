@@ -9,11 +9,13 @@ import { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, λnull, 
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
+import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
+
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
 // Shared constants
-import { _isArray, _isFinite, _parse, BLACK, COLOR, ENTITY, FILL, SOURCE_IN, SOURCE_OVER, WHITE } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _parse, BLACK, COLOR, ENTITY, FILL, SOURCE_IN, SOURCE_OVER, T_GRID, WHITE } from '../helper/shared-vars.js';
 
 // Local constants
 const _isInteger = Number.isSafeInteger || Number.isInteger,
@@ -21,8 +23,14 @@ const _isInteger = Number.isSafeInteger || Number.isInteger,
     GRAY = 'rgb(127 127 127 / 1)',
     GRID_GRADIENT = 'gridGradient',
     GRID_PICTURE = 'gridPicture',
-    T_GRID = 'Grid',
-    TILE_PICTURE = 'tilePicture';
+    TILE_PICTURE = 'tilePicture',
+    TOP = 'top',
+    LEFT = 'left',
+    CENTER = 'center',
+    BOTTOM = 'bottom',
+    RIGHT = 'right',
+    HORIZONTAL_POSITIONS = ['left', 'center', 'right'],
+    VERTICAL_POSITIONS = ['top', 'center', 'bottom'];
 
 
 // #### Grid constructor
@@ -116,6 +124,14 @@ const defaultAttributes = {
 // + The name-String of a Scrawl-canvas Gradient or RadialGradient object, or the object itself
 // + An integer Number representing the index of a tileSource object
     gutterColor: GRAY,
+
+// __horizontalPivotPosition__ - the x coordinate to return to artefacts using a tile as their pivot
+// + Permitted values: 'left', 'center', 'right'
+    horizontalPivotPosition: LEFT,
+
+// __verticalPivotPosition__ - the y coordinate to return to artefacts using a tile as their pivot
+// + Permitted values: 'top', 'center', 'bottom'
+    verticalPivotPosition: TOP,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -214,6 +230,26 @@ S.rows = function (item) {
     this.dirtyFilterIdentifier = true;
 };
 D.rows = λnull;
+
+S.horizontalPivotPosition = function (item) {
+
+    if (item.substring) {
+
+        item = item.toLowerCase();
+
+        if (HORIZONTAL_POSITIONS.includes(item)) this.horizontalPivotPosition = item;
+    }
+};
+
+S.verticalPivotPosition = function (item) {
+
+    if (item.substring) {
+
+        item = item.toLowerCase();
+
+        if (VERTICAL_POSITIONS.includes(item)) this.verticalPivotPosition = item;
+    }
+};
 
 
 // #### Tile management
@@ -319,6 +355,188 @@ P.getTilesUsingSource = function (key) {
 };
 
 
+// #### Convenience helpers
+
+// `tileIndexFromPosition` - returns the tileFill index for a (row, col) pair
+P.tileIndexFromPosition = function (row, col) {
+
+    if (_isFinite(row) && _isFinite(col) && row >= 0 && col >= 0) {
+
+        const rows = this.rows,
+            cols = this.columns;
+
+        row = (row | 0);
+        col = (col | 0);
+
+        if (row < rows && col < cols) return (row * cols) + col;
+    }
+
+    // On failure return -1
+    return -1;
+};
+
+// `positionIndices` - returns [row, col] for a tileFill index
+P.positionIndices = function (index) {
+
+    if (_isFinite(index) && index >= 0) {
+
+        const rows = this.rows,
+            cols = this.columns;
+
+        index = (index | 0);
+
+        if (cols > 0 && index < rows * cols) return [~~(index / cols), index % cols];
+    }
+
+    // On failure return an empty array
+    return [];
+};
+
+// `rowIndex` - returns row for a tileFill index
+P.rowIndex = function (index) {
+
+    if (_isFinite(index) && index >= 0) {
+
+        const rows = this.rows,
+            cols = this.columns;
+
+        index = (index | 0);
+
+        if (cols > 0 && index < rows * cols) return ~~(index / cols);
+    }
+
+    // On failure return -1
+    return -1;
+};
+
+// `columnIndex` - returns column for a tileFill index
+P.columnIndex = function (index) {
+
+    if (_isFinite(index) && index >= 0) {
+
+        const rows = this.rows,
+            cols = this.columns;
+
+        index = (index | 0);
+
+        if (cols > 0 && index < rows * cols) return index % cols;
+    }
+
+    // On failure return -1
+    return -1;
+};
+
+// `fillRow` - paint an entire row
+// + Argument object: { row, index }
+P.fillRow = function (items = Ωempty) {
+
+    let { row, index } = items;
+
+    if (_isFinite(row) && _isFinite(index) && row >= 0 && index >= 0) {
+
+        const cols = this.columns,
+            rows = this.rows;
+
+        row = (row | 0);
+        index = (index | 0);
+
+        if (cols > 0 && rows > 0 && row < rows) {
+
+            const start = row * cols,
+                fill = this.tileFill;
+
+            for (let c = 0; c < cols; c++) {
+
+                fill[start + c] = index;
+            }
+
+            this.dirtyFilterIdentifier = true;
+        }
+    }
+    return this;
+};
+
+// `fillColumn` - paint an entire column
+// + Argument object: { column, index }
+P.fillColumn = function (items = Ωempty) {
+
+    let { column, index } = items;
+
+    if (_isFinite(column) && _isFinite(index) && column >= 0 && index >= 0) {
+
+        const cols = this.columns,
+            rows = this.rows;
+
+        column = (column | 0);
+        index = (index | 0);
+
+        if (cols > 0 && rows > 0 && column < cols) {
+
+            const fill = this.tileFill;
+
+            for (let r = 0; r < rows; r++) {
+
+                fill[(r * cols) + column] = index;
+            }
+
+            this.dirtyFilterIdentifier = true;
+        }
+    }
+    return this;
+};
+
+// `fillRect` - paint a rectangular region (inclusive)
+// + Argument object: { rowStart, columnStart, rowEnd, columnEnd, index }
+P.fillRect = function (items = Ωempty) {
+
+    let { rowStart, columnStart, rowEnd, columnEnd, index } = items;
+
+    if (_isFinite(rowStart) && _isFinite(rowEnd) && _isFinite(columnStart) && _isFinite(columnEnd) && _isFinite(index)) {
+
+        // normalize bounds
+        rowStart = (rowStart | 0);
+        rowEnd = (rowEnd | 0);
+        columnStart = (columnStart | 0);
+        columnEnd = (columnEnd | 0);
+        index = (index | 0);
+
+        if (rowStart > rowEnd) [rowStart, rowEnd] = [rowEnd, rowStart];
+        if (columnStart > columnEnd) [columnStart, columnEnd] = [columnEnd, columnStart];
+
+        const cols = this.columns,
+            rows = this.rows;
+
+        if (
+            rowStart >= 0 && rowStart < rows &&
+            rowEnd >= 0 && rowEnd < rows &&
+            columnStart >= 0 && columnStart < cols &&
+            columnEnd >= 0 && columnEnd < cols &&
+            index >= 0
+        ) {
+
+            const fill = this.tileFill;
+
+            let r, c, base;
+
+            for (r = rowStart; r <= rowEnd; r++) {
+
+                base = r * cols;
+
+                for (c = columnStart; c <= columnEnd; c++) {
+
+                    fill[base + c] = index;
+                }
+            }
+
+            this.dirtyFilterIdentifier = true;
+        }
+    }
+    return this;
+};
+
+
+// #### Internal helpers
+
 // `cleanPathObject` - internal - used for entity stamping (Display cycle), and collision detection
 P.cleanPathObject = function () {
 
@@ -399,6 +617,46 @@ P.cleanPathObject = function () {
         this.currentTileWidth = colWidth;
         this.currentTileHeight = rowHeight;
     }
+};
+
+P.getTilePivotCoordsAt = function (index) {
+
+    if (_isFinite(index) && index >= 0) {
+
+        const tiles = this.tileRealCoordinates;
+
+        if (index < tiles.length) {
+
+            const start = this.currentStampPosition,
+                offset = [...tiles[index]],
+                angle = this.currentRotation,
+                scale = this.currentScale,
+                horizontalPivotPosition = this.horizontalPivotPosition,
+                verticalPivotPosition = this.verticalPivotPosition,
+                width = this.currentTileWidth,
+                height = this.currentTileHeight;
+
+            if (horizontalPivotPosition === RIGHT) offset[0] += width;
+            else if (horizontalPivotPosition === CENTER) offset[0] += width / 2;
+
+            if (verticalPivotPosition === BOTTOM) offset[1] += height;
+            else if (verticalPivotPosition === CENTER) offset[1] += height / 2;
+
+            if (this.flipReverse) offset[0] = -offset[0];
+            if (this.flipUpend) offset[1] = -offset[1];
+
+            const coord = requestCoordinate();
+            coord.setFromArray(offset).rotate(angle).add(start);
+
+            const res = [...coord];
+
+            releaseCoordinate(coord);
+
+            return res;
+        }
+    }
+
+    return [...this.currentStampPosition];
 };
 
 

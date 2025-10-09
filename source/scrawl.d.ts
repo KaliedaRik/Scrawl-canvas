@@ -1637,6 +1637,13 @@ interface GridFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions 
     removeTileSource: (index: number) => GridInstance;
     getTileSource: (row: number, col?: number) => number;
     getTilesUsingSource: (key: number) => number[];
+    tileIndexFromPosition: (row: number, column: number) => number;
+    positionIndices: (index: number) => [number, number] | [];
+    rowIndex: (index: number) => number;
+    columnIndex: (index: number) => number;
+    fillRow: (CommonObjectInput) => void;
+    fillColumn: (CommonObjectInput) => void;
+    fillRect: (CommonObjectInput) => void;
     simpleStamp: (host: CellInstance, items?: GridFactoryInputs) => void;
 }
 
