@@ -117,8 +117,6 @@ const checkHitTiles = () => {
 
     if (typeof hits !== 'boolean' && hits) {
 
-        console.log(hits);
-
         const index = hits.tiles[0];
 
         switch (currentSelection) {

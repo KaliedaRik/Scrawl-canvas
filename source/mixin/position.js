@@ -1413,7 +1413,7 @@ export default function (P = Ωempty) {
                         }
                     }
 
-                    // When the pivot is a Polyline entity, need also to confirm which pin to use (default 0)
+                    // When the pivot is a Grid entity, need also to confirm which tile to use (default 0)
                     else if (pivot.type === T_GRID) {
 
                         coord.setFromArray(pivot.getTilePivotCoordsAt(pivotIndex));
