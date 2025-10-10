@@ -1641,9 +1641,9 @@ interface GridFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions 
     positionIndices: (index: number) => [number, number] | [];
     rowIndex: (index: number) => number;
     columnIndex: (index: number) => number;
-    fillRow: (CommonObjectInput) => void;
-    fillColumn: (CommonObjectInput) => void;
-    fillRect: (CommonObjectInput) => void;
+    fillRow: (CommonObjectInput) => GridInstance;
+    fillColumn: (CommonObjectInput) => GridInstance;
+    fillRect: (CommonObjectInput) => GridInstance;
     simpleStamp: (host: CellInstance, items?: GridFactoryInputs) => void;
 }
 

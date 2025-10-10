@@ -1441,19 +1441,19 @@ P.getCellData = function (opaque = false) {
 
             const index = ((row * width) + col) * 4;
 
-            coord.setFromArray([halfWidth, halfHeight]).subtract([row, col]);
+            // coord.setFromArray([halfWidth, halfHeight]).subtract([row, col]);
+            coord.setFromArray([col, row]).subtract([halfWidth, halfHeight]);
 
-            // We want angle `0deg` to point north, to the top of the screen
-            let angle = 1 - ((_atan2(coord[1], coord[0]) / _piDouble) + 0.5);
-            if (angle > 0.5) angle -= 0.5;
-            else angle += 0.5;
+            // We want angle `0.0turn / 1.0turn` to point north, to the top of the screen; `0.25turn` is east (horizontal to the right); etc.
+            let angle = (_atan2(coord[1], coord[0]) / _piDouble) + 0.5;
+            angle = (angle + 0.75) % 1;
 
             pixelState.push({
                 indexR: index,
                 indexG: index + 1,
                 indexB: index + 2,
                 indexA: index + 3,
-                red: data[index + 0],
+                red: data[index],
                 green: data[index + 1],
                 blue: data[index + 2],
                 alpha: (opaque) ? 255 : data[index + 3],
@@ -1483,25 +1483,27 @@ P.paintCellData = function (item = Ωempty) {
 
     if (width && height && data && pixelState && w === width && h === height) {
 
-        pixelState.forEach(p => {
+        let i, iz, p, red, green, blue, alpha;
 
-            const {indexR, indexG, indexB, indexA} = p;
+        for (i = 0, iz = pixelState.length; i < iz; i++) {
 
-            const red = pixelCleaner[0] = p.red;
-            const green = pixelCleaner[0] = p.green;
-            const blue = pixelCleaner[0] = p.blue;
-            const alpha = pixelCleaner[0] = p.alpha;
+            p = pixelState[i];
+
+            red = pixelCleaner[0] = p.red;
+            green = pixelCleaner[0] = p.green;
+            blue = pixelCleaner[0] = p.blue;
+            alpha = pixelCleaner[0] = p.alpha;
 
             p.red = red;
             p.green = green;
             p.blue = blue;
             p.alpha = alpha;
 
-            data[indexR] = red;
-            data[indexG] = green;
-            data[indexB] = blue;
-            data[indexA] = alpha;
-        });
+            data[p.indexR] = red;
+            data[p.indexG] = green;
+            data[p.indexB] = blue;
+            data[p.indexA] = alpha;
+        };
 
         this.engine.putImageData(iData, 0, 0);
     }
