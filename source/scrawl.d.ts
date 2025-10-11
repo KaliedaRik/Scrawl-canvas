@@ -3156,6 +3156,7 @@ export function removeNativeListener(
 // -------------------------------------
 interface SeededRandomNumberGeneratorFunctions {
     random: () => number;
+    range: (range: number) => number;
 }
 export function seededRandomNumberGenerator(seed?: string): SeededRandomNumberGeneratorFunctions;
 

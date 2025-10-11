@@ -150,8 +150,9 @@ const checkHitTiles = () => {
                     let rowStart = row - 1,
                         rowEnd = row + 1,
                         columnStart = column - 1,
-                        columnEnd = column + 1,
-                        rows = myGrid.get('rows'),
+                        columnEnd = column + 1;
+
+                    const rows = myGrid.get('rows'),
                         columns = myGrid.get('columns');
 
                     if (rowStart < 0) rowStart = 0;
@@ -177,7 +178,7 @@ const checkHitTiles = () => {
     }
     else {
 
-        bunny.set({ 
+        bunny.set({
             lockTo: 'start',
             addPivotRotation: false,
         });

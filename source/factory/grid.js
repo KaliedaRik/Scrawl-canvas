@@ -630,7 +630,6 @@ P.getTilePivotCoordsAt = function (index) {
             const start = this.currentStampPosition,
                 offset = [...tiles[index]],
                 angle = this.currentRotation,
-                scale = this.currentScale,
                 horizontalPivotPosition = this.horizontalPivotPosition,
                 verticalPivotPosition = this.verticalPivotPosition,
                 width = this.currentTileWidth,
