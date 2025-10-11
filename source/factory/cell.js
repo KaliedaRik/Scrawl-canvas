@@ -1429,34 +1429,42 @@ P.getCellData = function (opaque = false) {
         halfHeight = _floor(height / 2);
 
     const iData = this.engine.getImageData(0, 0, width, height),
-        data = iData.data;
+        data = iData.data,
+        slider = new Uint32Array(data.buffer,  data.byteOffset,  data.byteLength >>> 2);;
+
+    if (opaque) {
+
+        for (let i = 3, iz = data.length; i < iz; i += 4) {
+
+            data[i] = 255;
+        }
+    }
 
     const pixelState = [];
 
     const coord = requestCoordinate();
 
-    for (let row = 0; row < height; row++) {
+    let row, col, index, angle;
 
-        for (let col = 0; col < width; col++) {
+    for (row = 0; row < height; row++) {
 
-            const index = ((row * width) + col) * 4;
+        for (col = 0; col < width; col++) {
+
+            index = ((row * width) + col) * 4;
 
             // coord.setFromArray([halfWidth, halfHeight]).subtract([row, col]);
             coord.setFromArray([col, row]).subtract([halfWidth, halfHeight]);
 
             // We want angle `0.0turn / 1.0turn` to point north, to the top of the screen; `0.25turn` is east (horizontal to the right); etc.
-            let angle = (_atan2(coord[1], coord[0]) / _piDouble) + 0.5;
+            angle = (_atan2(coord[1], coord[0]) / _piDouble) + 0.5;
             angle = (angle + 0.75) % 1;
 
             pixelState.push({
-                indexR: index,
-                indexG: index + 1,
-                indexB: index + 2,
-                indexA: index + 3,
+                index,
                 red: data[index],
-                green: data[index + 1],
-                blue: data[index + 2],
-                alpha: (opaque) ? 255 : data[index + 3],
+                green: data[++index],
+                blue: data[++index],
+                alpha: data[++index],
                 row,
                 col,
                 distance: coord.getMagnitude(),
@@ -1469,7 +1477,9 @@ P.getCellData = function (opaque = false) {
 
     return {
         iData,
+        slider,
         pixelState,
+        opaque,
     }
 };
 
@@ -1477,35 +1487,39 @@ const pixelCleaner = new Uint8ClampedArray(1);
 
 P.paintCellData = function (item = Ωempty) {
 
-    const { iData, pixelState} = item;
+    const { iData, slider, pixelState, opaque} = item;
     const { width, height, data} = iData;
     const [w, h] = this.currentDimensions;
 
     if (width && height && data && pixelState && w === width && h === height) {
 
-        let i, iz, p, red, green, blue, alpha;
+        let i, iz, p, red, green, blue, alpha, index,
+            update = false;
 
         for (i = 0, iz = pixelState.length; i < iz; i++) {
 
             p = pixelState[i];
 
+            index = p.index;
+
             red = pixelCleaner[0] = p.red;
             green = pixelCleaner[0] = p.green;
             blue = pixelCleaner[0] = p.blue;
-            alpha = pixelCleaner[0] = p.alpha;
+            alpha = opaque ? 255 : pixelCleaner[0] = p.alpha;
 
-            p.red = red;
-            p.green = green;
-            p.blue = blue;
-            p.alpha = alpha;
+            if (slider[index >>> 2] !== ((alpha << 24) | (blue << 16) | (green << 8) | red) >>> 0) {
 
-            data[p.indexR] = red;
-            data[p.indexG] = green;
-            data[p.indexB] = blue;
-            data[p.indexA] = alpha;
+                update = true;
+
+                data[index] = red;
+                data[++index] = green;
+                data[++index] = blue;
+
+                if (!opaque) data[++index] = alpha;
+            }
         };
 
-        this.engine.putImageData(iData, 0, 0);
+        if (update) this.engine.putImageData(iData, 0, 0);
     }
 };
 

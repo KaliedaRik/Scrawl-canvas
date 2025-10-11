@@ -537,9 +537,10 @@ const optionNames = [
     'conicTwo',
 ];
 
-const len = updateOptions.length;
+const len = updateOptions.length,
+    rnd = scrawl.seededRandomNumberGenerator('salting-is-good');
 
-let choice = Math.floor(Math.random() * len),
+let choice = rnd.range(len),
     currentChoice = choice;
 
 render.set({ commence: updateOptions[currentChoice] });
@@ -547,7 +548,7 @@ currentStatus.textContent = `Starting with ${optionNames[currentChoice]}`;
 
 setInterval(() => {
 
-    choice = Math.floor(Math.random() * len);
+    choice = rnd.range(len);
     render.set({ commence: updateOptions[choice] });
     currentStatus.textContent = `Changing from ${optionNames[currentChoice]} to ${optionNames[choice]}`;
     currentChoice = choice;
