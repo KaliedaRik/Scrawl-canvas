@@ -19,10 +19,13 @@ const name = (n) => `${namespace}-${n}`;
 const [cWidth, cHeight] = canvas.get('dimensions'),
     here = canvas.here;
 
+const _max = Math.max,
+    _min = Math.min,
+    _floor = Math.floor;
 
 // Create the easel cell
-const eWidth = Math.floor(cWidth / 4),
-    eHeight = Math.floor(cHeight / 4);
+const eWidth = _floor(cWidth / 4),
+    eHeight = _floor(cHeight / 4);
 
 const easel = canvas.buildCell({
     name: name('easel-cell'),
@@ -52,7 +55,29 @@ scrawl.makePicture({
 // Fluid simulation
 const len = eWidth * eHeight;
 
-const IX = (x, y) => y * eWidth + x;
+const eWm1 = eWidth - 1,
+    eWm15 = eWidth - 1.5,
+    eWm2 = eWidth - 2,
+    eHm1 = eHeight - 1,
+    eHm15 = eHeight - 1.5,
+    eHm2 = eHeight - 2;
+
+const innerIndicesLUT = new Uint32Array(len * 3);
+
+let counter = 0
+for (let y = 1; y < eHm1; y++) {
+
+    for (let x = 1; x < eWm1; x++) {
+
+        const index = y * eWidth + x;
+
+        innerIndicesLUT[counter++] = index;
+        innerIndicesLUT[counter++] = x;
+        innerIndicesLUT[counter++] = y;
+    }
+}
+
+console.log(innerIndicesLUT)
 
 // Tweakable variables
 const dt = 1/60,
@@ -69,44 +94,51 @@ let u = new Float32Array(len),
     dye = new Float32Array(len),
     dye0 = new Float32Array(len);
 
-// ---- Helpers
-const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
-
+// Helper functions
 const setBoundary = function (field, solid = true) {
 
-    for (let y = 0; y < eHeight; y++) {
+    let i, index0, index1;
 
-        field[IX(0, y)] = field[IX(1, y)];
-        field[IX(eWidth - 1, y)] = field[IX(eWidth - 2, y)];
+    for (i = 0; i < eHeight; i++) {
+
+        index0 = i * eWidth + 0;
+        index1 = i * eWidth + 1;
+        field[index0] = field[index1];
+
+        index0 = i * eWidth + eWm1;
+        index1 = i * eWidth + eWm2;
+        field[index0] = field[index1];
     }
 
-    for (let x = 0; x < eWidth; x++) {
+    for (i = 0; i < eWidth; i++) {
 
-        field[IX(x, 0)] = field[IX(x, 1)];
-        field[IX(x, eHeight - 1)] = field[IX(x, eHeight - 2)];
+        index0 = 0 * eWidth + i;
+        index1 = 1 * eWidth + i;
+        field[index0] = field[index1];
+
+        index0 = eHm1 * eWidth + i;
+        index1 = eHm2 * eWidth + i;
+        field[index0] = field[index1];
     }
 };
 
 const jacobi = function (out, b, alpha, rcpBeta, iterations){
 
-    let k, y, x, i;
+    let k, i, iz, index;
 
     for (k = 0; k < iterations; k++) {
 
-        for (y = 1; y < eHeight - 1; y++) {
+        for (i = 0, iz = innerIndicesLUT.length; i < iz; i += 3) {
 
-            for (x = 1; x < eWidth - 1; x++) {
+            index = innerIndicesLUT[i];
 
-                i = IX(x, y);
-
-                out[i] = (
-                    b[i] +
-                    out[IX(x - 1, y)] +
-                    out[IX(x + 1, y)] +
-                    out[IX(x, y - 1)] +
-                    out[IX(x, y + 1)]
-                ) * rcpBeta;
-            }
+            out[index] = (
+                b[index] +
+                out[index - 1] +
+                out[index + 1] +
+                out[index - eWidth] +
+                out[index + eWidth]
+            ) * rcpBeta;
         }
         setBoundary(out);
     }
@@ -114,59 +146,52 @@ const jacobi = function (out, b, alpha, rcpBeta, iterations){
 
 const advect = function (out, inp, u, v, dt) {
 
-    let y, x, xf, yf, x0, x1, sx, y0, y1, sy, i00, i10, i01, i11, a, b,
-        _floor = Math.floor;
+    let i, iz, xf, yf, x0, x1, sx, y0, y1, sy, a, b, index, y0width, y1width;
 
-    for (y = 1; y < eHeight - 1; y++) {
+    for (i = 0, iz = innerIndicesLUT.length; i < iz; i += 3) {
 
-        for (x = 1; x < eWidth - 1; x++) {
+        index = innerIndicesLUT[i];
 
-            xf = x - dt * u[IX(x, y)] * (eWidth - 2);
-            xf = clamp(xf, 0.5, eWidth - 1.5);
+        xf = innerIndicesLUT[i + 1] - dt * u[index] * eWm2;
+        xf = xf < 0.5 ? 0.5 : xf > eWm15 ? eWm15 : xf;
 
-            yf = y - dt * v[IX(x, y)] * (eHeight - 2);
-            yf = clamp(yf, 0.5, eHeight - 1.5);
+        yf = innerIndicesLUT[i + 2] - dt * v[index] * eHm2;
+        yf = yf < 0.5 ? 0.5 : yf > eHm15 ? eHm15 : yf;
 
-            x0 = _floor(xf);
-            y0 = _floor(yf);
+        x0 = _floor(xf);
+        y0 = _floor(yf);
 
-            x1 = x0 + 1;
-            y1 = y0 + 1;
+        x1 = x0 + 1;
+        y1 = y0 + 1;
 
-            sx = xf - x0;
-            sy = yf - y0;
+        sx = xf - x0;
+        sy = yf - y0;
 
-            i00 = IX(x0, y0);
-            i10 = IX(x1, y0);
-            i01 = IX(x0, y1);
-            i11 = IX(x1, y1);
+        y0width = y0 * eWidth;
+        y1width = y1 * eWidth;
 
-            a = inp[i00] * (1 - sx) + inp[i10] * sx;
-            b = inp[i01] * (1 - sx) + inp[i11] * sx;
+        a = inp[y0width + x0] * (1 - sx) + inp[y0width + x1] * sx;
+        b = inp[y1width + x0] * (1 - sx) + inp[y1width + x1] * sx;
 
-            out[IX(x, y)] = a * (1 - sy) + b * sy;
-        }
+        out[index] = a * (1 - sy) + b * sy;
     }
     setBoundary(out);
 };
 
 const project = function (u, v, p, div) {
 
-    let y, x, i;
+    let i, iz, index;
 
-    for (y = 1; y < eHeight - 1; y++) {
+    for (i = 0, iz = innerIndicesLUT.length; i < iz; i += 3) {
 
-        for (x = 1; x < eWidth - 1; x++) {
+        index = innerIndicesLUT[i];
 
-            i = IX(x, y);
+        div[index] = -0.5 * (
+            (u[index + 1] - u[index - 1]) +
+            (v[index + eWidth] - v[index - eWidth])
+        );
 
-            div[i] = -0.5 * (
-                (u[IX(x + 1, y)] - u[IX(x - 1, y)]) +
-                (v[IX(x, y + 1)] - v[IX(x, y - 1)])
-            );
-
-            p[i] = 0;
-        }
+        p[index] = 0;
     }
     setBoundary(div);
     setBoundary(p);
@@ -174,16 +199,12 @@ const project = function (u, v, p, div) {
     // Solve ∇²p = div via Jacobi
     jacobi(p, div, 1, 0.25, 20);
 
-    // u -= ∂p/∂x; v -= ∂p/∂y
-    for (y = 1; y < eHeight - 1; y++){
+    for (i = 0, iz = innerIndicesLUT.length; i < iz; i += 3) {
 
-        for (x = 1; x < eWidth - 1; x++){
+        index = innerIndicesLUT[i];
 
-            i = IX(x, y);
-
-            u[i] -= 0.5 * (p[IX(x + 1, y)] - p[IX(x - 1, y)]);
-            v[i] -= 0.5 * (p[IX(x, y + 1)] - p[IX(x, y - 1)]);
-        }
+        u[index] -= 0.5 * (p[index + 1] - p[index - 1]);
+        v[index] -= 0.5 * (p[index + eWidth] - p[index - eWidth]);
     }
     setBoundary(u);
     setBoundary(v);
@@ -196,26 +217,23 @@ const diffuse = function (out, inp, rate) {
 
     out.set(inp);
 
-    let k, y, x, i;
+    let k, i, iz, index;
 
     for (k = 0; k < 20; k++) {
 
-        for (y = 1; y < eHeight - 1; y++) {
+        for (i = 0, iz = innerIndicesLUT.length; i < iz; i += 3) {
 
-            for (x = 1; x < eWidth - 1; x++) {
-            
-                i = IX(x, y);
-            
-                out[i] = (
-                    inp[i] +
-                    a * (
-                        out[IX(x - 1, y)] +
-                        out[IX(x + 1, y)] +
-                        out[IX(x, y - 1)] +
-                        out[IX(x, y + 1)]
-                    )
-                ) / beta;
-            }
+            index = innerIndicesLUT[i];
+
+            out[index] = (
+                inp[index] +
+                a * (
+                    out[index - 1] +
+                    out[index + 1] +
+                    out[index - eWidth] +
+                    out[index + eWidth]
+                )
+            ) / beta;
         }
         setBoundary(out);
     }
@@ -224,7 +242,7 @@ const diffuse = function (out, inp, rate) {
 // Simulation step
 const emitter1 = {
     x: 2,
-    y: Math.floor(eHeight / 2) - 1,
+    y: _floor(eHeight / 2) - 1,
     radius: 2,
     dyeRate: 1.0,
     vx: 1.5 / eWidth,
@@ -232,7 +250,7 @@ const emitter1 = {
 };
 const emitter2 = {
     x: eWidth - 2,
-    y: Math.floor(eHeight / 2) + 1,
+    y: _floor(eHeight / 2) + 1,
     radius: 2,
     dyeRate: 1.0,
     vx: -1.2 / eWidth,
@@ -244,10 +262,10 @@ const step = function () {
     // emitter 1 (to show something on the canvas)
     let { x: ex, y: ey, radius: r, dyeRate, vx, vy } = emitter1;
     let r2 = r * r,
-        minX = Math.max(1, ex - r),
-        maxX = Math.min(eWidth  - 2, ex + r),
-        minY = Math.max(1, ey - r),
-        maxY = Math.min(eHeight - 2, ey + r);
+        minX = _max(1, ex - r),
+        maxX = _min(eWm2, ex + r),
+        minY = _max(1, ey - r),
+        maxY = _min(eHm2, ey + r);
 
     let y, x, dx, dy, i;
 
@@ -260,8 +278,8 @@ const step = function () {
 
             if (dx * dx + dy * dy <= r2) {
 
-                i = IX(x, y);
-                dye[i] = Math.min(1, dye[i] + dyeRate * dt);
+                i = y * eWidth + x;
+                dye[i] = _min(1, dye[i] + dyeRate * dt);
                 u[i] += vx;
                 v[i] += vy;
             }
@@ -271,10 +289,10 @@ const step = function () {
     // emitter 2 (to show some conflict)
     ({ x: ex, y: ey, radius: r, dyeRate, vx, vy } = emitter2);
     r2 = r * r;
-    minX = Math.max(1, ex - r);
-    maxX = Math.min(eWidth - 2, ex + r);
-    minY = Math.max(1, ey - r);
-    maxY = Math.min(eHeight - 2, ey + r);
+    minX = _max(1, ex - r);
+    maxX = _min(eWm2, ex + r);
+    minY = _max(1, ey - r);
+    maxY = _min(eHm2, ey + r);
 
     for (y = minY; y <= maxY; y++) {
 
@@ -285,8 +303,8 @@ const step = function () {
 
             if (dx * dx + dy * dy <= r2) {
 
-                i = IX(x, y);
-                dye[i] = Math.min(1, dye[i] + dyeRate * dt);
+                i = y * eWidth + x;
+                dye[i] = _min(1, dye[i] + dyeRate * dt);
                 u[i] += vx;
                 v[i] += vy;
             }
@@ -320,9 +338,7 @@ const step = function () {
 
 const drawCell = () => {
 
-    let i, p, v, c,
-        _max = Math.max,
-        _min = Math.min;
+    let i, p, v, c;
 
     for (i = 0; i < len; i++) {
 
