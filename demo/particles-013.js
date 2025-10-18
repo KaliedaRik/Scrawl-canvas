@@ -329,7 +329,7 @@ scrawl.makeEmitter({
         const colorFactory = this.fillColorFactory;
 
         engine.save();
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.resetTransform();
 
         history.forEach(p => {
 

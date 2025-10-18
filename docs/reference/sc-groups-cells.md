@@ -1,12 +1,12 @@
 # The Scrawl-canvas scene graph
-Scrawl-canvas works by generating a **retained mode** description - an object model of graphical primatives (called entitys) - for a scene which displays in a `<canvas>` element. SC builds this [scene graph](https://en.wikipedia.org/wiki/Scene_graph) using Group and Cell objects, alongside entity objects which get gathered into the Group objects that have been created for the scene.
+Scrawl-canvas works by generating a **retained mode** description - an object model of graphical primitives (called entitys) - for a scene which displays in a `<canvas>` element. SC builds this [scene graph](https://en.wikipedia.org/wiki/Scene_graph) using Group and Cell objects, alongside entity objects which get gathered into the Group objects that have been created for the scene.
 
 > **tl;dr: *SC is not a game engine!*** The SC scene graph does not use the classic [tree structure](https://en.wikipedia.org/wiki/Tree_(abstract_data_type)) approach to build out a top-down hierarchy of layers and nodes to describe the scene. Rather, SC uses a more bottom-up approach to creating the scene graph where entity objects control how, where and when they will appear in the canvas display. Using a tree structure for the scene graph may have been a more efficient design choice, but *SC is not a game engine!*
 > 
 > Dev-users should be aware that this - *somewhat different* - approach may take a bit of getting used to but, once the concepts are in place, it should be relatively simple to work with.
 
 ## SC scene graph hierarchy
-The following code creates a canvas display with this output. Note that the code is creating a deliberately complex scene-graph, for demonstration purposes; few of the test demos generate scene graphs as complex as this one:
+The following code creates a canvas display with this output. Note that the code is creating a deliberately complex scene graph, for demonstration purposes; few of the test demos generate scene graphs as complex as this one:
 
 ![Code output](sc-groups-cells-asset-001.webp)
 
@@ -185,13 +185,13 @@ The scene graph described above demonstrates these properties:
 + Every Cell object has a namesake Group object.
 + Cells cannot be nested; Groups cannot be nested, etc.
 + Though only shown here for one Cell, every Cell, Group and Entity object can control its own visibility in the Canvas display.
-+ Entitys are assigned to Groups (and Groups to Cells, Cells to the Canvas artifact) as they are created - the object lower down the hierarchy maintains details of the object it has assigned itself to.
-+ Though not shown here ... Cell, Group and Entity objects can reassign themsleves to a different Canvas, Cell or Group object (respectively) at any time.
++ Entitys are assigned to Groups (and Groups to Cells, Cells to the Canvas artefact) as they are created - the object lower down the hierarchy maintains details of the object it has assigned itself to.
++ Though not shown here ... Cell, Group and Entity objects can reassign themselves to a different Canvas, Cell or Group object (respectively) at any time.
 + Again not shown here ... entitys can belong to more than one Group object at any time.
 + Furthermore not shown here ... Group objects can exist independently of Cell objects - they're just collections of entity objects.
 + Cell objects can position themselves in the Canvas display; Entity objects can position themselves in their Cell's display.
 + Group objects play no role in positioning - there is no "cascade of matrix multiplications" between Cells, Groups and entitys.
-+ Some of the entitys have direct dependencies on other entitys for their positioning data, and one entity has a direcet dependency on a Cell to supply its fill style.
++ Some of the entitys have direct dependencies on other entitys for their positioning data, and one entity has a direct dependency on a Cell to supply its fill style.
 + A final not shown here ... Entitys can change their positioning and/or styling dependencies at any time.
 
 ## SC Group objects
@@ -237,7 +237,7 @@ Use the `group.kill()` function. Unlike (most) other SC objects, the Group `kill
 + `group.kill(true)`, `group.kill(true, false)` - kill the Group object's associated artefact/entity objects before removing the Group object from the SC ecosystem. Any artefact elements will remain in the DOM.
 + `group.kill(true, true)` - the same as `group.kill(true)`, except this time artefact elements will also be deleted from the DOM.
 
-Group objects also include functionality to kill all their currently associated artifact/entity objects while keeping the Group object itself intact:
+Group objects also include functionality to kill all their currently associated artefact/entity objects while keeping the Group object itself intact:
 + `group.killArtefacts()`, `group.killArtefacts(false)` - any artefact elements will remain in the DOM
 + `group.killArtefacts(true)` - any artefact elements will be deleted from the DOM
 
@@ -354,7 +354,7 @@ If the same set of filters need to be applied to several entity objects at the s
 Note that while the Group object filtering functionality is very similar to Cell object and entity object functionality, it differs from them in several small-yet-key areas. Repo-devs need to be aware that changes in filter functionality in one of these three areas of the code base may need to be reflected in the other two areas.
 
 ### Cell entity, and Stack artefact, end-user interactions
-Group objects come with a set of attributes and functions which, for end-users interacting with a Stack or Canvas element in a desktop (screen + mouse) environment, can quickly detect when they end-user's cursor is hovering over an Element artefact or entity object and take actions accordingly to change the Stack/Canvas display. Note that once these attributes are set, SC will handle the associated functionality automatically for the dev-user:
+Group objects come with a set of attributes and functions which, for end-users interacting with a Stack or Canvas element in a desktop (screen + mouse) environment, can quickly detect when the end-user's cursor is hovering over an Element artefact or entity object and take actions accordingly to change the Stack/Canvas display. Note that once these attributes are set, SC will handle the associated functionality automatically for the dev-user:
 + `group.checkForEntityHover` - Boolean (default: `false`)
 + `group.onEntityHover` - Function (default: no action taken)
 + `group.onEntityNoHover` - Function (default: no action taken)
@@ -400,7 +400,7 @@ Most SC functionality revolves around the *base Cell*, with the *display canvas*
 Note that the ***hidden `<canvas>` elements*** that SC generates as part of its work are just normal `<canvas>` elements, created using the browser's `document.createElement('canvas')` function. It is because of this reliance on access to the `document` object (alongside a number of other things such as the SC event system requiring access to the web page DOM) that SC is limited, *by design*, to work only in the frontend browser.
 + SC has not been designed to run in [web workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API), and makes no use of web worker code in any part of its code base. The same goes for [WebAssembly](https://developer.mozilla.org/en-US/docs/WebAssembly).
 + SC deliberately avoids the [OffscreenCanvas API](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas) as testing over the years has failed to demonstrate any significant speed/efficiency improvements for SC's specific requirements.
-+ SC does not include any code to help it run successfully on the server side, or in native apps. Honestly, if dev-users want a graphics generator to run on the server, their best bet is to look at something like [Skia](https://skia.org/) (which has bindings for the [Rust](https://crates.io/crates/skia-safe), [Java](https://github.com/JetBrains/skija), [Scala](https://github.com/nornagon/scanvas), [Python](https://pypi.org/project/skia-python/), etc languages), or alternatively [Cairo](https://www.cairographics.org/), to create graphical output for downloading or streaming to the front end.
++ SC does not include any code to help it run successfully on the server side, or in native apps. Honestly, if dev-users want a graphics generator to run on the server, their best bet is to look at something like [Skia](https://skia.org/) (which has bindings for the [Rust](https://crates.io/crates/skia-safe), [Java](https://github.com/JetBrains/skija), [Scala](https://github.com/nornagon/scanvas), [Python](https://pypi.org/project/skia-python/), etc languages), or alternatively [Cairo](https://www.cairographics.org/), to create graphical output for downloading or streaming to the frontend.
 
 ### Types of Cell objects
 SC uses hidden `<canvas>` elements for a variety of different purposes, and codes them up in different ways:
@@ -454,7 +454,7 @@ Dev-users can add a new `layer` Cell to a canvas at any time using the `canvas.b
 ### Create, serialize, clone and kill Cell objects
 SC handles the creation of `base` and `pool` Cells internally, as required.
 
-Dev-users can **create** new `layer` Cell objects using the `canvas.buildCell({key: value, ...})` function. While `layer` Cells can, in theory, be moved between Canvas artefacts, Repo-devs currently work on the assumtion that layers will be created for a specific canvas display and will not be transferred or shared between displays.
+Dev-users can **create** new `layer` Cell objects using the `canvas.buildCell({key: value, ...})` function. While `layer` Cells can, in theory, be moved between Canvas artefacts, Repo-devs currently work on the assumption that layers will be created for a specific canvas display and will not be transferred or shared between displays.
 
 Cell objects cannot, at this time, be **serialized** or **cloned**. Repo-devs need to address serialization work at some point.
 
@@ -467,7 +467,7 @@ Dev users can retrieve Cell objects from the library (as long as they know the o
 
 `Base` Cell objects can also be retrieved using the Canvas artefact object `canvas.getBase()` function. If only the `base` Cell object's name is required, use `canvas.get('baseName')`.
 
-For dev-user convenience, `base` Cell object attributes can be updated using the `canvas.setBase({key: value, ...})` and `canvas.deltaSetBase({key: value, ...})` function (with apologies for the function naming discrepency here).
+For dev-user convenience, `base` Cell object attributes can be updated using the `canvas.setBase({key: value, ...})` and `canvas.deltaSetBase({key: value, ...})` function (with apologies for the function naming discrepancy here).
 
 `Pool` Cell objects are *untracked objects* - repo-devs can get a `pool` Cell using the `requestCell()` function and return it to the pool using the `releaseCell(object)` function.
 
@@ -600,7 +600,7 @@ Note that `layer` Cells cannot be dragged-and-dropped like entity objects. Inste
 SC includes a (rough) emulation of [CSS object-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) functionality, which gets actioned when the `base` Cell stamps itself into its display `<canvas>` as the last step in the Display cycle. The `base` Cell reads the Canvas artefact object's `fit` attribute and positions itself into the display accordingly. This functionality is defined in the [factory/cell.js](../source/factory/cell.html) file - specifically the `show()` function.
 
 #### Cell opacity, composition and filters
-When a `layer` Cell object stamps itself into the `base` Cell, and the `base` Cell stamps itself into the display `<canvas>`, they will take into account their `globalAlpha`, `globalCompositeOperation`, `filter` and `filters`
+When a `layer` Cell object stamps itself into the `base` Cell, and the `base` Cell stamps itself into the display `<canvas>`, they will take into account their `globalAlpha`, `globalCompositeOperation`, `filter` and `filters` attributes.
 
 ### Cell interactions
 Scrawl artefact objects can include a `here` object, which includes real-time-updated details of the environment in which the artefact's DOM element lives. Further details of the `here` object can be found in the [User interaction and the here object](sc-dom-artefacts.html#user-interaction-and-the-here-object) section of the "Artefacts and the DOM" page in this Runbook.
@@ -737,7 +737,7 @@ Cell objects can act as State object `fillStyle` and `strokeStyle` attribute pat
 Further details about Pattern styles objects can be found in the [Styles management and use](sc-styles.html) page of this Runbook.
 
 ## Object processing order within the scene graph
-When the dev-user adds `pivot`, `mimic`, and `path` references into their SC code (see the [positioning system](sc-positioning.html) page for details), they also introduce **artefact dependencies**: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependant artefact begins its own calculations.
+When the dev-user adds `pivot`, `mimic`, and `path` references into their SC code (see the [positioning system](sc-positioning.html) page for details), they also introduce **artefact dependencies**: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependent artefact begins its own calculations.
 
 > **tl;dr: - SC includes no functionality to internally construct and maintain a [dependency graph](https://en.wikipedia.org/wiki/Dependency_graph)** describing which artefacts need to calculate values before dependent artefact can calculate theirs. It is up to the dev-user to tell SC the order in which artefacts should calculate/update their state.
 
@@ -753,7 +753,7 @@ The [SC Display cycle](sc-animation-systems.html) comprises the following steps:
 3: Show operation
 ```
 
-A number of attributes are used across the code base to describer ordering; it's important not to confuse them:
+A number of attributes are used across the code base to describe ordering; it's important not to confuse them:
 
 + SC ***Cell*** artefacts use their `compileOrder` and `showOrder` attributes to determine in which order they will perform the Display cycle compile and show operations.
 

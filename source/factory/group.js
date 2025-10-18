@@ -438,7 +438,7 @@ P.stampAction = function (myCell) {
 
                 realEngine.globalCompositeOperation = SOURCE_OVER;
                 realEngine.globalAlpha = 1;
-                realEngine.setTransform(1, 0, 0, 1, 0, 0);
+                realEngine.resetTransform();
 
                 realEngine.drawImage(tempElement, 0, 0);
 
@@ -475,7 +475,7 @@ P.applyFilters = function (myCell) {
         filterCellEngine.save();
         filterCellEngine.globalCompositeOperation = SOURCE_IN;
         filterCellEngine.globalAlpha = 1;
-        filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+        filterCellEngine.resetTransform();
         filterCellEngine.drawImage(currentElement, 0, 0);
         filterCellEngine.restore();
 
@@ -483,7 +483,7 @@ P.applyFilters = function (myCell) {
     }
 
     // At this point we will send the contents of the filterHost canvas over to the filter engine
-    filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+    filterCellEngine.resetTransform();
 
     const myimage = filterCellEngine.getImageData(0, 0, filterCellElement.width, filterCellElement.height);
 
@@ -505,7 +505,7 @@ P.applyFilters = function (myCell) {
 
     currentEngine.save();
 
-    currentEngine.setTransform(1, 0, 0, 1, 0, 0);
+    currentEngine.resetTransform();
     currentEngine.drawImage(filterCellElement, 0, 0);
     currentEngine.restore();
 

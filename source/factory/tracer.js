@@ -168,7 +168,7 @@ P.regularStamp = function () {
         engine.lineWidth = 1;
         engine.strokeStyle = hitRadiusColor;
 
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.resetTransform();
         engine.beginPath();
         engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, _piDouble);
         engine.stroke();

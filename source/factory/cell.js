@@ -1154,7 +1154,7 @@ P.stashOutputAction = function () {
 
         // Get the imageData object, and stash it
         engine.save();
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.resetTransform();
         this.stashedImageData = engine.getImageData(stashX, stashY, stashWidth, stashHeight);
         engine.restore();
 

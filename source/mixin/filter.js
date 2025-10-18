@@ -291,7 +291,7 @@ export default function (P = Ωempty) {
 
                                 if (copyHeight < hostHeight) dy = ((hostHeight - copyHeight) / 2) | 0;
 
-                                engine.setTransform(1, 0, 0, 1, 0, 0);
+                                engine.resetTransform();
                                 engine.globalCompositeOperation = SOURCE_OVER;
                                 engine.globalAlpha = 1;
                                 engine.imageSmoothingEnabled = false;

@@ -49,7 +49,7 @@ No formal guidelines exist for making the HTML5 `<canvas>` element accessible. Y
 
 (Note that online searching for standards, essays and investigations around canvas accessibility is made harder by the existence of the [Canvas LMS](https://www.instructure.com/canvas) SAAS offering, used widely by schools and colleges. More recently [OpenAI launched a product called Canvas](https://openai.com/index/introducing-canvas/) which doesn't help the search for relevant information. Not forgetting, of course, the [Canva](https://www.canva.com/) design studio thing.)
 
-Scrawl-canvas is a Javascript library for working with the HTML5 `<canvas>` element. The library:
+Scrawl-canvas is a JavaScript library for working with the HTML5 `<canvas>` element. The library:
 + Defines a set of factory functions for creating a wide range of graphic artefacts and effects, which can be drawn on a canvas.
 + Includes an easy-to-use protocol for positioning, displaying and animating artefacts and effects across the canvas.
 + Adds functionality to make `<canvas>` elements responsive, adapting their size to their surrounding environment while remaining fully interactive.
@@ -274,7 +274,7 @@ The requirements listed above are all concerned with making sure a web page can 
 #### Managing audio assets
 SC does not (at this time) include any functionality to import `<audio>` elements as SC assets. It is up to the dev-user to find ways to import and make use of such files within the context of an SC-managed canvas display. 
 
-For the intrepid developer, check out the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) page on MDN. If that feels too overwhelming, then the [awesome-webaudio](https://github.com/notthetup/awesome-webaudio) page on GitHub has links to many Javascript libraries that may help a web page meet a designer's audio-related demands.
+For the intrepid developer, check out the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) page on MDN. If that feels too overwhelming, then the [awesome-webaudio](https://github.com/notthetup/awesome-webaudio) page on GitHub has links to many JavaScript libraries that may help a web page meet a designer's audio-related demands.
 
 #### Managing video asset captions and subtitles
 SC functionality for importing video into the SC system as an asset, for use in Picture entitys and Pattern style objects, can be found in the [assets page](sc-assets.html) of this Runbook.
@@ -383,7 +383,7 @@ Meeting this requirement helps separate foreground from background, to make impo
 #### SC Color space support 
 While the use of accessible color is (almost entirely) a design issue, SC does help a little by supporting all legitimate absolute (that is, [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/)) color strings - including CIELAB LCH and OKLCH color space strings. See test demos [Canvas-015](../../demo/canvas-015.html) and [Canvas-016](../../demo/canvas-016.html).
 
-SC does not support [CSS Color Module Level 5](https://www.w3.org/TR/css-color-5/) relative colors. Dev-users can instead precalculate those colors and store them in [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables/Using_CSS_custom_properties), then extract those variables into code using the Javascript `getPropertyValue()` function.
+SC does not support [CSS Color Module Level 5](https://www.w3.org/TR/css-color-5/) relative colors. Dev-users can instead precalculate those colors and store them in [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables/Using_CSS_custom_properties), then extract those variables into code using the JavaScript `getPropertyValue()` function.
 
 Details about SC's support for [wide-gamut color support](sc-dom-artefacts.html#wide-gamut-color-support---display-p3) - `display-p3` - can be found at the linked section in the Artefacts and the DOM page of this Runbook.
 
@@ -469,7 +469,7 @@ Each SC generic, Ticker and display animation objects includes an attribute - `a
 
 All SC animation objects can be started and stopped at any time using the `anim.run()` and `anim.halt()` functions. See the following test demos for inspiration:
 + [Canvas-027](../../demo/canvas-027.html) - Video control and manipulation.
-+ [Canvas-033](../../demo/canvas-033.html) - User preferences: prefers-color-scheme; prefers-reduced-motion; Javascript disabled.
++ [Canvas-033](../../demo/canvas-033.html) - User preferences: prefers-color-scheme; prefers-reduced-motion; JavaScript disabled.
 + [Canvas-208](../../demo/canvas-208.html) - EnhancedLabel entity - text along a path.
 + [DOM-009](../../demo/dom-009.html) - Stop and restart the main animation loop.
 + [Snippets-006](../../demo/snippets-006.html) - Editable header text colorizer and animation effect snippets.

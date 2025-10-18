@@ -885,7 +885,7 @@ P.cleanInput = function () {
 
     canvas.width = sourceDimension;
     canvas.height = sourceDimension;
-    engine.setTransform(1, 0, 0, 1, 0, 0);
+    engine.resetTransform();
 
     this.source.stamp(true, mycell, {
         startX: 0,
@@ -958,7 +958,7 @@ P.cleanOutput = function () {
 
             inputCanvas.width = sourceDimension;
             inputCanvas.height = sourceDimension;
-            inputEngine.setTransform(1, 0, 0, 1, 0, 0);
+            inputEngine.resetTransform();
             inputEngine.putImageData(sourceData, 0, 0);
 
             const outputCell = requestCell(),
@@ -968,7 +968,7 @@ P.cleanOutput = function () {
             outputCanvas.width = outputWidth;
             outputCanvas.height = outputHeight;
             outputEngine.globalAlpha = this.state.globalAlpha;
-            outputEngine.setTransform(1, 0, 0, 1, 0, 0);
+            outputEngine.resetTransform();
 
             if(!engineInstructions.length) {
 
@@ -1070,8 +1070,8 @@ P.cleanOutput = function () {
             inputCanvas.width = iWidth;
             inputCanvas.height = iHeight;
 
-            outputEngine.setTransform(1, 0, 0, 1, 0, 0);
-            inputEngine.setTransform(1, 0, 0, 1, 0, 0);
+            outputEngine.resetTransform();
+            inputEngine.resetTransform();
 
             for (j = 0; j < iLoops; j++) {
 
@@ -1241,7 +1241,7 @@ P.clear = function (engine) {
         tempCanvas.height = h;
 
         tempEngine.putImageData(output, 0, 0);
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.resetTransform();
         engine.globalCompositeOperation = DESTINATION_OUT;
         engine.drawImage(tempCanvas, 0, 0, w, h, x, y, w, h);
         engine.globalCompositeOperation = gco;
@@ -1280,7 +1280,7 @@ P.doStroke = function (engine) {
             host.rotateDestination(engine, tStart[0], tStart[1], tPath);
             engine.stroke(tPath.pathObject);
 
-            engine.setTransform(1, 0, 0, 1, 0, 0);
+            engine.resetTransform();
             engine.beginPath()
             engine.moveTo(fEnd.x, fEnd.y);
             engine.lineTo(tEnd.x, tEnd.y);
@@ -1317,7 +1317,7 @@ P.doFill = function (engine) {
         tempCanvas.height = h;
 
         tempEngine.putImageData(output, 0, 0);
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.resetTransform();
         engine.drawImage(tempCanvas, 0, 0, w, h, x, y, w, h);
 
         releaseCell(tempCell);
@@ -1333,7 +1333,7 @@ P.drawBoundingBox = function (engine) {
     engine.save();
 
     const t = engine.getTransform();
-    engine.setTransform(1, 0, 0, 1, 0, 0);
+    engine.resetTransform();
 
     engine.strokeStyle = this.boundingBoxColor;
     engine.lineWidth = 1;

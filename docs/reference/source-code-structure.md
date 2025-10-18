@@ -27,6 +27,7 @@ Note that this page only covers the `source/*` folder structure. For details of 
 |
 | - helper
 |   | - array-pool.js
+|   | - color-engine.js
 |   | - document-root-elements.js
 |   | - filter-engine-bluenoise-data.js
 |   | - filter-engine.js
@@ -59,21 +60,21 @@ The following guidelines (which is not a complete list) underpin the decisions m
 
 1. No third party code direct dependencies. Ever.
 
-2. All code is written in modular Javascript, using `import` and `export` statements to share code between files.
+2. All code is written in modular JavaScript, using `import` and `export` statements to share code between files.
 
 3. [Circular dependencies](https://en.wikipedia.org/wiki/Circular_dependency) between files should be avoided at all costs.
 
-4. (Repo-devs maintain a Typescript definitions file purely to support code completion functionality in the dev-user's preferred development environment.)
+4. (Repo-devs maintain a TypeScript definitions file purely to support code completion functionality in the dev-user's preferred development environment.)
 
-5. Javascript is a [prototypal language](https://en.wikipedia.org/wiki/Prototype-based_programming). Javascript classes are expressly forbidden from the code base!
+5. JavaScript is a [prototypal language](https://en.wikipedia.org/wiki/Prototype-based_programming). JavaScript classes are expressly forbidden from the code base!
 
 6. SC uses mixin files to implement inheritance.
 
-7. Minimise lookups: mixin files should add attributes and functions to an object's prototype directly. Say no to hierarchies!
+7. Minimize lookups: mixin files should add attributes and functions to an object's prototype directly. Say no to hierarchies!
 
-8. Minimise [object shape](https://mathiasbynens.be/notes/shapes-ics) deformation: define an object's attributes up-front, with default values; do not add additional attributes once the object has been created; do not delete attributes. 
+8. Minimize [object shape](https://mathiasbynens.be/notes/shapes-ics) deformation: define an object's attributes up-front, with default values; do not add additional attributes once the object has been created; do not delete attributes. 
 
-9. Functional programming has its place, except when it is wasteful. Minimise wastefulness, for example by using pooled objects.
+9. Functional programming has its place, except when it is wasteful. Minimize wastefulness, for example by using pooled objects.
 
 10. Constant string variables should be created once, and only once, throughout the code base.
 
@@ -90,14 +91,14 @@ The following guidelines (which is not a complete list) underpin the decisions m
 Also, SC enforces additional coding preferences via linting rules, invoked by running the command `yarn lint`. 
 
 ## Common file structures
-Repo-devs make every effort to keep files tidy, in particular by maintaining a similar file structure for similar types of files. This is an attempt to minimise cognitive overload.
+Repo-devs make every effort to keep files tidy, in particular by maintaining a similar file structure for similar types of files. This is an attempt to minimize cognitive overload.
 
-Note that repo-devs encourage inline comments. The repo includes tool chaining to extract these comments into document files as part of the `yarn build` functionality. Use `// [... comment]` single-line comments - the tooling doesn't (yet) recognise (JS-style) `/* ... multi-line comments */`.
+Note that repo-devs encourage inline comments. The repo includes tool chaining to extract these comments into document files as part of the `yarn build` functionality. Use `// [... comment]` single-line comments – the tooling doesn't (yet) recognise (JS-style) `/* ... multi-line comments */`.
 
 ### Factory files
 SC uses [factory pattern](https://www.patterns.dev/vanilla/factory-pattern) files to define objects that a dev-user can create. Much of the functionality in factory files is shared between them, so as part of the factory file SC invokes **mixin functions** to add that functionality. Additional functionality specific to that object is then defined.
 
-As far as possible, all factory files use the following code structure - for instance `factory/wheel.js`:
+As far as possible, all factory files use the following code structure – for instance `factory/wheel.js`:
 
 ```
 // # Wheel factory

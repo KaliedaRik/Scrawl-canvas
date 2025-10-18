@@ -218,11 +218,11 @@ Dev-users are able to set an artefact to reference multiple artefacts, one each 
 
 + If the referenced artefact is an ***EnhancedLabel*** entity, the artefact is able to pivot to the EnhancedLabel's template artefact's start value, or to the position of a given textUnit within the EnhancedLabel, depending on the value set on the artefact's `pivotIndex` attribute.
 
-+ If the artefact's `addPivotRotation` boolean flag is set to `true`, the artefact will add the referenced artifact's rotation value to its own rotation value.
++ If the artefact's `addPivotRotation` boolean flag is set to `true`, the artefact will add the referenced artefact's rotation value to its own rotation value.
 
-+ If the artefact's `addPivotOffset` boolean flag is set to `true`, the artefact will add the referenced artifact's `currentOffset` value to its own offset value.
++ If the artefact's `addPivotOffset` boolean flag is set to `true`, the artefact will add the referenced artefact's `currentOffset` value to its own offset value.
 
-+ If the artefact's `addPivotHandle` boolean flag is set to `true`, the artefact will add the referenced artifact's `currentHandle` value to its own handle value.
++ If the artefact's `addPivotHandle` boolean flag is set to `true`, the artefact will add the referenced artefact's `currentHandle` value to its own handle value.
 
 #### Mimic specifics
 Mimic functionality allows an artefact to mimic a range of the referenced artefacts attributes, as follows:

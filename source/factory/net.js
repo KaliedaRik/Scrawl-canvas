@@ -366,7 +366,7 @@ P.regularStamp = function () {
         engine.shadowBlur = 0;
         engine.shadowColor = BLANK;
         engine.lineWidth = 1;
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.resetTransform();
         engine.beginPath();
 
         springs.forEach(s => {
@@ -404,7 +404,7 @@ P.regularStamp = function () {
         engine.shadowBlur = 0;
         engine.shadowColor = BLANK;
 
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.resetTransform();
         engine.beginPath();
 
         particleStore.forEach(p => {

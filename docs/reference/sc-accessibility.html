@@ -75,7 +75,7 @@
 <li>Research into <code>&lt;canvas&gt;</code> element accessibility seems limited, if <a href="https://www.google.com/search?sca_esv=0e7d64b0605ffa6f&udm=14&q=%22research%22+into+making+the+html5+canvas+element+more+accessible&sa=X&ved=2ahUKEwikx6TRk-GMAxWAQUEAHaFgFigQ5t4CegQIGRAB&biw=1342&bih=795&dpr=1">the results of this Google search</a> can be trusted.</li>
 </ul>
 <p>(Note that online searching for standards, essays and investigations around canvas accessibility is made harder by the existence of the <a href="https://www.instructure.com/canvas">Canvas LMS</a> SAAS offering, used widely by schools and colleges. More recently <a href="https://openai.com/index/introducing-canvas/">OpenAI launched a product called Canvas</a> which doesn't help the search for relevant information. Not forgetting, of course, the <a href="https://www.canva.com/">Canva</a> design studio thing.)</p>
-<p>Scrawl-canvas is a Javascript library for working with the HTML5 <code>&lt;canvas&gt;</code> element. The library:</p>
+<p>Scrawl-canvas is a JavaScript library for working with the HTML5 <code>&lt;canvas&gt;</code> element. The library:</p>
 <ul>
 <li>Defines a set of factory functions for creating a wide range of graphic artefacts and effects, which can be drawn on a canvas.</li>
 <li>Includes an easy-to-use protocol for positioning, displaying and animating artefacts and effects across the canvas.</li>
@@ -290,7 +290,7 @@
 </ul>
 <h4 id="managing-audio-assets">Managing audio assets</h4>
 <p>SC does not (at this time) include any functionality to import <code>&lt;audio&gt;</code> elements as SC assets. It is up to the dev-user to find ways to import and make use of such files within the context of an SC-managed canvas display. </p>
-<p>For the intrepid developer, check out the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API">Web Audio API</a> page on MDN. If that feels too overwhelming, then the <a href="https://github.com/notthetup/awesome-webaudio">awesome-webaudio</a> page on GitHub has links to many Javascript libraries that may help a web page meet a designer's audio-related demands.</p>
+<p>For the intrepid developer, check out the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API">Web Audio API</a> page on MDN. If that feels too overwhelming, then the <a href="https://github.com/notthetup/awesome-webaudio">awesome-webaudio</a> page on GitHub has links to many JavaScript libraries that may help a web page meet a designer's audio-related demands.</p>
 <h4 id="managing-video-asset-captions-and-subtitles">Managing video asset captions and subtitles</h4>
 <p>SC functionality for importing video into the SC system as an asset, for use in Picture entitys and Pattern style objects, can be found in the <a href="sc-assets.html">assets page</a> of this Runbook.</p>
 <p>SC does not (at this time) include functionality to access or display <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLTrackElement">HTMLTrackElement</a> data. The native <code>&lt;video&gt;</code> element expects to find <code>&lt;track&gt;</code> element children placed between its opening and closing tags. The text supplied in those text tracks are not part of the video stream data itself. Instead the text tends to be displayed in normal HTML elements placed over the <code>&lt;video&gt;</code> element's display.</p>
@@ -409,7 +409,7 @@
 </ul>
 <h4 id="sc-color-space-support">SC Color space support</h4>
 <p>While the use of accessible color is (almost entirely) a design issue, SC does help a little by supporting all legitimate absolute (that is, <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4</a>) color strings - including CIELAB LCH and OKLCH color space strings. See test demos <a href="../../demo/canvas-015.html">Canvas-015</a> and <a href="../../demo/canvas-016.html">Canvas-016</a>.</p>
-<p>SC does not support <a href="https://www.w3.org/TR/css-color-5/">CSS Color Module Level 5</a> relative colors. Dev-users can instead precalculate those colors and store them in <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables/Using_CSS_custom_properties">CSS custom properties</a>, then extract those variables into code using the Javascript <code>getPropertyValue()</code> function.</p>
+<p>SC does not support <a href="https://www.w3.org/TR/css-color-5/">CSS Color Module Level 5</a> relative colors. Dev-users can instead precalculate those colors and store them in <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables/Using_CSS_custom_properties">CSS custom properties</a>, then extract those variables into code using the JavaScript <code>getPropertyValue()</code> function.</p>
 <p>Details about SC's support for <a href="sc-dom-artefacts.html#wide-gamut-color-support---display-p3">wide-gamut color support</a> - <code>display-p3</code> - can be found at the linked section in the Artefacts and the DOM page of this Runbook.</p>
 <h4 id="sc-function-hooks-to-adapt-to-color-based-user-preferences-settings">SC function hooks to adapt to color-based user preferences settings</h4>
 <p>SC comes with built-in support to action changes to a canvas display based on any preference media settings - <code>forced-colors</code>, <code>inverted-colors</code>, <code>prefers-color-scheme</code>, <code>prefers-contrast</code>, <code>prefers-reduced-transparency</code> - that the end-user may have set on their device. This functionality has been detailed in the <a href="http://localhost:3000/docs/reference/sc-dom-artefacts.html#accessibility">Accessibility section</a> of the Artefacts and the DOM page of this Runbook.</p>
@@ -497,7 +497,7 @@
 <p>All SC animation objects can be started and stopped at any time using the <code>anim.run()</code> and <code>anim.halt()</code> functions. See the following test demos for inspiration:</p>
 <ul>
 <li><a href="../../demo/canvas-027.html">Canvas-027</a> - Video control and manipulation.</li>
-<li><a href="../../demo/canvas-033.html">Canvas-033</a> - User preferences: prefers-color-scheme; prefers-reduced-motion; Javascript disabled.</li>
+<li><a href="../../demo/canvas-033.html">Canvas-033</a> - User preferences: prefers-color-scheme; prefers-reduced-motion; JavaScript disabled.</li>
 <li><a href="../../demo/canvas-208.html">Canvas-208</a> - EnhancedLabel entity - text along a path.</li>
 <li><a href="../../demo/dom-009.html">DOM-009</a> - Stop and restart the main animation loop.</li>
 <li><a href="../../demo/snippets-006.html">Snippets-006</a> - Editable header text colorizer and animation effect snippets.</li>

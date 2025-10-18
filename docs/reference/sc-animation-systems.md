@@ -75,7 +75,7 @@ During the [SC initialization process](sc-initialization.html) a number of syste
 + `SC-core-listeners-tracker` - defined in [core/user-interaction.js](../source/core/user-interaction.html); order value: `0`. At the start of each Display cycle this function interrogates each of the attributes tracked in the `currentCorePosition` object and, when changes are detected, alerts affected artefact and entity objects by setting various `dirty` flags on them.
 + `SC-core-tickers-animation` - defined in [factory/ticker.js](../source/factory/ticker.html); order value: `0`. Ticker objects have their own animation subsystem within the core animation loop; tweens update affected artefact and entity objects (via `dirty` flags) prior to the main Display cycle iteration starting.
 + `SC-core-gradient-delta-animation` - defined in [mixin/styles.js](../source/mixin/styles.html); order value `1`. Used to delta-animate gradient-related Styles objects.
-+ `SC-core-workstore-hygeine` - defined in [helper/workstore.js](../source/helper/workstore.html); order value: `1`. The `workstore` object has its contents purged on a regular basis, controlled by this function. Note that the function implements its own choke functionality; by default the function only runs every 200 milliseconds (or just over).
++ `SC-core-workstore-hygiene` - defined in [helper/workstore.js](../source/helper/workstore.html); order value: `1`. The `workstore` object has its contents purged on a regular basis, controlled by this function. Note that the function implements its own choke functionality; by default the function only runs every 200 milliseconds (or just over).
 + *(Dev-user defined Animation objects)*
 + `SC-core-filters-cleanup-action` - defined in [helper/filter-engine.js](../source/helper/filter-engine.html); order value `999`. At the end of each core animation loop iteration this function checks every Filter object and resets its `dirtyFilterIdentifier` flag to `false`.
 
@@ -353,7 +353,7 @@ Examples of Tween targeting include:
 + Test demo [Modules-003](../../demo/modules-003.html) - tween an SC Gradient object's `paletteStart` and `paletteEnd` attributes.
 
 #### Tween Definition objects
-Definitions objects are normal Javascript objects with the following attributes:
+Definitions objects are normal JavaScript objects with the following attributes:
 ```
 {
   attribute:  Required    String
@@ -570,7 +570,7 @@ Note also that the `target` attribute is not mandatory. For instance a few of th
 (For info: the code that creates the frame rate readout can be found in the [demo suite's utility.js](../demo/utilities.html) file. Like the test demo files, the utilities file is not part of the SC library.)
 
 #### RenderAnimation observers
-SC does not, by default, run RenderAnimation object code if the object's target Artefact object is not currently visible in the end user's device's viewport. SC does this to minimise the impact of (often computationally heavy) Display cycle code on the end-user's device.
+SC does not, by default, run RenderAnimation object code if the object's target Artefact object is not currently visible in the end user's device's viewport. SC does this to minimize the impact of (often computationally heavy) Display cycle code on the end-user's device.
 
 This functionality is controlled by an [IntersectionObserver API object](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) which SC will create for each RenderAnimation object it instantiates.
 
