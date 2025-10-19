@@ -1,22 +1,22 @@
 # Scrawl-canvas filters
-The purpose of a computer graphics filter is to take an input graphic, apply a set of manipulations to each pixel in the graphic, and output the modified result. For web pages, filter algorithms are generally applied to elements - including `<canvas>` elements - using the [CSS filter property](https://developer.mozilla.org/en-US/docs/Web/CSS/filter).
+The purpose of a computer graphics filter is to take an input graphic, apply a set of manipulations to each pixel in the graphic, and output the modified result. For web pages, filter algorithms are generally applied to elements – including `<canvas>` elements – using the [CSS filter property](https://developer.mozilla.org/en-US/docs/Web/CSS/filter).
 
-> **tl;dr:** Filter effects - however they are used in a web page - are often computationally expensive and risk slowing down page speed and responsiveness. Use filters wisely!
+> **tl;dr:** Filter effects – however they are used in a web page – are often computationally expensive and risk slowing down page speed and responsiveness. Use filters wisely!
 
 ## CSS and SVG filters
-CSS filters are a set of functions which the dev-user can use to quickly apply a range of effects - `blur()`, `saturate()`, `drop-shadow()`, etc - either to a DOM element or to the background behind that element. While these filters can be stacked (eg: sepia + blur), for more advanced effects CSS offers a `url()` filter, which allows the dev-user to apply an [SVG-defined filter effect](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/filter) to the element.
+CSS filters are a set of functions which the dev-user can use to quickly apply a range of effects – `blur()`, `saturate()`, `drop-shadow()`, etc – either to a DOM element or to the background behind that element. While these filters can be stacked (eg: sepia + blur), for more advanced effects CSS offers a `url()` filter, which allows the dev-user to apply an [SVG-defined filter effect](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/filter) to the element.
 
 Note that SVG filters are complex and powerful. In addition to the MDN page linked above, the following resources may be of interest to the inquisitive:
-+ (Webplatform, 2015) - [A summary of the various SVG filter primitives](https://webplatform.github.io/docs/svg/tutorials/smarter_svg_filters/)
-+ (Codrops, 2019) - [A series of articles around SVG filters](https://tympanus.net/codrops/2019/01/15/svg-filters-101/)
-+ (yoksel.github.io) - [An interactive SVG filters playground](https://yoksel.github.io/svg-filters/#/)
++ (Webplatform, 2015) – [A summary of the various SVG filter primitives](https://webplatform.github.io/docs/svg/tutorials/smarter_svg_filters/)
++ (Codrops, 2019) – [A series of articles around SVG filters](https://tympanus.net/codrops/2019/01/15/svg-filters-101/)
++ (yoksel.github.io) – [An interactive SVG filters playground](https://yoksel.github.io/svg-filters/#/)
 
 Browsers extend the use of these filters to JavaScript-driven paint operations in the `<canvas>` element. The canvas context engine includes a [filter property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) (note: the key is singular), which dev-users can use to apply CSS filters to specific fill and stroke invocations. SC implements this functionality via regular `set` function calls: `cell.set({filter: string})` for the entire Cell object's display, and `entity.set({filter: string})` for individual entity objects within the display. Test demo [Filters-501](../../demo/filters-501.html) shows this functionality in action.
 
 ## The SC filter factory
 While browsers have (for the most part) supported general CSS filter functionality since 2013, extending that support to the canvas context engine `engine.filter` property has lagged and (as of March 2025, with respect to Safari browsers) remains incomplete.
 
-Given how useful filter functionality can be for creating various `<canvas>`-based displays and products, repo-devs built a bespoke filter engine into SC. Much of the functionality for the filter engine is defined in the [helper/filter-engine.js](../source/helper/filter-engine.html) file. This filter engine - which is an entirely novel filter system, separate from CSS filters - acts as a singleton object, created during SC initialization, and handles all SC-specific filter effect processing across all `<canvas>` elements present on the web page.
+Given how useful filter functionality can be for creating various `<canvas>`-based displays and products, repo-devs built a bespoke filter engine into SC. Much of the functionality for the filter engine is defined in the [helper/filter-engine.js](../source/helper/filter-engine.html) file. This filter engine – which is an entirely novel filter system, separate from CSS filters – acts as a singleton object, created during SC initialization, and handles all SC-specific filter effect processing across all `<canvas>` elements present on the web page.
 
 > **tl;dr:** The SC filter engine has been inspired by (the better parts of) the [Filter Effects Module Level 1](https://drafts.fxtf.org/filter-effects/) specification (which itself is based on the [SVG 1.1 (Second Edition) Filter Effects](https://www.w3.org/TR/SVG11/filters.html) specification). *It is* ***NOT an emulation*** *of that specification*.
 
@@ -64,7 +64,7 @@ const pixels = scrawl.makeFilter({        const pixels = scrawl.makeFilter({
                                           });
 ```
 
-More complex filters - such as this comic-effect filter, as seen in test demo [Filters-103](../../demo/filters-103.html) - are easier to build and edit using the modern approach:
+More complex filters – such as this comic-effect filter, as seen in test demo [Filters-103](../../demo/filters-103.html) – are easier to build and edit using the modern approach:
 ```
 const comicFilter = scrawl.makeFilter({
   name: 'my-comic-effect-filter',
@@ -192,17 +192,17 @@ SC follows in SVG's footsteps. Every SC filter primative function includes `line
 When an SC object invokes the filter engine to create a filtered output, it will include an [imageData object](https://developer.mozilla.org/en-US/docs/Web/API/ImageData) of its unfiltered display for the filter engine to work on. The imageData dimensions will match the dimensions of the host Cell on which the filtered output will eventually be stamped.
 
 When the SC filter engine receives this imageData, it's first action will be to ***unwrap*** the data in preparation for work. Three copies of the imageData object will be cached:
-+ `source` - this copy is never altered by the filters.
-+ `sourceAlpha` - this copy is mutated: all pixel color channels get set to `0`, while the pixel's alpha channel is set to `0` for transparent pixels, `255` otherwise.
-+ `work` - this is the working copy of the imageData object.
++ `source` – this copy is never altered by the filters.
++ `sourceAlpha` – this copy is mutated: all pixel color channels get set to `0`, while the pixel's alpha channel is set to `0` for transparent pixels, `255` otherwise.
++ `work` – this is the working copy of the imageData object.
 
 The filter engine then iterates through each filter action object. When the object's action function is invoked, it will check the object's `lineIn` (and `lineMix`, if required) attribute and select its input data as follows:
-+ `lineIn: 'source'` - use the `cache.source` imageData.
-+ `lineIn: 'source-alpha'` - use the `cache.sourceAlpha` imageData.
-+ `lineIn: undefined` - use the `cache.work` imageData.
++ `lineIn: 'source'` – use the `cache.source` imageData.
++ `lineIn: 'source-alpha'` – use the `cache.sourceAlpha` imageData.
++ `lineIn: undefined` – use the `cache.work` imageData.
 
 The `lineIn` and `lineMix` attributes can also be String identifiers:
-+ Whenever an action function completes, it will replace the `cache.work` imageData object with its own modified imageData output - except where the action object's `lineOut` identifier String has been defined, in which case the output will be stored in a new `cache[identifier]` attribute.
++ Whenever an action function completes, it will replace the `cache.work` imageData object with its own modified imageData output – except where the action object's `lineOut` identifier String has been defined, in which case the output will be stored in a new `cache[identifier]` attribute.
 + Once a new `cache[identifier]` attribute has been created, any subsequent action function can use that identifier String for their `lineIn` (and `lineMix`) attribute value. The function will use that identifier's imageData object for its input.
 
 The following example shows the steps involved in creating the filtered output for the comic filter effect, whose code was shown earlier on this page:
@@ -221,7 +221,7 @@ The following example shows the steps involved in creating the filtered output f
 |**Composition step** <br> `action: 'compose'` <br> `lineIn: 'color2'` <br> `lineMix: 'outline4'` <br> `compose: 'destination-over'` <br> `lineOut: undefined`|![Step 3 in](sc-filter-engine-asset-009.webp)|![Step 3 mix](sc-filter-engine-asset-007.webp)|![Step 3 out](sc-filter-engine-asset-010.webp)|
 
 ### Filter opacity
-All SC filter primitive functions include a final step - a crude channel-by-channel blending of the function's input imageData data and its calculated output data. The strength of this blend is set in the filter's `opacity` attribute:
+All SC filter primitive functions include a final step – a crude channel-by-channel blending of the function's input imageData data and its calculated output data. The strength of this blend is set in the filter's `opacity` attribute:
 + For `opacity: 0`, the final output is 100% input + 0% calculated effect
 + For `opacity: 1`, the final output is 0% input + 100% calculated effect
 + For `opacity: 0.4`, the final output is 60% input + 40% calculated effect
@@ -234,16 +234,16 @@ CSS/SVG filters can be used to add a filter effect to the background behind a DO
 
 In a similar vein, SC filters can be applied to the (currently stamped) display behind an SC entity object, or a Group of such objects. Dev-users can set up this effect by setting the object's `isStencil` attribute to `true`.
 
-Note that the object will not be able to memoize its filtered output - there's no way that SC can predict whether the background behind an entity has changed between Display cycle frames.
+Note that the object will not be able to memoize its filtered output – there's no way that SC can predict whether the background behind an entity has changed between Display cycle frames.
 
 Test demo [Filters-028](../../demo/filters-028.html) demonstrates stencilled filter effects.
 
 ### Memoizing a filtered object's output
-For any SC-controlled `<canvas>` which includes any animated effects in its display, that canvas needs to update at a minimum of 20 frames-per-second (fps) - every 50 milliseconds - to make the animation tolerable for the end-user, and preferably should update at a rate of 60fps (16ms) for a smooth animation effect. Some device/screen combinations allow for an update rate of 120fps (8ms) or higher!
+For any SC-controlled `<canvas>` which includes any animated effects in its display, that canvas needs to update at a minimum of 20 frames-per-second (fps) – every 50 milliseconds – to make the animation tolerable for the end-user, and preferably should update at a rate of 60fps (16ms) for a smooth animation effect. Some device/screen combinations allow for an update rate of 120fps (8ms) or higher!
 
-This means that SC must complete all of a Display cycle's required updates - across all `<canvas>` elements currently animating on the web page - within 16ms. For scenes which include filtered Cell, Group or entity objects this can be a difficult ask, given the intense computational nature of filter calculations.
+This means that SC must complete all of a Display cycle's required updates – across all `<canvas>` elements currently animating on the web page – within 16ms. For scenes which include filtered Cell, Group or entity objects this can be a difficult ask, given the intense computational nature of filter calculations.
 
-Thus it makes sense for filtered objects to cache - ***memoize*** - their filtered output as comprehensively as possible. Dev-users can achieve this by setting the `memoizeFilterOutput` attribute to `true` on these objects.
+Thus it makes sense for filtered objects to cache – ***memoize*** – their filtered output as comprehensively as possible. Dev-users can achieve this by setting the `memoizeFilterOutput` attribute to `true` on these objects.
 
 SC attempts to make the memoization process as painless as possible for dev-users. Much of the functionality has been internalized so setting the `memoizeFilterOutput` flag should be the only action the dev-user has to take.
 
@@ -260,7 +260,7 @@ There are a number of actions that can invalidate the memoized filter output. Th
 
 Whenever the dev-user triggers such changes, the object will set a `dirtyFilterIdentifier` flag which in turn will cause the object to set its `filterIdentifier` attribute to a new random String. The next time the filter engine encounters the object it will not find the new identifier in the SC workstore, leading to it running all the required filter operations on the object and lodging that output in the workstore keyed to the new identifier.
 
-The workstore regularly purges unaccessed keys - the output keyed to the old identifier will generally be purged one second after it was last accessed.
+The workstore regularly purges unaccessed keys – the output keyed to the old identifier will generally be purged one second after it was last accessed.
 
 ### One-time capture of a filtered object's output
 SC includes three functions to capture either a Cell, Group or entity object's output in a DOM `<img>` element which can then be imported into the SC environment as an ImageAsset object. These functions (defined in the [asset-management/image-asset.js](../source/asset-management/image-asset.html) file) are:
@@ -274,7 +274,7 @@ Where:
 
 These functions are one-shot functions: the capture will happen as part of the next Display cycle. The functionality includes adding the visual output to an `<img>` element in the DOM, as a child of an appropriately hidden `<div>` element within the `<canvas>` element. The action is necessarily asynchronous, thus the new Asset object may take a few additional iterations of the Display cycle to show up.
 
-There are various reasons why a dev-user may want to capture a static image of a Cell, Group or entity object - for instance when a particularly complicated filter has been applied to that object's display but it is not possible to memoize the object's output.
+There are various reasons why a dev-user may want to capture a static image of a Cell, Group or entity object – for instance when a particularly complicated filter has been applied to that object's display but it is not possible to memoize the object's output.
 
 Once the new asset is captured it can be displayed multiple times in canvas scenes using Picture entitys. For example, see test demos [Canvas-046](../../demo/canvas-046.html), and [Canvas-020](../../demo/canvas-020.html).
 
@@ -283,7 +283,7 @@ The code associated with this functionality is closely tied with the filter func
 ### Internal coding protocols
 The work to set up a Cell, Group or entity object to be modified by SC filters, and to display the filtered results on a host Cell, happens outside of the SC filter engine and factory code. 
 
-Due to Cell, Group and entity objects having distinct roles in the Display cycle, the protocols for applying filters to them necessarily differ - as described below. All of this functionality happens internally; the dev-user only needs to add filters to the objects for the processes to take place.
+Due to Cell, Group and entity objects having distinct roles in the Display cycle, the protocols for applying filters to them necessarily differ – as described below. All of this functionality happens internally; the dev-user only needs to add filters to the objects for the processes to take place.
 
 #### Apply filters to Cell objects
 SC Cell object filters are applied at the end of the Cell's participation in the Display cycle `compile` operation, after all entitys have stamped themselves onto its display. This filtered result will directly replace the original image data, ready for final display as part of the Display cycle `show` operation.
@@ -295,16 +295,16 @@ This functionality is all defined in the [factory/cell.js](../source/factory/cel
 #### Apply filters to Group objects
 At the start of every Display cycle `compile` operation, each Cell object goes through its Array of associated Group objects and invokes the `group.stamp()` function on each of them in turn. This leads to the Group object performing the following protocol:
 1. Determine whether any filters have been associated with the Group object, or if output needs to be stashed (as requested by `scrawl.createImageFromGroup()` function):
-  - If yes, retrieve a `pool` Cell object and set its dimensions to the Group's host Cell object's dimensions.
-  - If no, use the Group's host Cell object for the following steps.
+  – If yes, retrieve a `pool` Cell object and set its dimensions to the Group's host Cell object's dimensions.
+  – If no, use the Group's host Cell object for the following steps.
 2. Prepare the Group object's associated entity objects for stamping by invoking `group.prepareStamp()`.
 3. Invoke the `group.stampAction()` function, passing it the `pool` Cell object if one has been created.
 4. All associated entity objects now stamp themselves onto the required Cell object (as determined in step 1).
 5. If a `pool` Cell was supplied as the function's argument and Filter objects have been associated with the group, invoke the `group.applyFilters()` function:
-  - If the group is acting as a stencil, do the work to retrieve the host Cell's current display and stamp it onto the `pool` Cell, clipped by the Group's entity object's stamped displays.
-  - Preprocess the filters to load any external assets into the filter engine.
-  - Invoke the filter engine, passing it the necessary input and filter data.
-  - Stamp the filter engine's results onto the host Cell.
+  – If the group is acting as a stencil, do the work to retrieve the host Cell's current display and stamp it onto the `pool` Cell, clipped by the Group's entity object's stamped displays.
+  – Preprocess the filters to load any external assets into the filter engine.
+  – Invoke the filter engine, passing it the necessary input and filter data.
+  – Stamp the filter engine's results onto the host Cell.
 6. If output stashing is required then invoke the `group.stashAction()` function.
 7. If a `pool` Cell object was used, release it back to the pool.
 
@@ -313,20 +313,20 @@ This functionality is all defined in the [factory/group.js](../source/factory/gr
 #### Apply filters to entity objects
 SC filters are applied to the display output of entity objects at the point where they are stamped onto their host Cell. This is achieved using the following protocol:
 1. Determine whether any filters need to be applied to the entity:
-  - If no, use the entity's `regularStamp` functionality (not detailed below).
-  - If yes, use the entity's `filteredStamp` functionality.
+  – If no, use the entity's `regularStamp` functionality (not detailed below).
+  – If yes, use the entity's `filteredStamp` functionality.
 2. If the entity has not been stamped before, or its `entity.dirtyFilters` flag is `true`, process the filter objects into the internal `entity.currentFilters` Array so they are ready for application.
 3. Request a `pool` Cell object, size it to match the host Cell's dimensions and `regularStamp` the entity onto it (ignoring the `entity.globalCompositeOperation` attribute).
-  - If the `entity.isStencil` Boolean flag has been set to `true`, stamp the host Cell's current display over the entity (using `globalCompositeOperation: 'source-in'`).
+  – If the `entity.isStencil` Boolean flag has been set to `true`, stamp the host Cell's current display over the entity (using `globalCompositeOperation: 'source-in'`).
 4. Get the current image data from the `pool` Cell.
-5. Preprocess the filter objects - specifically to retrieve data for any external images used by the filters.
+5. Preprocess the filter objects – specifically to retrieve data for any external images used by the filters.
 6. Invoke the filter engine's `filterEngine.action()` function, passing all the required data to it.
 7. Reset the `pool` Cell and stamp the filter engine's returned `imageData` data into it.
 8. If the `entity.stashOutput` Boolean flag has been set to `true`, stash the `pool` data, either in a DOM `<img>` element or as `imageData` assigned to the `entity.stashedImageData` attribute.
 9. Stamp the `pool` Cell onto the host Cell (taking into account the `entity.globalCompositeOperation` attribute).
 10. Release the `pool` Cell object.
 
-All entity objects, apart from the EnhancedLabel entity, share the above functionality, whose code can be found in the [mixin/entity.js](../source/mixin/entity.html) file - specifically the `filteredStamp()` and `getCellCoverage()` functions.
+All entity objects, apart from the EnhancedLabel entity, share the above functionality, whose code can be found in the [mixin/entity.js](../source/mixin/entity.html) file – specifically the `filteredStamp()` and `getCellCoverage()` functions.
 
 #### Apply filters to EnhancedLabel entity objects
 Because the EnhancedLabel entity is so tightly coupled with the [SC text layout engine](sc-text-layout-engine.html), repo-devs have had to replicate the entity filter protocol in that entity's factory function. Thus changes in the entity filter protocol will need to be replicated in the [factory/enhanced-label.js](../source/factory/enhanced-label.html) file.
@@ -342,21 +342,21 @@ The SC filter engine has been built around the principle of manipulating [ImageD
 Each pixel in the image data is coded in the [sRGB color space](https://developer.mozilla.org/en-US/docs/Glossary/RGB) using three color channels and an additional alpha channel, always in the order `[red, green, blue, alpha]`. This means that for an ImageData object with a width of 100px and a height of 50px, the `imageData.data` Array will be `100 * 50 * 4 = 20,000` elements long.
 
 Given the (potentially huge) sizes that these image data Arrays can reach, repo-devs need to be particularly strict when it comes to coding up the data manipulations for filter primitive functions. The following guidelines may help:
-+ Precalculate any requirements that a primitive function may have - for instance, the locations of pixels in a matrix calculation, or the pixels that make up a tile - and cache the results in case other primitive functions can make use of them.
++ Precalculate any requirements that a primitive function may have – for instance, the locations of pixels in a matrix calculation, or the pixels that make up a tile – and cache the results in case other primitive functions can make use of them.
 + Always try to process the data array in a single pass. For instance, rather than use two loops to process image data by rows and columns, repo devs should use a single loop and calculate row/column positions within that loop.
 + Always check to see if the current pixel is transparent (its alpha channel has a value of `0`) and, if yes, skip the calculations for that pixel if possible.
-+ When dealing with non-RGB color space calculations, use the color caches - calculating a pixel's OKLCH channel values is very computationally expensive which is why the results of the first calculation for a given color should be cached.
++ When dealing with non-RGB color space calculations, use the color caches – calculating a pixel's OKLCH channel values is very computationally expensive which is why the results of the first calculation for a given color should be cached.
 
 #### Filter regions
 A key difference between SVG filters and SC filters is that the SVG restricts its filter computations to a [filter effects region](https://www.w3.org/TR/SVG11/filters.html#FilterEffectsRegion). It takes this approach to limit the pixel area that needs to be processed by its filter functions.
 
 SC does not take this approach. Instead the ImageData object that the filter engine receives will have the dimensions of the host Cell where the filter results will be applied. When a dev-user applies a filter to a `10px x 10px` Block entity, and a Wheel entity with radius `10px`, both appearing on a `100px x 100px` Cell, the ImageData objects presented to the filter engine will include a data Array containing (`100 x 100 x 4 = 40,000`) elements.
 
-Consider the situation where both the Block and Wheel entitys have the same `pixellate` filter applied to them. The pixellate primitive function, as part of its work, will generate a set of objects containing the location details (the data Array indexes) for the pixels contained in each of the tiles required to generate the effect. It calculates this locations data across the entire ImageData, and stashes the results in the SC workstore. Thus while the calculation may happen for the first entity the primitive function encounters, for every other entity on that Cell using the same filter the primitive function only needs to retrieve those calculated results from the workstore - and this remains true even if the Block or Wheel entitys subsequently change their dimensions, scale or position.
+Consider the situation where both the Block and Wheel entitys have the same `pixellate` filter applied to them. The pixellate primitive function, as part of its work, will generate a set of objects containing the location details (the data Array indexes) for the pixels contained in each of the tiles required to generate the effect. It calculates this locations data across the entire ImageData, and stashes the results in the SC workstore. Thus while the calculation may happen for the first entity the primitive function encounters, for every other entity on that Cell using the same filter the primitive function only needs to retrieve those calculated results from the workstore – and this remains true even if the Block or Wheel entitys subsequently change their dimensions, scale or position.
 
 > **tl;dr:** SVG filter regions are (often) tied to the elements to which the filter is applied. SC filter regions are tied to the Cell on which their effects appear.
 
-While it may seem sensible to limit the area over which a filter effect gets applied, to minimize the calculation effort, the current SC approach - paradoxically - doesn't seem to significantly damage filter performance. This can be seen in test demo [Canvas-007](../../demo/canvas-007.html).
+While it may seem sensible to limit the area over which a filter effect gets applied, to minimize the calculation effort, the current SC approach – paradoxically – doesn't seem to significantly damage filter performance. This can be seen in test demo [Canvas-007](../../demo/canvas-007.html).
 
 #### External caching using the SC workstore
 The SC `workstore` is a keyed object used for longer-term caching of generated data. Like the SC library and the filter engine itself, only one `workstore` object exists in the SC environment, instantiated at the same time as those other objects during page initialization.
@@ -368,39 +368,17 @@ The `workstore` itself (alongside an accompanying `workstoreLastAccessed` object
 + `getOrAddWorkstoreItem('key', data)`
 + `setAndReturnWorkstoreItem('key', data)`
 
-The filter engine makes extensive use of the workstore. Many of the calculations undertaken by the engine are expensive, thus it makes sense to cache the results after their first calculation to speed up future operations:
-
-+ **buildHorizontalBlur** creates a grid - an Array of Arrays - detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Stores the result in the key `blur-h-${gridWidth}-${gridHeight}-${radius}`. Used by the `blur` primitive function.
-
-+ **buildImageGrid** creates a grid - an Array of Arrays representing columns and rows - which contains the location of each pixel in an `ImageData.data` Array. Stores the result in the key `grid-${ImageData.width}-${ImageData.height}`. Used by the `blur`, `offset` and `swirl` primitive functions.
-
-+ **buildMatrixGrid** creates a grid - an Array of Arrays - detailing which pixels contribute to each pixel's matrix calculation. Stores the result in the key `matrix-${ImageData.width}-${ImageData.height}-${width}-${height}-${x}-${y}`. Used by the `corrode`, `emboss` and `matrix` primitive functions.
-
-+ **buildVerticalBlur** creates a grid - an Array of Arrays - detailing which pixels contribute to the vertical part of each pixel's blur calculation. Stores the result in the key `blur-v-${gridWidth}-${gridHeight}-${radius}`. Used by the `blur` primitive function.
-
-+ **getGradientData** creates an imageData object containing the pixel values from a `256px x 1px` canvas to which a linear gradient has been applied. Stores the result in the key `gradient-data-${gradient.name}`. Used by the `map-to-gradient` primitive function as well as SC gradient Palette objects.
-
-+ **getRandomNumbers** generates an array of "random" numbers from either *bluenoise* or *ordered* data, or alternatively from a seeded random number generator, to a given length. Stores the results in the key `random-${seed}-${length}-${type}`. Used by the `glitch`, `random-noise`, `reduce-palette` and (indirectly) `tiles` primitive functions.
+The filter engine makes extensive use of the workstore. Many of the calculations undertaken by the engine are expensive, thus it makes sense to cache the results after their first calculation to speed up future operations.
 
 If a Cell, Group or entity object has requested that its filtered output be memoized, then the final results of those filter operations will also be cached in the workstore, keyed to the object's `filterIdentifier` attribute.
 
 #### Filter engine internal cache
 The filter engine includes a `cache` object which gets reset to an empty object every time the `engine.action()` function gets invoked. This cache holds references to the initial ImageData objects supplied to the `action()` function, alongside any intermediate ImageData objects created as the engine processes the filter action objects.
 
-#### Color caches
-Color space conversion calculations are expensive. For this reason SC will cache the results of each calculation in an object containing a set of three Arrays. This object gets stored in the SC workstore keyed to the `color-point-arrays` String.
-
-The structures of the Array elements held by the color cache Arrays are:
-+ **labColorLib** - maps quantized OKLAB color values to their RGB equivalent values, stored as an `[r, g, b]` array
-+ **lchColorLib** - maps quantized OKLCH color values to their RGB equivalent values, stored as an `[r, g, b]` array
-+ **rgbColorLib** - maps RGB channel color values to their OKLAB/OKLCH equivalent values, stored as an array with the structure: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
-
-The colorLib Arrays are sets of nested sparse Arrays. See the code in the filter engine `getOkColorVals()`, `getRegularColorVals()`, `setOkColorVals()`, `memoizeLab()`, `memoizeLch()`, `getColorLabIndices()` and `getColorLchIndices()` functions for details.
-
-The color conversion algorithms themselves are handled by an SC color object. The filter engine generates (and exports) a Color object - named `SC-core-color-engine` - when the file's code first runs. The algorithm code can be seen in the [factory/color.js](../source/factory/color.html) file.
-
 ### Additional resources used by the filter engine
-The filter engine file imports a number of pool functions, which repo-devs can then use when building and maintaining the filter primitive functions. As ever, always release a pooled object after using it - failure to release can lead to slow memory leaks:
+Color space conversion calculations are expensive. For this reason SC will cache the results of each calculation in an object containing a set of three Arrays. This object gets stored in the SC workstore keyed to the `color-point-arrays` String. This work is handled by the [SC color engine](sc-styles.html) on behalf of the filter engine.
+
+The filter engine file also imports a number of pool functions, which repo-devs can then use when building and maintaining the filter primitive functions. As ever, always release a pooled object after using it – failure to release can lead to slow memory leaks:
 + `releaseCell`, `requestCell`
 + `releaseCoordinate`, `requestCoordinate`
 + `releaseArray`, `requestArray`
@@ -413,8 +391,8 @@ For this reason, SC uses a [pseudorandom number generator](https://en.wikipedia.
 The generator repo itself includes a direct dependency on the [moll/json-stringify-safe repository](https://github.com/moll/json-stringify-safe). Again, SC takes that code and includes it in the [helper/random-seed.js](../source/helper/random-seed.html) file.
 
 Licenses for the above code:
-+ skratchdot/random-seed repository - [MIT](https://opensource.org/license/mit) - Gibson Research Corporation.
-+ moll/json-stringify-safe - [ISC](https://opensource.org/license/isc-license-txt) - Isaac Z. Schlueter and Contributors.
++ skratchdot/random-seed repository – [MIT](https://opensource.org/license/mit) – Gibson Research Corporation.
++ moll/json-stringify-safe – [ISC](https://opensource.org/license/isc-license-txt) – Isaac Z. Schlueter and Contributors.
 
 #### Noise generators
 Generating noise can be computationally intensive. In addition to random noise, SC makes use of [blue noise](https://en.wikipedia.org/wiki/Colors_of_noise#Blue_noise) and [ordered noise](https://en.wikipedia.org/wiki/Ordered_dithering), consumed by the `random-noise` and `reduce-palette` primitive functions.
@@ -463,7 +441,7 @@ engine.prototype.action = function (packet) {
   // - The calling code should have already checked that there's a need to filter data
   if (actionsLen) {
 
-    // 4. Populate engine.cache with initial DataObjects
+    // 4. Populate engine's current cache object with initial DataObjects
     // - cache.source
     // - cache['source-alpha']
     // - cache.work
@@ -480,11 +458,12 @@ engine.prototype.action = function (packet) {
     }
 
     // 7. Cache the resulting ImageData object in the SC workstore, if required
-    if (identifier) setWorkstoreItem(identifier, this.cache.work);
+    if (identifier) setWorkstoreItem(identifier, cache.work);
 
     // 8. Return the resulting ImageData object
-    return this.cache.work;
+    return cache.work;
   }
+
   // 9. If there was no work to do, return the unprocessed ImageData object
   return image;
 }
@@ -523,35 +502,13 @@ All primitive functions live in an object called `engine.theBigActionsObject`. T
   let r, g, b, a, i;
 
   // The processing loop:
-  // - Works on a per-pixel basis by stepping through the input Array in batches of 4
+  // - Works on a per-pixel basis by stepping through the input Array
   // - Extracts the input data 
   // - Manipulates the data, as required
   // - Places the results of the data manipulation in the output Array
-  for (i = 0; i < len; i += 4) {
 
-    // Many primitive functions can skip over transparent pixels
-    if (iData[i + 3]) {
-
-      r = i;
-      g = r + 1;
-      b = g + 1;
-      a = b + 1;
-
-      oData[r] = (includeRed) ? iData[r] : 0;
-      oData[g] = (includeGreen) ? iData[g] : 0;
-      oData[b] = (includeBlue) ? iData[b] : 0;
-      oData[a] = (includeAlpha) ? iData[a] : 0;
-    }
-
-    // Skipped pixel data still needs to transfer to the output Array
-    else {
-
-      oData[r] = iData[r];
-      oData[g] = iData[g];
-      oData[b] = iData[b];
-      oData[a] = iData[a];
-    }
-  }
+  // Note that many filters have been optimised to work with various bitwise masks and
+  // operators. The code may look complex, but it is quick
 
   // Merge the input and output data in line with opacity requirements
   if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -619,6 +576,7 @@ Default object
 Produces a [chroma key compositing effect](https://en.wikipedia.org/wiki/Chroma_key) across the input.
 
 Using an array of `range` arrays, determines whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. 
++ Since SC v8.16.0, the modification to the alpha channel value can be feathered to create a more subtle effect. Feather variables take positive integer numbers in the range `0` to `255`.
 
 Each `range` array comprises six integer Numbers (between `0` and `255`) representing the following channel values: 
 + `[minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue]`
@@ -634,6 +592,10 @@ Default object
   opacity: 1,
 
   ranges: [],
+
+  featherRed: 0,
+  featherGreen: 0,
+  featherBlue: 0,
 }
 ```
 
@@ -800,7 +762,7 @@ Default object
 #### Action: `lock-channels-to-levels`
 Produces a [posterization effect](https://en.wikipedia.org/wiki/Posterization) on the input. 
 
-Takes in four arguments - `red`, `green`, `blue` and `alpha` - each of which is an Array of zero or more integer Numbers (between 0 and 255). 
+Takes in four arguments – `red`, `green`, `blue` and `alpha` – each of which is an Array of zero or more integer Numbers (between 0 and 255). 
 
 The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value
 
@@ -892,12 +854,12 @@ Default object
 #### Action: `step-channels`
 Restricts the number of color values that each channel can set by imposing regular bands on each channel. This produces a [posterization effect](https://en.wikipedia.org/wiki/Posterization) on the input.
 
-Takes three divisor values - `red`, `green`, `blue`. For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of `50` applied to a channel value of `120` will give a result of `100`.
+Takes three divisor values – `red`, `green`, `blue`. For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of `50` applied to a channel value of `120` will give a result of `100`.
 
 The `clamp` attribute determines where in the band the color reference value should fall:
-+ `down` (default) - uses `Math.floor()` for the calculation.
-+ `up` - uses `Math.ceil()`.
-+ `round` - uses `Math.round()`.
++ `down` (default) – uses `Math.floor()` for the calculation.
++ `up` – uses `Math.ceil()`.
++ `round` – uses `Math.round()`.
 
 Used by factory function method: `channelstep`.
 
@@ -924,8 +886,8 @@ The clamp attribute permitted values are:
 Creates a duotone effect across the input:
 + Grayscales the input.
 + For each pixel, checks the color channel values against a `level` argument: 
-  - pixels with channel values above the level value are assigned to the `high` color;
-  - otherwise they are updated to the `low` color.
+  – pixels with channel values above the level value are assigned to the `high` color;
+  – otherwise they are updated to the `low` color.
 
 The `high` and `low` attributes are both Arrays in the form:
 + `[redVal, greenVal, blueVal, alphaVal]` where values are positive integers in the range `0`-`255`.
@@ -1021,9 +983,9 @@ Default object
 The following primitive functions use two inputs (for compositing). The external image import function is also grouped here. 
 
 #### Action: `blend`
-Uses two inputs - `lineIn`, `lineMix` - and combines their pixel data using various separable and non-separable blend modes, as defined in the [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#blending) specification.
+Uses two inputs – `lineIn`, `lineMix` – and combines their pixel data using various separable and non-separable blend modes, as defined in the [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#blending) specification.
 
-Note that the inputs may be of different sizes: the output - `lineOut` - image size will be the same as the source (NOT `lineIn`) image. The `lineMix` input can be moved relative to the `lineIn` input using the `offsetX` and `offsetY` attributes.
+Note that the inputs may be of different sizes: the output – `lineOut` – image size will be the same as the source (NOT `lineIn`) image. The `lineMix` input can be moved relative to the `lineIn` input using the `offsetX` and `offsetY` attributes.
 
 Used by factory function method: `blend`.
 
@@ -1042,17 +1004,17 @@ Default object
 }
 
 The blend attribute permitted values are:
-  'color'           'color-burn'        'color-dodge'       'darken'
-  'difference'      'exclusion'         'hard-light'        'hue'
-  'lighten'         'lighter'           'luminosity'        'multiply'
-  'normal'          'overlay'           'saturation'        'screen'
-  'soft-light'
+  'chroma-match'    'color'           'color-burn'      'color-dodge'
+  'darken'          'difference'      'exclusion'       'hard-light'
+  'hue'             'hue-match'       'lighten'         'lighter'
+  'luminosity'      'multiply'        'normal'          'overlay'
+  'saturation'      'screen'          'soft-light'
 ```
 
 #### Action: `compose`
-Perform a Porter-Duff compositing operation on two inputs - see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators) for details.
+Perform a Porter-Duff compositing operation on two inputs – see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators) for details.
 
-Note that the `lineMix` input - which MUST be specified - can be offset using the `offsetX` and `offsetY` attributes.
+Note that the `lineMix` input – which MUST be specified – can be offset using the `offsetX` and `offsetY` attributes.
 
 Used by factory function method: `compose`.
 
@@ -1151,7 +1113,7 @@ Performs a special form of matrix operation on each input pixel's color and alph
 
 The matrix dimensions can be set using the `width` and `height` arguments, while setting the home pixel's position within the matrix can be set using the `offsetX` and `offsetY` arguments.
 
-The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the `operation` attribute.
+The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours – this value is set in the `operation` attribute.
 
 Channels can be selected for inclusion in the calculation by setting the various `include` flags.
 
@@ -1211,7 +1173,7 @@ Default object
 #### Action: `gaussian-blur`
 Generates a [gaussian blur](https://en.wikipedia.org/wiki/Gaussian_blur) effect from the input. 
 
-The code behind this approach uses an [infinite impulse response](https://en.wikipedia.org/wiki/Infinite_impulse_response) algorithm to produce the blur. The concept was developed by IBM engineers but, sadly, the paper seems to have been removed from the IBM site. The IBM concept was adapted to run in Javascript by contributors to the [nodeca/glur](https://github.com/nodeca/glur/blob/master/index.js) GitHub repository - it is that code which repo-devs have adapted into the SC code base for this blur effect. The nodeca/glur code uses the [MIT](https://opensource.org/license/mit) license.
+The code behind this approach uses an [infinite impulse response](https://en.wikipedia.org/wiki/Infinite_impulse_response) algorithm to produce the blur. The concept was developed by IBM engineers but, sadly, the paper seems to have been removed from the IBM site. The IBM concept was adapted to run in Javascript by contributors to the [nodeca/glur](https://github.com/nodeca/glur/blob/master/index.js) GitHub repository – it is that code which repo-devs have adapted into the SC code base for this blur effect. The nodeca/glur code uses the [MIT](https://opensource.org/license/mit) license.
 
 The horizontal and vertical parts of the blur can be separately set. Channels can also be excluded from the blur calculations, and the blur effect can be restricted to just the non-transparent parts of the input.
 
@@ -1320,11 +1282,11 @@ Default object
 #### Action: `tiles`
 Covers the input with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a more Delauney-like output.
 
-The filter has four modes, set on the `points` attribute:
-+ `'rect-grid'` - generates a regular grid of tiles, where: `offsetX`, `offsetY` represent the origin coordinate from which the grid will be calculated; `tileWidth`, `tileHeight` supply the dimensions of the rectangular tiles; `angle` is the amount of tile rotation.
-+ `'hex-grid'` - generates a hexagonal grid of tiles, where: `offsetX`, `offsetY` represent the origin coordinate from which the grid will be calculated; `tileRadius` supplies the radius for each hexagonal tile; `angle` is the amount of tile rotation.
-+ Number - semi-randomly generates a set of points to the given value, constrained to an area determined by the `tileRadius`, `offsetX`, `offsetY` and `angle` arguments. Unlike other versions, this version will only include pixels within the bounds of circle of the given radius centered on the supplied offset coordinate values. To vary the randomness of point generation, the user can supply a `seed` argument, used when initializing the pseudo-random number generator.
-+ Array eg: `[x1, y1, x2, y2, ...]` - actions the points as described in the array. Pixel selection for each point is constrained by the supplied `tileRadius`, `offsetX` and `offsetY` arguments.
+The filter has four modes, set on the `mode` attribute: `'rect'`, `'hex'`, `'random'`, `'points'`. Each mode has its own set of attributes:
++ **rect** - `rectWidth`, `rectHeight`, `originX`, `originY`, `angle`
++ **hex** - `hexRadius`, `originX`, `originY`, `angle`
++ **random** - `randomCount`, `seed`
++ **points** - `pointsData`
 
 Dev-users should be aware that initial calculation of the tile sets is very computationally intensive.
 
@@ -1340,24 +1302,27 @@ Default object
   lineOut: '',
   opacity: 1,
 
-  points: 'rect-grid',
+  mode: 'rect',
 
   angle: 0,
-  offsetX: 0,
-  offsetY: 0,
+  originX: 0,
+  originY: 0,
+
+  rectWidth: 10,
+  rectHeight: 10,
+
+  hexRadius: 5,
+
+  randomCount: 20,
   seed: DEFAULT_SEED,
-  tileHeight: 1,
-  tileRadius: 1,
-  tileWidth: 1,
+
+  pointsData: [],
 
   includeAlpha: false,
   includeBlue: true,
   includeGreen: true,
   includeRed: true,
 }
-
-The points attribute's permitted values are:
-  'rect-grid'     'hex-grid'      Number          Number[]      
 ```
 
 ### Displacement filters
@@ -1366,7 +1331,7 @@ The following primitive functions handle the movement of pixel data around the i
 #### Action: `displace`
 Moves pixels around the input image, based on the color channel values supplied by a displacement map image. This is the SC filter engine's attempt to reproduce the SVG [`<feDisplacementMap>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap) filter primative.
 
-Note that the `lineMix` input - which MUST be specified - can be offset using the `offsetX` and `offsetY` attributes. Ideally, the mix image should be the same size as the input image, but it can be larger or smaller - hence the inclusion of these attributes. The displacement transform will only happen when both inputs have pixels at the appropriate coordinate
+Note that the `lineMix` input – which MUST be specified – can be offset using the `offsetX` and `offsetY` attributes. Ideally, the mix image should be the same size as the input image, but it can be larger or smaller – hence the inclusion of these attributes. The displacement transform will only happen when both inputs have pixels at the appropriate coordinate
 
 As for the SVG filter primative, translations in the `x` and `y` axes are tied to the pixel values in a given color channel. These pixel values can be scaled.
 
@@ -1503,8 +1468,8 @@ The noiseType permitted values are:
 For each input pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
 
 This filter can handle multiple swirls in a single pass. Each swirl is defined in an object with the following attributes:
-+ The `start` and `radius` attributes can be defined in absolute `px` Number values, or relative `%` String values - relative to the input width.
-+ The `angle` Number value is measured in degrees - a value of `720` will result in a swirl of 2 complete turns.
++ The `start` and `radius` attributes can be defined in absolute `px` Number values, or relative `%` String values – relative to the input width.
++ The `angle` Number value is measured in degrees – a value of `720` will result in a swirl of 2 complete turns.
 + The `easing` value can be any valid easing string identifier (for example `'linear'`, `'easeOutIn'`, etc) or, alternatively, a dev-user defined easing function.
 
 ```
@@ -1533,7 +1498,7 @@ Default object
 ```
 
 ### OK filters
-The following primitive functions manipulate pixel image data in the [CIELAB color space](https://developer.mozilla.org/en-US/docs/Glossary/Color_space#cielab_color_spaces) - in particular OKLAB and OKLCH.
+The following primitive functions manipulate pixel image data in the [CIELAB color space](https://developer.mozilla.org/en-US/docs/Glossary/Color_space#cielab_color_spaces) – in particular OKLAB and OKLCH.
 
 #### Action: `alpha-to-luminance`
 For each pixel in the input, where alpha is not `0`:
@@ -1580,8 +1545,8 @@ For each pixel in the input:
 
 Where: 
 + `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white)
-+ `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red)
-+ `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow)
++ `A` (red-green) channel controls red-green hues – values range from `-0.4` (full green) to `+0.4` (full red)
++ `B` (yellow-blue) channel controls yellow-blue hues – values range from `-0.4` (full blue) to `+0.4` (full yellow)
 
 Used by factory function method: `modifyOk`.
 
@@ -1607,8 +1572,8 @@ For each pixel in the input:
 
 Where: 
 + `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white)
-+ `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red)
-+ `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow)
++ `A` (red-green) channel controls red-green hues – values range from `-0.4` (full green) to `+0.4` (full red)
++ `B` (yellow-blue) channel controls yellow-blue hues – values range from `-0.4` (full blue) to `+0.4` (full yellow)
 
 Used by factory function method: `modulateOk`.
 
@@ -1777,9 +1742,9 @@ tileWidth                   yes         1
 ```
 
 ### Method: `blend`
-**(Composition filter)** Performs a blend operation on two inputs - see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#blending) for more details.
+**(Composition filter)** Performs a blend operation on two inputs – see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#blending) for more details.
 
-Note that the `lineMix` input - which MUST be specified - can be offset using the `offsetX` and `offsetY` attributes.
+Note that the `lineMix` input – which MUST be specified – can be offset using the `offsetX` and `offsetY` attributes.
 
 Creates an ActionObject for the `blend` primitive function.
 
@@ -1797,11 +1762,11 @@ offsetX                     yes         0
 offsetY                     yes         0
 
 The blend attribute permitted values are:
-  'color'           'color-burn'        'color-dodge'       'darken'
-  'difference'      'exclusion'         'hard-light'        'hue'
-  'lighten'         'lighter'           'luminosity'        'multiply'
-  'normal'          'overlay'           'saturation'        'screen'
-  'soft-light'
+  'chroma-match'    'color'           'color-burn'      'color-dodge'
+  'darken'          'difference'      'exclusion'       'hard-light'
+  'hue'             'hue-match'       'lighten'         'lighter'
+  'luminosity'      'multiply'        'normal'          'overlay'
+  'saturation'      'screen'          'soft-light'
 ```
 
 ### Method: `blue`
@@ -1876,7 +1841,7 @@ level                       yes         1
 ### Method: `channelLevels`
 **(Color channels filter)** Produces a [posterization effect](https://en.wikipedia.org/wiki/Posterization) on the input. 
 
-Takes in four arguments - `red`, `green`, `blue` and `alpha` - each of which is an Array of zero or more integer Numbers (between 0 and 255). 
+Takes in four arguments – `red`, `green`, `blue` and `alpha` – each of which is an Array of zero or more integer Numbers (between 0 and 255). 
 
 The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value
 
@@ -1918,12 +1883,12 @@ red                         yes         1
 ### Method: `channelstep`
 **(Color channels filter)** Restricts the number of color values that each channel can set by imposing regular bands on each channel. This produces a [posterization effect](https://en.wikipedia.org/wiki/Posterization) on the input.
 
-Takes three divisor values - `red`, `green`, `blue`. For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of `50` applied to a channel value of `120` will give a result of `100`.
+Takes three divisor values – `red`, `green`, `blue`. For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of `50` applied to a channel value of `120` will give a result of `100`.
 
 The `clamp` attribute determines where in the band the color reference value should fall:
-+ `down` (default) - uses `Math.floor()` for the calculation.
-+ `up` - uses `Math.ceil()`.
-+ `round` - uses `Math.round()`.
++ `down` (default) – uses `Math.floor()` for the calculation.
++ `up` – uses `Math.ceil()`.
++ `round` – uses `Math.round()`.
 
 Creates an ActionObject for the `step-channels` primitive function.
 
@@ -1966,13 +1931,16 @@ includeRed                  yes         true
 ### Method: `chroma`
 **(Alpha channel filter)** Produces a [chroma key compositing effect](https://en.wikipedia.org/wiki/Chroma_key) across the input.
 
-Using an array of `range` arrays, determines whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. 
+Using an array of `range` arrays, determines whether a pixel's values lie entirely within a range's values and, if true, reduces that pixel's alpha channel value to zero - dependent on the values of any supplied `feather` attribute.
 
 Each `range` array comprises six integer Numbers (between `0` and `255`) representing the following channel values: 
 + `[minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue]`
 
 Dev-users can also define `range` Arrays as 
 + `[minimum-CSS-color-string, maximum-CSS-color-string]`
+
+The feather variables - `featherRed`, `featherGreen`, `featherBlue` - are integers in the range `0` (default) to `255`.
++ For convenience, dev-users can set all feather variables to the same value using a `feather` pseudo-attribute.
 
 Creates an ActionObject for the `chroma` primitive function.
 
@@ -1985,6 +1953,11 @@ lineOut                     yes         ''
 opacity                     yes         1
 
 ranges                      yes         []
+
+feather                     no          (pseudo-attribute)
+featherRed                  yes         0
+featherGreen                yes         0
+featherBlue                 yes         0
 ```
 
 ### Method: `chromakey`
@@ -2042,9 +2015,9 @@ lowRed                      yes         0
 ```
 
 ### Method: `compose`
-**(Composition filter)** Perform a Porter-Duff compositing operation on two inputs - see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators) for details.
+**(Composition filter)** Perform a Porter-Duff compositing operation on two inputs – see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators) for details.
 
-Note that the `lineMix` input - which MUST be specified - can be offset using the `offsetX` and `offsetY` attributes.
+Note that the `lineMix` input – which MUST be specified – can be offset using the `offsetX` and `offsetY` attributes.
 
 Creates an ActionObject for the `compose` primitive function.
 
@@ -2074,7 +2047,7 @@ The compose attribute permitted values are:
 
 The matrix dimensions can be set using the `width` and `height` arguments, while setting the home pixel's position within the matrix can be set using the `offsetX` and `offsetY` arguments.
 
-The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the `operation` attribute.
+The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours – this value is set in the `operation` attribute.
 
 Channels can be selected for inclusion in the calculation by setting the `includeRed`, `includeGreen`, `includeBlue` (all false by default) and `includeAlpha` (default: true) flags.
 
@@ -2144,7 +2117,7 @@ opacity                     yes         1
 ### Method: `displace`
 **(Displacement filter)** Moves pixels around the input image, based on the color channel values supplied by a displacement map image. This is the SC filter engine's attempt to reproduce the SVG [`<feDisplacementMap>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap) filter primative.
 
-Note that the `lineMix` input - which MUST be specified - can be offset using the `offsetX` and `offsetY` attributes. Ideally, the mix image should be the same size as the input image, but it can be larger or smaller - hence the inclusion of these attributes. The displacement transform will only happen when both inputs have pixels at the appropriate coordinate
+Note that the `lineMix` input – which MUST be specified – can be offset using the `offsetX` and `offsetY` attributes. Ideally, the mix image should be the same size as the input image, but it can be larger or smaller – hence the inclusion of these attributes. The displacement transform will only happen when both inputs have pixels at the appropriate coordinate
 
 As for the SVG filter primative, translations in the `x` and `y` axes are tied to the pixel values in a given color channel. These pixel values can be scaled.
 
@@ -2191,16 +2164,16 @@ opacity                     yes         1
 **(Convolution filter)** Outputs an emboss effect across the input.
 
 This method creates a chain of FilterAction objects, the composition of which can be controlled by a set of flags supplied by the dev-user:
-+ `useNaturalGrayscale` Boolean - if `true` the filter will start with a `grayscale` pass; default is to use an `average-channels` pass.
-+ `clamp` positive integer Number - clamps each color channel by the given value, using a `clampChannels` pass; pushes channel values towards a value of 127. Default is `0` (no pass).
-+ `smoothing` positive float Number - adds a `gaussianBlur` pass with the attribute's value acting as the radius. Default is `0` (no pass).
++ `useNaturalGrayscale` Boolean – if `true` the filter will start with a `grayscale` pass; default is to use an `average-channels` pass.
++ `clamp` positive integer Number – clamps each color channel by the given value, using a `clampChannels` pass; pushes channel values towards a value of 127. Default is `0` (no pass).
++ `smoothing` positive float Number – adds a `gaussianBlur` pass with the attribute's value acting as the radius. Default is `0` (no pass).
 
 The final FilterAction object added to the chain performs an `emboss` pass on what has gone before. This filter primative function, which calculates and applies a 3x3 convolution matrix to the image data, accepts a number of attributes:
-+ `angle` float Number (measured in degrees) - contributes to the weights used in the matrix
-+ `strength` float Number - contributes to the weights used in the matrix
-+ `postProcessResults` Boolean - if set to `true`, extra work happens after the matrix pass completes to either smooth pixel channels towards `127`, taking into account a `tolerance` value, or alternatively make qualifying pixels transparent
-+ `tolerance` positive float Number - only used during post-processing
-+ `keepOnlyChangedAreas` Boolean - determines whether, during post-processing, pixels will be smoothed towards 127, or set to transparent.
++ `angle` float Number (measured in degrees) – contributes to the weights used in the matrix
++ `strength` float Number – contributes to the weights used in the matrix
++ `postProcessResults` Boolean – if set to `true`, extra work happens after the matrix pass completes to either smooth pixel channels towards `127`, taking into account a `tolerance` value, or alternatively make qualifying pixels transparent
++ `tolerance` positive float Number – only used during post-processing
++ `keepOnlyChangedAreas` Boolean – determines whether, during post-processing, pixels will be smoothed towards 127, or set to transparent.
 
 Creates a chain of primitive function ActionObjects as follows:
 + `grayscale` \| `average-channels` > (`clamp`) > (`gaussianBlur`) > `emboss`
@@ -2524,8 +2497,8 @@ weights                     yes         [
 
 Where: 
 + `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white)
-+ `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red)
-+ `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow)
++ `A` (red-green) channel controls red-green hues – values range from `-0.4` (full green) to `+0.4` (full red)
++ `B` (yellow-blue) channel controls yellow-blue hues – values range from `-0.4` (full blue) to `+0.4` (full yellow)
 
 Creates an ActionObject for the `modify-ok-channels` primitive function.
 
@@ -2862,8 +2835,8 @@ opacity                     yes         1
 **(Displacement filter)** For each input pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
 
 This filter can handle multiple swirls in a single pass. Each swirl is defined in an object with the following attributes:
-+ The `start` and `radius` attributes can be defined in absolute `px` Number values, or relative `%` String values - relative to the input width.
-+ The `angle` Number value is measured in degrees - a value of `720` will result in a swirl of 2 complete turns.
++ The `start` and `radius` attributes can be defined in absolute `px` Number values, or relative `%` String values – relative to the input width.
++ The `angle` Number value is measured in degrees – a value of `720` will result in a swirl of 2 complete turns.
 + The `easing` value can be any valid easing string identifier (for example `'linear'`, `'easeOutIn'`, etc) or, alternatively, a dev-user defined easing function.
 
 ```
@@ -2903,8 +2876,8 @@ swirls                      yes         []
 **(Color channels filter)** Creates a duotone effect across the input:
 + Grayscales the input.
 + For each pixel, checks the color channel values against a `level` argument: 
-  - pixels with channel values above the level value are assigned to the `high` color;
-  - otherwise they are updated to the `low` color.
+  – pixels with channel values above the level value are assigned to the `high` color;
+  – otherwise they are updated to the `low` color.
 
 The `high` and `low` color channels can be set using their related attributes. Alternatively dev-users can set the `highColor` and `lowColor` attributes to CSS Color strings.
 
@@ -2950,43 +2923,47 @@ useMixedChannel             yes         true
 ### Method: `tiles`
 **(Convolution filter)** Covers the input with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a more Delauney-like output.
 
-The filter has four modes, set on the `points` attribute:
-+ `'rect-grid'` - generates a regular grid of tiles, where: `offsetX`, `offsetY` represent the origin coordinate from which the grid will be calculated; `tileWidth`, `tileHeight` supply the dimensions of the rectangular tiles; `angle` is the amount of tile rotation.
-+ `'hex-grid'` - generates a hexagonal grid of tiles, where: `offsetX`, `offsetY` represent the origin coordinate from which the grid will be calculated; `tileRadius` supplies the radius for each hexagonal tile; `angle` is the amount of tile rotation.
-+ Number - semi-randomly generates a set of points to the given value, constrained to an area determined by the `tileRadius`, `offsetX`, `offsetY` and `angle` arguments. Unlike other versions, this version will only include pixels within the bounds of circle of the given radius centered on the supplied offset coordinate values. To vary the randomness of point generation, the user can supply a `seed` argument, used when initializing the pseudo-random number generator.
-+ Array eg: `[x1, y1, x2, y2, ...]` - actions the points as described in the array. Pixel selection for each point is constrained by the supplied `tileRadius`, `offsetX` and `offsetY` arguments.
+The filter has four modes, set on the `mode` attribute: `'rect'`, `'hex'`, `'random'`, `'points'`. Each mode has its own set of attributes:
++ **rect** - `rectWidth`, `rectHeight`, `originX`, `originY`, `angle`
++ **hex** - `hexRadius`, `originX`, `originY`, `angle`
++ **random** - `randomCount`, `seed`
++ **points** - `pointsData`
 
 Dev-users should be aware that initial calculation of the tile sets is very computationally intensive.
 
 Channels can be included in the calculation by setting the appropriate `include` flags.
 
-Creates an ActionObject for the `tiles` primitive function.
+Used by factory function method: `tiles`.
 
 See test demo [Filters-015](../../demo/filters-015.html).
 ```
-Attribute                   Retained?   Default
---------------------------  ----------  ----------------
-lineIn                      yes         ''
-lineOut                     yes         ''
-opacity                     yes         1
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
 
-points                      yes         'rect-grid',
+  mode: 'rect',
 
-angle                       yes         0
-offsetX                     yes         0
-offsetY                     yes         0
-seed                        yes         DEFAULT_SEED,
-tileHeight                  yes         1
-tileRadius                  yes         1
-tileWidth                   yes         1
+  angle: 0,
+  originX: 0,
+  originY: 0,
 
-includeAlpha                yes         false
-includeBlue                 yes         true
-includeGreen                yes         true
-includeRed                  yes         true
+  rectWidth: 10,
+  rectHeight: 10,
 
-The points attribute's permitted values are:
-  'rect-grid'     'hex-grid'      Number          Number[]      
+  hexRadius: 5,
+
+  randomCount: 20,
+  seed: DEFAULT_SEED,
+
+  pointsData: [],
+
+  includeAlpha: false,
+  includeBlue: true,
+  includeGreen: true,
+  includeRed: true,
+}
 ```
 
 ### Method: `tint`

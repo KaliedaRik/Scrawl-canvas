@@ -23,10 +23,10 @@
 
     <main>
         <h1 id="the-scrawl-canvas-scene-graph">The Scrawl-canvas scene graph</h1>
-<p>Scrawl-canvas works by generating a <strong>retained mode</strong> description - an object model of graphical primitives (called entitys) - for a scene which displays in a <code>&lt;canvas&gt;</code> element. SC builds this <a href="https://en.wikipedia.org/wiki/Scene_graph">scene graph</a> using Group and Cell objects, alongside entity objects which get gathered into the Group objects that have been created for the scene.</p>
+<p>Scrawl-canvas works by generating a <strong>retained mode</strong> description – an object model of graphical primitives (called entitys) – for a scene which displays in a <code>&lt;canvas&gt;</code> element. SC builds this <a href="https://en.wikipedia.org/wiki/Scene_graph">scene graph</a> using Group and Cell objects, alongside entity objects which get gathered into the Group objects that have been created for the scene.</p>
 <blockquote>
   <p><strong>tl;dr: <em>SC is not a game engine!</strong></em> The SC scene graph does not use the classic <a href="https://en.wikipedia.org/wiki/Tree_(abstract_data_type)">tree structure</a> approach to build out a top-down hierarchy of layers and nodes to describe the scene. Rather, SC uses a more bottom-up approach to creating the scene graph where entity objects control how, where and when they will appear in the canvas display. Using a tree structure for the scene graph may have been a more efficient design choice, but <em>SC is not a game engine!</em></p>
-  <p>Dev-users should be aware that this - <em>somewhat different</em> - approach may take a bit of getting used to but, once the concepts are in place, it should be relatively simple to work with.</p>
+  <p>Dev-users should be aware that this – <em>somewhat different</em> – approach may take a bit of getting used to but, once the concepts are in place, it should be relatively simple to work with.</p>
 </blockquote>
 <h2 id="sc-scene-graph-hierarchy">SC scene graph hierarchy</h2>
 <p>The following code creates a canvas display with this output. Note that the code is creating a deliberately complex scene graph, for demonstration purposes; few of the test demos generate scene graphs as complex as this one:</p>
@@ -192,20 +192,20 @@
         |- Block entity 'last-block' (style dependency on 'my-hidden-cell')</code></pre>
 <p>The scene graph described above demonstrates these properties:</p>
 <ul>
-<li>The scene graph hierarchy is exactly four levels deep …<ul>
-<li>Level 1 - Artefact objects,</li>
-<li>Level 2 - Cell objects (relevant only for Canvas artefacts),</li>
-<li>Level 3 - Group objects,</li>
-<li>Level 4 - Entity objects.</li></ul></li>
+<li>The scene graph hierarchy is exactly four levels deep …<br />
+– Level 1 – Artefact objects,<br />
+– Level 2 – Cell objects (relevant only for Canvas artefacts),<br />
+– Level 3 – Group objects,<br />
+– Level 4 – Entity objects.</li>
 <li>Every Cell object has a namesake Group object.</li>
 <li>Cells cannot be nested; Groups cannot be nested, etc.</li>
 <li>Though only shown here for one Cell, every Cell, Group and Entity object can control its own visibility in the Canvas display.</li>
-<li>Entitys are assigned to Groups (and Groups to Cells, Cells to the Canvas artefact) as they are created - the object lower down the hierarchy maintains details of the object it has assigned itself to.</li>
+<li>Entitys are assigned to Groups (and Groups to Cells, Cells to the Canvas artefact) as they are created – the object lower down the hierarchy maintains details of the object it has assigned itself to.</li>
 <li>Though not shown here … Cell, Group and Entity objects can reassign themselves to a different Canvas, Cell or Group object (respectively) at any time.</li>
 <li>Again not shown here … entitys can belong to more than one Group object at any time.</li>
-<li>Furthermore not shown here … Group objects can exist independently of Cell objects - they're just collections of entity objects.</li>
+<li>Furthermore not shown here … Group objects can exist independently of Cell objects – they're just collections of entity objects.</li>
 <li>Cell objects can position themselves in the Canvas display; Entity objects can position themselves in their Cell's display.</li>
-<li>Group objects play no role in positioning - there is no "cascade of matrix multiplications" between Cells, Groups and entitys.</li>
+<li>Group objects play no role in positioning – there is no "cascade of matrix multiplications" between Cells, Groups and entitys.</li>
 <li>Some of the entitys have direct dependencies on other entitys for their positioning data, and one entity has a direct dependency on a Cell to supply its fill style.</li>
 <li>A final not shown here … Entitys can change their positioning and/or styling dependencies at any time.</li>
 </ul>
@@ -213,33 +213,33 @@
 <p>SC uses Group objects for a range of functionalities across the repo code base:</p>
 <ul>
 <li>Every SC Stack artefact and Cell object is given a <strong>namesake Group</strong> when they are created, to which can be added other Artefact objects (for Stacks) or entity objects (for Cells) which need to be displayed in them.</li>
-<li>(Note that SC Canvas artefacts do not have their own <em>namesake Group</em> as they only have one Cell object to worry about - their <code>base</code> Cell).</li>
+<li>(Note that SC Canvas artefacts do not have their own <em>namesake Group</em> as they only have one Cell object to worry about – their <code>base</code> Cell).</li>
 <li>Dev users can create new Group objects at any time using the <code>scrawl.makeGroup({ key: value, ...})</code> factory function.</li>
-<li><strong><em>Stack artefacts and Cell objects can include more than one Group object</em></strong> - dev-users can add/remove their user-created Group objects to Stacks and Cells at any time. Any Element/entity objects included in the Group object will become part of the Stack/Cell output display.</li>
+<li><strong><em>Stack artefacts and Cell objects can include more than one Group object</em></strong> – dev-users can add/remove their user-created Group objects to Stacks and Cells at any time. Any Element/entity objects included in the Group object will become part of the Stack/Cell output display.</li>
 <li>For convenience, Element/entity objects belonging to a Group object can have their attributes modified at any time via Group object functions.</li>
 <li>Group objects can be used to define the set of Element/entity objects which can be dragged-and-dropped as part of a <code>dragZone</code> object. See test demo <a href="../demo/canvas-026.html">Canvas-026</a> for an example.</li>
 <li>Group objects can be used to define a set of entity objects to which a <a href="sc-filter-engine.html">filter effect</a> can be applied.</li>
 </ul>
 <blockquote>
-  <p><strong>tl;dr:</strong> Group objects represent a collection of SC artefact (including entity) objects - <em>and that is all they are!</em></p>
+  <p><strong>tl;dr:</strong> Group objects represent a collection of SC artefact (including entity) objects – <em>and that is all they are!</em></p>
 </blockquote>
 <p>Most of the code relating to Group object functionality can be found in the following files:</p>
 <ul>
-<li><a href="../source/factory/group.html">factory/group.js</a> - for the Group object's factory function.</li>
-<li><a href="../source/mixin/cascade.html">mixin/cascade.js</a> - used by Stack and Cell objects to help manage their Group objects.</li>
+<li><a href="../source/factory/group.html">factory/group.js</a> – for the Group object's factory function.</li>
+<li><a href="../source/mixin/cascade.html">mixin/cascade.js</a> – used by Stack and Cell objects to help manage their Group objects.</li>
 </ul>
 <h3 id="create-serialize-clone-and-kill-group-objects">Create, serialize, clone and kill Group objects</h3>
 <p>For the most part, Group objects act like regular SC objects, with a few quirks …</p>
 <h4 id="create">Create</h4>
 <p>A new Group object can be created using the <code>scrawl.makeGroup({key: value, ...})</code> factory function:</p>
 <ul>
-<li>While Group objects can share a <code>name</code> attribute with a Stack artefact or Cell object, dev-users should try to keep Group names unique - just to be on the safe side.</li>
+<li>While Group objects can share a <code>name</code> attribute with a Stack artefact or Cell object, dev-users should try to keep Group names unique – just to be on the safe side.</li>
 <li>Group objects do not need to be associated with a Stack artefact or Cell object <code>host</code>, but when they are being created specifically to be part of such objects then include the <code>host</code> attribute in the argument object, setting its value to either the host object itself, or the object's <code>name</code> string.</li>
-<li>Element artefacts and entity objects can be added to the Group during its creation by setting the argument object's <code>artefacts</code> attribute to an array of Element/entity <code>name</code> strings; alternatively, populate the Group with Element/entity objects after Group creation completes - <code>scrawl.makeGroup({...}).addArtefacts(item, item, ...)</code>.</li>
+<li>Element artefacts and entity objects can be added to the Group during its creation by setting the argument object's <code>artefacts</code> attribute to an array of Element/entity <code>name</code> strings; alternatively, populate the Group with Element/entity objects after Group creation completes – <code>scrawl.makeGroup({...}).addArtefacts(item, item, ...)</code>.</li>
 </ul>
 <h4 id="serialize">Serialize</h4>
 <p>Group objects can be serialized using the <code>group.saveAsPacket()</code> function. The serialized packet will include all the currently associated artefact/entity object <code>name</code> strings in the <code>artefacts</code> attribute, but will not clone the artefacts themselves.</p>
-<p>(TODO: Repo-devs need to review how Group serialization should work with respect to associated artefacts and entitys - should there be a mechanism in the functionality to tell the <code>group.saveAsPacket()</code> invocation to serialize associated objects at the same time as it serializes the Group object?)</p>
+<p>(TODO: Repo-devs need to review how Group serialization should work with respect to associated artefacts and entitys – should there be a mechanism in the functionality to tell the <code>group.saveAsPacket()</code> invocation to serialize associated objects at the same time as it serializes the Group object?)</p>
 <h4 id="clone">Clone</h4>
 <p>Group objects can be created from another Group by cloning: <code>group.clone({key: value, ...})</code>. </p>
 <p>The cloned Group object will include the currently associated artefact/entity object <code>name</code> strings in the <code>artefacts</code> attribute, but will not clone those objects themselves. </p>
@@ -247,24 +247,24 @@
 <h4 id="kill">Kill</h4>
 <p>Use the <code>group.kill()</code> function. Unlike (most) other SC objects, the Group <code>kill</code> function can take 1-2 boolean arguments which, when set to <code>true</code>, will also kill all the artefact/entity objects currently associated with the group:</p>
 <ul>
-<li><code>group.kill()</code>, <code>group.kill(false)</code> - remove the Group object from the SC ecosystem, leaving the associated artefact/entity objects untouched.</li>
-<li><code>group.kill(true)</code>, <code>group.kill(true, false)</code> - kill the Group object's associated artefact/entity objects before removing the Group object from the SC ecosystem. Any artefact elements will remain in the DOM.</li>
-<li><code>group.kill(true, true)</code> - the same as <code>group.kill(true)</code>, except this time artefact elements will also be deleted from the DOM.</li>
+<li><code>group.kill()</code>, <code>group.kill(false)</code> – remove the Group object from the SC ecosystem, leaving the associated artefact/entity objects untouched.</li>
+<li><code>group.kill(true)</code>, <code>group.kill(true, false)</code> – kill the Group object's associated artefact/entity objects before removing the Group object from the SC ecosystem. Any artefact elements will remain in the DOM.</li>
+<li><code>group.kill(true, true)</code> – the same as <code>group.kill(true)</code>, except this time artefact elements will also be deleted from the DOM.</li>
 </ul>
 <p>Group objects also include functionality to kill all their currently associated artefact/entity objects while keeping the Group object itself intact:</p>
 <ul>
-<li><code>group.killArtefacts()</code>, <code>group.killArtefacts(false)</code> - any artefact elements will remain in the DOM</li>
-<li><code>group.killArtefacts(true)</code> - any artefact elements will be deleted from the DOM</li>
+<li><code>group.killArtefacts()</code>, <code>group.killArtefacts(false)</code> – any artefact elements will remain in the DOM</li>
+<li><code>group.killArtefacts(true)</code> – any artefact elements will be deleted from the DOM</li>
 </ul>
 <h3 id="group-discovery-in-the-sc-library-and-beyond">Group discovery in the SC library, and beyond</h3>
 <p>Group objects are tracked in the SC library, in the <code>library.group</code> section. If the dev-user needs to retrieve a handle to a Group object, and they know the object's name attribute, they can do this using <code>scrawl.findGroup('name-string')</code>.</p>
 <p>SC also includes functionality for the dev-user to retrieve Group objects via their Stack/Canvas artefact host object, and from Cell objects:</p>
 <ul>
-<li><code>stack.getGroup()</code> - retrieve the Stack artefact's <em>namesake</em> Group object.</li>
-<li><code>stack.get('groups')</code> - get an Array of Group name strings currently associated with the Stack artefact.</li>
-<li><code>canvas.get('baseGroup')</code> - retrieve the Canvas artefact's <code>base</code> Cell object's Group object.</li>
-<li><code>cell.getGroup()</code> - retrieve the Cell object's <em>namesake</em> Group object.</li>
-<li><code>cell.get('groups')</code> - get an Array of Group name strings currently associated with the Cell object.</li>
+<li><code>stack.getGroup()</code> – retrieve the Stack artefact's <em>namesake</em> Group object.</li>
+<li><code>stack.get('groups')</code> – get an Array of Group name strings currently associated with the Stack artefact.</li>
+<li><code>canvas.get('baseGroup')</code> – retrieve the Canvas artefact's <code>base</code> Cell object's Group object.</li>
+<li><code>cell.getGroup()</code> – retrieve the Cell object's <em>namesake</em> Group object.</li>
+<li><code>cell.get('groups')</code> – get an Array of Group name strings currently associated with the Cell object.</li>
 </ul>
 <h3 id="add-group-objects-to-stackcell-objects-and-remove-them">Add Group objects to Stack/Cell objects, and remove them</h3>
 <p>There's three approaches to associating a Group object with a Stack artefact or Cell object. The simplest method is during Group instantiation, by including a <code>host</code> attribute in the <code>scrawl.makeGroup()</code> factory function's argument object.</p>
@@ -272,9 +272,9 @@
 <p>SC recommends that dev-users avoid the <code>stack.set({ group })</code>, <code>cell.set({ group })</code> options because: only one group can be handled using this approach; and the operation will clear out all other associated Groups (including the <em>namesake</em> Group) before associating the new Group object.</p>
 <h3 id="group-visibility-order-and-sorting">Group visibility, order and sorting</h3>
 <p><em>The following only applies to Group objects associated with Cell objects that are part of the Display cycle.</em></p>
-<p>Group objects include a <code>visibility</code> attribute which, when set to <code>false</code>, will cause the Display cycle to skip over processing all of the artefacts/entitys associated with that Group - they will not recalculate their state, and they will not be stamped into the final Canvas display.</p>
+<p>Group objects include a <code>visibility</code> attribute which, when set to <code>false</code>, will cause the Display cycle to skip over processing all of the artefacts/entitys associated with that Group – they will not recalculate their state, and they will not be stamped into the final Canvas display.</p>
 <p>Group objects also include an <code>order</code> attribute, which should be set to a positive integer value (default: <code>0</code>). Entitys associated with a Group will all be <strong>batch processed</strong> on a per-group basis, with the artefacts in a Group with a lower <code>order</code> value completing their processing before the next group of entitys start their processing.</p>
-<p>Cell objects store the <code>name</code> strings of the Group objects associated with them in an Array keyed to their <code>cell.groups</code> attribute. As part of any sorting operation, the Cell object will retrieve the Group objects from the SC library, sort these objects in ascending <code>order</code> values and then store references to the now sorted Group objects in an internal <code>cell.groupBucket</code> Array. The <code>groups</code> Array should never itself be sorted as this represents the order in which Groups get associated with the Cell - which is itself determined in the the code written by dev-users.</p>
+<p>Cell objects store the <code>name</code> strings of the Group objects associated with them in an Array keyed to their <code>cell.groups</code> attribute. As part of any sorting operation, the Cell object will retrieve the Group objects from the SC library, sort these objects in ascending <code>order</code> values and then store references to the now sorted Group objects in an internal <code>cell.groupBucket</code> Array. The <code>groups</code> Array should never itself be sorted as this represents the order in which Groups get associated with the Cell – which is itself determined in the the code written by dev-users.</p>
 <p>Cell objects only re-sort their Group objects when they have to:</p>
 <ul>
 <li>During the first Display cycle</li>
@@ -283,15 +283,15 @@
 <li>When a Group object updates its <code>order</code> attribute's value</li>
 </ul>
 <p>Whenever any of these things happen, the Cell object's <code>batchResort</code> flag will be set to <code>true</code>, thus triggering a re-sort on the next Display cycle. SC uses a simple <a href="https://en.wikipedia.org/wiki/Bucket_sort">bucket sort algorithm</a> for the sorting operation. Much of this functionality gets defined in the <a href="../source/mixin/cascade.html">mixin/cascade.js</a> file.</p>
-<p>(Repo-dev note: current functionality is that when a Group object's <code>order</code> value changes - via a <code>group.set({order: newValue})</code> invocation - the Group will only signal the change to its current host Cell object. This may cause unexpected outcomes (edge cases) for more complex dev-user projects and may need to be revisited at some point.)</p>
-<p>(Repo-dev note: Group object visibility for Stack Element artefacts has not been investigated or tested, even though the functionality is - in theory - present. Needs review.)</p>
+<p>(Repo-dev note: current functionality is that when a Group object's <code>order</code> value changes – via a <code>group.set({order: newValue})</code> invocation – the Group will only signal the change to its current host Cell object. This may cause unexpected outcomes (edge cases) for more complex dev-user projects and may need to be revisited at some point.)</p>
+<p>(Repo-dev note: Group object visibility for Stack Element artefacts has not been investigated or tested, even though the functionality is – in theory – present. Needs review.)</p>
 <h3 id="add-artefactentity-objects-to-group-objects-and-remove-them">Add artefact/entity objects to Group objects, and remove them</h3>
 <p>Artefact/entity objects can be added to, and removed from, a Group object after it has been created by using the following functions:</p>
 <ul>
-<li><code>group.addArtefacts(item, item, ...)</code> - associate the artefact/entity object with the Group object, where each item may be the Artefact/entity object's <code>name</code> attribute value, or the Artefact/entity object itself.</li>
-<li><code>group.moveArtefactsIntoGroup(item, item, ...)</code> - similar to <code>addArtefacts</code>, except the artefact/entity objects being associated with the Group object will at the same time disassociate from any Group object they currently associate with.</li>
-<li><code>group.removeArtefacts(item, item, ...)</code> - the opposite of <code>addArtefacts</code>; here each artefact/entity object will disassociate itself from the Group object.</li>
-<li><code>group.clearArtefacts()</code> - the Group object instructs all of its associated artefact/entity objects to disassociate from it.</li>
+<li><code>group.addArtefacts(item, item, ...)</code> – associate the artefact/entity object with the Group object, where each item may be the Artefact/entity object's <code>name</code> attribute value, or the Artefact/entity object itself.</li>
+<li><code>group.moveArtefactsIntoGroup(item, item, ...)</code> – similar to <code>addArtefacts</code>, except the artefact/entity objects being associated with the Group object will at the same time disassociate from any Group object they currently associate with.</li>
+<li><code>group.removeArtefacts(item, item, ...)</code> – the opposite of <code>addArtefacts</code>; here each artefact/entity object will disassociate itself from the Group object.</li>
+<li><code>group.clearArtefacts()</code> – the Group object instructs all of its associated artefact/entity objects to disassociate from it.</li>
 </ul>
 <p>These operations have to be invoked on the Group object itself; SC does not supply convenience functions for the Stack artefact or Cell object to feed through arguments to their <em>namesake</em> Group objects.</p>
 <p>Dev-users can retrieve a specified artefact/entity object from a Group object using the <code>group.getArtefact('name-string')</code> function.</p>
@@ -299,12 +299,12 @@
 <p>The functionality previously described for Group ordering and sorting within Cell objects also applies to sorting artefact/entity objects within Group objects:</p>
 <ul>
 <li>Group objects store the <code>name</code> strings of the artefact/entity objects associated with them in an Array keyed to their <code>group.artefacts</code> attribute. This Array is never sorted as it represents the order in which artefacts/entitys get associated with the Group.</li>
-<li>Artefact/entity objects have two sort-related attributes (equivalent to the <code>group.order</code> attribute):<ul>
-<li><code>entity.calculateOrder</code> - representing the artefact/entity's processing position during the <code>preStamp</code> (state recalculation) phase of the Display cycle's <code>compile</code> operation.</li>
-<li><code>entity.stampOrder</code> - representing the artefact/entity's processing position during the <code>stamp</code> phase of the Display cycle's <code>compile</code> operation.</li></ul></li>
-<li>Which means that when a Group object re-sorts its associated artefact/entity objects, it will perform two sorts:<ul>
-<li>the results of the <code>calculateOrder</code> sort are stored in the internal <code>group.artefactCalculateBuckets</code> Array.</li>
-<li>the results of the <code>stampOrder</code> sort get stored in the <code>group.artefactStampBuckets</code> Array.</li></ul></li>
+<li>Artefact/entity objects have two sort-related attributes (equivalent to the <code>group.order</code> attribute):<br />
+– <code>entity.calculateOrder</code> – representing the artefact/entity's processing position during the <code>preStamp</code> (state recalculation) phase of the Display cycle's <code>compile</code> operation.<br />
+– <code>entity.stampOrder</code> – representing the artefact/entity's processing position during the <code>stamp</code> phase of the Display cycle's <code>compile</code> operation.</li>
+<li>Which means that when a Group object re-sorts its associated artefact/entity objects, it will perform two sorts:<br />
+– the results of the <code>calculateOrder</code> sort are stored in the internal <code>group.artefactCalculateBuckets</code> Array.<br />
+– the results of the <code>stampOrder</code> sort get stored in the <code>group.artefactStampBuckets</code> Array.</li>
 </ul>
 <p>Group objects only sort their artefact/entity objects when they have to, signalled through the <code>group.batchResort</code> flag. This flag gets set to <code>true</code> when:</p>
 <ul>
@@ -313,33 +313,33 @@
 <li>When an artefact/entity object is removed from the Group object's <code>artefacts</code> Array</li>
 <li>When an associated artefact/entity object updates its <code>calculateOrder</code> or <code>stampOrder</code> attribute's value (both of which can be set to the same value using the <code>order</code> pseudo-attribute)</li>
 </ul>
-<p>SC uses a bucket-sort algorithm to perform these sort operations. Both sorts are handled in a single internal function - <code>group.sortArtefacts()</code> - defined in the <a href="../source/factory/group.html">factory/group.js</a> file.</p>
+<p>SC uses a bucket-sort algorithm to perform these sort operations. Both sorts are handled in a single internal function – <code>group.sortArtefacts()</code> – defined in the <a href="../source/factory/group.html">factory/group.js</a> file.</p>
 <p>(Repo-dev note: current functionality is that when an artefact/entity object's <code>calculateOrder</code> or <code>stampOrder</code> value changes, the artefact/entity will only signal the change to its current host Group object. This may cause unexpected outcomes (edge cases) for more complex dev-user projects and may need to be revisited at some point.)</p>
 <h3 id="batch-update-artefactentity-object-attributes-using-group-object-functions">Batch update artefact/entity object attributes using Group object functions</h3>
 <p>Any SC <em>tracked object</em> (an object that inherits functionality from the <code>mixin/base.js</code> file) can have its attributes updated at any time using its <code>.set({key: value, ...})</code> and <code>.setDelta({key: value, ...})</code> functions. </p>
 <p>SC Group objects include functions that allow such updates to be applied to all of their artefact/entity objects in a single invocation:</p>
 <ul>
-<li><code>group.setArtefacts({key: value, ...})</code> - the Group object will, for each of its associated artefact/entity objects, invoke their <code>set()</code> function with the same argument that it received. </li>
-<li><code>group.updateArtefacts({key: value, ...})</code> - the Group object will, for each of its associated artefact/entity objects, invoke their <code>setDelta()</code> function with the same argument that it received.</li>
+<li><code>group.setArtefacts({key: value, ...})</code> – the Group object will, for each of its associated artefact/entity objects, invoke their <code>set()</code> function with the same argument that it received. </li>
+<li><code>group.updateArtefacts({key: value, ...})</code> – the Group object will, for each of its associated artefact/entity objects, invoke their <code>setDelta()</code> function with the same argument that it received.</li>
 </ul>
 <blockquote>
   <p><strong>tl;dr:</strong> The difference between <code>set</code> and <code>setDelta</code> is:</p>
   <ul>
-  <li><code>set({key: value}, ...)</code> - <strong>replaces</strong> each keyed attribute with the new value.</li>
-  <li><code>setDelta({key: value}, ...)</code> - for each keyed attribute, <strong>adds</strong> the new value to the existing value.</li>
+  <li><code>set({key: value}, ...)</code> – <strong>replaces</strong> each keyed attribute with the new value.</li>
+  <li><code>setDelta({key: value}, ...)</code> – for each keyed attribute, <strong>adds</strong> the new value to the existing value.</li>
   </ul>
 </blockquote>
 <h4 id="delta-manipulations">Delta manipulations</h4>
-<p>SC <code>delta</code> animation is explained in the <a href="sc-animation-systems.html">Animation and Display cycle</a> page of this Runbook. Group objects can be used to trigger delta updates across all of their associated artefact/entity objects using the following functions - even when delta animation for that artefact/entity object has been disabled:</p>
+<p>SC <code>delta</code> animation is explained in the <a href="sc-animation-systems.html">Animation and Display cycle</a> page of this Runbook. Group objects can be used to trigger delta updates across all of their associated artefact/entity objects using the following functions – even when delta animation for that artefact/entity object has been disabled:</p>
 <ul>
-<li><code>group.updateByDelta()</code> - <strong>add</strong> the keyed attribute values in the artefact/entity object's <code>delta</code> attribute object to its existing attribute values.</li>
-<li><code>group.reverseByDelta()</code> - <strong>subtract</strong> the keyed attribute values in the artefact/entity object's <code>delta</code> attribute object to its existing attribute values.</li>
+<li><code>group.updateByDelta()</code> – <strong>add</strong> the keyed attribute values in the artefact/entity object's <code>delta</code> attribute object to its existing attribute values.</li>
+<li><code>group.reverseByDelta()</code> – <strong>subtract</strong> the keyed attribute values in the artefact/entity object's <code>delta</code> attribute object to its existing attribute values.</li>
 </ul>
 <h4 id="artefact-class-manipulations">Artefact class manipulations</h4>
-<p>Specifically for associated artefact objects, dev-users can add or remove CSS class labels to/from those objects' DOM elements using the following Group object functions - note that the function argument is a String of space-separated classNames:</p>
+<p>Specifically for associated artefact objects, dev-users can add or remove CSS class labels to/from those objects' DOM elements using the following Group object functions – note that the function argument is a String of space-separated classNames:</p>
 <ul>
-<li><code>group.addArtefactClasses('css-classname-1 css-classname-2 ...')</code> - adds the supplied CSS classname strings to the end of the existing <code>artefact.classes</code> attribute.</li>
-<li><code>group.removeArtefactClasses('css-classname-1 css-classname-2 ...')</code> - removes each of the CSS classname strings from the existing <code>artefact.classes</code> attribute.</li>
+<li><code>group.addArtefactClasses('css-classname-1 css-classname-2 ...')</code> – adds the supplied CSS classname strings to the end of the existing <code>artefact.classes</code> attribute.</li>
+<li><code>group.removeArtefactClasses('css-classname-1 css-classname-2 ...')</code> – removes each of the CSS classname strings from the existing <code>artefact.classes</code> attribute.</li>
 </ul>
 <p>The actual update to the DOM elements doesn't happen straight away. Instead a <code>dirtyClasses</code> flag is set to <code>true</code>, which then gets actioned during the <code>show</code> operation of the Display cycle.</p>
 <h4 id="stack-artefact-and-cell-object-equivalent-functionality">Stack artefact and Cell object equivalent functionality</h4>
@@ -357,32 +357,32 @@
 <p>If the same set of filters need to be applied to several entity objects at the same time, those objects can be gathered together into their own Group object for processing. However dev-users should be aware of the limitations surrounding this approach:</p>
 <ul>
 <li>The Group object must be associated with the Cell object where the entitys will be stamped.</li>
-<li>The entitys will be stamped onto the Cell together, in a single operation - this means that if some of the entitys need to appear behind a non-filtered entity, while other entitys in the same Group need to appear in front of that entity, the operation will fail:<ul>
-<li>Either the dev-user will have to separate the entitys into two separate Group objects, with the unfiltered entity in an additional Group object whose <code>order</code> value lies between that of the two filtered Groups;</li>
-<li>Or the filters will need to be applied to each entity separately, at the entity level.</li></ul></li>
+<li>The entitys will be stamped onto the Cell together, in a single operation – this means that if some of the entitys need to appear behind a non-filtered entity, while other entitys in the same Group need to appear in front of that entity, the operation will fail:<br />
+– Either the dev-user will have to separate the entitys into two separate Group objects, with the unfiltered entity in an additional Group object whose <code>order</code> value lies between that of the two filtered Groups;<br />
+– Or the filters will need to be applied to each entity separately, at the entity level.</li>
 </ul>
 <p>Note that while the Group object filtering functionality is very similar to Cell object and entity object functionality, it differs from them in several small-yet-key areas. Repo-devs need to be aware that changes in filter functionality in one of these three areas of the code base may need to be reflected in the other two areas.</p>
 <h3 id="cell-entity-and-stack-artefact-end-user-interactions">Cell entity, and Stack artefact, end-user interactions</h3>
 <p>Group objects come with a set of attributes and functions which, for end-users interacting with a Stack or Canvas element in a desktop (screen + mouse) environment, can quickly detect when the end-user's cursor is hovering over an Element artefact or entity object and take actions accordingly to change the Stack/Canvas display. Note that once these attributes are set, SC will handle the associated functionality automatically for the dev-user:</p>
 <ul>
-<li><code>group.checkForEntityHover</code> - Boolean (default: <code>false</code>)</li>
-<li><code>group.onEntityHover</code> - Function (default: no action taken)</li>
-<li><code>group.onEntityNoHover</code> - Function (default: no action taken)</li>
+<li><code>group.checkForEntityHover</code> – Boolean (default: <code>false</code>)</li>
+<li><code>group.onEntityHover</code> – Function (default: no action taken)</li>
+<li><code>group.onEntityNoHover</code> – Function (default: no action taken)</li>
 </ul>
 <p>For dev-user convenience, these attributes can also be set via the Canvas artefact and Cell objects:</p>
 <ul>
-<li>Canvas artefact objects will pipe the attribute values through to their <code>base</code> Cell's <em>namesake</em> Group object - see test demo <a href="../../demo/canvas-001.html">Canvas-001</a> for an example:<ul>
-<li><code>canvas.checkForEntityHover</code></li>
-<li><code>canvas.onEntityHover</code></li>
-<li><code>canvas.onEntityNoHover</code></li></ul></li>
-<li>Cell objects pipe the attribute values directly to their <em>namesake</em> Group object - see test demo <a href="../../demo/canvas-039.html">Canvas-039</a>:<ul>
-<li><code>cell.checkForEntityHover</code></li>
-<li><code>cell.onEntityHover</code></li>
-<li><code>cell.onEntityNoHover</code></li></ul></li>
+<li>Canvas artefact objects will pipe the attribute values through to their <code>base</code> Cell's <em>namesake</em> Group object – see test demo <a href="../../demo/canvas-001.html">Canvas-001</a> for an example:<br />
+– <code>canvas.checkForEntityHover</code><br />
+– <code>canvas.onEntityHover</code><br />
+– <code>canvas.onEntityNoHover</code></li>
+<li>Cell objects pipe the attribute values directly to their <em>namesake</em> Group object – see test demo <a href="../../demo/canvas-039.html">Canvas-039</a>:<br />
+– <code>cell.checkForEntityHover</code><br />
+– <code>cell.onEntityHover</code><br />
+– <code>cell.onEntityNoHover</code></li>
 </ul>
 <p>Beyond hovering, dev-users can obtain a list of entitys currently under the cursor's location by invoking the following functions. The function argument will generally be an appropriate <code>here</code> object (see below for details on <code>here</code> objects):</p>
 <ul>
-<li><code>group.getArtefactAt(here)</code> - see test demos <a href="../../demo/canvas-026.html">Canvas-026</a>, <a href="../../demo/canvas-037.html">Canvas-037</a>, <a href="../../demo/canvas-058.html">Canvas-058</a>, <a href="../../demo/dom-007.html">DOM-007</a>.</li>
+<li><code>group.getArtefactAt(here)</code> – see test demos <a href="../../demo/canvas-026.html">Canvas-026</a>, <a href="../../demo/canvas-037.html">Canvas-037</a>, <a href="../../demo/canvas-058.html">Canvas-058</a>, <a href="../../demo/dom-007.html">DOM-007</a>.</li>
 <li><code>group.getAllArtefactsAt(here)</code> see test demo <a href="../../demo/dom-009.html">DOM-009</a>.</li>
 </ul>
 <h2 id="sc-cell-objects">SC Cell objects</h2>
@@ -423,22 +423,22 @@ Display can be filtered?                     CSS/SVG filters        CSS/SVG and 
 <p>CellFragment objects contain only the minimum functionality required so the Cells can perform their various jobs around the code base. The code for CellFragment objects, alongside the pool infrastructure, can be found in the <a href="../source/untracked-factory/cell-fragment.html">untracked-factory/cell-fragment.js</a> file, with additional, shared functionality defined in the <a href="../source/mixin/cell-key-functions.html">mixin/cell-key-functions.js</a> file.</p>
 <p>SC uses <code>pool</code> Cell objects extensively through the code base. Repo-devs retrieve a Cell from the pool using the <code>requestCell()</code> function, and return it using the <code>releaseCell(object)</code> function. When returned to the pool, the CellFragment objects and their <code>&lt;canvas&gt;</code> elements will be cleaned back into a default state. <strong>Note that failing to return a pool Cell will lead to memory leaks</strong>:</p>
 <ul>
-<li><a href="../source/asset-management/reaction-diffusion-asset.html">asset-management/reaction-diffusion-asset.js</a> - used to help create the initial conditions for an RD-asset, where the asset will build around an entity outline.</li>
-<li><a href="../source/factory/cell.html">factory/cell.js</a> - used to help create a <a href="https://brush.ninja/glossary/animation/ghosting/">ghosting effect</a> in a canvas animation. Also used to help calculate a layer Cell's <code>localHere</code> object's values, and to help stash a Cell object's <code>&lt;canvas&gt;</code> output as part of the <code>scrawl.createImageFromCell(cell, flag)</code> function.</li>
-<li><a href="../source/factory/crescent.html">factory/crescent.js</a> - used to help calculate the intersection points of the two circles that make up the crescent shape.</li>
-<li><a href="../source/factory/emitter.html">factory/emitter.js</a> - used for calculating if a proposed particle is within an entity area.</li>
-<li><a href="../source/factory/enhanced-label.html">factory/enhanced-label.js</a> - used extensively throughout the file, which needs a number of <code>pool</code> Cells to help it create the entity's output.</li>
-<li><a href="../source/factory/grid.html">factory/grid.js</a> - used to help build the Grid entity's display output.</li>
-<li><a href="../source/factory/group.html">factory/group.js</a> - used as part of the Group graphical filter functionality.</li>
-<li><a href="../source/factory/label.html">factory/label.js</a> - used to help draw Label underlines.</li>
-<li><a href="../source/factory/loom.html">factory/loom.js</a> - used to help build the Loom entity's display output.</li>
-<li><a href="../source/factory/mesh.html">factory/mesh.js</a> - used to help build the Mesh entity's display output.</li>
-<li><a href="../source/helper/filter-engine.html">helper/filter-engine.js</a> - the SC filter engine uses pool Cells to help calculate gradient effects. </li>
-<li><a href="../source/mixin/dom.html">mixin/dom.js</a> - SC Stack and Element artefacts use a pool Cell for their <code>checkHit(...)</code> functionality.</li>
-<li><a href="../source/mixin/entity.html">mixin/entity.js</a> - SC entity objects use the Cell to help add graphical filter effects to entity outputs.</li>
-<li><a href="../source/mixin/filters.html">mixin/filters.js</a> - used to help import assets into the filter engine.</li>
-<li><a href="../source/mixin/position.html">mixin/position.js</a> - SC uses pool Cells for entity <code>checkHit(...)</code> functionality.</li>
-<li><a href="../source/mixin/text.html">mixin/text.js</a> - used to help calculate font metadata.</li>
+<li><a href="../source/asset-management/reaction-diffusion-asset.html">asset-management/reaction-diffusion-asset.js</a> – used to help create the initial conditions for an RD-asset, where the asset will build around an entity outline.</li>
+<li><a href="../source/factory/cell.html">factory/cell.js</a> – used to help create a <a href="https://brush.ninja/glossary/animation/ghosting/">ghosting effect</a> in a canvas animation. Also used to help calculate a layer Cell's <code>localHere</code> object's values, and to help stash a Cell object's <code>&lt;canvas&gt;</code> output as part of the <code>scrawl.createImageFromCell(cell, flag)</code> function.</li>
+<li><a href="../source/factory/crescent.html">factory/crescent.js</a> – used to help calculate the intersection points of the two circles that make up the crescent shape.</li>
+<li><a href="../source/factory/emitter.html">factory/emitter.js</a> – used for calculating if a proposed particle is within an entity area.</li>
+<li><a href="../source/factory/enhanced-label.html">factory/enhanced-label.js</a> – used extensively throughout the file, which needs a number of <code>pool</code> Cells to help it create the entity's output.</li>
+<li><a href="../source/factory/grid.html">factory/grid.js</a> – used to help build the Grid entity's display output.</li>
+<li><a href="../source/factory/group.html">factory/group.js</a> – used as part of the Group graphical filter functionality.</li>
+<li><a href="../source/factory/label.html">factory/label.js</a> – used to help draw Label underlines.</li>
+<li><a href="../source/factory/loom.html">factory/loom.js</a> – used to help build the Loom entity's display output.</li>
+<li><a href="../source/factory/mesh.html">factory/mesh.js</a> – used to help build the Mesh entity's display output.</li>
+<li><a href="../source/helper/filter-engine.html">helper/filter-engine.js</a> – the SC filter engine uses pool Cells to help calculate gradient effects. </li>
+<li><a href="../source/mixin/dom.html">mixin/dom.js</a> – SC Stack and Element artefacts use a pool Cell for their <code>checkHit(...)</code> functionality.</li>
+<li><a href="../source/mixin/entity.html">mixin/entity.js</a> – SC entity objects use the Cell to help add graphical filter effects to entity outputs.</li>
+<li><a href="../source/mixin/filters.html">mixin/filters.js</a> – used to help import assets into the filter engine.</li>
+<li><a href="../source/mixin/position.html">mixin/position.js</a> – SC uses pool Cells for entity <code>checkHit(...)</code> functionality.</li>
+<li><a href="../source/mixin/text.html">mixin/text.js</a> – used to help calculate font metadata.</li>
 </ul>
 <h4 id="layer-cells">Layer Cells</h4>
 <p>A canvas scene can include multiple Cell objects alongside the <code>base</code> Cell. Each of these <code>layer</code> Cell objects will include a <em>namesake</em> Group object with which entity objects can associate themselves, to be included in the <code>layer's</code> output which will be stamped onto the <code>base</code> Cell as part of the <code>show</code> operation of the Display cycle.</p>
@@ -449,7 +449,7 @@ Display can be filtered?                     CSS/SVG filters        CSS/SVG and 
 <li>Determine the order in which <code>layer</code> Cells are processed during a Display cycle, using the Cell's <code>compileOrder</code> and <code>showOrder</code> attributes.</li>
 <li>Use the Canvas artefact, or <code>base</code> Cell, object dimensions to set their dimensions (with help from the <code>setRelativeDimensionsUsingBase</code> flag).</li>
 <li>Position themselves in the <code>base</code> Cell in the same way as entity objects can be positioned, using absolute and relative coordinates. They also have their own rotation-reflection points around which they can be rotated, scaled and flipped. See the <a href="sc-positioning.html">SC positioning system</a> page in this Runbook for more details.</li>
-<li>Position themselves by reference to other artefact/entity objects using pivot, mimic and path <code>lockTo</code> functionality - see test demo <a href="../../demo/canvas-036.html">Canvas-036</a> for an example of this functionality in action.</li>
+<li>Position themselves by reference to other artefact/entity objects using pivot, mimic and path <code>lockTo</code> functionality – see test demo <a href="../../demo/canvas-036.html">Canvas-036</a> for an example of this functionality in action.</li>
 <li>Modify how they stamp into the <code>base</code> Cell's display through the <code>globalAlpha</code> (for opacity) and <code>globalCompositeOperation</code> (for composition) values.</li>
 <li>Add filter effects to the <code>layer</code> Cell's output.</li>
 <li>Use the <code>layer</code> Cell output as an image asset for SC Pattern styles and the Picture entity.</li>
@@ -461,16 +461,16 @@ Display can be filtered?                     CSS/SVG filters        CSS/SVG and 
 <p>Cell objects cannot, at this time, be <strong>serialized</strong> or <strong>cloned</strong>. Repo-devs need to address serialization work at some point.</p>
 <p>For the <strong>kill</strong> functionality, Cell objects will check Canvas artefact objects to break any associations, and also check through all entity objects to make sure any <code>fillStyle</code> and <code>strokeStyle</code> references to the Cell get set back to default values. The Cell's <em>namesake</em> Group's <code>kill</code> function is then invoked with no arguments: terminating the Cell object will not terminate any entitys associated-by-proxy with that Cell.</p>
 <h3 id="cell-discovery-in-the-sc-library-and-beyond">Cell discovery in the SC library, and beyond</h3>
-<p><code>Base</code> and <code>layer</code> Cell objects are <em>tracked objects</em> in the SC library. They have their own section - <code>library.cell</code> - but also get included in the <code>library.asset</code> section. For this reason, Cell object and Asset/Gradient/Pattern object names should never clash.</p>
+<p><code>Base</code> and <code>layer</code> Cell objects are <em>tracked objects</em> in the SC library. They have their own section – <code>library.cell</code> – but also get included in the <code>library.asset</code> section. For this reason, Cell object and Asset/Gradient/Pattern object names should never clash.</p>
 <p>Dev users can retrieve Cell objects from the library (as long as they know the object's name) using the <code>scrawl.findCell('name-string')</code> function, and also through the <code>scrawl.findAsset('name-string')</code> function.</p>
 <p><code>Base</code> Cell objects can also be retrieved using the Canvas artefact object <code>canvas.getBase()</code> function. If only the <code>base</code> Cell object's name is required, use <code>canvas.get('baseName')</code>.</p>
 <p>For dev-user convenience, <code>base</code> Cell object attributes can be updated using the <code>canvas.setBase({key: value, ...})</code> and <code>canvas.deltaSetBase({key: value, ...})</code> function (with apologies for the function naming discrepancy here).</p>
-<p><code>Pool</code> Cell objects are <em>untracked objects</em> - repo-devs can get a <code>pool</code> Cell using the <code>requestCell()</code> function and return it to the pool using the <code>releaseCell(object)</code> function.</p>
+<p><code>Pool</code> Cell objects are <em>untracked objects</em> – repo-devs can get a <code>pool</code> Cell using the <code>requestCell()</code> function and return it to the pool using the <code>releaseCell(object)</code> function.</p>
 <h3 id="the-cell-engine">The Cell engine</h3>
 <p>When the Cell object wraps a <code>&lt;canvas&gt;</code> element, it will register handles to both the DOM element, and the element's <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D</a> Interface:</p>
 <ul>
-<li><code>cell.element</code> - handle to <code>&lt;canvas&gt;</code> DOM element</li>
-<li><code>cell.engine</code> - handle to the element's CanvasRenderingContext2D object, retrieved via the <code>cell.element.getContext()</code> function.</li>
+<li><code>cell.element</code> – handle to <code>&lt;canvas&gt;</code> DOM element</li>
+<li><code>cell.engine</code> – handle to the element's CanvasRenderingContext2D object, retrieved via the <code>cell.element.getContext()</code> function.</li>
 </ul>
 <blockquote>
   <p><strong>tl;dr:</strong> Note that while the <a href="https://html.spec.whatwg.org/multipage/canvas.html#2dcontext">canvas specification</a> refers to the CanvasRenderingContext2D object as <code>context</code>, many articles and explainers across the internet (including the MDN reference pages) will call it <code>ctx</code>. <strong><em>In the SC repo code base, this object is always referred to as: <code>engine</code></em></strong>.</p>
@@ -479,19 +479,19 @@ Display can be filtered?                     CSS/SVG filters        CSS/SVG and 
 <h4 id="cell-dimensions">Cell dimensions</h4>
 <p>Cell dimensions are set on the <code>cell.element</code> DOM element, using that element's <code>width</code> and <code>height</code> attributes. Dev-users should never need to set these attributes directly!</p>
 <p>Internally, Cell objects keep dimension details in the <code>cell.dimensions</code> attribute, whose value is an Array comprising of <code>[width, height]</code> data. These values can be either absolute Number values, or relative 'string%' values, where the value is a percentage of either the host Canvas artefact's dimensions, or (for <code>layer</code> Cells) the <code>base</code> Cell object's dimensions. </p>
-<p>Cell objects have enforced minimum dimensions of <code>[1, 1]</code> - the Canvas API's functionality will generally throw errors whenever it encounters a <code>&lt;canvas&gt;</code> element whose width or height is less than <code>1px</code>.</p>
-<p>These values will be recalculated into pixel values each time the dimensions change, with the results stored in the <code>cell.currentDimensions</code> attribute - another Array. Recalculation gets triggered whenever the SC signals system sets the Cell object's <code>cell.dirtyDimensions</code> flag to true.</p>
+<p>Cell objects have enforced minimum dimensions of <code>[1, 1]</code> – the Canvas API's functionality will generally throw errors whenever it encounters a <code>&lt;canvas&gt;</code> element whose width or height is less than <code>1px</code>.</p>
+<p>These values will be recalculated into pixel values each time the dimensions change, with the results stored in the <code>cell.currentDimensions</code> attribute – another Array. Recalculation gets triggered whenever the SC signals system sets the Cell object's <code>cell.dirtyDimensions</code> flag to true.</p>
 <p>For <code>base</code> and <code>pool</code> Cell objects, all of this functionality is automated by SC.</p>
 <ul>
 <li>All <code>pool</code> Cells have default dimensions <code>[1, 1]</code>. Repo code that requests a <code>pool</code> Cell will generally set the Cell's dimensions directly on the <code>cell.element</code></li>
-<li><code>Base</code> Cell dimensions will generally be set in the DOM <code>&lt;canvas&gt;</code> element's markup using the <code>data-base-width</code> and <code>data-base-height</code> attributes. When not included, the <code>base</code> Cell dimensions will match the <code>canvas</code> element's display <code>width</code>  and <code>height</code> dimensions (taking into account the device screen's <code>device-pixel-ratio</code>). Beyond these settings, dev-users are advised to not interfere with <code>base</code> Cell dimensions - see the <a href="http://localhost:3000/docs/reference/sc-dom-artefacts.html#canvas-artefact-notes">Canvas artefact notes</a> section of the Artefacts page of this Runbook for more information.</li>
+<li><code>Base</code> Cell dimensions will generally be set in the DOM <code>&lt;canvas&gt;</code> element's markup using the <code>data-base-width</code> and <code>data-base-height</code> attributes. When not included, the <code>base</code> Cell dimensions will match the <code>canvas</code> element's display <code>width</code>  and <code>height</code> dimensions (taking into account the device screen's <code>device-pixel-ratio</code>). Beyond these settings, dev-users are advised to not interfere with <code>base</code> Cell dimensions – see the <a href="http://localhost:3000/docs/reference/sc-dom-artefacts.html#canvas-artefact-notes">Canvas artefact notes</a> section of the Artefacts page of this Runbook for more information.</li>
 </ul>
-<p><code>Layer</code> Cells get created by dev-users, thus setting their dimensions is a dev-user responsibility. For the most part <code>layer</code> Cells act like Element artefacts or Block entitys with respect to dimensions management. Cell <code>dimensions</code> values - which can also be set individually using the <code>width</code> and <code>height</code> pseudo-attributes - can be:</p>
+<p><code>Layer</code> Cells get created by dev-users, thus setting their dimensions is a dev-user responsibility. For the most part <code>layer</code> Cells act like Element artefacts or Block entitys with respect to dimensions management. Cell <code>dimensions</code> values – which can also be set individually using the <code>width</code> and <code>height</code> pseudo-attributes – can be:</p>
 <ul>
 <li>Absolute number values, measured in CSS pixels</li>
-<li>Relative 'string%' values (for example, <code>10%</code>, <code>60%</code>, etc), where the relationship is:<ul>
-<li>by default, to the dimensions of the Canvas artefact object's <strong><em>display canvas</em></strong>; or</li>
-<li>if the Cell object's <code>setRelativeDimensionsUsingBase</code> flag is true, to the dimensions of the Canvas artefact object's <code>base</code> Cell's dimensions.</li></ul></li>
+<li>Relative 'string%' values (for example, <code>10%</code>, <code>60%</code>, etc), where the relationship is:<br />
+– by default, to the dimensions of the Canvas artefact object's <strong><em>display canvas</em></strong>; or<br />
+– if the Cell object's <code>setRelativeDimensionsUsingBase</code> flag is true, to the dimensions of the Canvas artefact object's <code>base</code> Cell's dimensions.</li>
 </ul>
 <p>These dimensions values can be changed at any time using the <code>cell.set({...})</code> or <code>cell.setDelta({...})</code> functions: </p>
 <ul>
@@ -503,31 +503,30 @@ Display can be filtered?                     CSS/SVG filters        CSS/SVG and 
 <p>SC <code>pool</code> Cells play no direct part in the Display cycle, thus don't need to concern themselves with backgrounds.</p>
 <p>For <code>layer</code> and <code>base</code> Cells, the Cell background is set as part of the Display cycle <code>clear</code> operation. Depending on the values of the Cell object attributes, it will be set as follows:</p>
 <ul>
-<li>If the <code>cell.backgroundColor</code> attribute is set to anything other than a zero-length string (<code>''</code>), then SC will assume the value is a Level 4 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value">CSS color value</a> and attempt to flood the cell with it.<ul>
-<li>If the string is not a valid CSS color value, then the background will be flooded with <code>rgb(0 0 0 / 1)</code> opaque black.</li></ul></li>
-<li>Failing the above, if the <code>cell.clearAlpha</code> attribute is set to anything other than <code>0</code>, the Cell will copy its current contents, clear itself, set its globalAlpha to this value, copy back its contents (now faded), and then restore its globalAlpha value - this is known as the <a href="https://brush.ninja/glossary/animation/ghosting/">ghosting effect</a>.</li>
+<li>If the <code>cell.backgroundColor</code> attribute is set to anything other than a zero-length string (<code>''</code>), then SC will assume the value is a Level 4 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value">CSS color value</a> and attempt to flood the cell with it.<br />
+– If the string is not a valid CSS color value, then the background will be flooded with <code>rgb(0 0 0 / 1)</code> opaque black.</li>
+<li>Failing the above, if the <code>cell.clearAlpha</code> attribute is set to anything other than <code>0</code>, the Cell will copy its current contents, clear itself, set its globalAlpha to this value, copy back its contents (now faded), and then restore its globalAlpha value – this is known as the <a href="https://brush.ninja/glossary/animation/ghosting/">ghosting effect</a>.</li>
 <li>Finally, if both the <code>backgroundColor</code> and <code>clearAlpha</code> attributes match their default values (<code>''</code> and <code>0</code> respectively) then the Cell background will be set to <code>rgb(0 0 0 / 0)</code> transparent black.</li>
 </ul>
 <p>See test demo <a href="../../demo/canvas-002.html">Canvas-002</a> for an example of this functionality.</p>
 <p>The <code>backgroundColor</code> and <code>clearAlpha</code> attributes can be set for <code>base</code> and <code>layer</code> Cells in the normal way, using the <code>cell.set({...})</code> function.</p>
 <p>Dev-users can also set the <code>base</code> background color via HTML by adding the <code>data-base-background-color="color-value"</code> and <code>data-base-clear-alpha="number"</code> attributes to the <code>&lt;canvas&gt;</code> markup.</p>
-<h4 id="cell-display-manipulation---the-splitshift-function">Cell display manipulation - the <code>splitShift()</code> function</h4>
-<p>SC offers a function - <code>cell.splitShift()</code> which gives direct access to a Cell object's engine to perform an animation effect where a given number of rows/columns on one side of the display get copied over to the other side of the display, with the remaining part of the display shifted to take up the vacated space. Code for this function can be found in the <a href="../source/factory/cell.html">factory/cell.js</a> file.</p>
+<h4 id="cell-display-manipulation-–-the-splitshift-function">Cell display manipulation – the <code>splitShift()</code> function</h4>
+<p>SC offers a function – <code>cell.splitShift()</code> which gives direct access to a Cell object's engine to perform an animation effect where a given number of rows/columns on one side of the display get copied over to the other side of the display, with the remaining part of the display shifted to take up the vacated space. Code for this function can be found in the <a href="../source/factory/cell.html">factory/cell.js</a> file.</p>
 <p>Dev-users wanting to use this functionality should be aware that it works best on <code>layer</code> Cell objects whose <code>cleared</code> and <code>compiled</code> flags have been set to <code>false</code>. Example test demos include <a href="../../demo/canvas-069.html">Canvas-069</a> and <a href="../../demo/canvas-070.html">Canvas-070</a>.</p>
-<h4 id="cell-data-manipulation---the-getcelldata-and-paintcelldata-functions">Cell data manipulation - the <code>getCellData()</code> and <code>paintCellData()</code> functions</h4>
-<p>SC includes two Cell functions - <code>cell.getCellData()</code> and <code>cell.paintCellData()</code> - which give dev-users direct access to a Cell object's pixel data.</p>
-<p>The <code>getCellData()</code> function returns an object with two attributes:</p>
+<h4 id="cell-data-manipulation-–-the-getcelldata-and-paintcelldata-functions">Cell data manipulation – the <code>getCellData()</code> and <code>paintCellData()</code> functions</h4>
+<p>SC includes two Cell functions – <code>cell.getCellData()</code> and <code>cell.paintCellData()</code> – which give dev-users direct access to a Cell object's pixel data.</p>
+<p>The <code>getCellData(opaqueFlag = false)</code> function returns an object with two attributes:</p>
 <ul>
-<li><code>obj.iData</code> - a copy of the Cell object's current display's <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">imageData object</a>.</li>
-<li><code>obj.pixelState</code> - a complementary Array which supplies details of each pixel's metadata and state. Each array member includes the following metadata:</li>
+<li><code>obj.iData</code> – a copy of the Cell object's current display's <a href="https://developer.mozilla.org/en-US/docs/Web/API/ImageData">imageData object</a>.<br />
+– If the function is called with a <code>true</code> argument then the image data's alpha channel values will all be set to <code>255</code>.</li>
+<li><code>obj.slider</code> – used by the <code>paintCellData</code> function.</li>
+<li><code>obj.opaque</code> – the opaqueFlag Boolean value, used by the <code>paintCellData</code> function.</li>
+<li><code>obj.pixelState</code> – a complementary Array which supplies details of each pixel's metadata and state. Each array member includes the following metadata:</li>
 </ul>
 <pre><code>{
-  // Index pointers into the iData.data array 
-  // + for each of the pixel's channels
-  indexR
-  indexG
-  indexB
-  indexA
+  // Index pointer (positive integer number) into the iData.data array 
+  index
 
   // Pixel color channel values 
   // + integer numbers between 0 and 255
@@ -547,8 +546,8 @@ Display can be filtered?                     CSS/SVG filters        CSS/SVG and 
   distance
   angle
 }</code></pre>
-<p>Dev users can then manipulate the pixelState object - for instance, run functions across the pixelState data to change their color channel values - and then apply them to the Cell display using the <code>paintCellData()</code> function.</p>
-<p>Code for this function can be found in the <a href="../source/factory/cell.html">factory/cell.js</a> file. Dev-users wanting to use this functionality should be aware that it works best on <code>layer</code> Cell objects whose <code>cleared</code> and <code>compiled</code> flags have been set to <code>false</code>. Example test demos include <a href="../../demo/canvas-071.html">Canvas-071</a> and <a href="../../demo/canvas-072.html">Canvas-072</a>.</p>
+<p>Dev users can then manipulate the pixelState object – for instance, run functions across the pixelState data to change their color channel values – and then apply them to the Cell display using the <code>paintCellData(obj)</code> function. Note that the object returned by <code>getCellData</code> must be the argument supplied to <code>paintCellData</code>.</p>
+<p>Code for this function can be found in the <a href="../source/factory/cell.html">factory/cell.js</a> file. Dev-users wanting to use this functionality should be aware that it works best on <code>layer</code> Cell objects whose <code>cleared</code> and <code>compiled</code> flags have been set to <code>false</code>. Example test demos include <a href="../../demo/canvas-071.html">Canvas-071</a>, <a href="../../demo/canvas-072.html">Canvas-072</a> and <a href="../../demo/canvas-073.html">Canvas-073</a>.</p>
 <h3 id="display-cycle-considerations">Display cycle considerations</h3>
 <p>Cell objects are central to the SC Display cycle, which is covered in detail in the <a href="sc-animation-systems.html">Animation and Display cycle</a> page of this Runbook.</p>
 <p>Cell objects react to the Display cycle in different ways:</p>
@@ -574,36 +573,36 @@ Display can be filtered?                     CSS/SVG filters        CSS/SVG and 
 </ul>
 <h4 id="layer-cell-show-functionality"><code>Layer</code> Cell show functionality</h4>
 <p><code>Layer</code> Cell functionality includes the ability to stamp themselves onto <code>base</code> Cell displays during the Display cycle <code>show</code> operation. The order in which <code>layer</code> Cells stamp themselves is determined by their <code>showOrder</code> attribute. By default <code>layer</code> Cells will display; dev-users can prevent this by setting the Cell's <code>shown</code> attribute to <code>false</code>.</p>
-<p>Each <code>layer</code> Cell can be positioned in, and animated across, their <code>base</code> Cell just like artefact objects in Stacks and entity objects in Cells - see the <a href="sc-positioning.html">positioning system</a> page in this Runbook for details, and test demo <a href="../../demo/canvas-036.html">Canvas-036</a> for a working example.</p>
-<p>Note that <code>layer</code> Cells cannot be dragged-and-dropped like entity objects. Instead they need to be pivoted to an entity object which can be dragged. Repo-devs are welcome to investigate this issue further and - perhaps - come up with a better solution.</p>
+<p>Each <code>layer</code> Cell can be positioned in, and animated across, their <code>base</code> Cell just like artefact objects in Stacks and entity objects in Cells – see the <a href="sc-positioning.html">positioning system</a> page in this Runbook for details, and test demo <a href="../../demo/canvas-036.html">Canvas-036</a> for a working example.</p>
+<p>Note that <code>layer</code> Cells cannot be dragged-and-dropped like entity objects. Instead they need to be pivoted to an entity object which can be dragged. Repo-devs are welcome to investigate this issue further and – perhaps – come up with a better solution.</p>
 <h4 id="base-cell-show-functionality"><code>Base</code> Cell show functionality</h4>
-<p>SC includes a (rough) emulation of <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit">CSS object-fit</a> functionality, which gets actioned when the <code>base</code> Cell stamps itself into its display <code>&lt;canvas&gt;</code> as the last step in the Display cycle. The <code>base</code> Cell reads the Canvas artefact object's <code>fit</code> attribute and positions itself into the display accordingly. This functionality is defined in the <a href="../source/factory/cell.html">factory/cell.js</a> file - specifically the <code>show()</code> function.</p>
+<p>SC includes a (rough) emulation of <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit">CSS object-fit</a> functionality, which gets actioned when the <code>base</code> Cell stamps itself into its display <code>&lt;canvas&gt;</code> as the last step in the Display cycle. The <code>base</code> Cell reads the Canvas artefact object's <code>fit</code> attribute and positions itself into the display accordingly. This functionality is defined in the <a href="../source/factory/cell.html">factory/cell.js</a> file – specifically the <code>show()</code> function.</p>
 <h4 id="cell-opacity-composition-and-filters">Cell opacity, composition and filters</h4>
 <p>When a <code>layer</code> Cell object stamps itself into the <code>base</code> Cell, and the <code>base</code> Cell stamps itself into the display <code>&lt;canvas&gt;</code>, they will take into account their <code>globalAlpha</code>, <code>globalCompositeOperation</code>, <code>filter</code> and <code>filters</code> attributes.</p>
 <h3 id="cell-interactions">Cell interactions</h3>
 <p>Scrawl artefact objects can include a <code>here</code> object, which includes real-time-updated details of the environment in which the artefact's DOM element lives. Further details of the <code>here</code> object can be found in the <a href="sc-dom-artefacts.html#user-interaction-and-the-here-object">User interaction and the here object</a> section of the "Artefacts and the DOM" page in this Runbook.</p>
-<p>Cell objects have a similar object - <code>cell.here</code> - which, when populated with data, will include a much smaller set of attributes:</p>
+<p>Cell objects have a similar object – <code>cell.here</code> – which, when populated with data, will include a much smaller set of attributes:</p>
 <pre><code>{
 // Current Cell dimensions
-  w: Number - Cell element width (px)
-  h: Number - Cell element height (px)
+  w: Number – Cell element width (px)
+  h: Number – Cell element height (px)
 
 // Current cursor position relative to Cell element top-left corner
-  x: Number - cursor x position 
-  y: Number - cursor y position 
+  x: Number – cursor x position 
+  y: Number – cursor y position 
 
-  active: Boolean - is the cursor over the Cell element?
+  active: Boolean – is the cursor over the Cell element?
 }</code></pre>
 <p>For <code>base</code> Cells, the <code>here</code> object will be automatically updated at the start of every Display cycle by the Cell object's host Canvas artefact. The code for this update can be found in the Cell factory file's <code>cell.updateBaseHere()</code> function.</p>
-<p>For <code>layer</code> Cells, the update process is manual - dev-users will need to include a call to the Cell object's <code>cell.updateHere()</code> function whenever they need up-to-date data. Examples of this can be found in the test demos <a href="../../demo/canvas-039.html">Canvas-039</a> and <a href="../../demo/canvas-059.html">Canvas-059</a>.</p>
+<p>For <code>layer</code> Cells, the update process is manual – dev-users will need to include a call to the Cell object's <code>cell.updateHere()</code> function whenever they need up-to-date data. Examples of this can be found in the test demos <a href="../../demo/canvas-039.html">Canvas-039</a> and <a href="../../demo/canvas-059.html">Canvas-059</a>.</p>
 <p><code>Pool</code> Cells never get shown in <code>&lt;canvas&gt;</code> displays, thus never need to have their <code>cell.here</code> objects updated.</p>
 <h2 id="cell-and-entity-state">Cell, and entity, state</h2>
 <p>The Cell engine (which is the <code>&lt;canvas&gt;</code> element's <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D object</a>) consists of a set of properties (attributes) that describe the engine's current state, and a group of methods (functions) for manipulating that state as well as performing painting operations on the element's drawing surface.</p>
-<p>The engine is an <em>immediate mode</em> object. Setting an engine property value - for instance: <code>engine.strokeStyle = 'red'</code> - will be actioned immediately; every change requires some time to complete. While a single update is insignificant in itself, many such changes during a Display cycle have the potential to impact canvas rendering speed resulting in a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas">sub-optimal performance</a>.</p>
+<p>The engine is an <em>immediate mode</em> object. Setting an engine property value – for instance: <code>engine.strokeStyle = 'red'</code> – will be actioned immediately; every change requires some time to complete. While a single update is insignificant in itself, many such changes during a Display cycle have the potential to impact canvas rendering speed resulting in a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas">sub-optimal performance</a>.</p>
 <p>To help manage this issue, SC supplies every Cell object with a virtual <strong>State object</strong> which keeps track of the engine object's properties. Entity objects also have a state object containing the values the entity requires the engine to have when it stamps itself onto the Cell. Rather than apply those values directly to the engine, SC will perform a bespoke <a href="https://ably.com/blog/practical-guide-to-diff-algorithms">diff operation</a> before every entity stamp and only update those engine properties that need to be updated.</p>
 <h3 id="create-serialize-clone-and-kill-state-objects">Create, serialize, clone and kill State objects</h3>
 <p>State objects are <em>untracked</em>, thus not referenced in the SC library. They get created at the same time as their Cell or entity object instantiates, and they will be serialized, cloned and killed alongside their host objects. This functionality is all handled internally by SC.</p>
-<p>The State object's factory code can be found in the <a href="../source/untracked-factory/state.html">untracked-factory/state.js</a> file. Note that the diff function lives on the State object - <code>state.getChanges()</code>. The code to apply diff changes to the Cell object's engine can be found in the <a href="../source/mixin/cell-key-functions.html">mixin/cell-key-functions.js</a> file, in the <code>cell.setEngine(entity)</code> function.</p>
+<p>The State object's factory code can be found in the <a href="../source/untracked-factory/state.html">untracked-factory/state.js</a> file. Note that the diff function lives on the State object – <code>state.getChanges()</code>. The code to apply diff changes to the Cell object's engine can be found in the <a href="../source/mixin/cell-key-functions.html">mixin/cell-key-functions.js</a> file, in the <code>cell.setEngine(entity)</code> function.</p>
 <h3 id="state-object-attributes">State object attributes</h3>
 <p>State objects track the following engine properties:</p>
 <table>
@@ -840,13 +839,13 @@ Display can be filtered?                     CSS/SVG filters        CSS/SVG and 
 <h4 id="fill-and-stroke-details">Fill and stroke details</h4>
 <p>The State object's <code>fillStyle</code> and <code>strokeStyle</code> attributes can be set to the following:</p>
 <ul>
-<li>Any legitimate <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4</a> color string. This includes:<ul>
-<li>Named and system color strings - <code>red</code>, <code>ButtonText</code>, <code>transparent</code></li>
-<li>Legitimate RGB hexadecimal notation strings - <code>#f00</code>, <code>#f008</code>, <code>#ff0000</code>, <code>#ff000088</code></li>
-<li>sRGB function strings - <code>rgb(255 0 0 / 0.5)</code>, <code>rgb(255, 0, 0)</code>, <code>rgba(255, 0, 0, 0.5)</code></li>
-<li>HSL and HWB function strings - <code>hsla(0, 100%, 50%, 0.5)</code>, <code>hwb(0 0% 0%)</code>, etc</li>
-<li>LAB, LCH, OKLAB, OKLCH function strings - <code>lab(52.2% 40.1 59.9 / 0.5)</code>, <code>oklch(59.6% 0.1 49.7)</code>, etc</li>
-<li>Predefined color space strings - <code>color(rec2020 0.42 0.97 0.01)</code>, <code>color(display-p3 -0.61 1.01 -0.22)</code>, etc</li></ul></li>
+<li>Any legitimate <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4</a> color string. This includes:<br />
+– Named and system color strings – <code>red</code>, <code>ButtonText</code>, <code>transparent</code><br />
+– Legitimate RGB hexadecimal notation strings – <code>#f00</code>, <code>#f008</code>, <code>#ff0000</code>, <code>#ff000088</code><br />
+– sRGB function strings – <code>rgb(255 0 0 / 0.5)</code>, <code>rgb(255, 0, 0)</code>, <code>rgba(255, 0, 0, 0.5)</code><br />
+– HSL and HWB function strings – <code>hsla(0, 100%, 50%, 0.5)</code>, <code>hwb(0 0% 0%)</code>, etc<br />
+– LAB, LCH, OKLAB, OKLCH function strings – <code>lab(52.2% 40.1 59.9 / 0.5)</code>, <code>oklch(59.6% 0.1 49.7)</code>, etc<br />
+– Predefined color space strings – <code>color(rec2020 0.42 0.97 0.01)</code>, <code>color(display-p3 -0.61 1.01 -0.22)</code>, etc</li>
 <li>A Gradient, RadialGradient or ConicGradient object, or the <code>name</code> attribute string of the object</li>
 <li>A Pattern object, or the <code>name</code> attribute string of the object</li>
 <li>A Cell object, or the <code>name</code> attribute string of the object</li>
@@ -855,10 +854,10 @@ Display can be filtered?                     CSS/SVG filters        CSS/SVG and 
 <p>The State object's <code>lineWidth</code> attribute represents the width of the line when the entity <code>scale</code> attribute is set to <code>1</code>. By default, the line width will scale relative to the entity object's current scale.</p>
 <p>Dev-users who want a constant line width regardless of entity scale can set the entity object's <code>scaleOutline</code> flag to <code>false</code>.</p>
 <h4 id="shadow-styling-details">Shadow styling details</h4>
-<p>The State object's <code>shadowOffsetX</code>, <code>shadowOffsetY</code> and <code>shadowBlur</code> attributes are, by default, constant - regardless of the entity object's <code>scale</code> attribute's value. The values applied when <code>scale === 1</code> are the same as when <code>scale === 2</code>.</p>
+<p>The State object's <code>shadowOffsetX</code>, <code>shadowOffsetY</code> and <code>shadowBlur</code> attributes are, by default, constant – regardless of the entity object's <code>scale</code> attribute's value. The values applied when <code>scale === 1</code> are the same as when <code>scale === 2</code>.</p>
 <p>Dev-users can make the shadow scale with the entity by setting the entity object's <code>scaleShadow</code> flag to <code>true</code>.</p>
 <h4 id="text-styling-details">Text styling details</h4>
-<p>The State object's (many) text styling attributes are relevant only to Label and EnhancedLabel entitys - details of how each attribute affects the displayed text is covered in more detail in the <a href="sc-text-based-entitys.html">text-based entitys</a> page of this Runbook.</p>
+<p>The State object's (many) text styling attributes are relevant only to Label and EnhancedLabel entitys – details of how each attribute affects the displayed text is covered in more detail in the <a href="sc-text-based-entitys.html">text-based entitys</a> page of this Runbook.</p>
 <h4 id="csssvg-filter-details">CSS/SVG filter details</h4>
 <p>SC supports the application of <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/filter">CSS/SVG filters</a> at both the entity and the Cell level (but not the Group level), where the filter(s) will be applied:</p>
 <ul>
@@ -880,7 +879,7 @@ Display can be filtered?                     CSS/SVG filters        CSS/SVG and 
 <h2 id="object-processing-order-within-the-scene-graph">Object processing order within the scene graph</h2>
 <p>When the dev-user adds <code>pivot</code>, <code>mimic</code>, and <code>path</code> references into their SC code (see the <a href="sc-positioning.html">positioning system</a> page for details), they also introduce <strong>artefact dependencies</strong>: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependent artefact begins its own calculations.</p>
 <blockquote>
-  <p><strong>tl;dr: - SC includes no functionality to internally construct and maintain a <a href="https://en.wikipedia.org/wiki/Dependency_graph">dependency graph</a></strong> describing which artefacts need to calculate values before dependent artefact can calculate theirs. It is up to the dev-user to tell SC the order in which artefacts should calculate/update their state.</p>
+  <p><strong>tl;dr: – SC includes no functionality to internally construct and maintain a <a href="https://en.wikipedia.org/wiki/Dependency_graph">dependency graph</a></strong> describing which artefacts need to calculate values before dependent artefact can calculate theirs. It is up to the dev-user to tell SC the order in which artefacts should calculate/update their state.</p>
 </blockquote>
 <p>The <a href="sc-animation-systems.html">SC Display cycle</a> comprises the following steps:</p>
 <pre><code>1: Clear operation
@@ -1004,18 +1003,18 @@ scrawl.makeBlock({
       }</code></pre>
 <p><strong>my-extra-cell</strong></p>
 <ol>
-<li><code>red-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>blue-block</code></li>
-<li><code>last-block</code> - has a <strong><em>stamp</em></strong> dependency on <code>my-hidden-cell</code></li>
-<li><code>blue-block</code> - has no dependencies</li>
+<li><code>red-block</code> – has a <strong><em>pivot</em></strong> dependency on <code>blue-block</code></li>
+<li><code>last-block</code> – has a <strong><em>stamp</em></strong> dependency on <code>my-hidden-cell</code></li>
+<li><code>blue-block</code> – has no dependencies</li>
 </ol>
 <p><strong>my-hidden-cell</strong></p>
 <ol start="4">
-<li><code>yellow-block</code> - has no dependencies</li>
+<li><code>yellow-block</code> – has no dependencies</li>
 </ol>
 <p><strong>my-canvas_base</strong></p>
 <ol start="5">
-<li><code>brown-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>orange-block</code></li>
-<li><code>orange-block</code> - has no dependencies</li>
+<li><code>brown-block</code> – has a <strong><em>pivot</em></strong> dependency on <code>orange-block</code></li>
+<li><code>orange-block</code> – has no dependencies</li>
 </ol>
 <p>… Which will lead to an incorrect canvas output:</p>
 <table>
@@ -1148,18 +1147,18 @@ scrawl.makeBlock({
 <p>Which will lead to the expected outcome:</p>
 <p><strong>my-hidden-cell</strong></p>
 <ol>
-<li><code>yellow-block</code> - has no dependencies</li>
+<li><code>yellow-block</code> – has no dependencies</li>
 </ol>
 <p><strong>my-extra-cell</strong></p>
 <ol start="2">
-<li><code>blue-block</code> - has no dependencies</li>
-<li><code>red-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>blue-block</code></li>
-<li><code>last-block</code> - has a <strong><em>stamp</em></strong> dependency on <code>my-hidden-cell</code></li>
+<li><code>blue-block</code> – has no dependencies</li>
+<li><code>red-block</code> – has a <strong><em>pivot</em></strong> dependency on <code>blue-block</code></li>
+<li><code>last-block</code> – has a <strong><em>stamp</em></strong> dependency on <code>my-hidden-cell</code></li>
 </ol>
 <p><strong>my-canvas_base</strong></p>
 <ol start="5">
-<li><code>orange-block</code> - has no dependencies</li>
-<li><code>brown-block</code> - has a <strong><em>pivot</em></strong> dependency on <code>orange-block</code></li>
+<li><code>orange-block</code> – has no dependencies</li>
+<li><code>brown-block</code> – has a <strong><em>pivot</em></strong> dependency on <code>orange-block</code></li>
 </ol>
     </main>
     

@@ -50,21 +50,21 @@
 <li><a href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility Guidelines (WCAG) v2.1</a></li>
 <li><a href="https://www.w3.org/TR/WCAG22/">Web Content Accessibility Guidelines (WCAG) v2.2</a></li>
 <li><a href="https://www.w3.org/WAI/standards-guidelines/wcag/">WCAG 2 Overview</a></li>
-<li><a href="https://www.w3.org/WAI/WCAG22/Understanding/">Links to all WCAG 2.2 "Understanding" Docs</a> - "Understanding" documents provide detailed explanations for WCAG guidelines and success criteria. They are informative, not part of the "normative" WCAG standard.</li>
-<li><a href="https://www.w3.org/WAI/WCAG22/Techniques/">Techniques for WCAG 2.2</a> - "Techniques" are examples of ways to meet Web Content Accessibility Guidelines (WCAG). They are not required to meet WCAG.</li>
+<li><a href="https://www.w3.org/WAI/WCAG22/Understanding/">Links to all WCAG 2.2 "Understanding" Docs</a> – "Understanding" documents provide detailed explanations for WCAG guidelines and success criteria. They are informative, not part of the "normative" WCAG standard.</li>
+<li><a href="https://www.w3.org/WAI/WCAG22/Techniques/">Techniques for WCAG 2.2</a> – "Techniques" are examples of ways to meet Web Content Accessibility Guidelines (WCAG). They are not required to meet WCAG.</li>
 </ul>
-<p>For the future - WCAG 3 drafts links:</p>
+<p>For the future – WCAG 3 drafts links:</p>
 <ul>
 <li><a href="https://www.w3.org/TR/wcag-3.0/">Web Content Accessibility Guidelines (WCAG) v3.0 working draft</a></li>
 <li><a href="https://www.w3.org/WAI/standards-guidelines/wcag/wcag3-intro/">WCAG 3 Introduction</a></li>
 </ul>
 <p>Accessibility legislation links:</p>
 <ul>
-<li>EU - <a href="https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/disability/union-equality-strategy-rights-persons-disabilities-2021-2030/european-accessibility-act_en">European accessibility act</a></li>
-<li>UK - <a href="https://www.gov.uk/guidance/meet-the-requirements-of-equality-and-accessibility-regulations">Meet the requirements of equality and accessibility regulations</a></li>
-<li>UK - <a href="https://www.gov.uk/service-manual/helping-people-to-use-your-service/understanding-wcag">Understanding WCAG 2.2</a></li>
-<li>USA - <a href="https://www.ada.gov/resources/web-guidance/">Guidance on Web Accessibility and the ADA</a></li>
-<li>USA - <a href="https://www.ada.gov/resources/2024-03-08-web-rule/">Fact Sheet: New Rule on the Accessibility of Web Content and Mobile Apps</a></li>
+<li>EU – <a href="https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/disability/union-equality-strategy-rights-persons-disabilities-2021-2030/european-accessibility-act_en">European accessibility act</a></li>
+<li>UK – <a href="https://www.gov.uk/guidance/meet-the-requirements-of-equality-and-accessibility-regulations">Meet the requirements of equality and accessibility regulations</a></li>
+<li>UK – <a href="https://www.gov.uk/service-manual/helping-people-to-use-your-service/understanding-wcag">Understanding WCAG 2.2</a></li>
+<li>USA – <a href="https://www.ada.gov/resources/web-guidance/">Guidance on Web Accessibility and the ADA</a></li>
+<li>USA – <a href="https://www.ada.gov/resources/2024-03-08-web-rule/">Fact Sheet: New Rule on the Accessibility of Web Content and Mobile Apps</a></li>
 </ul>
 <h2 id="impact-of-wcag-requirements-on-canvas-elements">Impact of WCAG requirements on <code>&lt;canvas&gt;</code> elements</h2>
 <p>No formal guidelines exist for making the HTML5 <code>&lt;canvas&gt;</code> element accessible. Yet the need to make canvas-based displays, animations and applications more accessible is widely accepted:</p>
@@ -96,20 +96,20 @@
 </ul>
 <p>Text alternatives convey the purpose of an image or function to provide an equivalent user experience. For instance, an appropriate text alternative for a search button would be “search” rather than “magnifying lens”.</p>
 <p>Text alternatives can be presented in a variety of ways. For instance, they can be read aloud for people who cannot see the screen and for people with reading difficulties, enlarged to custom text sizes, or displayed on braille devices. Text alternatives serve as labels for controls and functionality to aid keyboard navigation and navigation by voice recognition (speech input). They also act as labels to identify audio, video, and files in other formats, as well as applications that are embedded as part of a website.</p>
-<p><strong>1.1.1 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html">Non-text Content</a></strong></p>
+<p><strong>1.1.1 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html">Non-text Content</a></strong></p>
 <ul>
 <li>A canvas-based display or animation is nothing more than a collection of graphical pixels in the browser viewport. It is, by itself, not accessible. Browsers will often consider <code>&lt;canvas&gt;</code> elements to be images.</li>
 <li><code>&lt;canvas&gt;</code> elements can, with effort, present their display as an animation which is, in some ways, analagous to a <code>&lt;video&gt;</code> element. However there is no browser-based functionality specified for supplying such canvas displays with video-like controls to play or pause the animation.</li>
-<li><code>&lt;canvas&gt;</code> elements can, with effort, present their display as an user-interactive diagram which includes controls for the user to manipulate that display. Such graphical controls need to be accessible - including keyboard accessibility.</li>
-<li><code>&lt;canvas&gt;</code> elements can, with effort, display charts and maps - which may include interactive functionality. While static charts and maps can be treated as images for accessibility purposes, interactive charts and maps need to be accessible - including keyboard accessibility.</li>
-<li>Any significant data used to create a canvas display - for example chart data - should also be supplied in alternative formats which an end-user can access (like a table, or a downloadable CSV file).</li>
+<li><code>&lt;canvas&gt;</code> elements can, with effort, present their display as an user-interactive diagram which includes controls for the user to manipulate that display. Such graphical controls need to be accessible – including keyboard accessibility.</li>
+<li><code>&lt;canvas&gt;</code> elements can, with effort, display charts and maps – which may include interactive functionality. While static charts and maps can be treated as images for accessibility purposes, interactive charts and maps need to be accessible – including keyboard accessibility.</li>
+<li>Any significant data used to create a canvas display – for example chart data – should also be supplied in alternative formats which an end-user can access (like a table, or a downloadable CSV file).</li>
 <li>If a canvas display is being used purely for decorative purposes such as a space filler or background then it needs to be marked as such so assistive technologies can ignore it.</li>
-<li>Canvas displays used as backgrounds will need to be checked to make sure the content above them remains legible - for example there remains sufficient contrast between the background canvas display and the text placed over it.</li>
+<li>Canvas displays used as backgrounds will need to be checked to make sure the content above them remains legible – for example there remains sufficient contrast between the background canvas display and the text placed over it.</li>
 </ul>
 <h4 id="sc-and-canvas-element-children">SC and <code>&lt;canvas&gt;</code> element children</h4>
 <p>The HTML specification for the <code>&lt;canvas&gt;</code> element permits the element to contain mainly <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Content_categories#phrasing_content">phrasing content</a>, though it <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/canvas#technical_summary">specifically excludes interactive content</a> except for: <code>&lt;a&gt;</code> and <code>&lt;button&gt;</code> elements; and <code>&lt;input&gt;</code> elements whose type attribute is <code>checkbox</code>, <code>radio</code>, or <code>button</code>.</p>
 <p>The HTML markup placed between the <code>&lt;canvas&gt;</code> element's opening and closing tags is known as its <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage#accessible_content">fallback content</a>. This is the main approach to making the <code>&lt;canvas&gt;</code> element accessible. Decisions about what markup to include in this fallback content need to be made by the designer and dev-user as they develop the web page.</p>
-<p>Designers and dev-users should consider supplying an image of the canvas display as minimal fallback content. Many of the SC test demos include example code for such approaches - for instance see test demo <a href="../../demo/filters-006.html">Filters-006</a>.</p>
+<p>Designers and dev-users should consider supplying an image of the canvas display as minimal fallback content. Many of the SC test demos include example code for such approaches – for instance see test demo <a href="../../demo/filters-006.html">Filters-006</a>.</p>
 <p>SC performs significant work when importing a <code>&lt;canvas&gt;</code> element into the SC system, which includes mutating the element's DOM markup and adding SC-specific child elements to its fallback content. This work has been documented in the <a href="sc-dom-artefacts.html#canvas-artefact-notes">Canvas artefact notes</a> section of the Artefacts and the DOM page of this Runbook. These changes will not replace or modify any existing fallback content that has been defined for the element, nor do they prevent the dev-user from adding, manipulating or deleting such content after SC completes its import work.</p>
 <p>To summarise, SC adds the following markup to the <code>&lt;canvas&gt;</code> element as part of the import functionality:</p>
 <pre><code>&lt;canvas
@@ -167,7 +167,7 @@
 <h4 id="canvas-label-description-and-title">Canvas label, description and title</h4>
 <p><code>&lt;canvas&gt;</code> elements should always be provided with meaningful labels (via <code>aria-label</code> or, preferably, <code>aria-labelledby</code> attributes); consider these to be the canvas equivalent of the <code>&lt;img alt="accessible summary of image"&gt;</code> markup.</p>
 <p>Descriptions can add supplementary details about what the canvas does, such as a summary of the data contained in a chart, or keyboard shortcuts for interactive canvas functionality. However a better approach would be to supply such information in the text surrounding the <code>&lt;canvas&gt;</code> element as this allows end-users not using accessible technologies to also see/read the information.</p>
-<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/title">title attribute</a> is defined in the HTML specification as global, thus available on all HTML elements. However the attribute comes with <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/title#accessibility_concerns">significant accessibility concerns</a> - the general advice is to avoid using it to convey information to the end-user.</p>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/title">title attribute</a> is defined in the HTML specification as global, thus available on all HTML elements. However the attribute comes with <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/title#accessibility_concerns">significant accessibility concerns</a> – the general advice is to avoid using it to convey information to the end-user.</p>
 <p>Dev-users can tell SC to add labels, descriptions and titles to a <code>&lt;canvas&gt;</code> element by adding the following attributes to the element's HTML markup:</p>
 <pre><code>&lt;canvas
   id=[...canvas element's unique id string]
@@ -193,7 +193,7 @@
   });
 &lt;/script&gt;</code></pre>
 <blockquote>
-  <p><strong>WARNING:</strong> Dev-users should never attempt to set or update the label and description <code>&lt;div&gt;</code> elements directly! Nor should these elements be removed from the DOM - do not be tempted to update the <code>&lt;canvas&gt;</code> element's contents using <code>.innerHTML=[...new markup]</code> or similar functionality.</p>
+  <p><strong>WARNING:</strong> Dev-users should never attempt to set or update the label and description <code>&lt;div&gt;</code> elements directly! Nor should these elements be removed from the DOM – do not be tempted to update the <code>&lt;canvas&gt;</code> element's contents using <code>.innerHTML=[...new markup]</code> or similar functionality.</p>
 </blockquote>
 <h4 id="canvas-roles">Canvas roles</h4>
 <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles">role</a> of a <code>&lt;canvas&gt;</code> element can vary depending on how it is being used in the web page. </p>
@@ -201,13 +201,13 @@
 <p>However <code>&lt;canvas&gt;</code> elements are eminently adaptable; dev-users can find many use cases for them. Thus it is important for designers and dev-users to carefully consider the work being done by each canvas display in the web page and adapt the element's <code>role</code> value accordingly:</p>
 <ul>
 <li>Static canvas displays should keep the <strong><code>img</code></strong> role if the display is relevant (but not essential) to understanding the surrounding text.</li>
-<li>Static or animated canvas displays that don't contribute to the user's understanding of the surrounding text - for instance background or decorative artwork - should use the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/presentation_role">ARIA <code>presentation</code> role</a>, or its synonym <strong><code>none</code></strong>.</li>
+<li>Static or animated canvas displays that don't contribute to the user's understanding of the surrounding text – for instance background or decorative artwork – should use the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/presentation_role">ARIA <code>presentation</code> role</a>, or its synonym <strong><code>none</code></strong>.</li>
 <li>Chart and graph canvas displays should probably be given the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/figure_role">ARIA <code>figure</code> role</a>.</li>
-<li>Similarly, interactive image displays - such as a carousel or before-after component - may benefit from taking the <strong><code>figure</code></strong> role.</li>
+<li>Similarly, interactive image displays – such as a carousel or before-after component – may benefit from taking the <strong><code>figure</code></strong> role.</li>
 <li>If the entire <code>&lt;canvas&gt;</code> element (not just part of it) is being used as a button, best practice is to wrap it in a <code>&lt;button&gt;</code> (or <code>&lt;input type="button"&gt;</code>) element, in which case set its role to <strong><code>presentation</code></strong>. If that is not possible, then the element must take the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/button_role">ARIA <code>button</code> role</a> and at the same time the element's <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex">tabindex</a> attribute should be explicitly set to <code>0</code>.</li>
 <li>If the entire <code>&lt;canvas&gt;</code> element (not just part of it) is being used as a navigation link, best practice is to wrap it in an <code>&lt;a href=[...URL]&gt;</code> element, in which case set its role to <strong><code>presentation</code></strong>. If that is not possible, then the element must take the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/link_role">ARIA <code>link</code> role</a> and at the same time the element's <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex">tabindex</a> attribute should be explicitly set to <code>0</code>.</li>
 <li>If the entire <code>&lt;canvas&gt;</code> element (not just part of it) is being used as a visual progress bar, or conveying timer information (for instance a video playback progress bar, or a clock readout) then it might be appropriate to give the element an <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/progressbar_role">ARIA <code>progressbar</code> role</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/timer_role">ARIA <code>timer</code> role</a>.</li>
-<li>Highly interactive <code>&lt;canvas&gt;</code> elements need to be given the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/application_role">ARIA <code>application</code> role</a> - but use this role with care! The <strong><code>application</code></strong> role should be reserved for app-like canvas displays such as: spreadsheets; monitoring/analytic consoles; image or video editing studios; design suites; (collaborative) whiteboard experiences; etc.</li>
+<li>Highly interactive <code>&lt;canvas&gt;</code> elements need to be given the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/application_role">ARIA <code>application</code> role</a> – but use this role with care! The <strong><code>application</code></strong> role should be reserved for app-like canvas displays such as: spreadsheets; monitoring/analytic consoles; image or video editing studios; design suites; (collaborative) whiteboard experiences; etc.</li>
 </ul>
 <p>Dev-users can set a <code>&lt;canvas&gt;</code> element's <code>role</code> attribute in the normal way. While SC includes functionality to update the attribute after the canvas import completes, this is (almost certainly) not best practice:</p>
 <pre><code>&lt;canvas
@@ -229,64 +229,64 @@
 <li>Sign language interpretation of audio content, including relevant auditory experiences</li>
 </ul>
 <p>Well-written text transcripts containing the correct sequence of any auditory or visual information provide a basic level of accessibility and facilitate the production of captions and audio descriptions.</p>
-<p><strong>1.2.1 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/audio-only-and-video-only-prerecorded.html">Audio-only and Video-only (Prerecorded)</a></strong></p>
+<p><strong>1.2.1 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/audio-only-and-video-only-prerecorded.html">Audio-only and Video-only (Prerecorded)</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements can use <code>&lt;video&gt;</code> elements as a source for their display data. If a <code>&lt;video&gt;</code> element includes accompanying audio data then the <code>&lt;canvas&gt;</code> element will ignore it, though that data will still be available to developers who will need to find a novel way to supply it to end-users in an accessible way.</li>
 </ul>
-<p><strong>1.2.2 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/captions-prerecorded.html">Captions (Prerecorded)</a></strong></p>
+<p><strong>1.2.2 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/captions-prerecorded.html">Captions (Prerecorded)</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements can use <code>&lt;video&gt;</code> elements as a source for their display data. If a <code>&lt;video&gt;</code> element includes accompanying caption data then the <code>&lt;canvas&gt;</code> element will ignore it, though that data will still be available to developers who will need to find a novel way to supply it to end-users in an accessible way.</li>
 </ul>
-<p><strong>1.2.3 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/audio-description-or-media-alternative-prerecorded.html">Audio Description or Media Alternative (Prerecorded)</a></strong></p>
+<p><strong>1.2.3 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/audio-description-or-media-alternative-prerecorded.html">Audio Description or Media Alternative (Prerecorded)</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements can use <code>&lt;video&gt;</code> elements as a source for their display data. If a <code>&lt;video&gt;</code> element includes accompanying alternative text data then the <code>&lt;canvas&gt;</code> element will ignore it, though that data will still be available to developers who will need to find a novel way to supply it to end-users in an accessible manner.</li>
 </ul>
-<p><strong>1.2.4 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/captions-live.html">Captions (Live)</a></strong></p>
+<p><strong>1.2.4 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/captions-live.html">Captions (Live)</a></strong></p>
 <ul>
 <li>With considerable effort, developers can display live media streams in a <code>&lt;canvas&gt;</code> element by capturing the stream in a  <code>&lt;video&gt;</code> element, which can then act as a source for the <code>&lt;canvas&gt;</code> element's display data.</li>
-<li>If the media stream includes caption data, which is captured by the <code>&lt;video&gt;</code> element, then the <code>&lt;canvas&gt;</code> element will ignore it - though that data will still be available to developers who will need to find a novel way to supply it to end-users in an accessible manner.</li>
+<li>If the media stream includes caption data, which is captured by the <code>&lt;video&gt;</code> element, then the <code>&lt;canvas&gt;</code> element will ignore it – though that data will still be available to developers who will need to find a novel way to supply it to end-users in an accessible manner.</li>
 </ul>
-<p><strong>1.2.5 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/audio-description-prerecorded.html">Audio Description (Prerecorded)</a></strong></p>
+<p><strong>1.2.5 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/audio-description-prerecorded.html">Audio Description (Prerecorded)</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements can use <code>&lt;video&gt;</code> elements as a source for their display data. If a <code>&lt;video&gt;</code> element includes accompanying audio data then the <code>&lt;canvas&gt;</code> element will ignore it, though that data will still be available to developers who will need to find a novel way to supply it to end-users in an accessible way.</li>
 </ul>
-<p><strong>1.2.6 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/sign-language-prerecorded.html">Sign Language (Prerecorded)</a></strong></p>
+<p><strong>1.2.6 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/sign-language-prerecorded.html">Sign Language (Prerecorded)</a></strong></p>
 <ul>
-<li>Adding human-based or AI generated sign language interpretation to video is a developing field of technology - see (for instance) <a href="https://www.signapse.ai/">signapse.ai</a>, <a href="https://www.signfordeaf.com/solutions/video-sign-language">signfordeaf.com</a>, etc.</li>
+<li>Adding human-based or AI generated sign language interpretation to video is a developing field of technology – see (for instance) <a href="https://www.signapse.ai/">signapse.ai</a>, <a href="https://www.signfordeaf.com/solutions/video-sign-language">signfordeaf.com</a>, etc.</li>
 <li>Given that <code>&lt;canvas&gt;</code> elements can use <code>&lt;video&gt;</code> elements as a source for their display data, including signed interpretation in the canvas display should not be difficult. However, if chosen solutions include the ability to show/hide the signer then developers will need to find a way to emulate that control for the canvas display.</li>
 </ul>
-<p><strong>1.2.7 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/extended-audio-description-prerecorded.html">Extended Audio Description (Prerecorded)</a></strong></p>
+<p><strong>1.2.7 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/extended-audio-description-prerecorded.html">Extended Audio Description (Prerecorded)</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements can use <code>&lt;video&gt;</code> elements as a source for their display data. If a <code>&lt;video&gt;</code> element includes accompanying extended audio data then the <code>&lt;canvas&gt;</code> element will ignore it, though that data will still be available to developers who will need to find a novel way to supply it to end-users in an accessible way.</li>
 </ul>
-<p><strong>1.2.8 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/media-alternative-prerecorded.html">Media Alternative (Prerecorded)</a></strong></p>
+<p><strong>1.2.8 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/media-alternative-prerecorded.html">Media Alternative (Prerecorded)</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements can use <code>&lt;video&gt;</code> elements as a source for their display data. If a <code>&lt;video&gt;</code> element includes any accompanying data then the <code>&lt;canvas&gt;</code> element will ignore it, though that data will still be available to developers who will need to find a novel way to supply it to end-users in an accessible way.</li>
 </ul>
-<p><strong>1.2.9 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/audio-only-live.html">Audio-only (Live)</a></strong></p>
+<p><strong>1.2.9 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/audio-only-live.html">Audio-only (Live)</a></strong></p>
 <ul>
-<li>Not applicable - <code>&lt;canvas&gt;</code> elements are entirely visual in nature.</li>
+<li>Not applicable – <code>&lt;canvas&gt;</code> elements are entirely visual in nature.</li>
 </ul>
 <h4 id="sc-and-accessible-multimedia">SC and accessible multimedia</h4>
 <blockquote>
-  <p><strong>tl;dr:</strong> Many of the above requirements are best met during audio-visual production and post-production, long before the resulting files are supplied to the developer for inclusion in a web page. This includes generating subtitle and caption data in <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API/Web_Video_Text_Tracks_Format">Web Video Text Tracks Format</a> rather than adding them directly to the video as graphical text - which is entirely inaccessible!</p>
+  <p><strong>tl;dr:</strong> Many of the above requirements are best met during audio-visual production and post-production, long before the resulting files are supplied to the developer for inclusion in a web page. This includes generating subtitle and caption data in <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API/Web_Video_Text_Tracks_Format">Web Video Text Tracks Format</a> rather than adding them directly to the video as graphical text – which is entirely inaccessible!</p>
 </blockquote>
 <p>SC makes it reasonably easy for dev-users to add video playback to a canvas scene. It achieves this using a set of <a href="sc-assets.html">Asset objects</a>, which load animatable or streamed assets into the SC system and then serve them to <a href="sc-image-based-entitys.html">Picture entitys</a> and <a href="sc-styles.html">Pattern objects</a> for display in the <code>&lt;canvas&gt;</code> element:</p>
 <ul>
-<li>SC <strong>sprite assets</strong> take a series of images, or a spritesheet image, and - with the help of a manifest file or definition object - creates small animation loops for display.</li>
+<li>SC <strong>sprite assets</strong> take a series of images, or a spritesheet image, and – with the help of a manifest file or definition object – creates small animation loops for display.</li>
 <li>SC <strong>noise assets</strong> and <strong>reaction-diffusion assets</strong> use images generated by the SC system for various purposes; given that these images can be animated in various ways they need to be considered as in-scope for accessibility purposes.</li>
 <li>SC includes <strong>raw assets</strong> as a means to interact with, and display, third-party-generated <code>&lt;canvas&gt;</code> elements which may themselves be animated.</li>
-<li>SC <strong>video assets</strong> define and control:<ul>
-<li>File-based audio-visual sources, either already present in the web page, or from a remote server;</li>
-<li>Media streams generated by device cameras;</li>
-<li>Screen capture streams generated by the user's screen.</li></ul></li>
+<li>SC <strong>video assets</strong> define and control:<br />
+– File-based audio-visual sources, either already present in the web page, or from a remote server;<br />
+– Media streams generated by device cameras;<br />
+– Screen capture streams generated by the user's screen.</li>
 <li>SC <strong>Cell objects</strong> can also be used as an asset which means they, too, may need to meet these requirements (where appropriate).</li>
 </ul>
 <p>The requirements listed above are all concerned with making sure a web page can supply aural, visual and textual alternatives for various combinations of animated/streamed media assets. The need to meet these requirements depends on how important the asset is to the user's understanding of the web page's content:</p>
 <ul>
 <li>Text alternatives to supply either verbatim copy of, or additional detail around, a video- or audio-based asset, in particular when the asset supplies the end-user with additional information not mentioned in the text surrounding the <code>&lt;canvas&gt;</code> element.</li>
 <li>Descriptive speech and text (and sign?) for otherwise silent animated assets.</li>
-<li>Additional visual, sign-based recitation and/or commentary on video- or audio-based assets. Given the recent improvements in machine learning and AI computing functionality in this space, this requirement may become easier to meet going forward - in particular by combining video and AI-generated sign language animation in a <code>&lt;canvas&gt;</code> element.</li>
+<li>Additional visual, sign-based recitation and/or commentary on video- or audio-based assets. Given the recent improvements in machine learning and AI computing functionality in this space, this requirement may become easier to meet going forward – in particular by combining video and AI-generated sign language animation in a <code>&lt;canvas&gt;</code> element.</li>
 </ul>
 <h4 id="managing-audio-assets">Managing audio assets</h4>
 <p>SC does not (at this time) include any functionality to import <code>&lt;audio&gt;</code> elements as SC assets. It is up to the dev-user to find ways to import and make use of such files within the context of an SC-managed canvas display. </p>
@@ -294,8 +294,8 @@
 <h4 id="managing-video-asset-captions-and-subtitles">Managing video asset captions and subtitles</h4>
 <p>SC functionality for importing video into the SC system as an asset, for use in Picture entitys and Pattern style objects, can be found in the <a href="sc-assets.html">assets page</a> of this Runbook.</p>
 <p>SC does not (at this time) include functionality to access or display <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLTrackElement">HTMLTrackElement</a> data. The native <code>&lt;video&gt;</code> element expects to find <code>&lt;track&gt;</code> element children placed between its opening and closing tags. The text supplied in those text tracks are not part of the video stream data itself. Instead the text tends to be displayed in normal HTML elements placed over the <code>&lt;video&gt;</code> element's display.</p>
-<p>If dev-users want to play a user-controlled video in an SC-managed <code>&lt;canvas&gt;</code> element, then they need to implement the video controls themselves. The control inputs and buttons should (ideally!) be created using normal HTML <code>&lt;button&gt;</code> and <code>&lt;input&gt;</code> elements, though SC does not prevent the dev-user from creating them using SC entitys - see test demo <a href="../../demo/canvas-027.html">Canvas-027</a> for a proof-of-concept example.</p>
-<p>Similarly, dev-users can - once they have built the functionality to capture change events emitted by the video's <code>&lt;track&gt;</code> element - display those captions near to (or over) the <code>&lt;canvas&gt;</code> element, preferable in normal HTML elements or, alternatively, in SC Label and EnhancedLabel entitys.</p>
+<p>If dev-users want to play a user-controlled video in an SC-managed <code>&lt;canvas&gt;</code> element, then they need to implement the video controls themselves. The control inputs and buttons should (ideally!) be created using normal HTML <code>&lt;button&gt;</code> and <code>&lt;input&gt;</code> elements, though SC does not prevent the dev-user from creating them using SC entitys – see test demo <a href="../../demo/canvas-027.html">Canvas-027</a> for a proof-of-concept example.</p>
+<p>Similarly, dev-users can – once they have built the functionality to capture change events emitted by the video's <code>&lt;track&gt;</code> element – display those captions near to (or over) the <code>&lt;canvas&gt;</code> element, preferable in normal HTML elements or, alternatively, in SC Label and EnhancedLabel entitys.</p>
 <h3 id="content-can-be-presented-in-different-ways">Content can be presented in different ways</h3>
 <p>For users to be able to change the presentation of content, it is necessary that:</p>
 <ul>
@@ -304,29 +304,29 @@
 <li>Browsers and assistive technologies provide settings to customize the presentation</li>
 </ul>
 <p>Meeting this requirement allows content to be correctly read aloud, enlarged, or adapted to meet the needs and preferences of different people. For instance, it can be presented using custom color combinations, text size, or other styling to facilitate reading. This requirement also facilitates other forms of adaptation, including automatic generation of page outlines and summaries to help people get an overview and to focus on particular parts more easily.</p>
-<p><strong>1.3.1 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html">Info and Relationships</a></strong></p>
+<p><strong>1.3.1 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html">Info and Relationships</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements should never replace the web page.</li>
-<li>Where a <code>&lt;canvas&gt;</code> element is part of a web page, and it is not merely decorative, then developers need to make best effort to describe the contents of the canvas display - ideally through ARIA <code>labelled-by</code> and <code>described-by</code> markup.</li>
+<li>Where a <code>&lt;canvas&gt;</code> element is part of a web page, and it is not merely decorative, then developers need to make best effort to describe the contents of the canvas display – ideally through ARIA <code>labelled-by</code> and <code>described-by</code> markup.</li>
 <li>Any relevant graphical text contained in the canvas display should be reflected in some way back into the web page DOM so it can be accessed by assistive technologies. Ideally, that text should be part of the surrounding copy so that if the <code>&lt;canvas&gt;</code> element fails to render for any reason, the information displayed in the graphical text is not lost.</li>
 </ul>
-<p><strong>1.3.2 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/meaningful-sequence.html">Meaningful Sequence</a></strong></p>
+<p><strong>1.3.2 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/meaningful-sequence.html">Meaningful Sequence</a></strong></p>
 <ul>
-<li>For any relevant graphical text contained in the canvas display, that text should be reflected back into the web page DOM in a way so that it makes sense - both in itself, and in the wider context of the surrounding text - to end users accessing that text using assistive technology.</li>
+<li>For any relevant graphical text contained in the canvas display, that text should be reflected back into the web page DOM in a way so that it makes sense – both in itself, and in the wider context of the surrounding text – to end users accessing that text using assistive technology.</li>
 </ul>
-<p><strong>1.3.3 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/sensory-characteristics.html">Sensory Characteristics</a></strong></p>
+<p><strong>1.3.3 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/sensory-characteristics.html">Sensory Characteristics</a></strong></p>
 <ul>
-<li>Probably not applicable - <code>&lt;canvas&gt;</code> elements are more likely to be the control elements rather than the describers of control elements.</li>
+<li>Probably not applicable – <code>&lt;canvas&gt;</code> elements are more likely to be the control elements rather than the describers of control elements.</li>
 </ul>
-<p><strong>1.3.4 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/orientation.html">Orientation</a></strong></p>
+<p><strong>1.3.4 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/orientation.html">Orientation</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements are not naturally responsive; developers will need to apply some effort towards making the element fit appropriately into its environment's orientation without distorting the canvas display.</li>
 </ul>
-<p><strong>1.3.5 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/identify-input-purpose.html">Identify Input Purpose</a></strong></p>
+<p><strong>1.3.5 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/identify-input-purpose.html">Identify Input Purpose</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
 </ul>
-<p><strong>1.3.6 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/identify-purpose.html">Identify Purpose</a></strong></p>
+<p><strong>1.3.6 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/identify-purpose.html">Identify Purpose</a></strong></p>
 <ul>
 <li>It is unlikely that a <code>&lt;canvas&gt;</code> element will represent an entire <a href="https://www.w3.org/WAI/WCAG22/Techniques/aria/ARIA11">region</a> of a web page. Doing so is not advised!</li>
 </ul>
@@ -346,73 +346,73 @@
 <li>Background audio is low or can be turned off, to avoid interference or distraction</li>
 </ul>
 <p>Meeting this requirement helps separate foreground from background, to make important information more distinguishable. This includes considerations for people who do not use assistive technologies and for people using assistive technologies who may observe interference from prominent audio or visual content in the background. For instance, many people with color blindness do not use any particular tools and rely on a proper design that provides sufficient color contrast between text and its surrounding background. For others, audio that is automatically played could interfere with text-to-speech or with assistive listening devices (ALDs).</p>
-<p><strong>1.4.1 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html">Use of Color</a></strong></p>
+<p><strong>1.4.1 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html">Use of Color</a></strong></p>
 <ul>
 <li>This is a design issue. Canvas displays and animations should be designed alongside the rest of the web page on which the <code>&lt;canvas&gt;</code> elements appear.</li>
-<li>Websites should pay attention to user preferences - in particular to: <code>prefers-contrast</code>, <code>prefers-color-scheme</code>, <code>prefers-reduced-transparency</code>, <code>forced-colors</code>, <code>inverted-colors</code>. Canvas displays and animations should adapt to these user preferences in line with the rest of the web page. Again, this is a design issue which developers then need to implement.</li>
+<li>Websites should pay attention to user preferences – in particular to: <code>prefers-contrast</code>, <code>prefers-color-scheme</code>, <code>prefers-reduced-transparency</code>, <code>forced-colors</code>, <code>inverted-colors</code>. Canvas displays and animations should adapt to these user preferences in line with the rest of the web page. Again, this is a design issue which developers then need to implement.</li>
 </ul>
-<p><strong>1.4.2 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/audio-control.html">Audio Control</a></strong></p>
+<p><strong>1.4.2 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/audio-control.html">Audio Control</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements can use <code>&lt;video&gt;</code> elements as a source for their display data. If a <code>&lt;video&gt;</code> element includes accompanying audio data then the <code>&lt;canvas&gt;</code> element will ignore it. Developers will need to present the video's audio controls to end-users in an accessible way.</li>
 </ul>
-<p><strong>1.4.3 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html">Contrast (Minimum)</a></strong></p>
+<p><strong>1.4.3 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html">Contrast (Minimum)</a></strong></p>
 <ul>
 <li>This is a design issue. Canvas displays and animations should be designed alongside the rest of the web page on which the <code>&lt;canvas&gt;</code> elements appear.</li>
-<li>Websites should pay attention to user preferences - in particular to: <code>prefers-contrast</code>. Canvas displays and animations should adapt to this user preference in line with the rest of the web page.</li>
+<li>Websites should pay attention to user preferences – in particular to: <code>prefers-contrast</code>. Canvas displays and animations should adapt to this user preference in line with the rest of the web page.</li>
 </ul>
-<p><strong>1.4.4 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html">Resize Text</a></strong></p>
+<p><strong>1.4.4 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html">Resize Text</a></strong></p>
 <ul>
-<li><code>&lt;canvas&gt;</code> elements should react in the same way as any other element when the user zooms - <strong><em>not</em></strong> <em>pinch-zooms, which is an entirely different sort of zoom</em> - their browser displays. </li>
-<li>Developers need to make sure their canvas displays zoom in the appropriate manner - including making any graphical text appropriately larger.</li>
+<li><code>&lt;canvas&gt;</code> elements should react in the same way as any other element when the user zooms – <strong><em>not</em></strong> <em>pinch-zooms, which is an entirely different sort of zoom</em> – their browser displays. </li>
+<li>Developers need to make sure their canvas displays zoom in the appropriate manner – including making any graphical text appropriately larger.</li>
 </ul>
-<p><strong>1.4.5 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/images-of-text.html">Images of Text</a></strong></p>
+<p><strong>1.4.5 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/images-of-text.html">Images of Text</a></strong></p>
 <ul>
 <li>This requirement only applies to <code>&lt;canvas&gt;</code> elements whose display includes large amounts of graphical text.</li>
 <li>In general, canvas displays should only contain the minimum amount of graphical text to help users make sense of the display. Additional explanatory text should be supplied either in the surrounding web page text, or in the <code>&lt;canvas&gt;</code> element's ARIA <code>labelled-by</code> and <code>described-by</code> markup.</li>
 </ul>
-<p><strong>1.4.6 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-enhanced.html">Contrast (Enhanced)</a></strong></p>
+<p><strong>1.4.6 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-enhanced.html">Contrast (Enhanced)</a></strong></p>
 <ul>
 <li>This is a design issue. Canvas displays and animations should be designed alongside the rest of the web page on which the <code>&lt;canvas&gt;</code> elements appear.</li>
-<li>Websites should pay attention to user preferences - in particular to: <code>prefers-contrast</code>. Canvas displays and animations should adapt to this user preference in line with the rest of the web page.</li>
+<li>Websites should pay attention to user preferences – in particular to: <code>prefers-contrast</code>. Canvas displays and animations should adapt to this user preference in line with the rest of the web page.</li>
 </ul>
-<p><strong>1.4.7 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/low-or-no-background-audio.html">Low or No Background Audio</a></strong></p>
+<p><strong>1.4.7 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/low-or-no-background-audio.html">Low or No Background Audio</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements can use <code>&lt;video&gt;</code> elements as a source for their display data. If a <code>&lt;video&gt;</code> element includes accompanying audio data then the <code>&lt;canvas&gt;</code> element will ignore it. Developers will need to present the video's audio controls to end-users in an accessible way.</li>
 </ul>
-<p><strong>1.4.8 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html">Visual Presentation</a></strong></p>
+<p><strong>1.4.8 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html">Visual Presentation</a></strong></p>
 <ul>
 <li>This requirement only applies to <code>&lt;canvas&gt;</code> elements whose display includes large amounts of graphical text.</li>
 <li>In general, canvas displays should only contain the minimum amount of graphical text to help users make sense of the display. Additional explanatory text should be supplied either in the surrounding web page text, or in the <code>&lt;canvas&gt;</code> element's ARIA <code>labelled-by</code> and <code>described-by</code> markup.</li>
 </ul>
-<p><strong>1.4.9 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/images-of-text-no-exception.html">Images of Text (No Exception)</a></strong></p>
+<p><strong>1.4.9 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/images-of-text-no-exception.html">Images of Text (No Exception)</a></strong></p>
 <ul>
 <li>In general, canvas displays should only contain the minimum amount of graphical text to help users make sense of the display. Additional explanatory text should be supplied either in the surrounding web page text, or in the <code>&lt;canvas&gt;</code> element's ARIA <code>labelled-by</code> and <code>described-by</code> markup.</li>
 </ul>
-<p><strong>1.4.10 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/reflow.html">Reflow</a></strong></p>
+<p><strong>1.4.10 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/reflow.html">Reflow</a></strong></p>
 <ul>
 <li>In general, canvas displays should only contain the minimum amount of graphical text to help users make sense of the display. Additional explanatory text should be supplied either in the surrounding web page text, or in the <code>&lt;canvas&gt;</code> element's ARIA <code>labelled-by</code> and <code>described-by</code> markup.</li>
 <li>This requirement can (arguably) apply to any <code>&lt;canvas&gt;</code> element containing graphical text. It is up to the designer and developer to develop canvas displays that work appropriately with larger and smaller representations of that graphical text.</li>
 </ul>
-<p><strong>1.4.11 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html">Non-text Contrast</a></strong></p>
+<p><strong>1.4.11 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html">Non-text Contrast</a></strong></p>
 <ul>
 <li>Designers using <code>&lt;canvas&gt;</code> elements to convey graphical information should make an effort to give sufficient contrast between that information and the canvs display background.</li>
-<li>If the canvas display includes any graphical controls - links, buttons, draggable controls, etc - then there should be sufficient contrast between those elements and their surrounding graphics and background.</li>
+<li>If the canvas display includes any graphical controls – links, buttons, draggable controls, etc – then there should be sufficient contrast between those elements and their surrounding graphics and background.</li>
 </ul>
-<p><strong>1.4.12 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html">Text Spacing</a></strong></p>
+<p><strong>1.4.12 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html">Text Spacing</a></strong></p>
 <ul>
 <li>In general, canvas displays should only contain the minimum amount of graphical text to help users make sense of the display.</li>
 <li>If the canvas display is text-heavy, then that graphical text should make a best effort to respect the surrounding page's CSS markup when it comes to text spacing requirements.</li>
 </ul>
-<p><strong>1.4.13 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html">Content on Hover or Focus</a></strong></p>
+<p><strong>1.4.13 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html">Content on Hover or Focus</a></strong></p>
 <ul>
 <li>If a <code>&lt;canvas&gt;</code> element is animated and includes behaviour such as adding or removing additional content as a result of a hover or focus interaction, then the designer needs to take this accessibility requirement into consideration when designing those interactions.</li>
 </ul>
 <h4 id="sc-color-space-support">SC Color space support</h4>
-<p>While the use of accessible color is (almost entirely) a design issue, SC does help a little by supporting all legitimate absolute (that is, <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4</a>) color strings - including CIELAB LCH and OKLCH color space strings. See test demos <a href="../../demo/canvas-015.html">Canvas-015</a> and <a href="../../demo/canvas-016.html">Canvas-016</a>.</p>
+<p>While the use of accessible color is (almost entirely) a design issue, SC does help a little by supporting all legitimate absolute (that is, <a href="https://www.w3.org/TR/css-color-4/">CSS Color Module Level 4</a>) color strings – including CIELAB LCH and OKLCH color space strings. See test demos <a href="../../demo/canvas-015.html">Canvas-015</a> and <a href="../../demo/canvas-016.html">Canvas-016</a>.</p>
 <p>SC does not support <a href="https://www.w3.org/TR/css-color-5/">CSS Color Module Level 5</a> relative colors. Dev-users can instead precalculate those colors and store them in <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables/Using_CSS_custom_properties">CSS custom properties</a>, then extract those variables into code using the JavaScript <code>getPropertyValue()</code> function.</p>
-<p>Details about SC's support for <a href="sc-dom-artefacts.html#wide-gamut-color-support---display-p3">wide-gamut color support</a> - <code>display-p3</code> - can be found at the linked section in the Artefacts and the DOM page of this Runbook.</p>
+<p>Details about SC's support for <a href="sc-dom-artefacts.html#wide-gamut-color-support---display-p3">wide-gamut color support</a> – <code>display-p3</code> – can be found at the linked section in the Artefacts and the DOM page of this Runbook.</p>
 <h4 id="sc-function-hooks-to-adapt-to-color-based-user-preferences-settings">SC function hooks to adapt to color-based user preferences settings</h4>
-<p>SC comes with built-in support to action changes to a canvas display based on any preference media settings - <code>forced-colors</code>, <code>inverted-colors</code>, <code>prefers-color-scheme</code>, <code>prefers-contrast</code>, <code>prefers-reduced-transparency</code> - that the end-user may have set on their device. This functionality has been detailed in the <a href="http://localhost:3000/docs/reference/sc-dom-artefacts.html#accessibility">Accessibility section</a> of the Artefacts and the DOM page of this Runbook.</p>
+<p>SC comes with built-in support to action changes to a canvas display based on any preference media settings – <code>forced-colors</code>, <code>inverted-colors</code>, <code>prefers-color-scheme</code>, <code>prefers-contrast</code>, <code>prefers-reduced-transparency</code> – that the end-user may have set on their device. This functionality has been detailed in the <a href="http://localhost:3000/docs/reference/sc-dom-artefacts.html#accessibility">Accessibility section</a> of the Artefacts and the DOM page of this Runbook.</p>
 <h4 id="sc-support-for-browser-zoom-not-pinch-zoom">SC support for browser zoom (not pinch zoom)</h4>
 <p>Browser implementations for zoom generally follow the pattern of modifying the browser's <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio">window.devicePixelRatio</a> value. This has a direct impact on any <code>&lt;canvas&gt;</code> elements in the web page, which need to adapt to the user interaction as it happens, to maintain the canvas display or animation's clarity.</p>
 <p>While SC makes a best effort to manage <code>devicePixelRatio</code> update functionality behind-the-scenes, dev-users are strongly advised to test any <code>&lt;canvas&gt;</code> elements they add to the page across a range of devices and screens at a variety of zoom levels.</p>
@@ -426,19 +426,19 @@
 <li>Web browsers, authoring tools, and other tools provide keyboard support</li>
 </ul>
 <p>Meeting this requirement helps keyboard users, including people using alternative keyboards such as keyboards with ergonomic layouts, on-screen keyboards, or switch devices. It also helps people using voice recognition (speech input) to operate websites and to dictate text through the keyboard interface.</p>
-<p><strong>2.1.1 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html">Keyboard</a></strong></p>
+<p><strong>2.1.1 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html">Keyboard</a></strong></p>
 <ul>
 <li>If a <code>&lt;canvas&gt;</code> element includes interactive content driven by mouse or touch events, then those interactions should also be actionable through the user's keyboard or other input device.</li>
 </ul>
-<p><strong>2.1.2 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/no-keyboard-trap.html">No Keyboard Trap</a></strong></p>
+<p><strong>2.1.2 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/no-keyboard-trap.html">No Keyboard Trap</a></strong></p>
 <ul>
 <li>If a <code>&lt;canvas&gt;</code> element includes focusable content, then the element's functionality should also include standard methods for moving focus away from the element.</li>
 </ul>
-<p><strong>2.1.3 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/keyboard-no-exception.html">Keyboard (No Exception)</a></strong></p>
+<p><strong>2.1.3 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/keyboard-no-exception.html">Keyboard (No Exception)</a></strong></p>
 <ul>
 <li>If a <code>&lt;canvas&gt;</code> element includes interactive content driven by mouse or touch events, then those interactions should also be actionable through the user's keyboard or other input device.</li>
 </ul>
-<p><strong>2.1.4 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html">Character Key Shortcuts</a></strong></p>
+<p><strong>2.1.4 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html">Character Key Shortcuts</a></strong></p>
 <ul>
 <li>The work of meeting this requirement lies with the designer and UX developer. <code>&lt;canvas&gt;</code> elements that include interactive content should not be ignored in any work to assign keyboard shortcuts, or reassigning those shortcuts to different key strokes.</li>
 </ul>
@@ -449,12 +449,12 @@
 <li><code>scrawl.initializeDomInputs()</code> locates the DOM control elements, sets them to initial values and returns an object of those elements keyed to their <code>id</code> values.</li>
 <li><code>scrawl.makeUpdater()</code> adds event listeners to the DOM control elements and manages the process of channeling user updates to the targeted SC artefact, entity or Group object.</li>
 </ul>
-<p>While including input controls in the web page may often detract from the page's design and aesthetic, designers can overcome this issue by adding in methods to show/hide the controls - for instance by placing them inside a <code>&lt;details&gt;</code> element. The controls themselves can also be styled to match the surrounding content (because: they're just elements in the DOM). See test demo <a href="../../demo/canvas-023.html">Canvas-023</a> for an example.</p>
-<p>For more application-like interactive canvas displays - for instance: spreadsheets; monitoring/analytic consoles; image or video editing studios; design suites; etc - best practice is to include keyboard shortcuts for each of the possible interactions. To help dev-users, SC includes a <strong>keyboardZone</strong> convenience object in which dev-users can define the shortcut and associated action for the targeted <code>&lt;canvas&gt;</code> element. See the following test demos for examples:</p>
+<p>While including input controls in the web page may often detract from the page's design and aesthetic, designers can overcome this issue by adding in methods to show/hide the controls – for instance by placing them inside a <code>&lt;details&gt;</code> element. The controls themselves can also be styled to match the surrounding content (because: they're just elements in the DOM). See test demo <a href="../../demo/canvas-023.html">Canvas-023</a> for an example.</p>
+<p>For more application-like interactive canvas displays – for instance: spreadsheets; monitoring/analytic consoles; image or video editing studios; design suites; etc – best practice is to include keyboard shortcuts for each of the possible interactions. To help dev-users, SC includes a <strong>keyboardZone</strong> convenience object in which dev-users can define the shortcut and associated action for the targeted <code>&lt;canvas&gt;</code> element. See the following test demos for examples:</p>
 <ul>
-<li><a href="../../demo/snippets-005.html">Snippets-005</a> - Create a responsive, interactive and accessible before/after slider infographic.</li>
-<li><a href="../../demo/modules-005.html">Modules-005</a> - Accessible GUI-based simple canvas editor.</li>
-<li><a href="../../demo/canvas-211.html">Canvas-211</a> - EnhancedLabel entity - keyboard navigation.</li>
+<li><a href="../../demo/snippets-005.html">Snippets-005</a> – Create a responsive, interactive and accessible before/after slider infographic.</li>
+<li><a href="../../demo/modules-005.html">Modules-005</a> – Accessible GUI-based simple canvas editor.</li>
+<li><a href="../../demo/canvas-211.html">Canvas-211</a> – EnhancedLabel entity – keyboard navigation.</li>
 </ul>
 <p>More details about the <code>scrawl.makeKeyboardZone()</code> factory function can be found in the <a href="sc-events-signals.html#keyboard-shortcut-management">keyboard shortcut management</a> section of the Events and Signals page of this Runbook.</p>
 <h3 id="users-have-enough-time-to-read-and-use-the-content">Users have enough time to read and use the content</h3>
@@ -466,41 +466,41 @@
 <li>Postpone or suppress interruptions, except where necessary</li>
 <li>Re-authenticate when a session expires without losing data</li>
 </ul>
-<p><strong>2.2.1 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html">Timing Adjustable</a></strong></p>
+<p><strong>2.2.1 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html">Timing Adjustable</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements that have animated displays should also include user-accessble controls to adjust the speed of the animation.</li>
 </ul>
-<p><strong>2.2.2 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html">Pause, Stop, Hide</a></strong></p>
+<p><strong>2.2.2 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html">Pause, Stop, Hide</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements that have animated displays should also include user-accessble controls to halt/resume the animation at will. The user should also be able to hide the <code>&lt;canvas&gt;</code> element if they so desire.</li>
-<li>Websites should pay attention to user preferences - in particular to: <code>prefers-reduced-motion</code>. Canvas displays and animations should adapt to these user preferences in line with the rest of the web page - in this case to halt any animation if it runs for more than five seconds.</li>
+<li>Websites should pay attention to user preferences – in particular to: <code>prefers-reduced-motion</code>. Canvas displays and animations should adapt to these user preferences in line with the rest of the web page – in this case to halt any animation if it runs for more than five seconds.</li>
 </ul>
-<p><strong>2.2.3 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/no-timing.html">No Timing</a></strong></p>
+<p><strong>2.2.3 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/no-timing.html">No Timing</a></strong></p>
 <ul>
 <li>This is a page design issue, thus not applicable specifically to <code>&lt;canvas&gt;</code> elements.</li>
 </ul>
-<p><strong>2.2.4 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/interruptions.html">Interruptions</a></strong></p>
+<p><strong>2.2.4 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/interruptions.html">Interruptions</a></strong></p>
 <ul>
 <li>This is a page design issue, thus not applicable specifically to <code>&lt;canvas&gt;</code> elements.</li>
 </ul>
-<p><strong>2.2.5 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/re-authenticating.html">Re-authenticating</a></strong></p>
+<p><strong>2.2.5 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/re-authenticating.html">Re-authenticating</a></strong></p>
 <ul>
 <li>This is a page design issue, thus not applicable specifically to <code>&lt;canvas&gt;</code> elements.</li>
 <li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
 </ul>
-<p><strong>2.2.6 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/timeouts.html">Timeouts</a></strong></p>
+<p><strong>2.2.6 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/timeouts.html">Timeouts</a></strong></p>
 <ul>
 <li>This is a page design issue, thus not applicable specifically to <code>&lt;canvas&gt;</code> elements.</li>
 </ul>
 <h4 id="managing-sc-animations">Managing SC Animations</h4>
-<p>Each SC generic, Ticker and display animation objects includes an attribute - <code>anim.maxFrameRate</code> which can be used to control the speed of that animation. By default SC sets the value of this attribute to <code>60</code> frames-per-second, but this can be changed at any time using the normal <code>anim.set()</code> functionality. For an example, see test demo <a href="../../demo/canvas-050.html">Canvas-050</a>.</p>
+<p>Each SC generic, Ticker and display animation objects includes an attribute – <code>anim.maxFrameRate</code> which can be used to control the speed of that animation. By default SC sets the value of this attribute to <code>60</code> frames-per-second, but this can be changed at any time using the normal <code>anim.set()</code> functionality. For an example, see test demo <a href="../../demo/canvas-050.html">Canvas-050</a>.</p>
 <p>All SC animation objects can be started and stopped at any time using the <code>anim.run()</code> and <code>anim.halt()</code> functions. See the following test demos for inspiration:</p>
 <ul>
-<li><a href="../../demo/canvas-027.html">Canvas-027</a> - Video control and manipulation.</li>
-<li><a href="../../demo/canvas-033.html">Canvas-033</a> - User preferences: prefers-color-scheme; prefers-reduced-motion; JavaScript disabled.</li>
-<li><a href="../../demo/canvas-208.html">Canvas-208</a> - EnhancedLabel entity - text along a path.</li>
-<li><a href="../../demo/dom-009.html">DOM-009</a> - Stop and restart the main animation loop.</li>
-<li><a href="../../demo/snippets-006.html">Snippets-006</a> - Editable header text colorizer and animation effect snippets.</li>
+<li><a href="../../demo/canvas-027.html">Canvas-027</a> – Video control and manipulation.</li>
+<li><a href="../../demo/canvas-033.html">Canvas-033</a> – User preferences: prefers-color-scheme; prefers-reduced-motion; JavaScript disabled.</li>
+<li><a href="../../demo/canvas-208.html">Canvas-208</a> – EnhancedLabel entity – text along a path.</li>
+<li><a href="../../demo/dom-009.html">DOM-009</a> – Stop and restart the main animation loop.</li>
+<li><a href="../../demo/snippets-006.html">Snippets-006</a> – Editable header text colorizer and animation effect snippets.</li>
 </ul>
 <p>SC Ticker animation objects are the only time-based animations in the SC system. There is (at this time) no simple way for the dev-user to dilate a Ticker animation (make it run faster or slower) to meet end-user preferences, but there's also nothing to prevent them changing the duration of a Ticker animation at any time. </p>
 <p>SC Tween and Action objects can take temporal-relative String% values for their <code>.start</code> and <code>.duration</code> attributes, meaning that a Tween can be defined to start <code>20%</code> of the Ticker's duration after it starts running, and last for <code>30%</code> of its duration. This should make the work of dilating a Ticker animation a little easier for the dev-user.</p>
@@ -513,22 +513,22 @@
 <li>Warn users before flashing content is presented, and provide alternatives</li>
 <li>Provide mechanisms to switch off animations, unless they are essential</li>
 </ul>
-<p><strong>2.3.1 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html">Three Flashes or Below Threshold</a></strong></p>
+<p><strong>2.3.1 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html">Three Flashes or Below Threshold</a></strong></p>
 <ul>
 <li>This is a design issue. If a canvas display includes flashing animation then the user must be made aware of that before the animation plays. </li>
 <li>Explicit user consent for the canvas animation to play is advisable. </li>
 </ul>
-<p><strong>2.3.2 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/three-flashes.html">Three Flashes</a></strong></p>
+<p><strong>2.3.2 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/three-flashes.html">Three Flashes</a></strong></p>
 <ul>
 <li>This is a design issue. If a canvas display includes flashing animation then the user must be made aware of that before the animation plays. </li>
 <li>Explicit user consent for the canvas animation to play is required. </li>
 </ul>
-<p><strong>2.3.3 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html">Animation from Interactions</a></strong></p>
+<p><strong>2.3.3 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html">Animation from Interactions</a></strong></p>
 <ul>
-<li>Websites should pay attention to user preferences - in particular to: <code>prefers-reduced-motion</code>. Canvas displays and animations should adapt to these user preferences in line with the rest of the web page - in this case to suppress unnecessary animations arising from user interactions with the <code>&lt;canvas&gt;</code> element.</li>
+<li>Websites should pay attention to user preferences – in particular to: <code>prefers-reduced-motion</code>. Canvas displays and animations should adapt to these user preferences in line with the rest of the web page – in this case to suppress unnecessary animations arising from user interactions with the <code>&lt;canvas&gt;</code> element.</li>
 </ul>
 <h4 id="sc-function-hooks-to-adapt-to-motion-based-user-preferences-settings">SC function hooks to adapt to motion-based user preferences settings</h4>
-<p>SC comes with built-in support to action changes to a canvas display based on motion preference media settings - <code>prefers-reduced-motion</code> - that the end-user may have set on their device. This functionality has been detailed in the <a href="http://localhost:3000/docs/reference/sc-dom-artefacts.html#accessibility">Accessibility section</a> of the Artefacts and the DOM page of this Runbook.</p>
+<p>SC comes with built-in support to action changes to a canvas display based on motion preference media settings – <code>prefers-reduced-motion</code> – that the end-user may have set on their device. This functionality has been detailed in the <a href="http://localhost:3000/docs/reference/sc-dom-artefacts.html#accessibility">Accessibility section</a> of the Artefacts and the DOM page of this Runbook.</p>
 <h3 id="users-can-easily-navigate-find-content-and-determine-where-they-are">Users can easily navigate, find content, and determine where they are</h3>
 <p>Well organized content helps users to orient themselves and to navigate effectively. Such content includes:</p>
 <ul>
@@ -540,67 +540,67 @@
 <li>The purpose of a link is evident, ideally even when the link is viewed on its own</li>
 </ul>
 <p>Meeting this requirement helps people to navigate through web pages in different ways, depending on their particular needs and preferences. For instance, while some people rely on hierarchical navigation structures such as menu bars to find specific web pages, others rely on search functions on websites instead. Some people may be seeing the content while others may be hearing it or seeing and hearing it at the same time. Some people may be using the content with only a mouse or a keyboard, while others may be using both.</p>
-<p><strong>2.4.1 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html">Bypass Blocks</a></strong></p>
+<p><strong>2.4.1 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks.html">Bypass Blocks</a></strong></p>
 <ul>
-<li>Not applicable to <code>&lt;canvas&gt;</code> elements - the expectation should be that the element, if used for such purposes, should be part of a wider header or navigation component to which the requirement applies.</li>
+<li>Not applicable to <code>&lt;canvas&gt;</code> elements – the expectation should be that the element, if used for such purposes, should be part of a wider header or navigation component to which the requirement applies.</li>
 </ul>
-<p><strong>2.4.2 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/page-titled.html">Page Titled</a></strong></p>
+<p><strong>2.4.2 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/page-titled.html">Page Titled</a></strong></p>
 <ul>
 <li>Not applicable to <code>&lt;canvas&gt;</code> elements.</li>
 </ul>
-<p><strong>2.4.3 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html">Focus Order</a></strong></p>
+<p><strong>2.4.3 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-order.html">Focus Order</a></strong></p>
 <ul>
-<li>Developers can create - with some effort - <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
+<li>Developers can create – with some effort – <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
 <li>For these <code>&lt;canvas&gt;</code> elements, or the regions within them, all efforts should be made to ensure they respect the web page's focus order.</li>
 <li>In particular, the HTML specification allows <code>&lt;a&gt;</code> and <code>&lt;button&gt;</code> elements to be placed between the <code>&lt;canvas&gt;</code> element's opening and closing tags. Any navigation or action caused by user interaction should be triggered on those elements, not emulated by the <code>&lt;canvas&gt;</code> element.</li>
 </ul>
-<p><strong>2.4.4 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html">Link Purpose (In Context)</a></strong></p>
+<p><strong>2.4.4 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html">Link Purpose (In Context)</a></strong></p>
 <ul>
-<li>Developers can create - with some effort - <code>&lt;canvas&gt;</code> elements that act as links, or which include regions within their display which act as links.</li>
+<li>Developers can create – with some effort – <code>&lt;canvas&gt;</code> elements that act as links, or which include regions within their display which act as links.</li>
 <li>The HTML specification allows <code>&lt;a&gt;</code> elements to be placed between the <code>&lt;canvas&gt;</code> element's opening and closing tags. Any navigation cause by user interaction should be triggered on those elements, not emulated by the <code>&lt;canvas&gt;</code> element.</li>
 <li><code>&lt;a&gt;</code> elements contained within the <code>&lt;canvas&gt;</code> element should comply with this requirement.</li>
 </ul>
-<p><strong>2.4.5 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/multiple-ways.html">Multiple Ways</a></strong></p>
+<p><strong>2.4.5 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/multiple-ways.html">Multiple Ways</a></strong></p>
 <ul>
 <li>Not applicable to <code>&lt;canvas&gt;</code> elements.</li>
 </ul>
-<p><strong>2.4.6 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/headings-and-labels.html">Headings and Labels</a></strong></p>
+<p><strong>2.4.6 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/headings-and-labels.html">Headings and Labels</a></strong></p>
 <ul>
 <li>Using <code>&lt;canvas&gt;</code> elements to act as web page headings and labels is not advisable. They could be used as decorative accompaniments to headings and labels, in which case their application should be consistent and should not obscure those elements in any way.</li>
 </ul>
-<p><strong>2.4.7 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html">Focus Visible</a></strong></p>
+<p><strong>2.4.7 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html">Focus Visible</a></strong></p>
 <ul>
-<li>Developers can create - with some effort - <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
-<li>When the user focuses on the element, or the graphical region within the display acting as a button or link - for instance through a mouse hover, or a click or tap interaction - then that focussing action should be visibly conveyed to the user.</li>
-<li>This extends to keyboard navigation - when the user focusses on the <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> elements contained by the canvas, that action should be visibly indicated to the user in some way.</li>
+<li>Developers can create – with some effort – <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
+<li>When the user focuses on the element, or the graphical region within the display acting as a button or link – for instance through a mouse hover, or a click or tap interaction – then that focussing action should be visibly conveyed to the user.</li>
+<li>This extends to keyboard navigation – when the user focusses on the <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> elements contained by the canvas, that action should be visibly indicated to the user in some way.</li>
 </ul>
-<p><strong>2.4.8 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/location.html">Location</a></strong></p>
+<p><strong>2.4.8 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/location.html">Location</a></strong></p>
 <ul>
 <li>Not applicable to <code>&lt;canvas&gt;</code> elements.</li>
 </ul>
-<p><strong>2.4.9 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-link-only.html">Link Purpose (Link Only)</a></strong></p>
+<p><strong>2.4.9 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-link-only.html">Link Purpose (Link Only)</a></strong></p>
 <ul>
-<li>Developers can create - with some effort - <code>&lt;canvas&gt;</code> elements that act as links, or which include regions within their display which act as links.</li>
+<li>Developers can create – with some effort – <code>&lt;canvas&gt;</code> elements that act as links, or which include regions within their display which act as links.</li>
 <li>The HTML specification allows <code>&lt;a&gt;</code> elements to be placed between the <code>&lt;canvas&gt;</code> element's opening and closing tags. Any navigation cause by user interaction should be triggered on those elements, not emulated by the <code>&lt;canvas&gt;</code> element.</li>
 <li><code>&lt;a&gt;</code> elements contained within the <code>&lt;canvas&gt;</code> element should comply with this requirement.</li>
 </ul>
-<p><strong>2.4.10 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/section-headings.html">Section Headings</a></strong></p>
+<p><strong>2.4.10 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/section-headings.html">Section Headings</a></strong></p>
 <ul>
 <li>Using <code>&lt;canvas&gt;</code> elements to act as web page headings and labels is not advisable. They could be used as decorative accompaniments to headings and labels, in which case their application should be consistent and should not obscure those elements in any way.</li>
 </ul>
-<p><strong>2.4.11 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html">Focus Not Obscured (Minimum)</a></strong></p>
+<p><strong>2.4.11 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html">Focus Not Obscured (Minimum)</a></strong></p>
 <ul>
-<li>Developers can create - with some effort - <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
+<li>Developers can create – with some effort – <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
 <li>When the user keyboard focusses on the <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> elements contained by the canvas, then the <code>&lt;canvas&gt;</code> element should become visible in the browser viewport. If the focussed element is tied to a particular region of the canvas display then that part of the <code>&lt;canvas&gt;</code> element should be entirely visible in the browser viewport.</li>
 </ul>
-<p><strong>2.4.12 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-enhanced.html">Focus Not Obscured (Enhanced)</a></strong></p>
+<p><strong>2.4.12 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-enhanced.html">Focus Not Obscured (Enhanced)</a></strong></p>
 <ul>
-<li>Developers can create - with some effort - <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
+<li>Developers can create – with some effort – <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
 <li>When the user keyboard focusses on the <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> elements contained by the canvas, then the <code>&lt;canvas&gt;</code> element should become visible in the browser viewport. If the focussed element is tied to a particular region of the canvas display then that part of the <code>&lt;canvas&gt;</code> element should be entirely visible in the browser viewport.</li>
 </ul>
-<p><strong>2.4.13 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html">Focus Appearance</a></strong></p>
+<p><strong>2.4.13 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html">Focus Appearance</a></strong></p>
 <ul>
-<li>Developers can create - with some effort - <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
+<li>Developers can create – with some effort – <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
 <li>When the user keyboard focusses on the <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> elements contained by the canvas, then the <code>&lt;canvas&gt;</code> element, or the region within the canvas display tied to that button or link, should change its appearance to meet the requirements of this criterion.</li>
 </ul>
 <h4 id="sc-link-and-action-regions">SC link and action regions</h4>
@@ -612,12 +612,12 @@
 <p>This approach allows SC to leverage the browser's built-in accessibility functionality for the <code>&lt;button&gt;</code> and <code>&lt;a&gt;</code> elements, including keyboard navigation and element focus/blur.</p>
 <p>Further details of this functionality can be found in the <a href="sc-graphical-entity-functionality.html#interactive-entitys">interactive entitys</a> section of the Scrawl-canvas graphical entity functionality page of this Runbook. Test demo examples include:</p>
 <ul>
-<li><a href="../../demo/canvas-009.html">Canvas-009</a> - Entity web link anchors.</li>
-<li><a href="../../demo/modules-001.html">Modules-001</a> - Scrawl-canvas modularized code - London crime charts.</li>
-<li><a href="../../demo/modules-005.html">Modules-005</a> - Accessible GUI-based simple canvas editor.</li>
+<li><a href="../../demo/canvas-009.html">Canvas-009</a> – Entity web link anchors.</li>
+<li><a href="../../demo/modules-001.html">Modules-001</a> – Scrawl-canvas modularized code – London crime charts.</li>
+<li><a href="../../demo/modules-005.html">Modules-005</a> – Accessible GUI-based simple canvas editor.</li>
 </ul>
 <h4 id="apply-canvas-decoration-to-html-headers-using-sc-snippet-functionality">Apply canvas decoration to HTML headers using SC Snippet functionality</h4>
-<p>SC includes experimental functionality - <a href="sc-snippets.html">SC Snippets</a> - to associate a <code>&lt;canvas&gt;</code> element with normal (non-SC controlled) DOM elements. The results are similar to the <a href="https://ishoudinireadyyet.com/">Houdini</a> <a href="https://developer.mozilla.org/en-US/docs/Web/API/CSS_Painting_API">CSS Painting API</a>, though the path to achieving those results is different.</p>
+<p>SC includes experimental functionality – <a href="sc-snippets.html">SC Snippets</a> – to associate a <code>&lt;canvas&gt;</code> element with normal (non-SC controlled) DOM elements. The results are similar to the <a href="https://ishoudinireadyyet.com/">Houdini</a> <a href="https://developer.mozilla.org/en-US/docs/Web/API/CSS_Painting_API">CSS Painting API</a>, though the path to achieving those results is different.</p>
 <p>When a dev-user chooses to apply an SC Snippet to a DOM element such as a heading, then they will need to make sure that the added <code>&lt;canvas&gt;</code> does not interfere with the accessibility of the header.</p>
 <p>Test demo <a href="../../demo/snippets-006.html">Snippets-006</a> investigates this issue, including the need to accommodate end-user preferences (eg: <code>prefers-dark-mode</code>, <code>prefers-contrast</code>), and to include mechanisms to afford end-users control of animated effects.</p>
 <h3 id="users-can-use-different-input-modalities-beyond-keyboard">Users can use different input modalities beyond keyboard</h3>
@@ -631,43 +631,43 @@
 </ul>
 <p>Meeting this requirement makes the content easier to use for many people with a wide range of abilities using a wide range of devices. This includes content used on mobile phones, tablet computers, and self-service terminals such as ticketing machines.</p>
 <p>Note that most of the requirements below need to be managed at the design stage of website development.</p>
-<p><strong>2.5.1 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/pointer-gestures.html">Pointer Gestures</a></strong></p>
+<p><strong>2.5.1 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/pointer-gestures.html">Pointer Gestures</a></strong></p>
 <ul>
 <li>This should be handled at the level of the web page.</li>
 <li>Canvas displays and interactions should be designed to take into account the limitiations of various input devices.</li>
 </ul>
-<p><strong>2.5.2 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/pointer-cancellation.html">Pointer Cancellation</a></strong></p>
+<p><strong>2.5.2 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/pointer-cancellation.html">Pointer Cancellation</a></strong></p>
 <ul>
 <li>This should be handled at the level of the web page.</li>
 </ul>
-<p><strong>2.5.3 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html">Label in Name</a></strong></p>
+<p><strong>2.5.3 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html">Label in Name</a></strong></p>
 <ul>
-<li>Developers can create - with some effort - <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
+<li>Developers can create – with some effort – <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
 <li>The HTML specification allows <code>&lt;a&gt;</code> and <code>&lt;button&gt;</code> elements to be placed between the <code>&lt;canvas&gt;</code> element's opening and closing tags. These elements should be given a programmatic name.</li>
 <li>Designers should then make best efforts to display the label as graphical text (which is not reflected back into the web page DOM) to meet the requirements of this criterion, should it apply.</li>
 <li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
 </ul>
-<p><strong>2.5.4 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/motion-actuation.html">Motion Actuation</a></strong></p>
+<p><strong>2.5.4 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/motion-actuation.html">Motion Actuation</a></strong></p>
 <ul>
 <li>This is a web page design issue. <code>&lt;canvas&gt;</code> elements will be affected alongside all other components in the web page.</li>
 </ul>
-<p><strong>2.5.5 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html">Target Size (Enhanced)</a></strong></p>
+<p><strong>2.5.5 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html">Target Size (Enhanced)</a></strong></p>
 <ul>
-<li>Developers can create - with some effort - <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
+<li>Developers can create – with some effort – <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
 <li>Such <code>&lt;canvas&gt;</code> elements or graphical regions within the canvas display should make best efforts to meet these minimum target dimensions.</li>
 </ul>
-<p><strong>2.5.6 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/concurrent-input-mechanisms.html">Concurrent Input Mechanisms</a></strong></p>
+<p><strong>2.5.6 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/concurrent-input-mechanisms.html">Concurrent Input Mechanisms</a></strong></p>
 <ul>
 <li>Interactive <code>&lt;canvas&gt;</code> elements are not exempt from this requirement.</li>
 </ul>
-<p><strong>2.5.7 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html">Dragging Movements</a></strong></p>
+<p><strong>2.5.7 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html">Dragging Movements</a></strong></p>
 <ul>
-<li>Developers can create - with some effort - interactive <code>&lt;canvas&gt;</code> elements which include draggable regions within their display which act as action buttons or links.</li>
+<li>Developers can create – with some effort – interactive <code>&lt;canvas&gt;</code> elements which include draggable regions within their display which act as action buttons or links.</li>
 <li>For such <code>&lt;canvas&gt;</code> elements, developers should make best effort to create user interaction methods that do not rely solely on mouse or touch manipulations.</li>
 </ul>
-<p><strong>2.5.8 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html">Target Size (Minimum)</a></strong></p>
+<p><strong>2.5.8 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html">Target Size (Minimum)</a></strong></p>
 <ul>
-<li>Developers can create - with some effort - <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
+<li>Developers can create – with some effort – <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links.</li>
 <li>Such <code>&lt;canvas&gt;</code> elements or graphical regions within the canvas display should make best efforts to meet these minimum target dimensions.</li>
 </ul>
 <h3 id="text-is-readable-and-understandable">Text is readable and understandable</h3>
@@ -679,33 +679,33 @@
 <li>Using the clearest and simplest language possible, or providing simplified versions</li>
 </ul>
 <p>Meeting this requirement helps software, including assistive technology, to process text content correctly. For instance, this requirement helps software to read the content aloud, to generate page summaries, and to provide definitions for unusual words such as technical jargon. It also helps people who have difficulty understanding more complex sentences, phrases, and vocabulary. In particular, it helps people with different types of cognitive disabilities.</p>
-<p><strong>3.1.1 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/language-of-page.html">Language of Page</a></strong></p>
+<p><strong>3.1.1 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/language-of-page.html">Language of Page</a></strong></p>
 <ul>
 <li>This is a web page design and development issue. <code>&lt;canvas&gt;</code> elements, which can include graphical text in their displays,  will be affected alongside all other components in the web page.</li>
 </ul>
-<p><strong>3.1.2 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/language-of-parts.html">Language of Parts</a></strong></p>
+<p><strong>3.1.2 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/language-of-parts.html">Language of Parts</a></strong></p>
 <ul>
 <li>This is a web page design and development issue. <code>&lt;canvas&gt;</code> elements, which can include graphical text in their displays,  will be affected alongside all other components in the web page.</li>
 </ul>
-<p><strong>3.1.3 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/unusual-words.html">Unusual Words</a></strong></p>
+<p><strong>3.1.3 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/unusual-words.html">Unusual Words</a></strong></p>
 <ul>
 <li>This is a web page design and development issue. <code>&lt;canvas&gt;</code> elements, which can include graphical text in their displays,  will be affected alongside all other components in the web page.</li>
 </ul>
-<p><strong>3.1.4 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/abbreviations.html">Abbreviations</a></strong></p>
+<p><strong>3.1.4 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/abbreviations.html">Abbreviations</a></strong></p>
 <ul>
 <li>This is a web page design and development issue. <code>&lt;canvas&gt;</code> elements, which can include graphical text in their displays,  will be affected alongside all other components in the web page.</li>
 </ul>
-<p><strong>3.1.5 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/reading-level.html">Reading Level</a></strong></p>
+<p><strong>3.1.5 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/reading-level.html">Reading Level</a></strong></p>
 <ul>
 <li>This is a web page design and development issue. <code>&lt;canvas&gt;</code> elements, which can include graphical text in their displays,  will be affected alongside all other components in the web page.</li>
 </ul>
-<p><strong>3.1.6 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/pronunciation.html">Pronunciation</a></strong></p>
+<p><strong>3.1.6 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/pronunciation.html">Pronunciation</a></strong></p>
 <ul>
 <li>This is a web page design and development issue. <code>&lt;canvas&gt;</code> elements, which can include graphical text in their displays,  will be affected alongside all other components in the web page.</li>
 </ul>
 <h4 id="sc-text-management-functionality">SC text management functionality</h4>
-<p>SC manages graphical text through the Label and EnhancedLabel entitys. In both cases the entitys, by default, replicate their text into dedicated <code>&lt;div&gt;</code> elements which are part of the <code>&lt;canvas&gt;</code> element's <em>fallback content</em> - thus making the text available to accessibility technologies like screen readers. These elements will announce text changes to the end-user <strong>politely</strong>.</p>
-<p>However, not all of the text in a canvas display may be relevant to an end-user's understanding of the wider web page. For instance in a chart, it is often enough to inform the end-user of the start and end values of each axis without the need to tell them the value of each tick displayed in the chart - information which could distract them from the more important information which the chart demonstrates visually. To this end, SC allows dev-users to suppress an entity's text replication into the DOM on a case-by-case basis, controlled by the <code>entity.textIsAccessible</code> boolean attribute.</p>
+<p>SC manages graphical text through the Label and EnhancedLabel entitys. In both cases the entitys, by default, replicate their text into dedicated <code>&lt;div&gt;</code> elements which are part of the <code>&lt;canvas&gt;</code> element's <em>fallback content</em> – thus making the text available to accessibility technologies like screen readers. These elements will announce text changes to the end-user <strong>politely</strong>.</p>
+<p>However, not all of the text in a canvas display may be relevant to an end-user's understanding of the wider web page. For instance in a chart, it is often enough to inform the end-user of the start and end values of each axis without the need to tell them the value of each tick displayed in the chart – information which could distract them from the more important information which the chart demonstrates visually. To this end, SC allows dev-users to suppress an entity's text replication into the DOM on a case-by-case basis, controlled by the <code>entity.textIsAccessible</code> boolean attribute.</p>
 <p>Furthermore, it is not enough to replicate graphical text into the DOM. That replicated text needs to make coherent sense to the end-user, which means:</p>
 <ul>
 <li>The text may need to be manipulated to turn it into a meaningful phrase; and</li>
@@ -722,28 +722,28 @@
 </ul>
 <p>Meeting this requirement helps people to quickly learn the functionality and navigation mechanisms provided on a website, and to operate them according to their specific needs and preferences. For instance, some people assign personalized shortcut keys to functions they frequently use to enhance keyboard navigation. Others memorize the steps to reach certain pages or to complete processes on a website. Both rely on predictable and consistent functionality.</p>
 <p>Note that most of the requirements below need to be managed at the design stage of website development.</p>
-<p><strong>3.2.1 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/on-focus.html">On Focus</a></strong></p>
+<p><strong>3.2.1 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/on-focus.html">On Focus</a></strong></p>
 <ul>
-<li>Developers can create - with some effort - <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links, that can be focussed.</li>
+<li>Developers can create – with some effort – <code>&lt;canvas&gt;</code> elements that act as action buttons or links, or which include regions within their display which act as action buttons or links, that can be focussed.</li>
 <li>Such interactive <code>&lt;canvas&gt;</code> elements should make best effort to comply with this requirement.</li>
 </ul>
-<p><strong>3.2.2 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/on-input.html">On Input</a></strong></p>
+<p><strong>3.2.2 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/on-input.html">On Input</a></strong></p>
 <ul>
 <li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
 </ul>
-<p><strong>3.2.3 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/consistent-navigation.html">Consistent Navigation</a></strong></p>
+<p><strong>3.2.3 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/consistent-navigation.html">Consistent Navigation</a></strong></p>
 <ul>
 <li>This is a web page design issue.</li>
 </ul>
-<p><strong>3.2.4 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/consistent-identification.html">Consistent Identification</a></strong></p>
+<p><strong>3.2.4 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/consistent-identification.html">Consistent Identification</a></strong></p>
 <ul>
 <li>This is a web page design issue.</li>
 </ul>
-<p><strong>3.2.5 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/change-on-request.html">Change on Request</a></strong></p>
+<p><strong>3.2.5 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/change-on-request.html">Change on Request</a></strong></p>
 <ul>
 <li>This is a web page design issue.</li>
 </ul>
-<p><strong>3.2.6 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/consistent-help.html">Consistent Help</a></strong></p>
+<p><strong>3.2.6 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/consistent-help.html">Consistent Help</a></strong></p>
 <ul>
 <li>This is a web page design issue.</li>
 </ul>
@@ -756,46 +756,46 @@
 </ul>
 <p>Meeting this requirement helps people who do not see or hear the content, and may not recognize implicit relationships, sequences, and other cues. It also helps people who do not understand the functionality, are disoriented or confused, forget, or make mistakes using forms and interaction for any other reason.</p>
 <p>Note that most of the requirements below need to be managed at the design stage of website development.</p>
-<p><strong>3.3.1 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html">Error Identification</a></strong></p>
+<p><strong>3.3.1 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html">Error Identification</a></strong></p>
 <ul>
 <li>This is a web page design issue.</li>
 <li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
 </ul>
-<p><strong>3.3.2 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html">Labels or Instructions</a></strong></p>
+<p><strong>3.3.2 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html">Labels or Instructions</a></strong></p>
 <ul>
 <li>This is a web page design issue.</li>
 <li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
 </ul>
-<p><strong>3.3.3 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-suggestion.html">Error Suggestion</a></strong></p>
+<p><strong>3.3.3 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-suggestion.html">Error Suggestion</a></strong></p>
 <ul>
 <li>This is a web page design issue.</li>
 <li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
 </ul>
-<p><strong>3.3.4 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-prevention-legal-financial-data.html">Error Prevention (Legal, Financial, Data)</a></strong></p>
+<p><strong>3.3.4 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-prevention-legal-financial-data.html">Error Prevention (Legal, Financial, Data)</a></strong></p>
 <ul>
 <li>This is a web page design issue.</li>
 <li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
 </ul>
-<p><strong>3.3.5 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/help.html">Help</a></strong></p>
+<p><strong>3.3.5 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/help.html">Help</a></strong></p>
 <ul>
 <li>This is a web page design issue.</li>
 </ul>
-<p><strong>3.3.6 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-prevention-all.html">Error Prevention (All)</a></strong></p>
-<ul>
-<li>This is a web page design issue.</li>
-<li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
-</ul>
-<p><strong>3.3.7 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/redundant-entry.html">Redundant Entry</a></strong></p>
+<p><strong>3.3.6 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-prevention-all.html">Error Prevention (All)</a></strong></p>
 <ul>
 <li>This is a web page design issue.</li>
 <li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
 </ul>
-<p><strong>3.3.8 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-minimum.html">Accessible Authentication (Minimum)</a></strong></p>
+<p><strong>3.3.7 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/redundant-entry.html">Redundant Entry</a></strong></p>
 <ul>
 <li>This is a web page design issue.</li>
 <li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
 </ul>
-<p><strong>3.3.9 (AAA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-enhanced.html">Accessible Authentication (Enhanced)</a></strong></p>
+<p><strong>3.3.8 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-minimum.html">Accessible Authentication (Minimum)</a></strong></p>
+<ul>
+<li>This is a web page design issue.</li>
+<li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
+</ul>
+<p><strong>3.3.9 (AAA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-enhanced.html">Accessible Authentication (Enhanced)</a></strong></p>
 <ul>
 <li>This is a web page design issue.</li>
 <li><code>&lt;canvas&gt;</code> elements should NEVER be used as a replacement for form elements!</li>
@@ -812,11 +812,11 @@
 <ul>
 <li>No longer applicable, thus no impact on <code>&lt;canvas&gt;</code> elements.</li>
 </ul>
-<p><strong>4.1.2 (A) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html">Name, Role, Value</a></strong></p>
+<p><strong>4.1.2 (A) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html">Name, Role, Value</a></strong></p>
 <ul>
 <li>Any <code>&lt;canvas&gt;</code> element adapted to perform a purpose other than displaying a static, non-interactive scene in the web page needs to comply with this requirement.</li>
 </ul>
-<p><strong>4.1.3 (AA) - <a href="https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html">Status Messages</a></strong></p>
+<p><strong>4.1.3 (AA) – <a href="https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html">Status Messages</a></strong></p>
 <ul>
 <li>Any <code>&lt;canvas&gt;</code> element adapted to perform a purpose other than displaying a static, non-interactive scene in the web page needs to comply with this requirement. </li>
 <li>Updates to information that the <code>&lt;canvas&gt;</code> element makes available to the web page about changes in its display should be done in a way to make sense to the user (within the wider context of the page content) while at the same time not overwhelming the user with updated content.</li>

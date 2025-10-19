@@ -101,111 +101,11 @@ const setLastUsedReducePalette = (val) => lastUsedReducePalette = val;
 export const getLastUsedReducePalette = () => lastUsedReducePalette;
 
 
-// A small generally-available LUT for oklab gray
-const LUMINANCE_OKLAB_GRAY_LUT = 'alpha-to-luminance-oklab-gray-lut-256';
-const getOklabGrayLut = () => {
-
-    let lut = getWorkstoreItem(LUMINANCE_OKLAB_GRAY_LUT);
-
-    if (lut != null) return lut;
-
-    else {
-
-        lut = new Uint32Array(256);
-
-        const libs = colorEngine.getRgbOkCache();
-
-        let a, L, r, g, b;
-
-        for (a = 0; a < 256; a++) {
-
-            L = a / 256;
-            if (L > 1) L = 1;
-            else if (L < 0) L = 0;
-
-            [r, g, b] = colorEngine.getRgbValsForOklab(L, 0, 0, libs);
-
-            lut[a] = (255 << 24) | (b << 16) | (g << 8) | r;
-        }
-        setWorkstoreItem(LUMINANCE_OKLAB_GRAY_LUT, lut);
-
-        return lut;
-    }
-};
-
-// sRGB -> linear LUT (256)
-const SRGB_TO_LINEAR_LUT = 'srgb-linear-lut-256';
-const getLinearSrgbLut = () => {
-
-    let lut = getWorkstoreItem(SRGB_TO_LINEAR_LUT);
-
-    if (lut) return lut;
-
-    lut = new Float32Array(256);
-
-    let i, cs;
-
-    for (i = 0; i < 256; i++) {
-
-        cs = i / 255;
-        lut[i] = (cs <= 0.04045) ? (cs / 12.92) : _pow((cs + 0.055) / 1.055, 2.4);
-    }
-    setWorkstoreItem(SRGB_TO_LINEAR_LUT, lut);
-
-    return lut;
-};
-
-// Precomputed per-channel contributions to l,m,s (OKLab forward matrices)
-// + l = Lr[r] + Lg[g] + Lb[b]; etc (Nine 256-entry tables; ~9 KB total)
-const OKLAB_L_FROM_SRGB_TABLES = 'oklab-L-from-srgb-9tables';
-const getOklabLTables = () => {
-
-    let lut = getWorkstoreItem(OKLAB_L_FROM_SRGB_TABLES);
-    if (lut) return lut;
-
-    const s2l = getLinearSrgbLut();
-
-    const Lr = new Float32Array(256),
-        Lg = new Float32Array(256),
-        Lb = new Float32Array(256),
-        Mr = new Float32Array(256),
-        Mg = new Float32Array(256),
-        Mb = new Float32Array(256),
-        Sr = new Float32Array(256),
-        Sg = new Float32Array(256),
-        Sb = new Float32Array(256);
-
-    for (let i = 0, v; i < 256; i++) {
-
-        v = s2l[i];
-
-        Lr[i] = 0.4122214708 * v;
-        Lg[i] = 0.5363325363 * v;
-        Lb[i] = 0.0514459929 * v;
-
-        Mr[i] = 0.2119034982 * v;
-        Mg[i] = 0.6806995451 * v;
-        Mb[i] = 0.1073969566 * v;
-
-        Sr[i] = 0.0883024619 * v;
-        Sg[i] = 0.2817188376 * v;
-        Sb[i] = 0.6299787005 * v;
-    }
-
-    lut = { Lr, Lg, Lb, Mr, Mg, Mb, Sr, Sg, Sb };
-
-    setWorkstoreItem(OKLAB_L_FROM_SRGB_TABLES, lut);
-
-    return lut;
-};
+// __cache__ - an Object consisting of `key:Object` pairs where the key is the named input of a `process-image` action or the output of any action object. This object is cleared and re-initialized each time the `engine.action` function is invoked
+let cache = null;
 
 // #### FilterEngine constructor
 const FilterEngine = function () {
-
-    // ### Transactional variables
-
-    // __cache__ - an Object consisting of `key:Object` pairs where the key is the named input of a `process-image` action or the output of any action object. This object is cleared and re-initialized each time the `engine.action` function is invoked
-    this.cache = null;
 
     // __actions__ - the Array of action objects that the engine needs to process.
     this.actions = [];
@@ -249,9 +149,9 @@ P.action = function (packet) {
             if (a) a.call(this, actData);
         }
 
-        if (identifier) setWorkstoreItem(identifier, this.cache.work);
+        if (identifier) setWorkstoreItem(identifier, cache.work);
 
-        return this.cache.work;
+        return cache.work;
     }
     return image;
 };
@@ -262,9 +162,7 @@ P.action = function (packet) {
 // `unknit` - called at the start of each new message action chain. Creates and populates the __source__ and __work__ objects from the image data supplied in the message
 P.unknit = function (image) {
 
-    this.cache = {};
-
-    const cache = this.cache;
+    cache = {};
 
     const { width, height, data } = image;
 
@@ -272,25 +170,10 @@ P.unknit = function (image) {
     cache.work = new ImageData(new Uint8ClampedArray(data), width, height);
 };
 
-// `getAlphaData` - extract alpha channel data from (usually the source) ImageData object and create an alpha coverage mask (alpha channel: 0, or 255 if value is > 0), at the same time setting each pixel's color channels to black
-P.getAlphaData = function (image) {
-
-    const { width, height, data:iData } = image,
-        aImg = new ImageData(width, height),
-        aData = aImg.data;
-
-    for (let i = 3, len = iData.length; i < len; i += 4) {
-
-        aData[i] = (iData[i] > 0) ? 255 : 0;
-    }
-
-    return aImg;
-};
-
 
 // ### Functions invoked by a range of different action functions
 //
-P.getRandomNumbers = function (items = {}) {
+const getRandomNumbers = function (items = {}) {
 
     const {
         seed = DEFAULT_SEED,
@@ -344,9 +227,9 @@ P.getRandomNumbers = function (items = {}) {
 
 // Build compact tile rectangles (no per-pixel arrays).
 // + Returns an Int32Array laid out as [x0, y0, x1, y1, x0, y0, x1, y1, ...]
-P.buildTileRects = function (tileWidth, tileHeight, offsetX, offsetY, image) {
+const buildTileRects = function (tileWidth, tileHeight, offsetX, offsetY, image) {
 
-    if (!image) image = this.cache.source;
+    if (!image) image = cache.source;
 
     const iWidth  = image.width | 0,
         iHeight = image.height | 0;
@@ -408,553 +291,30 @@ P.buildTileRects = function (tileWidth, tileHeight, offsetX, offsetY, image) {
     return out;
 };
 
-// Build a compact label map (per-pixel tile id) instead of arrays of pixel indices.
-P.buildGeneralTileLabels = function (requirements, image) {
-
-    const { cache } = this;
-    if (!image) image = cache.source;
-
-    const iWidth = image.width | 0,
-        iHeight = image.height | 0,
-        nPix = (iWidth * iHeight) | 0;
-
-    if (!iWidth || !iHeight) return { labels: new Int32Array(0), nTiles: 0, mode: 'rect' };
-
-    const {
-        mode = RECT,
-        originX = 0,
-        originY = 0,
-        angle = 0,
-        rectWidth = 10,
-        rectHeight = 10,
-        hexRadius = 5,
-        randomCount = 20,
-        seed = DEFAULT_SEED,
-        pointsData = [],
-    } = requirements || {};
-
-    let ox = (_isFinite(originX) ? originX : 0) | 0,
-        oy = (_isFinite(originY) ? originY : 0) | 0;
-
-    // Cache key - a small stable key; for "points" we avoid dumping the full array into the key
-    let key = `tiles-v2-${mode}-${iWidth}-${iHeight}-${ox}-${oy}-${_round(angle*1000)}`;
-
-    let w, h, r, c, sd, arr, len;
-
-    if (mode === RECT) {
-
-        w = _max(1, _isFinite(rectWidth) ? rectWidth  | 0 : 1);
-        h = _max(1, _isFinite(rectHeight) ? rectHeight | 0 : 1);
-        key += `-rect-${w}-${h}`;
-    }
-    else if (mode === HEX) {
-
-        r = _max(1, _isFinite(hexRadius) ? hexRadius | 0 : 1);
-        key += `-hex-${r}`;
-    }
-    else if (mode === RANDOM) {
-
-        c = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
-        sd = seed || DEFAULT_SEED;
-        key += `-rnd-${c}-${sd}`;
-    }
-    else if (mode === POINTS) {
-
-        arr = _isArray(pointsData) ? pointsData : [];
-        len = (arr && arr.length) | 0;
-
-        // rolling checksum to detect changes cheaply
-        let hash = 2166136261 | 0;
-
-        for (let i = 0; i < len; i += _max(1, (len / 64) | 0)) {
-
-            hash ^= (arr[i] | 0);
-            hash = (hash * 16777619) | 0;
-        }
-        key += `-pts-${len}-${hash >>> 0}`;
-    }
-
-    const cached = getWorkstoreItem(key);
-    if (cached) return cached;
-
-    // Utility: inverse rotation (for lattice modes)
-    const toRad = angle * Math.PI / 180,
-        cosNeg = _cos(-toRad), sinNeg = _sin(-toRad);
-
-    // Output labels
-    const labels = new Int32Array(nPix);
-
-    let nTiles = 0;
-
-    if (mode === RECT) {
-
-        if (w < 1) w = 1;
-        if (h < 1) h = 1;
-
-        // Project four corners to grid space to get stable index ranges
-        const corners = [[0,0],[iWidth-1,0],[0,iHeight-1],[iWidth-1,iHeight-1]];
-
-        let iMin =  1e9,
-            iMax = -1e9,
-            jMin =  1e9,
-            jMax = -1e9,
-            dx, dy, xp, yp, iIdx, jIdx, ii, jj, p, y, x;
-
-        for (let c = 0; c < 4; c++) {
-
-            dx = corners[c][0] - ox;
-            dy = corners[c][1] - oy;
-            xp =  cosNeg * dx - sinNeg * dy;
-            yp =  sinNeg * dx + cosNeg * dy;
-            iIdx = _round(xp / w - 0.5);
-            jIdx = _round(yp / h - 0.5);
-
-            if (iIdx < iMin) iMin = iIdx; if (iIdx > iMax) iMax = iIdx;
-            if (jIdx < jMin) jMin = jIdx; if (jIdx > jMax) jMax = jIdx;
-        }
-
-        const nI = (iMax - iMin + 1) | 0,
-            nJ = (jMax - jMin + 1) | 0;
-
-        nTiles = (nI * nJ) | 0;
-
-        p = 0;
-
-        for (y = 0; y < iHeight; y++) {
-
-            dy = y - oy;
-
-            for (x = 0; x < iWidth; x++, p++) {
-
-                dx = x - ox;
-                xp = cosNeg * dx - sinNeg * dy;
-                yp = sinNeg * dx + cosNeg * dy;
-                iIdx = _round(xp / w - 0.5);
-                jIdx = _round(yp / h - 0.5);
-                ii = (iIdx - iMin) | 0;
-                jj = (jIdx - jMin) | 0;
-                labels[p] = (jj * nI + ii) | 0;
-            }
-        }
-
-        const res = { labels, nTiles, mode: RECT };
-        setWorkstoreItem(key, res);
-
-        return res;
-    }
-
-    if (mode === HEX) {
-
-        let s = _isFinite(hexRadius) ? hexRadius | 0 : 1;
-        if (s < 1) s = 1;
-
-        const invA = _sqrt(3) / 3,
-            invB = 1 / 3,
-            invC = 2 / 3;
-
-        // Compute bounds by projecting corners into lattice space and rounding
-        const corners = [
-            [0, 0],
-            [iWidth-1, 0],
-            [0, iHeight-1],
-            [iWidth-1, iHeight-1]
-        ];
-
-        let qMin = 1e9,
-            qMax = -1e9,
-            rMin = 1e9,
-            rMax = -1e9;
-
-        const roundCubeReturn = [0, 0];
-        const roundCube = (x, y, z) => {
-
-            let rx = _round(x),
-                ry = _round(y),
-                rz = _round(z);
-
-            const dx = _abs(rx - x),
-                dy = _abs(ry - y),
-                dz = _abs(rz - z);
-
-            if (dx > dy && dx > dz) rx = -ry - rz;
-            else if (dy > dz) ry = -rx - rz;
-            else rz = -rx - ry;
-
-            roundCubeReturn[0] = rx;
-            roundCubeReturn[1] = ry;
-
-            return roundCubeReturn;
-        };
-
-        let dx, dy, xp, yp, qf, rf, xf, zf, yf, qi, ri, qq, rr, p, y, x;
-
-        for (let c = 0; c < 4; c++) {
-
-            dx = corners[c][0] - ox;
-            dy = corners[c][1] - oy;
-
-            xp =  cosNeg * dx - sinNeg * dy;
-            yp =  sinNeg * dx + cosNeg * dy;
-
-            qf = (invA * xp - invB * yp) / s;
-            rf = (invC * yp) / s;
-
-            xf = qf;
-            zf = rf;
-            yf = -xf - zf;
-
-            [qi, ri] = roundCube(xf, yf, zf);
-
-            if (qi < qMin) qMin = qi;
-            if (qi > qMax) qMax = qi;
-            if (ri < rMin) rMin = ri;
-            if (ri > rMax) rMax = ri;
-        }
-
-        // Add a small guard to ensure full coverage
-        qMin -= 1;
-        rMin -= 1;
-        qMax += 1;
-        rMax += 1;
-
-        const nQ = (qMax - qMin + 1) | 0,
-            nR = (rMax - rMin + 1) | 0;
-
-        nTiles = (nQ * nR) | 0;
-
-        p = 0;
-
-        for (y = 0; y < iHeight; y++) {
-
-            dy = y - oy;
-
-            for (x = 0; x < iWidth; x++, p++) {
-
-                dx = x - ox;
-                xp =  cosNeg * dx - sinNeg * dy;
-                yp =  sinNeg * dx + cosNeg * dy;
-
-                qf = (invA * xp - invB * yp) / s;
-                rf = (invC * yp) / s;
-
-                xf = qf;
-                zf = rf;
-                yf = -xf - zf;
-
-                [qi, ri] = roundCube(xf, yf, zf);
-
-                qq = (qi - qMin) | 0;
-                rr = (ri - rMin) | 0;
-
-                labels[p] = (rr * nQ + qq) | 0;
-            }
-        }
-
-        const res = { labels, nTiles, mode: HEX };
-        setWorkstoreItem(key, res);
-
-        return res;
-    }
-
-    const seeds = [];
-
-    if (mode === RANDOM) {
-
-        let count = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
-        if (count < 10) count = 10;
-
-        const rng = seededRandomNumberGenerator(seed);
-
-        let x, y;
-
-        for (let i = 0; i < count; i++) {
-
-            x = (rng.random() * iWidth)  | 0;
-            y = (rng.random() * iHeight) | 0;
-
-            seeds.push(x, y);
-        }
-    }
-    else if (mode === POINTS) {
-
-        const arr = _isArray(pointsData) ? pointsData : [];
-
-        let x, y;
-
-        for (let i = 0, iz = arr.length; i < iz; i += 2) {
-
-            x = arr[i] | 0;
-            y = arr[i + 1] | 0;
-
-            if (x >= 0 && x < iWidth && y >= 0 && y < iHeight) seeds.push(x, y);
-        }
-    }
-
-    const nSeeds = (seeds.length / 2) | 0;
-
-    if (!nSeeds) {
-
-        const res = { labels: new Int32Array(nPix), nTiles: 0, mode };
-        setWorkstoreItem(key, res);
-
-        return res;
-    }
-
-    // Spatial hash parameters: choose cell so ~1 seed per cell
-    let cell = _floor(_sqrt((iWidth * iHeight) / nSeeds));
-    if (cell < 4) cell = 4;
-
-    const gridCols = ((iWidth + cell - 1) / cell) | 0,
-        gridRows = ((iHeight + cell - 1) / cell) | 0;
-
-    const head = new Int32Array(gridCols * gridRows);
-    head.fill(-1);
-
-    const next = new Int32Array(nSeeds);
-    next.fill(-1);
-
-    // Insert seeds (clamp to grid)
-    let sx, sy, gx, gy, g;
-
-    for (let s = 0; s < nSeeds; s++) {
-
-        sx = seeds[(s << 1)];
-        sy = seeds[(s << 1) + 1];
-
-        let gx = (sx / cell) | 0;
-        if (gx < 0) gx = 0;
-        else if (gx >= gridCols) gx = gridCols - 1;
-
-        let gy = (sy / cell) | 0;
-        if (gy < 0) gy = 0;
-        else if (gy >= gridRows) gy = gridRows - 1;
-
-        g = gy * gridCols + gx;
-
-        next[s] = head[g];
-
-        head[g] = s;
-    }
-
-    // Nearest seed per pixel (search 3×3 neighborhood with clamp)
-    let p = 0;
-
-    let best, bestD, y, x, gy2, gx2, dx, dy, d2, s;
-
-    for (y = 0; y < iHeight; y++) {
-
-        for (x = 0; x < iWidth; x++, p++) {
-
-            gx = (x / cell) | 0;
-            if (gx < 0) gx = 0;
-            else if (gx >= gridCols) gx = gridCols - 1;
-
-            gy = (y / cell) | 0;
-            if (gy < 0) gy = 0;
-            else if (gy >= gridRows) gy = gridRows - 1;
-
-            best = -1;
-            bestD = Infinity;
-
-            for (oy = -1; oy <= 1; oy++) {
-
-                gy2 = gy + oy;
-                if (gy2 < 0 || gy2 >= gridRows) continue;
-
-                for (ox = -1; ox <= 1; ox++) {
-
-                    gx2 = gx + ox;
-                    if (gx2 < 0 || gx2 >= gridCols) continue;
-
-                    s = head[gy2 * gridCols + gx2];
-
-                    while (s !== -1) {
-
-                        sx = seeds[(s << 1)];
-                        sy = seeds[(s << 1) + 1];
-                        dx = x - sx;
-                        dy = y - sy;
-
-                        d2 = dx * dx + dy * dy;
-
-                        if (d2 < bestD) {
-
-                            bestD = d2;
-                            best = s;
-                        }
-
-                        s = next[s];
-                    }
-                }
-            }
-            labels[p] = best;
-        }
-    }
-
-    nTiles = nSeeds;
-
-    const res = { labels, nTiles, mode };
-    setWorkstoreItem(key, res);
-
-    return res;
-};
-
-// `getBlurPrefixBuffers` Prefix buffers for blur filter (inclusive prefix sums).
-P.getBlurPrefixBuffers = function (len, axisKey) {
-
-    const name = `blur-prefix-${axisKey}-${len}`;
-
-    let obj = getWorkstoreItem(name);
-    if (obj) return obj;
-
-    const n = (len + 1),
-        bytes = n * 4 * 4,
-        buf = new ArrayBuffer(bytes);
-
-    const r = new Uint32Array(buf, 0, n),
-        g = new Uint32Array(buf, n * 4, n),
-        b = new Uint32Array(buf, n * 8, n),
-        a = new Uint32Array(buf, n * 12, n);
-
-    obj = { r, g, b, a };
-
-    setWorkstoreItem(name, obj);
-
-    return obj;
-};
-
-// `buildHorizontalBlur` - creates an Array of Arrays detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Resulting object will be cached in the store
-P.buildHorizontalBlur = function (gridWidth, gridHeight, radius) {
-
-    if (!_isFinite(radius)) radius = 0;
-
-    const name = `blur-h-${gridWidth}-${gridHeight}-${radius}`,
-        itemInWorkstore = getWorkstoreItem(name);
-
-    if (itemInWorkstore) return itemInWorkstore;
-
-    const startX = new Uint16Array(gridWidth * gridHeight);
-    const endX = new Uint16Array(gridWidth * gridHeight);
-
-    let x, y, p, sx, ex;
-
-    for (y = 0; y < gridHeight; y++) {
-
-        for (x = 0; x < gridWidth; x++) {
-
-            p = (y * gridWidth) + x;
-            sx = x - radius;
-            ex = x + radius;
-
-            if (sx < 0) sx = 0;
-            if (ex >= gridWidth) ex = gridWidth - 1;
-
-            startX[p] = sx;
-            endX[p] = ex;
-        }
-    }
-
-    const horizontalRanges = { startX, endX, width: gridWidth, height: gridHeight, kind: 'range-h' };
-
-    setWorkstoreItem(name, horizontalRanges);
-    return horizontalRanges;
-};
-
-// `buildVerticalBlur` - creates an Array of Arrays detailing which pixels contribute to the vertical part of each pixel's blur calculation. Resulting object will be cached in the store
-P.buildVerticalBlur = function (gridWidth, gridHeight, radius) {
-
-    if (!_isFinite(radius)) radius = 0;
-
-    const name = `blur-v-${gridWidth}-${gridHeight}-${radius}`,
-        itemInWorkstore = getWorkstoreItem(name);
-
-    if (itemInWorkstore) return itemInWorkstore;
-
-    const startY = new Uint16Array(gridWidth * gridHeight);
-    const endY = new Uint16Array(gridWidth * gridHeight);
-
-    let x, y, p, sy, ey;
-
-    for (y = 0; y < gridHeight; y++) {
-
-        for (x = 0; x < gridWidth; x++) {
-
-            p = (y * gridWidth) + x;
-            sy = y - radius;
-            ey = y + radius;
-
-            if (sy < 0) sy = 0;
-            if (ey >= gridHeight) ey = gridHeight - 1;
-
-            startY[p] = sy;
-            endY[p] = ey;
-        }
-    }
-
-    const verticalRanges = { startY, endY, width: gridWidth, height: gridHeight, kind: 'range-v' };
-
-    setWorkstoreItem(name, verticalRanges);
-    return verticalRanges;
-};
-
-P.getMatrixOffsets = function (mWidth, mHeight, mX, mY, image) {
-
-    if (!image) image = this.cache.source;
-
-    const iWidth  = image.width | 0,
-        iHeight = image.height | 0;
-
-    mWidth = (_isFinite(mWidth) && mWidth > 0) ? mWidth | 0 : 1;
-    mHeight = (_isFinite(mHeight) && mHeight > 0) ? mHeight | 0 : 1;
-
-    mX = (_isFinite(mX) ? mX : 0) | 0;
-    if (mX < 0) mX = 0;
-    else if (mX >= mWidth) mX = mWidth  - 1;
-
-    mY = (_isFinite(mY) ? mY : 0) | 0;
-    if (mY < 0) mY = 0;
-    else if (mY >= mHeight) mY = mHeight - 1;
-
-    const name = `matrix-offsets-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`;
-
-    let res = getWorkstoreItem(name);
-    if (res) return res;
-
-    res = new Int32Array(mWidth * mHeight);
-
-    let p = 0,
-        rowOff, y, x, yz, xz;
-
-    for (y = -mY, yz = mHeight - mY; y < yz; y++) {
-
-        rowOff = (y * iWidth) << 2;
-
-        for (x = -mX, xz = mWidth - mX; x < xz; x++) {
-
-            res[p++] = rowOff + (x << 2);
-        }
-    }
-    setWorkstoreItem(name, res);
-    return res;
-};
-
-// `cacheOutput` - insert an action function's output into the filter engine's cache
-P.cacheOutput = function (name, obj) {
-
-    this.cache[name] = obj;
-};
-
 // `getInputAndOutputLines` - determine, and return, the appropriate results object for the lineIn, lineMix and lineOut values supplied to each action function when it gets invoked
-P.getInputAndOutputLines = function (requirements) {
+const getInputAndOutputLines = function (requirements) {
 
-    const { cache } = this;
+    const getAlphaData = function (image) {
+
+        const { width, height, data:iData } = image,
+            aImg = new ImageData(width, height),
+            aData = aImg.data;
+
+        for (let i = 3, len = iData.length; i < len; i += 4) {
+
+            aData[i] = (iData[i] > 0) ? 255 : 0;
+        }
+
+        return aImg;
+    };
+
     const sourceData = cache.source;
 
     let lineIn = cache.work,
         lineMix = false,
         alphaData = false;
 
-    if (requirements.lineIn === SOURCE_ALPHA || requirements.lineMix === SOURCE_ALPHA) alphaData = this.getAlphaData(sourceData);
+    if (requirements.lineIn === SOURCE_ALPHA || requirements.lineMix === SOURCE_ALPHA) alphaData = getAlphaData(sourceData);
 
     if (requirements.lineIn) {
 
@@ -985,7 +345,7 @@ P.getInputAndOutputLines = function (requirements) {
 };
 
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
-P.processResults = function (store, incoming, ratio) {
+const processResults = function (store, incoming, ratio) {
 
     const sData = store.data,
         iData = incoming.data;
@@ -1039,82 +399,7 @@ P.processResults = function (store, incoming, ratio) {
     }
 };
 
-// `getGradientData` - create an imageData object containing the 256 values from a gradient that we require for doing filters work
-P.getGradientData = function (gradient) {
-
-    const name = `gradient-data-${gradient.name}`;
-
-    const itemInWorkstore = getWorkstoreItem(name);
-
-    if (!itemInWorkstore || gradient.dirtyFilterIdentifier || gradient.animateByDelta) {
-
-        const mycell = requestCell();
-
-        const {engine, element} = mycell;
-
-        element.width = 256;
-        element.height = 1;
-
-        const G = engine.createLinearGradient(0, 0, 255, 0);
-
-        gradient.addStopsToGradient(G, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
-
-        engine.fillStyle = G;
-        engine.fillRect(0, 0, 256, 1);
-
-        const data = engine.getImageData(0, 0, 256, 1).data;
-
-        releaseCell(mycell);
-
-        return setAndReturnWorkstoreItem(name, data);
-    }
-
-    return itemInWorkstore || [];
-};
-
-// Build (once) and cache a 1-D cbrt LUT
-P.getCbrtLut = function (size = 4096, maxX = 1.0) {
-
-    const key = `oklab::cbrt::${size}::${maxX}`;
-    let lut = getWorkstoreItem(key);
-
-    if (!lut) {
-
-        lut = new Float32Array(size + 1);
-
-        const step = maxX / size;
-
-        let i, x;
-
-        for (i = 0; i <= size; i++) {
-
-            x = i * step;
-            lut[i] = Math.cbrt(x);
-        }
-        setWorkstoreItem(key, lut);
-    }
-    return { lut, size, maxX, scale: size / maxX };
-};
-
-// Fast cbrt via LUT + lerp
-P.cbrtLUT = function (x, lutPack) {
-
-    const v = x;
-
-    if (v <= 0) return 0;
-
-    if (v >= lutPack.maxX) return lutPack.lut[lutPack.size];
-
-    const f = v * lutPack.scale,
-        i = f | 0,
-        t = f - i,
-        a = lutPack.lut[i],
-        b = lutPack.lut[i + 1];
-
-    return a + t * (b - a);
-};
-
-P.transferDataUnchanged = function (oData, iData, len) {
+const transferDataUnchanged = function (oData, iData, len) {
 
     if (len === iData.length) oData.set(iData);
     else oData.set(iData.subarray(0, len));
@@ -1129,7 +414,7 @@ P.theBigActionsObject = {
 // __alpha-to-channels__ (32-bit view + byte masks)
     [ALPHA_TO_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -1201,14 +486,46 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __alpha-to-luminance__ - Sets the OKLAB luminance channel to the value of the alpha channel, then sets the alpha channel to opaque and the A and B channels to 0 (gray)
     [ALPHA_TO_LUMINANCE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        // A small LUT for oklab gray
+        const LUMINANCE_OKLAB_GRAY_LUT = 'alpha-to-luminance-oklab-gray-lut-256';
+        const getOklabGrayLut = () => {
+
+            let lut = getWorkstoreItem(LUMINANCE_OKLAB_GRAY_LUT);
+
+            if (lut != null) return lut;
+
+            else {
+
+                lut = new Uint32Array(256);
+
+                const libs = colorEngine.getRgbOkCache();
+
+                let a, L, r, g, b;
+
+                for (a = 0; a < 256; a++) {
+
+                    L = a / 256;
+                    if (L > 1) L = 1;
+                    else if (L < 0) L = 0;
+
+                    [r, g, b] = colorEngine.getRgbValsForOklab(L, 0, 0, libs);
+
+                    lut[a] = (255 << 24) | (b << 16) | (g << 8) | r;
+                }
+                setWorkstoreItem(LUMINANCE_OKLAB_GRAY_LUT, lut);
+
+                return lut;
+            }
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -1236,14 +553,14 @@ P.theBigActionsObject = {
             else out32[p] = lut[a];
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __area-alpha__ - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
     [AREA_ALPHA]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -1264,7 +581,7 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        this.transferDataUnchanged(oData, iData, len);
+        transferDataUnchanged(oData, iData, len);
 
         // Clamp/correct like the old builder did
         let tW = (_isFinite(tileWidth) ? tileWidth : 1) | 0,
@@ -1342,14 +659,14 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __average-channels__ - Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0.
     [AVERAGE_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -1417,8 +734,8 @@ P.theBigActionsObject = {
             out32[p] = ((a << 24) | (bOut << 16) | (gOut << 8) | (rOut << 0)) >>> 0;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations).
@@ -1427,7 +744,7 @@ P.theBigActionsObject = {
 // + Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     [BLEND]: function (requirements) {
 
-        const [input, output, mix] = this.getInputAndOutputLines(requirements);
+        const [input, output, mix] = getInputAndOutputLines(requirements);
 
         const iWidth  = input.width  | 0,
             iHeight = input.height | 0,
@@ -1447,8 +764,8 @@ P.theBigActionsObject = {
 
         if (!iWidth || !iHeight) {
 
-            if (lineOut) this.processResults(output, input, 1 - opacity);
-            else this.processResults(this.cache.work, output, opacity);
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
             return;
         }
 
@@ -1464,8 +781,8 @@ P.theBigActionsObject = {
         const hasOverlap = (x1 > x0) && (y1 > y0);
         if (!hasOverlap) {
 
-            if (lineOut) this.processResults(output, input, 1 - opacity);
-            else this.processResults(this.cache.work, output, opacity);
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
             return;
         }
 
@@ -1712,14 +1029,112 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __blur__ - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect.
     [BLUR]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        // `getBlurPrefixBuffers` Prefix buffers for blur filter (inclusive prefix sums).
+        const getBlurPrefixBuffers = function (len, axisKey) {
+
+            const name = `blur-prefix-${axisKey}-${len}`;
+
+            let obj = getWorkstoreItem(name);
+            if (obj) return obj;
+
+            const n = (len + 1),
+                bytes = n * 4 * 4,
+                buf = new ArrayBuffer(bytes);
+
+            const r = new Uint32Array(buf, 0, n),
+                g = new Uint32Array(buf, n * 4, n),
+                b = new Uint32Array(buf, n * 8, n),
+                a = new Uint32Array(buf, n * 12, n);
+
+            obj = { r, g, b, a };
+
+            setWorkstoreItem(name, obj);
+
+            return obj;
+        };
+
+        // `buildHorizontalBlur` - creates an Array of Arrays detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Resulting object will be cached in the store
+        const buildHorizontalBlur = function (gridWidth, gridHeight, radius) {
+
+            if (!_isFinite(radius)) radius = 0;
+
+            const name = `blur-h-${gridWidth}-${gridHeight}-${radius}`,
+                itemInWorkstore = getWorkstoreItem(name);
+
+            if (itemInWorkstore) return itemInWorkstore;
+
+            const startX = new Uint16Array(gridWidth * gridHeight);
+            const endX = new Uint16Array(gridWidth * gridHeight);
+
+            let x, y, p, sx, ex;
+
+            for (y = 0; y < gridHeight; y++) {
+
+                for (x = 0; x < gridWidth; x++) {
+
+                    p = (y * gridWidth) + x;
+                    sx = x - radius;
+                    ex = x + radius;
+
+                    if (sx < 0) sx = 0;
+                    if (ex >= gridWidth) ex = gridWidth - 1;
+
+                    startX[p] = sx;
+                    endX[p] = ex;
+                }
+            }
+
+            const horizontalRanges = { startX, endX, width: gridWidth, height: gridHeight, kind: 'range-h' };
+
+            setWorkstoreItem(name, horizontalRanges);
+            return horizontalRanges;
+        };
+
+        // `buildVerticalBlur` - creates an Array of Arrays detailing which pixels contribute to the vertical part of each pixel's blur calculation. Resulting object will be cached in the store
+        const buildVerticalBlur = function (gridWidth, gridHeight, radius) {
+
+            if (!_isFinite(radius)) radius = 0;
+
+            const name = `blur-v-${gridWidth}-${gridHeight}-${radius}`,
+                itemInWorkstore = getWorkstoreItem(name);
+
+            if (itemInWorkstore) return itemInWorkstore;
+
+            const startY = new Uint16Array(gridWidth * gridHeight);
+            const endY = new Uint16Array(gridWidth * gridHeight);
+
+            let x, y, p, sy, ey;
+
+            for (y = 0; y < gridHeight; y++) {
+
+                for (x = 0; x < gridWidth; x++) {
+
+                    p = (y * gridWidth) + x;
+                    sy = y - radius;
+                    ey = y + radius;
+
+                    if (sy < 0) sy = 0;
+                    if (ey >= gridHeight) ey = gridHeight - 1;
+
+                    startY[p] = sy;
+                    endY[p] = ey;
+                }
+            }
+
+            const verticalRanges = { startY, endY, width: gridWidth, height: gridHeight, kind: 'range-v' };
+
+            setWorkstoreItem(name, verticalRanges);
+            return verticalRanges;
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -1744,7 +1159,7 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        if ((!processVertical && !processHorizontal) || (!includeRed && !includeGreen && !includeBlue && !includeAlpha)) this.transferDataUnchanged(oData, iData, len);
+        if ((!processVertical && !processHorizontal) || (!includeRed && !includeGreen && !includeBlue && !includeAlpha)) transferDataUnchanged(oData, iData, len);
         else {
 
             const gridWidth = input.width,
@@ -1754,9 +1169,9 @@ P.theBigActionsObject = {
 
             if (processHorizontal || processVertical) {
 
-                if (processHorizontal) horizontalBlurGrid = this.buildHorizontalBlur(gridWidth, gridHeight, radiusHorizontal);
+                if (processHorizontal) horizontalBlurGrid = buildHorizontalBlur(gridWidth, gridHeight, radiusHorizontal);
 
-                if (processVertical) verticalBlurGrid = this.buildVerticalBlur(gridWidth, gridHeight, radiusVertical);
+                if (processVertical) verticalBlurGrid = buildVerticalBlur(gridWidth, gridHeight, radiusVertical);
             }
 
             oData.set(iData);
@@ -1775,7 +1190,7 @@ P.theBigActionsObject = {
                     if (canFastH) {
 
                         ({ startX, endX, width, height } = horizontalBlurGrid);
-                        ({ r: pr, g: pg, b: pb, a: pa } = this.getBlurPrefixBuffers(width, 'h'));
+                        ({ r: pr, g: pg, b: pb, a: pa } = getBlurPrefixBuffers(width, 'h'));
 
                         for (y = 0; y < height; y++) {
 
@@ -1916,7 +1331,7 @@ P.theBigActionsObject = {
                     if (canFastV) {
 
                         ({ startY, endY, width, height } = verticalBlurGrid);
-                        ({ r: pr, g: pg, b: pb, a: pa } = this.getBlurPrefixBuffers(height, 'v'));
+                        ({ r: pr, g: pg, b: pb, a: pa } = getBlurPrefixBuffers(height, 'v'));
 
                         for (x = 0; x < width; x++) {
 
@@ -2047,14 +1462,14 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __channels-to-alpha__ - Calculates an average value from each pixel's included channels and applies that value to the alpha channel.
     [CHANNELS_TO_ALPHA]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -2118,14 +1533,14 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __chroma__ - Using an array of 'range' arrays, determine whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. Each 'range' array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values.
     [CHROMA]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -2373,14 +1788,14 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __clamp-channels__ - Clamp each color channel to a range set by lowColor and highColor values
     [CLAMP_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -2477,14 +1892,14 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __colors-to-alpha__ - Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the "red", "green" and "blue" arguments. The sensitivity of the effect can be manipulated using the "transparentAt" and "opaqueAt" values, both of which lie in the range 0-1.
     [COLORS_TO_ALPHA]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -2584,14 +1999,14 @@ P.theBigActionsObject = {
             out32[p] = (out32[p] & 0x00FFFFFF) | (na << 24);
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __compose__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the "compose" argument; permitted values are: 'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', 'xor', or 'lighter'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     [COMPOSE]: function (requirements) {
 
-        const [input, output, mix] = this.getInputAndOutputLines(requirements);
+        const [input, output, mix] = getInputAndOutputLines(requirements);
 
         const iWidth  = input.width | 0,
             iHeight = input.height | 0,
@@ -2612,8 +2027,8 @@ P.theBigActionsObject = {
         // Early outs
         if (!iWidth || !iHeight) {
 
-            if (lineOut) this.processResults(output, input, 1 - opacity);
-            else this.processResults(this.cache.work, output, opacity);
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
             return;
         }
 
@@ -2630,8 +2045,8 @@ P.theBigActionsObject = {
 
                 // Just copy source over wholesale and finish
                 oData.set(iData);
-                if (lineOut) this.processResults(output, input, 1 - opacity);
-                else this.processResults(this.cache.work, output, opacity);
+                if (lineOut) processResults(output, input, 1 - opacity);
+                else processResults(cache.work, output, opacity);
                 return;
 
             case SOURCE_OVER:
@@ -2650,8 +2065,8 @@ P.theBigActionsObject = {
         // If no overlap, we're done (baseline already correct)
         if (!hasOverlap || compose === CLEAR) {
 
-            if (lineOut) this.processResults(output, input, 1 - opacity);
-            else this.processResults(this.cache.work, output, opacity);
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
             return;
         }
 
@@ -2792,8 +2207,8 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values.
@@ -2802,7 +2217,7 @@ P.theBigActionsObject = {
 // + Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags.
     [CORRODE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -2837,7 +2252,7 @@ P.theBigActionsObject = {
         if (!_isFinite(offY) || offY < 0) offY = (kH >> 1);
         offY = _floor(offY);
 
-        if (kW === 1 && kH === 1 && offX === 0 && offY === 0) this.transferDataUnchanged(oData, iData, len);
+        if (kW === 1 && kH === 1 && offX === 0 && offY === 0) transferDataUnchanged(oData, iData, len);
         else {
 
             const left = offX | 0,
@@ -3103,8 +2518,8 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __displace__ - Shift pixels around the image, based on the values supplied in a displacement image
@@ -3151,7 +2566,7 @@ P.theBigActionsObject = {
             return lPosResult;
         };
 
-        const [input, output, mix] = this.getInputAndOutputLines(requirements);
+        const [input, output, mix] = getInputAndOutputLines(requirements);
 
         const {width:iWidth, height:iHeight, data:iData} = input;
         const {data:oData} = output;
@@ -3212,13 +2627,13 @@ P.theBigActionsObject = {
                 else copyPixel(iPos, iPos, iData);
             }
         }
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
     [EMBOSS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
               oData = output.data,
@@ -3375,14 +2790,14 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __flood__ - Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments
     [FLOOD]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -3422,8 +2837,8 @@ P.theBigActionsObject = {
             else out32[p] = excludeAlpha ? (((a << 24) | baseRGB) >>> 0) : packedWithA;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __gaussian-blur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
@@ -3604,7 +3019,7 @@ P.theBigActionsObject = {
             }
         }
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -3679,8 +3094,8 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __glitch__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
@@ -3697,7 +3112,7 @@ P.theBigActionsObject = {
 // + **Color-space glitch** - wrong YCbCr matrix or 4:2:0 bleed/smear.
     [GLITCH]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -3727,7 +3142,7 @@ P.theBigActionsObject = {
         let step = _floor(requirements.step);
         if (step < 1) step = 1;
 
-        const rnd = this.getRandomNumbers({
+        const rnd = getRandomNumbers({
             seed,
             length: iHeight * 5,
         });
@@ -3818,14 +3233,14 @@ P.theBigActionsObject = {
             }
             else oData[a] = iData[ua];
         }
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __grayscale__ - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.
     [GRAYSCALE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -3855,14 +3270,14 @@ P.theBigActionsObject = {
             out32[p] = ((a << 24) | (gray << 16) | (gray << 8) | gray) >>> 0;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __invert-channels__ - For each pixel, subtracts its current channel values - when included - from 255.
     [INVERT_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -3891,8 +3306,8 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __lock-channels-to-levels__ - Produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value.
@@ -3974,7 +3389,7 @@ P.theBigActionsObject = {
             return lut;
         };
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -4021,14 +3436,122 @@ P.theBigActionsObject = {
             out32[p] = ((na << 24) | (nb << 16) | (ng << 8) | nr) >>> 0;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __luminance-to-alpha__ - sets the OKLAB alpha channel to the value of the luminance channel, then sets the luminance, A and B channels to 0 (black).
     [LUMINANCE_TO_ALPHA]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        // Precomputed per-channel contributions to l,m,s (OKLab forward matrices)
+        // + l = Lr[r] + Lg[g] + Lb[b]; etc (Nine 256-entry tables; ~9 KB total)
+        const SRGB_TO_LINEAR_LUT = 'srgb-linear-lut-256';
+        const OKLAB_L_FROM_SRGB_TABLES = 'oklab-L-from-srgb-9tables';
+        const getOklabLTables = () => {
+
+            // sRGB -> linear LUT (256)
+            const getLinearSrgbLut = () => {
+
+                let lut = getWorkstoreItem(SRGB_TO_LINEAR_LUT);
+
+                if (lut) return lut;
+
+                lut = new Float32Array(256);
+
+                let i, cs;
+
+                for (i = 0; i < 256; i++) {
+
+                    cs = i / 255;
+                    lut[i] = (cs <= 0.04045) ? (cs / 12.92) : _pow((cs + 0.055) / 1.055, 2.4);
+                }
+                setWorkstoreItem(SRGB_TO_LINEAR_LUT, lut);
+
+                return lut;
+            };
+
+            let lut = getWorkstoreItem(OKLAB_L_FROM_SRGB_TABLES);
+            if (lut) return lut;
+
+            const s2l = getLinearSrgbLut();
+
+            const Lr = new Float32Array(256),
+                Lg = new Float32Array(256),
+                Lb = new Float32Array(256),
+                Mr = new Float32Array(256),
+                Mg = new Float32Array(256),
+                Mb = new Float32Array(256),
+                Sr = new Float32Array(256),
+                Sg = new Float32Array(256),
+                Sb = new Float32Array(256);
+
+            for (let i = 0, v; i < 256; i++) {
+
+                v = s2l[i];
+
+                Lr[i] = 0.4122214708 * v;
+                Lg[i] = 0.5363325363 * v;
+                Lb[i] = 0.0514459929 * v;
+
+                Mr[i] = 0.2119034982 * v;
+                Mg[i] = 0.6806995451 * v;
+                Mb[i] = 0.1073969566 * v;
+
+                Sr[i] = 0.0883024619 * v;
+                Sg[i] = 0.2817188376 * v;
+                Sb[i] = 0.6299787005 * v;
+            }
+
+            lut = { Lr, Lg, Lb, Mr, Mg, Mb, Sr, Sg, Sb };
+
+            setWorkstoreItem(OKLAB_L_FROM_SRGB_TABLES, lut);
+
+            return lut;
+        };
+
+        // Build (once) and cache a 1-D cbrt LUT
+        const getCbrtLut = function (size = 4096, maxX = 1.0) {
+
+            const key = `oklab::cbrt::${size}::${maxX}`;
+            let lut = getWorkstoreItem(key);
+
+            if (!lut) {
+
+                lut = new Float32Array(size + 1);
+
+                const step = maxX / size;
+
+                let i, x;
+
+                for (i = 0; i <= size; i++) {
+
+                    x = i * step;
+                    lut[i] = Math.cbrt(x);
+                }
+                setWorkstoreItem(key, lut);
+            }
+            return { lut, size, maxX, scale: size / maxX };
+        };
+
+        // Fast cbrt via LUT + lerp
+        const cbrtLUT = function (x, lutPack) {
+
+            const v = x;
+
+            if (v <= 0) return 0;
+
+            if (v >= lutPack.maxX) return lutPack.lut[lutPack.size];
+
+            const f = v * lutPack.scale,
+                i = f | 0,
+                t = f - i,
+                a = lutPack.lut[i],
+                b = lutPack.lut[i + 1];
+
+            return a + t * (b - a);
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -4042,8 +3565,6 @@ P.theBigActionsObject = {
         } = requirements;
 
         const { Lr, Lg, Lb, Mr, Mg, Mb, Sr, Sg, Sb } = getOklabLTables();
-
-        const { getCbrtLut, cbrtLUT } = this;
 
         const lutPack = getCbrtLut(4096, 1.0);
 
@@ -4076,14 +3597,47 @@ P.theBigActionsObject = {
             out32[p] = (A << 24) >>> 0;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __map-to-gradient__ - maps the colors in the supplied (complex) gradient to a grayscaled input.
     [MAP_TO_GRADIENT]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        // `getGradientData` - create an imageData object containing the 256 values from a gradient that we require for doing filters work
+        const getGradientData = function (gradient) {
+
+            const name = `gradient-data-${gradient.name}`;
+
+            const itemInWorkstore = getWorkstoreItem(name);
+
+            if (!itemInWorkstore || gradient.dirtyFilterIdentifier || gradient.animateByDelta) {
+
+                const mycell = requestCell();
+
+                const {engine, element} = mycell;
+
+                element.width = 256;
+                element.height = 1;
+
+                const G = engine.createLinearGradient(0, 0, 255, 0);
+
+                gradient.addStopsToGradient(G, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
+
+                engine.fillStyle = G;
+                engine.fillRect(0, 0, 256, 1);
+
+                const data = engine.getImageData(0, 0, 256, 1).data;
+
+                releaseCell(mycell);
+
+                return setAndReturnWorkstoreItem(name, data);
+            }
+
+            return itemInWorkstore || [];
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -4101,7 +3655,7 @@ P.theBigActionsObject = {
         if (!gradient) out32.set(src32);
         else {
 
-            const gradBytes = this.getGradientData(gradient);
+            const gradBytes = getGradientData(gradient);
 
             if (!gradBytes || gradBytes.length < 1024) out32.set(src32);
             else {
@@ -4153,14 +3707,55 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __matrix__ - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights.
     [MATRIX]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements),
+        const getMatrixOffsets = function (mWidth, mHeight, mX, mY, image) {
+
+            if (!image) image = cache.source;
+
+            const iWidth  = image.width | 0,
+                iHeight = image.height | 0;
+
+            mWidth = (_isFinite(mWidth) && mWidth > 0) ? mWidth | 0 : 1;
+            mHeight = (_isFinite(mHeight) && mHeight > 0) ? mHeight | 0 : 1;
+
+            mX = (_isFinite(mX) ? mX : 0) | 0;
+            if (mX < 0) mX = 0;
+            else if (mX >= mWidth) mX = mWidth  - 1;
+
+            mY = (_isFinite(mY) ? mY : 0) | 0;
+            if (mY < 0) mY = 0;
+            else if (mY >= mHeight) mY = mHeight - 1;
+
+            const name = `matrix-offsets-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`;
+
+            let res = getWorkstoreItem(name);
+            if (res) return res;
+
+            res = new Int32Array(mWidth * mHeight);
+
+            let p = 0,
+                rowOff, y, x, yz, xz;
+
+            for (y = -mY, yz = mHeight - mY; y < yz; y++) {
+
+                rowOff = (y * iWidth) << 2;
+
+                for (x = -mX, xz = mWidth - mX; x < xz; x++) {
+
+                    res[p++] = rowOff + (x << 2);
+                }
+            }
+            setWorkstoreItem(name, res);
+            return res;
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements),
             iData = input.data,
             oData = output.data,
             len = iData.length;
@@ -4224,10 +3819,10 @@ P.theBigActionsObject = {
 
         const nzCount = nzIdx.length;
 
-        if (nzCount === 0) this.transferDataUnchanged(oData, iData, len);
+        if (nzCount === 0) transferDataUnchanged(oData, iData, len);
         else {
 
-            const offs = this.getMatrixOffsets(mW, mH, aX, aY, input);
+            const offs = getMatrixOffsets(mW, mH, aX, aY, input);
 
             const pixels = (len >> 2);
 
@@ -4306,14 +3901,14 @@ P.theBigActionsObject = {
 
         releaseArray(nzIdx, nzW);
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // modify-ok-channels__ - Adds a value to each of the OKLAB channels. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow).
     [MODIFY_OK_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -4368,14 +3963,14 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __modulate-channels__ - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at that pixel's grayscale values. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value.
     [MODULATE_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -4470,14 +4065,14 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __modulate-ok-channels__ - Multiplies each of the OKLAB channels by a given amount. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow).
     [MODULATE_OK_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -4534,14 +4129,14 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __negative__ - for each pixel: convert to OKLAB; negate A and B; invert L; convert back to RGB
     [NEGATIVE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -4586,14 +4181,14 @@ P.theBigActionsObject = {
             out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __newsprint__ - Attempts to simulate a black-white dither effect similar to newsprint
     [NEWSPRINT]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
               oData = output.data;
@@ -4610,7 +4205,7 @@ P.theBigActionsObject = {
             width  = input.width | 0,
             rowStride = width << 2;
 
-        const rects = this.buildTileRects(tDim, tDim, 0, 0, input);
+        const rects = buildTileRects(tDim, tDim, 0, 0, input);
 
         const gVal = colorEngine.getBestGray,
             patterns = newspaperPatterns;
@@ -4672,14 +4267,14 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __offset__ - Offset the input image in the output image.
     [OFFSET]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -4794,14 +4389,14 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __pixelate__ - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the "tileWidth", "tileHeight", "offsetX" and "offsetY" arguments.
     [PIXELATE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -4823,10 +4418,10 @@ P.theBigActionsObject = {
         const width  = input.width | 0,
             rowStride = width << 2;
 
-        if (!includeRed && !includeGreen && !includeBlue && !includeAlpha) this.transferDataUnchanged(oData, iData, len);
+        if (!includeRed && !includeGreen && !includeBlue && !includeAlpha) transferDataUnchanged(oData, iData, len);
         else {
 
-            const rects = this.buildTileRects(tileWidth, tileHeight, offsetX, offsetY, input);
+            const rects = buildTileRects(tileWidth, tileHeight, offsetX, offsetY, input);
 
             let t, x0, x1, y0, y1, w, h, count, sumR, sumG, sumB, sumA, idx, end, avgR, avgG, avgB, avgA, y, start, p;
 
@@ -4919,8 +4514,8 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __process-image__ - expects preprocessor to have stored an ImageData in the workstore under `identifier`.
@@ -4935,12 +4530,12 @@ P.theBigActionsObject = {
         const {
             width: hostW,
             height: hostH,
-        } = this.cache.source;
+        } = cache.source;
 
         if (item && item.width === hostW && item.height === hostH) {
 
             // Use as-is (no clone): downstream filters treat this as read-only input
-            this.cache[lineOut] = item;
+            cache[lineOut] = item;
         }
         else {
 
@@ -4968,14 +4563,14 @@ P.theBigActionsObject = {
                     dst.set(src.subarray(s0, s0 + rowBytes), d0);
                 }
             }
-            this.cache[lineOut] = out;
+            cache[lineOut] = out;
         }
     },
 
 // __random-noise__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
     [RANDOM_NOISE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -5002,7 +4597,7 @@ P.theBigActionsObject = {
 
         const totalPx = src32.length | 0;
 
-        const rnd = this.getRandomNumbers({
+        const rnd = getRandomNumbers({
             seed,
             length: Math.ceil(totalPx * 3),
             imgWidth: width,
@@ -5146,8 +4741,8 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __reducePalette__ - Reduce the number of colors in its palette. The `palette` attribute can be: a Number (for the commonest colors);  an Array of CSS color Strings to use as the palette; or  the String name of a pre-defined palette - default: 'black-white'
@@ -5156,7 +4751,7 @@ P.theBigActionsObject = {
         const getRGBIndex = (r, g, b) => (r * _256_SQUARE) + (g * _256) + b;
 
         // Filter generics
-        const [input, output] = this.getInputAndOutputLines(requirements),
+        const [input, output] = getInputAndOutputLines(requirements),
             iData = input.data,
             iWidth = input.width,
             oData = output.data,
@@ -5178,7 +4773,7 @@ P.theBigActionsObject = {
         const libs = colorEngine.getRgbOkCache();
 
         // Dither noise (one per pixel)
-        const rnd = this.getRandomNumbers({
+        const rnd = getRandomNumbers({
             seed,
             length: len / 4,
             imgWidth: iWidth,
@@ -5308,8 +4903,8 @@ P.theBigActionsObject = {
 
             setLastUsedReducePalette(palette);
 
-            if (lineOut) this.processResults(output, input, 1 - opacity);
-            else this.processResults(this.cache.work, output, opacity);
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
 
             return;
         }
@@ -5388,8 +4983,8 @@ P.theBigActionsObject = {
 
             setLastUsedReducePalette(palette);
 
-            if (lineOut) this.processResults(output, input, 1 - opacity);
-            else this.processResults(this.cache.work, output, opacity);
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
 
             return;
         }
@@ -5524,14 +5119,14 @@ P.theBigActionsObject = {
         releaseArray(...selectedPalette);
 
         // Boilerplate post-processing
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __rotate-hue__ - for each pixel, converts the pixel to OKLCH, rotates the hue value by the given amount and converts back to RGB
     [ROTATE_HUE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -5595,14 +5190,14 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __set-channel-to-level__ - Sets the value of each pixel's included channel to the value supplied in the "level" argument.
     [SET_CHANNEL_TO_LEVEL]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -5666,8 +5261,8 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __step-channels__ - Takes three divisor values - "red", "green", "blue". For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of '50' applied to a channel value of '120' will give a result of '100'. The output is a form of posterization.
@@ -5678,7 +5273,7 @@ P.theBigActionsObject = {
 // + `round` - uses `Math.round()` for the calculation
     [STEP_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -5774,8 +5369,8 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __swirl__ - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
@@ -5784,7 +5379,7 @@ P.theBigActionsObject = {
 
         const getValue = (val, dim) => (val && val.substring) ? _floor((parseFloat(val) / 100) * dim) : val;
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -5800,7 +5395,7 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        if (_isArray(swirls) && !swirls.length) this.transferDataUnchanged(oData, iData, len);
+        if (_isArray(swirls) && !swirls.length) transferDataUnchanged(oData, iData, len);
         else {
 
             tData.set(iData);
@@ -5933,8 +5528,8 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __threshold__ - performs a binary check on each pixel and, according to the result, assigns the pixel to a defined high or low color
@@ -5944,7 +5539,7 @@ P.theBigActionsObject = {
 // + Channels can be excluded from the filter action by setting the `includeRed` etc flags to false
     [THRESHOLD]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -6027,15 +5622,405 @@ P.theBigActionsObject = {
             out32[p] = ((ao << 24) | (bo << 16) | (go << 8) | ro) >>> 0;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __tiles__ - Cover the image with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a Delauney-like output
 // + Four `modes` are supported: 'rect', 'hex', 'random', 'points'
     [TILES]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        // Build a compact label map
+        const buildGeneralTileLabels = function (requirements, image) {
+
+            if (!image) image = cache.source;
+
+            const iWidth = image.width | 0,
+                iHeight = image.height | 0,
+                nPix = (iWidth * iHeight) | 0;
+
+            if (!iWidth || !iHeight) return { labels: new Int32Array(0), nTiles: 0, mode: 'rect' };
+
+            const {
+                mode = RECT,
+                originX = 0,
+                originY = 0,
+                angle = 0,
+                rectWidth = 10,
+                rectHeight = 10,
+                hexRadius = 5,
+                randomCount = 20,
+                seed = DEFAULT_SEED,
+                pointsData = [],
+            } = requirements || {};
+
+            let ox = (_isFinite(originX) ? originX : 0) | 0,
+                oy = (_isFinite(originY) ? originY : 0) | 0;
+
+            // Cache key - a small stable key; for "points" we avoid dumping the full array into the key
+            let key = `tiles-v2-${mode}-${iWidth}-${iHeight}-${ox}-${oy}-${_round(angle*1000)}`;
+
+            let w, h, r, c, sd, arr, len;
+
+            if (mode === RECT) {
+
+                w = _max(1, _isFinite(rectWidth) ? rectWidth  | 0 : 1);
+                h = _max(1, _isFinite(rectHeight) ? rectHeight | 0 : 1);
+                key += `-rect-${w}-${h}`;
+            }
+            else if (mode === HEX) {
+
+                r = _max(1, _isFinite(hexRadius) ? hexRadius | 0 : 1);
+                key += `-hex-${r}`;
+            }
+            else if (mode === RANDOM) {
+
+                c = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
+                sd = seed || DEFAULT_SEED;
+                key += `-rnd-${c}-${sd}`;
+            }
+            else if (mode === POINTS) {
+
+                arr = _isArray(pointsData) ? pointsData : [];
+                len = (arr && arr.length) | 0;
+
+                // rolling checksum to detect changes cheaply
+                let hash = 2166136261 | 0;
+
+                for (let i = 0; i < len; i += _max(1, (len / 64) | 0)) {
+
+                    hash ^= (arr[i] | 0);
+                    hash = (hash * 16777619) | 0;
+                }
+                key += `-pts-${len}-${hash >>> 0}`;
+            }
+
+            const cached = getWorkstoreItem(key);
+            if (cached) return cached;
+
+            // Utility: inverse rotation (for lattice modes)
+            const toRad = angle * Math.PI / 180,
+                cosNeg = _cos(-toRad), sinNeg = _sin(-toRad);
+
+            // Output labels
+            const labels = new Int32Array(nPix);
+
+            let nTiles = 0;
+
+            if (mode === RECT) {
+
+                if (w < 1) w = 1;
+                if (h < 1) h = 1;
+
+                // Project four corners to grid space to get stable index ranges
+                const corners = [[0,0],[iWidth-1,0],[0,iHeight-1],[iWidth-1,iHeight-1]];
+
+                let iMin =  1e9,
+                    iMax = -1e9,
+                    jMin =  1e9,
+                    jMax = -1e9,
+                    dx, dy, xp, yp, iIdx, jIdx, ii, jj, p, y, x;
+
+                for (let c = 0; c < 4; c++) {
+
+                    dx = corners[c][0] - ox;
+                    dy = corners[c][1] - oy;
+                    xp =  cosNeg * dx - sinNeg * dy;
+                    yp =  sinNeg * dx + cosNeg * dy;
+                    iIdx = _round(xp / w - 0.5);
+                    jIdx = _round(yp / h - 0.5);
+
+                    if (iIdx < iMin) iMin = iIdx; if (iIdx > iMax) iMax = iIdx;
+                    if (jIdx < jMin) jMin = jIdx; if (jIdx > jMax) jMax = jIdx;
+                }
+
+                const nI = (iMax - iMin + 1) | 0,
+                    nJ = (jMax - jMin + 1) | 0;
+
+                nTiles = (nI * nJ) | 0;
+
+                p = 0;
+
+                for (y = 0; y < iHeight; y++) {
+
+                    dy = y - oy;
+
+                    for (x = 0; x < iWidth; x++, p++) {
+
+                        dx = x - ox;
+                        xp = cosNeg * dx - sinNeg * dy;
+                        yp = sinNeg * dx + cosNeg * dy;
+                        iIdx = _round(xp / w - 0.5);
+                        jIdx = _round(yp / h - 0.5);
+                        ii = (iIdx - iMin) | 0;
+                        jj = (jIdx - jMin) | 0;
+                        labels[p] = (jj * nI + ii) | 0;
+                    }
+                }
+
+                const res = { labels, nTiles, mode: RECT };
+                setWorkstoreItem(key, res);
+
+                return res;
+            }
+
+            if (mode === HEX) {
+
+                let s = _isFinite(hexRadius) ? hexRadius | 0 : 1;
+                if (s < 1) s = 1;
+
+                const invA = _sqrt(3) / 3,
+                    invB = 1 / 3,
+                    invC = 2 / 3;
+
+                // Compute bounds by projecting corners into lattice space and rounding
+                const corners = [
+                    [0, 0],
+                    [iWidth-1, 0],
+                    [0, iHeight-1],
+                    [iWidth-1, iHeight-1]
+                ];
+
+                let qMin = 1e9,
+                    qMax = -1e9,
+                    rMin = 1e9,
+                    rMax = -1e9;
+
+                const roundCubeReturn = [0, 0];
+                const roundCube = (x, y, z) => {
+
+                    let rx = _round(x),
+                        ry = _round(y),
+                        rz = _round(z);
+
+                    const dx = _abs(rx - x),
+                        dy = _abs(ry - y),
+                        dz = _abs(rz - z);
+
+                    if (dx > dy && dx > dz) rx = -ry - rz;
+                    else if (dy > dz) ry = -rx - rz;
+                    else rz = -rx - ry;
+
+                    roundCubeReturn[0] = rx;
+                    roundCubeReturn[1] = ry;
+
+                    return roundCubeReturn;
+                };
+
+                let dx, dy, xp, yp, qf, rf, xf, zf, yf, qi, ri, qq, rr, p, y, x;
+
+                for (let c = 0; c < 4; c++) {
+
+                    dx = corners[c][0] - ox;
+                    dy = corners[c][1] - oy;
+
+                    xp =  cosNeg * dx - sinNeg * dy;
+                    yp =  sinNeg * dx + cosNeg * dy;
+
+                    qf = (invA * xp - invB * yp) / s;
+                    rf = (invC * yp) / s;
+
+                    xf = qf;
+                    zf = rf;
+                    yf = -xf - zf;
+
+                    [qi, ri] = roundCube(xf, yf, zf);
+
+                    if (qi < qMin) qMin = qi;
+                    if (qi > qMax) qMax = qi;
+                    if (ri < rMin) rMin = ri;
+                    if (ri > rMax) rMax = ri;
+                }
+
+                // Add a small guard to ensure full coverage
+                qMin -= 1;
+                rMin -= 1;
+                qMax += 1;
+                rMax += 1;
+
+                const nQ = (qMax - qMin + 1) | 0,
+                    nR = (rMax - rMin + 1) | 0;
+
+                nTiles = (nQ * nR) | 0;
+
+                p = 0;
+
+                for (y = 0; y < iHeight; y++) {
+
+                    dy = y - oy;
+
+                    for (x = 0; x < iWidth; x++, p++) {
+
+                        dx = x - ox;
+                        xp =  cosNeg * dx - sinNeg * dy;
+                        yp =  sinNeg * dx + cosNeg * dy;
+
+                        qf = (invA * xp - invB * yp) / s;
+                        rf = (invC * yp) / s;
+
+                        xf = qf;
+                        zf = rf;
+                        yf = -xf - zf;
+
+                        [qi, ri] = roundCube(xf, yf, zf);
+
+                        qq = (qi - qMin) | 0;
+                        rr = (ri - rMin) | 0;
+
+                        labels[p] = (rr * nQ + qq) | 0;
+                    }
+                }
+
+                const res = { labels, nTiles, mode: HEX };
+                setWorkstoreItem(key, res);
+
+                return res;
+            }
+
+            const seeds = [];
+
+            if (mode === RANDOM) {
+
+                let count = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
+                if (count < 10) count = 10;
+
+                const rng = seededRandomNumberGenerator(seed);
+
+                let x, y;
+
+                for (let i = 0; i < count; i++) {
+
+                    x = (rng.random() * iWidth)  | 0;
+                    y = (rng.random() * iHeight) | 0;
+
+                    seeds.push(x, y);
+                }
+            }
+            else if (mode === POINTS) {
+
+                const arr = _isArray(pointsData) ? pointsData : [];
+
+                let x, y;
+
+                for (let i = 0, iz = arr.length; i < iz; i += 2) {
+
+                    x = arr[i] | 0;
+                    y = arr[i + 1] | 0;
+
+                    if (x >= 0 && x < iWidth && y >= 0 && y < iHeight) seeds.push(x, y);
+                }
+            }
+
+            const nSeeds = (seeds.length / 2) | 0;
+
+            if (!nSeeds) {
+
+                const res = { labels: new Int32Array(nPix), nTiles: 0, mode };
+                setWorkstoreItem(key, res);
+
+                return res;
+            }
+
+            // Spatial hash parameters: choose cell so ~1 seed per cell
+            let cell = _floor(_sqrt((iWidth * iHeight) / nSeeds));
+            if (cell < 4) cell = 4;
+
+            const gridCols = ((iWidth + cell - 1) / cell) | 0,
+                gridRows = ((iHeight + cell - 1) / cell) | 0;
+
+            const head = new Int32Array(gridCols * gridRows);
+            head.fill(-1);
+
+            const next = new Int32Array(nSeeds);
+            next.fill(-1);
+
+            // Insert seeds (clamp to grid)
+            let sx, sy, gx, gy, g;
+
+            for (let s = 0; s < nSeeds; s++) {
+
+                sx = seeds[(s << 1)];
+                sy = seeds[(s << 1) + 1];
+
+                let gx = (sx / cell) | 0;
+                if (gx < 0) gx = 0;
+                else if (gx >= gridCols) gx = gridCols - 1;
+
+                let gy = (sy / cell) | 0;
+                if (gy < 0) gy = 0;
+                else if (gy >= gridRows) gy = gridRows - 1;
+
+                g = gy * gridCols + gx;
+
+                next[s] = head[g];
+
+                head[g] = s;
+            }
+
+            // Nearest seed per pixel (search 3×3 neighborhood with clamp)
+            let p = 0;
+
+            let best, bestD, y, x, gy2, gx2, dx, dy, d2, s;
+
+            for (y = 0; y < iHeight; y++) {
+
+                for (x = 0; x < iWidth; x++, p++) {
+
+                    gx = (x / cell) | 0;
+                    if (gx < 0) gx = 0;
+                    else if (gx >= gridCols) gx = gridCols - 1;
+
+                    gy = (y / cell) | 0;
+                    if (gy < 0) gy = 0;
+                    else if (gy >= gridRows) gy = gridRows - 1;
+
+                    best = -1;
+                    bestD = Infinity;
+
+                    for (oy = -1; oy <= 1; oy++) {
+
+                        gy2 = gy + oy;
+                        if (gy2 < 0 || gy2 >= gridRows) continue;
+
+                        for (ox = -1; ox <= 1; ox++) {
+
+                            gx2 = gx + ox;
+                            if (gx2 < 0 || gx2 >= gridCols) continue;
+
+                            s = head[gy2 * gridCols + gx2];
+
+                            while (s !== -1) {
+
+                                sx = seeds[(s << 1)];
+                                sy = seeds[(s << 1) + 1];
+                                dx = x - sx;
+                                dy = y - sy;
+
+                                d2 = dx * dx + dy * dy;
+
+                                if (d2 < bestD) {
+
+                                    bestD = d2;
+                                    best = s;
+                                }
+
+                                s = next[s];
+                            }
+                        }
+                    }
+                    labels[p] = best;
+                }
+            }
+
+            nTiles = nSeeds;
+
+            const res = { labels, nTiles, mode };
+            setWorkstoreItem(key, res);
+
+            return res;
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
               oData = output.data,
@@ -6052,13 +6037,13 @@ P.theBigActionsObject = {
         } = requirements || {};
 
         // Build labels via new API
-        const { labels, nTiles } = this.buildGeneralTileLabels(requirements, input);
+        const { labels, nTiles } = buildGeneralTileLabels(requirements, input);
 
         if (!nTiles) {
 
-            this.transferDataUnchanged(oData, iData, len);
-            if (lineOut) this.processResults(output, input, 1 - opacity);
-            else this.processResults(this.cache.work, output, opacity);
+            transferDataUnchanged(oData, iData, len);
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
             return;
         }
 
@@ -6145,14 +6130,14 @@ P.theBigActionsObject = {
             else oData[i + 3] = iData[i + 3];
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __tint-channels__ - Has similarities to the SVG &lt;feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The 'sepia' convenience filter presets these values to create a sepia effect.
     [TINT_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -6212,15 +6197,15 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __user-defined-legacy__ - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter engine, which the engine would then run against the source input image as-and-when required. This functionality has been removed from the new filter functionality. All such filters will now return the input image unchanged.
 
     [USER_DEFINED_LEGACY]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -6231,10 +6216,10 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        this.transferDataUnchanged(oData, iData, len);
+        transferDataUnchanged(oData, iData, len);
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __vary-channels-by-weights__ - manipulate colors using a set of channel curve arrays.
@@ -6244,7 +6229,7 @@ P.theBigActionsObject = {
 // + Using this method, we can perform a __curve__ (image tonality) filter
     [VARY_CHANNELS_BY_WEIGHTS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -6302,8 +6287,8 @@ P.theBigActionsObject = {
                 oData[a] = alpha + weights[(alpha * 4) + 3];
             }
         }
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 };
 
