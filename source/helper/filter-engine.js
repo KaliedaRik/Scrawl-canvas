@@ -5960,7 +5960,7 @@ P.theBigActionsObject = {
             // Nearest seed per pixel (search 3×3 neighborhood with clamp)
             let p = 0;
 
-            let best, bestD, y, x, gy2, gx2, dx, dy, d2, s;
+            let best, bestD, y, x, gy2, gx2, dx, dy, d2, s, radius;
 
             for (y = 0; y < iHeight; y++) {
 
@@ -5977,38 +5977,75 @@ P.theBigActionsObject = {
                     best = -1;
                     bestD = Infinity;
 
-                    for (oy = -1; oy <= 1; oy++) {
+                    radius = 1;
 
-                        gy2 = gy + oy;
-                        if (gy2 < 0 || gy2 >= gridRows) continue;
+                    while (best === -1) {
 
-                        for (ox = -1; ox <= 1; ox++) {
+                        for (dy = -radius; dy <= radius; dy++) {
 
-                            gx2 = gx + ox;
-                            if (gx2 < 0 || gx2 >= gridCols) continue;
+                            gy2 = gy + dy;
 
-                            s = head[gy2 * gridCols + gx2];
+                            if (gy2 < 0 || gy2 >= gridRows) continue;
 
-                            while (s !== -1) {
+                            for (dx = -radius; dx <= radius; dx++) {
 
-                                sx = seeds[(s << 1)];
-                                sy = seeds[(s << 1) + 1];
-                                dx = x - sx;
-                                dy = y - sy;
+                                const gx2 = gx + dx;
 
-                                d2 = dx * dx + dy * dy;
+                                if (gx2 < 0 || gx2 >= gridCols) continue;
 
-                                if (d2 < bestD) {
+                                s = head[gy2 * gridCols + gx2];
 
-                                    bestD = d2;
-                                    best = s;
+                                while (s !== -1) {
+
+                                    sx = seeds[(s << 1)]
+                                    sy = seeds[(s << 1) + 1];
+                                    
+                                    d2 = (x - sx) * (x - sx) + (y - sy) * (y - sy);
+                                    
+                                    if (d2 < bestD) {
+
+                                        bestD = d2;
+                                        best = s;
+                                    }
+                                    s = next[s];
                                 }
-
-                                s = next[s];
                             }
                         }
+                        radius++;
                     }
                     labels[p] = best;
+                    // for (oy = -1; oy <= 1; oy++) {
+
+                    //     gy2 = gy + oy;
+                    //     if (gy2 < 0 || gy2 >= gridRows) continue;
+
+                    //     for (ox = -1; ox <= 1; ox++) {
+
+                    //         gx2 = gx + ox;
+                    //         if (gx2 < 0 || gx2 >= gridCols) continue;
+
+                    //         s = head[gy2 * gridCols + gx2];
+
+                    //         while (s !== -1) {
+
+                    //             sx = seeds[(s << 1)];
+                    //             sy = seeds[(s << 1) + 1];
+                    //             dx = x - sx;
+                    //             dy = y - sy;
+
+                    //             d2 = dx * dx + dy * dy;
+
+                    //             if (d2 < bestD) {
+
+                    //                 bestD = d2;
+                    //                 best = s;
+                    //             }
+
+                    //             s = next[s];
+                    //         }
+                    //     }
+                    // }
+                    // labels[p] = best;
                 }
             }
 
@@ -6116,6 +6153,15 @@ P.theBigActionsObject = {
         for (p = 0, i = 0; p < nPix; p++, i += 4) {
 
             t = labels[p];
+
+            if (t < 0) {
+
+                oData[i] = iData[i];
+                oData[i + 1] = iData[i + 1];
+                oData[i + 2] = iData[i + 2];
+                oData[i + 3] = iData[i + 3];
+                continue;
+            }
 
             if (includeRed) oData[i] = rAvg[t];
             else oData[i] = iData[i];
