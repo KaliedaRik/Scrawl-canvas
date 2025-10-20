@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -655,9 +660,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">addStrings</span> = (<span class="hljs-params">current, delta</span>) =&gt; {
-
-    <span class="hljs-keyword">if</span> ((delta != <span class="hljs-literal">null</span>)) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">addStrings</span> = (<span class="hljs-params">current, delta</span>) =&gt; {</pre></div></div>
             
         </li>
         
@@ -668,23 +671,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>Correct for labels</p>
+              <p>no-op if delta is null/undefined</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">LEFT</span> === current || <span class="hljs-variable constant_">TOP</span> === current) current = <span class="hljs-title class_">PC0</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">RIGHT</span> === current || <span class="hljs-variable constant_">BOTTOM</span> === current) current = <span class="hljs-title class_">PC100</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">CENTER</span> === current) current = <span class="hljs-title class_">PC50</span>;
-
-        <span class="hljs-keyword">const</span> stringFlag = (current.<span class="hljs-property">substring</span> || delta.<span class="hljs-property">substring</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(current)) current += (<span class="hljs-title function_">isa_number</span>(delta) ? delta : <span class="hljs-built_in">parseFloat</span>(delta));
-        <span class="hljs-keyword">else</span> current = <span class="hljs-built_in">parseFloat</span>(current) + (<span class="hljs-title function_">isa_number</span>(delta) ? delta : <span class="hljs-built_in">parseFloat</span>(delta));
-
-        <span class="hljs-keyword">return</span> (stringFlag) ? current + <span class="hljs-variable constant_">PC</span> : current;
-    }
-    <span class="hljs-keyword">return</span> current;
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (delta == <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span> current;</pre></div></div>
             
         </li>
         
@@ -694,6 +685,77 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>Fast numeric path</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(current) &amp;&amp; <span class="hljs-title function_">isa_number</span>(delta)) <span class="hljs-keyword">return</span> current + delta;
+
+    <span class="hljs-keyword">if</span> (current.<span class="hljs-property">substring</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Correct for labels</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">LEFT</span> === current || <span class="hljs-variable constant_">TOP</span> === current) current = <span class="hljs-title class_">PC0</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">RIGHT</span> === current || <span class="hljs-variable constant_">BOTTOM</span> === current) current = <span class="hljs-title class_">PC100</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">CENTER</span> === current) current = <span class="hljs-title class_">PC50</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>If either operand is a string, we keep percent semantics</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> wantPercent = (current.<span class="hljs-property">substring</span> || delta.<span class="hljs-property">substring</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>Parse numbers safely (treat bad parses as 0)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> cNum = <span class="hljs-title function_">isa_number</span>(current) ? current : (<span class="hljs-built_in">parseFloat</span>(current) || <span class="hljs-number">0</span>);
+    <span class="hljs-keyword">const</span> dNum = <span class="hljs-title function_">isa_number</span>(delta) ? delta : (<span class="hljs-built_in">parseFloat</span>(delta) || <span class="hljs-number">0</span>);
+
+    <span class="hljs-keyword">const</span> res = cNum + dNum;
+
+    <span class="hljs-keyword">return</span> wantPercent ? (res + <span class="hljs-variable constant_">PC</span>) : res;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>constrain</strong> - clamps a value between a minimum and maximum value</p>
 
@@ -709,11 +771,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>convertTime</strong> converts a time value into its component string suffix and (millisecond) number value properties; returns an array</p>
 <p>Examples:</p>
@@ -767,35 +829,26 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>correctAngle</strong> makes sure any degree-based angle is in the range <code>0-360</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">correctAngle</span> = (<span class="hljs-params">item</span>) =&gt; {
-
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isFinite</span>(item)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-
-    item = item % <span class="hljs-number">360</span>;
-
-    <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) item += <span class="hljs-number">360</span>;
-
-    <span class="hljs-keyword">return</span> item;
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">correctAngle</span> = (<span class="hljs-params">h</span>) =&gt; ((h % <span class="hljs-number">360</span>) + <span class="hljs-number">360</span>) % <span class="hljs-number">360</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-10">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>correctForZero</strong> checks and corrects for minor deviations from zero (eNumbers)</p>
 
@@ -814,11 +867,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>λ functions</strong> helps us avoid errors when invoking a function attribute settable by the coder</p>
 
@@ -833,11 +886,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Note that, when developing in this file, the Ωempty object should be frozen - <code>Object.freeze({})</code>. This is to prevent any code adding attributes to it (<code>Object.seal({})</code>) would also do the job). Sadly, Object freezing (and sealing) has a slight detriment to performance as the JS engine may perform additional checks when encountering the Ωempty object which are not required when we already know the code does not add any attributes to it</p>
 
@@ -852,11 +905,11 @@ export const Ωempty = Object.freeze({});
         </li>
         
         
-        <li id="section-13">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>generateUuid</strong> is a simple (crude) uuid generator
 <a href="http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript">http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript</a>
@@ -877,11 +930,11 @@ export const Ωempty = Object.freeze({});
         </li>
         
         
-        <li id="section-14">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>generateUniqueString</strong> is a simple random String generator
 <a href="https://gist.github.com/SimonHoiberg/ad2710c8626c5a74cddd8f6385795cc0">https://gist.github.com/SimonHoiberg/ad2710c8626c5a74cddd8f6385795cc0</a>
@@ -897,11 +950,11 @@ export const Ωempty = Object.freeze({});
         </li>
         
         
-        <li id="section-15">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><strong>interpolate</strong> clamp a value between a maximum and minimum value</p>
 
@@ -915,77 +968,17 @@ export const Ωempty = Object.freeze({});
         </li>
         
         
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p><strong>isa_boolean</strong> checks to make sure the argument is a boolean</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_boolean</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item === <span class="hljs-variable constant_">BOOLEAN</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p><strong>isa_canvas</strong> checks to make sure the argument is a DOM &lt;canvas&gt; element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_canvas</span> = item =&gt; (<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(item) === $CANVAS_ELEMENT) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p><strong>isa_dom</strong> checks to make sure the argument is a DOM element of some sort</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_dom</span> = item =&gt; (item &amp;&amp; item.<span class="hljs-property">querySelector</span> &amp;&amp; item.<span class="hljs-property">dispatchEvent</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p><strong>isa_fn</strong> checks to make sure the argument is a JavaScript function object</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_fn</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item === <span class="hljs-variable constant_">FUNCTION</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p><strong>isa_number</strong> checks to make sure the argument is true number (excluding NaN)</p>
+              <p><code>clamp8</code> - Clamp 8-bit output to between 0 and 255 integers</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_number</span> = item =&gt; (<span class="hljs-title function_">_isFinite</span>(item)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">clamp8</span> = (<span class="hljs-params">v</span>) =&gt; (v &lt; <span class="hljs-number">0</span> ? <span class="hljs-number">0</span> : (v &gt; <span class="hljs-number">255</span> ? <span class="hljs-number">255</span> : v | <span class="hljs-number">0</span>));</pre></div></div>
             
         </li>
         
@@ -996,11 +989,11 @@ export const Ωempty = Object.freeze({});
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <p><strong>isa_obj</strong> checks to make sure the argument is a JavaScript Object</p>
+              <p><code>clamp</code> - a generic clamping function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_obj</span> = item =&gt; (<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(item) === $OBJECT) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">clamp</span> = (<span class="hljs-params">v, lo, hi</span>) =&gt; (v &lt; lo ? lo : v &gt; hi ? hi : v);</pre></div></div>
             
         </li>
         
@@ -1011,11 +1004,11 @@ export const Ωempty = Object.freeze({});
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <p><strong>isa_quaternion</strong> checks to make sure the argument is a Scrawl-canvas Quaternion object</p>
+              <p><strong>isa_boolean</strong> checks to make sure the argument is a boolean</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_quaternion</span> = item =&gt; (item &amp;&amp; item.<span class="hljs-property">type</span> &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_QUATERNION</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_boolean</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item === <span class="hljs-variable constant_">BOOLEAN</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -1025,6 +1018,96 @@ export const Ωempty = Object.freeze({});
               
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p><strong>isa_canvas</strong> checks to make sure the argument is a DOM &lt;canvas&gt; element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_canvas</span> = item =&gt; (<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(item) === $CANVAS_ELEMENT) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p><strong>isa_dom</strong> checks to make sure the argument is a DOM element of some sort</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_dom</span> = item =&gt; (item &amp;&amp; item.<span class="hljs-property">querySelector</span> &amp;&amp; item.<span class="hljs-property">dispatchEvent</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <p><strong>isa_fn</strong> checks to make sure the argument is a JavaScript function object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_fn</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item === <span class="hljs-variable constant_">FUNCTION</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p><strong>isa_number</strong> checks to make sure the argument is true number (excluding NaN)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_number</span> = item =&gt; (<span class="hljs-title function_">_isFinite</span>(item)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p><strong>isa_obj</strong> checks to make sure the argument is a JavaScript Object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_obj</span> = item =&gt; (<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(item) === $OBJECT) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p><strong>isa_quaternion</strong> checks to make sure the argument is a Scrawl-canvas Quaternion object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_quaternion</span> = item =&gt; (item &amp;&amp; item.<span class="hljs-property">type</span> &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_QUATERNION</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><strong>mergeOver</strong> takes two objects and writes the attributes of one over the other. This function mutates the ‘original’ object rather than generating a third, new onject</p>
 <p>Example:</p>
@@ -1053,11 +1136,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-24">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><strong>mergeDiscard</strong> iterates over the additional object to perform a mergeOver operation, and also removing attributes from the original object where they have been set to null in the additional object</p>
 <p>Example:</p>
@@ -1086,11 +1169,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-25">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><strong>pushUnique</strong> adds a value to the end of an array, if that value is not already present in the array. This function mutates the array</p>
 <p>Example:</p>
@@ -1123,11 +1206,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-26">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><strong>removeItem</strong> removes a value from an array. This function mutates the array</p>
 <p>Example:</p>
@@ -1156,11 +1239,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-27">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><strong>xt</strong> checks to see if argument exists (is not ‘undefined’)</p>
 
@@ -1171,11 +1254,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-28">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><strong>xta</strong> checks to make sure that all the arguments supplied to the function exist (none are ‘undefined’)</p>
 
@@ -1186,11 +1269,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-29">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><strong>xtGet</strong> returns the first existing (not ‘undefined’) argument supplied to the function</p>
 
@@ -1201,11 +1284,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-30">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><strong>xto</strong> checks to make sure that at least one of the arguments supplied to the function exists (is not ‘undefined’)</p>
 
@@ -1216,11 +1299,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-31">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <h5 id="easing-engines">Easing engines</h5>
 <p><code>easeEngines</code> - an object in which keys define various easing functions</p>
@@ -1232,11 +1315,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-32">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Legacy easings</p>
 
@@ -1313,11 +1396,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-33">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>Noise functionality easing engines</p>
 
@@ -1330,11 +1413,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-34">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>The following easing variations come from the <a href="https://easings.net/">easings.net</a> web page</p>
 <ul>
@@ -1434,11 +1517,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-35">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>This is wrong</p>
 
@@ -1471,11 +1554,11 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
         </li>
         
         
-        <li id="section-36">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>Create an Object prototype</p>
 

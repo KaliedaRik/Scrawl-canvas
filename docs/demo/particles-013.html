@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1202,10 +1207,11 @@ scrawl.<span class="hljs-title function_">makeEnhancedLabel</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;particle-star&#x27;</span>),
 
-        <span class="hljs-attr">radius1</span>: <span class="hljs-number">20</span>,
-        <span class="hljs-attr">radius2</span>: <span class="hljs-number">14</span>,
+        <span class="hljs-attr">radius1</span>: <span class="hljs-number">12</span>,
+        <span class="hljs-attr">radius2</span>: <span class="hljs-number">21</span>,
 
-        <span class="hljs-attr">points</span>: <span class="hljs-number">5</span>,
+        <span class="hljs-attr">points</span>: <span class="hljs-number">7</span>,
+        <span class="hljs-attr">roll</span>: <span class="hljs-number">45</span>,
 
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
 
@@ -1218,6 +1224,7 @@ scrawl.<span class="hljs-title function_">makeEnhancedLabel</span>({
         <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">true</span>,
     }),
 
+    <span class="hljs-attr">stampFirst</span>: <span class="hljs-string">&#x27;newest&#x27;</span>,
     <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
         <span class="hljs-keyword">const</span> history = particle.<span class="hljs-property">history</span>;
@@ -1273,9 +1280,10 @@ scrawl.<span class="hljs-title function_">makeEnhancedLabel</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;main-star&#x27;</span>),
 
-    <span class="hljs-attr">radius1</span>: <span class="hljs-number">21</span>,
-    <span class="hljs-attr">radius2</span>: <span class="hljs-number">15</span>,
-    <span class="hljs-attr">points</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">radius1</span>: <span class="hljs-number">12</span>,
+    <span class="hljs-attr">radius2</span>: <span class="hljs-number">21</span>,
+    <span class="hljs-attr">points</span>: <span class="hljs-number">7</span>,
+    <span class="hljs-attr">roll</span>: <span class="hljs-number">45</span>,
 
     <span class="hljs-attr">path</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-tree&#x27;</span>),
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.484</span>,
@@ -1327,8 +1335,8 @@ scrawl.<span class="hljs-title function_">makeEnhancedLabel</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;particle-spangle-entity&#x27;</span>),
 
-        <span class="hljs-attr">radius1</span>: <span class="hljs-number">6</span>,
-        <span class="hljs-attr">radius2</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-attr">radius1</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-attr">radius2</span>: <span class="hljs-number">6</span>,
 
         <span class="hljs-attr">points</span>: <span class="hljs-number">4</span>,
 
@@ -1381,7 +1389,7 @@ scrawl.<span class="hljs-title function_">makeEnhancedLabel</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> globalAlpha = <span class="hljs-number">1</span>,
-                radius1 = <span class="hljs-number">6</span>;</pre></div></div>
+                radius2 = <span class="hljs-number">6</span>;</pre></div></div>
             
         </li>
         
@@ -1449,15 +1457,15 @@ scrawl.<span class="hljs-title function_">makeEnhancedLabel</span>({
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (remaining &lt; <span class="hljs-number">8</span>) {
 
-                <span class="hljs-keyword">if</span> (remaining &gt; <span class="hljs-number">4</span>) radius1 = <span class="hljs-number">6</span> + ((<span class="hljs-number">8</span> - remaining) * <span class="hljs-number">5</span>);
-                <span class="hljs-keyword">else</span> radius1 = <span class="hljs-number">6</span> + (remaining * <span class="hljs-number">5</span>);
+                <span class="hljs-keyword">if</span> (remaining &gt; <span class="hljs-number">4</span>) radius2 = <span class="hljs-number">6</span> + ((<span class="hljs-number">8</span> - remaining) * <span class="hljs-number">5</span>);
+                <span class="hljs-keyword">else</span> radius2 = <span class="hljs-number">6</span> + (remaining * <span class="hljs-number">5</span>);
             }
 
             artefact.<span class="hljs-title function_">simpleStamp</span>(host, {
                 start,
                 <span class="hljs-attr">fillStyle</span>: particle.<span class="hljs-property">fill</span>,
                 globalAlpha,
-                radius1,
+                radius2,
             });
         }
     },
@@ -1572,7 +1580,7 @@ scrawl.<span class="hljs-title function_">makeEnhancedLabel</span>({
         <span class="hljs-keyword">const</span> colorFactory = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillColorFactory</span>;
 
         engine.<span class="hljs-title function_">save</span>();
-        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        engine.<span class="hljs-title function_">resetTransform</span>();
 
         history.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
 

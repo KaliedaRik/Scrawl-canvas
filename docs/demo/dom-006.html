@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1356,13 +1361,7 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
     <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(purple) },
     <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(blue) },
 
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;purple_2&#x27;</span>),
-    <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;0%&#x27;</span>,
-    <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(purple) },
-    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(purple) },
-});</pre></div></div>
+}).<span class="hljs-title function_">clone</span>({</pre></div></div>
             
         </li>
         
@@ -1372,6 +1371,25 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>Set the color as soon as the action’s ticker starts to run</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;purple_2&#x27;</span>),
+    <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;0%&#x27;</span>,
+    <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(purple) },
+    <span class="hljs-attr">revert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { element.<span class="hljs-title function_">set</span>(purple) },
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Test ticker.set({subscribers: […]}) functionality</p>
 
@@ -1387,11 +1405,11 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Test ticker.subscribe(arg, …) functionality</p>
 
@@ -1414,11 +1432,11 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Add some Google Analytics progress actions to one of the tickers</p>
 <p>TODO: 0% times will fire the action function when the ticker is moving both forwards and backwards, but never fires the revert function. I don’t consider this to be a show stopper.</p>
@@ -1470,11 +1488,11 @@ scrawl.<span class="hljs-title function_">makeAction</span>({
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Also add some Google Analytics code to one of the tweens</p>
 
@@ -1496,11 +1514,11 @@ smallboat.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Start the tween animation</p>
@@ -1513,11 +1531,11 @@ smallboat.<span class="hljs-title function_">run</span>();</pre></div></div>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
@@ -1528,11 +1546,11 @@ smallboat.<span class="hljs-title function_">run</span>();</pre></div></div>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1548,11 +1566,11 @@ smallboat.<span class="hljs-title function_">run</span>();</pre></div></div>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Event listener will reverse direction on the larger boats, while halting/restarting the smallest boat</p>
@@ -1574,11 +1592,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
@@ -1589,11 +1607,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Test Tween object packet</p>
 
@@ -1604,11 +1622,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-attr">RESULT</span>:
 </code></pre>
@@ -1618,11 +1636,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>[
     “mystack-mySecondClonedTween”,
@@ -1637,13 +1655,13 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
         “onHalt”:”~~~\n        if (myTracker) myTracker.send(‘event’, ‘Tween state’, ‘halt’, <code>Tween ${this.name} on ${this.ticker}</code>)\n    “,
         “onResume”:”~~~\n        if (myTracker) myTracker.send(‘event’, ‘Tween state’, ‘resume’, <code>Tween ${this.name} on ${this.ticker}</code>)\n    “,
         “completeAction”:”~~~”,
-        “targets”:[],
-        “definitions”:[
-            {
-                “attribute”:”roll”,
-                “start”:-40,”end”:320
-            }
-        ]
+        “targets”:[“mystack-mythirdelement”],
+        “definitions”:[{
+            “attribute”:”roll”,
+            “start”:-40,
+            “end”:320,
+            “engine”:”linear”
+        }]
     }
 ]</p>
 
@@ -1652,11 +1670,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>Test Ticker object packet</p>
 
@@ -1667,11 +1685,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-attr">RESULT</span>:
 </code></pre>

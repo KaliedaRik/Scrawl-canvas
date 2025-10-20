@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -699,7 +704,6 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathData</span> = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathData</span> = [];
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchFromPath</span> = <span class="hljs-literal">null</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchIndex</span> = -<span class="hljs-number">1</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">engineInstructions</span> = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">engineDeltaLengths</span> = [];
@@ -1882,10 +1886,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
 <li>We only need to recalculate the path data on the initial render, and afterwards when the <strong>dirtyPathData</strong> flag has been set.</li>
 <li>If we perform the recalculation, then we need to make sure to set the <strong>dirtyOutput</strong> flag, which will trigger the output image build.</li>
 </ul>
+<p><code>prepareStamp</code> - function called as part of the Display cycle <code>compile</code> step.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">const</span> fPath = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPath</span>,
         tPath = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPath</span>;</pre></div></div>
@@ -1899,11 +1904,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
-              <p>Sanity check 1</p>
-<ul>
-<li><code>getBoundingBox</code> will recalculate and set the <code>dirtyPathData</code> flag</li>
-<li>if paths have set the Loom’s <code>dirtyStart</code> flag</li>
-</ul>
+              <p>Sanity check 1 — also recalculates bounding box if needed</p>
 
             </div>
             
@@ -1918,24 +1919,20 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
-              <p>Sanity check 2</p>
-<ul>
-<li>we can set the <code>dirtyPathData</code> ourselves if paths <code>start/end</code> coordinates have changed</li>
-<li>in case Shape path <code>roll/scale/flip/etc</code> updates don’t get messaged to the Loom entity</li>
-</ul>
+              <p>Sanity check 2 — if end points moved, mark path data dirty</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathData</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathData</span> &amp;&amp; fPath &amp;&amp; tPath) {
 
-        <span class="hljs-keyword">const</span> {<span class="hljs-attr">x</span>: testFromStartX, <span class="hljs-attr">y</span>: testFromStartY} = fPath.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">0</span>);
-        <span class="hljs-keyword">const</span> {<span class="hljs-attr">x</span>: testFromEndX, <span class="hljs-attr">y</span>: testFromEndY} = fPath.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">1</span>);
-        <span class="hljs-keyword">const</span> {<span class="hljs-attr">x</span>: testToStartX, <span class="hljs-attr">y</span>: testToStartY} = tPath.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">0</span>);
-        <span class="hljs-keyword">const</span> {<span class="hljs-attr">x</span>: testToEndX, <span class="hljs-attr">y</span>: testToEndY} = tPath.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">1</span>);
+        <span class="hljs-keyword">const</span> { <span class="hljs-attr">x</span>: fSx, <span class="hljs-attr">y</span>: fSy } = fPath.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">0</span>);
+        <span class="hljs-keyword">const</span> { <span class="hljs-attr">x</span>: fEx, <span class="hljs-attr">y</span>: fEy } = fPath.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">1</span>);
+        <span class="hljs-keyword">const</span> { <span class="hljs-attr">x</span>: tSx, <span class="hljs-attr">y</span>: tSy } = tPath.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">0</span>);
+        <span class="hljs-keyword">const</span> { <span class="hljs-attr">x</span>: tEx, <span class="hljs-attr">y</span>: tEy } = tPath.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-number">1</span>);
 
-        <span class="hljs-keyword">const</span> localPathTests = [testFromStartX, testFromStartY, testFromEndX, testFromEndY, testToStartX, testToStartY, testToEndX, testToEndY];
+        <span class="hljs-keyword">const</span> localPathTests = [fSx, fSy, fEx, fEy, tSx, tSy, tEx, tEy];
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathTests</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathTests</span>.<span class="hljs-title function_">some</span>(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> item !== localPathTests[index])) {
+        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathTests</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathTests</span>.<span class="hljs-title function_">some</span>(<span class="hljs-function">(<span class="hljs-params">v, i</span>) =&gt;</span> v !== localPathTests[i])) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathTests</span> = localPathTests;
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathData</span> = <span class="hljs-literal">true</span>;
@@ -1944,64 +1941,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathData</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathData</span>.<span class="hljs-property">length</span>) {
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathData</span> = <span class="hljs-literal">false</span>;
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchIndex</span> = -<span class="hljs-number">1</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engineInstructions</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engineDeltaLengths</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
-
-        <span class="hljs-keyword">const</span> fromPathData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathData</span>;
-        fromPathData.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
-
-        <span class="hljs-keyword">const</span> toPathData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathData</span>;
-        toPathData.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
-
-        <span class="hljs-keyword">if</span>(fPath &amp;&amp; tPath) {
-
-            <span class="hljs-keyword">const</span> fPathLength = <span class="hljs-title function_">_ceil</span>(fPath.<span class="hljs-property">length</span>),
-                tPathLength = <span class="hljs-title function_">_ceil</span>(tPath.<span class="hljs-property">length</span>);
-
-            <span class="hljs-keyword">const</span> pathSteps = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setSourceDimension</span>(<span class="hljs-title function_">_max</span>(fPathLength, tPathLength) * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceExpansionFactor</span>);
-
-            <span class="hljs-keyword">const</span> fPathStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathStart</span>,
-                fPathEnd = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathEnd</span>,
-                tPathStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathStart</span>,
-                tPathEnd = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathEnd</span>,
-                pathSpeed = <span class="hljs-variable language_">this</span>.<span class="hljs-property">constantSpeedAlongPath</span>;
-
-            <span class="hljs-keyword">let</span> fPartial, tPartial;
-
-            <span class="hljs-keyword">if</span> (fPathStart &lt; fPathEnd) fPartial = fPathEnd - fPathStart;
-            <span class="hljs-keyword">else</span> fPartial = fPathEnd + (<span class="hljs-number">1</span> - fPathStart);
-            <span class="hljs-keyword">if</span> (fPartial &lt; <span class="hljs-number">0.005</span>) fPartial = <span class="hljs-number">0.005</span>;
-
-            <span class="hljs-keyword">if</span> (tPathStart &lt; tPathEnd) tPartial = tPathEnd - tPathStart;
-            <span class="hljs-keyword">else</span> tPartial = tPathEnd + (<span class="hljs-number">1</span> - tPathStart);
-            <span class="hljs-keyword">if</span> (tPartial &lt; <span class="hljs-number">0.005</span>) tPartial = <span class="hljs-number">0.005</span>;
-
-            <span class="hljs-keyword">const</span> minPartial = <span class="hljs-title function_">_ceil</span>(<span class="hljs-title function_">_min</span>(fPartial, tPartial)),
-                pathDelta = <span class="hljs-number">1</span> / (pathSteps * (<span class="hljs-number">1</span> / minPartial));
-
-            <span class="hljs-keyword">let</span> x, y, cursor;
-
-            <span class="hljs-keyword">for</span> (cursor = <span class="hljs-number">0</span>; cursor &lt;= <span class="hljs-number">1</span>; cursor += pathDelta) {
-
-                ({x, y} = fPath.<span class="hljs-title function_">getPathPositionData</span>(cursor, pathSpeed));
-                fromPathData.<span class="hljs-title function_">push</span>([x - startX, y - startY]);
-
-                ({x, y} = tPath.<span class="hljs-title function_">getPathPositionData</span>(cursor, pathSpeed));
-                toPathData.<span class="hljs-title function_">push</span>([x - startX, y - startY]);
-            }
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathSteps</span> = fPartial / minPartial;
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathSteps</span> = tPartial / minPartial;
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchFromPath</span> = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathSteps</span> === <span class="hljs-number">1</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathData</span> = <span class="hljs-literal">true</span>;
-    }</pre></div></div>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathData</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -2012,12 +1952,21 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
-              <p><code>prepareStampTabsHelper</code> is defined in the <code>mixin/hidden-dom-elements.js</code> file - handles updates to anchor and button objects</p>
+              <p>Invalidate cached render instructions</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStampTabsHelper</span>();
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchIndex</span> = -<span class="hljs-number">1</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engineInstructions</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engineDeltaLengths</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">const</span> fromPathData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathData</span>,
+            toPathData   = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathData</span>;
+
+        fromPathData.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        toPathData.<span class="hljs-property">length</span>   = <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">if</span> (fPath &amp;&amp; tPath) {</pre></div></div>
             
         </li>
         
@@ -2027,6 +1976,146 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
               
               <div class="sswrap ">
                 <a class="ss" href="#section-57">&#x00a7;</a>
+              </div>
+              <p>Decide table resolution (and input size).</p>
+<ul>
+<li>Sample both paths uniformly at ‘pathSteps’ points.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> fPathLength = <span class="hljs-title function_">_ceil</span>(fPath.<span class="hljs-property">length</span>);
+            <span class="hljs-keyword">const</span> tPathLength = <span class="hljs-title function_">_ceil</span>(tPath.<span class="hljs-property">length</span>);
+
+            <span class="hljs-keyword">const</span> pathSteps = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setSourceDimension</span>(<span class="hljs-title function_">_max</span>(fPathLength, tPathLength) * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceExpansionFactor</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-58">&#x00a7;</a>
+              </div>
+              <p>Guard: ensure at least 2 samples so we can include both ends cleanly</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> steps = (pathSteps &gt; <span class="hljs-number">1</span>) ? pathSteps : <span class="hljs-number">2</span>,
+                step  = <span class="hljs-number">1</span> / (steps - <span class="hljs-number">1</span>);
+
+            <span class="hljs-keyword">const</span> pathSpeed = <span class="hljs-variable language_">this</span>.<span class="hljs-property">constantSpeedAlongPath</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-59">&#x00a7;</a>
+              </div>
+              <p>Build sampling tables with exactly <code>steps</code> entries.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; steps; i++) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-60">&#x00a7;</a>
+              </div>
+              <p>Ensure the last sample is exactly 1.0 to avoid FP drift</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">const</span> cursor = (i === steps - <span class="hljs-number">1</span>) ? <span class="hljs-number">1</span> : i * step;
+
+                <span class="hljs-keyword">let</span> p = fPath.<span class="hljs-title function_">getPathPositionData</span>(cursor, pathSpeed);
+                fromPathData.<span class="hljs-title function_">push</span>([p.<span class="hljs-property">x</span> - startX, p.<span class="hljs-property">y</span> - startY]);
+
+                p = tPath.<span class="hljs-title function_">getPathPositionData</span>(cursor, pathSpeed);
+                toPathData.<span class="hljs-title function_">push</span>([p.<span class="hljs-property">x</span> - startX, p.<span class="hljs-property">y</span> - startY]);
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-61">&#x00a7;</a>
+              </div>
+              <p>Compute the fractional span (0..1) required to traverse on each path.</p>
+<ul>
+<li>Stash these as per-row increments (cleanOutput adds them in table-index space).</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> fStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathStart</span>, fEnd = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathEnd</span>,
+                tStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathStart</span>,   tEnd = <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathEnd</span>
+
+            <span class="hljs-keyword">let</span> fPartial = (fEnd &gt;= fStart) ? (fEnd - fStart) : (<span class="hljs-number">1</span> - fStart + fEnd),
+                tPartial = (tEnd &gt;= tStart) ? (tEnd - tStart) : (<span class="hljs-number">1</span> - tStart + tEnd);
+
+            <span class="hljs-keyword">if</span> (fPartial &lt; <span class="hljs-number">0.005</span>) fPartial = <span class="hljs-number">0.005</span>;
+            <span class="hljs-keyword">if</span> (tPartial &lt; <span class="hljs-number">0.005</span>) tPartial = <span class="hljs-number">0.005</span>;
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">fromPathSteps</span> = fPartial;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">toPathSteps</span>   = tPartial;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-62">&#x00a7;</a>
+              </div>
+              <p>Which path reaches the end first?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">watchFromPath</span> = (fPartial &lt;= tPartial);
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathData</span> = <span class="hljs-literal">true</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-63">&#x00a7;</a>
+              </div>
+              <p>Hidden DOM elements housekeeping</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStampTabsHelper</span>();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><code>setSourceDimension</code> - internal function called by <code>prepareStamp</code>.</p>
 <ul>
@@ -2041,11 +2130,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-58">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <ul>
 <li><code>prepareStamp</code> does the dimension calculation itself, then supplies the new value</li>
@@ -2066,11 +2155,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-59">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p>if other functions call setSourceDimension, they will do it without supplying a new value</p>
 <ul>
@@ -2102,11 +2191,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-60">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><code>simpleStamp</code> - Simple stamping is entirely synchronous</p>
 <ul>
@@ -2133,11 +2222,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-61">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>stamp</code> - All entity stamping, except for simple stamps, goes through this function.</p>
 <ul>
@@ -2170,11 +2259,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-62">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p>if (this.sourceIsVideoOrSprite || this.dirtyInput) this.sourceImageData = this.cleanInput();</p>
 
@@ -2191,11 +2280,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-63">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <h4 id="clean-functions">Clean functions</h4>
 
@@ -2204,11 +2293,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-64">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><code>cleanInput</code> - internal function called by <code>stamp</code></p>
 
@@ -2232,7 +2321,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
 
     canvas.<span class="hljs-property">width</span> = sourceDimension;
     canvas.<span class="hljs-property">height</span> = sourceDimension;
-    engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    engine.<span class="hljs-title function_">resetTransform</span>();
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-title function_">stamp</span>(<span class="hljs-literal">true</span>, mycell, {
         <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
@@ -2258,11 +2347,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-65">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><code>cleanOutput</code> - internal function called by <code>stamp</code></p>
 <ul>
@@ -2319,7 +2408,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
 
             inputCanvas.<span class="hljs-property">width</span> = sourceDimension;
             inputCanvas.<span class="hljs-property">height</span> = sourceDimension;
-            inputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            inputEngine.<span class="hljs-title function_">resetTransform</span>();
             inputEngine.<span class="hljs-title function_">putImageData</span>(sourceData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
             <span class="hljs-keyword">const</span> outputCell = <span class="hljs-title function_">requestCell</span>(),
@@ -2329,7 +2418,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
             outputCanvas.<span class="hljs-property">width</span> = outputWidth;
             outputCanvas.<span class="hljs-property">height</span> = outputHeight;
             outputEngine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">globalAlpha</span>;
-            outputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            outputEngine.<span class="hljs-title function_">resetTransform</span>();
 
             <span class="hljs-keyword">if</span>(!engineInstructions.<span class="hljs-property">length</span>) {
 
@@ -2431,8 +2520,8 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
             inputCanvas.<span class="hljs-property">width</span> = iWidth;
             inputCanvas.<span class="hljs-property">height</span> = iHeight;
 
-            outputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-            inputEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            outputEngine.<span class="hljs-title function_">resetTransform</span>();
+            inputEngine.<span class="hljs-title function_">resetTransform</span>();
 
             <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; iLoops; j++) {
 
@@ -2456,11 +2545,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-66">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - internal function called by <code>stamp</code></p>
 
@@ -2483,11 +2572,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-67">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><code>getBoundingBox</code> - internal function called by <code>prepareStamp</code> and <code>cleanOutput</code> functions, as well as the various <em><strong>method</strong></em> functions.</p>
 <ul>
@@ -2547,11 +2636,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-68">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>These ‘method’ functions stamp the Loom entity onto the canvas context supplied to them in the <code>engine</code> argument.</p>
@@ -2561,11 +2650,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-69">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -2583,11 +2672,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-70">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -2603,11 +2692,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-71">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -2625,11 +2714,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-72">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -2647,11 +2736,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-73">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -2668,11 +2757,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-74">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -2689,11 +2778,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-75">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -2722,7 +2811,7 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         tempCanvas.<span class="hljs-property">height</span> = h;
 
         tempEngine.<span class="hljs-title function_">putImageData</span>(output, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        engine.<span class="hljs-title function_">resetTransform</span>();
         engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">DESTINATION_OUT</span>;
         engine.<span class="hljs-title function_">drawImage</span>(tempCanvas, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, w, h, x, y, w, h);
         engine.<span class="hljs-property">globalCompositeOperation</span> = gco;
@@ -2735,11 +2824,11 @@ D.<span class="hljs-property">toPathEnd</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-76">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p><code>none</code>, <code>clip</code></p>
 
@@ -2751,11 +2840,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-77">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <p>These <strong>stroke</strong> and <strong>fill</strong> functions handle most of the stuff that the method functions require to stamp the Loom entity onto a canvas cell.</p>
 
@@ -2764,11 +2853,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-78">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <p><code>doStroke</code></p>
 
@@ -2793,10 +2882,10 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
             host.<span class="hljs-title function_">rotateDestination</span>(engine, fStart[<span class="hljs-number">0</span>], fStart[<span class="hljs-number">1</span>], fPath);
             engine.<span class="hljs-title function_">stroke</span>(fPath.<span class="hljs-property">pathObject</span>);
 
-            host.<span class="hljs-title function_">rotateDestination</span>(engine, tStart[<span class="hljs-number">0</span>], tStart[<span class="hljs-number">1</span>], fPath);
+            host.<span class="hljs-title function_">rotateDestination</span>(engine, tStart[<span class="hljs-number">0</span>], tStart[<span class="hljs-number">1</span>], tPath);
             engine.<span class="hljs-title function_">stroke</span>(tPath.<span class="hljs-property">pathObject</span>);
 
-            engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            engine.<span class="hljs-title function_">resetTransform</span>();
             engine.<span class="hljs-title function_">beginPath</span>()
             engine.<span class="hljs-title function_">moveTo</span>(fEnd.<span class="hljs-property">x</span>, fEnd.<span class="hljs-property">y</span>);
             engine.<span class="hljs-title function_">lineTo</span>(tEnd.<span class="hljs-property">x</span>, tEnd.<span class="hljs-property">y</span>);
@@ -2811,11 +2900,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-79">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <p><code>doFill</code></p>
 <ul>
@@ -2847,7 +2936,7 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         tempCanvas.<span class="hljs-property">height</span> = h;
 
         tempEngine.<span class="hljs-title function_">putImageData</span>(output, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        engine.<span class="hljs-title function_">resetTransform</span>();
         engine.<span class="hljs-title function_">drawImage</span>(tempCanvas, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, w, h, x, y, w, h);
 
         <span class="hljs-title function_">releaseCell</span>(tempCell);
@@ -2857,11 +2946,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-80">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
               <p><code>drawBoundingBox</code></p>
 <ul>
@@ -2877,7 +2966,7 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
     engine.<span class="hljs-title function_">save</span>();
 
     <span class="hljs-keyword">const</span> t = engine.<span class="hljs-title function_">getTransform</span>();
-    engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    engine.<span class="hljs-title function_">resetTransform</span>();
 
     engine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxColor</span>;
     engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-number">1</span>;
@@ -2896,11 +2985,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-81">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 
@@ -2909,11 +2998,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-82">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-89">&#x00a7;</a>
               </div>
               <p>The <code>checkHit</code> functionality can be used in the same way it is for other entitys (and groups)</p>
 <ul>
@@ -2977,11 +3066,11 @@ P.<span class="hljs-property">clip</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-83">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
+                <a class="ss" href="#section-90">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeQuadratic</span>({

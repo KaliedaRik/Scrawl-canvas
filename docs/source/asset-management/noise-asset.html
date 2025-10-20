@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -698,6 +703,8 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">permMod8</span> = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">values</span> = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">grad</span> = [];
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">noiseValues</span> = [];
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span> = [];
 
@@ -1616,8 +1623,7 @@ S.<span class="hljs-property">colors</span> = <span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noiseValues</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">noiseValues</span> = [];
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">noiseValues</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">noiseValues</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">noiseValues</span>.<span class="hljs-title function_">push</span>(...noiseValues);
             <span class="hljs-title function_">releaseArray</span>(noiseValues);
         }

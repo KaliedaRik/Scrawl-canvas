@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1230,7 +1235,7 @@
         <span class="hljs-keyword">const</span> target = e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>,
             val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
-        <span class="hljs-keyword">let</span> [r, g, b] = colorFactory.<span class="hljs-title function_">extractRGBfromColor</span>(val);
+        <span class="hljs-keyword">let</span> [r, g, b] = colorFactory.<span class="hljs-title function_">extractRGBfromColorString</span>(val);
 
         r /= <span class="hljs-number">255</span>;
         g /= <span class="hljs-number">255</span>;
@@ -1240,25 +1245,25 @@
 
             myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">redColor</span>: val });
 
-            dom.<span class="hljs-property">redInRed</span>.<span class="hljs-property">value</span> = r.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-            dom.<span class="hljs-property">greenInRed</span>.<span class="hljs-property">value</span> = g.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-            dom.<span class="hljs-property">blueInRed</span>.<span class="hljs-property">value</span> = b.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
+            dom.<span class="hljs-property">redInRed</span>.<span class="hljs-property">value</span> = <span class="hljs-string">`<span class="hljs-subst">${r}</span>`</span>;
+            dom.<span class="hljs-property">greenInRed</span>.<span class="hljs-property">value</span> = <span class="hljs-string">`<span class="hljs-subst">${g}</span>`</span>;
+            dom.<span class="hljs-property">blueInRed</span>.<span class="hljs-property">value</span> = <span class="hljs-string">`<span class="hljs-subst">${b}</span>`</span>;
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;greenColor&#x27;</span> === target) {
 
             myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">greenColor</span>: val });
 
-            dom.<span class="hljs-property">redInGreen</span>.<span class="hljs-property">value</span> = r.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-            dom.<span class="hljs-property">greenInGreen</span>.<span class="hljs-property">value</span> = g.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-            dom.<span class="hljs-property">blueInGreen</span>.<span class="hljs-property">value</span> = b.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
+            dom.<span class="hljs-property">redInGreen</span>.<span class="hljs-property">value</span> = <span class="hljs-string">`<span class="hljs-subst">${r}</span>`</span>;
+            dom.<span class="hljs-property">greenInGreen</span>.<span class="hljs-property">value</span> = <span class="hljs-string">`<span class="hljs-subst">${g}</span>`</span>;
+            dom.<span class="hljs-property">blueInGreen</span>.<span class="hljs-property">value</span> = <span class="hljs-string">`<span class="hljs-subst">${b}</span>`</span>;
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;blueColor&#x27;</span> === target) {
 
             myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">blueColor</span>: val });
 
-            dom.<span class="hljs-property">redInBlue</span>.<span class="hljs-property">value</span> = r.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-            dom.<span class="hljs-property">greenInBlue</span>.<span class="hljs-property">value</span> = g.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-            dom.<span class="hljs-property">blueInBlue</span>.<span class="hljs-property">value</span> = b.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
+            dom.<span class="hljs-property">redInBlue</span>.<span class="hljs-property">value</span> = <span class="hljs-string">`<span class="hljs-subst">${r}</span>`</span>;
+            dom.<span class="hljs-property">greenInBlue</span>.<span class="hljs-property">value</span> = <span class="hljs-string">`<span class="hljs-subst">${g}</span>`</span>;
+            dom.<span class="hljs-property">blueInBlue</span>.<span class="hljs-property">value</span> = <span class="hljs-string">`<span class="hljs-subst">${b}</span>`</span>;
         }
     }
 }, <span class="hljs-string">&#x27;.colorSelector&#x27;</span>);</pre></div></div>

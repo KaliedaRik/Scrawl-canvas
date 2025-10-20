@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -1013,10 +1018,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         stroke = copy.<span class="hljs-property">strokeStyle</span>;
 
     <span class="hljs-keyword">if</span> (fill &amp;&amp; !fill.<span class="hljs-property">substring</span>) copy.<span class="hljs-property">fillStyle</span> = fill.<span class="hljs-property">name</span>;
-    <span class="hljs-keyword">if</span> (stroke &amp;&amp; !stroke.<span class="hljs-property">substring</span>) copy.<span class="hljs-property">strokeStyle</span> = stroke.<span class="hljs-property">name</span>;
-
-    <span class="hljs-keyword">return</span> copy;
-};</pre></div></div>
+    <span class="hljs-keyword">if</span> (stroke &amp;&amp; !stroke.<span class="hljs-property">substring</span>) copy.<span class="hljs-property">strokeStyle</span> = stroke.<span class="hljs-property">name</span>;</pre></div></div>
             
         </li>
         
@@ -1027,10 +1029,15 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>Handled by Label and EnhancedLabel entity, not by the TextStyle object</p>
+              <p>Ensure CSS-like strings are exported</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (copy.<span class="hljs-property">letterSpacing</span> == <span class="hljs-literal">null</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpacing</span> != <span class="hljs-literal">null</span>) copy.<span class="hljs-property">letterSpacing</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">letterSpacing</span>;
+    <span class="hljs-keyword">if</span> (copy.<span class="hljs-property">wordSpacing</span> == <span class="hljs-literal">null</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">wordSpacing</span> != <span class="hljs-literal">null</span>) copy.<span class="hljs-property">wordSpacing</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">wordSpacing</span>;
+
+    <span class="hljs-keyword">return</span> copy;
+};</pre></div></div>
             
         </li>
         
@@ -1041,7 +1048,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
+              <h4 id="clone-management">Clone management</h4>
 <p>Handled by Label and EnhancedLabel entity, not by the TextStyle object</p>
 
             </div>
@@ -1054,6 +1061,20 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
               
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>Handled by Label and EnhancedLabel entity, not by the TextStyle object</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 <p><code>set</code> - overwrites ‘mixin/entity.js’ function</p>
@@ -1095,11 +1116,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>setDelta</code> - overwrites ‘mixin/entity.js’ function</p>
 
@@ -1299,11 +1320,11 @@ S.<span class="hljs-property">textBaseline</span> = λ<span class="hljs-literal"
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>No additional functionality defined</p>
@@ -1313,11 +1334,11 @@ S.<span class="hljs-property">textBaseline</span> = λ<span class="hljs-literal"
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>example needed

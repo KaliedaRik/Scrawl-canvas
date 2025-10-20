@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -611,7 +616,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _atan2, _cos, _isFinite, _max, _min, _pow, _sin, _sqrt, <span class="hljs-variable constant_">BEZIER</span>, <span class="hljs-variable constant_">CLOSE</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">QUADRATIC</span>, <span class="hljs-variable constant_">UNKNOWN</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _abs, _acos, _atan2, _cos, _isFinite, _max, _min, _piDouble, _piHalf, _pow, _radian, _sin, _sqrt, _tan, <span class="hljs-variable constant_">BEZIER</span>, <span class="hljs-variable constant_">CLOSE</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">MOVE</span>, <span class="hljs-variable constant_">QUADRATIC</span>, <span class="hljs-variable constant_">UNKNOWN</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -710,7 +715,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">calculatePath</span> = (<span class="hljs-params">d, scale, start, useAsPath, precision, result</span>) =&gt; {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">calculatePath</span> = (<span class="hljs-params">d, scale, start, useAsPath, precision, result</span>) =&gt; {
+
+    <span class="hljs-keyword">if</span> (precision == <span class="hljs-literal">null</span> || <span class="hljs-built_in">isNaN</span>(precision)) precision = <span class="hljs-number">10</span>;</pre></div></div>
             
         </li>
         
@@ -734,8 +741,8 @@
         unitPartials = result.<span class="hljs-property">unitPartials</span>,
         progression = result.<span class="hljs-property">unitProgression</span>,
         positions = result.<span class="hljs-property">unitPositions</span>,
-        mySet = d.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/([A-Za-z][0-9. ,-]*)/g</span>),
-        localMatch = <span class="hljs-regexp">/(-?[0-9.]+\b)/g</span>;
+        mySet = d.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/([MmZzLlHhVvCcSsQqTtAa][^MmZzLlHhVvCcSsQqTtAa]*)/g</span>) || [],
+        localMatch = <span class="hljs-regexp">/[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/g</span>;
 
     <span class="hljs-keyword">let</span> command = <span class="hljs-variable constant_">ZERO_STR</span>,
         localPath = <span class="hljs-variable constant_">ZERO_STR</span>,
@@ -747,7 +754,9 @@
         oldX = <span class="hljs-number">0</span>,
         oldY = <span class="hljs-number">0</span>,
         reflectX = <span class="hljs-number">0</span>,
-        reflectY = <span class="hljs-number">0</span>;</pre></div></div>
+        reflectY = <span class="hljs-number">0</span>,
+        subpathStartX = <span class="hljs-number">0</span>,
+        subpathStartY = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -858,12 +867,25 @@
                 <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;M&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.<span class="hljs-property">length</span>; j &lt; jz; j += <span class="hljs-number">2</span>) {
 
+                        <span class="hljs-keyword">const</span> isFirstPair = (j === <span class="hljs-number">0</span>),
+                            saved = command;
+
+                        <span class="hljs-keyword">if</span> (!isFirstPair) command = <span class="hljs-string">&#x27;L&#x27;</span>;
+
                         points[j] = (points[j] * scale) - oldX;
                         points[j + <span class="hljs-number">1</span>] = (points[j + <span class="hljs-number">1</span>] * scale) - oldY;
                         curX += points[j];
                         curY += points[j + <span class="hljs-number">1</span>];
                         reflectX = reflectY = <span class="hljs-number">0</span>;
                         <span class="hljs-title function_">buildArrays</span>(points.<span class="hljs-title function_">slice</span>(j, j + <span class="hljs-number">2</span>));
+
+                        <span class="hljs-keyword">if</span> (isFirstPair) {
+
+                            subpathStartX = curX;
+                            subpathStartY = curY;
+                        }
+
+                        command = saved;
                     }
                     <span class="hljs-keyword">break</span>;
 
@@ -925,6 +947,8 @@
                 <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;A&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.<span class="hljs-property">length</span>; j &lt; jz; j += <span class="hljs-number">7</span>) {
 
+                        points[j] *= scale;
+                        points[j + <span class="hljs-number">1</span>] *= scale;
                         points[j + <span class="hljs-number">5</span>] = (points[j + <span class="hljs-number">5</span>] * scale) - oldX;
                         points[j + <span class="hljs-number">6</span>] = (points[j + <span class="hljs-number">6</span>] * scale) - oldY;
                         curX += points[j + <span class="hljs-number">5</span>];
@@ -959,6 +983,9 @@
                 <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;t&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.<span class="hljs-property">length</span>; j &lt; jz; j += <span class="hljs-number">2</span>) {
 
+                        <span class="hljs-keyword">const</span> saved = command;
+                        <span class="hljs-keyword">if</span> (saved === <span class="hljs-string">&#x27;m&#x27;</span> &amp;&amp; j &gt; <span class="hljs-number">0</span>) command = <span class="hljs-string">&#x27;l&#x27;</span>;
+
                         points[j] *= scale;
                         points[j + <span class="hljs-number">1</span>] *= scale;
                         curX += points[j];
@@ -974,6 +1001,14 @@
                             reflectX = reflectY = <span class="hljs-number">0</span>;
                         }
                         <span class="hljs-title function_">buildArrays</span>(points.<span class="hljs-title function_">slice</span>(j, j + <span class="hljs-number">2</span>));
+
+                        <span class="hljs-keyword">if</span> (saved === <span class="hljs-string">&#x27;m&#x27;</span> &amp;&amp; j === <span class="hljs-number">0</span>) {
+
+                            subpathStartX = curX;
+                            subpathStartY = curY;
+                        }
+
+                        command = saved;
                     }
                     <span class="hljs-keyword">break</span>;
 
@@ -1125,6 +1160,9 @@
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;m&#x27;</span> :
+                        subpathStartX = cx;
+                        subpathStartY = cy;
+
                         units[i] = [<span class="hljs-variable constant_">MOVE</span>, x, y];
                         <span class="hljs-keyword">break</span>;
 
@@ -1133,7 +1171,7 @@
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;t&#x27;</span> :
-                        <span class="hljs-keyword">if</span> (prevData &amp;&amp; (prevData.<span class="hljs-property">rx</span> || prevData.<span class="hljs-property">ry</span>)) {
+                        <span class="hljs-keyword">if</span> (prevData &amp;&amp; <span class="hljs-title function_">_isFinite</span>(prevData.<span class="hljs-property">rx</span>) &amp;&amp; <span class="hljs-title function_">_isFinite</span>(prevData.<span class="hljs-property">ry</span>)) {
 
                             <span class="hljs-title function_">setVector</span>(v, prevData.<span class="hljs-property">rx</span> - cx, prevData.<span class="hljs-property">ry</span> - cy);
                             <span class="hljs-title function_">rotateVector</span>(v, <span class="hljs-number">180</span>);
@@ -1148,7 +1186,7 @@
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;s&#x27;</span> :
-                        <span class="hljs-keyword">if</span> (prevData &amp;&amp; (prevData.<span class="hljs-property">rx</span> || prevData.<span class="hljs-property">ry</span>)) {
+                        <span class="hljs-keyword">if</span> (prevData &amp;&amp; <span class="hljs-title function_">_isFinite</span>(prevData.<span class="hljs-property">rx</span>) &amp;&amp; <span class="hljs-title function_">_isFinite</span>(prevData.<span class="hljs-property">ry</span>)) {
 
                             <span class="hljs-title function_">setVector</span>(v, prevData.<span class="hljs-property">rx</span> - cx, prevData.<span class="hljs-property">ry</span> - cy);
                             <span class="hljs-title function_">rotateVector</span>(v, <span class="hljs-number">180</span>);
@@ -1163,13 +1201,49 @@
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;a&#x27;</span> :
-                        units[i] = [<span class="hljs-variable constant_">LINEAR</span>, x, y, p[<span class="hljs-number">5</span>] + x, p[<span class="hljs-number">6</span>] + y];
+                        {
+                            <span class="hljs-keyword">const</span> sx = x,
+                                sy = y,
+                                ex = x + p[<span class="hljs-number">5</span>],
+                                ey = y + p[<span class="hljs-number">6</span>];
+
+                            <span class="hljs-keyword">const</span> curves = <span class="hljs-title function_">arcToCubicBeziers</span>(
+                                sx,
+                                sy,
+                                <span class="hljs-title function_">_abs</span>(p[<span class="hljs-number">0</span>]),
+                                <span class="hljs-title function_">_abs</span>(p[<span class="hljs-number">1</span>]),
+                                p[<span class="hljs-number">2</span>],
+                                p[<span class="hljs-number">3</span>] ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>,
+                                p[<span class="hljs-number">4</span>] ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>,
+                                ex,
+                                ey,
+                            );
+
+                            <span class="hljs-keyword">if</span> (!curves.<span class="hljs-property">length</span>) units[i] = [<span class="hljs-variable constant_">LINEAR</span>, sx, sy, ex, ey];
+                            <span class="hljs-keyword">else</span> {
+
+                                <span class="hljs-keyword">const</span> insertAt = i,
+                                    splice = [];
+
+                                <span class="hljs-keyword">let</span> px = sx,
+                                    py = sy;
+
+                                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [c1x, c1y, c2x, c2y, x2, y2] <span class="hljs-keyword">of</span> curves) {
+
+                                    splice.<span class="hljs-title function_">push</span>([<span class="hljs-variable constant_">BEZIER</span>, px, py, c1x, c1y, c2x, c2y, x2, y2]);
+
+                                    px = x2;
+                                    py = y2;
+                                }
+                                units.<span class="hljs-title function_">splice</span>(insertAt, <span class="hljs-number">1</span>, ...splice);
+                            }
+                        }
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;z&#x27;</span> :
                         <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isFinite</span>(x)) x = <span class="hljs-number">0</span>;
                         <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isFinite</span>(y)) y = <span class="hljs-number">0</span>;
-                        units[i] = [<span class="hljs-variable constant_">CLOSE</span>, x, y];
+                        units[i] = [<span class="hljs-variable constant_">CLOSE</span>, x, y, subpathStartX, subpathStartY];
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">default</span> :
@@ -1192,6 +1266,7 @@
                 <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">LINEAR</span> :
                 <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">QUADRATIC</span> :
                 <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">BEZIER</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">CLOSE</span> :
                     localResults = <span class="hljs-title function_">getShapeUnitMetaData</span>(spec, precision, data);
                     unitLengths[i] = localResults.<span class="hljs-property">length</span>;
                     xPoints.<span class="hljs-title function_">push</span>(...localResults.<span class="hljs-property">xPoints</span>);
@@ -1211,8 +1286,12 @@
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = unitLengths.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-            mySum += unitLengths[i] / myLen;
-            unitPartials[i] = mySum;
+            <span class="hljs-keyword">if</span> (myLen === <span class="hljs-number">0</span>) unitPartials[i] = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">else</span> {
+
+                mySum += unitLengths[i] / myLen;
+                unitPartials[i] = mySum;
+            }
         }
     }
     result.<span class="hljs-property">length</span> = myLen;</pre></div></div>
@@ -1230,10 +1309,18 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    result.<span class="hljs-property">maxX</span> = <span class="hljs-title function_">_max</span>(...xPoints);
-    result.<span class="hljs-property">maxY</span> = <span class="hljs-title function_">_max</span>(...yPoints);
-    result.<span class="hljs-property">minX</span> = <span class="hljs-title function_">_min</span>(...xPoints);
-    result.<span class="hljs-property">minY</span> = <span class="hljs-title function_">_min</span>(...yPoints);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!xPoints.<span class="hljs-property">length</span>) {
+
+        result.<span class="hljs-property">minX</span> = result.<span class="hljs-property">maxX</span> = subpathStartX;
+        result.<span class="hljs-property">minY</span> = result.<span class="hljs-property">maxY</span> = subpathStartY;
+    }
+    <span class="hljs-keyword">else</span> {
+
+        result.<span class="hljs-property">maxX</span> = <span class="hljs-title function_">_max</span>(...xPoints);
+        result.<span class="hljs-property">maxY</span> = <span class="hljs-title function_">_max</span>(...yPoints);
+        result.<span class="hljs-property">minX</span> = <span class="hljs-title function_">_min</span>(...xPoints);
+        result.<span class="hljs-property">minY</span> = <span class="hljs-title function_">_min</span>(...yPoints);
+    }
 
     result.<span class="hljs-property">xRange</span>.<span class="hljs-title function_">push</span>(...xPoints);
     result.<span class="hljs-property">yRange</span>.<span class="hljs-title function_">push</span>(...yPoints);
@@ -1274,7 +1361,7 @@
 <span class="hljs-keyword">const</span> rotateVector = <span class="hljs-keyword">function</span> (<span class="hljs-params">v, angle</span>) {
 
     <span class="hljs-keyword">let</span> arg = <span class="hljs-title function_">_atan2</span>(v.<span class="hljs-property">y</span>, v.<span class="hljs-property">x</span>);
-    arg += (angle * <span class="hljs-number">0.01745329251</span>);
+    arg += (angle * _radian);
 
     <span class="hljs-keyword">const</span> mag = <span class="hljs-title function_">_sqrt</span>((v.<span class="hljs-property">x</span> * v.<span class="hljs-property">x</span>) + (v.<span class="hljs-property">y</span> * v.<span class="hljs-property">y</span>));
 
@@ -1334,7 +1421,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (species === <span class="hljs-variable constant_">LINEAR</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (species === <span class="hljs-variable constant_">LINEAR</span> || species === <span class="hljs-variable constant_">CLOSE</span>) {
 
         <span class="hljs-keyword">const</span> [sx, sy, ex, ey] = args;
 
@@ -1467,6 +1554,219 @@
             <span class="hljs-attr">y</span>: T * T * sy + <span class="hljs-number">2</span> * T * t * cp1y + t * t * ey
         };
     },
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p>Convert an SVG arc (endpoint param) into an array of cubic Beziers.
+Returns array of [cp1x, cp1y, cp2x, cp2y, x, y] segments.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> arcToCubicBeziers = <span class="hljs-keyword">function</span> (<span class="hljs-params">x1, y1, rx, ry, phi, fa, fs, x2, y2</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p>Based on SVG 1.1 spec F.6.5</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> rad = phi * _radian,
+        cos = <span class="hljs-title function_">_cos</span>(rad),
+        sin = <span class="hljs-title function_">_sin</span>(rad);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <p>Step 1: compute (x1’, y1’)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> dx2 = (x1 - x2) / <span class="hljs-number">2</span>,
+        dy2 = (y1 - y2) / <span class="hljs-number">2</span>,
+        x1p = cos * dx2 + sin * dy2,
+        y1p = -sin * dx2 + cos * dy2;
+
+    <span class="hljs-keyword">let</span> rxs = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(rx),
+        rys = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(ry);
+
+    <span class="hljs-keyword">if</span> (rxs === <span class="hljs-number">0</span> || rys === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p>Correct radii</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> lambda = (x1p * x1p) / (rxs * rxs) + (y1p * y1p) / (rys * rys);
+
+    <span class="hljs-keyword">if</span> (lambda &gt; <span class="hljs-number">1</span>) {
+
+        <span class="hljs-keyword">const</span> s = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(lambda);
+        rxs *= s;
+        rys *= s;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p>Step 2: compute center (cx’, cy’)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> sign = (fa === fs) ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>,
+        rxs2 = rxs * rxs,
+        rys2 = rys * rys,
+        num = rxs2 * rys2 - rxs2 * y1p * y1p - rys2 * x1p * x1p,
+        den = rxs2 * y1p * y1p + rys2 * x1p * x1p;
+
+    <span class="hljs-keyword">if</span> (den === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> [];
+
+    <span class="hljs-keyword">const</span> coef = sign * <span class="hljs-title function_">_sqrt</span>(<span class="hljs-title function_">_max</span>(<span class="hljs-number">0</span>, num / den)),
+        cxp = coef * (rxs * y1p / rys),
+        cyp = coef * (-rys * x1p / rxs);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p>Step 3: center (cx, cy)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> cx = cos * cxp - sin * cyp + (x1 + x2) / <span class="hljs-number">2</span>,
+        cy = sin * cxp + cos * cyp + (y1 + y2) / <span class="hljs-number">2</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <p>Angles</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> angle = <span class="hljs-keyword">function</span> (<span class="hljs-params">u, v</span>) {
+
+        <span class="hljs-keyword">const</span> dot = u.<span class="hljs-property">x</span> * v.<span class="hljs-property">x</span> + u.<span class="hljs-property">y</span> * v.<span class="hljs-property">y</span>,
+            mag = <span class="hljs-title function_">_sqrt</span>((u.<span class="hljs-property">x</span> * u.<span class="hljs-property">x</span> + u.<span class="hljs-property">y</span> * u.<span class="hljs-property">y</span>) * (v.<span class="hljs-property">x</span> * v.<span class="hljs-property">x</span> + v.<span class="hljs-property">y</span> * v.<span class="hljs-property">y</span>));
+
+        <span class="hljs-keyword">if</span> (mag === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">let</span> ang = <span class="hljs-title function_">_acos</span>(<span class="hljs-title function_">_min</span>(<span class="hljs-number">1</span>, <span class="hljs-title function_">_max</span>(-<span class="hljs-number">1</span>, dot / mag)));
+
+        <span class="hljs-keyword">if</span> (u.<span class="hljs-property">x</span> * v.<span class="hljs-property">y</span> - u.<span class="hljs-property">y</span> * v.<span class="hljs-property">x</span> &lt; <span class="hljs-number">0</span>) ang = -ang;
+
+        <span class="hljs-keyword">return</span> ang;
+    };
+
+    <span class="hljs-keyword">const</span> ux = (x1p - cxp) / rxs,
+        uy = (y1p - cyp) / rys,
+        vx = (-x1p - cxp) / rxs,
+        vy = (-y1p - cyp) / rys;
+
+    <span class="hljs-keyword">const</span> theta1 = <span class="hljs-title function_">angle</span>({<span class="hljs-attr">x</span>:<span class="hljs-number">1</span>, <span class="hljs-attr">y</span>:<span class="hljs-number">0</span>}, {<span class="hljs-attr">x</span>:ux, <span class="hljs-attr">y</span>:uy});
+
+    <span class="hljs-keyword">let</span> dtheta = <span class="hljs-title function_">angle</span>({<span class="hljs-attr">x</span>:ux, <span class="hljs-attr">y</span>:uy}, {<span class="hljs-attr">x</span>:vx, <span class="hljs-attr">y</span>:vy});
+
+    <span class="hljs-keyword">if</span> (!fs &amp;&amp; dtheta &gt; <span class="hljs-number">0</span>) dtheta -= _piDouble;
+    <span class="hljs-keyword">if</span> (fs &amp;&amp; dtheta &lt; <span class="hljs-number">0</span>) dtheta += _piDouble;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p>Split into segments of &lt;= 90°</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> segs = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">ceil</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(dtheta) / _piHalf),
+        delta = dtheta / segs,
+        t = (<span class="hljs-number">4</span> / <span class="hljs-number">3</span>) * <span class="hljs-title function_">_tan</span>(delta / <span class="hljs-number">4</span>);
+
+    <span class="hljs-keyword">const</span> beziers = [];
+
+    <span class="hljs-keyword">let</span> i, th1, th2,
+        cosTh1, sinTh1, cosTh2, sinTh2,
+        _x1, _y1, _x2, _y2, _dx1, _dy1, _dx2, _dy2,
+        cp1x, cp1y, cp2x, cp2y;
+
+
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; segs; i++) {
+
+        th1 = theta1 + i * delta;
+        th2 = th1 + delta;
+
+        cosTh1 = <span class="hljs-title function_">_cos</span>(th1);
+        sinTh1 = <span class="hljs-title function_">_sin</span>(th1);
+        cosTh2 = <span class="hljs-title function_">_cos</span>(th2);
+        sinTh2 = <span class="hljs-title function_">_sin</span>(th2);
+
+        _x1 = cx + rxs * (cos * cosTh1 - sin * sinTh1);
+        _y1 = cy + rys * (sin * cosTh1 + cos * sinTh1);
+        _x2 = cx + rxs * (cos * cosTh2 - sin * sinTh2);
+        _y2 = cy + rys * (sin * cosTh2 + cos * sinTh2);
+
+        _dx1 = -rxs * (cos * sinTh1 + sin * cosTh1);
+        _dy1 = -rys * (sin * sinTh1 - cos * cosTh1);
+        _dx2 = -rxs * (cos * sinTh2 + sin * cosTh2);
+        _dy2 = -rys * (sin * sinTh2 - cos * cosTh2);
+
+        cp1x = _x1 + t * _dx1;
+        cp1y = _y1 + t * _dy1;
+        cp2x = _x2 - t * _dx2;
+        cp2y = _y2 - t * _dy2;
+
+        beziers.<span class="hljs-title function_">push</span>([cp1x, cp1y, cp2x, cp2y, _x2, _y2]);
+    }
+    <span class="hljs-keyword">return</span> beziers;
 };</pre></div></div>
             
         </li>

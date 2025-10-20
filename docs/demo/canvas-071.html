@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1636,9 +1641,10 @@
     <span class="hljs-string">&#x27;conicTwo&#x27;</span>,
 ];
 
-<span class="hljs-keyword">const</span> len = updateOptions.<span class="hljs-property">length</span>;
+<span class="hljs-keyword">const</span> len = updateOptions.<span class="hljs-property">length</span>,
+    rnd = scrawl.<span class="hljs-title function_">seededRandomNumberGenerator</span>(<span class="hljs-string">&#x27;salting-is-good&#x27;</span>);
 
-<span class="hljs-keyword">let</span> choice = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * len),
+<span class="hljs-keyword">let</span> choice = rnd.<span class="hljs-title function_">range</span>(len),
     currentChoice = choice;
 
 render.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">commence</span>: updateOptions[currentChoice] });
@@ -1646,7 +1652,7 @@ currentStatus.<span class="hljs-property">textContent</span> = <span class="hljs
 
 <span class="hljs-built_in">setInterval</span>(<span class="hljs-function">() =&gt;</span> {
 
-    choice = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * len);
+    choice = rnd.<span class="hljs-title function_">range</span>(len);
     render.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">commence</span>: updateOptions[choice] });
     currentStatus.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Changing from <span class="hljs-subst">${optionNames[currentChoice]}</span> to <span class="hljs-subst">${optionNames[choice]}</span>`</span>;
     currentChoice = choice;

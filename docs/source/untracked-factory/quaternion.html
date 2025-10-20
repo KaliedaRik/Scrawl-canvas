@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -576,13 +581,6 @@
               </div>
               <h1 id="quaternion-factory">Quaternion factory</h1>
 <p>Scrawl-canvas uses quaternion objects for some of its calculations - in particular for calculating DOM element 3D rotation values. These objects are not stored in the library; rather, they are kept in a <strong>quaternion pool</strong> and pulled from it when required.</p>
-<p>TODO: there’s errors in the math here! See in particular Demo <a href="../../demo/snippets-003.html">Snippets-003</a> to experiment:</p>
-<ul>
-<li>Pitch always appears to rotate with reference to the element. Yaw and roll, however, seem to rotate with reference to the stack frame, or the element - or possibly a combination of both - dependant on the values of the other euler attributes.</li>
-<li><code>quaternionMultiply</code> is almost certainly wrong - caused by trying to convert code meant for a y-axis-upwards frame to code that works in a y-axis-downwards frame</li>
-<li>The <code>setFromEuler</code> function is also (probably) wrong</li>
-<li>I hate quaternions!</li>
-</ul>
 
             </div>
             
@@ -650,7 +648,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Quaternion</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">n</span> = items.<span class="hljs-property">n</span> || <span class="hljs-number">1</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">n</span> = <span class="hljs-title function_">isa_number</span>(items.<span class="hljs-property">n</span>) ? items.<span class="hljs-property">n</span> : <span class="hljs-number">1</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">v</span> = <span class="hljs-title function_">makeVector</span>();
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
@@ -752,21 +750,61 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_quaternion</span>(obj)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromQuaternion</span>(obj);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xto</span>(obj.<span class="hljs-property">pitch</span>, obj.<span class="hljs-property">yaw</span>, obj.<span class="hljs-property">roll</span>)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromEuler</span>(obj);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xto</span>(obj.<span class="hljs-property">pitch</span>, obj.<span class="hljs-property">yaw</span>, obj.<span class="hljs-property">roll</span>) || <span class="hljs-title function_">xto</span>(obj.<span class="hljs-property">x</span>, obj.<span class="hljs-property">y</span>, obj.<span class="hljs-property">z</span>)) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromEuler</span>(obj);
 
-    <span class="hljs-keyword">const</span> tv = <span class="hljs-variable language_">this</span>.<span class="hljs-property">v</span>,
-        v = (<span class="hljs-title function_">xt</span>(obj.<span class="hljs-property">vector</span>) || <span class="hljs-title function_">xt</span>(obj.<span class="hljs-property">v</span>)) ? (obj.<span class="hljs-property">vector</span> || obj.<span class="hljs-property">v</span>) : <span class="hljs-literal">false</span>,
-        n = (<span class="hljs-title function_">xt</span>(obj.<span class="hljs-property">scalar</span>) || <span class="hljs-title function_">xt</span>(obj.<span class="hljs-property">n</span>)) ? (obj.<span class="hljs-property">scalar</span> || obj.<span class="hljs-property">n</span> || <span class="hljs-number">0</span>) : <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">const</span> tv = <span class="hljs-variable language_">this</span>.<span class="hljs-property">v</span>;
+    <span class="hljs-keyword">const</span> hasVec = <span class="hljs-title function_">xt</span>(obj.<span class="hljs-property">vector</span>) || <span class="hljs-title function_">xt</span>(obj.<span class="hljs-property">v</span>);
+    <span class="hljs-keyword">const</span> v = hasVec ? (obj.<span class="hljs-property">vector</span> || obj.<span class="hljs-property">v</span>) : Ωempty;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>scalar (n)</p>
 
-    <span class="hljs-keyword">const</span> x = (v) ? (v.<span class="hljs-property">x</span> || <span class="hljs-number">0</span>) : obj.<span class="hljs-property">x</span> || <span class="hljs-literal">false</span>,
-        y = (v) ? (v.<span class="hljs-property">y</span> || <span class="hljs-number">0</span>) : obj.<span class="hljs-property">y</span> || <span class="hljs-literal">false</span>,
-        z = (v) ? (v.<span class="hljs-property">z</span> || <span class="hljs-number">0</span>) : obj.<span class="hljs-property">z</span> || <span class="hljs-literal">false</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xto</span>(obj.<span class="hljs-property">scalar</span>, obj.<span class="hljs-property">n</span>)) {
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">n</span> = (<span class="hljs-title function_">isa_number</span>(n)) ? n : <span class="hljs-variable language_">this</span>.<span class="hljs-property">n</span>;
+        <span class="hljs-keyword">const</span> nval = <span class="hljs-title function_">xt</span>(obj.<span class="hljs-property">scalar</span>) ? obj.<span class="hljs-property">scalar</span> : obj.<span class="hljs-property">n</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(nval)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">n</span> = nval;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>vector components (set only if provided; zero is valid)</p>
 
-    tv.<span class="hljs-property">x</span> = (<span class="hljs-title function_">isa_number</span>(x)) ? x : tv.<span class="hljs-property">x</span>;
-    tv.<span class="hljs-property">y</span> = (<span class="hljs-title function_">isa_number</span>(y)) ? y : tv.<span class="hljs-property">y</span>;
-    tv.<span class="hljs-property">z</span> = (<span class="hljs-title function_">isa_number</span>(z)) ? z : tv.<span class="hljs-property">z</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xto</span>(v.<span class="hljs-property">x</span>, obj.<span class="hljs-property">x</span>)) {
+
+        <span class="hljs-keyword">const</span> x = hasVec ? v.<span class="hljs-property">x</span> : obj.<span class="hljs-property">x</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(x)) tv.<span class="hljs-property">x</span> = x;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xto</span>(v.<span class="hljs-property">y</span>, obj.<span class="hljs-property">y</span>)) {
+
+        <span class="hljs-keyword">const</span> y = hasVec ? v.<span class="hljs-property">y</span> : obj.<span class="hljs-property">y</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(y)) tv.<span class="hljs-property">y</span> = y;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xto</span>(v.<span class="hljs-property">z</span>, obj.<span class="hljs-property">z</span>)) {
+
+        <span class="hljs-keyword">const</span> z = hasVec ? v.<span class="hljs-property">z</span> : obj.<span class="hljs-property">z</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(z)) tv.<span class="hljs-property">z</span> = z;
+    }
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };
@@ -800,25 +838,38 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
 
     <span class="hljs-keyword">const</span> s1 = <span class="hljs-title function_">_sin</span>( pitch / <span class="hljs-number">2</span> ),
         s2 = <span class="hljs-title function_">_sin</span>( yaw / <span class="hljs-number">2</span> ),
-        s3 = <span class="hljs-title function_">_sin</span>( roll / <span class="hljs-number">2</span> );
+        s3 = <span class="hljs-title function_">_sin</span>( roll / <span class="hljs-number">2</span> );</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>Standard intrinsic XYZ (pitch = x, yaw = y, roll = z)</p>
 
-    tv.<span class="hljs-property">x</span> = s1 * c2 * c3 + c1 * s2 * s3;
-    tv.<span class="hljs-property">y</span> = c1 * s2 * c3 + s1 * c2 * s3;
-    tv.<span class="hljs-property">z</span> = c1 * c2 * s3 - s1 * s2 * c3;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    tv.<span class="hljs-property">x</span> =  s1 * c2 * c3 + c1 * s2 * s3;
+    tv.<span class="hljs-property">y</span> =  c1 * s2 * c3 - s1 * c2 * s3;
+    tv.<span class="hljs-property">z</span> =  c1 * c2 * s3 + s1 * s2 * c3;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">n</span> = c1 * c2 * c3 - s1 * s2 * s3;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">normalize</span>();
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-12">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -827,11 +878,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-13">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Set the Quaternion attributes to their default values</p>
 
@@ -852,11 +903,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-14">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Get the Quaternion’s <strong>magnitude</strong> value</p>
 
@@ -872,11 +923,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-15">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Normalize the Quaternion</p>
 
@@ -900,11 +951,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-16">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Multiply the Quaternion by another Quaternion</p>
 
@@ -939,39 +990,53 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-17">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p>Retrieve the Quaternion’s current angle (returns a Number representing degrees, not radians)</p>
+              <p>Retrieve the Quaternion’s current angle. Returns radians by default.</p>
+<ul>
+<li>Pass <code>true</code> to get degrees.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getAngle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">degree</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getAngle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">degree</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>Clamp to handle tiny FP drift; normalize not required but helps.</p>
 
-    <span class="hljs-keyword">let</span> result;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> w = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(<span class="hljs-number">1</span>, <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(-<span class="hljs-number">1</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">n</span>));
 
-    degree = (<span class="hljs-title function_">xt</span>(degree)) ? degree : <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> result = <span class="hljs-number">2</span> * <span class="hljs-title function_">_acos</span>(w);
 
-    result = <span class="hljs-number">2</span> * <span class="hljs-title function_">_acos</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">n</span>);
+    <span class="hljs-keyword">const</span> asDegrees = degree === <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">if</span>(degree){
+    <span class="hljs-keyword">if</span> (asDegrees) result *= (<span class="hljs-number">1</span> / _radian);
 
-        result *= (<span class="hljs-number">1</span> / _radian);
-    }
     <span class="hljs-keyword">return</span> <span class="hljs-title function_">correctForZero</span>(result);
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-18">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Rotate the Quaternion using another Quaternion’s values</p>
 
@@ -987,6 +1052,8 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setFromQuaternion</span>(q4.<span class="hljs-title function_">quaternionMultiply</span>(q5));
 
         <span class="hljs-title function_">releaseQuaternion</span>(q4, q5);
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">normalize</span>();
     }
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>
 };</pre></div></div>
@@ -994,11 +1061,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-19">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="quaternion-pool">Quaternion pool</h4>
 <p>An attempt to reuse quaternions rather than constantly creating and deleting them</p>
@@ -1010,11 +1077,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-20">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - retrieve a Quaternion from the quaternion pool</p>
 
@@ -1024,9 +1091,9 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
 
     <span class="hljs-keyword">if</span> (!quaternionPool.<span class="hljs-property">length</span>) quaternionPool.<span class="hljs-title function_">push</span>(<span class="hljs-title function_">makeQuaternion</span>());
 
-    <span class="hljs-keyword">const</span> q = quaternionPool.<span class="hljs-title function_">shift</span>();
+    <span class="hljs-keyword">const</span> q = quaternionPool.<span class="hljs-title function_">pop</span>();
 
-    q.<span class="hljs-title function_">set</span>(items);
+    q.<span class="hljs-title function_">zero</span>().<span class="hljs-title function_">set</span>(items);
 
     <span class="hljs-keyword">return</span> q
 };</pre></div></div>
@@ -1034,11 +1101,11 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-21">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - return a Quaternion to the quaternion pool. Failing to return Quaternion to the pool may lead to more inefficient code and possible memory leaks.</p>
 
@@ -1048,21 +1115,18 @@ P.<span class="hljs-property">setFromEuler</span> = <span class="hljs-keyword">f
 
     args.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">q</span> =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (q &amp;&amp; q.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_QUATERNION</span>) {
-
-            quaternionPool.<span class="hljs-title function_">push</span>(q.<span class="hljs-title function_">zero</span>());
-        }
+        <span class="hljs-keyword">if</span> (q &amp;&amp; q.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_QUATERNION</span>) quaternionPool.<span class="hljs-title function_">push</span>(q);
     });
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-22">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 

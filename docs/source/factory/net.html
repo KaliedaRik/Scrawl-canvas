@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -749,8 +754,6 @@
     <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">group</span>) items.<span class="hljs-property">group</span> = currentGroup;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">purge</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">purgeArtefact</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">purge</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -1541,7 +1544,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>;
         engine.<span class="hljs-property">shadowColor</span> = <span class="hljs-variable constant_">BLANK</span>;
         engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-number">1</span>;
-        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        engine.<span class="hljs-title function_">resetTransform</span>();
         engine.<span class="hljs-title function_">beginPath</span>();
 
         springs.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> {
@@ -1605,7 +1608,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>;
         engine.<span class="hljs-property">shadowColor</span> = <span class="hljs-variable constant_">BLANK</span>;
 
-        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        engine.<span class="hljs-title function_">resetTransform</span>();
         engine.<span class="hljs-title function_">beginPath</span>();
 
         particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
@@ -1914,10 +1917,10 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         <span class="hljs-keyword">if</span> (host &amp;&amp; rows &gt; <span class="hljs-number">0</span> &amp;&amp; columns &gt; <span class="hljs-number">0</span>) {
 
             <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
-            <span class="hljs-keyword">const</span> [, height] = host.<span class="hljs-property">currentDimensions</span>;
+            <span class="hljs-keyword">const</span> [width, height] = host.<span class="hljs-property">currentDimensions</span>;
 
             <span class="hljs-keyword">const</span> deltaR = (rowDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
-            <span class="hljs-keyword">const</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
+            <span class="hljs-keyword">const</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * width : columnDistance;
 
             <span class="hljs-keyword">let</span> dx, dy, p, i, j;</pre></div></div>
             
@@ -2030,10 +2033,10 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
         <span class="hljs-keyword">if</span> (host &amp;&amp; rows &gt; <span class="hljs-number">0</span> &amp;&amp; columns &gt; <span class="hljs-number">0</span>) {
 
             <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
-            <span class="hljs-keyword">const</span> [, height] = host.<span class="hljs-property">currentDimensions</span>;
+            <span class="hljs-keyword">const</span> [width, height] = host.<span class="hljs-property">currentDimensions</span>;
 
             <span class="hljs-keyword">const</span> deltaR = (rowDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
-            <span class="hljs-keyword">const</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
+            <span class="hljs-keyword">const</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * width : columnDistance;
 
             <span class="hljs-keyword">let</span> dx, dy, p, i, j;</pre></div></div>
             

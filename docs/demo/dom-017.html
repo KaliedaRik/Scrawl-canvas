@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1449,7 +1454,7 @@
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">removeCanvas</span> = (<span class="hljs-params"></span>) =&gt; {
     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;remove the current canvas:&#x27;</span>, currentCanvas);
 
-    scrawl.<span class="hljs-property">library</span>.<span class="hljs-title function_">purge</span>(currentCanvas);
+    scrawl.<span class="hljs-title function_">purge</span>(currentCanvas);
     currentCanvas = noCanvas;
 };</pre></div></div>
             
@@ -1883,7 +1888,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">removeStack</span> = (<span class="hljs-params"></span>) =&gt; {
     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;remove the current stack:&#x27;</span>, currentStack);
 
-    scrawl.<span class="hljs-property">library</span>.<span class="hljs-title function_">purge</span>(currentStack);
+    scrawl.<span class="hljs-title function_">purge</span>(currentStack);
     currentStack = noStack;
 };</pre></div></div>
             

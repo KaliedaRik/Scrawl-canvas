@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1179,7 +1184,7 @@
 
         engine.<span class="hljs-title function_">save</span>();
 
-        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        engine.<span class="hljs-title function_">resetTransform</span>();
 
         engine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">&#x27;midnightblue&#x27;</span>;
 
@@ -1268,7 +1273,7 @@
             <span class="hljs-keyword">const</span> {x, y} = here;
 
             engine.<span class="hljs-title function_">save</span>();
-            engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            engine.<span class="hljs-title function_">resetTransform</span>();
             engine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">&#x27;red&#x27;</span>;
 
             <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = particles.<span class="hljs-property">length</span>; i &lt; iz; i++) {

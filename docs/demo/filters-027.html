@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1084,6 +1089,8 @@
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;reducePalette&#x27;</span>,
     <span class="hljs-attr">palette</span>: <span class="hljs-string">&#x27;black-white&#x27;</span>,
     <span class="hljs-attr">noiseType</span>: <span class="hljs-string">&#x27;bluenoise&#x27;</span>,
+
+    <span class="hljs-attr">minimumColorDistance</span>: <span class="hljs-number">650</span>,
 });</pre></div></div>
             
         </li>
@@ -1140,8 +1147,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> <span class="hljs-variable constant_">LUP</span> = scrawl.<span class="hljs-title function_">getLastUsedReducePalette</span>();
-    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(<span class="hljs-variable constant_">LUP</span>)) <span class="hljs-variable constant_">LUP</span> = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(<span class="hljs-variable constant_">LUP</span>);
-    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable constant_">LUP</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(<span class="hljs-variable constant_">LUP</span>)) <span class="hljs-variable constant_">LUP</span> = <span class="hljs-variable constant_">LUP</span>.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;, &#x27;</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`
     Commonest colors: <span class="hljs-subst">${dom.paletteNumber.value}</span>

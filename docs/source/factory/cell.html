@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -2616,7 +2621,7 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
             </div>
             
             <div class="content"><div class='highlight'><pre>        engine.<span class="hljs-title function_">save</span>();
-        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        engine.<span class="hljs-title function_">resetTransform</span>();
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImageData</span> = engine.<span class="hljs-title function_">getImageData</span>(stashX, stashY, stashWidth, stashHeight);
         engine.<span class="hljs-title function_">restore</span>();</pre></div></div>
             
@@ -3030,19 +3035,28 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
         halfHeight = <span class="hljs-title function_">_floor</span>(height / <span class="hljs-number">2</span>);
 
     <span class="hljs-keyword">const</span> iData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height),
-        data = iData.<span class="hljs-property">data</span>;
+        data = iData.<span class="hljs-property">data</span>,
+        slider = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(data.<span class="hljs-property">buffer</span>,  data.<span class="hljs-property">byteOffset</span>,  data.<span class="hljs-property">byteLength</span> &gt;&gt;&gt; <span class="hljs-number">2</span>);;
+
+    <span class="hljs-keyword">if</span> (opaque) {
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">3</span>, iz = data.<span class="hljs-property">length</span>; i &lt; iz; i += <span class="hljs-number">4</span>) {
+
+            data[i] = <span class="hljs-number">255</span>;
+        }
+    }
 
     <span class="hljs-keyword">const</span> pixelState = [];
 
     <span class="hljs-keyword">const</span> coord = <span class="hljs-title function_">requestCoordinate</span>();
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> row = <span class="hljs-number">0</span>; row &lt; height; row++) {
+    <span class="hljs-keyword">let</span> row, col, index, angle;
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> col = <span class="hljs-number">0</span>; col &lt; width; col++) {
+    <span class="hljs-keyword">for</span> (row = <span class="hljs-number">0</span>; row &lt; height; row++) {
 
-            <span class="hljs-keyword">const</span> index = ((row * width) + col) * <span class="hljs-number">4</span>;
+        <span class="hljs-keyword">for</span> (col = <span class="hljs-number">0</span>; col &lt; width; col++) {
 
-            coord.<span class="hljs-title function_">setFromArray</span>([halfWidth, halfHeight]).<span class="hljs-title function_">subtract</span>([row, col]);</pre></div></div>
+            index = ((row * width) + col) * <span class="hljs-number">4</span>;</pre></div></div>
             
         </li>
         
@@ -3053,23 +3067,34 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
               <div class="sswrap ">
                 <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
-              <p>We want angle <code>0deg</code> to point north, to the top of the screen</p>
+              <p>coord.setFromArray([halfWidth, halfHeight]).subtract([row, col]);</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> angle = <span class="hljs-number">1</span> - ((<span class="hljs-title function_">_atan2</span>(coord[<span class="hljs-number">1</span>], coord[<span class="hljs-number">0</span>]) / _piDouble) + <span class="hljs-number">0.5</span>);
-            <span class="hljs-keyword">if</span> (angle &gt; <span class="hljs-number">0.5</span>) angle -= <span class="hljs-number">0.5</span>;
-            <span class="hljs-keyword">else</span> angle += <span class="hljs-number">0.5</span>;
+            <div class="content"><div class='highlight'><pre>            coord.<span class="hljs-title function_">setFromArray</span>([col, row]).<span class="hljs-title function_">subtract</span>([halfWidth, halfHeight]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-87">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-87">&#x00a7;</a>
+              </div>
+              <p>We want angle <code>0.0turn / 1.0turn</code> to point north, to the top of the screen; <code>0.25turn</code> is east (horizontal to the right); etc.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            angle = (<span class="hljs-title function_">_atan2</span>(coord[<span class="hljs-number">1</span>], coord[<span class="hljs-number">0</span>]) / _piDouble) + <span class="hljs-number">0.5</span>;
+            angle = (angle + <span class="hljs-number">0.75</span>) % <span class="hljs-number">1</span>;
 
             pixelState.<span class="hljs-title function_">push</span>({
-                <span class="hljs-attr">indexR</span>: index,
-                <span class="hljs-attr">indexG</span>: index + <span class="hljs-number">1</span>,
-                <span class="hljs-attr">indexB</span>: index + <span class="hljs-number">2</span>,
-                <span class="hljs-attr">indexA</span>: index + <span class="hljs-number">3</span>,
-                <span class="hljs-attr">red</span>: data[index + <span class="hljs-number">0</span>],
-                <span class="hljs-attr">green</span>: data[index + <span class="hljs-number">1</span>],
-                <span class="hljs-attr">blue</span>: data[index + <span class="hljs-number">2</span>],
-                <span class="hljs-attr">alpha</span>: (opaque) ? <span class="hljs-number">255</span> : data[index + <span class="hljs-number">3</span>],
+                index,
+                <span class="hljs-attr">red</span>: data[index],
+                <span class="hljs-attr">green</span>: data[++index],
+                <span class="hljs-attr">blue</span>: data[++index],
+                <span class="hljs-attr">alpha</span>: data[++index],
                 row,
                 col,
                 <span class="hljs-attr">distance</span>: coord.<span class="hljs-title function_">getMagnitude</span>(),
@@ -3082,7 +3107,9 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
 
     <span class="hljs-keyword">return</span> {
         iData,
+        slider,
         pixelState,
+        opaque,
     }
 };
 
@@ -3090,44 +3117,50 @@ P.<span class="hljs-property">show</span> = <span class="hljs-keyword">function<
 
 P.<span class="hljs-property">paintCellData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item = Ωempty</span>) {
 
-    <span class="hljs-keyword">const</span> { iData, pixelState} = item;
+    <span class="hljs-keyword">const</span> { iData, slider, pixelState, opaque} = item;
     <span class="hljs-keyword">const</span> { width, height, data} = iData;
     <span class="hljs-keyword">const</span> [w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
 
     <span class="hljs-keyword">if</span> (width &amp;&amp; height &amp;&amp; data &amp;&amp; pixelState &amp;&amp; w === width &amp;&amp; h === height) {
 
-        pixelState.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
+        <span class="hljs-keyword">let</span> i, iz, p, red, green, blue, alpha, index,
+            update = <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">const</span> {indexR, indexG, indexB, indexA} = p;
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = pixelState.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-            <span class="hljs-keyword">const</span> red = pixelCleaner[<span class="hljs-number">0</span>] = p.<span class="hljs-property">red</span>;
-            <span class="hljs-keyword">const</span> green = pixelCleaner[<span class="hljs-number">0</span>] = p.<span class="hljs-property">green</span>;
-            <span class="hljs-keyword">const</span> blue = pixelCleaner[<span class="hljs-number">0</span>] = p.<span class="hljs-property">blue</span>;
-            <span class="hljs-keyword">const</span> alpha = pixelCleaner[<span class="hljs-number">0</span>] = p.<span class="hljs-property">alpha</span>;
+            p = pixelState[i];
 
-            p.<span class="hljs-property">red</span> = red;
-            p.<span class="hljs-property">green</span> = green;
-            p.<span class="hljs-property">blue</span> = blue;
-            p.<span class="hljs-property">alpha</span> = alpha;
+            index = p.<span class="hljs-property">index</span>;
 
-            data[indexR] = red;
-            data[indexG] = green;
-            data[indexB] = blue;
-            data[indexA] = alpha;
-        });
+            red = pixelCleaner[<span class="hljs-number">0</span>] = p.<span class="hljs-property">red</span>;
+            green = pixelCleaner[<span class="hljs-number">0</span>] = p.<span class="hljs-property">green</span>;
+            blue = pixelCleaner[<span class="hljs-number">0</span>] = p.<span class="hljs-property">blue</span>;
+            alpha = opaque ? <span class="hljs-number">255</span> : pixelCleaner[<span class="hljs-number">0</span>] = p.<span class="hljs-property">alpha</span>;
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-title function_">putImageData</span>(iData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            <span class="hljs-keyword">if</span> (slider[index &gt;&gt;&gt; <span class="hljs-number">2</span>] !== ((alpha &lt;&lt; <span class="hljs-number">24</span>) | (blue &lt;&lt; <span class="hljs-number">16</span>) | (green &lt;&lt; <span class="hljs-number">8</span>) | red) &gt;&gt;&gt; <span class="hljs-number">0</span>) {
+
+                update = <span class="hljs-literal">true</span>;
+
+                data[index] = red;
+                data[++index] = green;
+                data[++index] = blue;
+
+                <span class="hljs-keyword">if</span> (!opaque) data[++index] = alpha;
+            }
+        };
+
+        <span class="hljs-keyword">if</span> (update) <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>.<span class="hljs-title function_">putImageData</span>(iData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
     }
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-87">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-87">&#x00a7;</a>
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 

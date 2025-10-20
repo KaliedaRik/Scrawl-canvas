@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1023,7 +1028,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;mycanvas&#x27;</span>);
+
+<span class="hljs-keyword">const</span> namespace = canvas.<span class="hljs-property">name</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -1048,6 +1056,7 @@
     <span class="hljs-attr">assetName</span>: initialAssetName,
     canvas,
     scrawl,
+    <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(initialAssetName),
 });</pre></div></div>
             
         </li>
@@ -1064,7 +1073,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;spiral-chart&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;spiral-chart-display&#x27;</span>),
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
     <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
     <span class="hljs-attr">asset</span>: initialAssetName,
@@ -1106,7 +1115,7 @@
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;demo-animation&#x27;</span>),
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
@@ -1133,13 +1142,14 @@
 
         <span class="hljs-keyword">const</span> assetName = <span class="hljs-string">`wiki-<span class="hljs-subst">${page}</span>-chart`</span>;
 
-        <span class="hljs-keyword">if</span> (!scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">assetnames</span>.<span class="hljs-title function_">includes</span>(assetName)) {
+        <span class="hljs-keyword">if</span> (!scrawl.<span class="hljs-title function_">findAsset</span>(assetName)) {
 
             <span class="hljs-title function_">buildChart</span>({
                 page,
                 assetName,
                 canvas,
                 scrawl,
+                <span class="hljs-attr">namespace</span>: <span class="hljs-title function_">name</span>(assetName),
             });
         }
 
