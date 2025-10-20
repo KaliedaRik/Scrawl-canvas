@@ -217,7 +217,7 @@ const build = function (items) {
         // Kill the frame
         api.kill = () => {
 
-            scrawl.library.purge(namespace);
+            scrawl.purge(namespace);
             api.keyboard();
         }
     }

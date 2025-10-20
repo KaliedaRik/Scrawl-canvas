@@ -11,7 +11,7 @@
     "build-min": "rollup -c",
     "build-showdown": "node ./scripts/build-reference-docs.mjs",
     "dev": "browser-sync -w",
-    "lint": "npx eslint source/**/*.js demo/*.js demo/**/*.js",
+    "lint": "npx eslint source/**/*.js demo/*.js demo/modules/*.js demo/snippets/*.js",
     "knip": "knip",
     "test": "tsc"
   },

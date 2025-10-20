@@ -35,7 +35,7 @@ const myNoise = scrawl.makeNoiseAsset({
 
     cyclePalette: true,
 
-    colorSpace: 'OKLAB',
+    colorSpace: 'OKLCH',
 
     colors: [
         [0, '#000000'],

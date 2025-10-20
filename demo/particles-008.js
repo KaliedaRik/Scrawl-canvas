@@ -144,7 +144,7 @@ const myNet = scrawl.makeNet({
 
     // The distance between rows and columns can be set using either absolute (px) Number values, or relative % String values
     rowDistance: 15,
-    columnDistance: '5%',
+    columnDistance: '3.2%',
 
     // We can get the Net entity to display its springs
     showSprings: true,

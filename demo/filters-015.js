@@ -26,13 +26,14 @@ const myFilter = scrawl.makeFilter({
     name: name('tiles'),
     method: 'tiles',
 
-    points: 'rect-grid',
+    mode: 'rect',
 
-    tileWidth: 20,
-    tileHeight: 20,
-    tileRadius: 14,
-    offsetX: 200,
-    offsetY: 200,
+    rectWidth: 20,
+    rectHeight: 20,
+    hexRadius: 14,
+    randomCount: 100,
+    originX: 200,
+    originY: 200,
 });
 
 
@@ -53,10 +54,10 @@ const piccy = scrawl.makePicture({
 const report = reportSpeed('#reportmessage', function () {
 
     return `
-    Tile dimensions - width: ${dom.tile_width.value}px, height: ${dom.tile_height.value}px, radius: ${dom.tile_radius.value}px
-    Origin offset - x: ${dom.offset_x.value}px, y: ${dom.offset_y.value}px
+    Tile dimensions - width: ${dom.rectWidth.value}px, height: ${dom.rectHeight.value}px, radius: ${dom.hexRadius.value}px
+    Origin - x: ${dom.originX.value}px, y: ${dom.originY.value}px
     Angle: ${dom.angle.value}
-    Random points: ${dom.random_points.value}
+    Random count: ${dom.randomCount.value}
     Opacity: ${dom.opacity.value}`;
 });
 
@@ -72,74 +73,20 @@ scrawl.makeRender({
 
 // #### User interaction
 const dom = scrawl.initializeDomInputs([
-    ['input', 'tile_width', '20'],
-    ['input', 'tile_height', '20'],
-    ['input', 'tile_radius', '14'],
-    ['input', 'offset_x', '200'],
-    ['input', 'offset_y', '200'],
+    ['input', 'rectWidth', '20'],
+    ['input', 'rectHeight', '20'],
+    ['input', 'hexRadius', '14'],
+    ['input', 'originX', '200'],
+    ['input', 'originY', '200'],
     ['input', 'angle', '0'],
-    ['input', 'random_points', '20'],
+    ['input', 'randomCount', '100'],
     ['input', 'opacity', '1'],
-    ['select', 'points', 0],
+    ['select', 'mode', 0],
     ['select', 'include_red', 1],
     ['select', 'include_green', 1],
     ['select', 'include_blue', 1],
     ['select', 'include_alpha', 0],
 ]);
-
-
-// Update points value selector
-scrawl.addNativeListener(['change', 'input'], (e) => {
-
-    const t = e.target,
-        value = t.value;
-
-    switch (value) {
-
-        case 'random' :
-            myFilter.set({
-                points: parseInt(dom.random_points.value, 10),
-                tileRadius: 100,
-            });
-            dom.tile_radius.value = '100';
-            break;
-
-        case 'hex-grid' :
-            myFilter.set({
-                points: value,
-                tileRadius: 20,
-                tileHeight: 40,
-            });
-            dom.tile_radius.value = '20';
-            dom.tile_height.value = '40';
-            break;
-
-        case 'rect-grid' :
-            myFilter.set({
-                points: value,
-                tileWidth: 20,
-                tileHeight: 20,
-            });
-            dom.tile_width.value = '20';
-            dom.tile_height.value = '20';
-            break;
-    }
-}, dom.points);
-
-
-// Update random-points value range
-scrawl.addNativeListener(['change', 'input'], (e) => {
-
-    const t = e.target,
-        value = t.value;
-
-        if (dom.points.value === 'random') {
-
-            myFilter.set({
-                points: parseInt(value, 10),
-            });
-        }
-}, dom.random_points);
 
 
 // Setup form observer functionality for remaining inputs/selectors
@@ -155,12 +102,15 @@ scrawl.makeUpdater({
 
     updates: {
 
-        tile_width: ['tileWidth', 'round'],
-        tile_height: ['tileHeight', 'round'],
-        tile_radius: ['tileRadius', 'round'],
-        offset_x: ['offsetX', 'round'],
-        offset_y: ['offsetY', 'round'],
+        mode: ['mode', 'raw'],
+
+        rectWidth: ['rectWidth', 'round'],
+        rectHeight: ['rectHeight', 'round'],
+        hexRadius: ['hexRadius', 'round'],
+        originX: ['originX', 'round'],
+        originY: ['originY', 'round'],
         angle: ['angle', 'round'],
+        randomCount: ['randomCount', 'round'],
 
         include_red: ['includeRed', 'boolean'],
         include_green: ['includeGreen', 'boolean'],

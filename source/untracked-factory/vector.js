@@ -286,6 +286,51 @@ P.normalize = function() {
     return this;
 };
 
+// Dot product with Vector or [x,y,z]
+P.getDot = function (item = Ωempty) {
+
+    if (_isArray(item)) {
+
+        const [x, y, z] = item;
+
+        return (isa_number(x) ? x : 0) * this.x
+            + (isa_number(y) ? y : 0) * this.y
+            + (isa_number(z) ? z : 0) * this.z;
+    }
+
+    const { x, y, z } = item;
+
+    return (isa_number(x) ? x : 0) * this.x
+        + (isa_number(y) ? y : 0) * this.y
+        + (isa_number(z) ? z : 0) * this.z;
+};
+
+// (Optional alias)
+P.dot = P.getDot;
+
+// this += scalar * other
+P.vectorAddScaled = function (other = Ωempty, scalar = 1) {
+
+    if (_isArray(other)) {
+
+        const [x, y, z] = other;
+
+        if (isa_number(x)) this.x += scalar * x;
+        if (isa_number(y)) this.y += scalar * y;
+        if (isa_number(z)) this.z += scalar * z;
+
+        return this;
+    }
+
+    const { x, y, z } = other;
+
+    if (isa_number(x)) this.x += scalar * x;
+    if (isa_number(y)) this.y += scalar * y;
+    if (isa_number(z)) this.z += scalar * z;
+
+    return this;
+};
+
 
 // #### Vector pool
 // An attempt to reuse vectors rather than constantly creating and deleting them
@@ -296,7 +341,7 @@ export const requestVector = function (x, y, z) {
 
     if (!vectorPool.length) vectorPool.push(new Vector());
 
-    const v = vectorPool.shift();
+    const v = vectorPool.pop();
 
     v.set(x, y, z);
 

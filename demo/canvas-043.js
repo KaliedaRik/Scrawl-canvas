@@ -307,7 +307,7 @@ const canvasTwoPostInitialization = function () {
 
     // The cog and star Cells - and their Groups, entitys, etc - have served their purpose
     // + Time to get rid of them
-    setTimeout(() => scrawl.library.purge(prepNamespace), 0);
+    setTimeout(() => scrawl.purge(prepNamespace), 0);
 };
 
 

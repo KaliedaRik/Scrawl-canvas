@@ -100,7 +100,7 @@ api.build = (items) => {
         // + We pass the namespace through to the stacked-bars module, so we can handle kill functionality here rather than there
         api.kill = () => {
             console.log('killing namespace', namespace);
-            scrawl.library.purge(namespace);
+            scrawl.purge(namespace);
         };
 
 

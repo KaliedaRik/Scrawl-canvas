@@ -228,7 +228,7 @@ P.processPacketOut = function (key, value, incl) {
 
     let result = true;
 
-    if(!incl.includes(key) < 0 && value === this.defs[key]) result = false;
+    if(!incl.includes(key) && value === this.defs[key]) result = false;
 
     return result;
 };
@@ -781,7 +781,7 @@ P.cleanInput = function () {
 
     canvas.width = sourceDimension;
     canvas.height = sourceDimension;
-    engine.setTransform(1, 0, 0, 1, 0, 0);
+    engine.resetTransform();
 
     this.source.stamp(true, mycell, {
         startX: 0,
@@ -828,7 +828,7 @@ P.cleanOutput = function () {
 
         inputCanvas.width = sourceDimension;
         inputCanvas.height = sourceDimension;
-        inputEngine.setTransform(1, 0, 0, 1, 0, 0);
+        inputEngine.resetTransform();
         inputEngine.putImageData(sourceImageData, 0, 0);
 
         const outputCell = requestCell(),
@@ -838,7 +838,7 @@ P.cleanOutput = function () {
         outputCanvas.width = outputWidth;
         outputCanvas.height = outputHeight;
         outputEngine.globalAlpha = this.state.globalAlpha;
-        outputEngine.setTransform(1, 0, 0, 1, 0, 0);
+        outputEngine.resetTransform();
 
         const inputStrutHeight = parseFloat((sourceDimension / (rows - 1)).toFixed(4)),
             inputStrutWidth = parseFloat((sourceDimension / (columns - 1)).toFixed(4));
@@ -907,8 +907,8 @@ P.cleanOutput = function () {
         inputCanvas.width = iWidth;
         inputCanvas.height = iHeight;
 
-        outputEngine.setTransform(1, 0, 0, 1, 0, 0);
-        inputEngine.setTransform(1, 0, 0, 1, 0, 0);
+        outputEngine.resetTransform();
+        inputEngine.resetTransform();
 
         for (let j = 0; j < iLoops; j++) {
 
@@ -1008,7 +1008,7 @@ P.clear = function (engine) {
         tempCanvas.height = h;
 
         tempEngine.putImageData(output, 0, 0);
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.resetTransform();
         engine.globalCompositeOperation = DESTINATION_OUT;
         engine.drawImage(tempCanvas, 0, 0);
         engine.globalCompositeOperation = gco;
@@ -1027,7 +1027,7 @@ P.clip = λnull;
 // `doStroke`
 P.doStroke = function (engine) {
 
-    engine.setTransform(1, 0, 0, 1, 0, 0);
+    engine.resetTransform();
     engine.stroke(this.pathObject);
 };
 
@@ -1052,7 +1052,7 @@ P.doFill = function (engine) {
         tempCanvas.height = h;
 
         tempEngine.putImageData(output, 0, 0);
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.resetTransform();
         engine.drawImage(tempCanvas, 0, 0);
 
         releaseCell(tempCell);

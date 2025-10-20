@@ -9,10 +9,13 @@
     "types": []
   },
   "include": [
-    "demo/**/*.js",
+    "demo/*.js",
+    "demo/modules/*.js",
+    "demo/snippets/*.js",
     "source/scrawl.d.ts"
   ],
   "exclude": [
-    "demo/**/temp-*.js",
+    "demo/**/temp-*",
+    "demo/mediapipe-*",
   ]
 }

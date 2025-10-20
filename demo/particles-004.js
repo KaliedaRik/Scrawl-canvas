@@ -88,8 +88,8 @@ scrawl.makeBezier({
 const stars = scrawl.makeStar({
 
     name: name('star'),
-    radius1: 6,
-    radius2: 4,
+    radius1: 3,
+    radius2: 7,
     points: 5,
     handle: ['center', 'center'],
     fillStyle: 'gold',

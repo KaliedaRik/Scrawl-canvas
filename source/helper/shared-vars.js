@@ -1,6 +1,7 @@
 // # Shared variables
 export const _abs = Math.abs;
 export const _assign = Object.assign;
+export const _acos = Math.acos;
 export const _atan2 = Math.atan2;
 export const _ceil = Math.ceil;
 export const _computed = window.getComputedStyle;
@@ -31,6 +32,7 @@ export const _round = Math.round;
 export const _setPrototypeOf = Object.setPrototypeOf;
 export const _sin = Math.sin;
 export const _sqrt = Math.sqrt;
+export const _tan = Math.tan;
 export const _tick = 16 / 1000;
 export const _values = Object.values;
 
@@ -72,6 +74,7 @@ export const CENTER = 'center';
 export const CHANNELS_TO_ALPHA = 'channels-to-alpha';
 export const CHROMA = 'chroma';
 export const CLAMP_CHANNELS = 'clamp-channels';
+export const CLAMP_VALUES = ['down', 'round', 'up'];
 export const CLEAR = 'clear';
 export const CLICK = 'click';
 export const CLICK_ACTION = 'clickAction';
@@ -125,7 +128,7 @@ export const HREF = 'href';
 export const HREFLANG = 'hreflang';
 export const IDEOGRAPHIC = 'ideographic';
 export const IMG = 'img';
-export const INT_COLOR_SPACES = ['RGB', 'HSL', 'HWB', 'XYZ', 'LAB', 'LCH', 'OKLAB', 'OKLCH'];
+export const INT_COLOR_SPACES = ['rgb', 'hsl', 'hwb', 'xyz', 'lab', 'lch', 'oklab', 'oklch'];
 export const INVERT_CHANNELS = 'invert-channels';
 export const LEAVE = 'leave';
 export const LEFT = 'left';
@@ -179,7 +182,7 @@ export const RADIUS_XY = ['radiusX', 'radiusY'];
 export const RADIUS_Y = ['radiusY'];
 export const RANDOM = 'random';
 export const RANDOM_NOISE = 'random-noise';
-export const RECT_GRID = 'rect-grid';
+export const RECT = 'rect';
 export const RECTANGLE = 'rectangle';
 export const RED = 'red';
 export const REDUCE_PALETTE = 'reduce-palette';
@@ -188,7 +191,7 @@ export const REL = 'rel';
 export const RELATIVE = 'relative';
 export const REMOVE_EVENT_LISTENER = 'removeEventListener';
 export const REVERSE_BY_DELTA = 'reverseByDelta';
-export const RGB = 'RGB';
+export const RGB = 'rgb';
 export const RIGHT = 'right';
 export const ROLE = 'role';
 export const ROOT = 'root';
@@ -218,13 +221,15 @@ export const T_COLOR = 'Color';
 export const T_COORDINATE = 'Coordinate';
 export const T_ENHANCED_LABEL = 'EnhancedLabel';
 export const T_FILTER = 'Filter';
+export const T_GRID = 'Grid';
 export const T_GROUP = 'Group';
 export const T_IMAGE = 'Image';
 export const T_LABEL = 'Label';
 export const T_LINE = 'Line';
 export const T_NET = 'Net';
 export const T_NOISE = 'Noise';
-export const T_PALETTE = 'Palette'
+export const T_COLOR_ENGINE = 'ColorEngine';
+export const T_PALETTE = 'Palette';
 export const T_PARTICLE = 'Particle';
 export const T_PICTURE = 'Picture';
 export const T_POLYLINE = 'Polyline';
@@ -243,6 +248,7 @@ export const T_WORLD = 'World';
 export const TAB_ORDER = 'tabOrder';
 export const TARGET = 'target';
 export const THRESHOLD = 'threshold';
+export const TILE_MODES = ['rect', 'hex', 'random', 'points'];
 export const TILES = 'tiles';
 export const TINT_CHANNELS = 'tint-channels';
 export const TOP = 'top';
@@ -265,15 +271,3 @@ export const WHITE = 'rgb(255 255 255 / 1)';
 export const WIDTH = 'width';
 export const ZERO_PATH = 'M0,0';
 export const ZERO_STR = '';
-
-// Can be turned into stacks
-export const PERMITTED_STACK_ELEMENTS = ['ARTICLE', 'ASIDE', 'DIV', 'FOOTER', 'HEADER', 'MAIN', 'NAV', 'SECTION'];
-
-// Can be imported into stacks as elements; have hit zones/pivot points - corner elements added
-export const PERMITTED_TRACKED_ELEMENTS = ['ARTICLE', 'ASIDE', 'DIV', 'FOOTER', 'HEADER', 'MAIN', 'NAV', 'SECTION', 'ADDRESS', 'BLOCKQUOTE', 'DL', 'FIGURE', 'FORM', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'HGROUP', 'MENU', 'METER', 'OL', 'P', 'PRE', 'PROGRESS', 'SEARCH', 'SELECT', 'TABLE', 'TEXTAREA', 'UL', 'OUTPUT'];
-
-// Elements not included in the other 3 groups. Can be imported into stacks as elements; do not have hit zones/pivot points - corner elements not added
-// export const PERMITTED_UNTRACKED_ELEMENTS = ['AUDIO', 'VIDEO', 'EMBED', 'FENCEDFRAME', 'IFRAME', 'OBJECT', 'IMG', 'PICTURE', 'SVG', 'MATH', 'INPUT', 'A', 'BUTTON', 'DETAILS'];
-
-// Cannot be used as stacks or stack elements
-export const FORBIDDEN_ELEMENTS = ['BASE', 'HEAD', 'LINK', 'META', 'STYLE', 'TITLE', 'BODY', 'DD', 'DT', 'FIGCAPTION', 'HR', 'LI', 'ABBR', 'B', 'BDI', 'BDO', 'BR', 'CITE', 'CODE', 'DATA', 'DFN', 'EM', 'I', 'KBD', 'MARK', 'Q', 'RP', 'RT', 'RUBY', 'S', 'SAMP', 'SMALL', 'SPAN', 'STRONG', 'SUB', 'SUP', 'TIME', 'U', 'VAR', 'WBR', 'AREA', 'MAP', 'TRACK', 'SOURCE', 'NOSCRIPT', 'SCRIPT', 'DEL', 'INS', 'CAPTION', 'COL', 'COLGROUP', 'TBODY', 'TD', 'TFOOT', 'TH', 'THEAD', 'TR', 'DATALIST', 'FIELDSET', 'LABEL', 'LEGEND', 'OPTGROUP', 'OPTION', 'SLOT', 'DIALOG', 'SUMMARY', 'TEMPLATE', 'ACRONYM', 'BIG', 'CENTER', 'CONTENT', 'DIR', 'FONT', 'FRAME', 'FRAMESET', 'IMAGE', 'MARQUEE', 'MENUITEM', 'NOBR', 'NOEMBED', 'NOFRAMES', 'PARAM', 'PLAINTEXT', 'RB', 'RTC', 'SHADOW', 'STRIKE', 'TT', 'XMP', 'ANIMATE', 'ANIMATEMOTION', 'ANIMATETRANSFORM', 'CIRCLE', 'CLIPPATH', 'CURSOR', 'DEFS', 'DESC', 'ELLIPSE', 'FEBLEND', 'FECOLORMATRIX', 'FECOMPONENTTRANSFER', 'FECOMPOSITE', 'FECONVOLVEMATRIX', 'FEDIFFUSELIGHTING', 'FEDISPLACEMENTMAP', 'FEDISTANTLIGHT', 'FEDROPSHADOW', 'FEFLOOD', 'FEFUNCA', 'FEFUNCB', 'FEFUNCG', 'FEFUNCR', 'FEGAUSSIANBLUR', 'FEIMAGE', 'FEMERGE', 'FEMERGENODE', 'FEMORPHOLOGY', 'FEOFFSET', 'FEPOINTLIGHT', 'FESPECULARLIGHTING', 'FESPOTLIGHT', 'FETILE', 'FETURBULENCE', 'FILTER', 'FONT-FACE-FORMAT', 'FONT-FACE-NAME', 'FONT-FACE-SRC', 'FONT-FACE-URI', 'FONT-FACE', 'FONT', 'FONT', 'FOREIGNOBJECT', 'G', 'GLYPH', 'GLYPHREF', 'HKERN', 'IMAGE', 'LINE', 'LINEARGRADIENT', 'MARKER', 'MASK', 'METADATA', 'MISSING-GLYPH', 'MPATH', 'PATH', 'PATTERN', 'POLYGON', 'POLYLINE', 'RADIALGRADIENT', 'RECT', 'SCRIPT', 'SET', 'STOP', 'STYLE', 'SWITCH', 'SYMBOL', 'TEXT', 'TEXTPATH', 'TREF', 'TSPAN', 'USE', 'VIEW', 'VKERN'];

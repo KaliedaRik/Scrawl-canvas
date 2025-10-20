@@ -47,6 +47,7 @@
 |
 | - helper
 |   | - array-pool.js
+|   | - color-engine.js
 |   | - document-root-elements.js
 |   | - filter-engine-bluenoise-data.js
 |   | - filter-engine.js
@@ -76,14 +77,14 @@
 <p>The following guidelines (which is not a complete list) underpin the decisions made when designing the code architecture. Some of these are based on the need to compute as quickly as possible; others are more whimsical:</p>
 <ol>
 <li><p>No third party code direct dependencies. Ever.</p></li>
-<li><p>All code is written in modular Javascript, using <code>import</code> and <code>export</code> statements to share code between files.</p></li>
+<li><p>All code is written in modular JavaScript, using <code>import</code> and <code>export</code> statements to share code between files.</p></li>
 <li><p><a href="https://en.wikipedia.org/wiki/Circular_dependency">Circular dependencies</a> between files should be avoided at all costs.</p></li>
-<li><p>(Repo-devs maintain a Typescript definitions file purely to support code completion functionality in the dev-user's preferred development environment.)</p></li>
-<li><p>Javascript is a <a href="https://en.wikipedia.org/wiki/Prototype-based_programming">prototypal language</a>. Javascript classes are expressly forbidden from the code base!</p></li>
+<li><p>(Repo-devs maintain a TypeScript definitions file purely to support code completion functionality in the dev-user's preferred development environment.)</p></li>
+<li><p>JavaScript is a <a href="https://en.wikipedia.org/wiki/Prototype-based_programming">prototypal language</a>. JavaScript classes are expressly forbidden from the code base!</p></li>
 <li><p>SC uses mixin files to implement inheritance.</p></li>
-<li><p>Minimise lookups: mixin files should add attributes and functions to an object's prototype directly. Say no to hierarchies!</p></li>
-<li><p>Minimise <a href="https://mathiasbynens.be/notes/shapes-ics">object shape</a> deformation: define an object's attributes up-front, with default values; do not add additional attributes once the object has been created; do not delete attributes. </p></li>
-<li><p>Functional programming has its place, except when it is wasteful. Minimise wastefulness, for example by using pooled objects.</p></li>
+<li><p>Minimize lookups: mixin files should add attributes and functions to an object's prototype directly. Say no to hierarchies!</p></li>
+<li><p>Minimize <a href="https://mathiasbynens.be/notes/shapes-ics">object shape</a> deformation: define an object's attributes up-front, with default values; do not add additional attributes once the object has been created; do not delete attributes. </p></li>
+<li><p>Functional programming has its place, except when it is wasteful. Minimize wastefulness, for example by using pooled objects.</p></li>
 <li><p>Constant string variables should be created once, and only once, throughout the code base.</p></li>
 <li><p>Prefer fast functionality over clever functionality. This includes iterators.</p></li>
 <li><p>Avoid asynchronous functionality except where absolutely necessary. No web workers!</p></li>
@@ -93,11 +94,11 @@
 </ol>
 <p>Also, SC enforces additional coding preferences via linting rules, invoked by running the command <code>yarn lint</code>. </p>
 <h2 id="common-file-structures">Common file structures</h2>
-<p>Repo-devs make every effort to keep files tidy, in particular by maintaining a similar file structure for similar types of files. This is an attempt to minimise cognitive overload.</p>
-<p>Note that repo-devs encourage inline comments. The repo includes tool chaining to extract these comments into document files as part of the <code>yarn build</code> functionality. Use <code>// [... comment]</code> single-line comments - the tooling doesn't (yet) recognise (JS-style) <code>/* ... multi-line comments */</code>.</p>
+<p>Repo-devs make every effort to keep files tidy, in particular by maintaining a similar file structure for similar types of files. This is an attempt to minimize cognitive overload.</p>
+<p>Note that repo-devs encourage inline comments. The repo includes tool chaining to extract these comments into document files as part of the <code>yarn build</code> functionality. Use <code>// [... comment]</code> single-line comments – the tooling doesn't (yet) recognise (JS-style) <code>/* ... multi-line comments */</code>.</p>
 <h3 id="factory-files">Factory files</h3>
 <p>SC uses <a href="https://www.patterns.dev/vanilla/factory-pattern">factory pattern</a> files to define objects that a dev-user can create. Much of the functionality in factory files is shared between them, so as part of the factory file SC invokes <strong>mixin functions</strong> to add that functionality. Additional functionality specific to that object is then defined.</p>
-<p>As far as possible, all factory files use the following code structure - for instance <code>factory/wheel.js</code>:</p>
+<p>As far as possible, all factory files use the following code structure – for instance <code>factory/wheel.js</code>:</p>
 <pre><code>// # Wheel factory
 // [... top level documentation for the factory]
 

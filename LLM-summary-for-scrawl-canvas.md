@@ -187,11 +187,6 @@ Demonstrates: Core Label entity functionality including support for non-western 
 - (https://github.com/KaliedaRik/Scrawl-canvas/blob/v8/demo/canvas-201.html // HTML structure and setup, including relevant CSS styling.)
 - (https://github.com/KaliedaRik/Scrawl-canvas/blob/v8/demo/canvas-201.js // Core Scrawl-canvas logic.)
 
-Demonstrates: The more advanced EnhancedLabel entity, for complex text layouts.
-
-- (https://github.com/KaliedaRik/Scrawl-canvas/blob/v8/demo/canvas-206.html // HTML structure and setup, including relevant CSS styling.)
-- (https://github.com/KaliedaRik/Scrawl-canvas/blob/v8/demo/canvas-206.js // Core Scrawl-canvas logic.)
-
 Demonstrates: The more advanced EnhancedLabel entity, for complex text layouts including the shaping of that text to fit into non-rectangular screen spaces.
 
 - (https://github.com/KaliedaRik/Scrawl-canvas/blob/v8/demo/canvas-206.html // HTML structure and setup, including relevant CSS styling.)
@@ -280,7 +275,7 @@ Demonstrates: the Scrawl-canvas Developer Runbook - pages of particular interest
 
 - (https://github.com/KaliedaRik/Scrawl-canvas/blob/v8/docs/reference/sc-positioning.md // Markdown file describing the Scrawl-canvas positioning system for Scrawl-canvas artefacts and graphical entities: the rotation-reflection point; absolute positioning using pixel values; relative positioning using percent-string values relative to the Canvas or Stack container; positioning artefacts and entities by reference to the positions of other artefacts and entities, using `pivot`, `path`, `mimic`, etc functionality.)
 
-- (https://github.com/KaliedaRik/Scrawl-canvas/blob/v8/docs/reference/aaa.md // Markdown file describing the Scrawl-canvas relationship with CSS and SVG filters, together with a deep-dive into the Scrawl-canvas library's own bespoke filters system: the `makeFilter` factory; applying Scrawl-canvas filters to Cell, Group and graphical entity objects, including the stacked filter and the chained filter approaches; filter opacity; filter stencils; filter output memoization; animating filters. The deep dive continues with consideration of the Scrawl-canvas filter engine: code efficiency; image and color caches; random number and noise generators; alpha channel filters; color channel filters; composition filters; convolution filters; displacement filters; filters that manipulate pixel colors in the CIELAB color space - OKLAB and OKLCH.)
+- (https://github.com/KaliedaRik/Scrawl-canvas/blob/v8/docs/reference/sc-filter-engine.md // Markdown file describing the Scrawl-canvas relationship with CSS and SVG filters, together with a deep-dive into the Scrawl-canvas library's own bespoke filters system: the `makeFilter` factory; applying Scrawl-canvas filters to Cell, Group and graphical entity objects, including the stacked filter and the chained filter approaches; filter opacity; filter stencils; filter output memoization; animating filters. The deep dive continues with consideration of the Scrawl-canvas filter engine: code efficiency; image and color caches; random number and noise generators; alpha channel filters; color channel filters; composition filters; convolution filters; displacement filters; filters that manipulate pixel colors in the CIELAB color space - OKLAB and OKLCH.)
 
 Demonstrates: the Scrawl-canvas structured learning material.
 

@@ -21,7 +21,7 @@ SC pre-defined path-based entitys
 + `Tetragon`
 
 Other things
-+ `Polyline` - generating a path-based entity from sets of coordinates (which can be references to other artifacts, and even particles)
++ `Polyline` - generating a path-based entity from sets of coordinates (which can be references to other artefacts, and even particles)
 + `Loom` - a compound entity that uses path-based entitys to define its display shape
 + `EnhancedLabel` - can use path-based entitys for "text along a path" effects
 

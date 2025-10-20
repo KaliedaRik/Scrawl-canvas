@@ -41,8 +41,6 @@ const starling = scrawl.makeWheel({
     noPositionDependencies: true,
     noFilters: true,
     noUserInteraction: true,
-
-    purge: 'all',
 });
 
 

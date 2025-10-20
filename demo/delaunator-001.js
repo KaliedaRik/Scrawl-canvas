@@ -141,12 +141,18 @@ const myWorld = scrawl.makeWorld({
 
                 const { particleStore } = emitter;
 
-                particleStore.forEach(p => {
+                if (particleStore) {
 
-                    const pos = p.position;
+                    let i, iz, p, pos;
 
-                    coords.push([pos.x, pos.y]);
-                });
+                    for (i = 0, iz = particleStore.length; i < iz; i++) {
+
+                        p = particleStore[i];
+                        pos = p.position;
+
+                        coords.push([pos.x, pos.y]);
+                    }
+                }
 
                 const here = (canvas) ? canvas.here : false;
 
@@ -223,7 +229,7 @@ scrawl.makeEmitter({
 
             engine.save();
 
-            engine.setTransform(1, 0, 0, 1, 0, 0);
+            engine.resetTransform();
 
             engine.lineWidth = 3;
             engine.strokeStyle = 'gold';

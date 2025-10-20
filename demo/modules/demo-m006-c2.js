@@ -184,6 +184,6 @@ export default function (items) {
     // #### Return object
     return {
         animation,
-        kill: () => scrawl.library.purge(namespace),
+        kill: () => scrawl.purge(namespace),
     };
 }

@@ -117,8 +117,8 @@ scrawl.makeStar({
 
     name: name('star'),
 
-    radius1: 18,
-    radius2: 12,
+    radius1: 6,
+    radius2: 18,
 
     points: 5,
 
@@ -218,6 +218,7 @@ const myEmitter = scrawl.makeEmitter({
     hitRadiusColor: 'red',
 
     // `stampAction` function
+    stampFirst: 'newest',
     stampAction: function (artefact, particle, host) {
 
         const history = particle.history,

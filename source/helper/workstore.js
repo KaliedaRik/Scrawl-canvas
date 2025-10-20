@@ -107,7 +107,7 @@ const purgeWorkstore = () => {
 // `core-workstore-hygeine` animation object runs every RAF cycle
 makeAnimation({
 
-    name: 'SC-core-workstore-hygeine',
+    name: 'SC-core-workstore-hygiene',
     order: 998,
     fn: () => purgeWorkstore(),
 });

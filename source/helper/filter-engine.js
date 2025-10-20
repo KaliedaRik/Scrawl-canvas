@@ -9,7 +9,11 @@ import { seededRandomNumberGenerator } from './random-seed.js';
 
 import { correctAngle, doCreate, easeEngines, isa_fn } from './utilities.js';
 
-import { checkForWorkstoreItem, getOrAddWorkstoreItem, getWorkstoreItem, setAndReturnWorkstoreItem, setWorkstoreItem } from './workstore.js';
+import { getOrAddWorkstoreItem, getWorkstoreItem, setAndReturnWorkstoreItem, setWorkstoreItem } from './workstore.js';
+
+import { colorEngine } from './color-engine.js';
+
+import { releaseArray, requestArray } from './array-pool.js';
 
 import { makeAnimation } from '../factory/animation.js';
 
@@ -17,24 +21,19 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 
 import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
-
-import { makeColor } from '../factory/color.js';
-
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _ceil, _floor, _isArray, _isFinite, _max, _min, _round, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT_GRID, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _pow, _round, _sin, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
-const _exp = Math.exp,
-    _256 = 256,
+const _256 = 256,
     _256_SQUARE = 256 * 256,
-    _256_CUBE = 256 * 256 * 256,
+    _exp = Math.exp,
     BLUE = 'blue',
+    CHROMA_MATCH = 'chroma-match',
     COLOR_BURN = 'color-burn',
     COLOR_DODGE = 'color-dodge',
-    COLOR_POINT_ARRAYS = 'color-point-arrays',
     CURRENT = 'current',
     DARKEN = 'darken',
     DESTINATION_ATOP = 'destination-atop',
@@ -44,18 +43,20 @@ const _exp = Math.exp,
     EXCLUSION = 'exclusion',
     GRAY_PALETTES = ['black-white', 'monochrome-4', 'monochrome-8', 'monochrome-16'],
     HARD_LIGHT = 'hard-light',
-    HEX_GRID = 'hex-grid',
+    HEX = 'hex',
     HUE = 'hue',
+    HUE_MATCH = 'hue-match',
     LIGHTEN = 'lighten',
     LIGHTER = 'lighter',
     LUMINOSITY = 'luminosity',
     MONOCHROME_16 = 'monochrome-16',
     MONOCHROME_4 = 'monochrome-4',
     MONOCHROME_8 = 'monochrome-8',
+    NAIVE_GRAY_LUT = 'naive-gray-lut',
     ORDERED = 'ordered',
     OVERLAY = 'overlay',
-    POINTS_ARRAY = 'points-array',
-    RANDOM_POINTS = 'random-points',
+    POINTS = 'points',
+    RECT = 'rect',
     SATURATION = 'saturation',
     SCREEN = 'screen',
     SOFT_LIGHT = 'soft-light',
@@ -63,8 +64,9 @@ const _exp = Math.exp,
     SOURCE_ATOP = 'source-atop',
     SOURCE_ONLY = 'source-only',
     T_FILTER_ENGINE = 'FilterEngine',
-    UNSET = 'unset',
     XOR = 'xor';
+
+const OK_BLENDS = [HUE, SATURATION, LUMINOSITY, COLOR, HUE_MATCH, CHROMA_MATCH];
 
 const orderedNoise = new Float32Array([0.00,0.50,0.13,0.63,0.03,0.53,0.16,0.66,0.75,0.25,0.88,0.38,0.78,0.28,0.91,0.41,0.19,0.69,0.06,0.56,0.22,0.72,0.09,0.59,0.94,0.44,0.81,0.31,0.97,0.47,0.84,0.34,0.05,0.55,0.17,0.67,0.02,0.52,0.14,0.64,0.80,0.30,0.92,0.42,0.77,0.27,0.89,0.39,0.23,0.73,0.11,0.61,0.20,0.70,0.08,0.58,0.98,0.48,0.86,0.36,0.95,0.45,0.83,0.33]);
 
@@ -91,14 +93,6 @@ const predefinedPalette = {
     [MONOCHROME_16]: [255, 238, 221, 204, 187, 170, 153, 136, 119, 102, 85, 68, 51, 34, 17, 0],
 }
 
-const LOW_ARRAY = new Uint8Array([0,255,0]),
-    HIGH_ARRAY = new Uint8Array([0,255,255]);
-
-
-// The filter Color object - used by various filters
-export const colorEngine = makeColor({
-    name: 'SC-core-color-engine',
-});
 
 // A backdoor to retrieve the last palette used by the `reduce-palette` filter
 // + We use this in Demo filters-027 to report the colors used in the commonest colors palette
@@ -107,13 +101,11 @@ const setLastUsedReducePalette = (val) => lastUsedReducePalette = val;
 export const getLastUsedReducePalette = () => lastUsedReducePalette;
 
 
+// __cache__ - an Object consisting of `key:Object` pairs where the key is the named input of a `process-image` action or the output of any action object. This object is cleared and re-initialized each time the `engine.action` function is invoked
+let cache = null;
+
 // #### FilterEngine constructor
 const FilterEngine = function () {
-
-    // ### Transactional variables
-
-    // __cache__ - an Object consisting of `key:Object` pairs where the key is the named input of a `process-image` action or the output of any action object. This object is cleared and re-initialized each time the `engine.action` function is invoked
-    this.cache = null;
 
     // __actions__ - the Array of action objects that the engine needs to process.
     this.actions = [];
@@ -130,6 +122,7 @@ P.action = function (packet) {
 
     const { identifier, filters, image } = packet;
     const { actions, theBigActionsObject } = this;
+
     let i, iz, actData, a;
 
     const itemInWorkstore = getWorkstoreItem(identifier);
@@ -156,12 +149,12 @@ P.action = function (packet) {
             if (a) a.call(this, actData);
         }
 
-        if (identifier) setWorkstoreItem(identifier, this.cache.work);
+        if (identifier) setWorkstoreItem(identifier, cache.work);
 
-        return this.cache.work;
+        return cache.work;
     }
     return image;
-}
+};
 
 
 // ### Permanent variables
@@ -169,83 +162,18 @@ P.action = function (packet) {
 // `unknit` - called at the start of each new message action chain. Creates and populates the __source__ and __work__ objects from the image data supplied in the message
 P.unknit = function (image) {
 
-    this.cache = {};
-
-    const cache = this.cache;
+    cache = {};
 
     const { width, height, data } = image;
 
-    cache.source = new ImageData(data, width, height);
-    cache.work = new ImageData(data, width, height);
-};
-
-// `getAlphaData` - extract alpha channel data from (usually the source) ImageData object and populate the color channels of a new ImageData object with that data
-P.getAlphaData = function (image) {
-
-    const {width, height, data:iData} = image;
-
-    const len = iData.length;
-
-    const sourceAlpha = new ImageData(width, height),
-        aData = sourceAlpha.data;
-
-    let a, i;
-
-    for (i = 0; i < len; i += 4) {
-
-        a = iData[i + 3];
-        aData[i] = 0;
-        aData[i + 1] = 0;
-        aData[i + 2] = 0;
-        aData[i + 3] = (a > 0) ? 255 : 0;
-    }
-
-    return sourceAlpha;
+    cache.source = new ImageData(new Uint8ClampedArray(data), width, height);
+    cache.work = new ImageData(new Uint8ClampedArray(data), width, height);
 };
 
 
 // ### Functions invoked by a range of different action functions
 //
-// `buildImageGrid` creates an Array of Arrays which contain the indexes of each pixel in the image channel Arrays
-P.buildImageGrid = function (image) {
-
-    const { cache } = this;
-
-    if (!image) image = cache.source;
-
-    const { width, height } = image
-
-    if (width && height) {
-
-        const name = `grid-${width}-${height}`,
-            itemInWorkstore = getWorkstoreItem(name);
-
-        if (itemInWorkstore) return itemInWorkstore;
-
-        const grid = [];
-
-        let counter = 0,
-            row, x, y;
-
-        for (y = 0; y < height; y++) {
-
-            row = [];
-
-            for (x = 0; x < width; x++) {
-
-                row.push(counter);
-                counter++;
-            }
-            grid.push(row);
-        }
-
-        setWorkstoreItem(name, grid);
-        return grid;
-    }
-    return false;
-};
-
-P.getRandomNumbers = function (items = {}) {
+const getRandomNumbers = function (items = {}) {
 
     const {
         seed = DEFAULT_SEED,
@@ -259,750 +187,134 @@ P.getRandomNumbers = function (items = {}) {
 
     if (itemInWorkstore) return itemInWorkstore;
 
-    const vals = requestArray();
+    if ((type === BLUENOISE || type === ORDERED) && imgWidth) {
 
-    let i, j, k, temp, currentRow;
+        const base = (type === BLUENOISE) ? bluenoise : orderedNoise,
+            dim = (_sqrt(base.length) | 0),
+            imgH = ((length / imgWidth) | 0),
+            out = new Float32Array(length);
 
-    if (type === BLUENOISE && imgWidth) {
+        let p = 0,
+            y, y0, x;
 
-        const bLen = bluenoise.length,
-            blueDims = _sqrt(bLen),
-            imgHeight = length / imgWidth,
-            bLines = requestArray();
+        for (y = 0; y < imgH && p < length; y++) {
 
-        for (i = 0; i < bLen; i += blueDims) {
+            y0 = (y % dim) * dim;
 
-            temp = bluenoise.slice(i, i + blueDims);
-            bLines.push(temp);
-        }
+            for (x = 0; x < imgWidth && p < length; x++) {
 
-        for (i = imgHeight; i > 0; i -= blueDims) {
-
-            for (j = 0; j < blueDims; j++) {
-
-                currentRow = bLines[j];
-
-                for (k = imgWidth; k > 0; k -= blueDims) {
-
-                    if (k < blueDims) vals.push(...currentRow.slice(0, k));
-                    else vals.push(...currentRow);
-                }
+                out[p++] = base[y0 + (x % dim)];
             }
         }
-        releaseArray(bLines);
-    }
-    else if (type === ORDERED && imgWidth) {
+        setWorkstoreItem(name, out);
 
-        const oLen = orderedNoise.length,
-            oDims = _sqrt(oLen),
-            imgHeight = length / imgWidth,
-            oLines = requestArray();
-
-        for (i = 0; i < oLen; i += oDims) {
-
-            temp = orderedNoise.slice(i, i + oDims);
-            oLines.push(temp);
-        }
-
-        for (i = imgHeight; i > 0; i -= oDims) {
-
-            for (j = 0; j < oDims; j++) {
-
-                currentRow = oLines[j];
-
-                for (k = imgWidth; k > 0; k -= oDims) {
-
-                    if (k < oDims) vals.push(...currentRow.slice(0, k));
-                    else vals.push(...currentRow);
-                }
-            }
-        }
-        releaseArray(oLines);
+        return out;
     }
     else {
 
-        const engine = seededRandomNumberGenerator(seed);
+        const engine = seededRandomNumberGenerator(seed),
+            out = new Float32Array(length);
 
-        for (i = 0; i < length; i++) {
+        for (let i = 0; i < length; i++) {
 
-            vals.push(engine.random());
+            out[i] = engine.random();
         }
+        setWorkstoreItem(name, out);
+
+        return out;
     }
-
-    const valsArray = new Float32Array(vals);
-    releaseArray(vals);
-
-    setWorkstoreItem(name, valsArray);
-    return valsArray;
 };
 
-P.buildImageCoordinateLookup = function (image) {
-
-    const { cache } = this;
+// Build compact tile rectangles (no per-pixel arrays).
+// + Returns an Int32Array laid out as [x0, y0, x1, y1, x0, y0, x1, y1, ...]
+const buildTileRects = function (tileWidth, tileHeight, offsetX, offsetY, image) {
 
     if (!image) image = cache.source;
 
-    const { width, height } = image
+    const iWidth  = image.width | 0,
+        iHeight = image.height | 0;
 
-    if (width && height) {
+    if (!iWidth || !iHeight) return new Int32Array(0);
 
-        const name = `coords-lookup-${width}-${height}`,
-            itemInWorkstore = getWorkstoreItem(name);
+    let tW = (_isFinite(tileWidth) ? tileWidth : 1) | 0,
+        tH = (_isFinite(tileHeight) ? tileHeight : 1) | 0,
+        offX = (_isFinite(offsetX) ? offsetX : 0) | 0,
+        offY = (_isFinite(offsetY) ? offsetY : 0) | 0;
 
-        if (itemInWorkstore) return itemInWorkstore;
+    if (tW < 1) tW = 1;
+    if (tW >= iWidth)  tW = iWidth - 1;
+    if (tH < 1) tH = 1;
+    if (tH >= iHeight) tH = iHeight - 1;
 
-        const lookup = []
+    if (offX < 0) offX = 0;
+    else if (offX >= tW) offX = tW - 1;
 
-        for (let y = 0; y < height; y++) {
+    if (offY < 0) offY = 0;
+    else if (offY >= tH) offY = tH - 1;
 
-            for (let x = 0; x < width; x++) {
-
-                lookup.push([x, y]);
-            }
-        }
-
-        setWorkstoreItem(name, lookup);
-        return lookup;
-    }
-    return false;
-};
-
-// `buildAlphaTileSets` - creates a record of which pixels belong to which tile - used for manipulating alpha channel values. Resulting object will be cached in the store
-P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels, image) {
+    const name = `simple-tileset-rects-${iWidth}-${iHeight}-${tW}-${tH}-${offX}-${offY}`;
 
-    const { cache } = this;
+    const cached = getWorkstoreItem(name);
+    if (cached) return cached;
 
-    if (!image) image = cache.source;
+    const rects = requestArray();
 
-    const { width:iWidth, height:iHeight } = image;
+    let j, y0, y1, yEnd, i, x0, x1, xEnd;
 
-    if (iWidth && iHeight) {
+    for (j = offY - tH; j < iHeight; j += tH) {
 
-        tileWidth = (_isFinite(tileWidth)) ? tileWidth : 1;
-        tileHeight = (_isFinite(tileHeight)) ? tileHeight : 1;
-        gutterWidth = (_isFinite(gutterWidth)) ? gutterWidth : 1;
-        gutterHeight = (_isFinite(gutterHeight)) ? gutterHeight : 1;
-        offsetX = (_isFinite(offsetX)) ? offsetX : 0;
-        offsetY = (_isFinite(offsetY)) ? offsetY : 0;
+        y0 = (j < 0 ? 0 : j);
+        y1 = j + tH;
 
-        if (tileWidth < 1) tileWidth = 1;
-        if (tileHeight < 1) tileHeight = 1;
-        if (tileWidth + gutterWidth >= iWidth) tileWidth = iWidth - gutterWidth - 1;
-        if (tileHeight + gutterHeight >= iHeight) tileHeight = iHeight - gutterHeight - 1;
+        if (y0 >= iHeight) break;
 
-        if (tileWidth < 1) tileWidth = 1;
-        if (tileHeight < 1) tileHeight = 1;
-        if (tileWidth + gutterWidth >= iWidth) gutterWidth = iWidth - tileWidth - 1;
-        if (tileHeight + gutterHeight >= iHeight) gutterHeight = iHeight - tileHeight - 1;
+        yEnd = (y1 > iHeight ? iHeight : y1);
 
-        const aWidth = tileWidth + gutterWidth,
-            aHeight = tileHeight + gutterHeight;
+        for (i = offX - tW; i < iWidth; i += tW) {
 
-        if (offsetX < 0) offsetX = 0;
-        if (offsetX >= aWidth) offsetX = aWidth - 1;
-        if (offsetY < 0) offsetY = 0;
-        if (offsetY >= aHeight) offsetY = aHeight - 1;
+            x0 = (i < 0 ? 0 : i);
+            x1 = i + tW;
 
-        const name = `alphatileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${gutterWidth}-${gutterHeight}-${offsetX}-${offsetY}`,
-            itemInWorkstore = getWorkstoreItem(name);
+            if (x0 >= iWidth) break;
 
-        if (itemInWorkstore) return itemInWorkstore;
+            xEnd = (x1 > iWidth ? iWidth : x1);
 
-        const tiles = [];
-
-        let hold, i, iz, j, jz, x, xz, y, yz;
-
-        for (j = offsetY - aHeight, jz = iHeight; j < jz; j += aHeight) {
-
-            for (i = offsetX - aWidth, iz = iWidth; i < iz; i += aWidth) {
-
-                hold = [];
-                for (y = j, yz = j + tileHeight; y < yz; y++) {
-                    if (y >= 0 && y < iHeight) {
-                        for (x = i, xz = i + tileWidth; x < xz; x++) {
-                            if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
-                        }
-                    }
-                }
-                tiles.push([].concat(hold));
-
-                hold = [];
-                for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
-                    if (y >= 0 && y < iHeight) {
-                        for (let x = i, xz = i + tileWidth; x < xz; x++) {
-                            if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
-                        }
-                    }
-                }
-                tiles.push([].concat(hold));
-
-                hold = [];
-                for (y = j, yz = j + tileHeight; y < yz; y++) {
-                    if (y >= 0 && y < iHeight) {
-                        for (let x = i + tileWidth, xz = i + tileWidth + gutterWidth; x < xz; x++) {
-                            if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
-                        }
-                    }
-                }
-                tiles.push([].concat(hold));
-
-                hold = [];
-                for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
-                    if (y >= 0 && y < iHeight) {
-                        for (let x = i + tileWidth, xz = i + tileWidth + gutterWidth; x < xz; x++) {
-                            if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
-                        }
-                    }
-                }
-                tiles.push([].concat(hold));
-            }
-        }
-
-        setWorkstoreItem(name, tiles);
-        return tiles;
-    }
-    return false;
-};
-
-// `buildImageTileSets` - creates a record of which pixels belong to which tile - used for manipulating color channels values. Resulting object will be cached in the store
-P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image) {
-
-    const { cache } = this;
-
-    if (!image) image = cache.source;
-
-    const { width:iWidth, height:iHeight } = image;
-
-    if (iWidth && iHeight) {
-
-        tileWidth = (_isFinite(tileWidth)) ? tileWidth : 1;
-        tileHeight = (_isFinite(tileHeight)) ? tileHeight : 1;
-        offsetX = (_isFinite(offsetX)) ? offsetX : 0;
-        offsetY = (_isFinite(offsetY)) ? offsetY : 0;
-
-        if (tileWidth < 1) tileWidth = 1;
-        if (tileWidth >= iWidth) tileWidth = iWidth - 1;
-        if (tileHeight < 1) tileHeight = 1;
-        if (tileHeight >= iHeight) tileHeight = iHeight - 1;
-        if (offsetX < 0) offsetX = 0;
-        if (offsetX >= tileWidth) offsetX = tileWidth - 1;
-        if (offsetY < 0) offsetY = 0;
-        if (offsetY >= tileHeight) offsetY = tileHeight - 1;
-
-        const name = `simple-tileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${offsetX}-${offsetY}`,
-            itemInWorkstore = getWorkstoreItem(name);
-
-        if (itemInWorkstore) return itemInWorkstore;
-
-        const tiles = [];
-
-        let i, iz, j, jz, x, xz, y, yz, hold;
-
-        for (j = offsetY - tileHeight, jz = iHeight; j < jz; j += tileHeight) {
-
-            for (i = offsetX - tileWidth, iz = iWidth; i < iz; i += tileWidth) {
-
-                hold = [];
-
-                for (y = j, yz = j + tileHeight; y < yz; y++) {
-
-                    if (y >= 0 && y < iHeight) {
-
-                        for (x = i, xz = i + tileWidth; x < xz; x++) {
-
-                            if (x >= 0 && x < iWidth) hold.push(((y * iWidth) + x) * 4);
-                        }
-                    }
-                }
-                if (hold.length) tiles.push(hold);
-            }
-        }
-
-        setWorkstoreItem(name, tiles);
-        return tiles;
-    }
-    return false;
-};
-
-// `buildGeneralTileSets` - separate the available space into a set of groups (tiles) and assign pixels to each group. Each tile centers on a `point` - an x/y coordinate; the calculations assign each pixel in the image to the group whose point it is closest to. Resulting object will be cached in the store
-// + Used by the `tile` filter, but separated out as the data it generates may have uses elsewhere
-P.buildGeneralTileSets = function (pointVals, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, seed, image) {
-
-    const { cache } = this;
-
-    if (!image) image = cache.source;
-    const { width:iWidth, height:iHeight } = image;
-
-    if (iWidth && iHeight) {
-
-        let tileW = 1,
-            tileH = 1,
-            tileR = 1,
-            offX = 0,
-            offY = 0,
-            ang = 0,
-            req = UNSET;
-
-        // The `pointVals` data can be supplied in a number of different formats:
-        // + As a String: `'rect-grid'` - the function will calculate a set of suitable points based on the source image's dimensions, and the user-defined `tileWidth`, `tileHeight`, `offsetX`, `offsetY` and `angle` arguments. This results in a rectangular grid of tiles (at most dimensions) which can be rotated to the required angle.
-        // + As a String: `'hex-grid'` - the function will calculate a set of suitable points based on the source image's dimensions, and the user-defined `tileHeight`, `tileRadius`, `offsetX`, `offsetY` and `angle` arguments. This results in a hexagonal grid of tiles (at most dimensions) which can be rotated to the required angle. The shape of the hexagons in the grid depend on the interplay between the `tileHeight` and `tileRadius` values.
-        // + As a positive integer Number - this is a request by the user for the function to semi-randomly generate a set of points to the given value, constrained to an area determined by the `tileRadius`, `offsetX`, `offsetY` and `angle` arguments. Unlike other versions, this version will only include pixels within the bounds of circle of the given radius centered on the supplied offset coordinate values. To vary the randomness of point generation, the user can supply a `seed` argument, used when initializing the pseudo-random number generator.
-        // + As an Array of Numbers, which represent user-defined points across the image. Pixel selection for each point is constrained by the supplied `tileRadius`, `offsetX` and `offsetY` arguments.
-        if (pointVals.substring) req = pointVals;
-        else if (_isArray(pointVals)) req = POINTS_ARRAY;
-        else if (_isFinite(pointVals)) req = RANDOM_POINTS;
-
-        if (req === UNSET) return [];
-
-        // The `tileWidth`, `tileHeight`, `tileRadius`, `offsetX` and `offsetY` arguments can be supplied as absolute Number values (in px), or as a String % value relative to the source image dimensions.
-        // + `tileRadius` is relative to the source image's width
-        if (tileWidth.substring) tileW = _round((parseFloat(tileWidth) / 100) * iWidth);
-        else if (_isFinite(tileWidth)) tileW = tileWidth;
-        if (tileW < 1) tileW = 1;
-
-        if (tileHeight.substring) tileH = _round((parseFloat(tileHeight) / 100) * iHeight);
-        else if (_isFinite(tileHeight)) tileH = tileHeight;
-        if (tileH < 1) tileH = 1;
-
-        if (tileRadius.substring) tileR = _round((parseFloat(tileRadius) / 100) * iWidth);
-        else if (_isFinite(tileRadius)) tileR = tileRadius;
-        if (tileR < 1) tileR = 1;
-
-        if (offsetX.substring) offX = _round((parseFloat(offsetX) / 100) * iWidth);
-        else if (_isFinite(offsetX)) offX = offsetX;
-        if (offX < 0) offX = 0;
-        else if (offX >= iWidth) offX = iWidth - 1;
-
-        if (offsetY.substring) offY = _round((parseFloat(offsetY) / 100) * iHeight);
-        else if (_isFinite(offsetY)) offY = offsetY;
-        if (offY < 0) offY = 0;
-        else if (offY >= iHeight) offY = iHeight - 1;
-
-        // The `angle` argument is the rotation applied to the points (using the offset coordinate as the rotation point), measured in degrees.
-        if (_isFinite(angle)) ang = angle;
-
-        let name = `${req}-tileset-${iWidth}-${iHeight}-${tileW}-${tileH}-${tileR}-${offX}-${offY}-${ang}`;
-        if (req === POINTS_ARRAY) name += `-${pointVals.join(ARG_SPLITTER)}`;
-        else if (req === RANDOM_POINTS) name += `-${pointVals}-${seed}`;
-
-        const itemInWorkstore = getWorkstoreItem(name);
-
-        if (itemInWorkstore) return itemInWorkstore;
-
-        if (req === RECT_GRID && tileW === 1 && tileH === 1) return getOrAddWorkstoreItem(name);
-
-        const coord = requestCoordinate(),
-            origin = [offX, offY],
-            test = [0, 0];
-
-        let tiles = [],
-            points;
-
-        const referencePoints = [],
-            neighbourPoints = [];
-
-        let h, hz, w, wz, x, xz, y, yz,
-            pointsName = ZERO_STR;
-
-        // Check to stop the hex grid breaking when user supplies an inappropriately low `tileHeight` argument value, compared to the value supplied in the `tileRadius` argument.
-        if (req === HEX_GRID && tileH / tileR < 1.05) tileH = tileR * 1.05;
-
-        const halfW = _floor(tileW / 2),
-            halfH = _floor(tileH / 2),
-            doubleR = tileR * 2,
-            hexDown = _round((tileH / tileR) * tileR);
-
-        let i, iz, cursor, ref,
-            counter = 0,
-            hexOffset = 0;
-
-        switch (req) {
-
-            case RECT_GRID :
-
-                pointsName = `rect-grid-points-${iWidth}-${iHeight}-${tileW}-${tileH}-${offX}-${offY}`;
-                points = getWorkstoreItem(pointsName);
-
-                if (!points) {
-
-                    const newPoints = [];
-
-                    // Generates a set of initial points in an overlarge grid (for square tiles)
-                    for (y = offY - (iHeight * 2) + halfH, yz = offY + (iHeight * 2) + halfH; y < yz; y += tileH) {
-
-                        for (x = offX - (iWidth * 2) + halfW, xz = offX + (iWidth * 2) + halfW; x < xz; x += tileW) {
-
-                            newPoints.push(x, y);
-                        }
-                    }
-
-                    points = getOrAddWorkstoreItem(pointsName, newPoints);
-                }
-                break;
-
-            case HEX_GRID :
-
-                pointsName = `hex-grid-points-${iWidth}-${iHeight}-${tileR}-${offX}-${offY}`;
-                points = getWorkstoreItem(pointsName);
-
-                if (!points) {
-
-                    const newPoints = [];
-
-                    // Generates a set of initial points in an overlarge grid (for hexagonal tiles)
-                    counter = 0;
-                    for (y = offY - (iHeight * 2) + tileR, yz = offY + (iHeight * 2) + tileR; y < yz; y += hexDown) {
-
-                        hexOffset = (counter % 2 === 0) ? tileR : 0;
-
-                        for (x = offX - (iWidth * 2) + tileR + hexOffset, xz = offX + (iWidth * 2) + tileR; x < xz; x += doubleR) {
-
-                            newPoints.push(x, y);
-                        }
-                        counter++;
-                    }
-
-                    points = getOrAddWorkstoreItem(pointsName, newPoints);
-                }
-                tileW = doubleR * 2;
-                tileH = hexDown * 2;
-                break;
-
-            case RANDOM_POINTS :
-
-                pointsName = `random-points-${iWidth}-${iHeight}-${tileR}-${offX}-${offY}-${points}-${seed}`;
-                points = getWorkstoreItem(pointsName);
-
-                if (!points) {
-
-                    const newPoints = [];
-
-                    // Generates a set of initial random points withing the given constraints
-                    const rnd = this.getRandomNumbers({
-                        seed,
-                        length: pointVals * 3,
-                    });
-                    let rndCursor = -1;
-
-                    for (i = 0; i < pointVals; i++) {
-
-                        coord.zero().add([rnd[++rndCursor], rnd[++rndCursor]]).rotate(rnd[++rndCursor] * 360).rotate(ang).scalarMultiply(tileR);
-
-                        [x, y] = coord;
-                        newPoints.push(_round(x), _round(y));
-                    }
-
-                    points = getOrAddWorkstoreItem(pointsName, newPoints);
-                }
-                tileW = tileR;
-                tileH = tileR;
-                break;
-
-            case POINTS_ARRAY :
-
-                pointsName = `defined-points-${iWidth}-${iHeight}-${tileR}-${pointVals}`;
-                points = getWorkstoreItem(pointsName);
-
-                if (!points) {
-
-                    // User-generated points are not pre-processed. Note that the positioning of these points is relative to the offset coordinate values; users, when generating the point values, need to take this into account otherwise the end result may unexpectedly move towards (or beyond) the bottom-right part of the final image.
-                    const newPoints = [...pointVals];
-
-                    points = getOrAddWorkstoreItem(pointsName, newPoints);
-                }
-
-                tileW = tileR;
-                tileH = tileR;
-                break;
-        }
-
-        // Go through initial set of points
-        counter = 0;
-
-        for (i = 0, iz = points.length; i < iz; i += 2) {
-
-            test[0] = points[i];
-            test[1] = points[i + 1];
-
-            coord.zero().add(test).rotate(ang).add(origin);
-
-            [x, y] = coord;
-            x = _round(x);
-            y = _round(y);
-
-            if ((x > -tileW) && (x < iWidth + tileW) && (y > -tileH) && (y < iHeight + tileH)) {
-
-                cursor = ((iWidth * 2) * (iHeight * 2)) + ((y + _floor(iHeight / 2)) * iWidth) + (x + _floor(iWidth / 2));
-
-                referencePoints[counter] = [x, y, cursor];
-                tiles[cursor] = [];
-
-                for (h = y - tileH, hz = y + tileH; h < hz; h++) {
-
-                    for (w = x - tileW, wz = x + tileW; w < wz; w++) {
-
-                        if (w >= 0 && w < iWidth && h >= 0 && h < iHeight) {
-
-                            if (req === RANDOM_POINTS) {
-
-                                if (coord.zero().subtract(origin).add([w, h]).getMagnitude() > tileR) continue;
-                            }
-
-                            ref = (h * iWidth) + w;
-                            if (!neighbourPoints[ref]) neighbourPoints[ref] = [];
-                            neighbourPoints[ref].push(counter);
-                        }
-                    }
-                }
-                counter++;
-            }
-        }
-
-        // Sanity check, in case none of the points survived the previous manipulation
-        if (!referencePoints.length) return referencePoints;
-
-        // Assign pixels to tile buckets
-        let minref, minlen, pixel, pixelRefs, distance;
-
-        for (h = 0; h < iHeight; h++) {
-
-            for (w = 0; w < iWidth; w++) {
-
-                pixel = (h * iWidth) + w;
-
-                test[0] = w;
-                test[1] = h;
-
-                pixelRefs = neighbourPoints[pixel];
-                minref = -1;
-                minlen = 0;
-
-                if (pixelRefs) {
-
-                    pixelRefs.forEach(r => {
-
-                        [x, y, cursor] = referencePoints[r];
-
-                        distance = coord.zero().add(test).subtract([x, y]).getMagnitude();
-
-                        if (minref < 0 || distance < minlen) {
-
-                            minref = cursor;
-                            minlen = distance;
-                        }
-                    });
-                }
-                if (minref >= 0) tiles[minref].push(pixel);
-            }
-        }
-
-        releaseCoordinate(coord);
-
-        // Filter the tiles Array to remove undefined indexes, then stash the result in the workstore (for future quick-serve) and return the array.
-        tiles = tiles.filter(t => t != null);
-
-        setWorkstoreItem(name, tiles);
-        return tiles;
-    }
-    return [];
-};
-
-// `buildHorizontalBlur` - creates an Array of Arrays detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Resulting object will be cached in the store
-P.buildHorizontalBlur = function (grid, radius) {
-
-    if (!_isFinite(radius)) radius = 0;
-
-    const gridHeight = grid.length,
-        gridWidth = grid[0].length;
-
-    const name = `blur-h-${gridWidth}-${gridHeight}-${radius}`,
-        itemInWorkstore = getWorkstoreItem(name);
-
-    if (itemInWorkstore) return itemInWorkstore;
-
-    const horizontalBlur = [];
-
-    let x, y, c, cz, cellsToProcess;
-
-    for (y = 0; y < gridHeight; y++) {
-
-        for (x = 0; x < gridWidth; x++) {
-
-            cellsToProcess = [];
-
-            for (c = x - radius, cz = x + radius + 1; c < cz; c++) {
-
-                if (c >= 0 && c < gridWidth) cellsToProcess.push(grid[y][c] * 4);
-            }
-            horizontalBlur[(y * gridWidth) + x] = cellsToProcess;
+            if (x0 < xEnd && y0 < yEnd) rects.push(x0, y0, xEnd, yEnd);
         }
     }
+    const out = new Int32Array(rects);
 
-    setWorkstoreItem(name, horizontalBlur);
-    return horizontalBlur;
-};
+    setWorkstoreItem(name, out);
 
-// `buildVerticalBlur` - creates an Array of Arrays detailing which pixels contribute to the vertical part of each pixel's blur calculation. Resulting object will be cached in the store
-P.buildVerticalBlur = function (grid, radius) {
+    releaseArray(rects);
 
-    if (!_isFinite(radius)) radius = 0;
-
-    const gridHeight = grid.length,
-        gridWidth = grid[0].length;
-
-    const name = `blur-v-${gridWidth}-${gridHeight}-${radius}`,
-        itemInWorkstore = getWorkstoreItem(name);
-
-    if (itemInWorkstore) return itemInWorkstore;
-
-    const verticalBlur = [];
-
-    let x, y, c, cz, cellsToProcess;
-
-    for (x = 0; x < gridWidth; x++) {
-
-        for (y = 0; y < gridHeight; y++) {
-
-            cellsToProcess = [];
-
-            for (c = y - radius, cz = y + radius + 1; c < cz; c++) {
-
-                if (c >= 0 && c < gridHeight) cellsToProcess.push(grid[c][x] * 4);
-            }
-            verticalBlur[(y * gridWidth) + x] = cellsToProcess;
-        }
-    }
-
-    setWorkstoreItem(name, verticalBlur);
-    return verticalBlur;
-};
-
-// `buildMatrixGrid` - creates an Array of Arrays detailing which pixels contribute to each pixel's matrix calculation. Resulting object will be cached in the store
-P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
-
-    const { cache } = this;
-
-    if (!image) image = cache.source;
-
-    const { width:iWidth, height:iHeight, data } = image;
-
-    if (mWidth == null || mWidth < 1) mWidth = 1;
-    if (mHeight == null || mHeight < 1) mHeight = 1;
-
-    if (mX == null || mX < 0) mX = 0;
-    else if (mX >= mWidth) mX = mWidth - 1;
-
-    if (mY == null || mY < 0) mY = 0;
-    else if (mY >= mHeight) mY = mHeight - 1;
-
-    const name = `matrix-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`,
-        itemInWorkstore = getWorkstoreItem(name);
-
-    if (itemInWorkstore) return itemInWorkstore;
-
-    const dataLength = data.length,
-        cellsTemplate = [],
-        grid = [];
-
-    let x, xz, y, yz, i, iz, pos, cell, val;
-
-    for (y = -mY, yz = mHeight - mY; y < yz; y++) {
-
-        for (x = -mX, xz = mWidth - mX; x < xz; x++) {
-
-            cellsTemplate.push(((y * iWidth) + x) * 4);
-        }
-    }
-
-    for (y = 0; y < iHeight; y++) {
-
-        for (x = 0; x < iWidth; x++) {
-
-            pos = ((y * iWidth) + x) * 4;
-            cell = [];
-
-            for (i = 0, iz = cellsTemplate.length; i < iz; i++) {
-
-                val = pos + cellsTemplate[i];
-
-                if (val < 0) val += dataLength;
-                else if (val >= dataLength) val -= dataLength;
-
-                cell.push(val);
-            }
-            grid.push(cell);
-        }
-    }
-
-    setWorkstoreItem(name, grid);
-    return grid;
-};
-
-// `checkChannelLevelsParameters` - divide each channel into discrete sequences of pixels
-P.checkChannelLevelsParameters = function (f) {
-
-    const doCheck = function (v, isHigh = false) {
-
-        if (v.toFixed) {
-            if (v < 0) return [LOW_ARRAY];
-            if (v > 255) return [HIGH_ARRAY];
-            if (!_isFinite(v)) return (isHigh) ? [HIGH_ARRAY] : [LOW_ARRAY];
-            return [[0, 255, v]];
-        }
-
-        if (v.substring) {
-            v = v.split(ARG_SPLITTER);
-        }
-
-        if (_isArray(v)) {
-
-            if (!v.length) return v;
-            if (_isArray(v[0])) return v;
-
-            v = v.map(s => parseInt(s, 10));
-            v.sort((a, b) => a - b);
-
-            if (v.length == 1) return [[0, 255, v[0]]];
-
-            const res = [];
-            let starts, ends, i, iz;
-
-            for (i = 0, iz = v.length; i < iz; i++) {
-
-                starts = 0;
-                ends = 255;
-                if (i !== 0) starts = _ceil(v[i - 1] + ((v[i] - v[i - 1]) / 2));
-                if (i !== iz - 1) ends = _floor(v[i] + ((v[i + 1] - v[i]) / 2));
-
-                res.push([starts, ends, v[i]]);
-            }
-            return res;
-        }
-        return (isHigh) ? [HIGH_ARRAY] : [LOW_ARRAY];
-    }
-    f.red = doCheck(f.red);
-    f.green = doCheck(f.green);
-    f.blue = doCheck(f.blue);
-    f.alpha = doCheck(f.alpha, true);
-};
-
-// `cacheOutput` - insert an action function's output into the filter engine's cache
-P.cacheOutput = function (name, obj) {
-
-    this.cache[name] = obj;
+    return out;
 };
 
 // `getInputAndOutputLines` - determine, and return, the appropriate results object for the lineIn, lineMix and lineOut values supplied to each action function when it gets invoked
-P.getInputAndOutputLines = function (requirements) {
+const getInputAndOutputLines = function (requirements) {
 
-    const { cache } = this;
+    const getAlphaData = function (image) {
+
+        const { width, height, data:iData } = image,
+            aImg = new ImageData(width, height),
+            aData = aImg.data;
+
+        for (let i = 3, len = iData.length; i < len; i += 4) {
+
+            aData[i] = (iData[i] > 0) ? 255 : 0;
+        }
+
+        return aImg;
+    };
+
     const sourceData = cache.source;
 
     let lineIn = cache.work,
         lineMix = false,
         alphaData = false;
 
-    if (requirements.lineIn === SOURCE_ALPHA || requirements.lineMix === SOURCE_ALPHA) alphaData = this.getAlphaData(sourceData);
+    if (requirements.lineIn === SOURCE_ALPHA || requirements.lineMix === SOURCE_ALPHA) alphaData = getAlphaData(sourceData);
 
     if (requirements.lineIn) {
 
@@ -1020,6 +332,7 @@ P.getInputAndOutputLines = function (requirements) {
     }
 
     let lineOut;
+
     if (!requirements.lineOut || !cache[requirements.lineOut]) {
 
         lineOut = new ImageData(lineIn.width, lineIn.height);
@@ -1031,211 +344,65 @@ P.getInputAndOutputLines = function (requirements) {
     return [lineIn, lineOut, lineMix];
 };
 
-// `getGrayscaleValue` - put here because this calculation is used in several different filters
-P.getGrayscaleValue = function (r, g, b) {
-
-    return _floor((0.2126 * r) + (0.7152 * g) + (0.0722 * b));
-};
-
-// `retrieveColorPointLibraries` - manages the three color point libraries. The function retrieves them from the workstore or - if they have not yet been created or have been deleted - creates, stores and returns them to the calling function. Returns an object with the following attributes:
-// + __labColorLib__ maps quantized OKLAB color values to their RGB equivalent values, stored as an `[r, g, b]` array
-// + __lchColorLib__ maps quantized OKLCH color values to their RGB equivalent values, stored as an `[r, g, b]` array
-// + __rgbColorLib__ maps RGB channel color values to their OKLAB/OKLCH equivalent values, stored as an array with the structure: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
-P.retrieveColorPointLibraries = function () {
-
-    if (!checkForWorkstoreItem(COLOR_POINT_ARRAYS)) {
-
-        setWorkstoreItem(COLOR_POINT_ARRAYS, {
-
-            labColorLib: [],
-            lchColorLib: [],
-            rgbColorLib: [],
-        });
-    }
-    return getWorkstoreItem(COLOR_POINT_ARRAYS);
-};
-
-// `getOkColorVals` - returns an array of OKLAB/OKLCH calculated values for a given RGB color point
-// + Arguments __r, g, b__ - positive integer clamped between 0-255 - RGB red, green and blue channel values
-// + Argument __libs__ - the object returned by the `retrieveColorPointLibraries` function
-// + Return an array: `[oklab|oklch_L, oklab_A, oklab_B, oklch_C, oklch_H]`
-P.getOkColorVals = function (r, g, b, libs) {
-
-    const lib = libs.rgbColorLib;
-
-    if (!lib[r] || !lib[r][g] || lib[r][g][b] == null) return this.setOkColorVals(r, g, b, libs);
-
-    return lib[r][g][b];
-};
-
-// `getRegularColorVals` - returns an array of RGB channel values for a given OKLAB or OKLCH color point. Note that arguments must represent an OKLAB color point only, or an OKLCH color point only
-// + Argument __l__ - float number between 0 and 1 - OKLAB/OKLCH luminance value
-// + Argument __ac__ - either the OKLAB __a__ channel value (float Number `-4.0`-`4.0`, or the OKLCH __c__ channel value (positive float Number between `0`-`4.0`)
-// + Argument __bh__ - either the OKLAB __b__ channel value (float Number `-4.0`-`4.0`, or the OKLCH __h__ channel value (signed float Number generally between `0`-`360`)
-// + Argument __libs__ - the object returned by the `retrieveColorPointLibraries` function
-// + Argument __isLch__ - boolean - true if arguments represent an OKLCH color point; false otherwise (default)
-// + Return an array of RGB color values: `[r, g, b]`
-P.getRegularColorVals = function (l, ac, bh, libs, isLch = false) {
-
-    const { labColorLib, lchColorLib } = libs;
-
-    let L, AC, BH, rgb;
-
-    if (isLch) {
-
-        [L, AC, BH] = this.getColorLchIndices(l, ac, bh);
-
-        if (!lchColorLib[L] || !lchColorLib[L][AC] || lchColorLib[L][AC][BH] == null) {
-
-            rgb = colorEngine.convertOKLABtoRGB(...colorEngine.convertOKLCHtoOKLAB(l, ac, bh));
-            this.memoizeLch(l, ac, bh, rgb, lchColorLib);
-            return rgb;
-        }
-        return lchColorLib[L][AC][BH];
-    }
-    else {
-
-        [L, AC, BH] = this.getColorLabIndices(l, ac, bh);
-
-        if (!labColorLib[L] || !labColorLib[L][AC] || labColorLib[L][AC][BH] == null) {
-
-            rgb = colorEngine.convertOKLABtoRGB(l, ac, bh);
-            this.memoizeLab(l, ac, bh, rgb, labColorLib);
-            return rgb;
-        }
-        return labColorLib[L][AC][BH];
-    }
-};
-
-// Color point library helper functions
-P.setOkColorVals = function (r, g, b, libs) {
-
-    const { rgbColorLib: lib, labColorLib, lchColorLib } = libs;
-
-    if (!lib[r]) lib[r] = [];
-    if (!lib[r][g]) lib[r][g] = [];
-
-    const vals = [],
-        rgb = [r, g, b];
-
-    const lab = colorEngine.convertRGBtoOKLAB(...rgb);
-    const lch = colorEngine.convertOKLABtoOKLCH(...lab);
-
-    vals.push(...lab, lch[1], lch[2]);
-
-    lib[r][g][b] = vals;
-
-    this.memoizeLab(...lab, rgb, labColorLib);
-    this.memoizeLch(...lch, rgb, lchColorLib);
-
-    return vals;
-};
-
-P.memoizeLab = function (l, a, b, rgb, lib) {
-
-    const [L, A, B] = this.getColorLabIndices(l, a, b);
-
-    if (!lib[L]) lib[L] = [];
-    if (!lib[L][A]) lib[L][A] = [];
-
-    lib[L][A][B] = rgb;
-};
-
-P.memoizeLch = function (l, c, h, rgb, lib) {
-
-    const [L, C, H] = this.getColorLchIndices(l, c, h);
-
-    if (!lib[L]) lib[L] = [];
-    if (!lib[L][C]) lib[L][C] = [];
-
-    lib[L][C][H] = rgb;
-};
-
-// Warning: magic numbers!
-P.getColorLabIndices = function (l, a, b) {
-
-    return [_floor(l * 500), _floor((a + 0.4) * 625), _floor((b + 0.4) * 625)];
-};
-P.getColorLchIndices = function (l, c, h) {
-
-    return [_floor(l * 500), _floor(c * 1250), _floor(h * 3)];
-};
-
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
-P.processResults = function (store, incoming, ratio) {
+const processResults = function (store, incoming, ratio) {
 
     const sData = store.data,
         iData = incoming.data;
 
-    let antiRatio, i, iz;
+    // Clamp ratio defensively
+    if (ratio <= 0) return;
 
-    if (ratio === 1) {
+    if (ratio >= 1) {
 
-        for (i = 0, iz = sData.length; i < iz; i++) {
-
-            sData[i] = iData[i];
-        }
+        sData.set(iData);
+        return;
     }
-    else if (ratio > 0) {
 
-        antiRatio = 1 - ratio;
+    // If source and destination are literally the same bytes, nothing to do.
+    if (sData.buffer === iData.buffer && sData.byteOffset === iData.byteOffset && sData.byteLength === iData.byteLength) return;
 
-        for (i = 0, iz = sData.length; i < iz; i++) {
+    // Convert to fixed-point [0..255]
+    const k  = (ratio * 255 + 0.5) | 0,
+        ak = 255 - k;
 
-            sData[i] = (sData[i] * antiRatio) + (iData[i] * ratio);
-        }
+    // Blend 4 channels at a time via 32-bit views
+    const nPixels = sData.byteLength >>> 2,
+        s32 = new Uint32Array(sData.buffer, sData.byteOffset, nPixels),
+        i32 = new Uint32Array(iData.buffer, iData.byteOffset, nPixels);
+
+    // Lane mask: operate on (R,B) in low 16s and (G,A) in high 16s separately
+    // + M selects bytes 0 and 2 in each 32-bit word
+    // + ROUND is per-lane rounding before >> 8
+    const M = 0x00FF00FF,
+        ROUND = 0x00800080;
+
+    let sv, iv, s_lo, s_hi, i_lo, i_hi, o_lo, o_hi;
+
+    for (let p = 0, pz = s32.length | 0; p < pz; p++) {
+
+        sv = s32[p];
+        iv = i32[p];
+
+        // Split into two 16-bit lanes: low bytes (R,B), high bytes (G,A)
+        s_lo = sv & M;
+        s_hi = (sv >>> 8) & M;
+        i_lo = iv & M;
+        i_hi = (iv >>> 8) & M;
+
+        // Per-lane blend with fixed-point 8.8
+        o_lo = (((s_lo * ak) + (i_lo * k) + ROUND) >>> 8) & M;
+        o_hi = (((s_hi * ak) + (i_hi * k) + ROUND) >>> 8) & M;
+
+        // Repack lanes back to RGBA
+        s32[p] = ((o_hi << 8) & 0xFF00FF00) | o_lo;
     }
 };
 
-// `getGradientData` - create an imageData object containing the 256 values from a gradient that we require for doing filters work
-P.getGradientData = function (gradient) {
+const transferDataUnchanged = function (oData, iData, len) {
 
-    const name = `gradient-data-${gradient.name}`;
-
-    const itemInWorkstore = getWorkstoreItem(name);
-
-    if (!itemInWorkstore || gradient.dirtyFilterIdentifier || gradient.animateByDelta) {
-
-        const mycell = requestCell();
-
-        const {engine, element} = mycell;
-
-        element.width = 256;
-        element.height = 1;
-
-        const G = engine.createLinearGradient(0, 0, 255, 0);
-
-        gradient.addStopsToGradient(G, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
-
-        engine.fillStyle = G;
-        engine.fillRect(0, 0, 256, 1);
-
-        const data = engine.getImageData(0, 0, 256, 1).data;
-
-        releaseCell(mycell);
-
-        return setAndReturnWorkstoreItem(name, data);
-    }
-
-    return itemInWorkstore || [];
-};
-
-P.transferDataUnchanged = function (oData, iData, len) {
-
-    let r, g, b, a, i;
-
-    for (i = 0; i < len; i += 4) {
-
-        r = i;
-        g = r + 1;
-        b = g + 1;
-        a = b + 1;
-
-        oData[r] = iData[r];
-        oData[g] = iData[g];
-        oData[b] = iData[b];
-        oData[a] = iData[a];
-    }
+    if (len === iData.length) oData.set(iData);
+    else oData.set(iData.subarray(0, len));
 };
 
 
@@ -1244,13 +411,16 @@ P.transferDataUnchanged = function (oData, iData, len) {
 P.theBigActionsObject = {
 
 // __alpha-to-channels__ - Copies the alpha channel value over to the selected value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero.
+// __alpha-to-channels__ (32-bit view + byte masks)
     [ALPHA_TO_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -1263,90 +433,140 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let r, g, b, a, aVal, i;
+        const Rb = 0x000000FF,
+            Gb = 0x0000FF00,
+            Bb = 0x00FF0000;
 
-        for (i = 0; i < len; i += 4) {
+        // Channels to receive alpha
+        const incMask = (includeRed ? Rb : 0) | (includeGreen ? Gb : 0) | (includeBlue ? Bb : 0);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
-            aVal = iData[a];
+        // Channels to zero (only when NOT included)
+        const zeroMask = (!includeRed && excludeRed   ? Rb : 0) | (!includeGreen && excludeGreen ? Gb : 0) | (!includeBlue && excludeBlue  ? Bb : 0);
 
-            if (aVal) {
+        // Fast path: if we’re not changing RGB at all, only set A=255 for nonzero A
+        const onlyAlphaTo255 = (incMask | zeroMask) === 0;
 
-                oData[r] = (includeRed) ? aVal : ((excludeRed) ? 0 : iData[r]);
-                oData[g] = (includeGreen) ? aVal : ((excludeGreen) ? 0 : iData[g]);
-                oData[b] = (includeBlue) ? aVal : ((excludeBlue) ? 0 : iData[b]);
-                oData[a] = 255;
+        if (onlyAlphaTo255) {
+
+            let p, pz, s, a;
+
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                s = src32[p];
+                a = (s >>> 24) & 0xFF;
+
+                if (a === 0) continue;
+
+                out32[p] = (s & 0x00FFFFFF) | 0xFF000000;
+            }
+        }
+        else {
+
+            const rgbMask = 0x00FFFFFF;
+
+            let p, pz, s, a, rgb, aRGB;
+
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                s = src32[p];
+                a = (s >>> 24) & 0xFF;
+
+                if (a === 0) continue;
+
+                rgb = s & rgbMask;
+
+                if (zeroMask) rgb &= ~zeroMask;
+
+                if (incMask) {
+
+                    aRGB = (a * 0x00010101) & rgbMask;
+                    rgb = (rgb & ~incMask) | (aRGB & incMask);
+                }
+                out32[p] = 0xFF000000 | rgb;
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __alpha-to-luminance__ - Sets the OKLAB luminance channel to the value of the alpha channel, then sets the alpha channel to opaque and the A and B channels to 0 (gray)
     [ALPHA_TO_LUMINANCE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        // A small LUT for oklab gray
+        const LUMINANCE_OKLAB_GRAY_LUT = 'alpha-to-luminance-oklab-gray-lut-256';
+        const getOklabGrayLut = () => {
+
+            let lut = getWorkstoreItem(LUMINANCE_OKLAB_GRAY_LUT);
+
+            if (lut != null) return lut;
+
+            else {
+
+                lut = new Uint32Array(256);
+
+                const libs = colorEngine.getRgbOkCache();
+
+                let a, L, r, g, b;
+
+                for (a = 0; a < 256; a++) {
+
+                    L = a / 256;
+                    if (L > 1) L = 1;
+                    else if (L < 0) L = 0;
+
+                    [r, g, b] = colorEngine.getRgbValsForOklab(L, 0, 0, libs);
+
+                    lut[a] = (255 << 24) | (b << 16) | (g << 8) | r;
+                }
+                setWorkstoreItem(LUMINANCE_OKLAB_GRAY_LUT, lut);
+
+                return lut;
+            }
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
             lineOut,
         } = requirements;
 
-        const libs = this.retrieveColorPointLibraries();
+        const lut = getOklabGrayLut();
 
-        let r, g, b, a, i, L, _r, _g, _b, alpha;
+        const RGB_MASK = 0x00FFFFFF;
 
-        for (i = 0; i < len; i += 4) {
+        let p, pz, s, a;
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-            alpha = iData[a];
+            s = src32[p];
+            a = (s >>> 24) & 0xFF;
 
-            if (alpha) {
-
-                L = alpha / 256;
-                if (L > 1) L = 1;
-                else if (L < 0) L = 0;
-
-                [_r, _g, _b] = this.getRegularColorVals(L, 0, 0, libs);
-
-                oData[r] = _r;
-                oData[g] = _g;
-                oData[b] = _b;
-                oData[a] = 255;
-            }
-            else {
-
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = 0;
-            }
+            if (a === 0) out32[p] = s & RGB_MASK;
+            else out32[p] = lut[a];
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __area-alpha__ - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
     [AREA_ALPHA]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
-            len = iData.length;
+            len = iData.length,
+            width = input.width,
+            height = input.height;
 
         const {
             opacity = 1,
@@ -1356,40 +576,103 @@ P.theBigActionsObject = {
             offsetY = 0,
             gutterWidth = 1,
             gutterHeight = 1,
+            // [core, bottom-strip, right-strip, bottom-right corner]
             areaAlphaLevels = [255, 0, 0, 0],
             lineOut,
         } = requirements;
 
-        const tiles = this.buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
+        transferDataUnchanged(oData, iData, len);
 
-        this.transferDataUnchanged(oData, iData, len);
+        // Clamp/correct like the old builder did
+        let tW = (_isFinite(tileWidth) ? tileWidth : 1) | 0,
+            tH = (_isFinite(tileHeight) ? tileHeight : 1) | 0,
+            gW = (_isFinite(gutterWidth) ? gutterWidth : 1) | 0,
+            gH = (_isFinite(gutterHeight) ? gutterHeight : 1) | 0;
 
-        let a, j, jz, tVal;
+        if (tW < 1) tW = 1;
+        if (tH < 1) tH = 1;
 
-        tiles.forEach((t, index) => {
+        if (tW + gW >= width)  {
 
-            a = areaAlphaLevels[index % 4];
+            tW = _max(1, width  - gW - 1);
+            gW = _max(1, width  - tW - 1);
+        }
 
-            for (j = 0, jz = t.length; j < jz; j++) {
+        if (tH + gH >= height) {
 
-                tVal = t[j];
+            tH = _max(1, height - gH - 1);
+            gH = _max(1, height - tH - 1);
+        }
 
-                if (iData[tVal]) oData[tVal] = a;
+        const aW = tW + gW,
+            aH = tH + gH;
+
+        let offX = (_isFinite(offsetX) ? offsetX : 0) | 0,
+            offY = (_isFinite(offsetY) ? offsetY : 0) | 0;
+
+        if (offX < 0) offX = 0;
+        else if (offX >= aW) offX = aW - 1;
+
+        if (offY < 0) offY = 0;
+        else if (offY >= aH) offY = aH - 1;
+
+        const mod = (a, m) => {
+            const r = a % m;
+            return r < 0 ? r + m : r;
+        };
+
+        let y, localY, inCoreY, localX, x, inCoreX, idx, a, segmentSpan, runLen, remain, p, k;
+
+        for (y = 0; y < height; y++) {
+
+            localY = mod(y - offY, aH);
+            inCoreY = (localY < tH);
+
+            localX = mod(0 - offX, aW);
+            x = 0;
+
+            while (x < width) {
+
+                inCoreX = (localX < tW);
+
+                idx = inCoreY ? (inCoreX ? 0 : 2) : (inCoreX ? 1 : 3);
+
+                a = areaAlphaLevels[idx] | 0;
+
+                segmentSpan = inCoreX ? (tW - localX) : (aW - localX);
+                runLen = segmentSpan;
+                remain = width - x;
+
+                if (runLen > remain) runLen = remain;
+
+                p = ((y * width) + x) * 4 + 3;
+
+                for (k = 0; k < runLen; k++) {
+
+                    if (iData[p]) oData[p] = a;
+                    p += 4;
+                }
+
+                x += runLen;
+
+                localX = (localX + runLen) % aW;
             }
-        });
+        }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __average-channels__ - Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0.
     [AVERAGE_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -1402,122 +685,74 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let divisor = 0;
-        if (includeRed) divisor++;
-        if (includeGreen) divisor++;
-        if (includeBlue) divisor++;
+        // Precompute divisor (how many channels contribute to the average)
+        const divisor = (includeRed ? 1 : 0) + (includeGreen ? 1 : 0) + (includeBlue ? 1 : 0);
 
-        let i, avg, r, g, b, a;
+        // Fast path flags (turned into ints to help JIT)
+        const incR = includeRed  | 0,
+            incG = includeGreen | 0,
+            incB = includeBlue | 0,
+            excR = excludeRed | 0,
+            excG = excludeGreen | 0,
+            excB = excludeBlue | 0;
 
-        for (i = 0; i < len; i += 4) {
+        // Walk one pixel per iteration
+        let p, rgba, r, g, b, a, rOut, gOut, bOut, sum, avg;
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        for (p = 0; p < src32.length; p++) {
 
-            if (iData[a]) {
+            rgba = src32[p];
 
-                if (divisor) {
+            r =  rgba & 0xff;
+            g = (rgba >>> 8) & 0xff;
+            b = (rgba >>> 16) & 0xff;
+            a = (rgba >>> 24) & 0xff;
 
-                    avg = 0;
+            if (a === 0) {
 
-                    if (includeRed) avg += iData[r];
-                    if (includeGreen) avg += iData[g];
-                    if (includeBlue) avg += iData[b];
+                out32[p] = rgba;
+                continue;
+            }
 
-                    avg = _floor(avg / divisor);
+            if (divisor) {
 
-                    oData[r] = (excludeRed) ? 0 : avg;
-                    oData[g] = (excludeGreen) ? 0 : avg;
-                    oData[b] = (excludeBlue) ? 0 : avg;
-                    oData[a] = iData[a];
-                }
-                else {
+                sum = (incR ? r : 0) + (incG ? g : 0) + (incB ? b : 0);
 
-                    oData[r] = (excludeRed) ? 0 : iData[r];
-                    oData[g] = (excludeGreen) ? 0 : iData[g];
-                    oData[b] = (excludeBlue) ? 0 : iData[b];
-                    oData[a] = iData[a];
-                }
+                avg = (sum / divisor) | 0;
+
+                rOut = excR ? 0 : avg;
+                gOut = excG ? 0 : avg;
+                bOut = excB ? 0 : avg;
             }
             else {
 
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = iData[a];
+                rOut = excR ? 0 : r;
+                gOut = excG ? 0 : g;
+                bOut = excB ? 0 : b;
             }
+
+            out32[p] = ((a << 24) | (bOut << 16) | (gOut << 8) | (rOut << 0)) >>> 0;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations).
 // + The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'.
+// + Scrawl-canvas uses the OKLCH color space to calculate color, hue, luminosity and saturation blends, which may lead to unexpecgted results for users coming from other products. SC also includes the "missing" combinations: 'hue-match', and 'chroma-match'.
 // + Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     [BLEND]: function (requirements) {
 
-        const copyPixel = function (fr, tr, data) {
+        const [input, output, mix] = getInputAndOutputLines(requirements);
 
-            const fg = fr + 1,
-                fb = fg + 1,
-                fa = fb + 1,
-                tg = tr + 1,
-                tb = tg + 1,
-                ta = tb + 1;
-
-            oData[tr] = data[fr];
-            oData[tg] = data[fg];
-            oData[tb] = data[fb];
-            oData[ta] = data[fa];
-        };
-
-        const getLinePositions = function (x, y) {
-
-            const ix = x,
-                iy = y,
-                mx = x - offsetX,
-                my = y - offsetY;
-
-            let mPos = -1;
-
-            const iPos = ((iy * iWidth) + ix) * 4;
-
-            if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = ((my * mWidth) + mx) * 4;
-
-            return [iPos, mPos];
-        };
-
-        const getChannelNormals = function (irn, mrn) {
-
-            const ign = irn + 1,
-                ibn = ign + 1,
-                ian = ibn + 1,
-                mgn = mrn + 1,
-                mbn = mgn + 1,
-                man = mbn + 1;
-
-            return [
-                iData[irn] / 255,
-                iData[ign] / 255,
-                iData[ibn] / 255,
-                iData[ian] / 255,
-                mData[mrn] / 255,
-                mData[mgn] / 255,
-                mData[mbn] / 255,
-                mData[man] / 255
-            ];
-        };
-
-        const alphaCalc = (dA, mA) => (dA + (mA * (1 - dA))) * 255;
-
-        const [input, output, mix] = this.getInputAndOutputLines(requirements);
-
-        const {width:iWidth, height:iHeight, data:iData} = input;
-        const {data:oData} = output;
-        const {width:mWidth, height:mHeight, data:mData} = mix;
+        const iWidth  = input.width  | 0,
+            iHeight = input.height | 0,
+            iData = input.data,
+            mWidth  = mix.width | 0,
+            mHeight = mix.height | 0,
+            mData = mix.data,
+            oData = output.data;
 
         const {
             opacity = 1,
@@ -1527,677 +762,379 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        // Pixel calculations
-        const colorburnCalc = (din, dmix) => {
-            if (dmix === 1) return 255;
-            else if (din === 0) return 0;
-            return (1 - _min(1, ((1 - dmix) / din ))) * 255;
-        };
-
-        const colordodgeCalc = (din, dmix) => {
-            if (dmix === 0) return 0;
-            else if (din === 1) return 255;
-            return _min(1, (dmix / (1 - din))) * 255;
-        };
-
-        const darkenCalc = (din, dmix) => (din < dmix) ? din : dmix;
-
-        const differenceCalc = (din, dmix) => _abs(din - dmix) * 255;
-
-        const exclusionCalc = (din, dmix) => (din + dmix - (2 * dmix * din)) * 255;
-
-        const hardlightCalc = (din, dmix) => (din <= 0.5) ? (din * dmix) * 255 : (dmix + (din - (dmix * din))) * 255;
-
-        const lightenCalc = (din, dmix) => (din > dmix) ? din : dmix;
-
-        const lighterCalc = (din, dmix) => (din + dmix) * 255;
-
-        const multiplyCalc = (din, dmix) => din * dmix * 255;
-
-        const overlayCalc = (din, dmix) => (din >= 0.5) ? (din * dmix) * 255 : (dmix + (din - (dmix * din))) * 255;
-
-        const screenCalc = (din, dmix) => (dmix + (din - (dmix * din))) * 255;
-
-        const softlightCalc = (din, dmix) => {
-            const d = (dmix <= 0.25) ?
-                ((((16 * dmix) - 12) * dmix) + 4) * dmix :
-                _sqrt(dmix);
-
-            if (din <= 0.5) return (dmix - ((1 - (2 * din)) * dmix * (1 - dmix))) * 255;
-            return (dmix + (((2 * din) - 1) * (d - dmix))) * 255;
-        };
-
-
-        const normalCalc = (Cs, As, Cb, Ab) => (As * Cs) + (Ab * Cb * (1 - As));
-
-        const libs = this.retrieveColorPointLibraries();
-
-        let x, y, dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA, ir, ig, ib, ia, mr, mg, mb, ma, cr, cg, cb, IL, IC, IH, ML, MC, MH;
-
-        switch (blend) {
-
-            case COLOR_BURN :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-                        ma = mr + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = colorburnCalc(dinR, dmixR);
-                                oData[ig] = colorburnCalc(dinG, dmixG);
-                                oData[ib] = colorburnCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case COLOR_DODGE :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-                        ma = mr + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = colordodgeCalc(dinR, dmixR);
-                                oData[ig] = colordodgeCalc(dinG, dmixG);
-                                oData[ib] = colordodgeCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case DARKEN :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-                        ma = mr + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-                                mg = mr + 1;
-                                mb = mg + 1;
-
-                                oData[ir] = darkenCalc(iData[ir], mData[mr]);
-                                oData[ig] = darkenCalc(iData[ig], mData[mg]);
-                                oData[ib] = darkenCalc(iData[ib], mData[mb]);
-                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case DIFFERENCE :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = differenceCalc(dinR, dmixR);
-                                oData[ig] = differenceCalc(dinG, dmixG);
-                                oData[ib] = differenceCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case EXCLUSION :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = exclusionCalc(dinR, dmixR);
-                                oData[ig] = exclusionCalc(dinG, dmixG);
-                                oData[ib] = exclusionCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case HARD_LIGHT :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = hardlightCalc(dinR, dmixR);
-                                oData[ig] = hardlightCalc(dinG, dmixG);
-                                oData[ib] = hardlightCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case LIGHTEN :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ir]) copyPixel(mr, ir, mData);
-                            else {
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-                                mg = mr + 1;
-                                mb = mg + 1;
-                                ma = mb + 1;
-
-                                oData[ir] = lightenCalc(iData[ir], mData[mr]);
-                                oData[ig] = lightenCalc(iData[ig], mData[mg]);
-                                oData[ib] = lightenCalc(iData[ib], mData[mb]);
-                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case LIGHTER :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = lighterCalc(dinR, dmixR);
-                                oData[ig] = lighterCalc(dinG, dmixG);
-                                oData[ib] = lighterCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case MULTIPLY :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-                        ma = mr + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = multiplyCalc(dinR, dmixR);
-                                oData[ig] = multiplyCalc(dinG, dmixG);
-                                oData[ib] = multiplyCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case OVERLAY :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = overlayCalc(dinR, dmixR);
-                                oData[ig] = overlayCalc(dinG, dmixG);
-                                oData[ib] = overlayCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case SCREEN :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = screenCalc(dinR, dmixR);
-                                oData[ig] = screenCalc(dinG, dmixG);
-                                oData[ib] = screenCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case SOFT_LIGHT :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-                        ma = mr + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-
-                                oData[ir] = softlightCalc(dinR, dmixR);
-                                oData[ig] = softlightCalc(dinG, dmixG);
-                                oData[ib] = softlightCalc(dinB, dmixB);
-                                oData[ia] = alphaCalc(dinA, dmixA);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case COLOR :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ig = ir + 1;
-                        ib = ig + 1;
-                        ia = ib + 1;
-                        mg = mr + 1;
-                        mb = mg + 1;
-                        ma = mb + 1;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [IL, , , IC, IH] = this.getOkColorVals(iData[ir], iData[ig], iData[ib], libs);
-                                [ML, , , MC, MH] = this.getOkColorVals(mData[mr], mData[mg], mData[mb], libs);
-
-                                // Creates a color with the hue and saturation of the source color and the luminosity of the backdrop color.
-                                [cr, cg, cb] = this.getRegularColorVals(ML, IC, IH, libs, true);
-
-                                oData[ir] = cr;
-                                oData[ig] = cg;
-                                oData[ib] = cb;
-                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case HUE :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ig = ir + 1;
-                        ib = ig + 1;
-                        ia = ib + 1;
-                        mg = mr + 1;
-                        mb = mg + 1;
-                        ma = mb + 1;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [IL, , , IC, IH] = this.getOkColorVals(iData[ir], iData[ig], iData[ib], libs);
-                                [ML, , , MC, MH] = this.getOkColorVals(mData[mr], mData[mg], mData[mb], libs);
-
-                                // Creates a color with the hue of the source color and the saturation and luminosity of the backdrop color.
-                                [cr, cg, cb] = this.getRegularColorVals(ML, MC, IH, libs, true);
-
-                                oData[ir] = cr;
-                                oData[ig] = cg;
-                                oData[ib] = cb;
-                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case LUMINOSITY :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ig = ir + 1;
-                        ib = ig + 1;
-                        ia = ib + 1;
-                        mg = mr + 1;
-                        mb = mg + 1;
-                        ma = mb + 1;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [IL, , , IC, IH] = this.getOkColorVals(iData[ir], iData[ig], iData[ib], libs);
-                                [ML, , , MC, MH] = this.getOkColorVals(mData[mr], mData[mg], mData[mb], libs);
-
-                                // Creates a color with the luminosity of the source color and the hue and saturation of the backdrop color.
-                                [cr, cg, cb] = this.getRegularColorVals(IL, MC, MH, libs, true);
-
-                                oData[ir] = cr;
-                                oData[ig] = cg;
-                                oData[ib] = cb;
-                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            case SATURATION :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ig = ir + 1;
-                        ib = ig + 1;
-                        ia = ib + 1;
-                        mg = mr + 1;
-                        mb = mg + 1;
-                        ma = mb + 1;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else if (!mData[ma]) copyPixel(ir, ir, iData);
-                            else {
-
-                                [IL, , , IC, IH] = this.getOkColorVals(iData[ir], iData[ig], iData[ib], libs);
-                                [ML, , , MC, MH] = this.getOkColorVals(mData[mr], mData[mg], mData[mb], libs);
-
-                                // Creates a color with the saturation of the source color and the hue and luminosity of the backdrop color.
-                                [cr, cg, cb] = this.getRegularColorVals(ML, IC, MH, libs, true);
-
-                                oData[ir] = cr;
-                                oData[ig] = cg;
-                                oData[ib] = cb;
-                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
-                            }
-                        }
-                    }
-                }
-                break;
-
-            default:
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        ia = ir + 3;
-
-                        if (iData[ia]) {
-
-                            if (mr < 0) copyPixel(ir, ir, iData);
-                            else if (!iData[ia]) copyPixel(mr, ir, mData);
-                            else {
-
-                                ig = ir + 1;
-                                ib = ig + 1;
-                                mg = mr + 1;
-                                mb = mg + 1;
-                                ma = mb + 1;
-
-                                dinA = iData[ia] / 255;
-                                dmixA = mData[ma] / 255;
-
-                                oData[ir] = normalCalc(iData[ir], dinA, mData[mr], dmixA);
-                                oData[ig] = normalCalc(iData[ig], dinA, mData[mg], dmixA);
-                                oData[ib] = normalCalc(iData[ib], dinA, mData[mb], dmixA);
-                                oData[ia] = alphaCalc(dinA, dmixA)
-                            }
-                        }
-                    }
-                }
+        if (!iWidth || !iHeight) {
+
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
+            return;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        // Baseline: outside overlap should be the input
+        oData.set(iData);
+
+        // Overlap rectangle (dest coords where mix contributes)
+        const x0 = (offsetX > 0 ? offsetX : 0) | 0,
+            y0 = (offsetY > 0 ? offsetY : 0) | 0,
+            x1 = _min(iWidth,  offsetX + mWidth)  | 0,
+            y1 = _min(iHeight, offsetY + mHeight) | 0;
+
+        const hasOverlap = (x1 > x0) && (y1 > y0);
+        if (!hasOverlap) {
+
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
+            return;
+        }
+
+        const inv255 = 1 / 255;
+
+        const f_colorburn = (S, B) => (S === 0 ? 0 : (B === 1 ? 255 : (1 - _min(1, (1 - B) / S)) * 255));
+
+        const f_colordodge = (S, B) => (S === 1 ? 255 : (B === 0 ? 0 : _min(1, B / (1 - S)) * 255));
+
+        const D = b => (b <= 0.25 ? (((16 * b - 12) * b) + 4) * b : _sqrt(b));
+
+        const libs = colorEngine.getRgbOkCache();
+
+        // Row strides
+        const rowI = iWidth  << 2,
+            rowM = mWidth  << 2,
+            rowO = rowI;
+
+        // Starting mix coords
+        const mx0 = (x0 - offsetX) | 0,
+            my0 = (y0 - offsetY) | 0;
+
+        // Inner loop helpers for OKLCH modes
+        const okResult = [0, 0, 0];
+
+        const doOK = (mode, ir, ig, ib, mr, mg, mb) => {
+
+            const [IL, , , IC, IH] = colorEngine.getOkValsForRgb(ir, ig, ib, libs);
+            const [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mr, mg, mb, libs);
+
+            let cr, cg, cb;
+
+            switch (mode) {
+
+                case COLOR:
+                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, IH, libs);
+                    break;
+
+                case HUE_MATCH:
+                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, IH, libs);
+                    break;
+
+                case CHROMA_MATCH:
+                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, IC, MH, libs);
+                    break;
+
+                case HUE:
+                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, MC, IH, libs);
+                    break;
+
+                case SATURATION:
+                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, MH, libs);
+                    break;
+
+                case LUMINOSITY:
+                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, MH, libs);
+                    break;
+
+            }
+            okResult[0] = cr;
+            okResult[1] = cg;
+            okResult[2] = cb;
+            return okResult;
+        };
+
+        // Process overlap
+        let y, my, iRow, oRow, mRow,
+            x, mx, iIdx, mIdx, oIdx,
+            ir, ig, ib, ia8, mr, mg, mb, ma8,
+            As, Ab, br, bg, bb,
+            Fr, Fg, Fb, Sr, Sg, Sb, Br, Bg, Bb,
+            k, oneMinusAs, oneMinusAb, R, G, B, A;
+
+        for (y = y0, my = my0; y < y1; y++, my++) {
+
+            iRow = (y * rowI) | 0;
+            oRow = (y * rowO) | 0;
+            mRow = (my * rowM) | 0;
+
+            for (x = x0, mx = mx0; x < x1; x++, mx++) {
+
+                iIdx = iRow + ((x  << 2) | 0);
+                mIdx = mRow + ((mx << 2) | 0);
+                oIdx = oRow + ((x  << 2) | 0);
+
+                ia8 = iData[iIdx + 3];
+                ma8 = mData[mIdx + 3];
+
+                if (ia8 === 0) continue;
+                if (ma8 === 0) continue;
+
+                ir = iData[iIdx];
+                ig = iData[iIdx + 1];
+                ib = iData[iIdx + 2];
+                mr = mData[mIdx];
+                mg = mData[mIdx + 1];
+                mb = mData[mIdx + 2];
+
+                As = ia8 * inv255;
+                Ab = ma8 * inv255;
+
+                if (OK_BLENDS.includes(blend)) {
+
+                    [br, bg, bb] = doOK(blend, ir, ig, ib, mr, mg, mb);
+
+                    Fr = br * inv255;
+                    Fg = bg * inv255;
+                    Fb = bb * inv255;
+                    Sr = ir * inv255;
+                    Sg = ig * inv255;
+                    Sb = ib * inv255;
+                    Br = mr * inv255;
+                    Bg = mg * inv255;
+                    Bb = mb * inv255;
+
+                    k = As * Ab;
+                    oneMinusAs = 1 - As;
+                    oneMinusAb = 1 - Ab;
+
+                    R = Sr * oneMinusAb + Br * oneMinusAs + Fr * k;
+                    G = Sg * oneMinusAb + Bg * oneMinusAs + Fg * k;
+                    B = Sb * oneMinusAb + Bb * oneMinusAs + Fb * k;
+                    A = As + Ab - As * Ab;
+
+                    oData[oIdx] = (R * 255) | 0;
+                    oData[oIdx + 1] = (G * 255) | 0;
+                    oData[oIdx + 2] = (B * 255) | 0;
+                    oData[oIdx + 3] = (A * 255) | 0;
+                }
+                else {
+
+                    Sr = ir * inv255;
+                    Sg = ig * inv255;
+                    Sb = ib * inv255;
+
+                    Br = mr * inv255;
+                    Bg = mg * inv255;
+                    Bb = mb * inv255;
+
+                    switch (blend) {
+
+                        case COLOR_BURN:
+                            Fr = f_colorburn(Sr, Br) * inv255;
+                            Fg = f_colorburn(Sg, Bg) * inv255;
+                            Fb = f_colorburn(Sb, Bb) * inv255;
+                            break;
+
+                        case COLOR_DODGE:
+                            Fr = f_colordodge(Sr, Br) * inv255;
+                            Fg = f_colordodge(Sg, Bg) * inv255;
+                            Fb = f_colordodge(Sb, Bb) * inv255;
+                            break;
+
+                        case DARKEN:
+                            Fr = _min(Sr, Br);
+                            Fg = _min(Sg, Bg);
+                            Fb = _min(Sb, Bb);
+                            break;
+
+                        case LIGHTEN:
+                            Fr = _max(Sr, Br);
+                            Fg = _max(Sg, Bg);
+                            Fb = _max(Sb, Bb);
+                            break;
+
+                        case LIGHTER:
+                            Fr = _min(1, Sr + Br);
+                            Fg = _min(1, Sg + Bg);
+                            Fb = _min(1, Sb + Bb);
+                            break;
+
+                        case MULTIPLY:
+                            Fr = Sr * Br;
+                            Fg = Sg * Bg;
+                            Fb = Sb * Bb;
+                            break;
+
+                        case SCREEN:
+                            Fr = Br + Sr - Br * Sr;
+                            Fg = Bg + Sg - Bg * Sg;
+                            Fb = Bb + Sb - Bb * Sb;
+                            break;
+
+                        case DIFFERENCE:
+                            Fr = _abs(Sr - Br);
+                            Fg = _abs(Sg - Bg);
+                            Fb = _abs(Sb - Bb);
+                            break;
+
+                        case EXCLUSION:
+                            Fr = Sr + Br - 2 * Sr * Br;
+                            Fg = Sg + Bg - 2 * Sg * Bg;
+                            Fb = Sb + Bb - 2 * Sb * Bb;
+                            break;
+
+                        case OVERLAY:
+                            Fr = (Br <= 0.5 ? 2 * Sr * Br : 1 - 2 * (1 - Sr) * (1 - Br));
+                            Fg = (Bg <= 0.5 ? 2 * Sg * Bg : 1 - 2 * (1 - Sg) * (1 - Bg));
+                            Fb = (Bb <= 0.5 ? 2 * Sb * Bb : 1 - 2 * (1 - Sb) * (1 - Bb));
+                            break;
+
+                        case HARD_LIGHT:
+                            Fr = (Sr <= 0.5 ? 2 * Sr * Br : 1 - 2 * (1 - Sr) * (1 - Br));
+                            Fg = (Sg <= 0.5 ? 2 * Sg * Bg : 1 - 2 * (1 - Sg) * (1 - Bg));
+                            Fb = (Sb <= 0.5 ? 2 * Sb * Bb : 1 - 2 * (1 - Sb) * (1 - Bb));
+                            break;
+
+                        case SOFT_LIGHT:
+
+                            Fr = (Sr <= 0.5)
+                                ? (Br - (1 - 2 * Sr) * Br * (1 - Br))
+                                : (Br + (2 * Sr - 1) * (D(Br) - Br));
+
+                            Fg = (Sg <= 0.5)
+                                ? (Bg - (1 - 2 * Sg) * Bg * (1 - Bg))
+                                : (Bg + (2 * Sg - 1) * (D(Bg) - Bg));
+
+                            Fb = (Sb <= 0.5)
+                                ? (Bb - (1 - 2 * Sb) * Bb * (1 - Bb))
+                                : (Bb + (2 * Sb - 1) * (D(Bb) - Bb));
+
+                            break;
+
+                        default:
+                            Fr = Sr;
+                            Fg = Sg;
+                            Fb = Sb;
+                    }
+
+                    k = As * Ab;
+                    oneMinusAs = 1 - As;
+                    oneMinusAb = 1 - Ab;
+
+                    R = Sr * oneMinusAb + Br * oneMinusAs + Fr * k;
+                    G = Sg * oneMinusAb + Bg * oneMinusAs + Fg * k;
+                    B = Sb * oneMinusAb + Bb * oneMinusAs + Fb * k;
+                    A = As + Ab - As * Ab;
+
+                    oData[oIdx] = (R * 255) | 0;
+                    oData[oIdx + 1] = (G * 255) | 0;
+                    oData[oIdx + 2] = (B * 255) | 0;
+                    oData[oIdx + 3] = (A * 255) | 0;
+                }
+            }
+        }
+
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __blur__ - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect.
-// Note that this filter is expensive, thus much slower to complete compared to other filter effects. Where possible, memoize the results this filter produces.
     [BLUR]: function (requirements) {
 
-        const getUncheckedValue = function (flag, gridStore, pos, data, offset, step) {
+        // `getBlurPrefixBuffers` Prefix buffers for blur filter (inclusive prefix sums).
+        const getBlurPrefixBuffers = function (len, axisKey) {
 
-            if (flag) {
+            const name = `blur-prefix-${axisKey}-${len}`;
 
-                const h = gridStore[pos];
+            let obj = getWorkstoreItem(name);
+            if (obj) return obj;
 
-                if (h != null) {
+            const n = (len + 1),
+                bytes = n * 4 * 4,
+                buf = new ArrayBuffer(bytes);
 
-                    const l = h.length;
+            const r = new Uint32Array(buf, 0, n),
+                g = new Uint32Array(buf, n * 4, n),
+                b = new Uint32Array(buf, n * 8, n),
+                a = new Uint32Array(buf, n * 12, n);
 
-                    let valCounter = 0,
-                        total = 0,
-                        index, t;
+            obj = { r, g, b, a };
 
-                    for (t = 0; t < l; t += step) {
+            setWorkstoreItem(name, obj);
 
-                        index = h[t] + offset;
-
-                        total += data[index];
-                        valCounter++
-                    }
-                    return total / valCounter;
-                }
-            }
-            return data[(pos * 4) + offset];
+            return obj;
         };
 
-        const getCheckedValue = function (flag, gridStore, pos, data, offset, step) {
+        // `buildHorizontalBlur` - creates an Array of Arrays detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Resulting object will be cached in the store
+        const buildHorizontalBlur = function (gridWidth, gridHeight, radius) {
 
-            if (flag) {
+            if (!_isFinite(radius)) radius = 0;
 
-                const h = gridStore[pos];
+            const name = `blur-h-${gridWidth}-${gridHeight}-${radius}`,
+                itemInWorkstore = getWorkstoreItem(name);
 
-                if (h != null) {
+            if (itemInWorkstore) return itemInWorkstore;
 
-                    const l = h.length;
+            const startX = new Uint16Array(gridWidth * gridHeight);
+            const endX = new Uint16Array(gridWidth * gridHeight);
 
-                    let valCounter = 0,
-                        total = 0,
-                        index, t, a, hVal;
+            let x, y, p, sx, ex;
 
-                    for (t = 0; t < l; t += step) {
+            for (y = 0; y < gridHeight; y++) {
 
-                        hVal = h[t];
-                        a = hVal + 3;
+                for (x = 0; x < gridWidth; x++) {
 
-                        if (data[a]) {
+                    p = (y * gridWidth) + x;
+                    sx = x - radius;
+                    ex = x + radius;
 
-                            index = hVal + offset;
+                    if (sx < 0) sx = 0;
+                    if (ex >= gridWidth) ex = gridWidth - 1;
 
-                            total += data[index];
-                            valCounter++
-                        }
-                    }
-                    if (valCounter) return total / valCounter;
+                    startX[p] = sx;
+                    endX[p] = ex;
                 }
             }
-            return data[(pos * 4) + offset];
+
+            const horizontalRanges = { startX, endX, width: gridWidth, height: gridHeight, kind: 'range-h' };
+
+            setWorkstoreItem(name, horizontalRanges);
+            return horizontalRanges;
         };
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        // `buildVerticalBlur` - creates an Array of Arrays detailing which pixels contribute to the vertical part of each pixel's blur calculation. Resulting object will be cached in the store
+        const buildVerticalBlur = function (gridWidth, gridHeight, radius) {
+
+            if (!_isFinite(radius)) radius = 0;
+
+            const name = `blur-v-${gridWidth}-${gridHeight}-${radius}`,
+                itemInWorkstore = getWorkstoreItem(name);
+
+            if (itemInWorkstore) return itemInWorkstore;
+
+            const startY = new Uint16Array(gridWidth * gridHeight);
+            const endY = new Uint16Array(gridWidth * gridHeight);
+
+            let x, y, p, sy, ey;
+
+            for (y = 0; y < gridHeight; y++) {
+
+                for (x = 0; x < gridWidth; x++) {
+
+                    p = (y * gridWidth) + x;
+                    sy = y - radius;
+                    ey = y + radius;
+
+                    if (sy < 0) sy = 0;
+                    if (ey >= gridHeight) ey = gridHeight - 1;
+
+                    startY[p] = sy;
+                    endY[p] = ey;
+                }
+            }
+
+            const verticalRanges = { startY, endY, width: gridWidth, height: gridHeight, kind: 'range-v' };
+
+            setWorkstoreItem(name, verticalRanges);
+            return verticalRanges;
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -2222,190 +1159,650 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let horizontalBlurGrid, verticalBlurGrid;
+        if ((!processVertical && !processHorizontal) || (!includeRed && !includeGreen && !includeBlue && !includeAlpha)) transferDataUnchanged(oData, iData, len);
+        else {
 
-        if (processHorizontal || processVertical) {
+            const gridWidth = input.width,
+                gridHeight = input.height;
 
-            const grid = this.buildImageGrid(input);
+            let horizontalBlurGrid, verticalBlurGrid;
 
-            if (processHorizontal)  horizontalBlurGrid = this.buildHorizontalBlur(grid, radiusHorizontal);
+            if (processHorizontal || processVertical) {
 
-            if (processVertical) verticalBlurGrid = this.buildVerticalBlur(grid, radiusVertical);
-        }
+                if (processHorizontal) horizontalBlurGrid = buildHorizontalBlur(gridWidth, gridHeight, radiusHorizontal);
 
-        oData.set(iData);
+                if (processVertical) verticalBlurGrid = buildVerticalBlur(gridWidth, gridHeight, radiusVertical);
+            }
 
-        const hold = new Uint8ClampedArray(iData);
+            oData.set(iData);
 
-        const selectedMethod = (excludeTransparentPixels) ? getCheckedValue : getUncheckedValue;
+            const hold = new Uint8ClampedArray(iData);
 
-        let counter, r, g, b, a, pass;
+            let pass, counter, rIdx, gIdx, bIdx, aIdx, startX, endX, width, height, sx, ex, y, rowBase, step4, sumR, sumG, sumB, sumA, countRGB, totalCount, idx, c, aVal, startY, endY, sy, ey, x, stepRow4, pr, pg, pb, pa, base, pos, count;
 
-        if (processHorizontal) {
+            const canFastH = (stepHorizontal === 1) && !excludeTransparentPixels,
+                canFastV = (stepVertical === 1) && !excludeTransparentPixels;
 
-            for (pass = 0; pass < passesHorizontal; pass++) {
+            if (processHorizontal) {
 
-                for (counter = 0; counter < pixelLen; counter++) {
+                for (pass = 0; pass < passesHorizontal; pass++) {
 
-                    r = counter * 4;
-                    g = r + 1;
-                    b = g + 1;
-                    a = b + 1;
+                    if (canFastH) {
 
-                    if (includeAlpha || hold[a]) {
+                        ({ startX, endX, width, height } = horizontalBlurGrid);
+                        ({ r: pr, g: pg, b: pb, a: pa } = getBlurPrefixBuffers(width, 'h'));
 
-                        oData[r] = selectedMethod(includeRed, horizontalBlurGrid, counter, hold, 0, stepHorizontal);
-                        oData[g] = selectedMethod(includeGreen, horizontalBlurGrid, counter, hold, 1, stepHorizontal);
-                        oData[b] = selectedMethod(includeBlue, horizontalBlurGrid, counter, hold, 2, stepHorizontal);
-                        oData[a] = getUncheckedValue(includeAlpha, horizontalBlurGrid, counter, hold, 3, stepHorizontal);
+                        for (y = 0; y < height; y++) {
+
+                            base = (y * width) << 2;
+
+                            if (includeRed) pr[0] = 0;
+                            if (includeGreen) pg[0] = 0;
+                            if (includeBlue) pb[0] = 0;
+                            if (includeAlpha) pa[0] = 0;
+
+                            for (let x = 0; x < width; x++) {
+
+                                idx = base + (x << 2);
+
+                                if (includeRed) pr[x + 1] = pr[x] + hold[idx];
+                                if (includeGreen) pg[x + 1] = pg[x] + hold[idx + 1];
+                                if (includeBlue) pb[x + 1] = pb[x] + hold[idx + 2];
+                                if (includeAlpha) pa[x + 1] = pa[x] + hold[idx + 3];
+                            }
+
+                            for (let x = 0; x < width; x++) {
+
+                                pos = (y * width) + x;
+                                sx = startX[pos];
+                                ex = endX[pos];
+                                count = (ex - sx + 1);
+                                idx = base + (x << 2);
+
+                                if (includeRed) oData[idx] = (pr[ex + 1] - pr[sx]) / count;
+                                else oData[idx] = hold[idx];
+
+                                if (includeGreen) oData[idx + 1] = (pg[ex + 1] - pg[sx]) / count;
+                                else oData[idx + 1] = hold[idx + 1];
+
+                                if (includeBlue) oData[idx + 2] = (pb[ex + 1] - pb[sx]) / count;
+                                else oData[idx + 2] = hold[idx + 2];
+
+                                if (includeAlpha) oData[idx + 3] = (pa[ex + 1] - pa[sx]) / count;
+                                else oData[idx + 3] = hold[idx + 3];
+                            }
+                        }
                     }
-                }
+                    else {
 
-                if (processVertical || pass < passesHorizontal - 1) hold.set(oData);
+                        for (counter = 0; counter < pixelLen; counter++) {
+
+                            rIdx = counter * 4;
+                            gIdx = rIdx + 1;
+                            bIdx = gIdx + 1;
+                            aIdx = bIdx + 1;
+
+                            if (includeAlpha || hold[aIdx]) {
+
+                                ({ startX, endX, width } = horizontalBlurGrid);
+
+                                sx = startX[counter];
+                                ex = endX[counter];
+                                y  = (counter / width) | 0;
+                                rowBase = (y * width) * 4;
+
+                                step4 = stepHorizontal << 2;
+
+                                sumR = 0;
+                                sumG = 0;
+                                sumB = 0;
+                                sumA = 0;
+                                countRGB = 0;
+
+                                totalCount = ((ex - sx) / stepHorizontal | 0) + 1;
+
+                                idx = rowBase + (sx << 2);
+
+                                if (!excludeTransparentPixels) {
+
+                                    for (c = sx; c <= ex; c += stepHorizontal) {
+
+                                        if (includeRed)   sumR += hold[idx];
+                                        if (includeGreen) sumG += hold[idx + 1];
+                                        if (includeBlue)  sumB += hold[idx + 2];
+                                        if (includeAlpha) sumA += hold[idx + 3];
+                                        idx += step4;
+                                    }
+
+                                    if (includeRed) oData[rIdx] = sumR / totalCount;
+                                    else oData[rIdx] = hold[rIdx];
+
+                                    if (includeGreen) oData[gIdx] = sumG / totalCount;
+                                    else oData[gIdx] = hold[gIdx];
+
+                                    if (includeBlue) oData[bIdx] = sumB / totalCount;
+                                    else oData[bIdx] = hold[bIdx];
+
+                                    if (includeAlpha) oData[aIdx] = sumA / totalCount;
+                                    else oData[aIdx] = hold[aIdx];
+                                }
+                                else {
+
+                                    for (c = sx; c <= ex; c += stepHorizontal) {
+
+                                        aVal = hold[idx + 3];
+
+                                        if (aVal) {
+
+                                            if (includeRed) sumR += hold[idx];
+                                            if (includeGreen) sumG += hold[idx + 1];
+                                            if (includeBlue) sumB += hold[idx + 2];
+                                            countRGB++;
+                                        }
+
+                                        if (includeAlpha) sumA += aVal;
+
+                                        idx += step4;
+                                    }
+
+                                    if (includeRed) oData[rIdx] = countRGB ? (sumR / countRGB) : hold[rIdx];
+                                    else oData[rIdx] = hold[rIdx];
+
+                                    if (includeGreen) oData[gIdx] = countRGB ? (sumG / countRGB) : hold[gIdx];
+                                    else oData[gIdx] = hold[gIdx];
+
+                                    if (includeBlue)  oData[bIdx] = countRGB ? (sumB / countRGB) : hold[bIdx];
+                                    else oData[bIdx] = hold[bIdx];
+
+                                    if (includeAlpha) oData[aIdx] = sumA / totalCount;
+                                    else oData[aIdx] = hold[aIdx];
+                                }
+                            }
+                        }
+                    }
+                    if (processVertical || pass < passesHorizontal - 1) hold.set(oData);
+                }
+            }
+
+            if (processVertical) {
+
+                for (pass = 0; pass < passesVertical; pass++) {
+
+                    if (canFastV) {
+
+                        ({ startY, endY, width, height } = verticalBlurGrid);
+                        ({ r: pr, g: pg, b: pb, a: pa } = getBlurPrefixBuffers(height, 'v'));
+
+                        for (x = 0; x < width; x++) {
+
+                            if (includeRed) pr[0] = 0;
+                            if (includeGreen) pg[0] = 0;
+                            if (includeBlue) pb[0] = 0;
+                            if (includeAlpha) pa[0] = 0;
+
+                            for (y = 0; y < height; y++) {
+
+                                idx = (((y * width) + x) << 2);
+
+                                if (includeRed) pr[y + 1] = pr[y] + hold[idx];
+                                if (includeGreen) pg[y + 1] = pg[y] + hold[idx + 1];
+                                if (includeBlue) pb[y + 1] = pb[y] + hold[idx + 2];
+                                if (includeAlpha) pa[y + 1] = pa[y] + hold[idx + 3];
+                            }
+
+                            for (y = 0; y < height; y++) {
+
+                                pos = (y * width) + x;
+                                sy = startY[pos];
+                                ey = endY[pos];
+                                count = (ey - sy + 1);
+                                idx = (((y * width) + x) << 2);
+
+                                if (includeRed) oData[idx] = (pr[ey + 1] - pr[sy]) / count;
+                                else oData[idx] = hold[idx];
+
+                                if (includeGreen) oData[idx + 1] = (pg[ey + 1] - pg[sy]) / count;
+                                else oData[idx + 1] = hold[idx + 1];
+
+                                if (includeBlue) oData[idx + 2] = (pb[ey + 1] - pb[sy]) / count;
+                                else oData[idx + 2] = hold[idx + 2];
+
+                                if (includeAlpha) oData[idx + 3] = (pa[ey + 1] - pa[sy]) / count;
+                                else oData[idx + 3] = hold[idx + 3];
+                            }
+                        }
+                    }
+                    else {
+
+                        for (counter = 0; counter < pixelLen; counter++) {
+
+                            rIdx = counter * 4;
+                            gIdx = rIdx + 1;
+                            bIdx = gIdx + 1;
+                            aIdx = bIdx + 1;
+
+                            if (includeAlpha || hold[aIdx]) {
+
+                                ({ startY, endY, width } = verticalBlurGrid);
+                                sy = startY[counter];
+                                ey = endY[counter];
+                                x  = counter % width;
+
+                                stepRow4 = (width * 4 * stepVertical);
+
+                                sumR = 0;
+                                sumG = 0;
+                                sumB = 0;
+                                sumA = 0;
+                                countRGB = 0;
+
+                                totalCount = ((ey - sy) / stepVertical | 0) + 1;
+
+                                idx = (sy * width * 4) + (x << 2);
+
+                                if (!excludeTransparentPixels) {
+
+                                    for (let r = sy; r <= ey; r += stepVertical) {
+
+                                        if (includeRed) sumR += hold[idx];
+                                        if (includeGreen) sumG += hold[idx + 1];
+                                        if (includeBlue) sumB += hold[idx + 2];
+                                        if (includeAlpha) sumA += hold[idx + 3];
+
+                                        idx += stepRow4;
+                                    }
+                                    if (includeRed) oData[rIdx] = sumR / totalCount;
+                                    else oData[rIdx] = hold[rIdx];
+
+                                    if (includeGreen) oData[gIdx] = sumG / totalCount;
+                                    else oData[gIdx] = hold[gIdx];
+
+                                    if (includeBlue) oData[bIdx] = sumB / totalCount;
+                                    else oData[bIdx] = hold[bIdx];
+
+                                    if (includeAlpha) oData[aIdx] = sumA / totalCount;
+                                    else oData[aIdx] = hold[aIdx];
+                                }
+                                else {
+
+                                    for (let r = sy; r <= ey; r += stepVertical) {
+
+                                        aVal = hold[idx + 3];
+
+                                        if (aVal) {
+
+                                            if (includeRed) sumR += hold[idx];
+                                            if (includeGreen) sumG += hold[idx + 1];
+                                            if (includeBlue) sumB += hold[idx + 2];
+                                            countRGB++;
+                                        }
+
+                                        if (includeAlpha) sumA += aVal;
+
+                                        idx += stepRow4;
+                                    }
+
+                                    if (includeRed) oData[rIdx] = countRGB ? (sumR / countRGB) : hold[rIdx];
+                                    else oData[rIdx] = hold[rIdx];
+
+                                    if (includeGreen) oData[gIdx] = countRGB ? (sumG / countRGB) : hold[gIdx];
+                                    else oData[gIdx] = hold[gIdx];
+
+                                    if (includeBlue) oData[bIdx] = countRGB ? (sumB / countRGB) : hold[bIdx];
+                                    else oData[bIdx] = hold[bIdx];
+
+                                    if (includeAlpha) oData[aIdx] = sumA / totalCount;
+                                    else oData[aIdx] = hold[aIdx];
+                                }
+                            }
+                        }
+                    }
+                    if (pass < passesVertical - 1) hold.set(oData);
+                }
             }
         }
 
-        if (processVertical) {
-
-            for (pass = 0; pass < passesVertical; pass++) {
-
-                for (counter = 0; counter < pixelLen; counter++) {
-
-                    r = counter * 4;
-                    g = r + 1;
-                    b = g + 1;
-                    a = b + 1;
-
-                    if (includeAlpha || hold[a]) {
-
-                        oData[r] = selectedMethod(includeRed, verticalBlurGrid, counter, hold, 0, stepVertical);
-                        oData[g] = selectedMethod(includeGreen, verticalBlurGrid, counter, hold, 1, stepVertical);
-                        oData[b] = selectedMethod(includeBlue, verticalBlurGrid, counter, hold, 2, stepVertical);
-                        oData[a] = getUncheckedValue(includeAlpha, verticalBlurGrid, counter, hold, 3, stepVertical);
-                    }
-                }
-                if (pass < passesVertical - 1) hold.set(oData);
-            }
-        }
-
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __channels-to-alpha__ - Calculates an average value from each pixel's included channels and applies that value to the alpha channel.
     [CHANNELS_TO_ALPHA]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
-            includeRed = true,
+            includeRed   = true,
             includeGreen = true,
-            includeBlue = true,
+            includeBlue  = true,
             lineOut,
         } = requirements;
 
-        let divisor = 0;
-        if (includeRed) divisor++;
-        if (includeGreen) divisor++;
-        if (includeBlue) divisor++;
+        const incR = includeRed ? 1 : 0,
+            incG = includeGreen ? 1 : 0,
+            incB = includeBlue ? 1 : 0,
+            div  = incR + incG + incB;
 
-        let r, g, b, a, vr, vg, vb, i, sum;
+        if (div === 0) out32.set(src32);
+        else {
 
-        for (i = 0; i < len; i += 4) {
+            let sumDiv3LUT = null;
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            if (div === 3) {
 
-            vr = iData[r];
-            vg = iData[g];
-            vb = iData[b];
+                sumDiv3LUT = getWorkstoreItem('cta::sumDiv3');
 
-            oData[r] = vr;
-            oData[g] = vg;
-            oData[b] = vb;
+                if (!sumDiv3LUT) {
 
-            if (divisor) {
+                    sumDiv3LUT = new Uint8Array(766);
 
-                sum = 0;
+                    for (let s = 0; s <= 765; s++) {
 
-                if (includeRed) sum += vr;
-                if (includeGreen) sum += vg;
-                if (includeBlue) sum += vb;
-
-                oData[a] = _floor(sum / divisor);
+                        sumDiv3LUT[s] = Math.floor(s / 3) & 0xFF;
+                    }
+                    setWorkstoreItem('cta::sumDiv3', sumDiv3LUT);
+                }
             }
-            else oData[a] = iData[a];
+
+            let p, pz, s, r, g, b, aNew, sum;
+
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                s = src32[p];
+
+                r = s & 0xFF;
+                g = (s >>> 8) & 0xFF;
+                b = (s >>> 16) & 0xFF;
+
+                if (div === 1) aNew = incR ? r : (incG ? g : b);
+                else if (div === 2) {
+
+                    sum = (incR ? r : 0) + (incG ? g : 0) + (incB ? b : 0);
+                    aNew = sum >>> 1;
+                }
+                else aNew = sumDiv3LUT[r + g + b];
+
+                out32[p] = (s & 0x00FFFFFF) | (aNew << 24);
+            }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __chroma__ - Using an array of 'range' arrays, determine whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. Each 'range' array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values.
     [CHROMA]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
             ranges = [],
+            featherRed = 0,
+            featherGreen = 0,
+            featherBlue  = 0,
             lineOut,
         } = requirements;
 
-        let r, g, b, a, vr, vg, vb, i, iz, j, flag;
+        // Helper functions
+        const clamp8 = v => (v < 0 ? 0 : v > 255 ? 255 : v | 0);
 
-        for (j = 0; j < len; j += 4) {
+        const posNumOr0 = v => {
 
-            flag = false;
+            const n = +v;
+            return (_isFinite(n) && n >= 0) ? n : 0;
+        };
 
-            r = j;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        const normRanges = (() => {
 
-            vr = iData[r];
-            vg = iData[g];
-            vb = iData[b];
+            const res = [];
+
+            let i, iz, r, minR, minG, minB, maxR, maxG, maxB, t;
 
             for (i = 0, iz = ranges.length; i < iz; i++) {
 
-                const [minR, minG, minB, maxR, maxG, maxB] = ranges[i];
+                r = ranges[i];
+                if (!r || r.length < 6) continue;
 
-                if (vr >= minR && vr <= maxR && vg >= minG && vg <= maxG && vb >= minB && vb <= maxB) {
-                    flag = true;
-                    break;
+                [minR, minG, minB, maxR, maxG, maxB] = r;
+
+                if (!(_isFinite(minR) && _isFinite(minG) && _isFinite(minB) && _isFinite(maxR) && _isFinite(maxG) && _isFinite(maxB))) continue;
+
+                minR |= 0;
+                minG |= 0;
+                minB |= 0;
+                maxR |= 0;
+                maxG |= 0;
+                maxB |= 0;
+
+                if (minR > maxR) {
+
+                    t = minR;
+                    minR = maxR;
+                    maxR = t;
                 }
 
+                if (minG > maxG) {
+
+                    t = minG;
+                    minG = maxG;
+                    maxG = t;
+                }
+
+                if (minB > maxB) {
+
+                    t = minB;
+                    minB = maxB;
+                    maxB = t;
+                }
+
+
+                res.push([clamp8(minR), clamp8(minG), clamp8(minB), clamp8(maxR), clamp8(maxG), clamp8(maxB)]);
             }
-            oData[r] = vr;
-            oData[g] = vg;
-            oData[b] = vb;
-            oData[a] = (flag) ? 0 : iData[a];
+            return res;
+        })();
+
+        // If no ranges, just copy
+        if (normRanges.length === 0) out32.set(src32);
+        else {
+
+            // Feather widths (validated: must be numbers >= 0; clamp to 0..255 and int)
+            const fR = clamp8(posNumOr0(featherRed)),
+                fG = clamp8(posNumOr0(featherGreen)),
+                fB = clamp8(posNumOr0(featherBlue));
+
+            // Cache keys
+            const keyBase = JSON.stringify(normRanges),
+                bitKey = `chroma-bitset::${keyBase}`,
+                fKey = `chroma-feather::${fR}_${fG}_${fB}::${keyBase}`;
+
+            // Hard-key path (all feathers zero)
+            if ((fR | fG | fB) === 0) {
+
+                let pack = getWorkstoreItem(bitKey);
+
+                if (!pack) {
+
+                    const n = normRanges.length | 0,
+                        words = (n + 31) >>> 5;
+
+                    const rMasks = Array.from({ length: words }, () => new Uint32Array(256)),
+                        gMasks = Array.from({ length: words }, () => new Uint32Array(256)),
+                        bMasks = Array.from({ length: words }, () => new Uint32Array(256));
+
+                    let k, w, bit, minR, minG, minB, maxR, maxG, maxB, v;
+
+                    for (k = 0; k < n; k++) {
+
+                        w = k >>> 5;
+                        bit = 1 << (k & 31);
+
+                        [minR, minG, minB, maxR, maxG, maxB] = normRanges[k];
+
+                        for (v = minR; v <= maxR; v++) {
+
+                            rMasks[w][v] |= bit;
+                        }
+                        for (v = minG; v <= maxG; v++) {
+
+                            gMasks[w][v] |= bit;
+                        }
+                        for (v = minB; v <= maxB; v++) {
+
+                            bMasks[w][v] |= bit;
+                        }
+                    }
+
+                    pack = { words, rMasks, gMasks, bMasks };
+                    setWorkstoreItem(bitKey, pack);
+                }
+
+                const { words, rMasks, gMasks, bMasks } = pack;
+
+                let p, pz, rgba, r, g, b, a, hit, w;
+
+                for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                    rgba = src32[p];
+                    r = rgba & 0xFF;
+                    g = (rgba >>> 8) & 0xFF;
+                    b = (rgba >>> 16) & 0xFF;
+                    a = (rgba >>> 24) & 0xFF;
+
+                    hit = 0;
+
+                    for (w = 0; w < words; w++) {
+
+                        if ((rMasks[w][r] & gMasks[w][g] & bMasks[w][b]) !== 0) {
+
+                            hit = 1; break;
+                        }
+                    }
+                    if (hit) a = 0;
+
+                    out32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
+                }
+            }
+
+            // feathered path (any feather > 0)
+            else {
+
+                let fpack = getWorkstoreItem(fKey);
+
+                if (!fpack) {
+
+                    const n = normRanges.length | 0;
+
+                    const makeLUT = (min, max, F) => {
+
+                        const lut = new Uint8Array(256);
+
+                        if (F <= 0) {
+
+                            for (let v = 0; v < 256; v++) {
+
+                                lut[v] = (v < min || v > max) ? 0 : 255;
+                            }
+                            return lut;
+                        }
+
+                        const lo = _max(0, min - F),
+                            hi = _min(255, max + F);
+
+                        let v, w;
+
+                        for (v = 0; v < 256; v++) {
+
+                            if (v < lo || v > hi) w = 0;
+                            else if (v < min) w = ((v - (min - F)) * 255 / F) | 0;
+                            else if (v > max) w = (((max + F) - v) * 255 / F) | 0;
+                            else w = 255;
+
+                            lut[v] = w < 0 ? 0 : (w > 255 ? 255 : w);
+                        }
+                        return lut;
+                    };
+
+                    const rLUTs = new Array(n),
+                        gLUTs = new Array(n),
+                        bLUTs = new Array(n);
+
+                    let k, minR, minG, minB, maxR, maxG, maxB;
+
+                    for (k = 0; k < n; k++) {
+
+                        [minR, minG, minB, maxR, maxG, maxB] = normRanges[k];
+
+                        rLUTs[k] = makeLUT(minR, maxR, fR);
+                        gLUTs[k] = makeLUT(minG, maxG, fG);
+                        bLUTs[k] = makeLUT(minB, maxB, fB);
+                    }
+                    fpack = { rLUTs, gLUTs, bLUTs };
+                    setWorkstoreItem(fKey, fpack);
+                }
+
+                const { rLUTs, gLUTs, bLUTs } = fpack,
+                    nRanges = rLUTs.length | 0;
+
+                let p, pz, rgba, r, g, b, a, wMax, k, w, na;
+
+                for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                    rgba = src32[p];
+
+                    r = rgba & 0xFF;
+                    g = (rgba >>> 8) & 0xFF;
+                    b = (rgba >>> 16) & 0xFF;
+                    a = (rgba >>> 24) & 0xFF;
+
+                    wMax = 0;
+
+                    for (k = 0; k < nRanges; k++) {
+
+                        w = _min(rLUTs[k][r], gLUTs[k][g], bLUTs[k][b]);
+
+                        if (w > wMax) {
+
+                            wMax = w;
+                            if (wMax === 255) break;
+                        }
+                    }
+
+                    na = ((a * (255 - wMax) + 128) >> 8) & 0xFF;
+
+                    out32[p] = ((na << 24) | (b << 16) | (g << 8) | r) >>> 0;
+                }
+            }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __clamp-channels__ - Clamp each color channel to a range set by lowColor and highColor values
     [CLAMP_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        // 32-bit pixel views
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -2418,63 +1815,97 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const dR = highRed - lowRed,
-            dG = highGreen - lowGreen,
-            dB = highBlue - lowBlue;
+        const c8 = v => (v < 0 ? 0 : v > 255 ? 255 : v | 0);
 
-        let r, g, b, a, vr, vg, vb, va, i;
+        const lr = c8(lowRed),
+            lg = c8(lowGreen),
+            lb = c8(lowBlue),
+            hr = c8(highRed),
+            hg = c8(highGreen),
+            hb = c8(highBlue);
 
-        for (i = 0; i < len; i += 4) {
+        const idR = (lr === 0 && hr === 255),
+            idG = (lg === 0 && hg === 255),
+            idB = (lb === 0 && hb === 255);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        if (idR && idG && idB)  out32.set(src32);
+        else {
 
-            vr = iData[r];
-            vg = iData[g];
-            vb = iData[b];
-            va = iData[a];
+            const keyR = `clampch::R:${lr},${hr}`,
+                keyG = `clampch::G:${lg},${hg}`,
+                keyB = `clampch::B:${lb},${hb}`;
 
-            if (va) {
+            let lutR = idR ? null : getWorkstoreItem(keyR),
+                lutG = idG ? null : getWorkstoreItem(keyG),
+                lutB = idB ? null : getWorkstoreItem(keyB);
 
-                vr /= 255;
-                vg /= 255;
-                vb /= 255;
+            const buildLUT = (lo, hi) => {
 
-                oData[r] = lowRed + (vr * dR);
-                oData[g] = lowGreen + (vg * dG);
-                oData[b] = lowBlue + (vb * dB);
+                const d = hi - lo,
+                    lut = new Uint8ClampedArray(256);
+
+                for (let v = 0; v < 256; v++) {
+
+                    lut[v] = lo + (v * d) / 255;
+                }
+                return lut;
+            };
+
+            if (!idR && !lutR) {
+
+                lutR = buildLUT(lr, hr);
+                setWorkstoreItem(keyR, lutR);
             }
-            else {
-                oData[r] = vr;
-                oData[g] = vg;
-                oData[b] = vb;
+            if (!idG && !lutG) {
+
+                lutG = buildLUT(lg, hg);
+                setWorkstoreItem(keyG, lutG);
             }
-            oData[a] = va;
+            if (!idB && !lutB) {
+
+                lutB = buildLUT(lb, hb);
+                setWorkstoreItem(keyB, lutB);
+            }
+
+            let p, pz, s, a, r, g, b, nr, ng, nb;
+
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                s = src32[p];
+
+                r = s & 0xFF;
+                g = (s >>> 8) & 0xFF;
+                b = (s >>> 16) & 0xFF;
+                a = (s >>> 24) & 0xFF;
+
+                if (a === 0) {
+
+                    out32[p] = s;
+                    continue;
+                }
+
+                nr = idR ? r : lutR[r];
+                ng = idG ? g : lutG[g];
+                nb = idB ? b : lutB[b];
+
+                out32[p] = ((a << 24) | (nb << 16) | (ng << 8) | nr) >>> 0;
+            }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __colors-to-alpha__ - Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the "red", "green" and "blue" arguments. The sensitivity of the effect can be manipulated using the "transparentAt" and "opaqueAt" values, both of which lie in the range 0-1.
     [COLORS_TO_ALPHA]: function (requirements) {
 
-        const getCTAValue = function (dr, dg, db) {
-
-            const diff = (_abs(red - dr) + _abs(green - dg) + _abs(blue - db)) / 3;
-
-            if (diff < transparent) return 0;
-            if (diff > opaque) return 255;
-            return ((diff - transparent) / range) * 255;
-        };
-
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -2486,420 +1917,314 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const maxDiff = _max(((red + green + blue) / 3), (((255 - red) + (255 - green) + (255 - blue)) / 3)),
-            transparent = transparentAt * maxDiff,
-            opaque = opaqueAt * maxDiff,
-            range = opaque - transparent;
+        // Helper functions
+        const clamp8 = v => (v < 0 ? 0 : v > 255 ? 255 : v | 0);
 
-        let r, g, b, a, vr, vg, vb, i;
+        const clamp01 = v => {
 
-        for (i = 0; i < len; i += 4) {
+            const n = +v;
+            return _isFinite(n) ? (n < 0 ? 0 : n > 1 ? 1 : n) : 0;
+        };
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        const R = clamp8(red),
+            G = clamp8(green),
+            B = clamp8(blue);
 
-            if (iData[a]) {
+        const tAt = clamp01(transparentAt),
+            oAt = clamp01(opaqueAt);
 
-                vr = iData[r];
-                vg = iData[g];
-                vb = iData[b];
+        const key = `cta::${R},${G},${B}::${tAt},${oAt}`;
 
-                oData[r] = vr;
-                oData[g] = vg;
-                oData[b] = vb;
-                oData[a] = getCTAValue(vr, vg, vb);
+        // Try workstore
+        let pack = getWorkstoreItem(key);
+
+        if (!pack) {
+
+            const diffR = new Uint16Array(256),
+                diffG = new Uint16Array(256),
+                diffB = new Uint16Array(256);
+
+            for (let v = 0; v < 256; v++) {
+
+                diffR[v] = _abs(v - R);
+                diffG[v] = _abs(v - G);
+                diffB[v] = _abs(v - B);
             }
+
+            const sumRef = R + G + B,
+                maxDiff3 = _max(sumRef, 765 - sumRef);
+
+            const tScaled = (tAt * maxDiff3) | 0,
+                oScaled = (oAt * maxDiff3) | 0;
+
+            let rangeScaled = oScaled - tScaled;
+
+            const binaryStep = (rangeScaled <= 0);
+
+            if (binaryStep) rangeScaled = 1;
+
+            pack = { diffR, diffG, diffB, tScaled, oScaled, rangeScaled, binaryStep };
+
+            setWorkstoreItem(key, pack);
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        const { diffR, diffG, diffB, tScaled, oScaled, rangeScaled, binaryStep } = pack;
+
+        // Copy frame once; we’ll overwrite alpha only for the pixels we touch.
+        out32.set(src32);
+
+        let p, pz, rgba, a, r, g, b, sumDiff, na;
+
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+            rgba = src32[p];
+            a = (rgba >>> 24) & 0xFF;
+
+            if (a === 0) continue;
+
+            r = rgba & 0xFF;
+            g = (rgba >>> 8) & 0xFF;
+            b = (rgba >>> 16) & 0xFF;
+
+            sumDiff = diffR[r] + diffG[g] + diffB[b];
+
+            if (sumDiff < tScaled) na = 0;
+            else if (sumDiff > oScaled) na = 255;
+            else if (binaryStep) na = (sumDiff > tScaled) ? 255 : 0;
+            else na = (((sumDiff - tScaled) * 255 + (rangeScaled >> 1)) / rangeScaled) | 0;
+
+            if (na < 0) na = 0;
+            else if (na > 255) na = 255;
+
+            out32[p] = (out32[p] & 0x00FFFFFF) | (na << 24);
+        }
+
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __compose__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the "compose" argument; permitted values are: 'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', 'xor', or 'lighter'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     [COMPOSE]: function (requirements) {
 
-        const copyPixel = function (fr, tr, data) {
+        const [input, output, mix] = getInputAndOutputLines(requirements);
 
-            const fg = fr + 1,
-                fb = fg + 1,
-                fa = fb + 1,
-                tg = tr + 1,
-                tb = tg + 1,
-                ta = tb + 1;
-
-            oData[tr] = data[fr];
-            oData[tg] = data[fg];
-            oData[tb] = data[fb];
-            oData[ta] = data[fa];
-        };
-
-        const getLinePositions = function (x, y) {
-
-            const ix = x,
-                iy = y,
-                mx = x - offsetX,
-                my = y - offsetY;
-
-            let mp = -1;
-
-            const ip = ((iy * iWidth) + ix) * 4;
-
-            if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mp = ((my * mWidth) + mx) * 4;
-
-            return [ip, mp];
-        };
-
-        const [input, output, mix] = this.getInputAndOutputLines(requirements);
-
-        const {width:iWidth, height:iHeight, data:iData} = input;
-        const {data:oData} = output;
-        const {width:mWidth, height:mHeight, data:mData} = mix;
+        const iWidth  = input.width | 0,
+            iHeight = input.height | 0,
+            iData = input.data,
+            mWidth  = mix.width | 0,
+            mHeight = mix.height | 0,
+            mData = mix.data,
+            oData   = output.data;
 
         const {
             opacity = 1,
-            compose = ZERO_STR,
+            compose = SOURCE_OVER,
             offsetX = 0,
             offsetY = 0,
             lineOut,
         } = requirements;
 
-        // Pixel calculations
-        const sAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * mAlpha) + (mAlpha * mColor * (1 - iAlpha));
+        // Early outs
+        if (!iWidth || !iHeight) {
 
-        const sInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
+            return;
+        }
 
-        const sOutCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * (1 - mAlpha);
+        const x0 = (offsetX > 0 ? offsetX : 0) | 0,
+            y0 = (offsetY > 0 ? offsetY : 0) | 0,
+            x1 = _min(iWidth, offsetX + mWidth) | 0,
+            y1 = _min(iHeight, offsetY + mHeight) | 0;
 
-        const dAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * iAlpha);
-
-        const dOverCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor);
-
-        const dInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
-
-        const dOutCalc = (mColor, iAlpha, mAlpha) => mAlpha * mColor * (1 - iAlpha);
-
-        const xorCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * (1 - iAlpha));
-
-        const sOverCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor) + (mAlpha * mColor * (1 - iAlpha));
-
-        let ir, ig, ib, ia, mr, mg, mb, ma, x, y, dinA, dmixA;
+        const hasOverlap = (x1 > x0) && (y1 > y0);
 
         switch (compose) {
 
-            case SOURCE_ONLY :
-                output.data.set(iData);
-                break;
+            case SOURCE_ONLY:
 
-            case SOURCE_ATOP :
+                // Just copy source over wholesale and finish
+                oData.set(iData);
+                if (lineOut) processResults(output, input, 1 - opacity);
+                else processResults(cache.work, output, opacity);
+                return;
 
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
+            case SOURCE_OVER:
+            case SOURCE_OUT:
+            case DESTINATION_OVER:
+            case DESTINATION_ATOP:
+            case XOR:
 
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr >= 0) {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = sAtopCalc(iData[ir], dinA, mData[mr], dmixA);
-                            oData[ig] = sAtopCalc(iData[ig], dinA, mData[mg], dmixA);
-                            oData[ib] = sAtopCalc(iData[ib], dinA, mData[mb], dmixA);
-                            oData[ia] = ((dinA * dmixA) + (dmixA * (1 - dinA))) * 255;
-                        }
-                    }
-                }
-                break;
-
-            case SOURCE_IN :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr >= 0) {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            ma = mr + 3;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = sInCalc(iData[ir], dinA, dmixA);
-                            oData[ig] = sInCalc(iData[ig], dinA, dmixA);
-                            oData[ib] = sInCalc(iData[ib], dinA, dmixA);
-                            oData[ia] = dinA * dmixA * 255;
-                        }
-                    }
-                }
-                break;
-
-            case SOURCE_OUT :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            ma = mr + 3;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = sOutCalc(iData[ir], dinA, dmixA);
-                            oData[ig] = sOutCalc(iData[ig], dinA, dmixA);
-                            oData[ib] = sOutCalc(iData[ib], dinA, dmixA);
-                            oData[ia] = dinA * (1 - dmixA) * 255;
-                        }
-                    }
-                }
-                break;
-
-            case DESTINATION_ONLY :
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr >= 0) copyPixel(mr, ir, mData);
-                    }
-                }
-                break;
-
-            case DESTINATION_ATOP :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = dAtopCalc(iData[ir], dinA, mData[mr], dmixA);
-                            oData[ig] = dAtopCalc(iData[ig], dinA, mData[mg], dmixA);
-                            oData[ib] = dAtopCalc(iData[ib], dinA, mData[mb], dmixA);
-                            oData[ia] = ((dinA * (1 - dmixA)) + (dmixA * dinA)) * 255;
-                        }
-                    }
-                }
-                break;
-
-            case DESTINATION_OVER :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = dOverCalc(iData[ir], dinA, mData[mr], dmixA);
-                            oData[ig] = dOverCalc(iData[ig], dinA, mData[mg], dmixA);
-                            oData[ib] = dOverCalc(iData[ib], dinA, mData[mb], dmixA);
-                            oData[ia] = ((dinA * (1 - dmixA)) + dmixA) * 255;
-                        }
-                    }
-                }
-                break;
-
-            case DESTINATION_IN :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr >= 0) {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = dInCalc(mData[mr], dinA, dmixA);
-                            oData[ig] = dInCalc(mData[mg], dinA, dmixA);
-                            oData[ib] = dInCalc(mData[mb], dinA, dmixA);
-                            oData[ia] = dinA * dmixA * 255;
-                        }
-                    }
-                }
-                break;
-
-            case DESTINATION_OUT :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr >= 0) {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = dOutCalc(mData[mr], dinA, dmixA);
-                            oData[ig] = dOutCalc(mData[mg], dinA, dmixA);
-                            oData[ib] = dOutCalc(mData[mb], dinA, dmixA);
-                            oData[ia] = dmixA * (1 - dinA) * 255;
-                        }
-                    }
-                }
-                break;
-
-            case CLEAR :
-                break;
-
-            case XOR :
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = xorCalc(iData[ir], dinA, mData[mr], dmixA);
-                            oData[ig] = xorCalc(iData[ig], dinA, mData[mg], dmixA);
-                            oData[ib] = xorCalc(iData[ib], dinA, mData[mb], dmixA);
-                            oData[ia] = ((dinA * (1 - dmixA)) + (dmixA * (1 - dinA))) * 255;
-                        }
-                    }
-                }
+                oData.set(iData);
                 break;
 
             default:
-
-                for (y = 0; y < iHeight; y++) {
-                    for (x = 0; x < iWidth; x++) {
-
-                        [ir, mr] = getLinePositions(x, y);
-
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else {
-
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            ia = ib + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
-
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
-
-                            oData[ir] = sOverCalc(iData[ir], dinA, mData[mr], dmixA);
-                            oData[ig] = sOverCalc(iData[ig], dinA, mData[mg], dmixA);
-                            oData[ib] = sOverCalc(iData[ib], dinA, mData[mb], dmixA);
-                            oData[ia] = (dinA + (dmixA * (1 - dinA))) * 255;
-                        }
-                    }
-                }
+                break;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        // If no overlap, we're done (baseline already correct)
+        if (!hasOverlap || compose === CLEAR) {
+
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
+            return;
+        }
+
+        // Blend only over overlap rows
+        // + Helpers use normalized alphas (ia, ma in [0..1])
+        const blend_sourceAtop = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs * ma) + (ma * Cd * (1 - ia));
+        const blend_sourceIn = (Cs, As,ia, ma) => ia * Cs * ma;
+        const blend_sourceOut = (Cs, As, ia, ma) => ia * Cs * (1 - ma);
+
+        const blend_destAtop = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs * (1 - ma)) + (ma * Cd * ia);
+        const blend_destOver = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs * (1 - ma)) + (ma * Cd);
+        const blend_destIn = (Cd, Ad, ia, ma) => ia * Cd * ma;
+        const blend_destOut = (Cd, Ad, ia, ma) => ma * Cd * (1 - ia);
+
+        const blend_xor = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs * (1 - ma)) + (ma * Cd * (1 - ia));
+        const blend_sourceOver = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs) + (ma * Cd * (1 - ia));
+
+        // Process overlap area
+        const rowStrideI = iWidth << 2,
+            rowStrideM = mWidth << 2,
+            rowStrideO = rowStrideI;
+
+        // Starting mix offsets
+        const mx0 = (x0 - offsetX) | 0,
+            my0 = (y0 - offsetY) | 0;
+
+        let y, my, iRow, oRow, mRow, x, mx, iIdx, mIdx, oIdx,
+            ir, ig, ib, ia8, mr, mg, mb, ma8, or, og, ob, oa, ia, ma;
+
+        for (y = y0, my = my0; y < y1; y++, my++) {
+
+            iRow = (y * rowStrideI) | 0;
+            oRow = (y * rowStrideO) | 0;
+            mRow = (my * rowStrideM) | 0;
+
+            // Scan across overlap
+            for (x = x0, mx = mx0; x < x1; x++, mx++) {
+
+                iIdx = iRow + ((x << 2) | 0);
+                mIdx = mRow + ((mx << 2) | 0);
+                oIdx = oRow + ((x  << 2) | 0);
+
+                ir = iData[iIdx];
+                ig = iData[iIdx + 1];
+                ib = iData[iIdx + 2];
+                ia8 = iData[iIdx + 3];
+
+                mr = mData[mIdx];
+                mg = mData[mIdx + 1];
+                mb = mData[mIdx + 2];
+                ma8 = mData[mIdx + 3];
+
+                // Normalize alphas once
+                ia = ia8 * (1 / 255);
+                ma = ma8 * (1 / 255);
+
+                switch (compose) {
+
+                    case SOURCE_ATOP:
+                        or = blend_sourceAtop(ir, ia, mr, ma, ia, ma);
+                        og = blend_sourceAtop(ig, ia, mg, ma, ia, ma);
+                        ob = blend_sourceAtop(ib, ia, mb, ma, ia, ma);
+                        oa = ((ia * ma) + (ma * (1 - ia))) * 255;
+                        break;
+
+                    case SOURCE_IN:
+                        or = blend_sourceIn(ir, ia, ia, ma);
+                        og = blend_sourceIn(ig, ia, ia, ma);
+                        ob = blend_sourceIn(ib, ia, ia, ma);
+                        oa = (ia * ma) * 255;
+                        break;
+
+                    case SOURCE_OUT:
+                        // Baseline already contains input; overwrite inside overlap
+                        or = blend_sourceOut(ir, ia, ia, ma);
+                        og = blend_sourceOut(ig, ia, ia, ma);
+                        ob = blend_sourceOut(ib, ia, ia, ma);
+                        oa = ia * (1 - ma) * 255;
+                        break;
+
+                    case DESTINATION_ONLY:
+                        // Just copy mix into output (within overlap). Outside remained transparent.
+                        or = mr; og = mg; ob = mb; oa = ma8;
+                        break;
+
+                    case DESTINATION_ATOP:
+                        or = blend_destAtop(ir, ia, mr, ma, ia, ma);
+                        og = blend_destAtop(ig, ia, mg, ma, ia, ma);
+                        ob = blend_destAtop(ib, ia, mb, ma, ia, ma);
+                        oa = ((ia * (1 - ma)) + (ma * ia)) * 255;
+                        break;
+
+                    case DESTINATION_OVER:
+                        or = blend_destOver(ir, ia, mr, ma, ia, ma);
+                        og = blend_destOver(ig, ia, mg, ma, ia, ma);
+                        ob = blend_destOver(ib, ia, mb, ma, ia, ma);
+                        oa = ((ia * (1 - ma)) + ma) * 255;
+                        break;
+
+                    case DESTINATION_IN:
+                        or = blend_destIn(mr, ma, ia, ma);
+                        og = blend_destIn(mg, ma, ia, ma);
+                        ob = blend_destIn(mb, ma, ia, ma);
+                        oa = ia * ma * 255;
+                        break;
+
+                    case DESTINATION_OUT:
+                        or = blend_destOut(mr, ma, ia, ma);
+                        og = blend_destOut(mg, ma, ia, ma);
+                        ob = blend_destOut(mb, ma, ia, ma);
+                        oa = ma * (1 - ia) * 255;
+                        break;
+
+                    case XOR:
+                        // Baseline outside overlap is input; inside we compute XOR
+                        or = blend_xor(ir, ia, mr, ma, ia, ma);
+                        og = blend_xor(ig, ia, mg, ma, ia, ma);
+                        ob = blend_xor(ib, ia, mb, ma, ia, ma);
+                        oa = ((ia * (1 - ma)) + (ma * (1 - ia))) * 255;
+                        break;
+
+                    case CLEAR:
+                        // (already early-returned)
+                        or = 0; og = 0; ob = 0; oa = 0;
+                        break;
+
+                    default:
+                        or = blend_sourceOver(ir, ia, mr, ma, ia, ma);
+                        og = blend_sourceOver(ig, ia, mg, ma, ia, ma);
+                        ob = blend_sourceOver(ib, ia, mb, ma, ia, ma);
+                        oa = (ia + (ma * (1 - ia))) * 255;
+                }
+
+                oData[oIdx] = or;
+                oData[oIdx + 1] = og;
+                oData[oIdx + 2] = ob;
+                oData[oIdx + 3] = oa;
+            }
+        }
+
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
-// __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the "level" attribute. Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags.
+// __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values.
+// + The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments.
+// + The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the "level" attribute.
+// + Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags.
     [CORRODE]: function (requirements) {
 
-        const doCalculations = function (data, matrix, offset) {
-
-            let max = 0,
-                min = 255,
-                v, c;
-
-            const matlen = matrix.length;
-
-            for (c = 0; c < matlen; c++) {
-
-                v = data[matrix[c] + offset];
-
-                if (v < min) min = v;
-                else if (v > max) max = v;
-            }
-
-            switch (operation) {
-
-                case 'lowest' :
-                    return min;
-
-                case 'highest' :
-                    return max;
-
-                default :
-                    return _floor(min + ((max - min) / 2));
-            }
-        };
-
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
-            len = iData.length;
+            len   = iData.length;
+
+        const width  = input.width  | 0,
+            height = input.height | 0;
 
         const {
             opacity = 1,
@@ -2911,43 +2236,290 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let width = requirements.width;
-        if (!_isFinite(width) || width < 1) width = 3;
-        width = _floor(width);
+        let kW = requirements.width;
+        if (!_isFinite(kW) || kW < 1) kW = 3;
+        kW = _floor(kW);
 
-        let height = requirements.height;
-        if (!_isFinite(height) || height < 1) height = 3;
-        height = _floor(height);
+        let kH = requirements.height;
+        if (!_isFinite(kH) || kH < 1) kH = 3;
+        kH = _floor(kH);
 
-        let offsetX = requirements.offsetX;
-        if (!_isFinite(offsetX) || offsetX < 1) offsetX = 1;
-        offsetX = _floor(offsetX);
+        let offX = requirements.offsetX;
+        if (!_isFinite(offX) || offX < 0) offX = (kW >> 1);
+        offX = _floor(offX);
 
-        let offsetY = requirements.offsetY;
-        if (!_isFinite(offsetY) || offsetY < 1) offsetY = 1;
-        offsetY = _floor(offsetY);
+        let offY = requirements.offsetY;
+        if (!_isFinite(offY) || offY < 0) offY = (kH >> 1);
+        offY = _floor(offY);
 
-        const grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
+        if (kW === 1 && kH === 1 && offX === 0 && offY === 0) transferDataUnchanged(oData, iData, len);
+        else {
 
-        const m = _floor(len / 4);
+            const left = offX | 0,
+                right = (kW - offX - 1) | 0,
+                top = offY | 0,
+                bottom = (kH - offY - 1) | 0;
 
-        let r, g, b, a, i;
+            const x0 = left,
+                x1 = (width - right) | 0,
+                y0 = top,
+                y1 = (height - bottom) | 0;
 
-        for (i = 0; i < m; i++) {
+            const nameQx = `corrode-deque-x-${width}`;
+            let Qx = getWorkstoreItem(nameQx);
+            if (!Qx) {
 
-            r = i * 4;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+                Qx = new Int32Array(width);
+                setWorkstoreItem(nameQx, Qx);
+            }
 
-            oData[r] = (includeRed) ? doCalculations(iData, grid[i], 0) : iData[r];
-            oData[g] = (includeGreen) ? doCalculations(iData, grid[i], 1) : iData[g];
-            oData[b] = (includeBlue) ? doCalculations(iData, grid[i], 2) : iData[b];
-            oData[a] = (includeAlpha) ? doCalculations(iData, grid[i], 3) : iData[a];
+            const nameQy = `corrode-deque-y-${height}`;
+            let Qy = getWorkstoreItem(nameQy);
+
+            if (!Qy) {
+
+                Qy = new Int32Array(height);
+                setWorkstoreItem(nameQy, Qy);
+            }
+
+            const midMin = new Uint8ClampedArray(len),
+                midMax = (operation === 'lowest') ? null : new Uint8ClampedArray(len);
+
+            const rowScan = (src, rowBase, xs, xe, ch, wantMin) => {
+
+                let m = wantMin ? 255 : 0,
+                    v, x;
+
+                const base = rowBase + ch;
+
+                for (x = xs; x <= xe; x++) {
+
+                    v = src[base + (x << 2)];
+                    if (wantMin ? (v < m) : (v > m)) m = v;
+                }
+                return m;
+            };
+
+            const colScan = (src, xs, ys, ye, ch, wantMin) => {
+
+                let m = wantMin ? 255 : 0,
+                    v, y;
+
+                const base = (xs << 2) + ch,
+                    stride = width << 2;
+
+                let idx = (ys * stride) + base;
+
+                for (y = ys; y <= ye; y++) {
+
+                    v = src[idx];
+                    if (wantMin ? (v < m) : (v > m)) m = v;
+                    idx += stride;
+                }
+                return m;
+            };
+
+            const horizontalPass = (src, dst, ch, wantMin) => {
+
+                const w = width,
+                    h = height,
+                    fullW = left + right + 1;
+
+                let y, rowBase, x, xs, xe, head, tail, v, qx, qv, leftEdge, center;
+
+                for (y = 0; y < h; y++) {
+
+                    rowBase = (y * w) << 2;
+
+                    for (x = 0; x < x0; x++) {
+
+                        xs = 0;
+                        xe = Math.min(w - 1, x + right);
+                        dst[rowBase + (x << 2) + ch] = rowScan(src, rowBase, xs, xe, ch, wantMin);
+                    }
+
+                    if (x1 > x0) {
+
+                        head = 0;
+                        tail = -1;
+
+                        for (x = 0; x < w; x++) {
+
+                            v = src[rowBase + (x << 2) + ch];
+
+                            while (tail >= head) {
+
+                                qx = Qx[tail];
+                                qv = src[rowBase + (qx << 2) + ch];
+
+                                if (wantMin ? (v <= qv) : (v >= qv)) tail--;
+                                else break;
+                            }
+
+                            Qx[++tail] = x;
+
+                            leftEdge = x - fullW + 1;
+
+                            while (head <= tail && Qx[head] < leftEdge) head++;
+
+                            if (x >= fullW - 1) {
+
+                                center = x - right;
+
+                                if (center >= x0 && center < x1) {
+
+                                    qx = Qx[head];
+                                    dst[rowBase + (center << 2) + ch] = src[rowBase + (qx << 2) + ch];
+                                }
+                            }
+                        }
+                    }
+
+                    for (x = x1; x < w; x++) {
+
+                        xs = _max(0, x - left);
+                        xe = w - 1;
+                        dst[rowBase + (x << 2) + ch] = rowScan(src, rowBase, xs, xe, ch, wantMin);
+                    }
+                }
+            };
+
+            const verticalPass = (src, dst, ch, wantMin) => {
+
+                const w = width,
+                    h = height,
+                    fullH = top + bottom + 1,
+                    stride = w << 2;
+
+                let x, ys, ye, head, tail, y, idx, v, qv, topEdge, center, qy;
+
+                for (x = 0; x < w; x++) {
+
+                    for (y = 0; y < y0; y++) {
+
+                        ys = 0;
+                        ye = _min(h - 1, y + bottom);
+                        dst[(y * stride) + (x << 2) + ch] = colScan(src, x, ys, ye, ch, wantMin);
+                    }
+
+                    if (y1 > y0) {
+
+                        head = 0;
+                        tail = -1;
+
+                        for (y = 0; y < h; y++) {
+
+                            idx = (y * stride) + (x << 2) + ch;
+                            v = src[idx];
+
+                            while (tail >= head) {
+
+                                qy = Qy[tail];
+                                qv = src[(qy * stride) + (x << 2) + ch];
+
+                                if (wantMin ? (v <= qv) : (v >= qv)) tail--;
+                                else break;
+                            }
+
+                            Qy[++tail] = y;
+
+                            topEdge = y - fullH + 1;
+
+                            while (head <= tail && Qy[head] < topEdge) head++;
+
+                            if (y >= fullH - 1) {
+
+                                center = y - bottom;
+
+                                if (center >= y0 && center < y1) {
+
+                                    qy = Qy[head];
+
+                                    dst[(center * stride) + (x << 2) + ch] = src[(qy * stride) + (x << 2) + ch];
+                                }
+                            }
+                        }
+                    }
+
+                    for (y = y1; y < h; y++) {
+
+                        ys = _max(0, y - top);
+                        ye = h - 1;
+                        dst[(y * stride) + (x << 2) + ch] = colScan(src, x, ys, ye, ch, wantMin);
+                    }
+                }
+            };
+
+            const doR = !!includeRed,
+                doG = !!includeGreen,
+                doB = !!includeBlue,
+                doA = !!includeAlpha;
+
+            if (doA && !doR && !doG && !doB) {
+
+                oData.set(iData);
+
+                if (operation === 'lowest' || operation === 'mean') horizontalPass(iData, midMin, 3, true);
+                if (operation === 'highest' || operation === 'mean') horizontalPass(iData, midMax || midMin, 3, false);
+
+                if (operation === 'lowest') verticalPass(midMin, oData, 3, true);
+                else if (operation === 'highest') verticalPass(midMax, oData, 3, false);
+                else {
+
+                    const tmpMin = new Uint8ClampedArray(len),
+                        tmpMax = new Uint8ClampedArray(len);
+
+                    verticalPass(midMin, tmpMin, 3, true);
+                    verticalPass(midMax, tmpMax, 3, false);
+
+                    for (let i = 3; i < len; i += 4) {
+
+                        oData[i] = (tmpMin[i] + tmpMax[i]) >> 1;
+                    }
+                }
+            }
+            else {
+
+                oData.set(iData);
+
+                const runForChannel = (ch) => {
+
+                    if (operation === 'lowest') {
+
+                        horizontalPass(iData,  midMin, ch, true);
+                        verticalPass(midMin, oData,  ch, true);
+                    }
+                    else if (operation === 'highest') {
+
+                        horizontalPass(iData,  midMin, ch, false);
+                        verticalPass(midMin, oData,  ch, false);
+                    }
+                    else {
+
+                        const tmpVMin = new Uint8ClampedArray(len),
+                            tmpVMax = new Uint8ClampedArray(len);
+
+                        horizontalPass(iData, midMin, ch, true);
+                        horizontalPass(iData, midMax, ch, false);
+                        verticalPass  (midMin, tmpVMin, ch, true);
+                        verticalPass  (midMax, tmpVMax, ch, false);
+
+                        for (let i = ch; i < len; i += 4) {
+
+                            oData[i] = (tmpVMin[i] + tmpVMax[i]) >> 1;
+                        }
+                    }
+                };
+
+                if (doR) runForChannel(0);
+                if (doG) runForChannel(1);
+                if (doB) runForChannel(2);
+                if (doA) runForChannel(3);
+            }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __displace__ - Shift pixels around the image, based on the values supplied in a displacement image
@@ -2974,6 +2546,8 @@ P.theBigActionsObject = {
             }
         };
 
+        const lPosResult = [0, 0];
+
         const getLinePositions = function (x, y) {
 
             const ix = x,
@@ -2983,14 +2557,16 @@ P.theBigActionsObject = {
 
             let mPos = -1;
 
-            const iPos = ((iy * iWidth) + ix) * 4;
+            lPosResult[0] = ((iy * iWidth) + ix) * 4;
 
             if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = ((my * mWidth) + mx) * 4;
 
-            return [iPos, mPos];
+            lPosResult[1] = mPos;
+
+            return lPosResult;
         };
 
-        const [input, output, mix] = this.getInputAndOutputLines(requirements);
+        const [input, output, mix] = getInputAndOutputLines(requirements);
 
         const {width:iWidth, height:iHeight, data:iData} = input;
         const {data:oData} = output;
@@ -3021,9 +2597,11 @@ P.theBigActionsObject = {
         let x, y, dx, dy, dPos, iPos, mPos;
 
         for (y = 0; y < iHeight; y++) {
+
             for (x = 0; x < iWidth; x++) {
 
                 [iPos, mPos] = getLinePositions(x, y);
+
                 if (mPos >= 0) {
 
                     dx = _floor(x + ((127 - mData[mPos + offsetForChannelX]) / 127) * scaleX);
@@ -3033,6 +2611,7 @@ P.theBigActionsObject = {
 
                         if (dx < 0) dx = 0;
                         if (dx >= iWidth) dx = iWidth - 1;
+
                         if (dy < 0) dy = 0;
                         if (dy >= iHeight) dy = iHeight - 1;
 
@@ -3045,34 +2624,22 @@ P.theBigActionsObject = {
                     }
                     copyPixel(dPos, iPos, iData);
                 }
-                else {
-                    copyPixel(iPos, iPos, iData);
-                }
+                else copyPixel(iPos, iPos, iData);
             }
         }
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
-// __emboss__ - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action
     [EMBOSS]: function (requirements) {
 
-        const doCalculations = function (data, matrix, offset) {
-
-            let val = 0;
-
-            for (let m = 0, mz = matrix.length; m < mz; m++) {
-
-                if (weights[m]) val += (data[matrix[m] + offset] * weights[m]);
-            }
-            return val;
-        }
-
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+              oData = output.data,
+              W = input.width  | 0,
+              H = input.height | 0,
+              rowStride = W << 2;
 
         const {
             opacity = 1,
@@ -3082,124 +2649,161 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const strength = _abs(requirements.strength || 1);
+        // --- Build 3x3 weights from strength + angle
+        const strength = _abs(requirements.strength || 1),
+            angle = correctAngle(requirements.angle || 0),
+            slices  = (angle / 45) | 0,
+            remains = ((angle % 45) / 45) * strength;
 
-        const angle = correctAngle(requirements.angle || 0);
+        const w = new Float32Array(9);
 
-        const slices = _floor(angle / 45),
-            remains = ((angle % 45) / 45) * strength,
-            weights = new Array(9);
-
-        weights.fill(0, 0, 9);
-        weights[4] = 1;
+        w[4] = 1;
 
         if (slices === 0) {
-            weights[5] = strength - remains;
-            weights[8] = remains;
-            weights[3] = -weights[5];
-            weights[0] = -weights[8];
+
+            w[5] = strength - remains;
+            w[8] = remains;
+            w[3] = -w[5];
+            w[0] = -w[8];
         }
         else if (slices === 1) {
-            weights[8] = strength - remains;
-            weights[7] = remains;
-            weights[0] = -weights[8];
-            weights[1] = -weights[7];
+
+            w[8] = strength - remains;
+            w[7] = remains;
+            w[0] = -w[8];
+            w[1] = -w[7];
         }
         else if (slices === 2) {
-            weights[7] = strength - remains;
-            weights[6] = remains;
-            weights[1] = -weights[7];
-            weights[2] = -weights[6];
+
+            w[7] = strength - remains;
+            w[6] = remains;
+            w[1] = -w[7];
+            w[2] = -w[6];
         }
         else if (slices === 3) {
-            weights[6] = strength - remains;
-            weights[3] = remains;
-            weights[2] = -weights[6];
-            weights[5] = -weights[3];
+            w[6] = strength - remains;
+            w[3] = remains;
+            w[2] = -w[6];
+            w[5] = -w[3];
         }
         else if (slices === 4) {
-            weights[3] = strength - remains;
-            weights[0] = remains;
-            weights[5] = -weights[3];
-            weights[8] = -weights[0];
+            w[3] = strength - remains;
+            w[0] = remains;
+            w[5] = -w[3];
+            w[8] = -w[0];
         }
         else if (slices === 5) {
-            weights[0] = strength - remains;
-            weights[1] = remains;
-            weights[8] = -weights[0];
-            weights[7] = -weights[1];
+            w[0] = strength - remains;
+            w[1] = remains;
+            w[8] = -w[0];
+            w[7] = -w[1];
         }
         else if (slices === 6) {
-            weights[1] = strength - remains;
-            weights[2] = remains;
-            weights[7] = -weights[1];
-            weights[6] = -weights[2];
+            w[1] = strength - remains;
+            w[2] = remains;
+            w[7] = -w[1];
+            w[6] = -w[2];
         }
         else {
-            weights[2] = strength - remains;
-            weights[5] = remains;
-            weights[6] = -weights[2];
-            weights[3] = -weights[5];
+            w[2] = strength - remains;
+            w[5] = remains;
+            w[6] = -w[2];
+            w[3] = -w[5];
         }
 
-        const grid = this.buildMatrixGrid(3, 3, 1, 1, input);
+        // Copy input → output as a base (alpha passthrough needed anyway)
+        // oData.set(iData);
 
-        let i, r, g, b, a, iR, iG, iB, iA, oR, oG, oB, m;
+        let x, y, yU, yD, rowU, rowM, rowD, xL, xC, xR,
+            p00, p01, p02, p10, p11, p12, p20, p21, p22,
+            r, g, b, iR, iG, iB, unchanged;
 
-        for (i = 0; i < len; i += 4) {
+        // Main pass (toroidal wrap)
+        for (y = 0; y < H; y++) {
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            yU = (y === 0 ? H - 1 : y - 1);
+            yD = (y === H - 1 ? 0 : y + 1);
 
-            iR = iData[r];
-            iG = iData[g];
-            iB = iData[b];
-            iA = iData[a];
+            rowU = (yU * rowStride) | 0;
+            rowM = (y * rowStride) | 0;
+            rowD = (yD * rowStride) | 0;
 
-            if (iA) {
+            for (x = 0; x < W; x++) {
 
-                m = _floor(i / 4);
+                xL = (x === 0 ? W - 1 : x - 1) << 2;
+                xC = (x << 2);
+                xR = (x === W - 1 ? 0 : x + 1) << 2;
 
-                oData[r] = doCalculations(iData, grid[m], 0);
-                oData[g] = doCalculations(iData, grid[m], 1);
-                oData[b] = doCalculations(iData, grid[m], 2);
-                oData[a] = iData[a];
+                // Indices for 3x3 neighborhood, row-major
+                p00 = rowU + xL;
+                p01 = rowU + xC;
+                p02 = rowU + xR;
+                p10 = rowM + xL;
+                p11 = rowM + xC;
+                p12 = rowM + xR;
+                p20 = rowD + xL;
+                p21 = rowD + xC;
+                p22 = rowD + xR;
 
+                if (!iData[p11 + 3]) continue;
+
+                r = iData[p00] * w[0] + iData[p01] * w[1] + iData[p02] * w[2] +
+                    iData[p10] * w[3] + iData[p11] * w[4] + iData[p12] * w[5] +
+                    iData[p20] * w[6] + iData[p21] * w[7] + iData[p22] * w[8];
+
+                g = iData[p00 + 1] * w[0] + iData[p01 + 1] * w[1] + iData[p02 + 1] * w[2] +
+                    iData[p10 + 1] * w[3] + iData[p11 + 1] * w[4] + iData[p12 + 1] * w[5] +
+                    iData[p20 + 1] * w[6] + iData[p21 + 1] * w[7] + iData[p22 + 1] * w[8];
+
+                b = iData[p00 + 2] * w[0] + iData[p01 + 2] * w[1] + iData[p02 + 2] * w[2] +
+                    iData[p10 + 2] * w[3] + iData[p11 + 2] * w[4] + iData[p12 + 2] * w[5] +
+                    iData[p20 + 2] * w[6] + iData[p21 + 2] * w[7] + iData[p22 + 2] * w[8];
+
+                oData[p11] = r;
+                oData[p11 + 1] = g;
+                oData[p11 + 2] = b;
+                oData[p11 + 3] = iData[p11 + 3];
+
+                // Optional post-process (unchanged → midgray or transparent)
                 if (postProcessResults) {
 
-                    oR = oData[r];
-                    oG = oData[g];
-                    oB = oData[b];
+                    iR = iData[p11];
+                    iG = iData[p11 + 1];
+                    iB = iData[p11 + 2];
 
-                    if (oR >= iR - tolerance && oR <= iR + tolerance &&
-                        oG >= iG - tolerance && oG <= iG + tolerance &&
-                        oB >= iB - tolerance && oB <= iB + tolerance) {
+                    unchanged =
+                        (r >= iR - tolerance && r <= iR + tolerance) &&
+                        (g >= iG - tolerance && g <= iG + tolerance) &&
+                        (b >= iB - tolerance && b <= iB + tolerance);
 
-                        if (keepOnlyChangedAreas) oData[a] = 0;
+                    if (unchanged) {
+
+                        if (keepOnlyChangedAreas) oData[p11 + 3] = 0;
                         else {
-                            oData[r] = 127;
-                            oData[g] = 127;
-                            oData[b] = 127;
+
+                            oData[p11] = 127;
+                            oData[p11 + 1] = 127;
+                            oData[p11 + 2] = 127;
                         }
                     }
                 }
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __flood__ - Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments
     [FLOOD]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -3211,30 +2815,30 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let i, c, a;
+        const clamp8 = v => (v < 0 ? 0 : v > 255 ? 255 : v | 0);
 
-        for (i = 0; i < len; i += 4) {
+        const R = clamp8(red),
+            G = clamp8(green),
+            B = clamp8(blue),
+            A = clamp8(alpha);
 
-            a = i + 3;
+        // Precompute packed color
+        const baseRGB = (B << 16) | (G << 8) | R,
+            packedWithA = ((A << 24) | baseRGB) >>> 0;
 
-            if (iData[a]) {
+        let p, pz, s, a;
 
-                c = i;
-                oData[c] = red;
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-                c++;
-                oData[c] = green;
+            s = src32[p];
+            a = (s >>> 24) & 0xFF;
 
-                c++;
-                oData[c] = blue;
-
-                c++;
-                oData[c] = (excludeAlpha) ? iData[a] : alpha;
-            }
+            if (a === 0) out32[p] = s;
+            else out32[p] = excludeAlpha ? (((a << 24) | baseRGB) >>> 0) : packedWithA;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __gaussian-blur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
@@ -3415,7 +3019,7 @@ P.theBigActionsObject = {
             }
         }
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data;
@@ -3490,14 +3094,25 @@ P.theBigActionsObject = {
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __glitch__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
+//
+// NOTE: this filter is deprecated. No further work is planned to maintain or improve it. Instead, the plan is to replace this filter with a set of loosely linked glitch effect filters covering:
+// + **Row/Column Displace** - band-based shifts with seed/seedDelta and edgeMode (transparent / wrap / clamp).
+// + **Channel Split/Drift** - per-channel offsets (optional blur for chroma bleed).
+// + **Slice Repeat / Dropout** - duplicate or zero spans for tear/gap artifacts.
+// + **Block Corrupt** - copy/permute fixed-size tiles (macroblock vibe).
+// + **Quantize/Posterize** - use the existing STEP_CHANNELS filter.
+// + **Banding** - deliberate bit-depth reduction (optional dithering).
+// + **Noise overlays** - grain, RF snow, line hum - see the RANDOM_NOISE filter, which already implements (some of) this functionality.
+// + **Scanline mod** - per-row brightness modulation (e.g., sinusoidal).
+// + **Color-space glitch** - wrong YCbCr matrix or 4:2:0 bleed/smear.
     [GLITCH]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -3527,7 +3142,7 @@ P.theBigActionsObject = {
         let step = _floor(requirements.step);
         if (step < 1) step = 1;
 
-        const rnd = this.getRandomNumbers({
+        const rnd = getRandomNumbers({
             seed,
             length: iHeight * 5,
         });
@@ -3565,8 +3180,8 @@ P.theBigActionsObject = {
 
                     shiftR = (offsetRedMin + _floor(rnd[++rndCursor] * redRange)) * 4;
                     shiftG = (offsetGreenMin + _floor(rnd[++rndCursor] * greenRange)) * 4;
-                    shiftB= (offsetBlueMin + _floor(rnd[++rndCursor] * blueRange)) * 4;
-                    shiftA= (offsetAlphaMin + _floor(rnd[++rndCursor] * alphaRange)) * 4;
+                    shiftB = (offsetBlueMin + _floor(rnd[++rndCursor] * blueRange)) * 4;
+                    shiftA = (offsetAlphaMin + _floor(rnd[++rndCursor] * alphaRange)) * 4;
 
                     for (j = 0; j < step; j++) {
 
@@ -3618,55 +3233,58 @@ P.theBigActionsObject = {
             }
             else oData[a] = iData[ua];
         }
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __grayscale__ - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.
     [GRAYSCALE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        // 32-bit views over the same buffers (respecting byteOffset/length)
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
         const {
             opacity = 1,
-            lineOut,
+            lineOut
         } = requirements;
 
-        const gVal = this.getGrayscaleValue;
+        let rgba, r, g, b, a, gray, p, pz;
 
-        let r, g, b, a, i, gray;
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-        for (i = 0; i < len; i += 4) {
+            rgba = src32[p];
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            r = rgba & 0xff;
+            g = (rgba >>> 8) & 0xff;
+            b = (rgba >>> 16) & 0xff;
+            a = (rgba >>> 24) & 0xff;
 
-            gray = gVal(iData[r], iData[g], iData[b]);
+            gray = (r * 54 + g * 183 + b * 19) >> 8;
 
-            oData[r] = gray;
-            oData[g] = gray;
-            oData[b] = gray;
-            oData[a] = iData[a];
+            out32[p] = ((a << 24) | (gray << 16) | (gray << 8) | gray) >>> 0;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __invert-channels__ - For each pixel, subtracts its current channel values - when included - from 255.
     [INVERT_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        // 32-bit views over the same buffers (respect byteOffset/length)
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -3677,120 +3295,355 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let r, g, b, a, i;
+        const mask = (includeRed ? 0x000000FF : 0) | (includeGreen ? 0x0000FF00 : 0) | (includeBlue ? 0x00FF0000 : 0) | (includeAlpha ? 0xFF000000 : 0);
 
-        for (i = 0; i < len; i += 4) {
+        if (mask === 0) out32.set(src32);
+        else {
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
 
-            oData[r] = (includeRed) ? 255 - iData[r] : iData[r];
-            oData[g] = (includeGreen) ? 255 - iData[g] : iData[g];
-            oData[b] = (includeBlue) ? 255 - iData[b] : iData[b];
-            oData[a] = (includeAlpha) ? 255 - iData[a] : iData[a];
+                out32[p] = src32[p] ^ mask;
+            }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __lock-channels-to-levels__ - Produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value.
     [LOCK_CHANNELS_TO_LEVELS]: function (requirements) {
 
-        const getLCTLValue = function (val, levels) {
+        const normalizeLevels = (spec) => {
 
-            if (!levels.length) return val;
+            let arr;
 
-            for (let j = 0, jz = levels.length; j < jz; j++) {
+            if (spec == null) arr = [];
+            else if (spec.toFixed) arr = [spec];
+            else if (spec.substring) {
 
-                const [start, end, level] = levels[j];
-                if (val >= start && val <= end) return level;
+                arr = (spec.match(/-?\d+/g) || []).map(n => +n);
             }
+            else if (_isArray(spec)) arr = spec.map(n => +n);
+            else arr = [];
+
+            const seen = new Uint8Array(256),
+                out = [];
+
+            let i, iz, v;
+
+            for (i = 0, iz = arr.length; i < iz; i++) {
+
+                v = arr[i];
+
+                if (!_isFinite(v)) continue;
+
+                v = v < 0 ? 0 : v > 255 ? 255 : v | 0;
+
+                if (!seen[v]) {
+
+                    seen[v] = 1;
+                    out.push(v);
+                }
+            }
+
+            out.sort((a, b) => a - b);
+
+            return out;
         };
 
-        this.checkChannelLevelsParameters(requirements);
+        const buildLUT = (levels) => {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+            const lut = new Uint8ClampedArray(256);
+
+            if (!levels || levels.length === 0) {
+
+                for (let v = 0; v < 256; v++) {
+
+                    lut[v] = v;
+                }
+                return lut;
+            }
+
+            if (levels.length === 1) {
+
+                const L = levels[0] | 0;
+
+                for (let v = 0; v < 256; v++) {
+
+                    lut[v] = L;
+                }
+                return lut;
+            }
+
+            for (let i = 0, iz = levels.length; i < iz; i++) {
+
+                const cur = levels[i],
+                    start = (i === 0) ? 0 : _ceil((levels[i - 1] + cur) * 0.5),
+                    end = (i === iz - 1) ? 255 : _floor((cur + levels[i + 1]) * 0.5);
+
+                for (let v = start; v <= end; v++) {
+
+                    lut[v] = cur;
+                }
+            }
+            return lut;
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
         const {
             opacity = 1,
-            red = [0],
+            red   = [0],
             green = [0],
-            blue = [0],
+            blue  = [0],
             alpha = [255],
             lineOut,
         } = requirements;
 
-        let r, g, b, a, i;
+        // Normalize and build LUTs
+        const rLevels = normalizeLevels(red),
+            gLevels = normalizeLevels(green),
+            bLevels = normalizeLevels(blue),
+            aLevels = normalizeLevels(alpha);
 
-        for (i = 0; i < len; i += 4) {
+        const lutR = buildLUT(rLevels),
+            lutG = (green === red) ? lutR : buildLUT(gLevels),
+            lutB = (blue  === red) ? lutR : (blue === green ? lutG : buildLUT(bLevels)),
+            lutA = buildLUT(aLevels);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        let p, pz, rgba, r, g, b, a, nr, ng, nb, na;
 
-            oData[r] = getLCTLValue(iData[r], red);
-            oData[g] = getLCTLValue(iData[g], green);
-            oData[b] = getLCTLValue(iData[b], blue);
-            oData[a] = getLCTLValue(iData[a], alpha);
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+            rgba = src32[p];
+
+            r = rgba & 0xFF;
+            g = (rgba >>> 8) & 0xFF;
+            b = (rgba >>> 16) & 0xFF;
+            a = (rgba >>> 24) & 0xFF;
+
+            nr = lutR[r];
+            ng = lutG[g];
+            nb = lutB[b];
+            na = lutA[a];
+
+            out32[p] = ((na << 24) | (nb << 16) | (ng << 8) | nr) >>> 0;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __luminance-to-alpha__ - sets the OKLAB alpha channel to the value of the luminance channel, then sets the luminance, A and B channels to 0 (black).
     [LUMINANCE_TO_ALPHA]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        // Precomputed per-channel contributions to l,m,s (OKLab forward matrices)
+        // + l = Lr[r] + Lg[g] + Lb[b]; etc (Nine 256-entry tables; ~9 KB total)
+        const SRGB_TO_LINEAR_LUT = 'srgb-linear-lut-256';
+        const OKLAB_L_FROM_SRGB_TABLES = 'oklab-L-from-srgb-9tables';
+        const getOklabLTables = () => {
+
+            // sRGB -> linear LUT (256)
+            const getLinearSrgbLut = () => {
+
+                let lut = getWorkstoreItem(SRGB_TO_LINEAR_LUT);
+
+                if (lut) return lut;
+
+                lut = new Float32Array(256);
+
+                let i, cs;
+
+                for (i = 0; i < 256; i++) {
+
+                    cs = i / 255;
+                    lut[i] = (cs <= 0.04045) ? (cs / 12.92) : _pow((cs + 0.055) / 1.055, 2.4);
+                }
+                setWorkstoreItem(SRGB_TO_LINEAR_LUT, lut);
+
+                return lut;
+            };
+
+            let lut = getWorkstoreItem(OKLAB_L_FROM_SRGB_TABLES);
+            if (lut) return lut;
+
+            const s2l = getLinearSrgbLut();
+
+            const Lr = new Float32Array(256),
+                Lg = new Float32Array(256),
+                Lb = new Float32Array(256),
+                Mr = new Float32Array(256),
+                Mg = new Float32Array(256),
+                Mb = new Float32Array(256),
+                Sr = new Float32Array(256),
+                Sg = new Float32Array(256),
+                Sb = new Float32Array(256);
+
+            for (let i = 0, v; i < 256; i++) {
+
+                v = s2l[i];
+
+                Lr[i] = 0.4122214708 * v;
+                Lg[i] = 0.5363325363 * v;
+                Lb[i] = 0.0514459929 * v;
+
+                Mr[i] = 0.2119034982 * v;
+                Mg[i] = 0.6806995451 * v;
+                Mb[i] = 0.1073969566 * v;
+
+                Sr[i] = 0.0883024619 * v;
+                Sg[i] = 0.2817188376 * v;
+                Sb[i] = 0.6299787005 * v;
+            }
+
+            lut = { Lr, Lg, Lb, Mr, Mg, Mb, Sr, Sg, Sb };
+
+            setWorkstoreItem(OKLAB_L_FROM_SRGB_TABLES, lut);
+
+            return lut;
+        };
+
+        // Build (once) and cache a 1-D cbrt LUT
+        const getCbrtLut = function (size = 4096, maxX = 1.0) {
+
+            const key = `oklab::cbrt::${size}::${maxX}`;
+            let lut = getWorkstoreItem(key);
+
+            if (!lut) {
+
+                lut = new Float32Array(size + 1);
+
+                const step = maxX / size;
+
+                let i, x;
+
+                for (i = 0; i <= size; i++) {
+
+                    x = i * step;
+                    lut[i] = Math.cbrt(x);
+                }
+                setWorkstoreItem(key, lut);
+            }
+            return { lut, size, maxX, scale: size / maxX };
+        };
+
+        // Fast cbrt via LUT + lerp
+        const cbrtLUT = function (x, lutPack) {
+
+            const v = x;
+
+            if (v <= 0) return 0;
+
+            if (v >= lutPack.maxX) return lutPack.lut[lutPack.size];
+
+            const f = v * lutPack.scale,
+                i = f | 0,
+                t = f - i,
+                a = lutPack.lut[i],
+                b = lutPack.lut[i + 1];
+
+            return a + t * (b - a);
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
             lineOut,
         } = requirements;
 
-        const libs = this.retrieveColorPointLibraries();
+        const { Lr, Lg, Lb, Mr, Mg, Mb, Sr, Sg, Sb } = getOklabLTables();
 
-        let r, g, b, a, i, L;
+        const lutPack = getCbrtLut(4096, 1.0);
 
-        for (i = 0; i < len; i += 4) {
+        let p, pz, s, r8, g8, b8, l, m, s3, l_, m_, s_, L, A;
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-            [L] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+            s = src32[p];
 
-            oData[r] = 0;
-            oData[g] = 0;
-            oData[b] = 0;
-            oData[a] = _floor(L * 256);
+            r8 = s & 0xFF;
+            g8 = (s >>> 8) & 0xFF;
+            b8 = (s >>> 16) & 0xFF;
+
+            l = Lr[r8] + Lg[g8] + Lb[b8];
+            m = Mr[r8] + Mg[g8] + Mb[b8];
+            s3 = Sr[r8] + Sg[g8] + Sb[b8];
+
+            l_ = cbrtLUT(l, lutPack);
+            m_ = cbrtLUT(m, lutPack);
+            s_ = cbrtLUT(s3, lutPack);
+
+            L = (0.2104542553 * l_) + (0.7936177850 * m_) - (0.0040720468 * s_);
+
+            if (L < 0) L = 0;
+            else if (L > 1) L = 1;
+
+            A = (L * 256) | 0;
+            if (A > 255) A = 255;
+
+            out32[p] = (A << 24) >>> 0;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __map-to-gradient__ - maps the colors in the supplied (complex) gradient to a grayscaled input.
     [MAP_TO_GRADIENT]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        // `getGradientData` - create an imageData object containing the 256 values from a gradient that we require for doing filters work
+        const getGradientData = function (gradient) {
+
+            const name = `gradient-data-${gradient.name}`;
+
+            const itemInWorkstore = getWorkstoreItem(name);
+
+            if (!itemInWorkstore || gradient.dirtyFilterIdentifier || gradient.animateByDelta) {
+
+                const mycell = requestCell();
+
+                const {engine, element} = mycell;
+
+                element.width = 256;
+                element.height = 1;
+
+                const G = engine.createLinearGradient(0, 0, 255, 0);
+
+                gradient.addStopsToGradient(G, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
+
+                engine.fillStyle = G;
+                engine.fillRect(0, 0, 256, 1);
+
+                const data = engine.getImageData(0, 0, 256, 1).data;
+
+                releaseCell(mycell);
+
+                return setAndReturnWorkstoreItem(name, data);
+            }
+
+            return itemInWorkstore || [];
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -3799,133 +3652,269 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        if (gradient) {
+        if (!gradient) out32.set(src32);
+        else {
 
-            let i, avg, r, g, b, a, v;
+            const gradBytes = getGradientData(gradient);
 
-            const rainbowData = this.getGradientData(gradient);
+            if (!gradBytes || gradBytes.length < 1024) out32.set(src32);
+            else {
 
-            if (rainbowData.length) {
+                const grad32 = new Uint32Array(gradBytes.buffer, gradBytes.byteOffset, 256);
 
-                const gVal = this.getGrayscaleValue;
+                let sumLUT;
+                if (!useNaturalGrayscale) {
 
-                for (i = 0; i < len; i += 4) {
+                    sumLUT = getWorkstoreItem(NAIVE_GRAY_LUT);
 
-                    r = i;
-                    g = r + 1;
-                    b = g + 1;
-                    a = b + 1;
+                    if (!sumLUT) {
 
-                    if (iData[a]) {
+                        sumLUT = new Uint8Array(766);
 
-                        if (useNaturalGrayscale) avg = gVal(iData[r], iData[g], iData[b]);
-                        else avg = _floor((0.3333 * iData[r]) + (0.3333 * iData[g]) + (0.3333 * iData[b]));
+                        for (let s = 0; s <= 765; s++) {
 
-                        v = avg * 4;
-
-                        oData[r] = rainbowData[v];
-                        v++;
-                        oData[g] = rainbowData[v];
-                        v++;
-                        oData[b] = rainbowData[v];
-                        v++;
-                        oData[a] = rainbowData[v];
+                            sumLUT[s] = Math.floor(0.3333 * s) & 0xFF;
+                        }
+                        setWorkstoreItem(NAIVE_GRAY_LUT, sumLUT);
                     }
                 }
-            }
-            else this.transferDataUnchanged(oData, iData, len);
-        }
-        else this.transferDataUnchanged(oData, iData, len);
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+                let p, pz, s, a, r, g, b, gray, sum;
+
+                for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                    s = src32[p];
+                    a = (s >>> 24) & 0xFF;
+
+                    if (a === 0) {
+
+                        out32[p] = s;
+                        continue;
+                    }
+
+                    r = s & 0xFF;
+                    g = (s >>> 8) & 0xFF;
+                    b = (s >>> 16) & 0xFF;
+
+                    if (useNaturalGrayscale) gray = (r * 54 + g * 183 + b * 19) >> 8;
+                    else {
+
+                        sum = r + g + b;
+                        gray = sumLUT[sum];
+                    }
+                    out32[p] = grad32[gray];
+                }
+            }
+        }
+
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __matrix__ - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights.
     [MATRIX]: function (requirements) {
 
-        const doCalculations = function (data, matrix, offset) {
+        const getMatrixOffsets = function (mWidth, mHeight, mX, mY, image) {
 
-            let val = 0,
-                c;
+            if (!image) image = cache.source;
 
-            for (let m = 0, mz = matrix.length; m < mz; m++) {
+            const iWidth  = image.width | 0,
+                iHeight = image.height | 0;
 
+            mWidth = (_isFinite(mWidth) && mWidth > 0) ? mWidth | 0 : 1;
+            mHeight = (_isFinite(mHeight) && mHeight > 0) ? mHeight | 0 : 1;
 
-                if (weights[m]) {
+            mX = (_isFinite(mX) ? mX : 0) | 0;
+            if (mX < 0) mX = 0;
+            else if (mX >= mWidth) mX = mWidth  - 1;
 
-                    c = matrix[m] + offset;
-                    val += (data[c] * weights[m]);
+            mY = (_isFinite(mY) ? mY : 0) | 0;
+            if (mY < 0) mY = 0;
+            else if (mY >= mHeight) mY = mHeight - 1;
+
+            const name = `matrix-offsets-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`;
+
+            let res = getWorkstoreItem(name);
+            if (res) return res;
+
+            res = new Int32Array(mWidth * mHeight);
+
+            let p = 0,
+                rowOff, y, x, yz, xz;
+
+            for (y = -mY, yz = mHeight - mY; y < yz; y++) {
+
+                rowOff = (y * iWidth) << 2;
+
+                for (x = -mX, xz = mWidth - mX; x < xz; x++) {
+
+                    res[p++] = rowOff + (x << 2);
                 }
             }
-            return val;
+            setWorkstoreItem(name, res);
+            return res;
         };
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
-
-        const iData = input.data,
+        const [input, output] = getInputAndOutputLines(requirements),
+            iData = input.data,
             oData = output.data,
             len = iData.length;
 
         const {
             opacity = 1,
-            includeRed = true,
+            includeRed   = true,
             includeGreen = true,
-            includeBlue = true,
+            includeBlue  = true,
             includeAlpha = false,
             offsetX = 1,
             offsetY = 1,
             lineOut,
         } = requirements;
 
-        let width = requirements.width;
-        if (!_isFinite(width) || width < 1) width = 3;
-        width = _floor(width);
+        // Matrix dims
+        let mW = requirements.width;
+        if (!_isFinite(mW) || mW < 1) mW = 3;
+        mW |= 0;
 
-        let height = requirements.height;
-        if (!_isFinite(height) || height < 1) height = 3;
-        height = _floor(height);
+        let mH = requirements.height;
+        if (!_isFinite(mH) || mH < 1) mH = 3;
+        mH |= 0;
 
+        // Clamp anchor to matrix bounds (so default identity lines up with offsets)
+        let aX = (_isFinite(offsetX) ? offsetX : 0) | 0;
+        if (aX < 0) aX = 0;
+        else if (aX >= mW) aX = mW - 1;
+
+        let aY = (_isFinite(offsetY) ? offsetY : 0) | 0;
+        if (aY < 0) aY = 0;
+        else if (aY >= mH) aY = mH - 1;
+
+        // Weights
         let weights = requirements.weights;
-        if (!weights || weights.length !== (width * height)) {
-            weights = [].fill(0, 0, (width * height) - 1);
-            weights[_floor(weights.length / 2) + 1] = 1;
+
+        if (!weights || weights.length !== (mW * mH)) {
+
+            weights = new Float32Array(mW * mH);
+            weights[(aY * mW) + aX] = 1;
+        }
+        else if (!(weights instanceof Float32Array)) {
+
+            weights = Float32Array.from(weights);
         }
 
-        const grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
+        // Kernel offsets (cached)
+        const nzIdx = requestArray(),
+            nzW = requestArray();
 
-        let r, g, b, a, i;
+        for (let i = 0, w; i < weights.length; i++) {
 
-        const pixels = _floor(len / 4);
+            w = weights[i];
 
-        for (i = 0; i < pixels; i++) {
+            if (w !== 0) {
 
-            r = i * 4;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
-
-            if (iData[a]) {
-
-                oData[r] = (includeRed) ? doCalculations(iData, grid[i], 0) : iData[r];
-                oData[g] = (includeGreen) ? doCalculations(iData, grid[i], 1) : iData[g];
-                oData[b] = (includeBlue) ? doCalculations(iData, grid[i], 2) : iData[b];
-                oData[a] = (includeAlpha) ? doCalculations(iData, grid[i], 3) : iData[a];
+                nzIdx.push(i);
+                nzW.push(w);
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        const nzCount = nzIdx.length;
+
+        if (nzCount === 0) transferDataUnchanged(oData, iData, len);
+        else {
+
+            const offs = getMatrixOffsets(mW, mH, aX, aY, input);
+
+            const pixels = (len >> 2);
+
+            let base, acc, k, p;
+
+            for (let i = 0; i < pixels; i++) {
+
+                base = i << 2;
+
+                if (!iData[base + 3]) continue;
+
+                if (includeRed) {
+
+                    acc = 0;
+
+                    for (k = 0; k < nzCount; k++) {
+
+                        p = base + offs[nzIdx[k]];
+                        if (p < 0) p += len;
+                        else if (p >= len) p -= len;
+
+                        acc += iData[p] * nzW[k];
+                    }
+                    oData[base] = acc;
+                }
+                else oData[base] = iData[base];
+
+                if (includeGreen) {
+
+                    acc = 0;
+
+                    for (k = 0; k < nzCount; k++) {
+
+                        p = base + offs[nzIdx[k]];
+                        if (p < 0) p += len;
+                        else if (p >= len) p -= len;
+
+                        acc += iData[p + 1] * nzW[k];
+                    }
+                    oData[base + 1] = acc;
+                }
+                else oData[base + 1] = iData[base + 1];
+
+                if (includeBlue) {
+
+                    acc = 0;
+
+                    for (k = 0; k < nzCount; k++) {
+
+                        p = base + offs[nzIdx[k]];
+                        if (p < 0) p += len;
+                        else if (p >= len) p -= len;
+
+                        acc += iData[p + 2] * nzW[k];
+                    }
+                    oData[base + 2] = acc;
+                }
+                else oData[base + 2] = iData[base + 2];
+
+                if (includeAlpha) {
+
+                    acc = 0;
+                    for (k = 0; k < nzCount; k++) {
+
+                        p = base + offs[nzIdx[k]];
+                        if (p < 0) p += len;
+                        else if (p >= len) p -= len;
+
+                        acc += iData[p + 3] * nzW[k];
+                    }
+                    oData[base + 3] = acc;
+                }
+                else oData[base + 3] = iData[base + 3];
+            }
+        }
+
+        releaseArray(nzIdx, nzW);
+
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // modify-ok-channels__ - Adds a value to each of the OKLAB channels. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow).
     [MODIFY_OK_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -3935,61 +3924,59 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const libs = this.retrieveColorPointLibraries();
+        if (channelL === 0 && channelA === 0 && channelB === 0) out32.set(src32);
+        else {
 
-        let r, g, b, a, i, L, A, B, _r, _g, _b;
+            const libs  = colorEngine.getRgbOkCache(),
+                getOk = colorEngine.getOkValsForRgb,
+                toRgb = colorEngine.getRgbValsForOklab;
 
-        for (i = 0; i < len; i += 4) {
+            const clamp01 = (v) => (v < 0 ? 0 : (v > 1 ? 1 : v));
+            const clampAB = (v) => (v < -0.4 ? -0.4 : (v > 0.4 ? 0.4 : v));
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            let p, pz, s, a, r0, g0, b0, ok, L, A, B, rgb;
 
-            if (iData[a]) {
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-                [L, A, B] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+                s = src32[p];
 
-                L += channelL;
-                if (L > 1) L = 1;
-                else if (L < 0) L = 0;
+                a = (s >>> 24) & 0xff;
+                if (a === 0) {
 
-                A += channelA;
-                if (A > 0.4) A = 0.4;
-                else if (A < -0.4) A = -0.4;
+                    out32[p] = s;
+                    continue;
+                }
 
-                B += channelB;
-                if (B > 0.4) B = 0.4;
-                else if (B < -0.4) B = -0.4;
+                r0 = s & 0xff;
+                g0 = (s >>> 8) & 0xff;
+                b0 = (s >>> 16) & 0xff;
 
-                [_r, _g, _b] = this.getRegularColorVals(L, A, B, libs);
+                ok = getOk(r0, g0, b0, libs);
 
-                oData[r] = _r;
-                oData[g] = _g;
-                oData[b] = _b;
-                oData[a] = iData[a];
-            }
-            else {
+                L = clamp01(ok[0] + channelL);
+                A = clampAB(ok[1] + channelA);
+                B = clampAB(ok[2] + channelB);
 
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = iData[a];
+                rgb = toRgb(L, A, B, libs);
+
+                out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __modulate-channels__ - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at that pixel's grayscale values. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value.
     [MODULATE_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -4001,59 +3988,97 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let r, g, b, a, gray, vr, vg, vb, i;
+        // Convert scales to 8.8 fixed-point (round to nearest)
+        const rK = (red * 256 + 0.5) | 0,
+            gK = (green * 256 + 0.5) | 0,
+            bK = (blue * 256 + 0.5) | 0,
+            aK = (alpha * 256 + 0.5) | 0;
 
-        if (saturation) {
+        let p, pz, rgba, r, g, b, a;
 
-            const gVal = this.getGrayscaleValue;
+        if (!saturation && rK === 256 && gK === 256 && bK === 256 && aK === 256) out32.set(src32);
 
-            for (i = 0; i < len; i += 4) {
+        else if (!saturation) {
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-                vr = iData[r];
-                vg = iData[g];
-                vb = iData[b];
+                rgba = src32[p];
 
-                gray = gVal(vr, vg, vb);
+                r = rgba & 0xff;
+                g = (rgba >>> 8) & 0xff;
+                b = (rgba >>> 16) & 0xff;
+                a = (rgba >>> 24) & 0xff;
 
-                oData[r] = gray + ((vr - gray) * red);
-                oData[g] = gray + ((vg - gray) * green);
-                oData[b] = gray + ((vb - gray) * blue);
-                oData[a] = iData[a] * alpha;
+                r = (r * rK + 128) >> 8;
+                if (r < 0) r = 0;
+                else if (r > 255) r = 255;
+
+                g = (g * gK + 128) >> 8;
+                if (g < 0) g = 0;
+                else if (g > 255) g = 255;
+
+                b = (b * bK + 128) >> 8;
+                if (b < 0) b = 0;
+                else if (b > 255) b = 255;
+
+                a = (a * aK + 128) >> 8;
+                if (a < 0) a = 0;
+                else if (a > 255) a = 255;
+
+                out32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
             }
         }
         else {
 
-            for (i = 0; i < len; i += 4) {
+            let r0, g0, b0, gray;
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+            // Saturation mode: start from gray, then lerp toward original per channel
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-                oData[r] = iData[r] * red;
-                oData[g] = iData[g] * green;
-                oData[b] = iData[b] * blue;
-                oData[a] = iData[a] * alpha;
+                rgba = src32[p];
+
+                r0 = rgba & 0xff;
+                g0 = (rgba >>> 8) & 0xff;
+                b0 = (rgba >>> 16) & 0xff;
+                a  = (rgba >>> 24) & 0xff;
+
+                gray = (r0 * 54 + g0 * 183 + b0 * 19) >> 8;
+
+                r = gray + (((r0 - gray) * rK + 128) >> 8);
+                g = gray + (((g0 - gray) * gK + 128) >> 8);
+                b = gray + (((b0 - gray) * bK + 128) >> 8);
+                a = (a * aK + 128) >> 8;
+
+                if (r < 0) r = 0;
+                else if (r > 255) r = 255;
+
+                if (g < 0) g = 0;
+                else if (g > 255) g = 255;
+
+                if (b < 0) b = 0;
+                else if (b > 255) b = 255;
+
+                if (a < 0) a = 0;
+                else if (a > 255) a = 255;
+
+                out32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __modulate-ok-channels__ - Multiplies each of the OKLAB channels by a given amount. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow).
     [MODULATE_OK_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -4063,211 +4088,202 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const libs = this.retrieveColorPointLibraries();
+        // Fast identity
+        if (channelL === 1 && channelA === 1 && channelB === 1) out32.set(src32);
+        else {
 
-        let r, g, b, a, i, L, A, B, _r, _g, _b;
+            const libs = colorEngine.getRgbOkCache(),
+                getOk  = colorEngine.getOkValsForRgb,
+                toRgb  = colorEngine.getRgbValsForOklab;
 
-        for (i = 0; i < len; i += 4) {
+            const clamp01 = (v) => (v < 0 ? 0 : (v > 1 ? 1 : v)),
+                clampAB = (v) => (v < -0.4 ? -0.4 : (v > 0.4 ? 0.4 : v));
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            let p, pz, s, a, r0, g0, b0, ok, L, A, B, rgb;
 
-            if (iData[a]) {
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-                [L, A, B] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+                s = src32[p];
 
-                L *= channelL;
-                if (L > 1) L = 1;
-                else if (L < 0) L = 0;
+                a = (s >>> 24) & 0xff;
 
-                A *= channelA;
-                if (A > 0.4) A = 0.4;
-                else if (A < -0.4) A = -0.4;
+                if (a === 0) {
 
-                B *= channelB;
-                if (B > 0.4) B = 0.4;
-                else if (B < -0.4) B = -0.4;
+                    out32[p] = s;
+                    continue;
+                }
 
-                [_r, _g, _b] = this.getRegularColorVals(L, A, B, libs);
+                r0 = s & 0xff;
+                g0 = (s >>> 8) & 0xff;
+                b0 = (s >>> 16) & 0xff;
 
-                oData[r] = _r;
-                oData[g] = _g;
-                oData[b] = _b;
-                oData[a] = iData[a];
-            }
-            else {
+                ok = getOk(r0, g0, b0, libs);
 
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = iData[a];
+                L = clamp01(ok[0] * channelL);
+                A = clampAB(ok[1] * channelA);
+                B = clampAB(ok[2] * channelB);
+
+                rgb = toRgb(L, A, B, libs);
+
+                out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
-// __negative__ - for each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB
+// __negative__ - for each pixel: convert to OKLAB; negate A and B; invert L; convert back to RGB
     [NEGATIVE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
             lineOut,
         } = requirements;
 
-        const libs = this.retrieveColorPointLibraries();
+        const libs = colorEngine.getRgbOkCache(),
+            getOk  = colorEngine.getOkValsForRgb,
+            toRgb  = colorEngine.getRgbValsForOklab;
 
-        let r, g, b, a, i, L, C, H, _r, _g, _b;
+        let p, pz, rgba, r, g, b, a, ok, L, A, B, rgb;
 
-        for (i = 0; i < len; i += 4) {
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+            rgba = src32[p];
 
-            if (iData[a]) {
+            r = rgba & 0xFF;
+            g = (rgba >>> 8) & 0xFF;
+            b = (rgba >>> 16) & 0xFF;
+            a = (rgba >>> 24) & 0xFF;
 
-                [L, , , C, H] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+            if (a === 0) {
 
-                L = 1 - L;
-                H += 180;
-
-                [_r, _g, _b] = this.getRegularColorVals(L, C, H, libs, true);
-
-                oData[r] = _r;
-                oData[g] = _g;
-                oData[b] = _b;
-                oData[a] = iData[a];
+                out32[p] = rgba;
+                continue;
             }
-            else {
 
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = iData[a];
-            }
+            ok = getOk(r, g, b, libs);
+
+            L = 1 - ok[0];
+            A = -ok[1];
+            B = -ok[2];
+
+            rgb = toRgb(L, A, B, libs);
+
+            out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __newsprint__ - Attempts to simulate a black-white dither effect similar to newsprint
     [NEWSPRINT]: function (requirements) {
 
-        const doCalculations = function (inChannel, outChannel, tile) {
-
-            grays.length = 0;
-            calcGrays.length = 0;
-
-            let avg = 0,
-                i, r, g, b, a, gray;
-
-            const l = tile.length;
-
-            for (i = 0; i < l; i++) {
-
-                r = tile[i];
-                g = r + 1;
-                b = g + 1;
-
-                gray = gVal(inChannel[r], inChannel[g], inChannel[b]);
-
-                avg += gray;
-            }
-            avg /= l;
-
-            const pattern = patterns[_floor((avg / 255) * 13)];
-
-            if (width === 1) grays.push(...pattern);
-            else {
-
-                gray = pattern[0];
-                for (i = 0; i < width; i++) {
-                    calcGrays.push(gray);
-                }
-                gray = pattern[1];
-                for (i = 0; i < width; i++) {
-                    calcGrays.push(gray);
-                }
-                for (i = 0; i < width; i++) {
-                    grays.push(...calcGrays);
-                }
-                gray = pattern[2];
-                calcGrays.length = 0;
-                for (i = 0; i < width; i++) {
-                    calcGrays.push(gray);
-                }
-                gray = pattern[3];
-                for (i = 0; i < width; i++) {
-                    calcGrays.push(gray);
-                }
-                for (i = 0; i < width; i++) {
-                    grays.push(...calcGrays);
-                }
-            }
-
-            for (i = 0; i < l; i++) {
-
-                gray = grays[i];
-
-                r = tile[i];
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
-
-                outChannel[r] = gray;
-                outChannel[g] = gray;
-                outChannel[b] = gray;
-                outChannel[a] = inChannel[a];
-            }
-        }
-
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data;
+              oData = output.data;
 
         const {
             opacity = 1,
             lineOut,
         } = requirements;
 
-        let width = _floor(requirements.width || 1);
-        if (width < 1) width = 1;
+        let w = _floor(requirements.width || 1);
+        if (w < 1) w = 1;
 
-        const tileDimensions = width * 2;
+        const tDim = w << 1,
+            width  = input.width | 0,
+            rowStride = width << 2;
 
-        const tiles = this.buildImageTileSets(tileDimensions, tileDimensions, 0, 0);
+        const rects = buildTileRects(tDim, tDim, 0, 0, input);
 
-        const gVal = this.getGrayscaleValue;
-        const patterns = newspaperPatterns;
-        const grays = [],
-            calcGrays = [];
+        const gVal = colorEngine.getBestGray,
+            patterns = newspaperPatterns;
 
-        tiles.forEach(t => doCalculations(iData, oData, t));
+        let t, x0, x1, y0, y1, tw, th, count, sum, y, idx, end, avg, p, p0, p1, p2, p3, ox, oy, topBand, rowBase, x, leftBand, gray;
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        for (t = 0; t < rects.length; t += 4) {
+
+            x0 = rects[t];
+            y0 = rects[t + 1];
+            x1 = rects[t + 2];
+            y1 = rects[t + 3];
+
+            tw = x1 - x0;
+            th = y1 - y0;
+            count = tw * th;
+
+            sum = 0;
+
+            for (y = y0; y < y1; y++) {
+
+                idx = (y * rowStride) + (x0 << 2);
+                end = idx + (tw << 2);
+
+                for (; idx < end; idx += 4) {
+
+                    sum += gVal(iData[idx], iData[idx + 1], iData[idx + 2]);
+                }
+            }
+            avg = sum / count;
+
+            p = patterns[_min(12, _floor((avg / 255) * 13))];
+
+            p0 = p[0];
+            p1 = p[1];
+            p2 = p[2];
+            p3 = p[3];
+
+            ox = _floor(x0 / tDim) * tDim;
+            oy = _floor(y0 / tDim) * tDim;
+
+            for (y = y0; y < y1; y++) {
+
+                topBand = ((y - oy) < w);
+                rowBase = (y * rowStride);
+
+                for (x = x0; x < x1; x++) {
+
+                    leftBand = ((x - ox) < w);
+                    gray = topBand ? (leftBand ? p0 : p1) : (leftBand ? p2 : p3);
+
+                    idx = rowBase + (x << 2);
+
+                    oData[idx] = gray;
+                    oData[idx + 1] = gray;
+                    oData[idx + 2] = gray;
+                    oData[idx + 3] = iData[idx + 3];
+                }
+            }
+        }
+
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __offset__ - Offset the input image in the output image.
     [OFFSET]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data;
+            oData = output.data,
+            width  = input.width  | 0,
+            height = input.height | 0;
+
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -4282,110 +4298,109 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        if (offsetRedX || offsetGreenX || offsetBlueX || offsetAlphaX || offsetRedY || offsetGreenY || offsetBlueY || offsetAlphaY) {
+        if (!(offsetRedX || offsetGreenX || offsetBlueX || offsetAlphaX || offsetRedY || offsetGreenY || offsetBlueY || offsetAlphaY)) out32.set(src32);
+        else {
 
-            let simpleoffset = false;
+            const rowStridePx = width | 0;
 
-            if (offsetRedX === offsetGreenX && offsetRedX === offsetBlueX && offsetRedX === offsetAlphaX && offsetRedY === offsetGreenY && offsetRedY === offsetBlueY && offsetRedY === offsetAlphaY) simpleoffset = true;
+            const simple = offsetRedX === offsetGreenX && offsetRedX === offsetBlueX && offsetRedX === offsetAlphaX && offsetRedY === offsetGreenY && offsetRedY === offsetBlueY && offsetRedY === offsetAlphaY;
 
-            const grid = this.buildImageGrid(input),
-                gWidth = grid[0].length,
-                gHeight = grid.length;
+            if (simple) {
 
-            let drx, dry, dgx, dgy, dbx, dby, dax, day, inCell, outCell;
+                const dx = offsetRedX | 0,
+                    dy = offsetRedY | 0;
 
-            for (let y = 0; y < gHeight; y++) {
-                for (let x = 0; x < gWidth; x++) {
+                let y, ty, xStart, xEnd, n, srcRowBase, destRowBase;
 
-                    inCell = grid[y][x] * 4;
+                for (y = 0; y < height; y++) {
 
-                    if (simpleoffset) {
+                    ty = y + dy;
+                    if (ty < 0 || ty >= height) continue;
 
-                        drx = x + offsetRedX;
-                        dry = y + offsetRedY;
+                    xStart = dx < 0 ? -dx : 0;
+                    xEnd = dx > 0 ? width - dx : width;
+                    n = (xEnd - xStart) | 0;
 
-                        if (drx >= 0 && drx < gWidth && dry >= 0 && dry < gHeight) {
+                    if (n <= 0) continue;
 
-                            outCell = grid[dry][drx] * 4;
-                            oData[outCell] = iData[inCell];
-                            oData[outCell + 1] = iData[inCell + 1];
-                            oData[outCell + 2] = iData[inCell + 2];
-                            oData[outCell + 3] = iData[inCell + 3];
-                        }
-                    }
-                    else {
+                    srcRowBase = (y  * rowStridePx + xStart) | 0;
+                    destRowBase = (ty * rowStridePx + xStart + dx) | 0;
 
-                        drx = x + offsetRedX;
-                        dry = y + offsetRedY;
-                        dgx = x + offsetGreenX;
-                        dgy = y + offsetGreenY;
-                        dbx = x + offsetBlueX;
-                        dby = y + offsetBlueY;
-                        dax = x + offsetAlphaX;
-                        day = y + offsetAlphaY;
-
-                        if (drx >= 0 && drx < gWidth && dry >= 0 && dry < gHeight) {
-
-                            outCell = grid[dry][drx] * 4;
-                            oData[outCell] = iData[inCell];
-                        }
-
-                        if (dgx >= 0 && dgx < gWidth && dgy >= 0 && dgy < gHeight) {
-
-                            outCell = grid[dgy][dgx] * 4;
-                            oData[outCell + 1] = iData[inCell + 1];
-                        }
-
-                        if (dbx >= 0 && dbx < gWidth && dby >= 0 && dby < gHeight) {
-
-                            outCell = grid[dby][dbx] * 4;
-                            oData[outCell + 2] = iData[inCell + 2];
-                        }
-
-                        if (dax >= 0 && dax < gWidth && day >= 0 && day < gHeight) {
-
-                            outCell = grid[day][dax] * 4;
-                            oData[outCell + 3] = iData[inCell + 3];
-                        }
-                    }
+                    // copy whole run of pixels
+                    out32.set(src32.subarray(srcRowBase, srcRowBase + n), destRowBase);
                 }
+            }
+            else {
+
+                out32.fill(0);
+
+                const copyChannel = (dx, dy, shift) => {
+
+                    dx |= 0; dy |= 0;
+
+                    if (dx === 0 && dy === 0) {
+
+                        const cm = (0xFF << shift) >>> 0,
+                            ncm = (~cm) >>> 0;
+
+                        let p, pz, s, v;
+
+                        for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                            s = src32[p];
+                            v = out32[p];
+                            out32[p] = (v & ncm) | (s & cm);
+                        }
+                        return;
+                    }
+
+                    const cm = (0xFF << shift) >>> 0,
+                        ncm = (~cm) >>> 0;
+
+                    let y, ty, xStart, xEnd, n, src, dst, v, s, k;
+
+                    for (y = 0; y < height; y++) {
+
+                        ty = y + dy;
+                        if (ty < 0 || ty >= height) continue;
+
+                        xStart = dx < 0 ? -dx : 0;
+                        xEnd = dx > 0 ? width - dx : width;
+                        n = (xEnd - xStart) | 0;
+
+                        if (n <= 0) continue;
+
+                        src = (y * rowStridePx + xStart) | 0;
+                        dst = (ty * rowStridePx + xStart + dx) | 0;
+
+                        for (k = 0; k < n; k++, src++, dst++) {
+
+                            v = out32[dst];
+                            s = src32[src];
+                            out32[dst] = (v & ncm) | (s & cm);
+                        }
+                    }
+                };
+
+                copyChannel(offsetRedX, offsetRedY, 0);
+                copyChannel(offsetGreenX, offsetGreenY, 8);
+                copyChannel(offsetBlueX, offsetBlueY, 16);
+                copyChannel(offsetAlphaX, offsetAlphaY, 24);
             }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __pixelate__ - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the "tileWidth", "tileHeight", "offsetX" and "offsetY" arguments.
     [PIXELATE]: function (requirements) {
 
-        const doCalculations = function (inChannel, outChannel, tile, offset) {
-
-            let avg = tile.reduce((a, v) => a + inChannel[v + offset], 0);
-
-            avg = _floor(avg / tile.length);
-
-            for (let i = 0, iz = tile.length; i < iz; i++) {
-
-                outChannel[tile[i] + offset] = avg;
-            }
-        }
-
-        const setOutValueToInValue = function (inChannel, outChannel, tile, offset) {
-
-            let cell;
-
-            for (let i = 0, iz = tile.length; i < iz; i++) {
-
-                cell = tile[i];
-                outChannel[cell + offset] = inChannel[cell + offset];
-            }
-        };
-
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data;
+            oData = output.data,
+            len = iData.length;
 
         const {
             opacity = 1,
@@ -4400,108 +4415,174 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const tiles = this.buildImageTileSets(tileWidth, tileHeight, offsetX, offsetY);
+        const width  = input.width | 0,
+            rowStride = width << 2;
 
-        tiles.forEach(t => {
+        if (!includeRed && !includeGreen && !includeBlue && !includeAlpha) transferDataUnchanged(oData, iData, len);
+        else {
 
-            if (includeRed) doCalculations(iData, oData, t, 0);
-            else setOutValueToInValue(iData, oData, t, 0);
+            const rects = buildTileRects(tileWidth, tileHeight, offsetX, offsetY, input);
 
-            if (includeGreen) doCalculations(iData, oData, t, 1);
-            else setOutValueToInValue(iData, oData, t, 1);
+            let t, x0, x1, y0, y1, w, h, count, sumR, sumG, sumB, sumA, idx, end, avgR, avgG, avgB, avgA, y, start, p;
 
-            if (includeBlue) doCalculations(iData, oData, t, 2);
-            else setOutValueToInValue(iData, oData, t, 2);
+            // Process each tile
+            for (t = 0; t < rects.length; t += 4) {
 
-            if (includeAlpha) doCalculations(iData, oData, t, 3);
-            else setOutValueToInValue(iData, oData, t, 3);
-        });
+                x0 = rects[t];
+                y0 = rects[t + 1];
+                x1 = rects[t+2];
+                y1 = rects[t + 3];
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
-    },
+                w = x1 - x0;
+                h = y1 - y0;
+                count = w * h;
 
-// __process-image__ - Add an asset to the filter, which can then be used by other filters as either their `lineIn` or `lineMix` inputs.
-// + `asset` - the String name of the asset object. The asset must be pre-loaded before it can be included in the filter; where things go wrong, the system will attempt to load a 1x1 transparent pixel in place of the asset.
-// + `width` and `height` - arguments are measured in integer Number pixels, or % strings (relative to the source entity/Group/Cell dimensions).
-// + `copyX`, `copyY`, `copyWidth`, `copyHeight` - the start and dimensions of the area of the image to be used in the filter; values are integer Number pixels, or % strings relative to the image's natural dimensions.
-// + If the image's dimensions differ from the source entity/Group/Cell dimensions then, where a given dimension is smaller than source, that dimension will be centered; where the image dimension is larger then that dimension will be pinned to the top, or left.
-// + Filters will run faster when the asset's dimensions match the dimensions of the entity/Group/Cell to which the filter is being applied.
-// + `lineOut` - required. The image will be stored in the filter engine's cache using this name. Be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset's data.
-// + Assets are loaded into the filter engine each time the filter runs and are not persisted when the filter completes.
-// + Adding assets to a filter chain will very often disable filter memoization functionality!
-    [PROCESS_IMAGE]: function (requirements) {
+                sumR = 0;
+                sumG = 0;
+                sumB = 0;
+                sumA = 0;
 
-        const {identifier, lineOut} = requirements;
+                if (includeRed || includeGreen || includeBlue || includeAlpha) {
 
-        if (lineOut && lineOut.substring && lineOut.length) {
+                    for (y = y0; y < y1; y++) {
 
-            const assetData = getWorkstoreItem(identifier);
+                        idx = (y * rowStride) + (x0 << 2);
+                        end = idx + (w << 2);
 
-            let width = assetData ? assetData.width : 1,
-                height = assetData ? assetData.height : 1,
-                data = assetData ? assetData.data : new Uint8ClampedArray(4);
+                        if (includeRed && includeGreen && includeBlue && includeAlpha) {
 
-            if (width && height && data) {
+                            // Fast path: accumulate all 4 channels
+                            for (; idx < end; idx += 4) {
 
-                const {width:sWidth, height:sHeight} = this.cache.source;
+                                sumR += iData[idx];
+                                sumG += iData[idx + 1];
+                                sumB += iData[idx + 2];
+                                sumA += iData[idx + 3];
+                            }
+                        } else {
 
-                if (sWidth !== width || sHeight !== height) {
+                            // Selective accumulation
+                            for (; idx < end; idx += 4) {
 
-                    const temp = new ImageData(sWidth, sHeight),
-                        tempData = temp.data;
-
-                    let tx, ty, tempCursor, inputCursor,
-                        dx = (sWidth - width) / 2,
-                        dy = (sHeight - height) / 2;
-
-                    if (dx < 0) dx = 0;
-                    if (dy < 0) dy = 0;
-
-                    for (ty = 0; ty < sHeight; ty++) {
-                        for (tx = 0; tx < sWidth; tx++) {
-
-                            if (tx < width && ty < height) {
-
-                                tempCursor = (((ty + dy) * sWidth) + (tx + dx)) * 4;
-                                inputCursor = ((ty * width) + tx) * 4;
-
-                                tempData[tempCursor] = data[inputCursor];
-                                tempCursor++;
-                                inputCursor++;
-                                tempData[tempCursor] = data[inputCursor];
-                                tempCursor++;
-                                inputCursor++;
-                                tempData[tempCursor] = data[inputCursor];
-                                tempCursor++;
-                                inputCursor++;
-                                tempData[tempCursor] = data[inputCursor];
+                                if (includeRed) sumR += iData[idx];
+                                if (includeGreen) sumG += iData[idx + 1];
+                                if (includeBlue) sumB += iData[idx + 2];
+                                if (includeAlpha) sumA += iData[idx + 3];
                             }
                         }
                     }
-                    data = tempData;
-                    width = sWidth;
-                    height = sHeight;
                 }
-                this.cache[lineOut] = new ImageData(data, width, height);
+
+                avgR = includeRed ? _floor(sumR / count) : 0;
+                avgG = includeGreen ? _floor(sumG / count) : 0;
+                avgB = includeBlue ? _floor(sumB / count) : 0;
+                avgA = includeAlpha ? _floor(sumA / count) : 0;
+
+                for (y = y0; y < y1; y++) {
+
+                    start = (y * rowStride) + (x0 << 2);
+                    end = start + (w << 2);
+
+                    oData.set(iData.subarray(start, end), start);
+
+                    if (includeRed || includeGreen || includeBlue || includeAlpha) {
+
+                        p = start;
+
+                        if (includeRed && includeGreen && includeBlue && includeAlpha) {
+
+                            for (; p < end; p += 4) {
+
+                                oData[p] = avgR;
+                                oData[p + 1] = avgG;
+                                oData[p + 2] = avgB;
+                                oData[p + 3] = avgA;
+                            }
+                        }
+                        else {
+
+                            for (; p < end; p += 4) {
+
+                                if (includeRed) oData[p] = avgR;
+                                if (includeGreen) oData[p + 1] = avgG;
+                                if (includeBlue) oData[p + 2] = avgB;
+                                if (includeAlpha) oData[p + 3] = avgA;
+                            }
+                        }
+                    }
+                }
             }
+        }
+
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
+    },
+
+// __process-image__ - expects preprocessor to have stored an ImageData in the workstore under `identifier`.
+    [PROCESS_IMAGE]: function (requirements) {
+
+        const { identifier, lineOut } = requirements;
+        if (!(lineOut && lineOut.substring && lineOut.length)) return;
+
+        const item = getWorkstoreItem(identifier);
+
+        // Fall back to host-sized transparent if missing
+        const {
+            width: hostW,
+            height: hostH,
+        } = cache.source;
+
+        if (item && item.width === hostW && item.height === hostH) {
+
+            // Use as-is (no clone): downstream filters treat this as read-only input
+            cache[lineOut] = item;
+        }
+        else {
+
+            // Make an empty host-sized image and, if we have something, place what we can
+            const out = new ImageData(hostW, hostH);
+
+            if (item && item.data && item.width && item.height) {
+
+                // Clamp the copy in case sizes differ (shouldn’t happen with the new preprocessor)
+                const w = _min(hostW, item.width) | 0,
+                    h = _min(hostH, item.height) | 0,
+                    src = item.data,
+                    dst = out.data,
+                    srcStride = item.width << 2,
+                    dstStride = hostW << 2,
+                    rowBytes  = w << 2;
+
+                let s0, d0;
+
+                for (let y = 0; y < h; y++) {
+
+                    s0 = (y * srcStride);
+                    d0 = (y * dstStride);
+
+                    dst.set(src.subarray(s0, s0 + rowBytes), d0);
+                }
+            }
+            cache[lineOut] = out;
         }
     },
 
 // __random-noise__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
     [RANDOM_NOISE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            iWidth = input.width;
+            width  = input.width | 0;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
-            width = 1,
-            height = 1,
+            width: boxW = 1,
+            height: boxH = 1,
             level = 0.5,
             seed = DEFAULT_SEED,
             noiseType = RANDOM,
@@ -4514,91 +4595,154 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const rnd = this.getRandomNumbers({
+        const totalPx = src32.length | 0;
+
+        const rnd = getRandomNumbers({
             seed,
-            length: _ceil((len / 4) * 3),
-            imgWidth: iWidth,
+            length: Math.ceil(totalPx * 3),
+            imgWidth: width,
             type: noiseType,
         });
 
-        let rndCursor = -1,
-            rndLevel,
-            rndWidth,
-            rndHeight,
-            r, g, b, a, i, dw, dh, source;
+        let rp = 0;
 
-        const halfWidth = width / 2,
-            halfHeight = height / 2;
+        const halfW = boxW * 0.5,
+            halfH = boxH * 0.5;
 
-        for (i = 0; i < len; i += 4) {
+        const incMask = (includeRed ? 0x000000FF : 0) | (includeGreen ? 0x0000FF00 : 0) | (includeBlue ? 0x00FF0000 : 0) | (includeAlpha ? 0xFF000000 : 0);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        if (incMask === 0xFFFFFFFF >>> 0) {
 
-            if (noiseType === RANDOM) {
+            let p, pz, rLevel, rWx, rHy, t, sPix, dw, dh, q, aP, aQ;
 
-                rndLevel = rnd[++rndCursor];
-                rndWidth = rnd[++rndCursor];
-                rndHeight = rnd[++rndCursor];
-            }
-            else {
+            for (p = 0, pz = totalPx; p < pz; p++) {
 
-                const temp = rnd[++rndCursor];
-                rndLevel = temp;
-                rndWidth = temp;
-                rndHeight = temp;
-            }
+                if (noiseType === RANDOM) {
 
-            if (rndLevel < level) {
-
-                dw = _floor((rndWidth * width) - halfWidth);
-                dh = _floor((rndHeight * height) - halfHeight);
-
-                source = i + ((dh * iWidth) + dw) * 4;
-
-                if (noWrap && (source < 0 || source >= len)) {
-
-                    oData[r] = iData[r];
-                    oData[g] = iData[g];
-                    oData[b] = iData[b];
-                    oData[a] = iData[a];
+                    rLevel = rnd[rp++];
+                    rWx = rnd[rp++];
+                    rHy = rnd[rp++];
                 }
                 else {
 
-                    if (source < 0) source += len;
-                    else if (source >= len) source -= len;
+                    t = rnd[rp++];
+                    rLevel = t;
+                    rWx = t;
+                    rHy = t;
+                }
 
-                    if (excludeTransparentPixels && (!iData[a] || !iData[source + 3])) {
+                sPix = src32[p];
 
-                        oData[r] = iData[r];
-                        oData[g] = iData[g];
-                        oData[b] = iData[b];
-                        oData[a] = iData[a];
-                    }
-                    else {
+                if (rLevel >= level) {
 
-                        oData[r] = (includeRed) ? iData[source] : iData[r];
-                        source++;
-                        oData[g] = (includeGreen) ? iData[source] : iData[g];
-                        source++;
-                        oData[b] = (includeBlue) ? iData[source] : iData[b];
-                        source++;
-                        oData[a] = (includeAlpha) ? iData[source] : iData[a];
+                    out32[p] = sPix;
+                    continue;
+                }
+
+                dw = _floor(rWx * boxW - halfW) | 0;
+                dh = _floor(rHy * boxH - halfH) | 0;
+
+                q = p + dh * width + dw;
+
+                if (noWrap) {
+
+                    if (q < 0 || q >= totalPx) {
+
+                        out32[p] = sPix;
+                        continue;
                     }
                 }
-            }
-            else {
+                else {
 
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = iData[a];
+                    if (q < 0) q += totalPx;
+                    else if (q >= totalPx) q -= totalPx;
+                }
+
+                if (excludeTransparentPixels) {
+
+                    aP = (sPix >>> 24) & 0xFF;
+                    aQ = (src32[q] >>> 24) & 0xFF;
+
+                    if (aP === 0 || aQ === 0) {
+
+                        out32[p] = sPix;
+                        continue;
+                    }
+                }
+                out32[p] = src32[q];
             }
         }
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+
+        // General path: merge selected bytes from sampled pixel into original
+        else {
+
+            const notIncMask = (~incMask) >>> 0;
+
+            let p, pz, rLevel, rWx, rHy, t, orig, dw, dh, q, aP, aQ, sampled;
+
+            for (p = 0, pz = totalPx; p < pz; p++) {
+
+                if (noiseType === RANDOM) {
+
+                    rLevel = rnd[rp++];
+                    rWx = rnd[rp++];
+                    rHy = rnd[rp++];
+                }
+                else {
+
+                    t = rnd[rp++];
+                    rLevel = t;
+                    rWx = t;
+                    rHy = t;
+                }
+
+                orig = src32[p];
+
+                if (rLevel >= level) {
+
+                    out32[p] = orig;
+                    continue;
+                }
+
+                dw = _floor(rWx * boxW - halfW) | 0;
+                dh = _floor(rHy * boxH - halfH) | 0;
+
+                q = p + dh * width + dw;
+
+                if (noWrap) {
+
+                    if (q < 0 || q >= totalPx) {
+
+                        out32[p] = orig;
+                        continue;
+                    }
+                }
+                else {
+
+                    if (q < 0) q += totalPx;
+                    else if (q >= totalPx) q -= totalPx;
+                }
+
+                if (excludeTransparentPixels) {
+
+                    aP = (orig >>> 24) & 0xFF;
+                    aQ = (src32[q] >>> 24) & 0xFF;
+
+                    if (aP === 0 || aQ === 0) {
+
+                        out32[p] = orig;
+                        continue;
+                    }
+                }
+
+                sampled = src32[q];
+
+                out32[p] = (orig & notIncMask) | (sampled & incMask);
+            }
+        }
+
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __reducePalette__ - Reduce the number of colors in its palette. The `palette` attribute can be: a Number (for the commonest colors);  an Array of CSS color Strings to use as the palette; or  the String name of a pre-defined palette - default: 'black-white'
@@ -4606,10 +4750,9 @@ P.theBigActionsObject = {
 
         const getRGBIndex = (r, g, b) => (r * _256_SQUARE) + (g * _256) + b;
 
-        // Filter generics (as used by all filters)
-        const [input, output] = this.getInputAndOutputLines(requirements);
-
-        const iData = input.data,
+        // Filter generics
+        const [input, output] = getInputAndOutputLines(requirements),
+            iData = input.data,
             iWidth = input.width,
             oData = output.data,
             len = iData.length;
@@ -4622,16 +4765,15 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let {
-            palette = BLACK_WHITE,
-        } = requirements;
+        let { palette = BLACK_WHITE } = requirements;
 
-        const noiseType = (useBluenoise) ? BLUENOISE : requirements.noiseType || RANDOM;
+        // Legacy
+        const noiseType = useBluenoise ? BLUENOISE : (requirements.noiseType || RANDOM);
 
-        const libs = this.retrieveColorPointLibraries();
+        const libs = colorEngine.getRgbOkCache();
 
-        // Noise - used for dithering the output
-        const rnd = this.getRandomNumbers({
+        // Dither noise (one per pixel)
+        const rnd = getRandomNumbers({
             seed,
             length: len / 4,
             imgWidth: iWidth,
@@ -4640,34 +4782,63 @@ P.theBigActionsObject = {
 
         let rndCursor = -1;
 
-        // Check we have a valid palette value
+        // Validate palette
         if (palette == null) palette = BLACK_WHITE;
         else if (palette.substring && !predefinedPalette[palette]) palette = BLACK_WHITE;
         else if (_isArray(palette) && palette.length < 2) palette = BLACK_WHITE;
         else if (palette.toFixed && (palette < 2 || palette > 256)) palette = BLACK_WHITE;
 
-        // Grayscale vs array vs commonest colors palettes follow different computing paths
         const isGray = GRAY_PALETTES.includes(palette);
         const isArrayPalette = _isArray(palette);
 
-        const distances = [];
+        const BTPRes = [0, 0, 0, 0];
+        const bestTwoPaletteIndices = (ILi, IAi, IBi, pal) => {
 
-        let selectedPalette, selectedPaletteLength,
-            i, iz, index, r, g, b, a, _r, _g, _b,
-            okPaletteVals, distance, distance0, distance1,
-            candidate0, candidate1,
-            totalScore, propensity, test, selectedColor,
-            IL, IA, IB, PL, PA, PB, L, A, B;
+            let i0 = -1,
+                i1 = -1,
+                d0 = Infinity,
+                d1 = Infinity,
+                p, pz, e, dL, dA, dB, dsq;
 
-        // Grayscale palette
+            for (p = 0, pz = pal.length; p < pz; p++) {
+
+                e = pal[p];
+                dL = ILi - e[4];
+                dA = IAi - e[5];
+                dB = IBi - e[6];
+                dsq = (dL * dL) + (dA * dA) + (dB * dB);
+
+                if (dsq < d0) {
+
+                    d1 = d0;
+                    i1 = i0;
+                    d0 = dsq;
+                    i0 = p;
+                }
+                else if (dsq < d1) {
+
+                    d1 = dsq;
+                    i1 = p;
+                }
+            }
+
+            BTPRes[0] = i0;
+            BTPRes[1] = i1;
+            BTPRes[2] = d0;
+            BTPRes[3] = d1;
+
+            return BTPRes;
+        }
+
+        // == Grayscale palettes ==
         if (isGray) {
 
-            const { getGrayscaleValue } = this;
+            const selectedPalette = predefinedPalette[palette],
+                P = selectedPalette.length,
+                getGray = colorEngine.getBestGray;
 
-            selectedPalette = predefinedPalette[palette];
-            selectedPaletteLength = selectedPalette.length;
-
-            let paletteColor, gray;
+            let i, a, alpha, r, g, b, gray, idx0, idx1,
+                d0, d1, pi, pv, d, total, propensity, test, chosen;
 
             for (i = 0; i < len; i += 4) {
 
@@ -4676,78 +4847,99 @@ P.theBigActionsObject = {
                 b = g + 1;
                 a = b + 1;
 
-                if (iData[a]) {
+                alpha = iData[a];
 
-                    gray = getGrayscaleValue(iData[r], iData[g], iData[b]);
+                if (alpha) {
 
-                    distances.length = 0;
+                    gray = getGray(iData[r], iData[g], iData[b]);
 
-                    for (index = 0; index < selectedPaletteLength; index++) {
+                    // track best two without building arrays/sorting
+                    idx0 = -1;
+                    idx1 = -1;
+                    d0 = Infinity;
+                    d1 = Infinity;
 
-                        paletteColor = selectedPalette[index];
-                        distance = _abs(paletteColor - gray);
-                        distances.push([paletteColor, distance]);
+                    for (pi = 0; pi < P; pi++) {
 
-                        // Because of the palette's ordered data shape, we can short-circuit calculations for G8/G16 palettes
-                        if (index && distance >= distances[index - 1][1]) break;
+                        pv = selectedPalette[pi];
+                        d = _abs(pv - gray);
+
+                        if (d < d0) {
+
+                            d1 = d0;
+                            idx1 = idx0;
+                            d0 = d;
+                            idx0 = pi;
+                        }
+                        else if (d < d1) {
+
+                            d1 = d;
+                            idx1 = pi;
+                        }
+
+                        // short-circuit for ordered palettes (G8/G16): if distances increase, we can break
+                        if (pi && d >= d1) break;
                     }
 
-                    distances.sort((a, b) => a[1] - b[1]);
+                    total = d0 + d1;
+                    propensity = total - d0;
+                    test = rnd[++rndCursor] * total;
+                    chosen = (test < propensity) ? selectedPalette[idx0] : selectedPalette[idx1];
 
-                    [candidate0, distance0] = distances[0];
-                    [candidate1, distance1] = distances[1];
-                    totalScore = distance0 + distance1;
-                    propensity = totalScore - distance0;
-
-                    test = rnd[++rndCursor] * totalScore;
-
-                    if (test < propensity) selectedColor = candidate0;
-                    else selectedColor = candidate1;
-
-                    oData[r] = selectedColor;
-                    oData[g] = selectedColor;
-                    oData[b] = selectedColor;
-                    oData[a] = iData[a];
+                    oData[r] = chosen;
+                    oData[g] = chosen;
+                    oData[b] = chosen;
+                    oData[a] = alpha;
                 }
                 else {
 
                     ++rndCursor;
-
                     oData[r] = iData[r];
                     oData[g] = iData[g];
                     oData[b] = iData[b];
-                    oData[a] = iData[a];
+                    oData[a] = 0;
                 }
             }
+
             setLastUsedReducePalette(palette);
+
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
+
+            return;
         }
 
-        // Array of colors palette
-        // - Known issue (2024-08-26): Safari browser does not like named colors (eg: `red`) in the array, but seems happy to process structured colors (eg: `rgb(255 0 0)`). Firefox and Chrome just get on with the job (as normal)
-        else if (isArrayPalette) {
+        // == Array-of-colors palette ==
+        if (isArrayPalette) {
 
             const name = palette.join(ARG_SPLITTER);
 
-            if (predefinedPalette[name]) selectedPalette = predefinedPalette[name];
-            else {
+            let selectedPalette = predefinedPalette[name];
+
+            let i, iz, a, alpha, r, g, b, ok,
+                ILi, IAi, IBi, idx0, idx1, d0, d1,
+                total, propensity, test, chosen;
+
+            if (!selectedPalette) {
 
                 selectedPalette = [];
 
-                let eRed, eGreen, eBlue;
+                let eR, eG, eB, PLi, PAi, PBi;
 
                 for (i = 0, iz = palette.length; i < iz; i++) {
 
-                    [eRed, eGreen, eBlue] = colorEngine.getColorFromCanvas(palette[i].trim());
+                    [eR, eG, eB] = colorEngine.extractRGBfromColorString(palette[i]);
 
-                    okPaletteVals = this.getOkColorVals(eRed, eGreen, eBlue, libs);
-                    selectedPalette.push([eRed, eGreen, eBlue, ...okPaletteVals]);
+                    ok = colorEngine.getOkValsForRgb(eR, eG, eB, libs);
+                    PLi = (ok[0] * 100) | 0;
+                    PAi = ((ok[1] + 0.4) * 125) | 0;
+                    PBi = ((ok[2] + 0.4) * 125) | 0;
+
+                    selectedPalette.push([0, eR, eG, eB, PLi, PAi, PBi]);
                 }
-
                 predefinedPalette[name] = selectedPalette;
             }
 
-            selectedPaletteLength = selectedPalette.length;
-
             for (i = 0; i < len; i += 4) {
 
                 r = i;
@@ -4755,266 +4947,264 @@ P.theBigActionsObject = {
                 b = g + 1;
                 a = b + 1;
 
-                if (iData[a]) {
+                alpha = iData[a];
 
-                    distances.length = 0;
+                if (alpha) {
 
-                    [IL, IA, IB] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+                    ok = colorEngine.getOkValsForRgb(iData[r], iData[g], iData[b], libs);
 
-                    for (index = 0; index < selectedPaletteLength; index++) {
+                    ILi = (ok[0] * 100) | 0;
+                    IAi = ((ok[1] + 0.4) * 125) | 0;
+                    IBi = ((ok[2] + 0.4) * 125) | 0;
 
-                        [,,,PL, PA, PB] = selectedPalette[index];
+                    [idx0, idx1, d0, d1] = bestTwoPaletteIndices(ILi, IAi, IBi, selectedPalette);
 
-                        L = (IL * 100) - (PL * 100);
-                        A = ((IA + 0.4) * 125) - ((PA + 0.4) * 125);
-                        B = ((IB + 0.4) * 125) - ((PB + 0.4) * 125);
-                        distance = _sqrt((L * L) + (A * A) + (B * B));
-                        distances.push([index, distance]);
-                    }
+                    total = d0 + d1;
+                    propensity = total - d0;
+                    test = rnd[++rndCursor] * total;
 
-                    distances.sort((a, b) => a[1] - b[1]);
+                    chosen = (test < propensity) ? selectedPalette[idx0] : selectedPalette[idx1];
 
-                    [candidate0, distance0] = distances[0];
-                    [candidate1, distance1] = distances[1];
-                    totalScore = distance0 + distance1;
-                    propensity = totalScore - distance0;
+                    oData[r] = chosen[1];
+                    oData[g] = chosen[2];
+                    oData[b] = chosen[3];
+                    oData[a] = alpha;
 
-                    test = rnd[++rndCursor] * totalScore;
-
-                    if (test < propensity) selectedColor = selectedPalette[candidate0];
-                    else selectedColor = selectedPalette[candidate1];
-
-                    [_r, _g, _b] = selectedColor;
-
-                    oData[r] = _r;
-                    oData[g] = _g;
-                    oData[b] = _b;
-                    oData[a] = iData[a];
                 }
                 else {
 
                     ++rndCursor;
-
                     oData[r] = iData[r];
                     oData[g] = iData[g];
                     oData[b] = iData[b];
-                    oData[a] = iData[a];
+                    oData[a] = 0;
                 }
             }
+
             setLastUsedReducePalette(palette);
+
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
+
+            return;
         }
 
-        // Commonest colors palette
-        // + We need to calculate the commonest colors palette for this image
-        else {
+        // == Commonest colors palette ==
+        const metadata = new Map(),
+            seen = [],
+            selectedPalette = [];
 
-            // 1. Go through the data to collect metadata: frequency, values, etc
-            const metadata = Array(_256_CUBE);
+        let i, iz, a, r, g, b, rgbIndex, row, ok, ILi, IAi, IBi, red, green, blue, alpha,
+            best2, j, jz, p, dL, dA, dB, dsq, idx, idx0, idx1,
+            d0, d1, total, propensity, rec, test, chosen;
 
-            let rgbIndex, j, jz;
+        // 1) collect metadata for observed colors
+        for (i = 0; i < len; i += 4) {
 
-            for (i = 0; i < len; i += 4) {
+            a = i + 3;
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+            if (!iData[a]) continue;
 
-                _r = iData[r];
-                _g = iData[g];
-                _b = iData[b];
+            red = iData[i];
+            green = iData[i + 1];
+            blue = iData[i + 2];
+            rgbIndex = getRGBIndex(red, green, blue);
 
-                // Ignore transparent pixels
-                if (iData[a]) {
+            row = metadata.get(rgbIndex);
 
-                    rgbIndex = getRGBIndex(_r, _g, _b);
+            if (row) row[0] += 1;
+            else {
 
-                    if (metadata[rgbIndex]) metadata[rgbIndex][0] += 1;
-                    else {
+                ok = colorEngine.getOkValsForRgb(red, green, blue, libs);
+                ILi = (ok[0] * 100) | 0;
+                IAi = ((ok[1] + 0.4) * 125) | 0;
+                IBi = ((ok[2] + 0.4) * 125) | 0;
 
-                        [L, A, B] = this.getOkColorVals(_r, _g, _b, libs);
-                        L *= 100;
-                        A = (A + 0.4) * 125;
-                        B = (B + 0.4) * 125;
+                metadata.set(rgbIndex, [1, red, green, blue, ILi, IAi, IBi]);
 
-                        metadata[rgbIndex] = [1, _r, _g, _b, L, A, B];
-                    }
-                }
-            }
-
-            // 2. Filter metadata, then sort for commonest colors
-            const filteredMetadata = metadata.filter(e => e != null);
-            filteredMetadata.sort((a, b) => b[0] - a[0]);
-
-            // 3. Generate the palette, using minimumColorDistance to winnow out similar colors
-            selectedPalette = [[...filteredMetadata[0]]];
-
-            const difference = [];
-
-            for (i = 1, iz = filteredMetadata.length; i < iz; i++) {
-
-                [,,,, IL, IA, IB] = filteredMetadata[i];
-
-                difference.length = 0;
-
-                for (j = 0, jz = selectedPalette.length; j < jz; j++) {
-
-                    [,,,, PL, PA, PB] = selectedPalette[j];
-
-                    L = (IL * 100) - (PL * 100);
-                    A = ((IA + 0.4) * 125) - ((PA + 0.4) * 125);
-                    B = ((IB + 0.4) * 125) - ((PB + 0.4) * 125);
-                    distance = _sqrt((L * L) + (A * A) + (B * B));
-                    difference.push(distance);
-                }
-
-                difference.sort((a, b) => a - b);
-
-                if (difference[0] > minimumColorDistance) selectedPalette.push([...filteredMetadata[i]]);
-                if (selectedPalette.length >= palette) break;
-            }
-
-            selectedPaletteLength = selectedPalette.length;
-
-            setLastUsedReducePalette(selectedPalette.map(item => `rgb(${item[1]} ${item[2]} ${item[3]})`));
-
-            // 4. Update metadata, replacing each entry's RGB with its 2 closest candidates in the palette
-            metadata.forEach(item => {
-
-                [,,,, IL, IA, IB] = item;
-
-                distances.length = 0;
-
-                for (index = 0; index < selectedPaletteLength; index++) {
-
-                    [,,,, PL, PA, PB] = selectedPalette[index];
-
-                    L = (IL * 100) - (PL * 100);
-                    A = ((IA + 0.4) * 125) - ((PA + 0.4) * 125);
-                    B = ((IB + 0.4) * 125) - ((PB + 0.4) * 125);
-                    distance = _sqrt((L * L) + (A * A) + (B * B));
-                    distances.push([index, distance]);
-                }
-
-                distances.sort((a, b) => a[1] - b[1]);
-
-                [candidate0, distance0] = distances[0];
-                [candidate1, distance1] = distances[1];
-                totalScore = distance0 + distance1;
-                propensity = totalScore - distance0;
-
-                item.length = 0;
-
-                item.push(totalScore, propensity, selectedPalette[candidate0], selectedPalette[candidate1]);
-            });
-
-            // 5. Apply the filter results to the output
-            for (i = 0; i < len; i += 4) {
-
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
-
-                if (iData[a]) {
-
-                    rgbIndex = getRGBIndex(iData[r], iData[g], iData[b]);
-
-                    [totalScore, propensity, candidate0, candidate1] = metadata[rgbIndex];
-
-                    test = rnd[++rndCursor] * totalScore;
-
-                    if (test < propensity) selectedColor = candidate0;
-                    else selectedColor = candidate1;
-
-                    [, _r, _g, _b] = selectedColor;
-
-                    oData[r] = _r;
-                    oData[g] = _g;
-                    oData[b] = _b;
-                    oData[a] = iData[a];
-                }
-                else {
-
-                    ++rndCursor;
-
-                    oData[r] = iData[r];
-                    oData[g] = iData[g];
-                    oData[b] = iData[b];
-                    oData[a] = iData[a];
-                }
+                seen.push(rgbIndex);
             }
         }
 
-        // Boilerplate filter post-processing
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        // 2) commonest first (sort only the seen colors with a minimum count of 2)
+        const filteredSeen = seen.filter(item => metadata.get(item)[0] > 1);
+        filteredSeen.sort((item1, item2) => metadata.get(item2)[0] - metadata.get(item1)[0]);
+
+        // 3) generate palette, winnowing by minimumColorDistance
+        const mapped = minimumColorDistance * 0.01,
+            minDist2 = mapped * mapped;
+
+        selectedPalette.push(requestArray(...metadata.get(filteredSeen[0])));
+
+        for (i = 1, iz = filteredSeen.length; i < iz; i++) {
+
+            if (selectedPalette.length >= palette) break;
+
+            row = metadata.get(filteredSeen[i]);
+
+            best2 = Infinity;
+
+            for (j = 0, jz = selectedPalette.length; j < jz; j++) {
+
+                p = selectedPalette[j];
+                dL = row[4] - p[4];
+                dA = row[5] - p[5];
+                dB = row[6] - p[6];
+                dsq = (dL * dL) + (dA * dA) + (dB * dB);
+
+                if (dsq < best2) best2 = dsq;
+            }
+
+            if (best2 > minDist2) selectedPalette.push(requestArray(...row));
+        }
+
+        if (selectedPalette.length === 1 && filteredSeen.length > 2) selectedPalette.push(requestArray(...metadata.get(filteredSeen[1])));
+
+        setLastUsedReducePalette(selectedPalette.map(item => `rgb(${item[1]} ${item[2]} ${item[3]})`));
+
+        // 4) for each seen color, precompute its two best palette candidates (store totals/propensity)
+        for (i = 0, iz = seen.length; i < iz; i++) {
+
+            idx = seen[i];
+            row = metadata.get(idx);
+
+            [idx0, idx1, d0, d1] = bestTwoPaletteIndices(row[4], row[5], row[6], selectedPalette);
+
+            total = d0 + d1;
+            propensity = total - d0;
+
+            // Mutate the row with malice aforethought
+            row[0] = total;
+            row[1] = propensity;
+            row[2] = selectedPalette[idx0];
+            row[3] = selectedPalette[idx1];
+        }
+
+        // 5) apply
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            alpha = iData[a];
+
+            if (alpha) {
+
+                rgbIndex = getRGBIndex(iData[r], iData[g], iData[b]);
+
+                rec = metadata.get(rgbIndex);
+                total = rec[0];
+
+                propensity = rec[1];
+                test = rnd[++rndCursor] * total;
+                chosen = (test < propensity) ? rec[2] : rec[3];
+
+                oData[r] = chosen[1];
+                oData[g] = chosen[2];
+                oData[b] = chosen[3];
+                oData[a] = alpha;
+
+            } else {
+
+                ++rndCursor;
+                oData[r] = iData[r];
+                oData[g] = iData[g];
+                oData[b] = iData[b];
+                oData[a] = 0;
+            }
+        }
+
+        releaseArray(...selectedPalette);
+
+        // Boilerplate post-processing
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __rotate-hue__ - for each pixel, converts the pixel to OKLCH, rotates the hue value by the given amount and converts back to RGB
     [ROTATE_HUE]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
-            angle = 0,
             lineOut,
         } = requirements;
 
-        if (angle) {
+        let { angle = 0 } = requirements;
 
-            const libs = this.retrieveColorPointLibraries();
+        angle = ((angle % 360) + 360) % 360;
 
-            let r, g, b, a, i, L, C, H, _r, _g, _b;
+        if (angle === 0) out32.set(src32);
+        else {
 
-            for (i = 0; i < len; i += 4) {
+            const libs = colorEngine.getRgbOkCache(),
+                getOk = colorEngine.getOkValsForRgb,
+                toRgb = colorEngine.getRgbValsForOklch;
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+            const CHROMA_EPS = 1e-4;
 
-                if (iData[a]) {
+            let rgba, r, g, b, a, ok, L, C, H, rgb;
 
-                    [L, , , C, H] = this.getOkColorVals(iData[r], iData[g], iData[b], libs);
+            for (let p = 0, pz = src32.length | 0; p < pz; p++) {
 
-                    H += angle;
+                rgba = src32[p];
 
-                    [_r, _g, _b] = this.getRegularColorVals(L, C, H, libs, true);
+                a = rgba >>> 24;
 
-                    oData[r] = _r;
-                    oData[g] = _g;
-                    oData[b] = _b;
-                    oData[a] = iData[a];
+                if (a === 0) {
+
+                    out32[p] = rgba;
+                    continue;
                 }
-                else {
 
-                    oData[r] = iData[r];
-                    oData[g] = iData[g];
-                    oData[b] = iData[b];
-                    oData[a] = iData[a];
+                r = rgba & 0xFF;
+                g = (rgba >>> 8) & 0xFF;
+                b = (rgba >>> 16) & 0xFF;
+
+                ok = getOk(r, g, b, libs);
+
+                L = ok[0];
+                C = ok[3];
+
+                if (C < CHROMA_EPS) {
+
+                    out32[p] = rgba;
+                    continue;
                 }
+
+                H = ok[4] + angle;
+                if (H >= 360) H -= 360;
+
+                rgb = toRgb(L, C, H, libs);
+
+                out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
             }
         }
-        else this.transferDataUnchanged(oData, iData, len);
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __set-channel-to-level__ - Sets the value of each pixel's included channel to the value supplied in the "level" argument.
     [SET_CHANNEL_TO_LEVEL]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        // 32-bit pixel views that respect byteOffset/length
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -5026,23 +5216,53 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let r, g, b, a, i;
+        // Clamp level to [0, 255] and make it an int
+        const L = level < 0 ? 0 : level > 255 ? 255 : (level | 0);
 
-        for (i = 0; i < len; i += 4) {
+        const Rm = includeRed   ? 0x000000FF : 0,
+            Gm = includeGreen ? 0x0000FF00 : 0,
+            Bm = includeBlue  ? 0x00FF0000 : 0,
+            Am = includeAlpha ? 0xFF000000 : 0;
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        // Mask that zeroes the included channels; keeps others intact
+        const clearMask = (~(Rm | Gm | Bm | Am)) >>> 0;
 
-            oData[r] = (includeRed) ? level : iData[r];
-            oData[g] = (includeGreen) ? level : iData[g];
-            oData[b] = (includeBlue) ? level : iData[b];
-            oData[a] = (includeAlpha) ? level : iData[a];
+        // Mask that sets included channels to 'level'
+        const setMask = (includeRed ? (L <<  0) : 0) | (includeGreen ? (L <<  8) : 0) | (includeBlue  ? (L << 16) : 0) | (includeAlpha ? ((L & 255) << 24) : 0);
+
+        // Fast fill cases:
+        // + If no channels included: just copy
+        // + If all channels included: build one constant pixel and fill
+        if ((Rm | Gm | Bm | Am) === 0) {
+
+            // nothing to change
+            for (let p = 0; p < src32.length; p++) {
+
+                out32[p] = src32[p];
+            }
+        }
+        else if ((Rm | Gm | Bm | Am) === 0xFFFFFFFF >>> 0) {
+
+            // all channels forced to level
+            const constantPixel = setMask >>> 0;
+
+            for (let p = 0; p < out32.length; p++) {
+
+                out32[p] = constantPixel;
+            }
+        }
+        else {
+
+            // General case: clear included bits, then OR in the level
+            for (let p = 0, src; p < src32.length; p++) {
+
+                src = src32[p];
+                out32[p] = (src & clearMask) | setMask;
+            }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __step-channels__ - Takes three divisor values - "red", "green", "blue". For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of '50' applied to a channel value of '120' will give a result of '100'. The output is a form of posterization.
@@ -5053,78 +5273,121 @@ P.theBigActionsObject = {
 // + `round` - uses `Math.round()` for the calculation
     [STEP_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
             red = 1,
             green = 1,
             blue = 1,
-            clamp = DOWN,
             lineOut,
         } = requirements;
 
-        let r, g, b, a, i;
+        let clamp = requirements.clamp;
+        if (!CLAMP_VALUES.includes(clamp)) clamp = DOWN;
 
-        for (i = 0; i < len; i += 4) {
+        // Fast identity path: divisors == 1 => no change for any mode
+        if (red === 1 && green === 1 && blue === 1) out32.set(src32);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        else {
 
-            switch (clamp) {
+            const makeLUT = (d) => {
 
-                case UP :
-                    oData[r] = _ceil(iData[r] / red) * red;
-                    oData[g] = _ceil(iData[g] / green) * green;
-                    oData[b] = _ceil(iData[b] / blue) * blue;
-                    break;
+                const div = d > 0 ? d : 1;
 
-                case ROUND :
-                    oData[r] = _round(iData[r] / red) * red;
-                    oData[g] = _round(iData[g] / green) * green;
-                    oData[b] = _round(iData[b] / blue) * blue;
-                    break;
+                // Power-of-two fast path for DOWN
+                if (clamp === DOWN && (div & (div - 1)) === 0) {
 
-                default :
-                    oData[r] = _floor(iData[r] / red) * red;
-                    oData[g] = _floor(iData[g] / green) * green;
-                    oData[b] = _floor(iData[b] / blue) * blue;
-                    break;
+                    const mask = ~(div - 1) & 0xFF,
+                        lut = new Uint8Array(256);
+
+                    for (let v = 0; v < 256; v++) {
+
+                        lut[v] = v & mask;
+                    }
+                    return lut;
+                }
+
+                const lut = new Uint8ClampedArray(256);
+
+                if (div === 1) {
+
+                    for (let v = 0; v < 256; v++) lut[v] = v;
+                    return lut;
+                }
+
+                if (clamp === UP) {
+
+                    for (let v = 0; v < 256; v++) {
+
+                        lut[v] = _ceil(v / div) * div;
+                    }
+                }
+                else if (clamp === ROUND) {
+
+                    for (let v = 0; v < 256; v++) {
+
+                        lut[v] = _round(v / div) * div;
+                    }
+                }
+                else {
+
+                    for (let v = 0; v < 256; v++) {
+
+                        lut[v] = _floor(v / div) * div;
+                    }
+                }
+                return lut;
+            };
+
+            const lutR = makeLUT(red),
+                lutG = (green === red) ? lutR : makeLUT(green),
+                lutB = (blue  === red) ? lutR : (blue === green ? lutG : makeLUT(blue));
+
+            let p, pz, rgba, r, g, b, a, nr, ng, nb;
+
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                rgba = src32[p];
+
+                r = rgba & 0xff;
+                g = (rgba >>> 8) & 0xff;
+                b = (rgba >>> 16) & 0xff;
+                a = (rgba >>> 24) & 0xff;
+
+                nr = lutR[r];
+                ng = lutG[g];
+                nb = lutB[b];
+
+                out32[p] = ((a << 24) | (nb << 16) | (ng << 8) | nr) >>> 0;
             }
-            oData[a] = iData[a];
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __swirl__ - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
 // + This filter can handle multiple swirls in a single pass
     [SWIRL]: function (requirements) {
 
-        const getValue = function (val, dim) {
+        const getValue = (val, dim) => (val && val.substring) ? _floor((parseFloat(val) / 100) * dim) : val;
 
-            return (val.substring) ? _floor((parseFloat(val) / 100) * dim) : val;
-        };
-
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
-            len = iData.length,
-            iWidth = input.width,
+            len   = iData.length,
+            iWidth  = input.width,
             iHeight = input.height;
 
-        const tempInput = new ImageData(iWidth, iHeight),
-            tData = tempInput.data,
-            tWidth = tempInput.width,
-            tHeight = tempInput.height;
+        const tData = new Uint8ClampedArray(iData);
 
         const {
             opacity = 1,
@@ -5132,114 +5395,88 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let r, g, b, a, s, sz, pos, x, y, xz, yz, i, j,
-            distance, dr, dg, db, da, dx, dy, dLen;
+        if (_isArray(swirls) && !swirls.length) transferDataUnchanged(oData, iData, len);
+        else {
 
-        for (i = 0; i < len; i += 4) {
+            tData.set(iData);
+            oData.set(iData);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
-
-            tData[r] = iData[r];
-            tData[g] = iData[g];
-            tData[b] = iData[b];
-            tData[a] = iData[a];
-
-            oData[r] = iData[r];
-            oData[g] = iData[g];
-            oData[b] = iData[b];
-            oData[a] = iData[a];
-        }
-
-        if (_isArray(swirls) && swirls.length) {
-
-            const grid = this.buildImageGrid(input);
+            let s, sz, startX, startY, innerRadius, outerRadius, angle, easing, sx, sy, outer, inner, complexLen, x, xz, y, yz, e, ename, swirlName, swirlCoords, start, coord, iy, ix, destIdx, distance, srcIdx, factor, dx, dy, cursor, rowBase, bytesPerPx, spanPx, spanBytes, off;
 
             for (s = 0, sz = swirls.length; s < sz; s++) {
 
-                const [startX, startY, innerRadius, outerRadius, angle, easing] = swirls[s];
+                [startX, startY, innerRadius, outerRadius, angle, easing] = swirls[s];
 
-                const sx = getValue(startX, iWidth),
-                    sy = getValue(startY, iHeight);
+                sx = getValue(startX,  iWidth);
+                sy = getValue(startY,  iHeight);
 
-                let outer = getValue(outerRadius, iWidth),
-                    inner = getValue(innerRadius, iWidth);
+                outer = getValue(outerRadius, iWidth);
+                inner = getValue(innerRadius, iWidth);
 
                 if (inner > outer) {
 
-                    const temp = inner;
+                    const tmp = inner;
                     inner = outer;
-                    outer = temp;
+                    outer = tmp;
                 }
 
-                let complexLen = outer - inner;
+                complexLen = outer - inner;
                 if (complexLen === 0) complexLen = 0.1;
 
-                x = sx - outer;
+                // Bounding box clamp
+                x  = sx - outer;
                 if (x < 0) x = 0;
-                xz = sx + outer
-                if (xz > tWidth) xz = tWidth;
+
+                xz = sx + outer;
+                if (xz > iWidth) xz = iWidth;
+
                 y = sy - outer;
                 if (y < 0) y = 0;
-                yz = sy + outer
-                if (yz >= tHeight) yz = tHeight;
 
-                if (x < xz && y < yz && x < tWidth && xz > 0 && y < tHeight && yz > 0) {
+                yz = sy + outer;
+                if (yz > iHeight) yz = iHeight;
 
-                    let e = easing;
-                    let ename = easing;
+                if (x < xz && y < yz && x < iWidth && xz > 0 && y < iHeight && yz > 0) {
 
-                    if (isa_fn(e)) ename = `ude-${e(0)}-${e(0.1)}-${e(0.2)}-${e(0.3)}-${e(0.4)}-${e(0.5)}-${e(0.6)}-${e(0.7)}-${e(0.8)}-${e(0.9)}-${e(1)}`;
-                    else {
-                        e = (null != easeEngines[e]) ? easeEngines[e] : easeEngines['linear'];
+                    // Resolve easing
+                    e = easing;
+                    ename = easing;
+                    if (isa_fn(e)) {
+
+                        ename = `ude-${e(0)}-${e(0.1)}-${e(0.2)}-${e(0.3)}-${e(0.4)}-${e(0.5)}-${e(0.6)}-${e(0.7)}-${e(0.8)}-${e(0.9)}-${e(1)}`;
                     }
+                    else e = (null != easeEngines[e]) ? easeEngines[e] : easeEngines['linear'];
 
-                    const swirlName = `swirl-${startX}-${startY}-${innerRadius}-${outerRadius}-${angle}-${ename}-${iWidth}-${iHeight}`;
+                    swirlName = `swirl-${startX}-${startY}-${innerRadius}-${outerRadius}-${angle}-${ename}-${iWidth}-${iHeight}`;
 
-                    const swirlCoords = getOrAddWorkstoreItem(swirlName);
+                    swirlCoords = getOrAddWorkstoreItem(swirlName);
 
                     if (!swirlCoords.length) {
 
-                        const start = requestCoordinate();
-                        const coord = requestCoordinate();
+                        start = requestCoordinate();
+                        coord = requestCoordinate();
 
                         start.setFromArray([sx, sy]);
 
-                        for (i = y; i < yz; i++) {
+                        for (iy = y; iy < yz; iy++) {
 
-                            for (j = x; j < xz; j++) {
+                            for (ix = x; ix < xz; ix++) {
 
-                                pos = [j, i];
+                                destIdx = (((iy * iWidth) + ix) << 2);
 
-                                r = grid[i][j] * 4;
+                                distance = coord.set([ix, iy]).subtract(start).getMagnitude();
 
-                                distance = coord.set(pos).subtract(start).getMagnitude();
-
-                                if (distance > outer) dr = r;
-                                else if (distance < inner) {
-
-                                    coord.rotate(angle).add(start);
-
-                                    dx = _floor(coord[0]);
-                                    dy = _floor(coord[1]);
-
-                                    if (dx < 0) dx += iWidth;
-                                    else if (dx >= iWidth) dx -= iWidth;
-
-                                    if (dy < 0) dy += iHeight;
-                                    else if (dy >= iHeight) dy -= iHeight;
-
-                                    dr = grid[dy][dx] * 4;
-                                }
+                                if (distance > outer) srcIdx = destIdx;
                                 else {
 
-                                    dLen = 1 - ((distance - inner) / complexLen);
+                                    factor = 1;
+                                    if (distance >= inner) {
 
-                                    dLen = e(dLen);
+                                        factor = 1 - ((distance - inner) / complexLen);
+                                        factor = e(factor);
+                                    }
 
-                                    coord.rotate(angle * dLen).add(start);
+                                    coord.rotate(angle * factor).add(start);
 
                                     dx = _floor(coord[0]);
                                     dy = _floor(coord[1]);
@@ -5250,56 +5487,49 @@ P.theBigActionsObject = {
                                     if (dy < 0) dy += iHeight;
                                     else if (dy >= iHeight) dy -= iHeight;
 
-                                    dr = grid[dy][dx] * 4;
+                                    srcIdx = (((dy * iWidth) + dx) << 2);
                                 }
-                                swirlCoords.push(dr);
+
+                                swirlCoords.push(srcIdx);
                             }
                         }
                         releaseCoordinate(coord, start);
                     }
 
-                    let swirlCursor = -1;
-                    for (i = y; i < yz; i++) {
+                    cursor = 0;
 
-                        for (j = x; j < xz; j++) {
+                    for (iy = y; iy < yz; iy++) {
 
-                            r = grid[i][j] * 4;
-                            g = r + 1;
-                            b = g + 1;
-                            a = b + 1;
+                        rowBase = (iy * iWidth) << 2;
 
-                            dr = swirlCoords[++swirlCursor];
-                            dg = dr + 1;
-                            db = dg + 1;
-                            da = db + 1;
+                        for (ix = x; ix < xz; ix++) {
 
-                            oData[r] = tData[dr];
-                            oData[g] = tData[dg];
-                            oData[b] = tData[db];
-                            oData[a] = tData[da];
+                            destIdx = rowBase + (ix << 2);
+                            srcIdx  = swirlCoords[cursor++];
+
+                            oData[destIdx] = tData[srcIdx];
+                            oData[destIdx + 1] = tData[srcIdx + 1];
+                            oData[destIdx + 2] = tData[srcIdx + 2];
+                            oData[destIdx + 3] = tData[srcIdx + 3];
                         }
                     }
 
-                    for (i = y; i < yz; i++) {
+                    bytesPerPx = 4;
+                    spanPx = (xz - x);
+                    spanBytes = spanPx * bytesPerPx;
 
-                        for (j = x; j < xz; j++) {
+                    for (iy = y; iy < yz; iy++) {
 
-                            r = grid[i][j] * 4;
-                            g = r + 1;
-                            b = g + 1;
-                            a = b + 1;
+                        off = (((iy * iWidth) + x) << 2);
 
-                            tData[r] = oData[r];
-                            tData[g] = oData[g];
-                            tData[b] = oData[b];
-                            tData[a] = oData[a];
-                        }
+                        tData.set(oData.subarray(off, off + spanBytes), off);
                     }
                 }
             }
         }
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __threshold__ - performs a binary check on each pixel and, according to the result, assigns the pixel to a defined high or low color
@@ -5309,11 +5539,13 @@ P.theBigActionsObject = {
 // + Channels can be excluded from the filter action by setting the `includeRed` etc flags to false
     [THRESHOLD]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -5332,159 +5564,632 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const [lowR, lowG, lowB, lowA] = low;
-        const [highR, highG, highB, highA] = high;
+        // Clamp once
+        const clamp8 = v => (v < 0 ? 0 : (v > 255 ? 255 : v | 0));
 
-        const gVal = this.getGrayscaleValue;
+        const lvl = clamp8(level),
+            rT = clamp8(red),
+            gT = clamp8(green),
+            bT = clamp8(blue),
+            aT = clamp8(alpha);
 
-        let r, g, b, a, i, pr, pg, pb, pa, gray;
+        const lowR = clamp8(low[0]),
+            lowG = clamp8(low[1]),
+            lowB = clamp8(low[2]),
+            lowA = clamp8(low[3]),
+            highR = clamp8(high[0]),
+            highG = clamp8(high[1]),
+            highB = clamp8(high[2]),
+            highA = clamp8(high[3]);
 
-        for (i = 0; i < len; i += 4) {
+        let p, pz, rgba, r, g, b, a, ro, go, bo, ao, gray;
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-            pr = iData[r];
-            pg = iData[g];
-            pb = iData[b];
-            pa = iData[a];
+            rgba = src32[p];
+
+            r = rgba & 0xFF;
+            g = (rgba >>> 8) & 0xFF;
+            b = (rgba >>> 16) & 0xFF;
+            a = (rgba >>> 24) & 0xFF;
 
             if (useMixedChannel) {
 
-                gray = gVal(pr, pg, pb);
+                gray = (r * 54 + g * 183 + b * 19) >> 8;
 
-                if (gray < level) {
+                if (gray < lvl) {
 
-                    oData[r] = (includeRed) ? lowR : pr;
-                    oData[g] = (includeGreen) ? lowG : pg;
-                    oData[b] = (includeBlue) ? lowB : pb;
-                    oData[a] = (includeAlpha) ? lowA : pa;
+                    ro = includeRed ? lowR  : r;
+                    go = includeGreen ? lowG  : g;
+                    bo = includeBlue ? lowB  : b;
+                    ao = includeAlpha ? lowA  : a;
                 }
                 else {
 
-                    oData[r] = (includeRed) ? highR : pr;
-                    oData[g] = (includeGreen) ? highG : pg;
-                    oData[b] = (includeBlue) ? highB : pb;
-                    oData[a] = (includeAlpha) ? highA : pa;
+                    ro = includeRed ? highR : r;
+                    go = includeGreen ? highG : g;
+                    bo = includeBlue ? highB : b;
+                    ao = includeAlpha ? highA : a;
                 }
             }
             else {
 
-                if (includeRed) {
-                    oData[r] = (pr < red) ? lowR : highR;
-                }
-                else oData[r] = pr;
-
-                if (includeGreen) {
-                    oData[g] = (pg < green) ? lowG : highG;
-                }
-                else oData[g] = pg;
-
-                if (includeBlue) {
-                    oData[b] = (pb < blue) ? lowB : highB;
-                }
-                else oData[b] = pb;
-
-                if (includeAlpha) {
-                    oData[a] = (pa < alpha) ? lowA : highA;
-                }
-                else oData[a] = pa;
+                ro = includeRed ? (r < rT ? lowR : highR) : r;
+                go = includeGreen ? (g < gT ? lowG : highG) : g;
+                bo = includeBlue ? (b < bT ? lowB : highB) : b;
+                ao = includeAlpha ? (a < aT ? lowA : highA) : a;
             }
+            out32[p] = ((ao << 24) | (bo << 16) | (go << 8) | ro) >>> 0;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __tiles__ - Cover the image with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a Delauney-like output
-// + `points='rect-grid'` - generate a regular grid of tiles, where: `offsetX`, `offsetY` represent the origin coordinate from which the grid will be calculated; `tileWidth`, `tileHeight` supply the dimensions of the rectangular tiles; `angle` is the amount of tile rotation.
-// + `points='hex-grid'` - generate a hexagonal grid of tiles, where: `offsetX`, `offsetY` represent the origin coordinate from which the grid will be calculated; `tileRadius` supplies the radius for each hexagonal tile; `angle` is the amount of tile rotation.
-// + `points=50` - generate a pseudo-random set of points based on `offsetX`, `offsetY` and `tileRadius` arguments
-// + `points=[100, 100, 100, 300, 300, 100, 300, 300]` - action the points as described in the array
-// + More documentation can be found with the `buildGeneralTileSets` code, near the top of this file.
+// + Four `modes` are supported: 'rect', 'hex', 'random', 'points'
     [TILES]: function (requirements) {
 
-        const doCalculations = function (inChannel, outChannel, tile, offset) {
+        // Build a compact label map
+        const buildGeneralTileLabels = function (requirements, image) {
 
-            let avg = tile.reduce((a, v) => a + inChannel[(v * 4) + offset], 0);
+            if (!image) image = cache.source;
 
-            avg = _floor(avg / tile.length);
+            const iWidth = image.width | 0,
+                iHeight = image.height | 0,
+                nPix = (iWidth * iHeight) | 0;
 
-            for (let i = 0, iz = tile.length; i < iz; i++) {
+            if (!iWidth || !iHeight) return { labels: new Int32Array(0), nTiles: 0, mode: 'rect' };
 
-                outChannel[(tile[i] * 4) + offset] = avg;
+            const {
+                mode = RECT,
+                originX = 0,
+                originY = 0,
+                angle = 0,
+                rectWidth = 10,
+                rectHeight = 10,
+                hexRadius = 5,
+                randomCount = 20,
+                seed = DEFAULT_SEED,
+                pointsData = [],
+            } = requirements || {};
+
+            let ox = (_isFinite(originX) ? originX : 0) | 0,
+                oy = (_isFinite(originY) ? originY : 0) | 0;
+
+            // Cache key - a small stable key; for "points" we avoid dumping the full array into the key
+            let key = `tiles-v2-${mode}-${iWidth}-${iHeight}-${ox}-${oy}-${_round(angle*1000)}`;
+
+            let w, h, r, c, sd, arr, len;
+
+            if (mode === RECT) {
+
+                w = _max(1, _isFinite(rectWidth) ? rectWidth  | 0 : 1);
+                h = _max(1, _isFinite(rectHeight) ? rectHeight | 0 : 1);
+                key += `-rect-${w}-${h}`;
             }
-        }
+            else if (mode === HEX) {
 
-        const setOutValueToInValue = function (inChannel, outChannel, tile, offset) {
-
-            let cell;
-
-            for (let i = 0, iz = tile.length; i < iz; i++) {
-
-                cell = (tile[i] * 4) + offset;
-                outChannel[cell] = inChannel[cell];
+                r = _max(1, _isFinite(hexRadius) ? hexRadius | 0 : 1);
+                key += `-hex-${r}`;
             }
+            else if (mode === RANDOM) {
+
+                c = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
+                sd = seed || DEFAULT_SEED;
+                key += `-rnd-${c}-${sd}`;
+            }
+            else if (mode === POINTS) {
+
+                arr = _isArray(pointsData) ? pointsData : [];
+                len = (arr && arr.length) | 0;
+
+                // rolling checksum to detect changes cheaply
+                let hash = 2166136261 | 0;
+
+                for (let i = 0; i < len; i += _max(1, (len / 64) | 0)) {
+
+                    hash ^= (arr[i] | 0);
+                    hash = (hash * 16777619) | 0;
+                }
+                key += `-pts-${len}-${hash >>> 0}`;
+            }
+
+            const cached = getWorkstoreItem(key);
+            if (cached) return cached;
+
+            // Utility: inverse rotation (for lattice modes)
+            const toRad = angle * Math.PI / 180,
+                cosNeg = _cos(-toRad), sinNeg = _sin(-toRad);
+
+            // Output labels
+            const labels = new Int32Array(nPix);
+
+            let nTiles = 0;
+
+            if (mode === RECT) {
+
+                if (w < 1) w = 1;
+                if (h < 1) h = 1;
+
+                // Project four corners to grid space to get stable index ranges
+                const corners = [[0,0],[iWidth-1,0],[0,iHeight-1],[iWidth-1,iHeight-1]];
+
+                let iMin =  1e9,
+                    iMax = -1e9,
+                    jMin =  1e9,
+                    jMax = -1e9,
+                    dx, dy, xp, yp, iIdx, jIdx, ii, jj, p, y, x;
+
+                for (let c = 0; c < 4; c++) {
+
+                    dx = corners[c][0] - ox;
+                    dy = corners[c][1] - oy;
+                    xp =  cosNeg * dx - sinNeg * dy;
+                    yp =  sinNeg * dx + cosNeg * dy;
+                    iIdx = _round(xp / w - 0.5);
+                    jIdx = _round(yp / h - 0.5);
+
+                    if (iIdx < iMin) iMin = iIdx; if (iIdx > iMax) iMax = iIdx;
+                    if (jIdx < jMin) jMin = jIdx; if (jIdx > jMax) jMax = jIdx;
+                }
+
+                const nI = (iMax - iMin + 1) | 0,
+                    nJ = (jMax - jMin + 1) | 0;
+
+                nTiles = (nI * nJ) | 0;
+
+                p = 0;
+
+                for (y = 0; y < iHeight; y++) {
+
+                    dy = y - oy;
+
+                    for (x = 0; x < iWidth; x++, p++) {
+
+                        dx = x - ox;
+                        xp = cosNeg * dx - sinNeg * dy;
+                        yp = sinNeg * dx + cosNeg * dy;
+                        iIdx = _round(xp / w - 0.5);
+                        jIdx = _round(yp / h - 0.5);
+                        ii = (iIdx - iMin) | 0;
+                        jj = (jIdx - jMin) | 0;
+                        labels[p] = (jj * nI + ii) | 0;
+                    }
+                }
+
+                const res = { labels, nTiles, mode: RECT };
+                setWorkstoreItem(key, res);
+
+                return res;
+            }
+
+            if (mode === HEX) {
+
+                let s = _isFinite(hexRadius) ? hexRadius | 0 : 1;
+                if (s < 1) s = 1;
+
+                const invA = _sqrt(3) / 3,
+                    invB = 1 / 3,
+                    invC = 2 / 3;
+
+                // Compute bounds by projecting corners into lattice space and rounding
+                const corners = [
+                    [0, 0],
+                    [iWidth-1, 0],
+                    [0, iHeight-1],
+                    [iWidth-1, iHeight-1]
+                ];
+
+                let qMin = 1e9,
+                    qMax = -1e9,
+                    rMin = 1e9,
+                    rMax = -1e9;
+
+                const roundCubeReturn = [0, 0];
+                const roundCube = (x, y, z) => {
+
+                    let rx = _round(x),
+                        ry = _round(y),
+                        rz = _round(z);
+
+                    const dx = _abs(rx - x),
+                        dy = _abs(ry - y),
+                        dz = _abs(rz - z);
+
+                    if (dx > dy && dx > dz) rx = -ry - rz;
+                    else if (dy > dz) ry = -rx - rz;
+                    else rz = -rx - ry;
+
+                    roundCubeReturn[0] = rx;
+                    roundCubeReturn[1] = ry;
+
+                    return roundCubeReturn;
+                };
+
+                let dx, dy, xp, yp, qf, rf, xf, zf, yf, qi, ri, qq, rr, p, y, x;
+
+                for (let c = 0; c < 4; c++) {
+
+                    dx = corners[c][0] - ox;
+                    dy = corners[c][1] - oy;
+
+                    xp =  cosNeg * dx - sinNeg * dy;
+                    yp =  sinNeg * dx + cosNeg * dy;
+
+                    qf = (invA * xp - invB * yp) / s;
+                    rf = (invC * yp) / s;
+
+                    xf = qf;
+                    zf = rf;
+                    yf = -xf - zf;
+
+                    [qi, ri] = roundCube(xf, yf, zf);
+
+                    if (qi < qMin) qMin = qi;
+                    if (qi > qMax) qMax = qi;
+                    if (ri < rMin) rMin = ri;
+                    if (ri > rMax) rMax = ri;
+                }
+
+                // Add a small guard to ensure full coverage
+                qMin -= 1;
+                rMin -= 1;
+                qMax += 1;
+                rMax += 1;
+
+                const nQ = (qMax - qMin + 1) | 0,
+                    nR = (rMax - rMin + 1) | 0;
+
+                nTiles = (nQ * nR) | 0;
+
+                p = 0;
+
+                for (y = 0; y < iHeight; y++) {
+
+                    dy = y - oy;
+
+                    for (x = 0; x < iWidth; x++, p++) {
+
+                        dx = x - ox;
+                        xp =  cosNeg * dx - sinNeg * dy;
+                        yp =  sinNeg * dx + cosNeg * dy;
+
+                        qf = (invA * xp - invB * yp) / s;
+                        rf = (invC * yp) / s;
+
+                        xf = qf;
+                        zf = rf;
+                        yf = -xf - zf;
+
+                        [qi, ri] = roundCube(xf, yf, zf);
+
+                        qq = (qi - qMin) | 0;
+                        rr = (ri - rMin) | 0;
+
+                        labels[p] = (rr * nQ + qq) | 0;
+                    }
+                }
+
+                const res = { labels, nTiles, mode: HEX };
+                setWorkstoreItem(key, res);
+
+                return res;
+            }
+
+            const seeds = [];
+
+            if (mode === RANDOM) {
+
+                let count = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
+                if (count < 10) count = 10;
+
+                const rng = seededRandomNumberGenerator(seed);
+
+                let x, y;
+
+                for (let i = 0; i < count; i++) {
+
+                    x = (rng.random() * iWidth)  | 0;
+                    y = (rng.random() * iHeight) | 0;
+
+                    seeds.push(x, y);
+                }
+            }
+            else if (mode === POINTS) {
+
+                const arr = _isArray(pointsData) ? pointsData : [];
+
+                let x, y;
+
+                for (let i = 0, iz = arr.length; i < iz; i += 2) {
+
+                    x = arr[i] | 0;
+                    y = arr[i + 1] | 0;
+
+                    if (x >= 0 && x < iWidth && y >= 0 && y < iHeight) seeds.push(x, y);
+                }
+            }
+
+            const nSeeds = (seeds.length / 2) | 0;
+
+            if (!nSeeds) {
+
+                const res = { labels: new Int32Array(nPix), nTiles: 0, mode };
+                setWorkstoreItem(key, res);
+
+                return res;
+            }
+
+            // Spatial hash parameters: choose cell so ~1 seed per cell
+            let cell = _floor(_sqrt((iWidth * iHeight) / nSeeds));
+            if (cell < 4) cell = 4;
+
+            const gridCols = ((iWidth + cell - 1) / cell) | 0,
+                gridRows = ((iHeight + cell - 1) / cell) | 0;
+
+            const head = new Int32Array(gridCols * gridRows);
+            head.fill(-1);
+
+            const next = new Int32Array(nSeeds);
+            next.fill(-1);
+
+            // Insert seeds (clamp to grid)
+            let sx, sy, gx, gy, g;
+
+            for (let s = 0; s < nSeeds; s++) {
+
+                sx = seeds[(s << 1)];
+                sy = seeds[(s << 1) + 1];
+
+                let gx = (sx / cell) | 0;
+                if (gx < 0) gx = 0;
+                else if (gx >= gridCols) gx = gridCols - 1;
+
+                let gy = (sy / cell) | 0;
+                if (gy < 0) gy = 0;
+                else if (gy >= gridRows) gy = gridRows - 1;
+
+                g = gy * gridCols + gx;
+
+                next[s] = head[g];
+
+                head[g] = s;
+            }
+
+            // Nearest seed per pixel (search 3×3 neighborhood with clamp)
+            let p = 0;
+
+            let best, bestD, y, x, gy2, gx2, dx, dy, d2, s, radius;
+
+            for (y = 0; y < iHeight; y++) {
+
+                for (x = 0; x < iWidth; x++, p++) {
+
+                    gx = (x / cell) | 0;
+                    if (gx < 0) gx = 0;
+                    else if (gx >= gridCols) gx = gridCols - 1;
+
+                    gy = (y / cell) | 0;
+                    if (gy < 0) gy = 0;
+                    else if (gy >= gridRows) gy = gridRows - 1;
+
+                    best = -1;
+                    bestD = Infinity;
+
+                    radius = 1;
+
+                    while (best === -1) {
+
+                        for (dy = -radius; dy <= radius; dy++) {
+
+                            gy2 = gy + dy;
+
+                            if (gy2 < 0 || gy2 >= gridRows) continue;
+
+                            for (dx = -radius; dx <= radius; dx++) {
+
+                                const gx2 = gx + dx;
+
+                                if (gx2 < 0 || gx2 >= gridCols) continue;
+
+                                s = head[gy2 * gridCols + gx2];
+
+                                while (s !== -1) {
+
+                                    sx = seeds[(s << 1)]
+                                    sy = seeds[(s << 1) + 1];
+                                    
+                                    d2 = (x - sx) * (x - sx) + (y - sy) * (y - sy);
+                                    
+                                    if (d2 < bestD) {
+
+                                        bestD = d2;
+                                        best = s;
+                                    }
+                                    s = next[s];
+                                }
+                            }
+                        }
+                        radius++;
+                    }
+                    labels[p] = best;
+                    // for (oy = -1; oy <= 1; oy++) {
+
+                    //     gy2 = gy + oy;
+                    //     if (gy2 < 0 || gy2 >= gridRows) continue;
+
+                    //     for (ox = -1; ox <= 1; ox++) {
+
+                    //         gx2 = gx + ox;
+                    //         if (gx2 < 0 || gx2 >= gridCols) continue;
+
+                    //         s = head[gy2 * gridCols + gx2];
+
+                    //         while (s !== -1) {
+
+                    //             sx = seeds[(s << 1)];
+                    //             sy = seeds[(s << 1) + 1];
+                    //             dx = x - sx;
+                    //             dy = y - sy;
+
+                    //             d2 = dx * dx + dy * dy;
+
+                    //             if (d2 < bestD) {
+
+                    //                 bestD = d2;
+                    //                 best = s;
+                    //             }
+
+                    //             s = next[s];
+                    //         }
+                    //     }
+                    // }
+                    // labels[p] = best;
+                }
+            }
+
+            nTiles = nSeeds;
+
+            const res = { labels, nTiles, mode };
+            setWorkstoreItem(key, res);
+
+            return res;
         };
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+              oData = output.data,
+              len = iData.length,
+              nPix = (len >>> 2);
 
         const {
             opacity = 1,
-            tileWidth = 1,
-            tileHeight = 1,
-            tileRadius = 1,
-            offsetX = 0,
-            offsetY = 0,
-            angle = 0,
-            points = RECT_GRID,
-            seed = DEFAULT_SEED,
-            includeRed = true,
+            includeRed   = true,
             includeGreen = true,
-            includeBlue = true,
+            includeBlue  = true,
             includeAlpha = false,
             lineOut,
-        } = requirements;
+        } = requirements || {};
 
-        const tiles = this.buildGeneralTileSets(points, tileWidth, tileHeight, tileRadius, offsetX, offsetY, angle, seed);
+        // Build labels via new API
+        const { labels, nTiles } = buildGeneralTileLabels(requirements, input);
 
-        if (!tiles.length) this.transferDataUnchanged(oData, iData, len);
-        else {
+        if (!nTiles) {
 
-            tiles.forEach(t => {
-
-                if (includeRed) doCalculations(iData, oData, t, 0);
-                else setOutValueToInValue(iData, oData, t, 0);
-
-                if (includeGreen) doCalculations(iData, oData, t, 1);
-                else setOutValueToInValue(iData, oData, t, 1);
-
-                if (includeBlue) doCalculations(iData, oData, t, 2);
-                else setOutValueToInValue(iData, oData, t, 2);
-
-                if (includeAlpha) doCalculations(iData, oData, t, 3);
-                else setOutValueToInValue(iData, oData, t, 3);
-            });
+            transferDataUnchanged(oData, iData, len);
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
+            return;
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        // Accumulators (reused via workstore)
+        const accKey = `tiles-acc-v2-${nTiles}`;
+
+        let acc = getWorkstoreItem(accKey);
+
+        if (!acc) {
+
+            acc = {
+                r: new Uint32Array(nTiles),
+                g: new Uint32Array(nTiles),
+                b: new Uint32Array(nTiles),
+                a: new Uint32Array(nTiles),
+                c: new Uint32Array(nTiles),
+            };
+
+            setWorkstoreItem(accKey, acc);
+        }
+        else {
+
+            acc.r.fill(0);
+            acc.g.fill(0);
+            acc.b.fill(0);
+            acc.a.fill(0);
+            acc.c.fill(0);
+        }
+
+        const rAcc = acc.r,
+            gAcc = acc.g,
+            bAcc = acc.b,
+            aAcc = acc.a,
+            cnt = acc.c;
+
+        // Pass 1: accumulate per tile
+        let t, c, p, i;
+
+        for (p = 0, i = 0; p < nPix; p++, i += 4) {
+
+            t = labels[p];
+
+            if (t < 0) continue;
+
+            cnt[t]++;
+
+            if (includeRed) rAcc[t] += iData[i    ];
+            if (includeGreen) gAcc[t] += iData[i + 1];
+            if (includeBlue) bAcc[t] += iData[i + 2];
+            if (includeAlpha) aAcc[t] += iData[i + 3];
+        }
+
+        // Averages (uint8)
+        const rAvg = includeRed ? new Uint8Array(nTiles) : null,
+            gAvg = includeGreen ? new Uint8Array(nTiles) : null,
+            bAvg = includeBlue ? new Uint8Array(nTiles) : null,
+            aAvg = includeAlpha ? new Uint8Array(nTiles) : null;
+
+        for (t = 0; t < nTiles; t++) {
+
+            c = cnt[t] || 1;
+
+            if (includeRed) rAvg[t] = (rAcc[t] / c) | 0;
+            if (includeGreen) gAvg[t] = (gAcc[t] / c) | 0;
+            if (includeBlue) bAvg[t] = (bAcc[t] / c) | 0;
+            if (includeAlpha) aAvg[t] = (aAcc[t] / c) | 0;
+        }
+
+        // Pass 2: write out
+        for (p = 0, i = 0; p < nPix; p++, i += 4) {
+
+            t = labels[p];
+
+            if (t < 0) {
+
+                oData[i] = iData[i];
+                oData[i + 1] = iData[i + 1];
+                oData[i + 2] = iData[i + 2];
+                oData[i + 3] = iData[i + 3];
+                continue;
+            }
+
+            if (includeRed) oData[i] = rAvg[t];
+            else oData[i] = iData[i];
+
+            if (includeGreen) oData[i + 1] = gAvg[t];
+            else oData[i + 1] = iData[i + 1];
+
+            if (includeBlue) oData[i + 2] = bAvg[t];
+            else oData[i + 2] = iData[i + 2];
+
+            if (includeAlpha) oData[i + 3] = aAvg[t];
+            else oData[i + 3] = iData[i + 3];
+        }
+
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __tint-channels__ - Has similarities to the SVG &lt;feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The 'sepia' convenience filter presets these values to create a sepia effect.
     [TINT_CHANNELS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.byteLength >>> 2);
 
         const {
             opacity = 1,
@@ -5500,34 +6205,53 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let r, g, b, a, i, vr, vg, vb;
+        const c00 = +redInRed,
+            c01 = +greenInRed,
+            c02 = +blueInRed,
+            c10 = +redInGreen,
+            c11 = +greenInGreen,
+            c12 = +blueInGreen,
+            c20 = +redInBlue,
+            c21 = +greenInBlue,
+            c22 = +blueInBlue;
 
-        for (i = 0; i < len; i += 4) {
+        const isIdentity = (c00 === 1 && c11 === 1 && c22 === 1 && c01 === 0 && c02 === 0 && c10 === 0 && c12 === 0 && c20 === 0 && c21 === 0);
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        if (isIdentity) out32.set(src32);
+        else {
 
-            vr = iData[r];
-            vg = iData[g];
-            vb = iData[b];
+            let p, pz, rgba, r, g, b, a, nr, ng, nb;
 
-            oData[r] = _floor((vr * redInRed) + (vg * greenInRed) + (vb * blueInRed));
-            oData[g] = _floor((vr * redInGreen) + (vg * greenInGreen) + (vb * blueInGreen));
-            oData[b] = _floor((vr * redInBlue) + (vg * greenInBlue) + (vb * blueInBlue));
-            oData[a] = iData[a];
+            for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+                rgba = src32[p];
+
+                r =  rgba & 0xff;
+                g = (rgba >>> 8) & 0xff;
+                b = (rgba >>> 16) & 0xff;
+                a = (rgba >>> 24) & 0xff;
+
+                nr = _floor(r * c00 + g * c01 + b * c02);
+                ng = _floor(r * c10 + g * c11 + b * c12);
+                nb = _floor(r * c20 + g * c21 + b * c22);
+
+                nr = nr < 0 ? 0 : nr > 255 ? 255 : nr;
+                ng = ng < 0 ? 0 : ng > 255 ? 255 : ng;
+                nb = nb < 0 ? 0 : nb > 255 ? 255 : nb;
+
+                out32[p] = ((a << 24) | (nb << 16) | (ng << 8) | nr) >>> 0;
+            }
         }
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __user-defined-legacy__ - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter engine, which the engine would then run against the source input image as-and-when required. This functionality has been removed from the new filter functionality. All such filters will now return the input image unchanged.
 
     [USER_DEFINED_LEGACY]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -5538,10 +6262,10 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        this.transferDataUnchanged(oData, iData, len);
+        transferDataUnchanged(oData, iData, len);
 
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 
 // __vary-channels-by-weights__ - manipulate colors using a set of channel curve arrays.
@@ -5551,7 +6275,7 @@ P.theBigActionsObject = {
 // + Using this method, we can perform a __curve__ (image tonality) filter
     [VARY_CHANNELS_BY_WEIGHTS]: function (requirements) {
 
-        const [input, output] = this.getInputAndOutputLines(requirements);
+        const [input, output] = getInputAndOutputLines(requirements);
 
         const iData = input.data,
             oData = output.data,
@@ -5570,7 +6294,7 @@ P.theBigActionsObject = {
             weights.fill(0);
         }
 
-        const gVal = this.getGrayscaleValue;
+        const gVal = colorEngine.getBestGray;
 
         let i, r, g, b, a, red, green, blue, alpha, gray, all, allR, allG, allB;
 
@@ -5609,8 +6333,8 @@ P.theBigActionsObject = {
                 oData[a] = alpha + weights[(alpha * 4) + 3];
             }
         }
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
     },
 };
 
@@ -5643,5 +6367,3 @@ constructors.FilterEngine = FilterEngine;
 
 // Create a singleton filter engine, for export and use within this code base
 export const filterEngine = new FilterEngine();
-
-

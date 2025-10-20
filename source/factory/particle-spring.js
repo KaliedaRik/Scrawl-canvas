@@ -5,7 +5,7 @@
 // #### Imports
 import { constructors, particle } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
 import { releaseVector, requestVector } from '../untracked-factory/vector.js';
 
@@ -28,8 +28,6 @@ const Spring = function (items = Ωempty) {
     this.set(this.defs);
 
     this.set(items);
-
-    if (!this.action) this.action = λnull;
 
     return this;
 };
@@ -108,29 +106,36 @@ S.particleTo = function (item) {
 // `applySpring` - internal function
 P.applySpring = function () {
 
-    const {particleFrom, particleTo, particleFromIsStatic, particleToIsStatic, springConstant, damperConstant, restLength} = this;
+    const { particleFrom, particleTo, particleFromIsStatic, particleToIsStatic, springConstant, damperConstant, restLength } = this;
 
-    if (particleFrom && particleTo) {
+    if (!(particleFrom && particleTo)) return;
 
-        const {position: fromPosition, velocity: fromVelocity, load: fromLoad} = particleFrom;
-        const {position: toPosition, velocity: toVelocity, load: toLoad} = particleTo;
+    const { position: fromPos, velocity: fromVel, load: fromLoad } = particleFrom;
+    const { position: toPos,   velocity: toVel,   load: toLoad   } = particleTo;
 
-        const dVelocity = requestVector(toVelocity).vectorSubtract(fromVelocity),
-            dPosition = requestVector(toPosition).vectorSubtract(fromPosition);
+    const dPos = requestVector(toPos).vectorSubtract(fromPos);
+    const len = dPos.getMagnitude();
 
-        const firstNorm = requestVector(dPosition).normalize(),
-            secondNorm = requestVector(firstNorm);
+    if (!len) {
 
-        firstNorm.scalarMultiply(springConstant * (dPosition.getMagnitude() - restLength));
-        dVelocity.vectorMultiply(secondNorm).scalarMultiply(damperConstant).vectorMultiply(secondNorm);
-
-        const force = requestVector(firstNorm).vectorAdd(dVelocity);
-
-        if (!particleFromIsStatic) fromLoad.vectorAdd(force);
-        if (!particleToIsStatic) toLoad.vectorSubtract(force);
-
-        releaseVector(dVelocity, dPosition, firstNorm, secondNorm, force);
+        releaseVector(dPos);
+        return;
     }
+
+    const n = requestVector(dPos).normalize();
+    const dVel = requestVector(toVel).vectorSubtract(fromVel);
+
+    const force = requestVector(n).scalarMultiply(springConstant * (len - restLength));
+
+    const vAlong = dVel.getDot(n);
+
+    force.vectorAddScaled(n, damperConstant * vAlong);
+
+    if (!particleFromIsStatic)fromLoad.vectorAdd(force);
+
+    if (!particleToIsStatic) toLoad.vectorSubtract(force);
+
+    releaseVector(dPos, n, dVel, force);
 };
 
 

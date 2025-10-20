@@ -18,7 +18,7 @@ import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 
 // Shared constants
-import { _abs, _ceil, _floor, _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, SOURCE_OVER, START, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, SOURCE_OVER, START, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants (none defined)
 
@@ -154,8 +154,6 @@ P.entityInit = function (items = Ωempty) {
 
     this.midInitActions(items);
 
-    if (this.purge) this.purgeArtefact(this.purge);
-
     this.dirtyFont = true;
     this.currentFontIsLoaded = false;
 };
@@ -194,9 +192,35 @@ P.measureFont = function () {
 
     const ratio = fontSizeValue / 100;
 
+    // If spacing is active, compute width manually (fallback)
+    let width = _ceil(_abs(actualBoundingBoxLeft) + _abs(actualBoundingBoxRight));
+
+    if ((letterSpaceValue !== 0 || wordSpaceValue !== 0) && this.text) {
+
+        const cell2 = requestCell();
+        const ctx = cell2.engine;
+
+        ctx.font = defaultTextStyle.canvasFont;
+        ctx.textAlign = LEFT;
+        ctx.textBaseline = TOP;
+
+        let total = 0;
+
+        const t = this.text;
+
+        for (let i = 0; i < t.length; i++) {
+
+            const ch = t[i];
+            total += ctx.measureText(ch).width;
+            if (i < t.length - 1) total += (letterSpaceValue + (ch === ' ' ? wordSpaceValue : 0)) * currentScale;
+        }
+        width = _ceil(total);
+        releaseCell(cell2);
+    }
+
     if (dimensions) {
 
-        dimensions[0] = _ceil(_abs(actualBoundingBoxLeft) + _abs(actualBoundingBoxRight));
+        dimensions[0] = width;
         dimensions[1] = meta.height * ratio * currentScale;
     }
 
@@ -362,7 +386,7 @@ P.stampPositioningHelper = function () {
     const x = -currentHandle[0],
         y = -currentHandle[1] + fontVerticalOffset * currentScale;
 
-    return [text, _floor(x), _floor(y)];
+    return [text, x, y];
 }
 
 // `underlineEngine` - internal helper function
@@ -408,7 +432,7 @@ P.underlineEngine = function (host, pos) {
     underlineEngine.font = defaultTextStyle.canvasFont;
     underlineEngine.fontKerning = defaultTextStyle.fontKerning;
     underlineEngine.fontStretch = defaultTextStyle.fontStretch;
-    underlineEngine.fontVariantCaps = defaultTextStyle.fontVariant;
+    underlineEngine.fontVariantCaps = defaultTextStyle.fontVariantCaps;
     underlineEngine.textRendering = defaultTextStyle.textRendering;
     underlineEngine.letterSpacing = defaultTextStyle.letterSpacing;
     underlineEngine.lineCap = ROUND;

@@ -2,7 +2,7 @@
 A brief overview of the Scrawl-canvas repo's folders and files, together with instructions on the steps to take when releasing a new version of the repo to NPM.
 
 ## GitHub branch policy
-The Scrawl-canvas repo includes two branches - `v8` and `v8-dev` - alongside any number of development and investigation branches.
+The Scrawl-canvas repo includes two branches – `v8` and `v8-dev` – alongside any number of development and investigation branches.
 
 ### v8 branch
 
@@ -17,7 +17,7 @@ Final testing prior to a new release should take place on the `v8-dev` branch as
 Development or maintenance branches merge into `v8-dev` via a PR, so repo-devs can keep track of the work they contain.
 
 ### History
-The repo used to contain `v6` and `v7` branches, but they were deleted once the decision was made not to maintain them. At some point in the future a `v9` branch may be created, should the code ever require a substantial rewrite - for example if repo-devs ever move code over to WASM, or reintroduce Web Workers, or convert the entire codebase over to Typescript.
+The repo used to contain `v6` and `v7` branches, but they were deleted once the decision was made not to maintain them. At some point in the future a `v9` branch may be created, should the code ever require a substantial rewrite – for example if repo-devs ever move code over to WASM, or reintroduce Web Workers, or convert the entire codebase over to TypeScript.
 
 ## Repository structure
 The Scrawl-canvas repo on GitHub is a complete package to maintain and develop the SC frontend code which gets imported into a web page. As such, the repo includes documentation and testing (demo) code, alongside the source code and configuration files for the developer toolchain.
@@ -25,9 +25,9 @@ The Scrawl-canvas repo on GitHub is a complete package to maintain and develop t
 ### Top level documentation
 The essential files are as follows:
 
-+ `package.json` - SC gets released as an [NPM package](https://www.npmjs.com/). The file needs to be updated with version data for each new release.
-+ `README.md` - This file displays in various places, thus needs to be updated for each release.
-+ `LICENSE.md` - Scrawl-canvas uses the standard [MIT license](https://opensource.org/license/mit).
++ `package.json` – SC gets released as an [NPM package](https://www.npmjs.com/). The file needs to be updated with version data for each new release.
++ `README.md` – This file displays in various places, thus needs to be updated for each release.
++ `LICENSE.md` – Scrawl-canvas uses the standard [MIT license](https://opensource.org/license/mit).
 
 ### Development toolchain
 Most files relating to the dev toolchain reside in the root of the repo. These can be broken down as follows:
@@ -50,7 +50,7 @@ The SC frontend (source) code gets built and bundled using [Rollup](https://roll
 
 Scrawl-canvas runs in browser environments only. There are no plans at this time to support functionality to get SC running in any non-browser environments (Node, Bun, Deno, etc).
 
-Running the `yarn build-min` command (also invoked when running `yarn build`) will bundle and minify the SC frontend (source) code. The `package.json` file points to the minified file as the main entry point for running the code in the front end.
+Running the `yarn build-min` command (also invoked when running `yarn build`) will bundle and minify the SC frontend (source) code. The `package.json` file points to the minified file as the main entry point for running the code in the frontend.
 
 + `rollup.config.js`
 + `min/scrawl.js`
@@ -77,20 +77,20 @@ Files specific to the Developer Runbook toolchain:
 + `docs/reference/*`
 + `docs/css/*`
 
-#### Testing: Eslint
-Repo-devs lint both the SC frontend (source) and demo code using [ESLint](https://eslint.org/) - command: `yarn lint`.
+#### Testing: ESlint
+Repo-devs lint both the SC frontend (source) and demo code using [ESLint](https://eslint.org/) – command: `yarn lint`.
 
 + `eslint.config.mjs`
 
 #### Testing: Knip
-Repo-devs use [Knip](https://knip.dev/) to find and fix unused files, exports and dependencies in the SC frontend (source) code - command: `yarn knip`.
+Repo-devs use [Knip](https://knip.dev/) to find and fix unused files, exports and dependencies in the SC frontend (source) code – command: `yarn knip`.
 
 + `knip.json`
 
-#### Testing: Typescript
-The Scrawl-canvas source code is written in Javascript. There are no plans to convert the codebase over to [Typescript](https://www.typescriptlang.org/) at any point in the near-mid future.
+#### Testing: TypeScript
+The Scrawl-canvas source code is written in JavaScript. There are no plans to convert the codebase over to [TypeScript](https://www.typescriptlang.org/) at any point in the near-mid future.
 
-Repo-devs use the TS parser for testing both the SC frontend (source) and demo code against the repo's TS definitions (`.d.ts`) file - this is mainly to identify errors in that file - command: `yarn test`.
+Repo-devs use the TS parser for testing both the SC frontend (source) and demo code against the repo's TS definitions (`.d.ts`) file – this is mainly to identify errors in that file – command: `yarn test`.
 
 The `.d.ts` file is ***not*** autogenerated, but rather hand-written, relying mainly on interfaces to define the SC public API used in frontend code. 
 
@@ -98,7 +98,7 @@ The `.d.ts` file is ***not*** autogenerated, but rather hand-written, relying ma
 + `source/scrawl.d.ts`
 
 ### Development and testing: Browser-sync
-The bulk of development testing is handled manually - if anyone can come up with a way of automating (mostly) animated and interactive integration tests, some PRs in that direction would be most gratefully received! For a walk-through on how to conduct this manual testing, see this [Substack post with added YouTube videos](https://rikroots.substack.com/p/testing-as-an-act-of-fun).
+The bulk of development testing is handled manually – if anyone can come up with a way of automating (mostly) animated and interactive integration tests, some PRs in that direction would be most gratefully received! For a walk-through on how to conduct this manual testing, see this [Substack post with added YouTube videos](https://rikroots.substack.com/p/testing-as-an-act-of-fun).
 
 The integration tests are a set of handwritten demo files in the `demo` folder. Each test includes an `html` file and a `js` file sharing the same name. Additional module and asset files used in the demos can be found in various subfolders:
 
@@ -145,12 +145,12 @@ Version release has not (yet) been automated, which means the following steps ne
 
 1: All outstanding development branches that will be part of the release need to be merged into `v8-dev`.
 
-2: Generate a PR from the `v8-dev` branch on GitHub - make a note of all the changes that will be included in the release in the PR description (use previous release notes for inspiration).
+2: Generate a PR from the `v8-dev` branch on GitHub – make a note of all the changes that will be included in the release in the PR description (use previous release notes for inspiration).
 
 #### Local SC root
 
 3: Perform a complete testing sweep against `v8-dev` locally:
-+ Manual testing of all demos in Chrome, Firefox and Safari browsers - fix any non-working demos, pushing changes to the PR
++ Manual testing of all demos in Chrome, Firefox and Safari browsers – fix any non-working demos, pushing changes to the PR
 + Run `yarn lint` to identify (and fix) any JS linting issues; push changes to the PR.
 + Run `yarn knip` to remove unnecessary code; push changes to the PR.
 + Run `yarn test` to fix any issues in the `d.ts` definitions file; push changes to the PR.
@@ -178,7 +178,7 @@ Version release has not (yet) been automated, which means the following steps ne
 
 7: Dogfood the upcoming release by copying `scrawl-canvas/min/` and `scrawl-canvas/source` folders over to `scrawl-canvas-website/node_modules/scrawl-canvas`.
 
-8: Smoke test the website by running `yarn dev` - dogfooding of the minified file happens on the "Tour" landing page. If the canvases break they will either need fixing to work with the new release, or there's an undiscovered bug in SC itself which needs to be investigated.
+8: Smoke test the website by running `yarn dev` – dogfooding of the minified file happens on the "Tour" landing page. If the canvases break they will either need fixing to work with the new release, or there's an undiscovered bug in SC itself which needs to be investigated.
 
 9: If all goes well, all (relevant) references to the previous release version (in the form `x.y.z` and also `x-y-z`) need to be updated across scrawl-canvas-website files; the release date also needs to be updated in a couple of files. Current affected files include:
 + `public/cookbook/add-using-cdn.html`
@@ -202,7 +202,7 @@ Version release has not (yet) been automated, which means the following steps ne
 + `min/`
 + `source/`
 
-12: Rerun `yarn dev` and smoke check the entire scrawl-canvas-website site.
+12: Re-run `yarn dev` and smoke check the entire scrawl-canvas-website site.
 
 #### GitHub
 
@@ -226,7 +226,7 @@ Version release has not (yet) been automated, which means the following steps ne
 + `yarn remove scrawl-canvas`
 + `yarn add scrawl-canvas`
 
-19: Check to make sure the new version was added to the repo - the previous command should report the version of SC that was added.
+19: Check to make sure the new version was added to the repo – the previous command should report the version of SC that was added.
 
 20: Run: `yarn build`. Smoke test the website.
 
@@ -235,8 +235,3 @@ Version release has not (yet) been automated, which means the following steps ne
 #### CodePen
 
 22: Repo-devs can now update all the [SC Pen demos in CodePen](https://codepen.io/collection/RzzMjw). This is required work because several of these demos are embedded into the website's various "Learn" articles. The change in each Pen is to update the SC import line to the latest version.
-
-#### tsdocs.dev website
-
-23: Remember to visit the [tsdocs.dev](https://tsdocs.dev/) website and search for `scrawl-canvas`. This should (fingers crossed) be sufficient for the site to pick up the latest version of the library and auto-generate reference pages for it from the `scrawl.d.ts` file.
-

@@ -33,11 +33,15 @@ P.type = T_GENERIC_ARRAY;
 
 const genericArrayPool = [];
 
-export const requestArray = function () {
+export const requestArray = function (...args) {
 
     if (!genericArrayPool.length) genericArrayPool.push(new GenericArray());
 
-    return genericArrayPool.shift();
+    const a = genericArrayPool.pop();
+
+    if (args.length) a.push(...args);
+
+    return a;
 };
 
 export const releaseArray = function (...args) {
@@ -49,10 +53,10 @@ export const releaseArray = function (...args) {
             a.length = 0;
             genericArrayPool.push(a);
 
-            if (genericArrayPool.length > 20) {
+            if (genericArrayPool.length > 512) {
 
                 console.log('purging genericArrayPool');
-                genericArrayPool.length = 10;
+                genericArrayPool.length = 256;
             }
         }
     });

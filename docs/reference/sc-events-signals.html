@@ -26,21 +26,21 @@
 <p>SC does not include a bespoke implementation of an event-driven system. SC artefact, entity and animation objects do not generate any <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">custom events</a> as part of their functionality.</p>
 <p>Instead SC relies on the normal <a href="https://developer.mozilla.org/en-US/docs/Web/Events">event system</a> provided by the browser to handle user interactions with an SC Canvas or Stack display:</p>
 <ul>
-<li>SC uses a number of system-generated event listeners to handle changes in the browser environment, for instance:<ul>
-<li>A single event listener to track mouse movement across the viewport.</li>
-<li>Similarly, event listeners to react to user-initiated page scrolling and browser window resize events.</li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">Intersection observers</a> to report on <code>&lt;canvas&gt;</code> and stack DOM element positioning within the browser viewport.</li>
-<li>Event listeners assigned to various <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries">CSS matchMedia() queries</a> to monitor, in particular, user-set media preferences.</li></ul></li>
-<li>SC also supplies the dev-user with a set of convenience functions to capture various user interactions with a Canvas or Stack display, including:<ul>
-<li>Mouse, touch and pointer events.</li>
-<li>Drag-and-drop functionality.</li>
-<li>Keyboard navigation and trigger events.</li>
-<li>Interactions with form element controls.</li>
-<li>Responsive image management.</li>
-<li>Media stream, and screen capture, events.</li></ul></li>
+<li>SC uses a number of system-generated event listeners to handle changes in the browser environment, for instance:<br />
+– A single event listener to track mouse movement across the viewport.<br />
+– Similarly, event listeners to react to user-initiated page scrolling and browser window resize events.<br />
+– <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">Intersection observers</a> to report on <code>&lt;canvas&gt;</code> and stack DOM element positioning within the browser viewport.<br />
+– Event listeners assigned to various <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries">CSS matchMedia() queries</a> to monitor, in particular, user-set media preferences.</li>
+<li>SC also supplies the dev-user with a set of convenience functions to capture various user interactions with a Canvas or Stack display, including:<br />
+– Mouse, touch and pointer events.<br />
+– Drag-and-drop functionality.<br />
+– Keyboard navigation and trigger events.<br />
+– Interactions with form element controls.<br />
+– Responsive image management.<br />
+– Media stream, and screen capture, events.</li>
 </ul>
 <p>For the most part, these events do not trigger immediate changes in the SC system or its data. Rather they will update values held in the <code>currentCorePosition</code> object (which acts as SC's Single Source of Truth for this data) and set relevant <a href="https://gameprogrammingpatterns.com/dirty-flag.html">dirty flags</a> which the system can then address during the next Display cycle.</p>
-<p>This <strong>signals system</strong> pattern is also used by other SC objects - in particular artefact and entity objects - to communicate changes in their data to other objects that rely on the changed data for their own calculations: when a change occurs dirty flags will be set, but actioning those changes and alerting subscribed objects of those changes is deferred until the next Display cycle.</p>
+<p>This <strong>signals system</strong> pattern is also used by other SC objects – in particular artefact and entity objects – to communicate changes in their data to other objects that rely on the changed data for their own calculations: when a change occurs dirty flags will be set, but actioning those changes and alerting subscribed objects of those changes is deferred until the next Display cycle.</p>
 <h2 id="system-events">System events</h2>
 <p>[write up]</p>
 <h3 id="the-core-listeners-tracker-function">The core listeners tracker function</h3>
@@ -180,9 +180,9 @@ object.set({
 //   - the update is ignored</code></pre>
 <p>The code may seem over-complicated … but it works! Repo-devs have chosen to use this approach because:</p>
 <ul>
-<li>It keeps the factory file code understandable:<ul>
-<li>Object attributes can be defined and explained in the <code>defs</code> object.</li>
-<li>Attribute updates requiring <code>dirty</code> flags to be set can be managed more easily.</li></ul></li>
+<li>It keeps the factory file code understandable:<br />
+– Object attributes can be defined and explained in the <code>defs</code> object.<br />
+– Attribute updates requiring <code>dirty</code> flags to be set can be managed more easily.</li>
 <li>It prevents dev-users accidentally damaging object shapes, which can lead to code efficiency degredation</li>
 <li>It couples tightly with the object <code>packet</code> (serialization) system, and thus with the accompanying object <code>clone</code> system.</li>
 <li>Mixin and factory files can easily add attributes to the <code>defs</code> object to meet their particular requirements.</li>

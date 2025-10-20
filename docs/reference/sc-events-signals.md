@@ -3,21 +3,21 @@ SC does not include a bespoke implementation of an event-driven system. SC artef
 
 Instead SC relies on the normal [event system](https://developer.mozilla.org/en-US/docs/Web/Events) provided by the browser to handle user interactions with an SC Canvas or Stack display:
 + SC uses a number of system-generated event listeners to handle changes in the browser environment, for instance:
-  - A single event listener to track mouse movement across the viewport.
-  - Similarly, event listeners to react to user-initiated page scrolling and browser window resize events.
-  - [Intersection observers](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) to report on `<canvas>` and stack DOM element positioning within the browser viewport.
-  - Event listeners assigned to various [CSS matchMedia() queries](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries) to monitor, in particular, user-set media preferences.
+  – A single event listener to track mouse movement across the viewport.
+  – Similarly, event listeners to react to user-initiated page scrolling and browser window resize events.
+  – [Intersection observers](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) to report on `<canvas>` and stack DOM element positioning within the browser viewport.
+  – Event listeners assigned to various [CSS matchMedia() queries](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries) to monitor, in particular, user-set media preferences.
 + SC also supplies the dev-user with a set of convenience functions to capture various user interactions with a Canvas or Stack display, including:
-  - Mouse, touch and pointer events.
-  - Drag-and-drop functionality.
-  - Keyboard navigation and trigger events.
-  - Interactions with form element controls.
-  - Responsive image management.
-  - Media stream, and screen capture, events.
+  – Mouse, touch and pointer events.
+  – Drag-and-drop functionality.
+  – Keyboard navigation and trigger events.
+  – Interactions with form element controls.
+  – Responsive image management.
+  – Media stream, and screen capture, events.
 
 For the most part, these events do not trigger immediate changes in the SC system or its data. Rather they will update values held in the `currentCorePosition` object (which acts as SC's Single Source of Truth for this data) and set relevant [dirty flags](https://gameprogrammingpatterns.com/dirty-flag.html) which the system can then address during the next Display cycle.
 
-This **signals system** pattern is also used by other SC objects - in particular artefact and entity objects - to communicate changes in their data to other objects that rely on the changed data for their own calculations: when a change occurs dirty flags will be set, but actioning those changes and alerting subscribed objects of those changes is deferred until the next Display cycle.
+This **signals system** pattern is also used by other SC objects – in particular artefact and entity objects – to communicate changes in their data to other objects that rely on the changed data for their own calculations: when a change occurs dirty flags will be set, but actioning those changes and alerting subscribed objects of those changes is deferred until the next Display cycle.
 
 ## System events
 [write up]
@@ -186,8 +186,8 @@ object.set({
 
 The code may seem over-complicated ... but it works! Repo-devs have chosen to use this approach because:
 + It keeps the factory file code understandable:
-  - Object attributes can be defined and explained in the `defs` object.
-  - Attribute updates requiring `dirty` flags to be set can be managed more easily.
+  – Object attributes can be defined and explained in the `defs` object.
+  – Attribute updates requiring `dirty` flags to be set can be managed more easily.
 + It prevents dev-users accidentally damaging object shapes, which can lead to code efficiency degredation
 + It couples tightly with the object `packet` (serialization) system, and thus with the accompanying object `clone` system.
 + Mixin and factory files can easily add attributes to the `defs` object to meet their particular requirements.

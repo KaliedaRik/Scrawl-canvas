@@ -39,6 +39,8 @@ const myRadial = scrawl.makeRadialGradient({
     cyclePalette: true,
     animateByDelta: true,
 
+    colorSpace: 'LAB',
+
     colors: [
         [0, 'black'],
         [99, 'red'],
@@ -50,7 +52,7 @@ const myRadial = scrawl.makeRadialGradient({
         [699, 'green'],
         [799, 'black'],
         [899, 'lavender'],
-        [999, 'black']
+        [999, 'black'],
     ],
 });
 
@@ -61,6 +63,8 @@ scrawl.makeGradient({
 
     easing: 'easeOutInQuad',
     precision: 1,
+
+    colorSpace: 'OKLAB',
 
     colors: [
         [0, 'black'],
@@ -91,6 +95,8 @@ scrawl.makeGradient({
     name: name('linear'),
     endX: '100%',
 
+    colorSpace: 'RGB',
+
     colors: [
         [0, 'blue'],
         [495, 'red'],
@@ -98,7 +104,6 @@ scrawl.makeGradient({
         [505, 'red'],
         [999, 'green']
     ],
-    colorSpace: 'OKLAB',
     precision: 5,
 });
 
