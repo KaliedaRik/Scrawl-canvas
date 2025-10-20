@@ -5654,7 +5654,7 @@ P.theBigActionsObject = {
                 pointsData = [],
             } = requirements || {};
 
-            let ox = (_isFinite(originX) ? originX : 0) | 0,
+            const ox = (_isFinite(originX) ? originX : 0) | 0,
                 oy = (_isFinite(originY) ? originY : 0) | 0;
 
             // Cache key - a small stable key; for "points" we avoid dumping the full array into the key
@@ -5989,7 +5989,7 @@ P.theBigActionsObject = {
 
                             for (dx = -radius; dx <= radius; dx++) {
 
-                                const gx2 = gx + dx;
+                                gx2 = gx + dx;
 
                                 if (gx2 < 0 || gx2 >= gridCols) continue;
 
@@ -5999,9 +5999,9 @@ P.theBigActionsObject = {
 
                                     sx = seeds[(s << 1)]
                                     sy = seeds[(s << 1) + 1];
-                                    
+
                                     d2 = (x - sx) * (x - sx) + (y - sy) * (y - sy);
-                                    
+
                                     if (d2 < bestD) {
 
                                         bestD = d2;

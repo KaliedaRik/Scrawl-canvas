@@ -16,8 +16,7 @@ const canvas = scrawl.findCanvas('my-canvas');
 const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
-const [cWidth, cHeight] = canvas.get('dimensions'),
-    here = canvas.here;
+const [cWidth, cHeight] = canvas.get('dimensions');
 
 const _max = Math.max,
     _min = Math.min,
@@ -85,7 +84,7 @@ const dt = 1/60,
     diff = 0.0001;
 
 // Fields (double buffers for advection/diffuse)
-let u = new Float32Array(len),
+const u = new Float32Array(len),
     v = new Float32Array(len),
     u0 = new Float32Array(len),
     v0 = new Float32Array(len),
@@ -95,7 +94,7 @@ let u = new Float32Array(len),
     dye0 = new Float32Array(len);
 
 // Helper functions
-const setBoundary = function (field, solid = true) {
+const setBoundary = function (field) {
 
     let i, index0, index1;
 
@@ -361,7 +360,7 @@ const drawCell = () => {
 const report = reportSpeed('#reportmessage');
 
 // Create the Display cycle animation
-const render = scrawl.makeRender({
+scrawl.makeRender({
 
     name: name('animation'),
     target: canvas,
