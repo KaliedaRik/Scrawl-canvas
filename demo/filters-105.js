@@ -26,9 +26,7 @@ const myFilter = scrawl.makeFilter({
 
     name: filteredName('tiles'),
     method: 'tiles',
-    tileRadius: 50,
-    offsetX: 200,
-    offsetY: 200,
+    mode: 'points',
 });
 
 // Create the target entity
@@ -89,31 +87,18 @@ const currentPaths = spiral.name;
 // Update filter with spiral points data
 const getPointsFromSpiral = () => {
 
-    const len = spiral.length,
-        step = (1 / (Math.floor(len / distance))),
-        points = [],
-        coord = scrawl.requestCoordinate(),
-        pos = spiral.get('position');
+    const pointsData = [],
+        len = spiral.length,
+        step = (1 / (Math.floor(len / distance)));
 
-    let x, y;
+    for (let i = step, pos; i < 1; i += step) {
 
-    for (let i = step; i <= 1; i += step) {
+        pos = spiral.getPathPositionData(i);
 
-        [x, y] = coord.setFromVector(spiral.getPathPositionData(i)).subtract(pos);
-/** @ts-expect-error */
-        points.push(Math.round(x), Math.round(y));
+        pointsData.push(pos.x, pos.y);
     }
-    [x, y] = coord.setFromVector(spiral.getPathPositionData(0.00000001)).subtract(pos);
-/** @ts-expect-error */
-    points.push(Math.round(x), Math.round(y));
 
-    [x, y] = coord.setFromVector(spiral.getPathPositionData(0.99999999)).subtract(pos);
-/** @ts-expect-error */
-    points.push(Math.round(x), Math.round(y));
-
-    scrawl.releaseCoordinate(coord);
-
-    myFilter.set({ points });
+    myFilter.set({ pointsData });
 };
 
 const updateFilterPoints = () => {
@@ -132,10 +117,9 @@ const updateFilterPoints = () => {
 const report = reportSpeed('#reportmessage', function () {
 
     return `
-    Tile dimensions - radius: ${dom.tile_radius.value}px
-    Origin offset - x: ${dom.offset_x.value}px, y: ${dom.offset_y.value}px
     Step along path: ${distance}
-    Spiral: radiusIncrement: ${dom.spiral_radius.value}, radiusIncrementAdjust: ${dom.spiral_radius_adjust.value}, Opacity: ${dom.opacity.value}`;
+    Spiral: radiusIncrement: ${dom.spiral_radius.value}, radiusIncrementAdjust: ${dom.spiral_radius_adjust.value}
+    Opacity: ${dom.opacity.value}`;
 });
 
 
@@ -157,9 +141,6 @@ scrawl.makeRender({
 // Setup form
 const dom = scrawl.initializeDomInputs([
     ['input', 'path_step', '50'],
-    ['input', 'offset_x', '200'],
-    ['input', 'offset_y', '200'],
-    ['input', 'tile_radius', '50'],
     ['input', 'spiral_radius', '0.04'],
     ['input', 'spiral_radius_adjust', '1'],
     ['input', 'opacity', '1'],
@@ -181,9 +162,6 @@ scrawl.makeUpdater({
 
     updates: {
         opacity: ['opacity', 'float'],
-        offset_x: ['offsetX', 'round'],
-        offset_y: ['offsetY', 'round'],
-        tile_radius: ['tileRadius', 'round'],
     },
 });
 
@@ -210,15 +188,6 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
     });
 
 }, '#show_path');
-
-// Move the paths
-scrawl.addNativeListener(['change', 'input'], () => {
-
-    pathGroup.setArtefacts({
-        start: [parseInt(dom.offset_x.value, 10), parseInt(dom.offset_y.value, 10)],
-    });
-
-}, '.move-paths');
 
 // LineSpiral adjustments
 scrawl.addNativeListener(['change', 'input'], () => {

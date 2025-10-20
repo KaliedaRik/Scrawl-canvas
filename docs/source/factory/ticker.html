@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -1243,31 +1248,24 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
 
         <span class="hljs-keyword">const</span> buckets = <span class="hljs-title function_">requestArray</span>();
 
-        <span class="hljs-keyword">let</span> i, iz, obj, eTime;
+        <span class="hljs-keyword">let</span> i, sub;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) {
 
-            obj = subs[i];
+            sub = tween[subs[i]];
 
-            eTime = <span class="hljs-title function_">_floor</span>(obj.<span class="hljs-property">effectiveTime</span>) || <span class="hljs-number">0</span>;
-
-            <span class="hljs-keyword">if</span> (!buckets[eTime]) buckets[eTime] = <span class="hljs-title function_">requestArray</span>();
-
-            buckets[eTime].<span class="hljs-title function_">push</span>(obj);
+            <span class="hljs-keyword">if</span> (sub) buckets.<span class="hljs-title function_">push</span>(sub);
         }
+
+        <span class="hljs-keyword">if</span> (buckets.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>) buckets.<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a.<span class="hljs-property">effectiveTime</span> - b.<span class="hljs-property">effectiveTime</span>);
 
         subs.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
-        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = buckets.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; buckets.<span class="hljs-property">length</span>; i++) {
 
-            obj = buckets[i];
-
-            <span class="hljs-keyword">if</span> (obj) {
-
-                subs.<span class="hljs-title function_">push</span>(...obj);
-                <span class="hljs-title function_">releaseArray</span>(obj);
-            }
+            subs.<span class="hljs-title function_">push</span>(buckets[i].<span class="hljs-property">name</span>);
         }
+
         <span class="hljs-title function_">releaseArray</span>(buckets);
     }
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">repopulateSubscriberObjects</span>();
@@ -2135,7 +2133,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = tickerAnimations.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
-                obj = tickerAnimations[i];
+                obj = animationtickers[tickerAnimations[i]];
 
                 <span class="hljs-keyword">if</span> (obj) {
 
@@ -2143,7 +2141,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
 
                     <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = <span class="hljs-title function_">requestArray</span>();
 
-                    buckets[order].<span class="hljs-title function_">push</span>(obj);
+                    buckets[order].<span class="hljs-title function_">push</span>(obj.<span class="hljs-property">name</span>);
                 }
             }
             tickerAnimations.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
@@ -2232,7 +2230,7 @@ S.<span class="hljs-property">subscribers</span> = <span class="hljs-keyword">fu
         });
     }
 
-    <span class="hljs-keyword">return</span> resultObjectPool.<span class="hljs-title function_">shift</span>();
+    <span class="hljs-keyword">return</span> resultObjectPool.<span class="hljs-title function_">pop</span>();
 };</pre></div></div>
             
         </li>

@@ -79,7 +79,7 @@ S.action = function (item) {
 
     if (isa_fn(item)) this.action = item;
     else this.action = λnull;
-}
+};
 
 
 // #### Factory

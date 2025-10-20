@@ -25,7 +25,7 @@
         <h1 id="repository-structure-and-release-protocol">Repository structure, and release protocol</h1>
 <p>A brief overview of the Scrawl-canvas repo's folders and files, together with instructions on the steps to take when releasing a new version of the repo to NPM.</p>
 <h2 id="github-branch-policy">GitHub branch policy</h2>
-<p>The Scrawl-canvas repo includes two branches - <code>v8</code> and <code>v8-dev</code> - alongside any number of development and investigation branches.</p>
+<p>The Scrawl-canvas repo includes two branches – <code>v8</code> and <code>v8-dev</code> – alongside any number of development and investigation branches.</p>
 <h3 id="v8-branch">v8 branch</h3>
 <p><code>v8</code> is the default branch against which all <a href="https://www.npmjs.com/package/scrawl-canvas">NPM releases</a> take place. The only branch that should merge into it is <code>v8-dev</code>, and this should only happen as part of a new version release.</p>
 <h3 id="v8-dev-branch">v8-dev branch</h3>
@@ -33,15 +33,15 @@
 <p>Final testing prior to a new release should take place on the <code>v8-dev</code> branch as part of a PR to merge into <code>v8</code>. Once the merge completes repo-devs can either retain the current <code>v8-dev</code> branch for the next release candidate, or delete it and create a new <code>v8-dev</code> branch from the <code>v8</code> branch.</p>
 <p>Development or maintenance branches merge into <code>v8-dev</code> via a PR, so repo-devs can keep track of the work they contain.</p>
 <h3 id="history">History</h3>
-<p>The repo used to contain <code>v6</code> and <code>v7</code> branches, but they were deleted once the decision was made not to maintain them. At some point in the future a <code>v9</code> branch may be created, should the code ever require a substantial rewrite - for example if repo-devs ever move code over to WASM, or reintroduce Web Workers, or convert the entire codebase over to Typescript.</p>
+<p>The repo used to contain <code>v6</code> and <code>v7</code> branches, but they were deleted once the decision was made not to maintain them. At some point in the future a <code>v9</code> branch may be created, should the code ever require a substantial rewrite – for example if repo-devs ever move code over to WASM, or reintroduce Web Workers, or convert the entire codebase over to TypeScript.</p>
 <h2 id="repository-structure">Repository structure</h2>
 <p>The Scrawl-canvas repo on GitHub is a complete package to maintain and develop the SC frontend code which gets imported into a web page. As such, the repo includes documentation and testing (demo) code, alongside the source code and configuration files for the developer toolchain.</p>
 <h3 id="top-level-documentation">Top level documentation</h3>
 <p>The essential files are as follows:</p>
 <ul>
-<li><code>package.json</code> - SC gets released as an <a href="https://www.npmjs.com/">NPM package</a>. The file needs to be updated with version data for each new release.</li>
-<li><code>README.md</code> - This file displays in various places, thus needs to be updated for each release.</li>
-<li><code>LICENSE.md</code> - Scrawl-canvas uses the standard <a href="https://opensource.org/license/mit">MIT license</a>.</li>
+<li><code>package.json</code> – SC gets released as an <a href="https://www.npmjs.com/">NPM package</a>. The file needs to be updated with version data for each new release.</li>
+<li><code>README.md</code> – This file displays in various places, thus needs to be updated for each release.</li>
+<li><code>LICENSE.md</code> – Scrawl-canvas uses the standard <a href="https://opensource.org/license/mit">MIT license</a>.</li>
 </ul>
 <h3 id="development-toolchain">Development toolchain</h3>
 <p>Most files relating to the dev toolchain reside in the root of the repo. These can be broken down as follows:</p>
@@ -62,7 +62,7 @@
 <h4 id="building-rollup">Building: Rollup</h4>
 <p>The SC frontend (source) code gets built and bundled using <a href="https://rollupjs.org/">Rollup</a> and its <a href="https://www.npmjs.com/package/@rollup/plugin-terser">terser</a> plugin. Only the <strong>ES modules</strong> output format is supported.</p>
 <p>Scrawl-canvas runs in browser environments only. There are no plans at this time to support functionality to get SC running in any non-browser environments (Node, Bun, Deno, etc).</p>
-<p>Running the <code>yarn build-min</code> command (also invoked when running <code>yarn build</code>) will bundle and minify the SC frontend (source) code. The <code>package.json</code> file points to the minified file as the main entry point for running the code in the front end.</p>
+<p>Running the <code>yarn build-min</code> command (also invoked when running <code>yarn build</code>) will bundle and minify the SC frontend (source) code. The <code>package.json</code> file points to the minified file as the main entry point for running the code in the frontend.</p>
 <ul>
 <li><code>rollup.config.js</code></li>
 <li><code>min/scrawl.js</code></li>
@@ -87,26 +87,26 @@
 <li><code>docs/reference/*</code></li>
 <li><code>docs/css/*</code></li>
 </ul>
-<h4 id="testing-eslint">Testing: Eslint</h4>
-<p>Repo-devs lint both the SC frontend (source) and demo code using <a href="https://eslint.org/">ESLint</a> - command: <code>yarn lint</code>.</p>
+<h4 id="testing-eslint">Testing: ESlint</h4>
+<p>Repo-devs lint both the SC frontend (source) and demo code using <a href="https://eslint.org/">ESLint</a> – command: <code>yarn lint</code>.</p>
 <ul>
 <li><code>eslint.config.mjs</code></li>
 </ul>
 <h4 id="testing-knip">Testing: Knip</h4>
-<p>Repo-devs use <a href="https://knip.dev/">Knip</a> to find and fix unused files, exports and dependencies in the SC frontend (source) code - command: <code>yarn knip</code>.</p>
+<p>Repo-devs use <a href="https://knip.dev/">Knip</a> to find and fix unused files, exports and dependencies in the SC frontend (source) code – command: <code>yarn knip</code>.</p>
 <ul>
 <li><code>knip.json</code></li>
 </ul>
-<h4 id="testing-typescript">Testing: Typescript</h4>
-<p>The Scrawl-canvas source code is written in Javascript. There are no plans to convert the codebase over to <a href="https://www.typescriptlang.org/">Typescript</a> at any point in the near-mid future.</p>
-<p>Repo-devs use the TS parser for testing both the SC frontend (source) and demo code against the repo's TS definitions (<code>.d.ts</code>) file - this is mainly to identify errors in that file - command: <code>yarn test</code>.</p>
+<h4 id="testing-typescript">Testing: TypeScript</h4>
+<p>The Scrawl-canvas source code is written in JavaScript. There are no plans to convert the codebase over to <a href="https://www.typescriptlang.org/">TypeScript</a> at any point in the near-mid future.</p>
+<p>Repo-devs use the TS parser for testing both the SC frontend (source) and demo code against the repo's TS definitions (<code>.d.ts</code>) file – this is mainly to identify errors in that file – command: <code>yarn test</code>.</p>
 <p>The <code>.d.ts</code> file is <strong><em>not</em></strong> autogenerated, but rather hand-written, relying mainly on interfaces to define the SC public API used in frontend code. </p>
 <ul>
 <li><code>tsconfig.json</code></li>
 <li><code>source/scrawl.d.ts</code></li>
 </ul>
 <h3 id="development-and-testing-browser-sync">Development and testing: Browser-sync</h3>
-<p>The bulk of development testing is handled manually - if anyone can come up with a way of automating (mostly) animated and interactive integration tests, some PRs in that direction would be most gratefully received! For a walk-through on how to conduct this manual testing, see this <a href="https://rikroots.substack.com/p/testing-as-an-act-of-fun">Substack post with added YouTube videos</a>.</p>
+<p>The bulk of development testing is handled manually – if anyone can come up with a way of automating (mostly) animated and interactive integration tests, some PRs in that direction would be most gratefully received! For a walk-through on how to conduct this manual testing, see this <a href="https://rikroots.substack.com/p/testing-as-an-act-of-fun">Substack post with added YouTube videos</a>.</p>
 <p>The integration tests are a set of handwritten demo files in the <code>demo</code> folder. Each test includes an <code>html</code> file and a <code>js</code> file sharing the same name. Additional module and asset files used in the demos can be found in various subfolders:</p>
 <ul>
 <li><code>demo/*.html</code></li>
@@ -144,11 +144,11 @@
 <h3 id="release-steps">Release steps</h3>
 <h4 id="github">GitHub</h4>
 <p>1: All outstanding development branches that will be part of the release need to be merged into <code>v8-dev</code>.</p>
-<p>2: Generate a PR from the <code>v8-dev</code> branch on GitHub - make a note of all the changes that will be included in the release in the PR description (use previous release notes for inspiration).</p>
+<p>2: Generate a PR from the <code>v8-dev</code> branch on GitHub – make a note of all the changes that will be included in the release in the PR description (use previous release notes for inspiration).</p>
 <h4 id="local-sc-root">Local SC root</h4>
 <p>3: Perform a complete testing sweep against <code>v8-dev</code> locally:</p>
 <ul>
-<li>Manual testing of all demos in Chrome, Firefox and Safari browsers - fix any non-working demos, pushing changes to the PR</li>
+<li>Manual testing of all demos in Chrome, Firefox and Safari browsers – fix any non-working demos, pushing changes to the PR</li>
 <li>Run <code>yarn lint</code> to identify (and fix) any JS linting issues; push changes to the PR.</li>
 <li>Run <code>yarn knip</code> to remove unnecessary code; push changes to the PR.</li>
 <li>Run <code>yarn test</code> to fix any issues in the <code>d.ts</code> definitions file; push changes to the PR.</li>
@@ -172,7 +172,7 @@
 <p>6: Create a zipped file of the minified code: <code>zip -r scrawl-canvas_x-y-z.zip ./Scrawl-canvas/min/</code></p>
 <h4 id="local-scrawl-canvas-website">Local scrawl-canvas-website</h4>
 <p>7: Dogfood the upcoming release by copying <code>scrawl-canvas/min/</code> and <code>scrawl-canvas/source</code> folders over to <code>scrawl-canvas-website/node_modules/scrawl-canvas</code>.</p>
-<p>8: Smoke test the website by running <code>yarn dev</code> - dogfooding of the minified file happens on the "Tour" landing page. If the canvases break they will either need fixing to work with the new release, or there's an undiscovered bug in SC itself which needs to be investigated.</p>
+<p>8: Smoke test the website by running <code>yarn dev</code> – dogfooding of the minified file happens on the "Tour" landing page. If the canvases break they will either need fixing to work with the new release, or there's an undiscovered bug in SC itself which needs to be investigated.</p>
 <p>9: If all goes well, all (relevant) references to the previous release version (in the form <code>x.y.z</code> and also <code>x-y-z</code>) need to be updated across scrawl-canvas-website files; the release date also needs to be updated in a couple of files. Current affected files include:</p>
 <ul>
 <li><code>public/cookbook/add-using-cdn.html</code></li>
@@ -196,7 +196,7 @@
 <li><code>min/</code></li>
 <li><code>source/</code></li>
 </ul>
-<p>12: Rerun <code>yarn dev</code> and smoke check the entire scrawl-canvas-website site.</p>
+<p>12: Re-run <code>yarn dev</code> and smoke check the entire scrawl-canvas-website site.</p>
 <h4 id="github-1">GitHub</h4>
 <p>13: Merge the <code>v8-dev</code> PR into <code>v8</code>. If the <code>v8-dev</code> branch gets (accidentally) deleted during the process, repo-devs can recreate it from Local</p>
 <h4 id="local-sc-root-1">Local SC root</h4>
@@ -211,13 +211,11 @@
 <li><code>yarn remove scrawl-canvas</code></li>
 <li><code>yarn add scrawl-canvas</code></li>
 </ul>
-<p>19: Check to make sure the new version was added to the repo - the previous command should report the version of SC that was added.</p>
+<p>19: Check to make sure the new version was added to the repo – the previous command should report the version of SC that was added.</p>
 <p>20: Run: <code>yarn build</code>. Smoke test the website.</p>
 <p>21: Repo-devs are now in a position to push the updated website to production. Use FTP for this work. All files in the <code>public</code> folder need to be copied to the remote site.</p>
 <h4 id="codepen">CodePen</h4>
 <p>22: Repo-devs can now update all the <a href="https://codepen.io/collection/RzzMjw">SC Pen demos in CodePen</a>. This is required work because several of these demos are embedded into the website's various "Learn" articles. The change in each Pen is to update the SC import line to the latest version.</p>
-<h4 id="tsdocsdev-website">tsdocs.dev website</h4>
-<p>23: Remember to visit the <a href="https://tsdocs.dev/">tsdocs.dev</a> website and search for <code>scrawl-canvas</code>. This should (fingers crossed) be sufficient for the site to pick up the latest version of the library and auto-generate reference pages for it from the <code>scrawl.d.ts</code> file.</p>
     </main>
     
     <nav>

@@ -1,6 +1,6 @@
 {
   "name": "scrawl-canvas",
-  "version": "8.15.0",
+  "version": "8.16.0",
   "description": "Responsive, interactive and more accessible HTML5 canvas elements. Scrawl-canvas is a JavaScript library designed to make using the HTML5 canvas element easier, and more fun",
   "main": "./min/scrawl.js",
   "type": "module",
@@ -11,7 +11,7 @@
     "build-min": "rollup -c",
     "build-showdown": "node ./scripts/build-reference-docs.mjs",
     "dev": "browser-sync -w",
-    "lint": "npx eslint source/**/*.js demo/*.js demo/**/*.js",
+    "lint": "npx eslint source/**/*.js demo/*.js demo/modules/*.js demo/snippets/*.js",
     "knip": "knip",
     "test": "tsc"
   },
@@ -48,18 +48,18 @@
   "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme",
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@eslint/js": "^9.27.0",
+    "@eslint/js": "^9.38.0",
     "@rollup/plugin-terser": "^0.4.4",
-    "@types/node": "^22.15.21",
+    "@types/node": "^24.8.1",
     "@types/showdown": "^2.0.6",
     "browser-sync": "^3.0.4",
     "docco": "^0.9.2",
-    "eslint": "^9.27.0",
+    "eslint": "^9.38.0",
     "globals": "^16.1.0",
-    "knip": "^5.57.0",
-    "rollup": "^4.41.0",
+    "knip": "^5.66.1",
+    "rollup": "^4.52.5",
     "showdown": "^2.1.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.3"
   },
   "packageManager": "yarn@4.0.1"
 }

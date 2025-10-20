@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1193,8 +1198,8 @@ scrawl.<span class="hljs-title function_">makeStar</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;star&#x27;</span>),
 
-    <span class="hljs-attr">radius1</span>: <span class="hljs-number">18</span>,
-    <span class="hljs-attr">radius2</span>: <span class="hljs-number">12</span>,
+    <span class="hljs-attr">radius1</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">radius2</span>: <span class="hljs-number">18</span>,
 
     <span class="hljs-attr">points</span>: <span class="hljs-number">5</span>,
 
@@ -1424,7 +1429,8 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stampFirst</span>: <span class="hljs-string">&#x27;newest&#x27;</span>,
+    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
         <span class="hljs-keyword">const</span> history = particle.<span class="hljs-property">history</span>,
 <span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>

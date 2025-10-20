@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -632,7 +637,7 @@
     <span class="hljs-variable constant_">FONT_VARIANT_VALS</span> = [<span class="hljs-string">&#x27;small-caps&#x27;</span>, <span class="hljs-string">&#x27;all-small-caps&#x27;</span>, <span class="hljs-string">&#x27;petite-caps&#x27;</span>, <span class="hljs-string">&#x27;all-petite-caps&#x27;</span>, <span class="hljs-string">&#x27;unicase&#x27;</span>, <span class="hljs-string">&#x27;titling-caps&#x27;</span>],
     <span class="hljs-variable constant_">ITALIC</span> = <span class="hljs-string">&#x27;italic&#x27;</span>,
     <span class="hljs-variable constant_">LABEL_DIRTY_FONT_KEYS</span> = [<span class="hljs-string">&#x27;direction&#x27;</span>, <span class="hljs-string">&#x27;fontKerning&#x27;</span>, <span class="hljs-string">&#x27;fontSize&#x27;</span>, <span class="hljs-string">&#x27;fontStretch&#x27;</span>, <span class="hljs-string">&#x27;fontString&#x27;</span>, <span class="hljs-string">&#x27;fontStyle&#x27;</span>, <span class="hljs-string">&#x27;fontVariantCaps&#x27;</span>, <span class="hljs-string">&#x27;fontWeight&#x27;</span>, <span class="hljs-string">&#x27;letterSpaceValue&#x27;</span>, <span class="hljs-string">&#x27;letterSpacing&#x27;</span>, <span class="hljs-string">&#x27;scale&#x27;</span>, <span class="hljs-string">&#x27;textRendering&#x27;</span>, <span class="hljs-string">&#x27;wordSpaceValue&#x27;</span>, <span class="hljs-string">&#x27;wordSpacing&#x27;</span>],
-    <span class="hljs-variable constant_">LABEL_UNLOADED_FONT_KEYS</span> = [<span class="hljs-string">&#x27;fontString&#x27;</span>],
+    <span class="hljs-variable constant_">LABEL_UNLOADED_FONT_KEYS</span> = [<span class="hljs-string">&#x27;fontString&#x27;</span>,<span class="hljs-string">&#x27;fontFamily&#x27;</span>, <span class="hljs-string">&#x27;fontWeight&#x27;</span>, <span class="hljs-string">&#x27;fontStyle&#x27;</span>, <span class="hljs-string">&#x27;fontStretch&#x27;</span>, <span class="hljs-string">&#x27;fontVariantCaps&#x27;</span>, <span class="hljs-string">&#x27;fontSize&#x27;</span>],
     <span class="hljs-variable constant_">LABEL_UPDATE_FONTSTRING_KEYS</span> = [<span class="hljs-string">&#x27;fontString&#x27;</span>, <span class="hljs-string">&#x27;scale&#x27;</span>],
     <span class="hljs-variable constant_">LABEL_UPDATE_PARTS_KEYS</span> = [<span class="hljs-string">&#x27;fontFamily&#x27;</span>, <span class="hljs-string">&#x27;fontSize&#x27;</span>, <span class="hljs-string">&#x27;fontStretch&#x27;</span>, <span class="hljs-string">&#x27;fontStyle&#x27;</span>, <span class="hljs-string">&#x27;fontVariantCaps&#x27;</span>, <span class="hljs-string">&#x27;fontWeight&#x27;</span>],
     <span class="hljs-variable constant_">LAYOUT_KEYS</span> = [<span class="hljs-string">&#x27;lineSpacing&#x27;</span>, <span class="hljs-string">&#x27;textUnitFlow&#x27;</span>, <span class="hljs-string">&#x27;lineAdjustment&#x27;</span>, <span class="hljs-string">&#x27;alignment&#x27;</span>, <span class="hljs-string">&#x27;justifyLine&#x27;</span>, <span class="hljs-string">&#x27;flipReverse&#x27;</span>, <span class="hljs-string">&#x27;flipUpend&#x27;</span>, <span class="hljs-string">&#x27;alignTextUnitsToPath&#x27;</span>, <span class="hljs-string">&#x27;lockFillStyleToEntity&#x27;</span>, <span class="hljs-string">&#x27;lockStrokeStyleToEntity&#x27;</span>],
@@ -723,7 +728,7 @@
             <span class="hljs-attr">highlightStyle</span>: defaultTextCopy.<span class="hljs-property">highlightStyle</span>,
             <span class="hljs-attr">includeHighlight</span>: defaultTextCopy.<span class="hljs-property">includeHighlight</span>,
             <span class="hljs-attr">includeUnderline</span>: defaultTextCopy.<span class="hljs-property">includeUnderline</span>,
-            <span class="hljs-attr">letterSpacing</span>: defaultTextCopy.<span class="hljs-property">letterSpaceValue</span>,
+            <span class="hljs-attr">letterSpacing</span>: defaultTextCopy.<span class="hljs-property">letterSpace</span>,
             <span class="hljs-attr">lineDash</span>: defaultTextCopy.<span class="hljs-property">lineDash</span>,
             <span class="hljs-attr">lineDashOffset</span>: defaultTextCopy.<span class="hljs-property">lineDashOffset</span>,
             <span class="hljs-attr">lineWidth</span>: defaultTextCopy.<span class="hljs-property">lineWidth</span>,
@@ -737,7 +742,7 @@
             <span class="hljs-attr">underlineOffset</span>: defaultTextCopy.<span class="hljs-property">underlineOffset</span>,
             <span class="hljs-attr">underlineStyle</span>: defaultTextCopy.<span class="hljs-property">underlineStyle</span>,
             <span class="hljs-attr">underlineWidth</span>: defaultTextCopy.<span class="hljs-property">underlineWidth</span>,
-            <span class="hljs-attr">wordSpacing</span>: defaultTextCopy.<span class="hljs-property">wordSpaceValue</span>,
+            <span class="hljs-attr">wordSpacing</span>: defaultTextCopy.<span class="hljs-property">wordSpace</span>,
 
             <span class="hljs-attr">filter</span>: stateCopy.<span class="hljs-property">filter</span>,
             <span class="hljs-attr">font</span>: <span class="hljs-literal">null</span>,
@@ -949,7 +954,7 @@
 
                         fn = defaultTextStyleSetters[key];
 
-                        <span class="hljs-keyword">if</span> (fn) fn.<span class="hljs-title function_">call</span>(state, val);
+                        <span class="hljs-keyword">if</span> (fn) fn.<span class="hljs-title function_">call</span>(defaultTextStyle, val);
                         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defaultTextStyleDefs[key] != <span class="hljs-variable constant_">UNDEF</span>) defaultTextStyle[key] = <span class="hljs-title function_">addStrings</span>(defaultTextStyle[key], val);
                     }
                     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">STATE_KEYS</span>.<span class="hljs-title function_">includes</span>(key)) {
@@ -1692,9 +1697,43 @@
 
     P.<span class="hljs-property">checkFontIsLoaded</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">font</span>) {
 
-        <span class="hljs-keyword">if</span> (font == <span class="hljs-literal">null</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span> = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">SYSTEM_FONTS</span>.<span class="hljs-title function_">includes</span>(font)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span> = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">if</span> (font == <span class="hljs-literal">null</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span> = <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
+              <p>else if (SYSTEM_FONTS.includes(font)) this.currentFontIsLoaded = true;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
+              </div>
+              <p>Extract first family after the size token</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> afterSize = font.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/^[^ ]+\s+/</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+            <span class="hljs-keyword">const</span> firstFamily = afterSize.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>)[<span class="hljs-number">0</span>].<span class="hljs-title function_">trim</span>().<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/^[&#x27;&quot;]|[&#x27;&quot;]$/g</span>, <span class="hljs-string">&#x27;&#x27;</span>).<span class="hljs-title function_">toLowerCase</span>();
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">SYSTEM_FONTS</span>.<span class="hljs-title function_">includes</span>(firstFamily)) {
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">return</span>;
+            }
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span> != <span class="hljs-literal">null</span> &amp;&amp; !<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span>) {
 
@@ -1715,11 +1754,11 @@
         </li>
         
         
-        <li id="section-39">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <h4 id="accessibility-functions">Accessibility functions</h4>
 <p><code>getCanvasTextHold</code> - get a handle for the &lt;canvas&gt; element’s child text hold &lt;div&gt;</p>
@@ -1733,11 +1772,11 @@
         </li>
         
         
-        <li id="section-40">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>For non-based Cells we have to make a recursive call to find the &lt;canvas&gt; host</p>
 
@@ -1796,9 +1835,25 @@
                 <span class="hljs-keyword">if</span> (hold) hold.<span class="hljs-property">dirtyTextTabOrder</span> = <span class="hljs-literal">true</span>;
             }
         }
-    };
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
+              </div>
+              <p><code>getAccessibleText</code> - Note that only one placeholder character is supported in any accessibleText string</p>
+<ul>
+<li>Text should never be unnecessarily repeated to the reader/listener</li>
+</ul>
 
-    P.<span class="hljs-property">getAccessibleText</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getAccessibleText</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         <span class="hljs-keyword">const</span> {accessibleText, accessibleTextPlaceholder, text} = <span class="hljs-variable language_">this</span>;
         <span class="hljs-keyword">return</span> accessibleText.<span class="hljs-title function_">replace</span>(accessibleTextPlaceholder, text);

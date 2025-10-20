@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1142,7 +1147,12 @@
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`
     (Low color: <span class="hljs-subst">${dom.lowColor.value}</span>, High color: <span class="hljs-subst">${dom.highColor.value}</span>)
+
+    Feather (overides channels): <span class="hljs-subst">${dom.feather.value}</span>
+        Feather channels - red: <span class="hljs-subst">${dom.featherRed.value}</span>, green: <span class="hljs-subst">${dom.featherGreen.value}</span>, blue: <span class="hljs-subst">${dom.featherBlue.value}</span>
+
     Range: [<span class="hljs-subst">${myFilter.ranges}</span>] → [<span class="hljs-subst">${myFilter.actions[<span class="hljs-number">0</span>].ranges}</span>]
+
     Opacity: <span class="hljs-subst">${dom.opacity.value}</span>`</span>;
 });</pre></div></div>
             
@@ -1184,6 +1194,10 @@
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;lowColor&#x27;</span>, <span class="hljs-string">&#x27;#000000&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;highColor&#x27;</span>, <span class="hljs-string">&#x27;#5c7f5c&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;feather&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;featherRed&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;featherGreen&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;featherBlue&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
 ]);</pre></div></div>
             
         </li>
@@ -1211,12 +1225,30 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>Handle opacity input</p>
+              <p>Setup form observer functionality</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">handleOpacity</span> = (<span class="hljs-params"></span>) =&gt; myFilter.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">opacity</span>: <span class="hljs-built_in">parseFloat</span>(dom.<span class="hljs-property">opacity</span>.<span class="hljs-property">value</span>) });
-scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], handleOpacity, <span class="hljs-string">&#x27;#opacity&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeUpdater</span>({
+
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
+    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
+
+    <span class="hljs-attr">target</span>: myFilter,
+
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updates</span>: {
+
+        <span class="hljs-attr">feather</span>: [<span class="hljs-string">&#x27;feather&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">featherRed</span>: [<span class="hljs-string">&#x27;featherRed&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">featherGreen</span>: [<span class="hljs-string">&#x27;featherGreen&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">featherBlue</span>: [<span class="hljs-string">&#x27;featherBlue&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+
+        <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+    },
+});</pre></div></div>
             
         </li>
         

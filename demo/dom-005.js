@@ -58,8 +58,6 @@ const makeStars = function (buildNumber) {
             noFilters: true,
             noPathUpdates: true,
 
-            purge: 'all',
-
             css: {
                 backgroundColor: 'white',
                 borderRadius: '50%'

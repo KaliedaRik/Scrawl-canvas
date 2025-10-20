@@ -61,8 +61,8 @@ scrawl.makeBlock({
 scrawl.makeStar({
 
     name: name('star'),
-    radius1: 18,
-    radius2: 12,
+    radius1: 6,
+    radius2: 18,
     points: 5,
 
 /** @ts-expect-error */
@@ -145,6 +145,7 @@ const myEmitter = scrawl.makeEmitter({
     rangeFromZ: -0.2,
 
     // Define the stampAction function
+    stampFirst: 'newest',
     stampAction: function (artefact, particle, host) {
 
         // We will use the (semi-)random `fill` color assigned to the particle when it was generated
@@ -156,7 +157,7 @@ const myEmitter = scrawl.makeEmitter({
         const {strokeStyle, globalAlpha} = myWorld;
 
         // We will display each particle on the canvas using the entity currently assigned to our emitter's `artefact` attribute
-        history.forEach(p => {
+        history.toReversed().forEach(p => {
 
             // Entitys use Scrawl-canvas Coordinate arrays for their positioning data; we can set the `start` Coordinate using a normal Array containing `[x, y]` data - which we can easily extract from the particle's history arrays like so:
             [remaining, z, ...start] = p;
@@ -247,6 +248,7 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'opacity', '0.2'],
     ['input', 'generationRate', '10'],
     ['select', 'artefact', 0],
+    ['select', 'artefact', 0],
 ]);
 
 
@@ -259,6 +261,7 @@ scrawl.addNativeListener('touchmove', (e) => {
 }, canvas.domElement);
 
 // Setting (restricting) the range of colors assigned to particles when they are generated.
+/** @ts-expect-error */
 const colorFactory = myEmitter.fillColorFactory;
 
 const setLowColor = function (e) {
@@ -322,6 +325,7 @@ scrawl.makeUpdater({
         historyLength: ['historyLength', 'int'],
         kill_radius: ['killRadius', 'int'],
         kill_radius_variation: ['killRadiusVariation', 'int'],
+        stampFirst: ['stampFirst', 'raw'],
     },
 });
 

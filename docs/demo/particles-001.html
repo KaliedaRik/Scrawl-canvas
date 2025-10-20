@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1168,8 +1173,7 @@
             <div class="content"><div class='highlight'><pre>        {
             <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;alphaDecay&#x27;</span>,
             <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">6</span>,
-        },
-    ],</pre></div></div>
+        },</pre></div></div>
             
         </li>
         
@@ -1179,6 +1183,30 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>We will store a user-updatable Boolean value - <code>processInReverse</code> - which we will use in the <code>stampAction</code> function to tweak the particle effect that we are trying to achieve</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        {
+            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;processInReverse&#x27;</span>,
+            <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Updating processInReverse to <span class="hljs-subst">${item === <span class="hljs-string">&#x27;yes&#x27;</span> ? <span class="hljs-string">&#x27;true&#x27;</span> : <span class="hljs-string">&#x27;false&#x27;</span>}</span>`</span>);
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">processInReverse</span> = item === <span class="hljs-string">&#x27;yes&#x27;</span> ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+            },
+        },
+    ],</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Overwrite our user-defined attributes’ default values with new data, for testing.</p>
 
@@ -1192,11 +1220,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Test the World object’s user-defined attributes</p>
 
@@ -1213,11 +1241,11 @@ myWorld.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Define an Emitter entity</p>
 
@@ -1230,11 +1258,11 @@ myWorld.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Every emitter <strong>must</strong> be associated with a World object. The attribute’s value can be the World object’s String name value, or the object itself</p>
 
@@ -1245,11 +1273,11 @@ myWorld.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>The Emitter is a normal Scrawl-canvas entity. It can be positioned absolutely/relatively - as here, by setting the <code>start</code> (<code>startX</code>, <code>startY</code>) coordinates. Or it can be positioned by reference to other Scrawl-canvas artefacts using the <code>pivot</code>, <code>mimic</code>, <code>path</code>, <code>mouse</code> and/or Net <code>particle</code> functionality.</p>
 
@@ -1260,11 +1288,11 @@ myWorld.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Emitter entitys use <em><strong>ephemeral particles</strong></em> to produce their visual effects, generating a steady stream of particles over time and then killing them off in various ways. The <code>generationRate</code> attribute <em>sets the number of particles that the Emitter will generate every second</em>.</p>
 
@@ -1275,11 +1303,11 @@ myWorld.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>A common way to kill off generated particles is to give them a lifetime limit (measured in seconds). We can set that value using the <code>killAfterTime</code> attribute. We can also add in a measure of variability using the <code>killAfterTimeVariation</code> attribute.</p>
 <ul>
@@ -1294,26 +1322,26 @@ myWorld.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>For every Display cycle tick (which in optimal conditions will be around 17 milliseconds after the previous tick), a particle will update its position and record the new position using a ParticleHistory array. This data is then added to the entity’s <code>history</code> array. We can limit the number of ParticleHistory arrays stored in the history array by setting the <code>historyLength</code> attribute to a suitable integer Number value.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">historyLength</span>: <span class="hljs-number">100</span>,</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>For every Display cycle tick (which in optimal conditions will be around 17 milliseconds after the previous tick), a particle will update its position and record the new position using a ParticleHistory array. This data is then added to the entity’s <code>history</code> array. We can limit the number of ParticleHistory arrays stored in the history array by setting the <code>historyLength</code> attribute to a suitable integer Number value.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">historyLength</span>: <span class="hljs-number">20</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>The key functionality of a particle is that it moves.</p>
 <ul>
@@ -1339,36 +1367,18 @@ myWorld.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p>We can assign a range of colors to our particle - we’ll start the demo with the minimum and maximum fillStyle colors set to the same color</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fillMinimumColor</span>: <span class="hljs-string">&#x27;#f0f8ff&#x27;</span>,
-    <span class="hljs-attr">fillMaximumColor</span>: <span class="hljs-string">&#x27;#f0f8ff&#x27;</span>,</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <p>The <code>stampAction</code> function describes the steps that our Emitter will take to draw each of its particles onto the host canvas screen.</p>
-<ul>
-<li>In this instance, we have not supplied the Emitter with an <code>artefact</code>; instead we will draw directly on the host object’s &lt;canvas&gt; element.</li>
-</ul>
+              <p>We can assign a range of colors to our particle - we’ll start the demo with the minimum and maximum fillStyle colors set to the same color</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fillMinimumColor</span>: <span class="hljs-string">&#x27;#ffff00&#x27;</span>,
+    <span class="hljs-attr">fillMaximumColor</span>: <span class="hljs-string">&#x27;#ff0000&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1379,6 +1389,25 @@ myWorld.<span class="hljs-title function_">set</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
+              <p>The <code>stampAction</code> function describes the steps that our Emitter will take to draw each of its particles onto the host canvas screen.</p>
+<ul>
+<li>In this instance, we have not supplied the Emitter with an <code>artefact</code>; instead we will draw directly on the host object’s &lt;canvas&gt; element.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stampFirst</span>: <span class="hljs-string">&#x27;oldest&#x27;</span>,
+    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
               <p>We obtain the <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">canvas element’s 2D rendering context</a> - which we will call the <em><strong>engine</strong></em> - from the function’s <code>host</code> argument.</p>
 
             </div>
@@ -1388,6 +1417,8 @@ myWorld.<span class="hljs-title function_">set</span>({
             len = history.<span class="hljs-property">length</span>,
 <span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
             alphaDecay = myWorld.<span class="hljs-property">alphaDecay</span>,
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+            processInReverse = myWorld.<span class="hljs-property">processInReverse</span>,
             endRad = <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">2</span>;
 
         <span class="hljs-keyword">let</span> remaining, radius, alpha,
@@ -1399,11 +1430,11 @@ myWorld.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Start by saving the engine’s current state.</p>
 
@@ -1411,21 +1442,7 @@ myWorld.<span class="hljs-title function_">set</span>({
             
             <div class="content"><div class='highlight'><pre>        engine.<span class="hljs-title function_">save</span>();
 
-        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
-              </div>
-              <p>// We are using the same color for all of the Emitter’s particles, which we’ve stored in a user-defined attribute in the World obvject.
-engine.fillStyle = myWorld.get(‘particleColor’);</p>
-
-            </div>
+        engine.<span class="hljs-title function_">resetTransform</span>();</pre></div></div>
             
         </li>
         
@@ -1436,11 +1453,10 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <p>We are going to display all of the particle’s most recent tick positions, as saved in their <code>history</code> array</p>
+              <p>// We are using the same color for all of the Emitter’s particles, which we’ve stored in a user-defined attribute in the World obvject.
+engine.fillStyle = myWorld.get(‘particleColor’);</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>        history.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -1450,6 +1466,22 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
               
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p>We are going to display all of the particle’s most recent tick positions, as saved in their <code>history</code> array</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> hParticles = processInReverse ? history.<span class="hljs-title function_">toReversed</span>() : history;
+        hParticles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>Every ParticleHistory Array stores its data in the following manner:</p>
 <pre><code>[
@@ -1467,11 +1499,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>We can change the size of the particle circle, based on its given z direction value - the more distant it is from us, the smaller its radius should be.</p>
 
@@ -1482,11 +1514,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>As the particle ages, we want it to appear to be more transparent - note that the <em>remaining</em> value represents time remaining before the particle dies, not how long the particle has been alive.</p>
 
@@ -1497,32 +1529,17 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
         </li>
         
         
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
-              </div>
-              <p>Another ageing mecahnism can be constructed using the index value vs the history array’s length.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            colorRange = index / len;</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
-              <p>Only draw this historical instance of the particle if it will be visible</p>
+              <p>Another ageing mecahnism can be constructed using the index value vs the history array’s length.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (radius &gt; <span class="hljs-number">0</span> &amp;&amp; alpha &gt; <span class="hljs-number">0</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            colorRange = processInReverse ? <span class="hljs-number">1</span> - (index / len) : index / len;</pre></div></div>
             
         </li>
         
@@ -1533,11 +1550,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
-              <p>Start a new path</p>
+              <p>Only draw this historical instance of the particle if it will be visible</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                engine.<span class="hljs-title function_">beginPath</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (radius &gt; <span class="hljs-number">0</span> &amp;&amp; alpha &gt; <span class="hljs-number">0</span>) {</pre></div></div>
             
         </li>
         
@@ -1548,11 +1565,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
-              <p>Move the path to the correct position</p>
+              <p>Start a new path</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                engine.<span class="hljs-title function_">moveTo</span>(x, y);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                engine.<span class="hljs-title function_">beginPath</span>();</pre></div></div>
             
         </li>
         
@@ -1563,11 +1580,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
-              <p>Define the circle to be drawn at those coordinates</p>
+              <p>Move the path to the correct position</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                engine.<span class="hljs-title function_">arc</span>(x, y, radius, <span class="hljs-number">0</span>, endRad);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                engine.<span class="hljs-title function_">moveTo</span>(x, y);</pre></div></div>
             
         </li>
         
@@ -1578,11 +1595,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
-              <p>Set the engine’s globalAlpha attribute</p>
+              <p>Define the circle to be drawn at those coordinates</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                engine.<span class="hljs-property">globalAlpha</span> = alpha;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                engine.<span class="hljs-title function_">arc</span>(x, y, radius, <span class="hljs-number">0</span>, endRad);</pre></div></div>
             
         </li>
         
@@ -1592,6 +1609,21 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
               
               <div class="sswrap ">
                 <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
+              <p>Set the engine’s globalAlpha attribute</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                engine.<span class="hljs-property">globalAlpha</span> = alpha;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Set the engine’s fillStyle attribute - we’re using a range color here</p>
 <ul>
@@ -1608,11 +1640,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Perform the fill for this particle</p>
 
@@ -1625,11 +1657,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>Restore the engine’s state.</p>
 
@@ -1642,11 +1674,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1660,11 +1692,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>ParticleHistory arrays are not saved in the Scrawl-canvas library; instead we need to count them in each particle</p>
 
@@ -1701,11 +1733,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>We want the Emitter to attach itself to the mouse cursor whenever it is active over the &lt;canvas&gt; element</p>
 
@@ -1721,11 +1753,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1742,11 +1774,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 
@@ -1754,8 +1786,8 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dom = scrawl.<span class="hljs-title function_">initializeDomInputs</span>([
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;world_speed&#x27;</span>, <span class="hljs-string">&#x27;2&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;maxcolor_controller&#x27;</span>, <span class="hljs-string">&#x27;#f0f8ff&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;mincolor_controller&#x27;</span>, <span class="hljs-string">&#x27;#f0f8ff&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;maxcolor_controller&#x27;</span>, <span class="hljs-string">&#x27;#ff0000&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;mincolor_controller&#x27;</span>, <span class="hljs-string">&#x27;#ffff00&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;color_alpha&#x27;</span>, <span class="hljs-string">&#x27;6&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;background&#x27;</span>, <span class="hljs-string">&#x27;#000000&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;range_x&#x27;</span>, <span class="hljs-string">&#x27;40&#x27;</span>],
@@ -1764,21 +1796,23 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;rangefrom_y&#x27;</span>, <span class="hljs-string">&#x27;-20&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;range_z&#x27;</span>, <span class="hljs-string">&#x27;-1&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;rangefrom_z&#x27;</span>, <span class="hljs-string">&#x27;-0.2&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;historyLength&#x27;</span>, <span class="hljs-string">&#x27;100&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;historyLength&#x27;</span>, <span class="hljs-string">&#x27;20&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;killAfterTime&#x27;</span>, <span class="hljs-string">&#x27;5&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;killAfterTimeVariation&#x27;</span>, <span class="hljs-string">&#x27;0.1&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;generationRate&#x27;</span>, <span class="hljs-string">&#x27;60&#x27;</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;gravity&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;stampFirst&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;processInReverse&#x27;</span>, <span class="hljs-number">0</span>],
 ]);</pre></div></div>
             
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>For this demo we will suppress touchmove functionality over the canvas</p>
 
@@ -1794,11 +1828,11 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p>Setup form observer functionality</p>
 
@@ -1818,6 +1852,7 @@ engine.fillStyle = myWorld.get(‘particleColor’);</p>
 
         <span class="hljs-attr">world_speed</span>: [<span class="hljs-string">&#x27;tickMultiplier&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
         <span class="hljs-attr">color_alpha</span>: [<span class="hljs-string">&#x27;alphaDecay&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+        <span class="hljs-attr">processInReverse</span>: [<span class="hljs-string">&#x27;processInReverse&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
     },
 });
 
@@ -1844,6 +1879,7 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         <span class="hljs-attr">rangefrom_y</span>: [<span class="hljs-string">&#x27;rangeFromY&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
         <span class="hljs-attr">range_z</span>: [<span class="hljs-string">&#x27;rangeZ&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
         <span class="hljs-attr">rangefrom_z</span>: [<span class="hljs-string">&#x27;rangeFromZ&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+        <span class="hljs-attr">stampFirst</span>: [<span class="hljs-string">&#x27;stampFirst&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
     },
 });
 
@@ -1873,11 +1909,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

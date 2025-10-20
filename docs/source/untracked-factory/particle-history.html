@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -575,20 +580,6 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="particlehistory-factory">ParticleHistory factory</h1>
-<p>The Scrawl-canvas particle physics engine is a simple system designed to allow developers a way to add particle-based effects to their canvas animation scenes. The physics engine is built on top of the following components:</p>
-<ul>
-<li><a href="../factory/particle.html">Particle objects</a>, which represent a 3-dimensional coordinate - based on a Scrawl-canvas <a href="./vector.html">Vector object</a> - and include a history of recent positions which we can use to determine how to display that particle on screen.</li>
-<li><a href="./particleHistory.html">History arrays</a> which can be pooled (reused) to cut down on Array creation and distruction during the animation.</li>
-<li><a href="../factory/particleForce.html">Force objects</a> which define the general and occasional forces to be applied to each particle in the system as the animation progresses - a <strong>gravity</strong> force object is pre-defined by Scrawl-canvas.</li>
-<li><a href="../factory/particleSpring.html">Spring objects</a> used to define a constraint (connection) between two particles in a system.</li>
-<li><a href="../factory/particleWorld.html">World objects</a> where we can store attributes and values used by various objects; these attributes can be set up so that they will be inherited by clones of the World object. We can also influence the speed of the physics animation here.</li>
-</ul>
-<p>We do not have to handle particle generation and manipulation ourselves. Instead, Scrawl-canvas gives us three dedicated <strong>entitys</strong> which we use to add particle animation effects to the canvas scene. These entitys are:</p>
-<ul>
-<li><a href="../factory/tracer.html">Tracer</a> - this entity generates a single non-recycled (in other words: long lasting) particle with a history, which we can use to display trace effects in the animation.</li>
-<li><a href="../factory/emitter.html">Emitter</a> - an entity which generates a stream of short-lived, recycled particles, each with its own history. Emitters are highly versatile entitys which can generate a wide range of effects.</li>
-<li><a href="../factory/net.html">Net</a> - a (generally) larger entity which uses both forces and springs to manage the animation of its non-recycled particles. Note that other artefacts can use Net particles as a reference for their own positioning.</li>
-</ul>
 <p><strong>ParticleHistory</strong> objects are Arrays in which Scrawl-canvas records history data for a given particle at a specified time. The array holds data in the following format:</p>
 <pre><code>[
     <span class="hljs-title class_">Number</span>:particle-life-time-remaining,
@@ -597,7 +588,7 @@
     <span class="hljs-title class_">Number</span>:particle-y-position
 ]
 </code></pre>
-<p>Because of the number of ParticleHistory arrays that can be generated and discarded in even a simple particle physics animation, Scrawl-canvas includes functionality to pool and reuse ParticleHistory arrays. The exported functions <code>requestParticleHistoryObject</code> and <code>releaseParticleHistoryObject</code> give us access to the pool mechanism.</p>
+<p>Because of the number of ParticleHistory arrays that can be generated and discarded in even a simple particle physics animation, Scrawl-canvas includes functionality to pool and reuse ParticleHistory arrays. The exported functions <code>requestParticleHistory</code> and <code>releaseParticleHistory</code> give us access to the pool mechanism.</p>
 
             </div>
             
@@ -774,7 +765,7 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
 
     <span class="hljs-keyword">if</span> (!particleHistoryPool.<span class="hljs-property">length</span>) particleHistoryPool.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ParticleHistory</span>());
 
-    <span class="hljs-keyword">return</span> particleHistoryPool.<span class="hljs-title function_">shift</span>();
+    <span class="hljs-keyword">return</span> particleHistoryPool.<span class="hljs-title function_">pop</span>();
 };</pre></div></div>
             
         </li>
@@ -812,7 +803,7 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (particleHistoryPool.<span class="hljs-property">length</span> &gt; <span class="hljs-number">100</span>) particleHistoryPool.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (particleHistoryPool.<span class="hljs-property">length</span> &gt; <span class="hljs-number">200</span>) particleHistoryPool.<span class="hljs-property">length</span> -= <span class="hljs-number">100</span>;
         }
     });
 };

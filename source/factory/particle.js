@@ -93,7 +93,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 // #### Packet management
 P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, ['^(local|dirty|current)']);
-P.packetObjects = pushUnique(P.packetObjects, ['position', 'velocity', 'acceleration']);
+P.packetObjects = pushUnique(P.packetObjects, ['position', 'velocity', 'load']);
 
 
 // #### Clone management
@@ -226,7 +226,7 @@ P.applyForces = function (world, host) {
 
         this.forces.forEach(key => {
 
-            f = force[key];
+            f = (key && key.type === 'Force') ? key : force[key];
 
             if (f && f.action) f.action(this, world, host);
         });
@@ -379,7 +379,21 @@ export const requestParticle = function (items) {
 
     if (!particlePool.length) particlePool.push(new Particle());
 
-    const v = particlePool.shift();
+    const v = particlePool.pop();
+
+    v.isRunning = false;
+    v.hasLifetime = false;
+    v.distanceLimit = 0;
+    v.killBeyondCanvas = false;
+    v.isBeingDragged = false;
+    v.dragOffset = null;
+
+    v.position.zero();
+    v.velocity.zero();
+    v.load.zero();
+    v.initialPosition.zero();
+    v.history.length = 0;
+    v.forces.length = 0;
 
     v.set(items);
 

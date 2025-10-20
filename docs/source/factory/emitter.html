@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -639,7 +644,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">T_EMITTER</span> = <span class="hljs-string">&#x27;Emitter&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">T_EMITTER</span> = <span class="hljs-string">&#x27;Emitter&#x27;</span>,
+    <span class="hljs-variable constant_">NEWEST</span> = <span class="hljs-string">&#x27;newest&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -759,8 +765,6 @@
     <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">group</span>) items.<span class="hljs-property">group</span> = currentGroup;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">purge</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">purgeArtefact</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">purge</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -1106,9 +1110,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
-              <h5 id="not-defined-in-the-defs-object-but-set-up-in-the-constructor-and-setters">Not defined in the defs object, but set up in the constructor and setters</h5>
+              <p><strong>stampFirst</strong> - The order in which particles get stamped during each iteration of the Display cycle. Takes a string argument, the values of which can be: <code>oldest</code> (default), <code>newest</code>.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stampFirst</span>: <span class="hljs-string">&#x27;oldest&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1119,7 +1125,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
-              <p><strong>particleStore</strong> - an Array where all the Emitter’s current particles will be stored. To render the entity, we need to iterate through these particles and use them to repeatedly stamp the Emitter’s artefact - or perform equivalent &lt;canvas&gt; context engine instructions - onto the host Cell. These actions will be defined in the <code>stampAction</code> function.</p>
+              <h5 id="not-defined-in-the-defs-object-but-set-up-in-the-constructor-and-setters">Not defined in the defs object, but set up in the constructor and setters</h5>
 
             </div>
             
@@ -1132,11 +1138,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
-              <p>The user-defined stamp functions <strong>preAction</strong>, <strong>stampAction</strong> and <strong>postAction</strong> are invoked in turn one each tick of the Display cycle. By default these functions do nothing, meaning nothing gets drawn to the canvas</p>
-<ul>
-<li><code>preAction</code> and <code>postAction</code> - these functions receive a single argument, a Cell wrapper on which we can draw additional graphics (if needed) - see Demo <a href="../../demo/particles-006.html">Particles 006</a> for a working example</li>
-<li><code>stampAction</code> - define all major rendering actions in this function. The function receives the following arguments: <code>(artefact, particle, host)</code> - where <code>artefact</code> is the Emitter entity’s artefact object (if any has been defined/set); <code>particle</code> is the current Particle object whose history needs to be rendered onto the canvas; and <code>host</code> is the Cell wrapper on which we will draw our graphics</li>
-</ul>
+              <p><strong>particleStore</strong> - an Array where all the Emitter’s current particles will be stored. To render the entity, we need to iterate through these particles and use them to repeatedly stamp the Emitter’s artefact - or perform equivalent &lt;canvas&gt; context engine instructions - onto the host Cell. These actions will be defined in the <code>stampAction</code> function.</p>
 
             </div>
             
@@ -1149,6 +1151,23 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
+              <p>The user-defined stamp functions <strong>preAction</strong>, <strong>stampAction</strong> and <strong>postAction</strong> are invoked in turn one each tick of the Display cycle. By default these functions do nothing, meaning nothing gets drawn to the canvas</p>
+<ul>
+<li><code>preAction</code> and <code>postAction</code> - these functions receive a single argument, a Cell wrapper on which we can draw additional graphics (if needed) - see Demo <a href="../../demo/particles-006.html">Particles 006</a> for a working example</li>
+<li><code>stampAction</code> - define all major rendering actions in this function. The function receives the following arguments: <code>(artefact, particle, host)</code> - where <code>artefact</code> is the Emitter entity’s artefact object (if any has been defined/set); <code>particle</code> is the current Particle object whose history needs to be rendered onto the canvas; and <code>host</code> is the Cell wrapper on which we will draw our graphics</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
               <p><strong>fillColorFactory</strong> and <strong>strokeColorFactory</strong> - Color objects - there will never be a need to define these attributes as this is done as part of the factory’s object build functionality. Used to generate fill and stroke colors for each newly generated particle</p>
 
             </div>
@@ -1160,11 +1179,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -1198,11 +1217,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 
@@ -1216,11 +1235,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -1245,11 +1264,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1329,11 +1348,11 @@ S.<span class="hljs-property">artefact</span> = <span class="hljs-keyword">funct
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>To generate along a path, or in an area, we set the <code>generateAlongPath</code> or <code>generateInArea</code> attributes to the (path-based) artefact we shall be using for the template. This can be the artefact’s String name, or the artefact object itself</p>
 
@@ -1368,11 +1387,11 @@ S.<span class="hljs-property">generateInArea</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>Color management - we can set these attributes (<code>fillColor fillMinimumColor fillMaximumColor, strokeColor strokeMinimumColor strokeMaximumColor</code>) on the Emitter object - the setter functions pass the color value onto the appropriate color factory for processing and update</p>
 
@@ -1448,11 +1467,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1461,11 +1480,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>prepareStamp</code> - internal - overwrites the entity mixin function</p>
 
@@ -1507,11 +1526,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>Functionality specific to Emitter entitys</p>
 
@@ -1526,13 +1545,13 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
-              <p>Create thew generator choke, if necessary</p>
+              <p>Create the generator choke, if necessary</p>
 
             </div>
             
@@ -1544,11 +1563,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>Check through particles, removing all particles that have completed their lives</p>
 
@@ -1570,11 +1589,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p>Determine how many new particles need to be generated</p>
 
@@ -1585,11 +1604,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p>Need to prevent generation of new particles if the elapsed time is due to the user focussing on another tab in the browser before returning to the tab running this Scrawl-canvas animation</p>
 
@@ -1620,11 +1639,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>We only update the choke value after particles have been generated</p>
 <ul>
@@ -1640,11 +1659,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>prepareStampTabsHelper</code> is defined in the <code>mixin/hidden-dom-elements.js</code> file - handles updates to anchor and button objects</p>
 
@@ -1656,11 +1675,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><code>addParticles</code> - internal function called by <code>prepareStamp</code> … if you are not a fan of overly-complex functions, look away now.</p>
 <p>We can add particles to an emitter in a number of different ways, determined by the setting of two flag attributes on the emitter. The flags are actioned in the following order:</p>
@@ -1684,11 +1703,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>internal helper functions, used when creating the particle</p>
 
@@ -1698,14 +1717,52 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         <span class="hljs-keyword">return</span> <span class="hljs-title function_">correctForZero</span>(item + ((<span class="hljs-title function_">_random</span>() * itemVar * <span class="hljs-number">2</span>) - itemVar));
     };
 
-    <span class="hljs-keyword">const</span> velocityCalc = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, itemVar, min</span>) {
+    <span class="hljs-keyword">const</span> velocityCalc = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, itemVar, min</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-52">&#x00a7;</a>
+              </div>
+              <p>Fast path</p>
 
-        <span class="hljs-keyword">let</span> val = <span class="hljs-title function_">correctForZero</span>(item + (<span class="hljs-title function_">_random</span>() * itemVar));
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (min &lt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-title function_">correctForZero</span>(item + (<span class="hljs-title function_">_random</span>() * itemVar));
 
-        <span class="hljs-keyword">while</span> (<span class="hljs-title function_">_abs</span>(val) &lt; min) {
+        <span class="hljs-keyword">let</span> val = <span class="hljs-number">0</span>,
+            attempts = <span class="hljs-number">0</span>,
+            sign;
+
+        <span class="hljs-keyword">do</span> {
 
             val = <span class="hljs-title function_">correctForZero</span>(item + (<span class="hljs-title function_">_random</span>() * itemVar));
-        }
+
+            attempts += <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-53">&#x00a7;</a>
+              </div>
+              <p>Fallback: guarantee at least |min|, randomize sign</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (attempts &gt; <span class="hljs-number">20</span>) {
+
+                sign = <span class="hljs-title function_">_random</span>() &lt; <span class="hljs-number">0.5</span> ? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>;
+                <span class="hljs-keyword">return</span> sign * min;
+            }
+        } <span class="hljs-keyword">while</span> (<span class="hljs-title function_">_abs</span>(val) &lt; min);
 
         <span class="hljs-keyword">return</span> val;
     };
@@ -1717,11 +1774,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-51">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>The emitter object retains details of the initial values required for eachg particle it generates</p>
 
@@ -1735,11 +1792,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-52">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p>Use an artefact’s current area location to determine where the particle will be generated</p>
 
@@ -1796,9 +1853,22 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
 
                     historyLength,
                     engine,
-                    forces,
+                    forces,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-56">&#x00a7;</a>
+              </div>
+              <p>mass: calc(mass, massVariation),</p>
 
-                    <span class="hljs-attr">mass</span>: <span class="hljs-title function_">calc</span>(mass, massVariation),
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-attr">mass</span>: <span class="hljs-title function_">_abs</span>(<span class="hljs-title function_">calc</span>(mass, massVariation)) || <span class="hljs-number">1e-6</span>,
 
                     <span class="hljs-attr">fill</span>: fillColorFactory.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title function_">_random</span>()),
                     <span class="hljs-attr">stroke</span>: strokeColorFactory.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title function_">_random</span>()),
@@ -1819,11 +1889,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-53">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>Use an Shape-based entity’s path to determine where the particle will be generated</p>
 
@@ -1884,11 +1954,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-54">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p>TODO: documentation</p>
 
@@ -1972,11 +2042,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-55">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p>TODO: documentation</p>
 
@@ -2051,11 +2121,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-56">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p>Generate the particle using the emitter’s start coordinate, or a reference artifact’s coordinate</p>
 
@@ -2103,11 +2173,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-57">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - overwriters the functionality defined in the entity.js mixin</p>
 
@@ -2115,7 +2185,7 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">regularStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">const</span> {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition, stampFirst} = <span class="hljs-variable language_">this</span>;
 
     <span class="hljs-keyword">const</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
 
@@ -2128,11 +2198,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-58">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter’s animation.</p>
 
@@ -2151,11 +2221,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-59">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>Perform canvas drawing before the main (developer-defined) <code>stampAction</code> function</p>
 
@@ -2163,20 +2233,31 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
             
             <div class="content"><div class='highlight'><pre>    preAction.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, host);
 
-    particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">NEWEST</span> === stampFirst) {
 
-        p.<span class="hljs-title function_">manageHistory</span>(deltaTime, host);
-        stampAction.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, artefact, p, host);
-    });</pre></div></div>
+        particleStore.<span class="hljs-title function_">toReversed</span>().<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
+
+            p.<span class="hljs-title function_">manageHistory</span>(deltaTime, host);
+            stampAction.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, artefact, p, host);
+        });
+    }
+    <span class="hljs-keyword">else</span> {
+
+        particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
+
+            p.<span class="hljs-title function_">manageHistory</span>(deltaTime, host);
+            stampAction.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, artefact, p, host);
+        });
+    }</pre></div></div>
             
         </li>
         
         
-        <li id="section-60">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p>Perform further canvas drawing after the main (developer-defined) <code>stampAction</code> function</p>
 
@@ -2192,7 +2273,7 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-number">1</span>;
         engine.<span class="hljs-property">strokeStyle</span> = hitRadiusColor;
 
-        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        engine.<span class="hljs-title function_">resetTransform</span>();
         engine.<span class="hljs-title function_">beginPath</span>();
         engine.<span class="hljs-title function_">arc</span>(currentStampPosition[<span class="hljs-number">0</span>], currentStampPosition[<span class="hljs-number">1</span>], hitRadius, <span class="hljs-number">0</span>, _piDouble);
         engine.<span class="hljs-title function_">stroke</span>();
@@ -2206,11 +2287,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-61">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>checkHit</code> - overwrites the function defined in mixin/position.js</p>
 <ul>
@@ -2264,11 +2345,11 @@ D.<span class="hljs-property">height</span> = D.<span class="hljs-property">widt
         </li>
         
         
-        <li id="section-62">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({

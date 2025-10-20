@@ -26,7 +26,8 @@ import entityMix from '../mixin/entity.js';
 import { _abs, _floor, _isArray, _isFinite, _now, _piDouble, _random, _tick, BLACK, ENTITY, EULER, MOUSE, PARTICLE, T_WORLD } from '../helper/shared-vars.js';
 
 // Local constants
-const T_EMITTER = 'Emitter';
+const T_EMITTER = 'Emitter',
+    NEWEST = 'newest';
 
 
 // #### Emitter constructor
@@ -75,8 +76,6 @@ const Emitter = function (items = Ωempty) {
     if (!items.group) items.group = currentGroup;
 
     this.set(items);
-
-    if (this.purge) this.purgeArtefact(this.purge);
 
     return this;
 };
@@ -172,6 +171,9 @@ const defaultAttributes = {
 
     // __resetAfterBlur__ - positive float Number (measuring seconds) - physics simulations can be brittle, particularly if they are forced to calculate Particle loads (accelerations), velocities and speeds over a large time step. Rather than manage that time step in cases where the user may neglect or navigate away from the browser tab containing the physics animation, Scrawl-canvas will stop, clear, and recreate the scene if the time it takes the user to return to (re-focus on) the web page is greater than the value set in this attribute.
     resetAfterBlur: 3,
+
+    // __stampFirst__ - The order in which particles get stamped during each iteration of the Display cycle. Takes a string argument, the values of which can be: `oldest` (default), `newest`.
+    stampFirst: 'oldest',
 
     // ##### Not defined in the defs object, but set up in the constructor and setters
 
@@ -448,7 +450,7 @@ P.prepareStamp = function () {
 
     let generatorChoke = this.generatorChoke;
 
-    // Create thew generator choke, if necessary
+    // Create the generator choke, if necessary
     if (!generatorChoke) {
 
         this.generatorChoke = generatorChoke = now;
@@ -525,12 +527,26 @@ P.addParticles = function (req) {
 
     const velocityCalc = function (item, itemVar, min) {
 
-        let val = correctForZero(item + (_random() * itemVar));
+        // Fast path
+        if (min <= 0) return correctForZero(item + (_random() * itemVar));
 
-        while (_abs(val) < min) {
+        let val = 0,
+            attempts = 0,
+            sign;
+
+        do {
 
             val = correctForZero(item + (_random() * itemVar));
-        }
+
+            attempts += 1;
+
+            // Fallback: guarantee at least |min|, randomize sign
+            if (attempts > 20) {
+
+                sign = _random() < 0.5 ? -1 : 1;
+                return sign * min;
+            }
+        } while (_abs(val) < min);
 
         return val;
     };
@@ -599,7 +615,8 @@ P.addParticles = function (req) {
                     engine,
                     forces,
 
-                    mass: calc(mass, massVariation),
+                    // mass: calc(mass, massVariation),
+                    mass: _abs(calc(mass, massVariation)) || 1e-6,
 
                     fill: fillColorFactory.getRangeColor(_random()),
                     stroke: strokeColorFactory.getRangeColor(_random()),
@@ -852,7 +869,7 @@ P.addParticles = function (req) {
 // `regularStamp` - overwriters the functionality defined in the entity.js mixin
 P.regularStamp = function () {
 
-    const {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
+    const {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition, stampFirst} = this;
 
     const host = this.currentHost;
 
@@ -877,11 +894,22 @@ P.regularStamp = function () {
     // Perform canvas drawing before the main (developer-defined) `stampAction` function
     preAction.call(this, host);
 
-    particleStore.forEach(p => {
+    if (NEWEST === stampFirst) {
 
-        p.manageHistory(deltaTime, host);
-        stampAction.call(this, artefact, p, host);
-    });
+        particleStore.toReversed().forEach(p => {
+
+            p.manageHistory(deltaTime, host);
+            stampAction.call(this, artefact, p, host);
+        });
+    }
+    else {
+
+        particleStore.forEach(p => {
+
+            p.manageHistory(deltaTime, host);
+            stampAction.call(this, artefact, p, host);
+        });
+    }
 
     // Perform further canvas drawing after the main (developer-defined) `stampAction` function
     postAction.call(this, host);
@@ -894,7 +922,7 @@ P.regularStamp = function () {
         engine.lineWidth = 1;
         engine.strokeStyle = hitRadiusColor;
 
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.resetTransform();
         engine.beginPath();
         engine.arc(currentStampPosition[0], currentStampPosition[1], hitRadius, 0, _piDouble);
         engine.stroke();

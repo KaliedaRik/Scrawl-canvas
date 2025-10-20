@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1117,8 +1122,8 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 scrawl.<span class="hljs-title function_">makeStar</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;star&#x27;</span>),
-    <span class="hljs-attr">radius1</span>: <span class="hljs-number">18</span>,
-    <span class="hljs-attr">radius2</span>: <span class="hljs-number">12</span>,
+    <span class="hljs-attr">radius1</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">radius2</span>: <span class="hljs-number">18</span>,
     <span class="hljs-attr">points</span>: <span class="hljs-number">5</span>,
 
 <span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
@@ -1272,7 +1277,8 @@ scrawl.<span class="hljs-title function_">makeLabel</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stampFirst</span>: <span class="hljs-string">&#x27;newest&#x27;</span>,
+    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {</pre></div></div>
             
         </li>
         
@@ -1319,7 +1325,7 @@ scrawl.<span class="hljs-title function_">makeLabel</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        history.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        history.<span class="hljs-title function_">toReversed</span>().<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -1506,6 +1512,7 @@ scrawl.<span class="hljs-title function_">makeLabel</span>({
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;0.2&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;generationRate&#x27;</span>, <span class="hljs-string">&#x27;10&#x27;</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;artefact&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;artefact&#x27;</span>, <span class="hljs-number">0</span>],
 ]);</pre></div></div>
             
         </li>
@@ -1541,7 +1548,8 @@ scrawl.<span class="hljs-title function_">makeLabel</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> colorFactory = myEmitter.<span class="hljs-property">fillColorFactory</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+<span class="hljs-keyword">const</span> colorFactory = myEmitter.<span class="hljs-property">fillColorFactory</span>;
 
 <span class="hljs-keyword">const</span> setLowColor = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
@@ -1626,6 +1634,7 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         <span class="hljs-attr">historyLength</span>: [<span class="hljs-string">&#x27;historyLength&#x27;</span>, <span class="hljs-string">&#x27;int&#x27;</span>],
         <span class="hljs-attr">kill_radius</span>: [<span class="hljs-string">&#x27;killRadius&#x27;</span>, <span class="hljs-string">&#x27;int&#x27;</span>],
         <span class="hljs-attr">kill_radius_variation</span>: [<span class="hljs-string">&#x27;killRadiusVariation&#x27;</span>, <span class="hljs-string">&#x27;int&#x27;</span>],
+        <span class="hljs-attr">stampFirst</span>: [<span class="hljs-string">&#x27;stampFirst&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
     },
 });
 

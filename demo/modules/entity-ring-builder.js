@@ -99,6 +99,6 @@ export default function (items = {}) {
 
     return {
         cell,
-        kill: () => scrawl.library.purge(namespace),
+        kill: () => scrawl.purge(namespace),
     }
 }

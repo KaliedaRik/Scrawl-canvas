@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1073,22 +1078,6 @@ canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-world&#x27;</span>),
     <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
-    <span class="hljs-attr">userAttributes</span>: [
-        {
-            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rangeColorValue&#x27;</span>,
-            <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
-            <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">rangeColorValue</span> = item;
-
-                emitter.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">fillMinimumColor</span>: lowAdjuster.<span class="hljs-title function_">getRangeColor</span>(item),
-                    <span class="hljs-attr">fillMaximumColor</span>: highAdjuster.<span class="hljs-title function_">getRangeColor</span>(item),
-                });
-            },
-        },
-    ],
 });
 
 
@@ -1156,6 +1145,37 @@ canvas.<span class="hljs-title function_">buildCell</span>({
             });
         });
     },
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>Add the world attribute after the world and emitter objects have been created</p>
+<ul>
+<li>Have to do it this way as the attribute lives in one and references the other.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>myWorld.<span class="hljs-title function_">addAttribute</span>({
+    <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rangeColorValue&#x27;</span>,
+    <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">rangeColorValue</span> = item;
+
+        emitter.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">fillMinimumColor</span>: lowAdjuster.<span class="hljs-title function_">getRangeColor</span>(item),
+            <span class="hljs-attr">fillMaximumColor</span>: highAdjuster.<span class="hljs-title function_">getRangeColor</span>(item),
+        });
+    },
 });
 
 scrawl.<span class="hljs-title function_">makeTween</span>({
@@ -1179,11 +1199,11 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1195,11 +1215,11 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1215,11 +1235,11 @@ scrawl.<span class="hljs-title function_">makeTween</span>({
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

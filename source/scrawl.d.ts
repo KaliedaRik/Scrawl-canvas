@@ -1,4 +1,4 @@
-// Type definitions for Scrawl-canvas 8.15.0
+// Type definitions for Scrawl-canvas 8.16.0
 
 
 
@@ -477,8 +477,6 @@ interface PivotMixinFunctions {}
 // -------------------------------------
 type LockToValues = 'start' | 'pivot' | 'path' | 'mimic' | 'particle' | 'mouse';
 
-type PurgeValues = 'pivot' | 'mimic' | 'path' | 'filter' | 'all' | string[];
-
 interface PositionMixinDeltaInputs {
     dimensions?: CommonTwoElementArrayInput;
     handle?: CommonTwoElementArrayInput;
@@ -513,7 +511,6 @@ interface PositionMixinInputs {
     calculateOrder?: number;
     stampOrder?: number;
     particle?: ParticleInstance | string;
-    purge?: PurgeValues;
     visibility?: boolean;
 }
 
@@ -532,7 +529,6 @@ interface PositionMixinFunctions {
     checkHit?: (tests: HitTests) => HitOutput | boolean;
     dropArtefact?: () => ArtefactInstance;
     pickupArtefact?: (items: CommonTwoElementArrayInput | CommonHereObjectInput) => ArtefactInstance;
-    purgeArtefact?: (item: string | string[]) => void;
 }
 
 
@@ -1116,8 +1112,9 @@ interface ColorSaveInputs extends ColorFactoryInputs, SaveInputs {}
 
 interface ColorFactoryFunctions extends BaseMixinFunctions {
     clone: (item?: ColorFactoryInputs) => ColorInstance;
-    convertRGBtoHex: (red: number, green: number, blue: number) => string;
-    extractRGBfromColor: (item: string) => number[];
+    buildColorStringFromData: (space: string, red: number, green: number, blue: number, alpha: number) => string;
+    extractRGBfromColorString: (item: string) => number[];
+    convertRGBtoHex: (r: number, g: number, b: number) => string;
     generateRandomColor: DefaultStringOutputFunction;
     getCurrentColor: DefaultStringOutputFunction;
     getMaximumColor: DefaultStringOutputFunction;
@@ -1248,6 +1245,8 @@ export interface ElementInstance extends ElementFactoryInputs, ElementFactoryFun
 
 // EmitterInstance factory
 // -------------------------------------
+type EmitterStampFirstValues = 'oldest' | 'newest';
+
 interface EmitterFactoryDeltaInputs extends BaseMixinDeltaInputs, EntityMixinDeltaInputs {
     generationRate?: number;
     particleCount?: number;
@@ -1295,6 +1294,7 @@ interface EmitterFactoryInputs extends BaseMixinInputs, EntityMixinInputs, Emitt
     rangeFrom?: VectorInstance;
     showHitRadius?: boolean;
     stampAction?: (artefact: EntityInstance, particle: ParticleInstance, host: CellInstance) => void;
+    stampFirst?: EmitterStampFirstValues,
     strokeColor?: string;
     strokeMaximumColor?: string;
     strokeMinimumColor?: string;
@@ -1312,11 +1312,7 @@ interface EmitterFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctio
     simpleStamp: (host: CellInstance, items?: EmitterFactoryInputs) => void;
 }
 
-export interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions {
-    fillColorFactory: ColorInstance;
-    strokeColorFactor: ColorInstance;
-    particleStore: ParticleInstance[];
-}
+export interface EmitterInstance extends EmitterFactoryInputs, EmitterFactoryFunctions {}
 
 
 
@@ -1425,6 +1421,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     gutterHeight?: number;
     gutterWidth?: number;
     height?: StringOrNumberInput;
+    hexRadius?: number,
     highAlpha?: number;
     highBlue?: number;
     highGreen?: number;
@@ -1436,6 +1433,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     lowGreen?: number;
     lowRed?: number;
     minimumColorDistance?: number;
+    mode?: 'rect' | 'hex' | 'random' | 'points';
     noWrap?: boolean;
     offsetAlphaMax?: number;
     offsetAlphaMin?: number;
@@ -1457,6 +1455,8 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     offsetRedY?: number;
     offsetX?: StringOrNumberInput;
     offsetY?: StringOrNumberInput;
+    originX?: number;
+    originY?: number;
     opacity?: number;
     opaqueAt?: number;
     passes?: number;
@@ -1466,6 +1466,9 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     radius?: number;
     radiusHorizontal?: number;
     radiusVertical?: number;
+    randomCount?: number;
+    rectHeight?: number;
+    rectWidth?: number;
     redInBlue?: number;
     redInGreen?: number;
     redInRed?: number;
@@ -1527,6 +1530,7 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     operation?: string;
     palette?: StringOrNumberInput;
     points?: StringOrNumberInput | number[];
+    pointsData?: number[];
     postProcessResults?: boolean;
     processHorizontal?: boolean;
     processVertical?: boolean;
@@ -1633,6 +1637,13 @@ interface GridFactoryFunctions extends BaseMixinFunctions, EntityMixinFunctions 
     removeTileSource: (index: number) => GridInstance;
     getTileSource: (row: number, col?: number) => number;
     getTilesUsingSource: (key: number) => number[];
+    tileIndexFromPosition: (row: number, column: number) => number;
+    positionIndices: (index: number) => [number, number] | [];
+    rowIndex: (index: number) => number;
+    columnIndex: (index: number) => number;
+    fillRow: (CommonObjectInput) => GridInstance;
+    fillColumn: (CommonObjectInput) => GridInstance;
+    fillRect: (CommonObjectInput) => GridInstance;
     simpleStamp: (host: CellInstance, items?: GridFactoryInputs) => void;
 }
 
@@ -2915,7 +2926,16 @@ interface VideoAssetFactoryInputs extends BaseMixinInputs, VideoAssetFactoryDelt
 
 interface VideoAssetFactoryFunctions extends BaseMixinFunctions {}
 
-export interface VideoAssetInstance extends VideoAssetFactoryInputs, VideoAssetFactoryFunctions {}
+export interface VideoAssetInstance extends VideoAssetFactoryInputs, VideoAssetFactoryFunctions {
+    isAudioOnly: boolean;
+    mediaStream: MediaStream;
+    mediaStreamTrack: MediaStreamTrack;
+    onMediaStreamEnd: () => void;
+    source: HTMLVideoElement;
+    sourceLoaded: boolean;
+    sourceNaturalWidth: number;
+    sourceNaturalHeight: number;
+}
 
 
 
@@ -3136,6 +3156,7 @@ export function removeNativeListener(
 // -------------------------------------
 interface SeededRandomNumberGeneratorFunctions {
     random: () => number;
+    range: (range: number) => number;
 }
 export function seededRandomNumberGenerator(seed?: string): SeededRandomNumberGeneratorFunctions;
 

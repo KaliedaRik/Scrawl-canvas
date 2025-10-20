@@ -20,7 +20,7 @@ const DEF_SECTION_PLACEHOLDER = '§',
     FONT_VARIANT_VALS = ['small-caps', 'all-small-caps', 'petite-caps', 'all-petite-caps', 'unicase', 'titling-caps'],
     ITALIC = 'italic',
     LABEL_DIRTY_FONT_KEYS = ['direction', 'fontKerning', 'fontSize', 'fontStretch', 'fontString', 'fontStyle', 'fontVariantCaps', 'fontWeight', 'letterSpaceValue', 'letterSpacing', 'scale', 'textRendering', 'wordSpaceValue', 'wordSpacing'],
-    LABEL_UNLOADED_FONT_KEYS = ['fontString'],
+    LABEL_UNLOADED_FONT_KEYS = ['fontString','fontFamily', 'fontWeight', 'fontStyle', 'fontStretch', 'fontVariantCaps', 'fontSize'],
     LABEL_UPDATE_FONTSTRING_KEYS = ['fontString', 'scale'],
     LABEL_UPDATE_PARTS_KEYS = ['fontFamily', 'fontSize', 'fontStretch', 'fontStyle', 'fontVariantCaps', 'fontWeight'],
     LAYOUT_KEYS = ['lineSpacing', 'textUnitFlow', 'lineAdjustment', 'alignment', 'justifyLine', 'flipReverse', 'flipUpend', 'alignTextUnitsToPath', 'lockFillStyleToEntity', 'lockStrokeStyleToEntity'],
@@ -67,7 +67,7 @@ export default function (P = Ωempty) {
             highlightStyle: defaultTextCopy.highlightStyle,
             includeHighlight: defaultTextCopy.includeHighlight,
             includeUnderline: defaultTextCopy.includeUnderline,
-            letterSpacing: defaultTextCopy.letterSpaceValue,
+            letterSpacing: defaultTextCopy.letterSpace,
             lineDash: defaultTextCopy.lineDash,
             lineDashOffset: defaultTextCopy.lineDashOffset,
             lineWidth: defaultTextCopy.lineWidth,
@@ -81,7 +81,7 @@ export default function (P = Ωempty) {
             underlineOffset: defaultTextCopy.underlineOffset,
             underlineStyle: defaultTextCopy.underlineStyle,
             underlineWidth: defaultTextCopy.underlineWidth,
-            wordSpacing: defaultTextCopy.wordSpaceValue,
+            wordSpacing: defaultTextCopy.wordSpace,
 
             filter: stateCopy.filter,
             font: null,
@@ -261,7 +261,7 @@ export default function (P = Ωempty) {
 
                         fn = defaultTextStyleSetters[key];
 
-                        if (fn) fn.call(state, val);
+                        if (fn) fn.call(defaultTextStyle, val);
                         else if (typeof defaultTextStyleDefs[key] != UNDEF) defaultTextStyle[key] = addStrings(defaultTextStyle[key], val);
                     }
                     else if (STATE_KEYS.includes(key)) {
@@ -670,8 +670,17 @@ export default function (P = Ωempty) {
     P.checkFontIsLoaded = function (font) {
 
         if (font == null) this.currentFontIsLoaded = false;
-        else if (SYSTEM_FONTS.includes(font)) this.currentFontIsLoaded = true;
+        // else if (SYSTEM_FONTS.includes(font)) this.currentFontIsLoaded = true;
         else {
+
+            // Extract first family after the size token
+            const afterSize = font.replace(/^[^ ]+\s+/, '');
+            const firstFamily = afterSize.split(',')[0].trim().replace(/^['"]|['"]$/g, '').toLowerCase();
+            if (SYSTEM_FONTS.includes(firstFamily)) {
+
+                this.currentFontIsLoaded = true;
+                return;
+            }
 
             if (this.currentFontIsLoaded != null && !this.currentFontIsLoaded) {
 
@@ -752,6 +761,8 @@ export default function (P = Ωempty) {
         }
     };
 
+// `getAccessibleText` - Note that only one placeholder character is supported in any accessibleText string
+// + Text should never be unnecessarily repeated to the reader/listener
     P.getAccessibleText = function () {
 
         const {accessibleText, accessibleTextPlaceholder, text} = this;

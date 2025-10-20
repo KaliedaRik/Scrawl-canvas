@@ -85,7 +85,7 @@ export default function (P = Ωempty) {
 
     S.precision = function (item) {
 
-        if (xt(item) && item.toFixed) {
+        if (_isFinite(item)) {
 
             this.precision = item;
             this.updateDirty();
@@ -234,6 +234,8 @@ export default function (P = Ωempty) {
 
         const { unitPositions, unitProgression, length } = this;
 
+        if (!length || !unitPositions || !unitProgression) return 0;
+
         if (unitPositions && unitPositions.length) {
 
             const arraysLen = unitPositions.length;
@@ -255,6 +257,8 @@ export default function (P = Ωempty) {
                 }
             }
 
+            if (index >= arraysLen) index = arraysLen - 1;
+
             const remainingDynamicDistance = (index) ? (pos - dynamicDistance) : pos;
 
             const dynamicSegmentLength = (index)
@@ -264,6 +268,8 @@ export default function (P = Ωempty) {
             const steadySegmentLength = (index)
                 ? (unitPositions[index] - unitPositions[index - 1])
                 : unitPositions[index];
+
+            if (!dynamicSegmentLength) return steadyDistance;
 
             const steadyToDynamicRatio = steadySegmentLength / dynamicSegmentLength;
 
@@ -326,7 +332,8 @@ export default function (P = Ωempty) {
             const unitPartials = this.unitPartials;
 
             let previousLen = 0,
-                remainder = pos % 1;
+                remainder = ((pos % 1) + 1) % 1,
+                denom;
 
             let stoppingLen, myLen, i, iz, unit, species;
 
@@ -348,7 +355,9 @@ export default function (P = Ωempty) {
 
                     // 2. Calculate point along the subpath the pos value represents
                     unit = this.units[i];
-                    myLen = (remainder - previousLen) / (stoppingLen - previousLen);
+
+                    denom = (stoppingLen - previousLen);
+                    myLen = denom ? (remainder - previousLen) / denom : 0;
 
                     break;
                 }
@@ -492,7 +501,9 @@ export default function (P = Ωempty) {
                     if (progression) {
 
                         lastPartial = unitPartials[i];
-                        currentPartial = unitPartials[i + 1] - lastPartial;
+
+                        currentPartial = (i + 1 < unitPartials.length) ? unitPartials[i + 1] - lastPartial : 1 - lastPartial;
+
                         positions = unitPositions[i];
 
                         for (j = 0, jz = progression.length; j < jz; j++) {

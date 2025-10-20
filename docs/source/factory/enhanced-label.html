@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -1182,7 +1187,7 @@ P.<span class="hljs-property">processFactoryPacketOut</span> = <span class="hljs
 
     <span class="hljs-keyword">let</span> result = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">if</span>(!incs.<span class="hljs-title function_">indexOf</span>(key) &amp;&amp; value === <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[key]) result = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span>(!incs.<span class="hljs-title function_">includes</span>(key) &amp;&amp; value === <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[key]) result = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">return</span> result;
 };</pre></div></div>
@@ -1707,7 +1712,7 @@ G.<span class="hljs-property">textLines</span> = <span class="hljs-keyword">func
     <span class="hljs-keyword">if</span> (val === <span class="hljs-variable constant_">MIDDLE</span>) <span class="hljs-keyword">return</span> (dim / <span class="hljs-number">2</span>) * scale;
     <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isFinite</span>(<span class="hljs-built_in">parseFloat</span>(val))) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">return</span> (<span class="hljs-built_in">parseFloat</span>(val) / <span class="hljs-number">100</span>) * dim;
+    <span class="hljs-keyword">return</span> (<span class="hljs-built_in">parseFloat</span>(val) / <span class="hljs-number">100</span>) * dim * scale;
 };</pre></div></div>
             
         </li>
@@ -2424,7 +2429,7 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
         <span class="hljs-keyword">const</span> nodeVals = <span class="hljs-title function_">_computed</span>(node.<span class="hljs-property">parentNode</span>);
 
         <span class="hljs-keyword">const</span> unitSet = {};
-        <span class="hljs-keyword">let</span> oldVal, newVal;
+        <span class="hljs-keyword">let</span> oldVal, newVal, raw;
 
         oldVal = currentTextStyle.<span class="hljs-property">direction</span>;
         newVal = nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;direction&#x27;</span>);
@@ -2481,7 +2486,8 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
         <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">fillStyle</span> = newVal;
 
         oldVal = currentTextStyle.<span class="hljs-property">includeHighlight</span>;
-        newVal = !!nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-include-highlight&#x27;</span>);
+        raw = nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-include-highlight&#x27;</span>).<span class="hljs-title function_">trim</span>().<span class="hljs-title function_">toLowerCase</span>();
+        newVal = (raw === <span class="hljs-string">&#x27;true&#x27;</span> || raw === <span class="hljs-string">&#x27;1&#x27;</span>);
         <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">includeHighlight</span> = newVal;
 
         oldVal = currentTextStyle.<span class="hljs-property">highlightStyle</span>;
@@ -2489,44 +2495,46 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
         <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">highlightStyle</span> = newVal;
 
         oldVal = currentTextStyle.<span class="hljs-property">lineWidth</span>;
-        newVal = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-stroke-width&#x27;</span>));
-        <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">lineWidth</span> = newVal;
+        raw = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-stroke-width&#x27;</span>));
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(raw) &amp;&amp; oldVal !== raw) unitSet.<span class="hljs-property">lineWidth</span> = raw;
 
         oldVal = currentTextStyle.<span class="hljs-property">includeOverline</span>;
-        newVal = !!nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-include-overline&#x27;</span>);
+        raw = nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-include-overline&#x27;</span>).<span class="hljs-title function_">trim</span>().<span class="hljs-title function_">toLowerCase</span>();
+        newVal = (raw === <span class="hljs-string">&#x27;true&#x27;</span> || raw === <span class="hljs-string">&#x27;1&#x27;</span>);
         <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">includeOverline</span> = newVal;
 
         oldVal = currentTextStyle.<span class="hljs-property">overlineOffset</span>;
-        newVal = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-overline-offset&#x27;</span>));
-        <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">overlineOffset</span> = newVal;
+        raw = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-overline-offset&#x27;</span>));
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(raw) &amp;&amp; oldVal !== raw) unitSet.<span class="hljs-property">overlineOffset</span> = raw;
 
         oldVal = currentTextStyle.<span class="hljs-property">overlineStyle</span>;
         newVal = nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-overline-style&#x27;</span>);
         <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">overlineStyle</span> = newVal;
 
         oldVal = currentTextStyle.<span class="hljs-property">overlineWidth</span>;
-        newVal = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-overline-width&#x27;</span>));
-        <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">overlineWidth</span> = newVal;
+        raw = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-overline-width&#x27;</span>));
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(raw) &amp;&amp; oldVal !== raw) unitSet.<span class="hljs-property">overlineWidth</span> = raw;
 
         oldVal = currentTextStyle.<span class="hljs-property">includeUnderline</span>;
-        newVal = !!nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-include-underline&#x27;</span>);
+        raw = nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-include-underline&#x27;</span>).<span class="hljs-title function_">trim</span>().<span class="hljs-title function_">toLowerCase</span>();
+        newVal = (raw === <span class="hljs-string">&#x27;true&#x27;</span> || raw === <span class="hljs-string">&#x27;1&#x27;</span>);
         <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">includeUnderline</span> = newVal;
 
         oldVal = currentTextStyle.<span class="hljs-property">underlineGap</span>;
-        newVal = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-underline-gap&#x27;</span>));
-        <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">underlineGap</span> = newVal;
+        raw = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-underline-gap&#x27;</span>));
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(raw) &amp;&amp; oldVal !== raw) unitSet.<span class="hljs-property">underlineGap</span> = raw;
 
         oldVal = currentTextStyle.<span class="hljs-property">underlineOffset</span>;
-        newVal = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-underline-offset&#x27;</span>));
-        <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">underlineOffset</span> = newVal;
+        raw = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-underline-offset&#x27;</span>));
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(raw) &amp;&amp; oldVal !== raw) unitSet.<span class="hljs-property">underlineOffset</span> = raw;
 
         oldVal = currentTextStyle.<span class="hljs-property">underlineStyle</span>;
         newVal = nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-underline-style&#x27;</span>);
         <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">underlineStyle</span> = newVal;
 
         oldVal = currentTextStyle.<span class="hljs-property">underlineWidth</span>;
-        newVal = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-underline-width&#x27;</span>));
-        <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">underlineWidth</span> = newVal;
+        raw = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-underline-width&#x27;</span>));
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(raw) &amp;&amp; oldVal !== raw) unitSet.<span class="hljs-property">underlineWidth</span> = raw;
 
         oldVal = currentTextStyle.<span class="hljs-property">method</span>;
         newVal = nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-method&#x27;</span>);
@@ -2541,16 +2549,16 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
         <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">localHandleY</span> = newVal;
 
         oldVal = localState.<span class="hljs-property">localOffsetX</span>;
-        newVal = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-local-offset-x&#x27;</span>));
-        <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">localOffsetX</span> = newVal;
+        raw = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-local-offset-x&#x27;</span>));
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(raw) &amp;&amp; oldVal !== raw) unitSet.<span class="hljs-property">localOffsetX</span> = raw;
 
         oldVal = localState.<span class="hljs-property">localOffsetY</span>;
-        newVal = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-local-offset-y&#x27;</span>));
-        <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">localOffsetY</span> = newVal;
+        raw = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-local-offset-y&#x27;</span>));
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(raw) &amp;&amp; oldVal !== raw) unitSet.<span class="hljs-property">localOffsetY</span> = raw;
 
         oldVal = localState.<span class="hljs-property">localAlignment</span>;
-        newVal = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-local-alignment&#x27;</span>));
-        <span class="hljs-keyword">if</span> (oldVal !== newVal) unitSet.<span class="hljs-property">localAlignment</span> = newVal;
+        raw = <span class="hljs-built_in">parseFloat</span>(nodeVals.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--SC-local-alignment&#x27;</span>));
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(raw) &amp;&amp; oldVal !== raw) unitSet.<span class="hljs-property">localAlignment</span> = raw;
 
         unit.<span class="hljs-title function_">set</span>(unitSet);
         unit.<span class="hljs-property">style</span>.<span class="hljs-title function_">set</span>(unitSet, <span class="hljs-literal">true</span>);
@@ -2661,12 +2669,15 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
         textUnits,
         truncateString,
         breakTextOnSpaces,
+        layoutTemplate,
     } = <span class="hljs-variable language_">this</span>;
 
     <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(),
         engine = mycell.<span class="hljs-property">engine</span>;
 
-    <span class="hljs-keyword">let</span> res, chars, charType, style, len, nextUnit, nextStyle, nextChars, nextType, nextLen, unkernedLen;
+    <span class="hljs-keyword">let</span> res, chars, charType, style, len,
+        nextUnit, nextStyle, nextChars, nextType, nextLen,
+        unkernedLen, scale;
 
     <span class="hljs-keyword">const</span> currentTextStyle = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeWorkingTextStyle</span>(defaultTextStyle);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setEngineFromWorkingTextStyle</span>(currentTextStyle, Ωempty, state, mycell);
@@ -2698,7 +2709,8 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (charType === <span class="hljs-variable constant_">TEXT_TYPE_SPACE</span>) {
 
-            t.<span class="hljs-property">len</span> += currentTextStyle.<span class="hljs-property">wordSpaceValue</span>;
+            scale = layoutTemplate ? layoutTemplate.<span class="hljs-property">currentScale</span> || <span class="hljs-number">1</span> : <span class="hljs-number">1</span>;
+            t.<span class="hljs-property">len</span> += currentTextStyle.<span class="hljs-property">wordSpaceValue</span> * scale;
         }</pre></div></div>
             
         </li>
@@ -5227,9 +5239,6 @@ P.<span class="hljs-property">createTextCellsForSpace</span> = <span class="hljs
 
                         [x, y] = startData;
                         [dx, dy] = startCorrection;
-
-                        dx = <span class="hljs-title function_">_floor</span>(dx);
-                        dy = <span class="hljs-title function_">_floor</span>(dy);
 
                         cos = <span class="hljs-title function_">_cos</span>(startRotation);
                         sin = <span class="hljs-title function_">_sin</span>(startRotation);

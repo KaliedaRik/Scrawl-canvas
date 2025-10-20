@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -775,7 +780,7 @@
 
     S.<span class="hljs-property">precision</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item) &amp;&amp; item.<span class="hljs-property">toFixed</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(item)) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">precision</span> = item;
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
@@ -1088,6 +1093,8 @@
 
         <span class="hljs-keyword">const</span> { unitPositions, unitProgression, length } = <span class="hljs-variable language_">this</span>;
 
+        <span class="hljs-keyword">if</span> (!length || !unitPositions || !unitProgression) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+
         <span class="hljs-keyword">if</span> (unitPositions &amp;&amp; unitPositions.<span class="hljs-property">length</span>) {
 
             <span class="hljs-keyword">const</span> arraysLen = unitPositions.<span class="hljs-property">length</span>;
@@ -1109,6 +1116,8 @@
                 }
             }
 
+            <span class="hljs-keyword">if</span> (index &gt;= arraysLen) index = arraysLen - <span class="hljs-number">1</span>;
+
             <span class="hljs-keyword">const</span> remainingDynamicDistance = (index) ? (pos - dynamicDistance) : pos;
 
             <span class="hljs-keyword">const</span> dynamicSegmentLength = (index)
@@ -1118,6 +1127,8 @@
             <span class="hljs-keyword">const</span> steadySegmentLength = (index)
                 ? (unitPositions[index] - unitPositions[index - <span class="hljs-number">1</span>])
                 : unitPositions[index];
+
+            <span class="hljs-keyword">if</span> (!dynamicSegmentLength) <span class="hljs-keyword">return</span> steadyDistance;
 
             <span class="hljs-keyword">const</span> steadyToDynamicRatio = steadySegmentLength / dynamicSegmentLength;
 
@@ -1206,7 +1217,8 @@
             <span class="hljs-keyword">const</span> unitPartials = <span class="hljs-variable language_">this</span>.<span class="hljs-property">unitPartials</span>;
 
             <span class="hljs-keyword">let</span> previousLen = <span class="hljs-number">0</span>,
-                remainder = pos % <span class="hljs-number">1</span>;
+                remainder = ((pos % <span class="hljs-number">1</span>) + <span class="hljs-number">1</span>) % <span class="hljs-number">1</span>,
+                denom;
 
             <span class="hljs-keyword">let</span> stoppingLen, myLen, i, iz, unit, species;</pre></div></div>
             
@@ -1268,7 +1280,9 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>                    unit = <span class="hljs-variable language_">this</span>.<span class="hljs-property">units</span>[i];
-                    myLen = (remainder - previousLen) / (stoppingLen - previousLen);
+
+                    denom = (stoppingLen - previousLen);
+                    myLen = denom ? (remainder - previousLen) / denom : <span class="hljs-number">0</span>;
 
                     <span class="hljs-keyword">break</span>;
                 }
@@ -1496,7 +1510,9 @@
                     <span class="hljs-keyword">if</span> (progression) {
 
                         lastPartial = unitPartials[i];
-                        currentPartial = unitPartials[i + <span class="hljs-number">1</span>] - lastPartial;
+
+                        currentPartial = (i + <span class="hljs-number">1</span> &lt; unitPartials.<span class="hljs-property">length</span>) ? unitPartials[i + <span class="hljs-number">1</span>] - lastPartial : <span class="hljs-number">1</span> - lastPartial;
+
                         positions = unitPositions[i];
 
                         <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = progression.<span class="hljs-property">length</span>; j &lt; jz; j++) {

@@ -1,7 +1,8 @@
 // # Demo Mediapipe 003
-// MediaPipe Face Mesh - working with the mesh coordinates
+// MediaPipe Hand Landmarker - working with the mesh coordinates
 
 // [Run code](../../demo/mediapipe-003.html)
+import * as MediaPipe from './js/mediapipe/tasks-vision/vision-bundle.js';
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed } from './utilities.js';
@@ -16,232 +17,246 @@ const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
-// Magic numbers
-const width = 1280,
-    height = 720;
+// #### Importing a device-based media stream
+// For this Demo we:
+// + Create a hidden Cell (camera-input-cell) which will hold the raw data from the media stream video
+// + Create a media stream video asset
+// + Display the media stream asset in a Picture entity in our hidden Cell
+// + Display the hidden Cell in the base Cell using a second Picture entity (the background)
+// + Display an overlay of labels detected by the hand landmarker
+//
+// + Note 1: Users will need to explicitly agree to let Scrawl-canvas use the media stream the first time the page loads (the browser should handle this agreement procedure itself)
+// + Note 2: importMediaStream returns a Promise!
 
+const videoFeedCell = canvas.buildCell({
 
-const dom = scrawl.initializeDomInputs([
-    ['input', 'wormstart', '220'],
-    ['input', 'wormend', '270'],
-]);
+    name: name('camera-input-cell'),
+    dimensions: [768, 768],
 
-const worm = scrawl.makePolyline({
+    // We pipe the media stream displayed in this cell:
+    // + Through the MediaPipe ML model code, to remove background
+    // + Into the base cell to display the filtered background
+    //
+    // Because MediaPipe needs time to process each frame, this means:
+    // + There's a chance of the face and background falling out of sync
+    // + So we only update the cell after MediaPipe completes its processing work
+    // + Thus keeping both background and face in sync
 
-    name: name('face-worm'),
-
-    strokeStyle: 'red',
-    lineJoin: 'round',
-    lineCap: 'round',
-    lineWidth: 3,
-
-    method: 'draw',
-
-    mapToPins: true,
-    tension: 0.3,
+    cleared: false,
+    compiled: false,
+    shown: false,
 });
 
-const updateLabelsAndWorm = function (asset) {
+// We use another Cell to feed data into MediaPipe
+// + Required dimensions: 224 x 224
+const modelInputCell = canvas.buildCell({
 
-    const { entitys, mesh } = asset
-
-    if (mesh.length && Array.isArray(mesh[0])) {
-
-        const face = mesh[0];
-
-        // We only need to create the labels once
-        if (!entitys.length) {
-
-            face.forEach((coord, index) => {
-
-                entitys.push(scrawl.makeLabel({
-
-                    name: name(`label-${index}`),
-                    text: `${index}`,
-                    handle: ['center', 'center'],
-                    fontString: '10px Arial',
-                    textIsAccessible: false,
-                }));
-            });
-        }
-
-        // Update label coordinates with new mesh data
-        entitys.forEach((e, index) => {
-
-            const coord = face[index];
-
-            const {x, y} = coord;
-
-            e.set({
-                startX: `${x * 100}%`,
-                startY: `${y * 100}%`,
-            });
-        });
-
-        let wormStart = parseInt(dom.wormstart.value, 10),
-            wormEnd = parseInt(dom.wormend.value, 10);
-
-        // Check for perilous user input
-        if (!Number.isFinite(wormStart)) wormStart = 0;
-        if (wormStart < 0) wormStart = 0;
-        if (wormStart > 468) wormStart = 468;
-
-        if (!Number.isFinite(wormEnd)) wormEnd = 0;
-        if (wormEnd < 0) wormEnd = 0;
-        if (wormEnd > 468) wormEnd = 468;
-
-        if (wormEnd < wormStart) {
-
-            const temp = wormStart;
-            wormStart = wormEnd;
-            wormEnd = temp;
-        }
-
-        dom.wormstart.value = `${wormStart}`;
-        dom.wormend.value = `${wormEnd}`;
-
-        // Update the worm's pins
-        worm.set({
-            pins: entitys.slice(wormStart, wormEnd),
-        });
-    }
-};
+    name: name('model-input-cell'),
+    dimensions: [224, 224],
+    shown: false,
+});
 
 
-// #### MediaPipe functionality
-// We'll handle everything in a raw asset object
-const myAsset = scrawl.makeRawAsset({
+// #### Entitys
 
-    name: name('mediapipe-model-interpreter'),
+// Media stream picture entity
+// + Goes into the hidden video feed Cell
+// + Initialized without an asset, and given some default dimensions - these will be updated when the media stream completes initialization
+const inputPicture = scrawl.makePicture({
 
-    userAttributes: [{
+    name: name('camera-input-picture'),
+    group: videoFeedCell,
 
-        key: 'mesh',
-        defaultValue: false,
-        setter: function (item) {
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
 
-            if (item) {
+    // To get a mirror effect
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+    flipReverse: true,
+});
 
-                const {image:img, multiFaceLandmarks:mesh} = item;
+// The model input Cell also needs a Picture entity, to feed into the model
+// + The model requires image data with set dimensions (224 x 224)
+scrawl.makePicture({
 
-                if (img) {
+    name: name('model-input-picture'),
+    group: modelInputCell,
 
-/** @ts-expect-error */
-                    this.canvasWidth =  img.width;
-/** @ts-expect-error */
-                    this.canvasHeight = img.height;
-                }
+    asset: videoFeedCell,
 
-/** @ts-expect-error */
-                if (mesh) this.mesh = mesh;
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
+});
 
-/** @ts-expect-error */
-                this.dirtyData = true;
-            }
+// Base Cell background image
+// + We apply filters to the background image, and stamp it onto the base cell last (with appropriate GCO)
+scrawl.makePicture({
+
+    name: name('background-picture'),
+    asset: videoFeedCell,
+
+    dimensions: ['100%', '100%'],
+    copyDimensions: ['100%', '100%'],
+
+    globalAlpha: 0.4,
+});
+
+// Create some Label entitys to display landmark points
+const landmarkPoints = [
+    'Wrist',
+    'Thumb-cmc',
+    'Thumb-mcp',
+    'Thumb-ip',
+    'Thumb-tip',
+    'Index-mcp',
+    'Index-pip',
+    'Index-dip',
+    'Index-tip',
+    'Middle-mcp',
+    'Middle-pip',
+    'Middle-dip',
+    'Middle-tip',
+    'Ring-mcp',
+    'Ring-pip',
+    'Ring-dip',
+    'Ring-tip',
+    'Pinky-mcp',
+    'Pinky-pip',
+    'Pinky-dip',
+    'Pinky-tip',
+];
+
+const labels = [];
+
+for (let i = 0, iz = landmarkPoints.length; i < iz; i++) {
+
+    const label = landmarkPoints[i]
+
+    labels.push(scrawl.makeLabel({
+
+        name: name(label),
+        fontString: '8px monospace',
+        text: label,
+        handle: ['center', 'center'],
+        scale: 1,
+        visibility: false,
+    }));
+}
+
+
+// #### Google MediaPipe ML model code
+let handLandmarker;
+
+const startModel = async () => {
+
+    const path = 'js/mediapipe/tasks-vision/'
+    const vision = await MediaPipe.FilesetResolver.forVisionTasks();
+
+    vision.wasmBinaryPath = `${path}wasm${vision.wasmBinaryPath}`;
+    vision.wasmLoaderPath = `${path}wasm${vision.wasmLoaderPath}`;
+
+    handLandmarker = await MediaPipe.HandLandmarker.createFromOptions(vision, {
+
+        baseOptions: {
+            modelAssetPath: `${path}model/hand_landmarker.task`,
         },
-    },{
-        key: 'entitys',
-        defaultValue: [],
-        setter: () => {},
-    },{
-        key: 'canvasWidth',
-        defaultValue: 0,
-        setter: () => {},
-    },{
-        key: 'canvasHeight',
-        defaultValue: 0,
-        setter: () => {},
-    }],
 
-    updateSource: function (assetWrapper) {
-
-        const { mesh } = assetWrapper;
-
-        if (mesh && mesh.length) updateLabelsAndWorm(this);
-    },
-});
-
-
-// The forever loop function, which captures the MediaPipe model's output and passes it on to our raw asset for processing
-const perform = function (mesh) {
-
-    myAsset.set({ mesh });
-
-    // To get the raw asset working, something needs to subscribe to it - even though we're not using the asset to output any graphics in this demo. We only need to create the Picture entity once.
-    if (!output) output = scrawl.makePicture({
-
-        name: name('output'),
-        asset: name('mediapipe-model-interpreter'),
+        runningMode: 'VIDEO',
     });
 };
 
+// We can start the model code running straight away
+// - It's the camera for which we need user permission
+startModel();
 
-// ##### Import and use media stream
-let video, model, output;
 
-// Capture the media stream
+// This function gets consumed by the model's handLandmarker object
+// - handLandmarker doesn't start its work until it has something to segment
+const processModelData = (results) => {
+
+    if (results && results.landmarks && results.landmarks.length) {
+
+        const data = results.landmarks[0];
+
+        if (data && data.length) {
+
+            let point, label;
+
+            for (let i = 0, iz = labels.length; i < iz; i++) {
+
+                point = data[i];
+                label = labels[i];
+
+                label.set({
+                    startX: `${point.x * 100}%`,
+                    startY: `${point.y * 100}%`,
+                    scale: 1 - (point.z * 2),
+                    visibility: true,
+                });
+            }
+        }
+    }
+
+    else {
+
+        for (let i = 0, iz = labels.length; i < iz; i++) {
+
+            labels[i].set({ visibility: false });
+        }
+    }
+    videoFeedCell.clear();
+    videoFeedCell.compile();
+};
+
+
+// #### Media stream capture
 scrawl.importMediaStream({
 
-    name: name('device-camera'),
+    name: name('video-feed'),
+    audio: false,
     video: {
-        width: { ideal: width },
-        height: { ideal: height },
+        width: { ideal: 768 },
+        height: { ideal: 768 },
         facingMode: 'user',
     },
 })
-.then(mycamera => {
+.then(streamAsset => {
 
-    video = mycamera;
+    // The asset creates a non-DOM video element, which loads metadata asynchronously
+    scrawl.addNativeListener('loadedmetadata', () => {
 
-/** @ts-expect-error */
-    video.source.width = width;
-/** @ts-expect-error */
-    video.source.height = height;
+        // We need to account for the case when the browser doesn't return the desired dimensions
+        // + The handle to the non-DOM video element is stored in the `asset.source` attribute
+        const width = streamAsset.source.videoWidth,
+            height = streamAsset.source.videoHeight,
+            minimumDimension = Math.min(width, height),
+            scale = 768 / minimumDimension;
 
-    scrawl.makePicture({
+        // Use the asset's actual dimensions, and scale to prevent distortions
+        inputPicture.set({
+            dimensions: [width, height],
+            scale,
+            asset: streamAsset,
+        });
 
-        name: 'background',
-        asset: mycamera.name,
+        // We need to feed input data into the model discretely, via an SC animation object
+        scrawl.makeAnimation({
 
-        dimensions: ['100%', '100%'],
-        copyDimensions: ['100%', '100%'],
+            name: name('model-segmenter'),
+            order: 0,
+            fn: () => {
 
-        globalAlpha: 0.2,
-    });
+                if (handLandmarker && handLandmarker.detectForVideo) {
 
-    // Start the MediaPipe model
-/* eslint-disable */
-/** @ts-expect-error */
-    model = new FaceMesh({
+                    const results = handLandmarker.detectForVideo(modelInputCell.element, performance.now());
 
-/* eslint-enable */
-        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
-    });
+                    if (results) processModelData(results);
+                }
+            }
+        });
 
-    model.setOptions({
-        maxNumFaces: 1,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5
-    });
-
-    model.onResults(perform);
-
-    // Use MediaPipe's camera functionality to get updates to the forever loop
-/* eslint-disable */
-/** @ts-expect-error */
-    const mediaPipeCamera = new Camera(video.source, {
-
-/* eslint-enable */
-        onFrame: async () => {
-
-            await model.send({image: video.source});
-        },
-
-        width,
-        height,
-    });
-
-    mediaPipeCamera.start();
+    }, streamAsset.source);
 })
 .catch(err => console.log(err.message));
 
@@ -254,11 +269,12 @@ const report = reportSpeed('#reportmessage');
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: name('animation'),
-    target: canvas,
-    afterShow: report,
+  name: name('render'),
+  target: canvas,
+  afterShow: report,
 });
 
 
 // #### Development and testing
-console.log(scrawl.library);
+console.log('scrawl.library', scrawl.library);
+console.log('MediaPipe', MediaPipe);

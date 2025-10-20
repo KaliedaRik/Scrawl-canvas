@@ -89,9 +89,9 @@ scrawl.makeFilter({
         radius: 2,
     }, {
         action: 'step-channels',
-        red: 31,
-        green: 31,
-        blue: 31,
+        red: 32,
+        green: 32,
+        blue: 32,
         clamp: 'round',
     }],
 });
@@ -104,25 +104,17 @@ scrawl.findEntity(name('display')).addFilters(name('blotchy-newsprint'));
 canvas = scrawl.findCanvas('canvas-2');
 namespace = canvas.name;
 
-const points1 = [],
-    points2 = [];
-
-for (let i = 0; i < 2000; i++) {
-    points1.push(Math.floor(Math.random() * 400));
-    points2.push(Math.floor(Math.random() * 400));
-}
-
 scrawl.makeFilter({
 
     name: name('jagged-shapes'),
     actions: [{
         action: 'tiles',
-        points: points1,
-        tileRadius: 30,
+        mode: 'random',
+        randomCount: 1600,
     }, {
         action: 'tiles',
-        points: points2,
-        tileRadius: 30,
+        mode: 'random',
+        randomCount: 400,
         opacity: 0.5
     }],
 });

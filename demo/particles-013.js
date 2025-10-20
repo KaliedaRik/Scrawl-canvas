@@ -111,10 +111,11 @@ scrawl.makeEmitter({
 
         name: name('particle-star'),
 
-        radius1: 20,
-        radius2: 14,
+        radius1: 12,
+        radius2: 21,
 
-        points: 5,
+        points: 7,
+        roll: 45,
 
         handle: ['center', 'center'],
 
@@ -127,6 +128,7 @@ scrawl.makeEmitter({
         noDeltaUpdates: true,
     }),
 
+    stampFirst: 'newest',
     stampAction: function (artefact, particle, host) {
 
         const history = particle.history;
@@ -158,9 +160,10 @@ scrawl.makeStar({
 
     name: name('main-star'),
 
-    radius1: 21,
-    radius2: 15,
-    points: 5,
+    radius1: 12,
+    radius2: 21,
+    points: 7,
+    roll: 45,
 
     path: name('my-tree'),
     pathPosition: 0.484,
@@ -199,8 +202,8 @@ scrawl.makeEmitter({
 
         name: name('particle-spangle-entity'),
 
-        radius1: 6,
-        radius2: 2,
+        radius1: 2,
+        radius2: 6,
 
         points: 4,
 
@@ -229,7 +232,7 @@ scrawl.makeEmitter({
 
             // This function handles fadein/out, and spangle shape. Spangle rotation is handled by the spangle entity itself, using a delta animation
             let globalAlpha = 1,
-                radius1 = 6;
+                radius2 = 6;
 
             // Fade in young particles
             if (remaining > 18) {
@@ -248,15 +251,15 @@ scrawl.makeEmitter({
             // Grow and shrink the spangle's spikes as it matures
             if (remaining < 8) {
 
-                if (remaining > 4) radius1 = 6 + ((8 - remaining) * 5);
-                else radius1 = 6 + (remaining * 5);
+                if (remaining > 4) radius2 = 6 + ((8 - remaining) * 5);
+                else radius2 = 6 + (remaining * 5);
             }
 
             artefact.simpleStamp(host, {
                 start,
                 fillStyle: particle.fill,
                 globalAlpha,
-                radius1,
+                radius2,
             });
         }
     },
@@ -326,7 +329,7 @@ scrawl.makeEmitter({
         const colorFactory = this.fillColorFactory;
 
         engine.save();
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.resetTransform();
 
         history.forEach(p => {
 

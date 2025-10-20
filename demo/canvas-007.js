@@ -389,9 +389,8 @@ scrawl.makeFilter({
 scrawl.makeFilter({
     name: name('tiles'),
     method: 'tiles',
-    points: 'hex-grid',
-    tileHeight: 40,
-    tileRadius: 24,
+    mode: 'hex',
+    hexRadius: 8,
 });
 
 // __Modulate Ok__ filter
@@ -609,7 +608,9 @@ scrawl.makeFilter({
 scrawl.makeFilter({
     name: name('reducePalette'),
     method: 'reducePalette',
-    noiseType: 'ordered',
+    noiseType: 'bluenoise',
+    palette: 128,
+    minimumColorDistance: 150,
 });
 
 scrawl.makeGradient({

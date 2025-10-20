@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1813,9 +1818,8 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tiles&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
-    <span class="hljs-attr">points</span>: <span class="hljs-string">&#x27;hex-grid&#x27;</span>,
-    <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">40</span>,
-    <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">24</span>,
+    <span class="hljs-attr">mode</span>: <span class="hljs-string">&#x27;hex&#x27;</span>,
+    <span class="hljs-attr">hexRadius</span>: <span class="hljs-number">8</span>,
 });</pre></div></div>
             
         </li>
@@ -2321,7 +2325,9 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;reducePalette&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;reducePalette&#x27;</span>,
-    <span class="hljs-attr">noiseType</span>: <span class="hljs-string">&#x27;ordered&#x27;</span>,
+    <span class="hljs-attr">noiseType</span>: <span class="hljs-string">&#x27;bluenoise&#x27;</span>,
+    <span class="hljs-attr">palette</span>: <span class="hljs-number">128</span>,
+    <span class="hljs-attr">minimumColorDistance</span>: <span class="hljs-number">150</span>,
 });
 
 scrawl.<span class="hljs-title function_">makeGradient</span>({

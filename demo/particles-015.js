@@ -41,22 +41,6 @@ const myWorld = scrawl.makeWorld({
 
     name: name('my-world'),
     tickMultiplier: 2,
-    userAttributes: [
-        {
-            key: 'rangeColorValue',
-            defaultValue: 0,
-            setter: function (item) {
-
-/** @ts-expect-error */
-                this.rangeColorValue = item;
-
-                emitter.set({
-                    fillMinimumColor: lowAdjuster.getRangeColor(item),
-                    fillMaximumColor: highAdjuster.getRangeColor(item),
-                });
-            },
-        },
-    ],
 });
 
 
@@ -110,6 +94,23 @@ const emitter = scrawl.makeEmitter({
                 fillStyle: particle.fill,
                 radius: (index / len) * 4,
             });
+        });
+    },
+});
+
+// Add the world attribute after the world and emitter objects have been created
+// + Have to do it this way as the attribute lives in one and references the other.
+myWorld.addAttribute({
+    key: 'rangeColorValue',
+    defaultValue: 0,
+    setter: function (item) {
+
+/** @ts-expect-error */
+        this.rangeColorValue = item;
+
+        emitter.set({
+            fillMinimumColor: lowAdjuster.getRangeColor(item),
+            fillMaximumColor: highAdjuster.getRangeColor(item),
         });
     },
 });

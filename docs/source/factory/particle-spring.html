@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -594,7 +599,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, particle } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, mergeOver, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { releaseVector, requestVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/vector.js&#x27;</span>;
 
@@ -652,8 +657,6 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
-
-    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span> = λ<span class="hljs-literal">null</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -879,29 +882,36 @@ S.<span class="hljs-property">particleTo</span> = <span class="hljs-keyword">fun
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">applySpring</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> {particleFrom, particleTo, particleFromIsStatic, particleToIsStatic, springConstant, damperConstant, restLength} = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">const</span> { particleFrom, particleTo, particleFromIsStatic, particleToIsStatic, springConstant, damperConstant, restLength } = <span class="hljs-variable language_">this</span>;
 
-    <span class="hljs-keyword">if</span> (particleFrom &amp;&amp; particleTo) {
+    <span class="hljs-keyword">if</span> (!(particleFrom &amp;&amp; particleTo)) <span class="hljs-keyword">return</span>;
 
-        <span class="hljs-keyword">const</span> {<span class="hljs-attr">position</span>: fromPosition, <span class="hljs-attr">velocity</span>: fromVelocity, <span class="hljs-attr">load</span>: fromLoad} = particleFrom;
-        <span class="hljs-keyword">const</span> {<span class="hljs-attr">position</span>: toPosition, <span class="hljs-attr">velocity</span>: toVelocity, <span class="hljs-attr">load</span>: toLoad} = particleTo;
+    <span class="hljs-keyword">const</span> { <span class="hljs-attr">position</span>: fromPos, <span class="hljs-attr">velocity</span>: fromVel, <span class="hljs-attr">load</span>: fromLoad } = particleFrom;
+    <span class="hljs-keyword">const</span> { <span class="hljs-attr">position</span>: toPos,   <span class="hljs-attr">velocity</span>: toVel,   <span class="hljs-attr">load</span>: toLoad   } = particleTo;
 
-        <span class="hljs-keyword">const</span> dVelocity = <span class="hljs-title function_">requestVector</span>(toVelocity).<span class="hljs-title function_">vectorSubtract</span>(fromVelocity),
-            dPosition = <span class="hljs-title function_">requestVector</span>(toPosition).<span class="hljs-title function_">vectorSubtract</span>(fromPosition);
+    <span class="hljs-keyword">const</span> dPos = <span class="hljs-title function_">requestVector</span>(toPos).<span class="hljs-title function_">vectorSubtract</span>(fromPos);
+    <span class="hljs-keyword">const</span> len = dPos.<span class="hljs-title function_">getMagnitude</span>();
 
-        <span class="hljs-keyword">const</span> firstNorm = <span class="hljs-title function_">requestVector</span>(dPosition).<span class="hljs-title function_">normalize</span>(),
-            secondNorm = <span class="hljs-title function_">requestVector</span>(firstNorm);
+    <span class="hljs-keyword">if</span> (!len) {
 
-        firstNorm.<span class="hljs-title function_">scalarMultiply</span>(springConstant * (dPosition.<span class="hljs-title function_">getMagnitude</span>() - restLength));
-        dVelocity.<span class="hljs-title function_">vectorMultiply</span>(secondNorm).<span class="hljs-title function_">scalarMultiply</span>(damperConstant).<span class="hljs-title function_">vectorMultiply</span>(secondNorm);
-
-        <span class="hljs-keyword">const</span> force = <span class="hljs-title function_">requestVector</span>(firstNorm).<span class="hljs-title function_">vectorAdd</span>(dVelocity);
-
-        <span class="hljs-keyword">if</span> (!particleFromIsStatic) fromLoad.<span class="hljs-title function_">vectorAdd</span>(force);
-        <span class="hljs-keyword">if</span> (!particleToIsStatic) toLoad.<span class="hljs-title function_">vectorSubtract</span>(force);
-
-        <span class="hljs-title function_">releaseVector</span>(dVelocity, dPosition, firstNorm, secondNorm, force);
+        <span class="hljs-title function_">releaseVector</span>(dPos);
+        <span class="hljs-keyword">return</span>;
     }
+
+    <span class="hljs-keyword">const</span> n = <span class="hljs-title function_">requestVector</span>(dPos).<span class="hljs-title function_">normalize</span>();
+    <span class="hljs-keyword">const</span> dVel = <span class="hljs-title function_">requestVector</span>(toVel).<span class="hljs-title function_">vectorSubtract</span>(fromVel);
+
+    <span class="hljs-keyword">const</span> force = <span class="hljs-title function_">requestVector</span>(n).<span class="hljs-title function_">scalarMultiply</span>(springConstant * (len - restLength));
+
+    <span class="hljs-keyword">const</span> vAlong = dVel.<span class="hljs-title function_">getDot</span>(n);
+
+    force.<span class="hljs-title function_">vectorAddScaled</span>(n, damperConstant * vAlong);
+
+    <span class="hljs-keyword">if</span> (!particleFromIsStatic)fromLoad.<span class="hljs-title function_">vectorAdd</span>(force);
+
+    <span class="hljs-keyword">if</span> (!particleToIsStatic) toLoad.<span class="hljs-title function_">vectorSubtract</span>(force);
+
+    <span class="hljs-title function_">releaseVector</span>(dPos, n, dVel, force);
 };</pre></div></div>
             
         </li>

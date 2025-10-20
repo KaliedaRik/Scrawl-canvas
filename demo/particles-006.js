@@ -89,7 +89,7 @@ const myEmitter = scrawl.makeEmitter({
 
         engine.save();
 
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.resetTransform();
 
         engine.strokeStyle = 'midnightblue';
 
@@ -154,7 +154,7 @@ const myEmitter = scrawl.makeEmitter({
             const {x, y} = here;
 
             engine.save();
-            engine.setTransform(1, 0, 0, 1, 0, 0);
+            engine.resetTransform();
             engine.strokeStyle = 'red';
 
             for (let i = 0, iz = particles.length; i < iz; i++) {

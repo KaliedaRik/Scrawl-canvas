@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -617,7 +622,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CORNER_SELECTOR</span>, <span class="hljs-variable constant_">ELEMENT</span>, <span class="hljs-variable constant_">FORBIDDEN_ELEMENTS</span>, <span class="hljs-variable constant_">MIMIC</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">ABSOLUTE</span>, <span class="hljs-variable constant_">CANVAS</span>, <span class="hljs-variable constant_">CORNER_SELECTOR</span>, <span class="hljs-variable constant_">ELEMENT</span>, <span class="hljs-variable constant_">MIMIC</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -643,6 +648,21 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
+              <p>Cannot be used as stack elements</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">FORBIDDEN_ELEMENTS</span> = [<span class="hljs-string">&#x27;BASE&#x27;</span>, <span class="hljs-string">&#x27;HEAD&#x27;</span>, <span class="hljs-string">&#x27;LINK&#x27;</span>, <span class="hljs-string">&#x27;META&#x27;</span>, <span class="hljs-string">&#x27;STYLE&#x27;</span>, <span class="hljs-string">&#x27;TITLE&#x27;</span>, <span class="hljs-string">&#x27;BODY&#x27;</span>, <span class="hljs-string">&#x27;DD&#x27;</span>, <span class="hljs-string">&#x27;DT&#x27;</span>, <span class="hljs-string">&#x27;FIGCAPTION&#x27;</span>, <span class="hljs-string">&#x27;HR&#x27;</span>, <span class="hljs-string">&#x27;LI&#x27;</span>, <span class="hljs-string">&#x27;ABBR&#x27;</span>, <span class="hljs-string">&#x27;B&#x27;</span>, <span class="hljs-string">&#x27;BDI&#x27;</span>, <span class="hljs-string">&#x27;BDO&#x27;</span>, <span class="hljs-string">&#x27;BR&#x27;</span>, <span class="hljs-string">&#x27;CITE&#x27;</span>, <span class="hljs-string">&#x27;CODE&#x27;</span>, <span class="hljs-string">&#x27;DATA&#x27;</span>, <span class="hljs-string">&#x27;DFN&#x27;</span>, <span class="hljs-string">&#x27;EM&#x27;</span>, <span class="hljs-string">&#x27;I&#x27;</span>, <span class="hljs-string">&#x27;KBD&#x27;</span>, <span class="hljs-string">&#x27;MARK&#x27;</span>, <span class="hljs-string">&#x27;Q&#x27;</span>, <span class="hljs-string">&#x27;RP&#x27;</span>, <span class="hljs-string">&#x27;RT&#x27;</span>, <span class="hljs-string">&#x27;RUBY&#x27;</span>, <span class="hljs-string">&#x27;S&#x27;</span>, <span class="hljs-string">&#x27;SAMP&#x27;</span>, <span class="hljs-string">&#x27;SMALL&#x27;</span>, <span class="hljs-string">&#x27;SPAN&#x27;</span>, <span class="hljs-string">&#x27;STRONG&#x27;</span>, <span class="hljs-string">&#x27;SUB&#x27;</span>, <span class="hljs-string">&#x27;SUP&#x27;</span>, <span class="hljs-string">&#x27;TIME&#x27;</span>, <span class="hljs-string">&#x27;U&#x27;</span>, <span class="hljs-string">&#x27;VAR&#x27;</span>, <span class="hljs-string">&#x27;WBR&#x27;</span>, <span class="hljs-string">&#x27;AREA&#x27;</span>, <span class="hljs-string">&#x27;MAP&#x27;</span>, <span class="hljs-string">&#x27;TRACK&#x27;</span>, <span class="hljs-string">&#x27;SOURCE&#x27;</span>, <span class="hljs-string">&#x27;NOSCRIPT&#x27;</span>, <span class="hljs-string">&#x27;SCRIPT&#x27;</span>, <span class="hljs-string">&#x27;DEL&#x27;</span>, <span class="hljs-string">&#x27;INS&#x27;</span>, <span class="hljs-string">&#x27;CAPTION&#x27;</span>, <span class="hljs-string">&#x27;COL&#x27;</span>, <span class="hljs-string">&#x27;COLGROUP&#x27;</span>, <span class="hljs-string">&#x27;TBODY&#x27;</span>, <span class="hljs-string">&#x27;TD&#x27;</span>, <span class="hljs-string">&#x27;TFOOT&#x27;</span>, <span class="hljs-string">&#x27;TH&#x27;</span>, <span class="hljs-string">&#x27;THEAD&#x27;</span>, <span class="hljs-string">&#x27;TR&#x27;</span>, <span class="hljs-string">&#x27;DATALIST&#x27;</span>, <span class="hljs-string">&#x27;FIELDSET&#x27;</span>, <span class="hljs-string">&#x27;LABEL&#x27;</span>, <span class="hljs-string">&#x27;LEGEND&#x27;</span>, <span class="hljs-string">&#x27;OPTGROUP&#x27;</span>, <span class="hljs-string">&#x27;OPTION&#x27;</span>, <span class="hljs-string">&#x27;SLOT&#x27;</span>, <span class="hljs-string">&#x27;DIALOG&#x27;</span>, <span class="hljs-string">&#x27;SUMMARY&#x27;</span>, <span class="hljs-string">&#x27;TEMPLATE&#x27;</span>, <span class="hljs-string">&#x27;ACRONYM&#x27;</span>, <span class="hljs-string">&#x27;BIG&#x27;</span>, <span class="hljs-string">&#x27;CENTER&#x27;</span>, <span class="hljs-string">&#x27;CONTENT&#x27;</span>, <span class="hljs-string">&#x27;DIR&#x27;</span>, <span class="hljs-string">&#x27;FONT&#x27;</span>, <span class="hljs-string">&#x27;FRAME&#x27;</span>, <span class="hljs-string">&#x27;FRAMESET&#x27;</span>, <span class="hljs-string">&#x27;IMAGE&#x27;</span>, <span class="hljs-string">&#x27;MARQUEE&#x27;</span>, <span class="hljs-string">&#x27;MENUITEM&#x27;</span>, <span class="hljs-string">&#x27;NOBR&#x27;</span>, <span class="hljs-string">&#x27;NOEMBED&#x27;</span>, <span class="hljs-string">&#x27;NOFRAMES&#x27;</span>, <span class="hljs-string">&#x27;PARAM&#x27;</span>, <span class="hljs-string">&#x27;PLAINTEXT&#x27;</span>, <span class="hljs-string">&#x27;RB&#x27;</span>, <span class="hljs-string">&#x27;RTC&#x27;</span>, <span class="hljs-string">&#x27;SHADOW&#x27;</span>, <span class="hljs-string">&#x27;STRIKE&#x27;</span>, <span class="hljs-string">&#x27;TT&#x27;</span>, <span class="hljs-string">&#x27;XMP&#x27;</span>, <span class="hljs-string">&#x27;ANIMATE&#x27;</span>, <span class="hljs-string">&#x27;ANIMATEMOTION&#x27;</span>, <span class="hljs-string">&#x27;ANIMATETRANSFORM&#x27;</span>, <span class="hljs-string">&#x27;CIRCLE&#x27;</span>, <span class="hljs-string">&#x27;CLIPPATH&#x27;</span>, <span class="hljs-string">&#x27;CURSOR&#x27;</span>, <span class="hljs-string">&#x27;DEFS&#x27;</span>, <span class="hljs-string">&#x27;DESC&#x27;</span>, <span class="hljs-string">&#x27;ELLIPSE&#x27;</span>, <span class="hljs-string">&#x27;FEBLEND&#x27;</span>, <span class="hljs-string">&#x27;FECOLORMATRIX&#x27;</span>, <span class="hljs-string">&#x27;FECOMPONENTTRANSFER&#x27;</span>, <span class="hljs-string">&#x27;FECOMPOSITE&#x27;</span>, <span class="hljs-string">&#x27;FECONVOLVEMATRIX&#x27;</span>, <span class="hljs-string">&#x27;FEDIFFUSELIGHTING&#x27;</span>, <span class="hljs-string">&#x27;FEDISPLACEMENTMAP&#x27;</span>, <span class="hljs-string">&#x27;FEDISTANTLIGHT&#x27;</span>, <span class="hljs-string">&#x27;FEDROPSHADOW&#x27;</span>, <span class="hljs-string">&#x27;FEFLOOD&#x27;</span>, <span class="hljs-string">&#x27;FEFUNCA&#x27;</span>, <span class="hljs-string">&#x27;FEFUNCB&#x27;</span>, <span class="hljs-string">&#x27;FEFUNCG&#x27;</span>, <span class="hljs-string">&#x27;FEFUNCR&#x27;</span>, <span class="hljs-string">&#x27;FEGAUSSIANBLUR&#x27;</span>, <span class="hljs-string">&#x27;FEIMAGE&#x27;</span>, <span class="hljs-string">&#x27;FEMERGE&#x27;</span>, <span class="hljs-string">&#x27;FEMERGENODE&#x27;</span>, <span class="hljs-string">&#x27;FEMORPHOLOGY&#x27;</span>, <span class="hljs-string">&#x27;FEOFFSET&#x27;</span>, <span class="hljs-string">&#x27;FEPOINTLIGHT&#x27;</span>, <span class="hljs-string">&#x27;FESPECULARLIGHTING&#x27;</span>, <span class="hljs-string">&#x27;FESPOTLIGHT&#x27;</span>, <span class="hljs-string">&#x27;FETILE&#x27;</span>, <span class="hljs-string">&#x27;FETURBULENCE&#x27;</span>, <span class="hljs-string">&#x27;FILTER&#x27;</span>, <span class="hljs-string">&#x27;FONT-FACE-FORMAT&#x27;</span>, <span class="hljs-string">&#x27;FONT-FACE-NAME&#x27;</span>, <span class="hljs-string">&#x27;FONT-FACE-SRC&#x27;</span>, <span class="hljs-string">&#x27;FONT-FACE-URI&#x27;</span>, <span class="hljs-string">&#x27;FONT-FACE&#x27;</span>, <span class="hljs-string">&#x27;FONT&#x27;</span>, <span class="hljs-string">&#x27;FONT&#x27;</span>, <span class="hljs-string">&#x27;FOREIGNOBJECT&#x27;</span>, <span class="hljs-string">&#x27;G&#x27;</span>, <span class="hljs-string">&#x27;GLYPH&#x27;</span>, <span class="hljs-string">&#x27;GLYPHREF&#x27;</span>, <span class="hljs-string">&#x27;HKERN&#x27;</span>, <span class="hljs-string">&#x27;IMAGE&#x27;</span>, <span class="hljs-string">&#x27;LINE&#x27;</span>, <span class="hljs-string">&#x27;LINEARGRADIENT&#x27;</span>, <span class="hljs-string">&#x27;MARKER&#x27;</span>, <span class="hljs-string">&#x27;MASK&#x27;</span>, <span class="hljs-string">&#x27;METADATA&#x27;</span>, <span class="hljs-string">&#x27;MISSING-GLYPH&#x27;</span>, <span class="hljs-string">&#x27;MPATH&#x27;</span>, <span class="hljs-string">&#x27;PATH&#x27;</span>, <span class="hljs-string">&#x27;PATTERN&#x27;</span>, <span class="hljs-string">&#x27;POLYGON&#x27;</span>, <span class="hljs-string">&#x27;POLYLINE&#x27;</span>, <span class="hljs-string">&#x27;RADIALGRADIENT&#x27;</span>, <span class="hljs-string">&#x27;RECT&#x27;</span>, <span class="hljs-string">&#x27;SCRIPT&#x27;</span>, <span class="hljs-string">&#x27;SET&#x27;</span>, <span class="hljs-string">&#x27;STOP&#x27;</span>, <span class="hljs-string">&#x27;STYLE&#x27;</span>, <span class="hljs-string">&#x27;SWITCH&#x27;</span>, <span class="hljs-string">&#x27;SYMBOL&#x27;</span>, <span class="hljs-string">&#x27;TEXT&#x27;</span>, <span class="hljs-string">&#x27;TEXTPATH&#x27;</span>, <span class="hljs-string">&#x27;TREF&#x27;</span>, <span class="hljs-string">&#x27;TSPAN&#x27;</span>, <span class="hljs-string">&#x27;USE&#x27;</span>, <span class="hljs-string">&#x27;VIEW&#x27;</span>, <span class="hljs-string">&#x27;VKERN&#x27;</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
               <h4 id="element-constructor">Element constructor</h4>
 
             </div>
@@ -654,11 +674,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Restrict what can become an Element</p>
 <ul>
@@ -677,11 +697,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Scrawl-canvas does not retain an Element’s textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes <code>text</code> (for textContent, which automatically escapes all HTML-related tags and entities) and <code>content</code> (which should respect HTML tags and entities)</p>
 
@@ -727,11 +747,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="element-prototype">Element prototype</h4>
 
@@ -746,11 +766,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -762,28 +782,14 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <h4 id="element-attributes">Element attributes</h4>
-<p>No additional attributes required beyond those supplied by the mixins</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet functionality required</p>
+              <h4 id="element-attributes">Element attributes</h4>
+<p>No additional attributes required beyond those supplied by the mixins</p>
 
             </div>
             
@@ -796,8 +802,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
 
             </div>
             
@@ -809,6 +815,20 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -824,11 +844,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -839,11 +859,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><code>text</code> - <strong>this is the preferred way to update an element’s text content</strong> because the text supplied in the argument is not treated as HTML by the browser.</p>
 <p>When we update the DOM attribute <code>element.textContent</code>, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its ‘kids’ after updating the text</p>
@@ -869,11 +889,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><code>content</code> - <strong>WARNING - this is a dangerous function!</strong> It does not perform any character escaping before inserting the supplied argument into the element. Raw HTML (including, for instance, &lt;script&gt; tags) will be added to the DOM. It’s up to the developer to make sure this content is safe!</p>
 <p>When we update the DOM attribute <code>element.innerHTML</code>, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its ‘kids’ after updating the text</p>
@@ -899,11 +919,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -912,11 +932,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwrites mixin/position function.</p>
 
@@ -930,11 +950,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="snippet-related-functions">Snippet-related functions</h4>
 
@@ -943,11 +963,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>addCanvas</code> - adds a new &lt;canvas&gt; element to Scrawl-canvas stack immediately before this element, and sets up the canvas to mimic the element (meaning it will mimic changes to the element’s dimensions, positioning, scale and 3D rotational values)</p>
 <ul>
@@ -1010,11 +1030,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-title class_">Get</span> a handle to a <span class="hljs-title class_">Stack</span> wrapper

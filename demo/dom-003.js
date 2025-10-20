@@ -10,7 +10,6 @@ import { reportSpeed } from './utilities.js';
 // #### Scene setup
 const stack = scrawl.findStack('mystack');
 
-
 // Namespacing boilerplate
 const namespace = stack.name;
 const name = (n) => `${namespace}-${n}`;
@@ -104,8 +103,8 @@ stack.addNewElement({
 
     startY: 250,
     scale: 1.25,
-    pitch: 60,
-    yaw: 80,
+    pitch: 30,
+    yaw: 30,
 
     css: {
         border: 0,

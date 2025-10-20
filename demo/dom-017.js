@@ -275,7 +275,7 @@ const reloadCanvas = () => {
 const removeCanvas = () => {
     console.log('remove the current canvas:', currentCanvas);
 
-    scrawl.library.purge(currentCanvas);
+    scrawl.purge(currentCanvas);
     currentCanvas = noCanvas;
 };
 
@@ -532,7 +532,7 @@ const reloadStack = () => {
 const removeStack = () => {
     console.log('remove the current stack:', currentStack);
 
-    scrawl.library.purge(currentStack);
+    scrawl.purge(currentStack);
     currentStack = noStack;
 };
 

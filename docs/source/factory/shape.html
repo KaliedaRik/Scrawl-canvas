@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -786,8 +791,11 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
 P.<span class="hljs-property">cleanStampHandlePositionsAdditionalActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> box = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>,
-        stampHandle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>;
+    <span class="hljs-keyword">const</span> box = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>;
+
+    <span class="hljs-keyword">if</span> (!box || box.<span class="hljs-property">length</span> &lt; <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">const</span> stampHandle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>;
 
     stampHandle[<span class="hljs-number">0</span>] += box[<span class="hljs-number">0</span>];
     stampHandle[<span class="hljs-number">1</span>] += box[<span class="hljs-number">1</span>];

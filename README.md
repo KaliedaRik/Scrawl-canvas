@@ -1,5 +1,6 @@
 # Welcome to the Scrawl-canvas Library
-Version: `8.15.0 - 21 May 2025` 
+Version: `8.16.0 - 20 Octobeer 2025` 
+
 
 #### Key links
 + Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
@@ -9,14 +10,10 @@ Version: `8.15.0 - 21 May 2025`
 
 Scrawl-canvas on CodePen: [codepen.io/collection/RzzMjw](https://codepen.io/collection/RzzMjw).
 
-LLM-compatible summary of library capabilities: [Scrawl-canvas summary](https://github.com/KaliedaRik/Scrawl-canvas/blob/v8/LLM-summary-for-scrawl-canvas.md)
-
 Scrawl-canvas on Discord: [discord.com/channels/...](https://discord.com/channels/906541519509536829/906541519996080149)
 
 __Do you want to contribute?__ Don't be afraid - reach out and let's see what website magic we can create together!
 
-+ [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5605/badge)](https://bestpractices.coreinfrastructure.org/projects/5605)
-+ [![justforfunnoreally.dev badge](https://img.shields.io/badge/justforfunnoreally-dev-9ff)](https://justforfunnoreally.dev)
 
 ### What?
 Scrawl-canvas is a Javascript library for working with the HTML5 &lt;canvas> element. The library:
@@ -25,7 +22,10 @@ Scrawl-canvas is a Javascript library for working with the HTML5 &lt;canvas> ele
 + Adds functionality to make &lt;canvas> elements `responsive`, adapting their size to their surrounding environment while remaining fully `interactive`.
 + Helps make canvas elements more `accessible` for both keyboard and AT users.
 
+The [LLM-summary-for-scrawl-canvas.md](https://github.com/KaliedaRik/Scrawl-canvas/blob/v8/LLM-summary-for-scrawl-canvas.md) file goes into more detail about the functionalities and capabilities of the library.
+
 https://user-images.githubusercontent.com/5357530/141673995-df239c38-2ba1-43f3-831c-b655524f2f40.mp4
+
 
 ### Why?
 Working with the native Canvas API is hard work - particularly when the desired result is more complex than a couple of coloured boxes in a static display. 
@@ -44,6 +44,7 @@ ___Sadly these advantages are also significant barriers:___
 + We cannot easily save and share displays, effects and animations; each &lt;canvas> element's output is tightly coupled to the code that defines that output.
 + __Of most concern__, canvases are entirely graphical - visual - by nature; they come with __significant accessibility issues__. Given the ever-stricter requirements for websites to be accessible to all users, this makes using a canvas to present important information a dangerous proposition.
 
+
 ### Scrawl-canvas overcomes these barriers
 Scrawl-canvas is fast, and developer-friendly. It's suitable for building infographics, games, interactive videos - whatever we can imagine for a 2D graphical presentation. And it is modular - we can break the code for a particular effect into its own module file which can be reused in other projects.
 
@@ -51,9 +52,11 @@ Scrawl-canvas offers all of this while never losing its hard focus on making the
 
 Also, Scrawl-canvas supports developers coding in TypeScript by means of a TS definitions file included in the repository.
 
+
 ## Installation and use
 
 There are three main ways to include Scrawl-canvas in your project:
+
 
 ### Download, unpack, use
 
@@ -61,7 +64,7 @@ There are three main ways to include Scrawl-canvas in your project:
 2. Unzip the file to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.15.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-15-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-15-0.zip) - that package only includes the minified file.
+Alternatively, a zip package of the v8.16.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-16-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-16-0.zip) - that package only includes the minified file.
 
 ```html
 <!-- Hello world -->
@@ -101,14 +104,16 @@ Alternatively, a zip package of the v8.15.0 files can be downloaded from this li
 </html>
 ```
 
+
 ### CDN - unpkg.com
 This will pull the requested npm package directly into your web page:
 ```html
 <script type="module">
-    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.15.0';
+    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.16.0';
     [...]
 </script>
 ```
+
 
 ### NPM/Yarn
 1. Add the library to your project using NPM or Yarn
@@ -128,6 +133,7 @@ import * as scrawl from 'scrawl-canvas';
 // - it can be used as-is, with no further installation steps required
 ```
 
+
 ## Local development and testing
 After forking this repo down to your local machine, `cd` into the scrawl-canvas folder, run `yarn install` or `npm install` (for the local build toolchain - the library itself has no external dependencies) and start a local server.
 
@@ -137,12 +143,14 @@ $> yarn install
 $> yarn dev
 ```
 
+
 ### Testing
 The code base does not include any ___unit testing___ frameworks. Instead, we rely on a set of Demo tests which allow us to perform ___integration testing___ and ___user interface testing___.
 
 Why this approach? Because most of the Scrawl-canvas functionality revolves around various forms of user interaction and animation, which requires visual inspection of the Demo tests to check that the canvas display - and thus, by inference, the underlying code - performs as expected.
 
 Demos that include user interaction allow us to test specific aspects of the code base.
+
 
 #### Linting
 The tool chain includes the [ESLint](https://eslint.org/) package to impose some basic checks on code. We use the default checks supplied by the package (as indicated in the [rules documentation page](https://eslint.org/docs/latest/rules)). To run the linter:
@@ -157,10 +165,9 @@ The tool chain also includes the [Knip](https://knip.dev/) package to check for 
 $> yarn knip
 ```
 
+
 ### TypeScript support
 Scrawl-canvas supports TypeScript through a TypeScript Definitions (d.ts) file. The definitions file aims to be as accurate, comprehensive and informative as possible, but specifically excludes support for internal (private) SC object attributes and functions.
-
-To view the library's API types, try the [tsdocs.dev website](https://tsdocs.dev/docs/scrawl-canvas).
 
 To aid development, we test the definitions file against the entire suite of Demo code .js files supplied as part of the library. From the root of the project, run the following command:
 
@@ -170,21 +177,39 @@ $> yarn test
 
 
 ### Documentation
-The source code has been extensively commented. We generate documentation from that code using [Docco](http://ashkenas.com/docco/). Documentation is regenerated each time the library is rebuilt.
+The library comes with a comprehensive Developer Runbook. The files for the runbook can be found in the `/docs/reference/` folder, and are written in markdown format. HTML files are generated from these markdown files using [Showdown](https://showdownjs.com/). The HTML files can be regenerated at any timeby running the following command on the command line: 
+
+```sh
+$> yarn build-showdown
+```
+
+The source code has been extensively commented. We generate documentation from that code using [Docco](http://ashkenas.com/docco/). This documentation can be regenerated at any time by running the following command on the command line:
+
+```sh
+$> yarn build-docco
+```
+
 
 ### Minification
-We minify the source code using [rollup](https://rollupjs.org/guide/en/) and its [terser](https://terser.org/) [plugin](https://www.npmjs.com/package/rollup-plugin-terser).
+We minify the source code using [rollup](https://rollupjs.org/guide/en/) and its [terser](https://terser.org/) [plugin](https://www.npmjs.com/package/rollup-plugin-terser). A new minified file can be generated at any time by running the following command on the command line:
+
+```sh
+$> yarn build-min
+```
+
 
 ### Building the library
 
-Running the following command on the command line will recreate the minified file, and regenerate the documentation:
+Running the following command on the command line will recreate the minified file, and regenerate all of the documentation:
 
 ```sh
 $> yarn build
 ```
 
+
 ### Star History
 [![Star History Chart](https://api.star-history.com/svg?repos=KaliedaRik/Scrawl-canvas&type=Date)](https://star-history.com/#KaliedaRik/Scrawl-canvas&Date)
+
 
 
 ### Development team

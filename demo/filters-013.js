@@ -97,7 +97,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 
         myFilter.set({ reference: val });
 
-        const [r, g, b, a] = colorFactory.extractRGBfromColor(val);
+        const [r, g, b, a] = colorFactory.extractRGBfromColorString(val);
 
         dom.red.value = `${r}`;
         dom.green.value = `${g}`;

@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -1501,7 +1506,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
 
                 realEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
                 realEngine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
-                realEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                realEngine.<span class="hljs-title function_">resetTransform</span>();
 
                 realEngine.<span class="hljs-title function_">drawImage</span>(tempElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
@@ -1574,7 +1579,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
         filterCellEngine.<span class="hljs-title function_">save</span>();
         filterCellEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_IN</span>;
         filterCellEngine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
-        filterCellEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        filterCellEngine.<span class="hljs-title function_">resetTransform</span>();
         filterCellEngine.<span class="hljs-title function_">drawImage</span>(currentElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
         filterCellEngine.<span class="hljs-title function_">restore</span>();
 
@@ -1594,7 +1599,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    filterCellEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            <div class="content"><div class='highlight'><pre>    filterCellEngine.<span class="hljs-title function_">resetTransform</span>();
 
     <span class="hljs-keyword">const</span> myimage = filterCellEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterCellElement.<span class="hljs-property">width</span>, filterCellElement.<span class="hljs-property">height</span>);
 
@@ -1616,7 +1621,7 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
 
     currentEngine.<span class="hljs-title function_">save</span>();
 
-    currentEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    currentEngine.<span class="hljs-title function_">resetTransform</span>();
     currentEngine.<span class="hljs-title function_">drawImage</span>(filterCellElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
     currentEngine.<span class="hljs-title function_">restore</span>();
 

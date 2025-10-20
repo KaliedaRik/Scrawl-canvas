@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -1033,7 +1038,7 @@
 
         <span class="hljs-keyword">let</span> result = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span>(!incs.<span class="hljs-title function_">indexOf</span>(key) &amp;&amp; value === <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[key]) result = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span>(!incs.<span class="hljs-title function_">includes</span>(key) &amp;&amp; value === <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[key]) result = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">return</span> result;
     };
@@ -1336,8 +1341,6 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">midInitActions</span>(items);
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">purge</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">purgeArtefact</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">purge</span>);
     };
 
     P.<span class="hljs-property">midInitActions</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
@@ -1870,12 +1873,21 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
-              <p>Handle GCO</p>
+              <p>Handle GCO and GA</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> oldGCO = <span class="hljs-variable constant_">SOURCE_OVER</span>
-            <span class="hljs-keyword">if</span> (state) oldGCO = state.<span class="hljs-property">globalCompositeOperation</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> oldGCO = <span class="hljs-variable constant_">SOURCE_OVER</span>;
+            <span class="hljs-keyword">let</span> oldAlpha = <span class="hljs-number">1</span>;
+
+            <span class="hljs-keyword">if</span> (state) {
+
+                oldGCO = state.<span class="hljs-property">globalCompositeOperation</span>;
+                oldAlpha = state.<span class="hljs-property">globalAlpha</span>;
+
+                state.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
+                state.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
+            }</pre></div></div>
             
         </li>
         
@@ -1901,11 +1913,15 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
-              <p>Restore GCO</p>
+              <p>Restore GCO and GA</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (state) state.<span class="hljs-property">globalCompositeOperation</span> = oldGCO;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (state) {
+
+                state.<span class="hljs-property">globalCompositeOperation</span> = oldGCO;
+                state.<span class="hljs-property">globalAlpha</span> = oldAlpha;
+            }
 
             <span class="hljs-keyword">if</span> (hasFilters) {
 

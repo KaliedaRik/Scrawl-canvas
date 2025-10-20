@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1165,9 +1170,9 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         <span class="hljs-attr">radius</span>: <span class="hljs-number">2</span>,
     }, {
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;step-channels&#x27;</span>,
-        <span class="hljs-attr">red</span>: <span class="hljs-number">31</span>,
-        <span class="hljs-attr">green</span>: <span class="hljs-number">31</span>,
-        <span class="hljs-attr">blue</span>: <span class="hljs-number">31</span>,
+        <span class="hljs-attr">red</span>: <span class="hljs-number">32</span>,
+        <span class="hljs-attr">green</span>: <span class="hljs-number">32</span>,
+        <span class="hljs-attr">blue</span>: <span class="hljs-number">32</span>,
         <span class="hljs-attr">clamp</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
     }],
 });
@@ -1191,25 +1196,17 @@ scrawl.<span class="hljs-title function_">findEntity</span>(<span class="hljs-ti
             <div class="content"><div class='highlight'><pre>canvas = scrawl.<span class="hljs-title function_">findCanvas</span>(<span class="hljs-string">&#x27;canvas-2&#x27;</span>);
 namespace = canvas.<span class="hljs-property">name</span>;
 
-<span class="hljs-keyword">const</span> points1 = [],
-    points2 = [];
-
-<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">2000</span>; i++) {
-    points1.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">400</span>));
-    points2.<span class="hljs-title function_">push</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">400</span>));
-}
-
 scrawl.<span class="hljs-title function_">makeFilter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;jagged-shapes&#x27;</span>),
     <span class="hljs-attr">actions</span>: [{
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
-        <span class="hljs-attr">points</span>: points1,
-        <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">30</span>,
+        <span class="hljs-attr">mode</span>: <span class="hljs-string">&#x27;random&#x27;</span>,
+        <span class="hljs-attr">randomCount</span>: <span class="hljs-number">1600</span>,
     }, {
         <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
-        <span class="hljs-attr">points</span>: points2,
-        <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">30</span>,
+        <span class="hljs-attr">mode</span>: <span class="hljs-string">&#x27;random&#x27;</span>,
+        <span class="hljs-attr">randomCount</span>: <span class="hljs-number">400</span>,
         <span class="hljs-attr">opacity</span>: <span class="hljs-number">0.5</span>
     }],
 });

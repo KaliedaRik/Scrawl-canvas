@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -995,7 +1000,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="demo-mediapipe-003">Demo Mediapipe 003</h1>
-<p>MediaPipe Face Mesh - working with the mesh coordinates</p>
+<p>MediaPipe Hand Landmarker - working with the mesh coordinates</p>
 
             </div>
             
@@ -1012,7 +1017,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> <span class="hljs-title class_">MediaPipe</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./js/mediapipe/tasks-vision/vision-bundle.js&#x27;</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
@@ -1056,41 +1062,32 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>Magic numbers</p>
+              <h4 id="importing-a-device-based-media-stream">Importing a device-based media stream</h4>
+<p>For this Demo we:</p>
+<ul>
+<li><p>Create a hidden Cell (camera-input-cell) which will hold the raw data from the media stream video</p>
+</li>
+<li><p>Create a media stream video asset</p>
+</li>
+<li><p>Display the media stream asset in a Picture entity in our hidden Cell</p>
+</li>
+<li><p>Display the hidden Cell in the base Cell using a second Picture entity (the background)</p>
+</li>
+<li><p>Display an overlay of labels detected by the hand landmarker</p>
+</li>
+<li><p>Note 1: Users will need to explicitly agree to let Scrawl-canvas use the media stream the first time the page loads (the browser should handle this agreement procedure itself)</p>
+</li>
+<li><p>Note 2: importMediaStream returns a Promise!</p>
+</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> width = <span class="hljs-number">1280</span>,
-    height = <span class="hljs-number">720</span>;
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">const</span> videoFeedCell = canvas.<span class="hljs-title function_">buildCell</span>({
 
-
-<span class="hljs-keyword">const</span> dom = scrawl.<span class="hljs-title function_">initializeDomInputs</span>([
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;wormstart&#x27;</span>, <span class="hljs-string">&#x27;220&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;wormend&#x27;</span>, <span class="hljs-string">&#x27;270&#x27;</span>],
-]);
-
-<span class="hljs-keyword">const</span> worm = scrawl.<span class="hljs-title function_">makePolyline</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;face-worm&#x27;</span>),
-
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-    <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
-    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
-
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-
-    <span class="hljs-attr">mapToPins</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">tension</span>: <span class="hljs-number">0.3</span>,
-});
-
-<span class="hljs-keyword">const</span> updateLabelsAndWorm = <span class="hljs-keyword">function</span> (<span class="hljs-params">asset</span>) {
-
-    <span class="hljs-keyword">const</span> { entitys, mesh } = asset
-
-    <span class="hljs-keyword">if</span> (mesh.<span class="hljs-property">length</span> &amp;&amp; <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(mesh[<span class="hljs-number">0</span>])) {
-
-        <span class="hljs-keyword">const</span> face = mesh[<span class="hljs-number">0</span>];</pre></div></div>
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;camera-input-cell&#x27;</span>),
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">768</span>, <span class="hljs-number">768</span>],</pre></div></div>
             
         </li>
         
@@ -1101,24 +1098,25 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>We only need to create the labels once</p>
+              <p>We pipe the media stream displayed in this cell:</p>
+<ul>
+<li>Through the MediaPipe ML model code, to remove background</li>
+<li>Into the base cell to display the filtered background</li>
+</ul>
+<p>Because MediaPipe needs time to process each frame, this means:</p>
+<ul>
+<li>There’s a chance of the face and background falling out of sync</li>
+<li>So we only update the cell after MediaPipe completes its processing work</li>
+<li>Thus keeping both background and face in sync</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!entitys.<span class="hljs-property">length</span>) {
-
-            face.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">coord, index</span>) =&gt;</span> {
-
-                entitys.<span class="hljs-title function_">push</span>(scrawl.<span class="hljs-title function_">makeLabel</span>({
-
-                    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">`label-<span class="hljs-subst">${index}</span>`</span>),
-                    <span class="hljs-attr">text</span>: <span class="hljs-string">`<span class="hljs-subst">${index}</span>`</span>,
-                    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-                    <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;10px Arial&#x27;</span>,
-                    <span class="hljs-attr">textIsAccessible</span>: <span class="hljs-literal">false</span>,
-                }));
-            });
-        }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-attr">cleared</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">compiled</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1129,24 +1127,19 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Update label coordinates with new mesh data</p>
+              <p>We use another Cell to feed data into MediaPipe</p>
+<ul>
+<li>Required dimensions: 224 x 224</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        entitys.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">e, index</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> modelInputCell = canvas.<span class="hljs-title function_">buildCell</span>({
 
-            <span class="hljs-keyword">const</span> coord = face[index];
-
-            <span class="hljs-keyword">const</span> {x, y} = coord;
-
-            e.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${x * <span class="hljs-number">100</span>}</span>%`</span>,
-                <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${y * <span class="hljs-number">100</span>}</span>%`</span>,
-            });
-        });
-
-        <span class="hljs-keyword">let</span> wormStart = <span class="hljs-built_in">parseInt</span>(dom.<span class="hljs-property">wormstart</span>.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>),
-            wormEnd = <span class="hljs-built_in">parseInt</span>(dom.<span class="hljs-property">wormend</span>.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>);</pre></div></div>
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;model-input-cell&#x27;</span>),
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">224</span>, <span class="hljs-number">224</span>],
+    <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1157,27 +1150,9 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Check for perilous user input</p>
+              <h4 id="entitys">Entitys</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Number</span>.<span class="hljs-built_in">isFinite</span>(wormStart)) wormStart = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (wormStart &lt; <span class="hljs-number">0</span>) wormStart = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (wormStart &gt; <span class="hljs-number">468</span>) wormStart = <span class="hljs-number">468</span>;
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Number</span>.<span class="hljs-built_in">isFinite</span>(wormEnd)) wormEnd = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (wormEnd &lt; <span class="hljs-number">0</span>) wormEnd = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (wormEnd &gt; <span class="hljs-number">468</span>) wormEnd = <span class="hljs-number">468</span>;
-
-        <span class="hljs-keyword">if</span> (wormEnd &lt; wormStart) {
-
-            <span class="hljs-keyword">const</span> temp = wormStart;
-            wormStart = wormEnd;
-            wormEnd = temp;
-        }
-
-        dom.<span class="hljs-property">wormstart</span>.<span class="hljs-property">value</span> = <span class="hljs-string">`<span class="hljs-subst">${wormStart}</span>`</span>;
-        dom.<span class="hljs-property">wormend</span>.<span class="hljs-property">value</span> = <span class="hljs-string">`<span class="hljs-subst">${wormEnd}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -1188,15 +1163,21 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>Update the worm’s pins</p>
+              <p>Media stream picture entity</p>
+<ul>
+<li>Goes into the hidden video feed Cell</li>
+<li>Initialized without an asset, and given some default dimensions - these will be updated when the media stream completes initialization</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        worm.<span class="hljs-title function_">set</span>({
-            <span class="hljs-attr">pins</span>: entitys.<span class="hljs-title function_">slice</span>(wormStart, wormEnd),
-        });
-    }
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> inputPicture = scrawl.<span class="hljs-title function_">makePicture</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;camera-input-picture&#x27;</span>),
+    <span class="hljs-attr">group</span>: videoFeedCell,
+
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],</pre></div></div>
             
         </li>
         
@@ -1207,60 +1188,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <h4 id="mediapipe-functionality">MediaPipe functionality</h4>
-<p>We’ll handle everything in a raw asset object</p>
+              <p>To get a mirror effect</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myAsset = scrawl.<span class="hljs-title function_">makeRawAsset</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mediapipe-model-interpreter&#x27;</span>),
-
-    <span class="hljs-attr">userAttributes</span>: [{
-
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;mesh&#x27;</span>,
-        <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-            <span class="hljs-keyword">if</span> (item) {
-
-                <span class="hljs-keyword">const</span> {<span class="hljs-attr">image</span>:img, <span class="hljs-attr">multiFaceLandmarks</span>:mesh} = item;
-
-                <span class="hljs-keyword">if</span> (img) {
-
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> =  img.<span class="hljs-property">width</span>;
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> = img.<span class="hljs-property">height</span>;
-                }
-
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
-                <span class="hljs-keyword">if</span> (mesh) <span class="hljs-variable language_">this</span>.<span class="hljs-property">mesh</span> = mesh;
-
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
-            }
-        },
-    },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;entitys&#x27;</span>,
-        <span class="hljs-attr">defaultValue</span>: [],
-        <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
-    },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>,
-        <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
-        <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
-    },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>,
-        <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
-        <span class="hljs-attr">setter</span>: <span class="hljs-function">() =&gt;</span> {},
-    }],
-
-    <span class="hljs-attr">updateSource</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">assetWrapper</span>) {
-
-        <span class="hljs-keyword">const</span> { mesh } = assetWrapper;
-
-        <span class="hljs-keyword">if</span> (mesh &amp;&amp; mesh.<span class="hljs-property">length</span>) <span class="hljs-title function_">updateLabelsAndWorm</span>(<span class="hljs-variable language_">this</span>);
-    },
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">flipReverse</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
             
         </li>
@@ -1272,13 +1206,23 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>The forever loop function, which captures the MediaPipe model’s output and passes it on to our raw asset for processing</p>
+              <p>The model input Cell also needs a Picture entity, to feed into the model</p>
+<ul>
+<li>The model requires image data with set dimensions (224 x 224)</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> perform = <span class="hljs-keyword">function</span> (<span class="hljs-params">mesh</span>) {
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
 
-    myAsset.<span class="hljs-title function_">set</span>({ mesh });</pre></div></div>
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;model-input-picture&#x27;</span>),
+    <span class="hljs-attr">group</span>: modelInputCell,
+
+    <span class="hljs-attr">asset</span>: videoFeedCell,
+
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+});</pre></div></div>
             
         </li>
         
@@ -1289,16 +1233,23 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>To get the raw asset working, something needs to subscribe to it - even though we’re not using the asset to output any graphics in this demo. We only need to create the Picture entity once.</p>
+              <p>Base Cell background image</p>
+<ul>
+<li>We apply filters to the background image, and stamp it onto the base cell last (with appropriate GCO)</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!output) output = scrawl.<span class="hljs-title function_">makePicture</span>({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
 
-        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;output&#x27;</span>),
-        <span class="hljs-attr">asset</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mediapipe-model-interpreter&#x27;</span>),
-    });
-};</pre></div></div>
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;background-picture&#x27;</span>),
+    <span class="hljs-attr">asset</span>: videoFeedCell,
+
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+
+    <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.4</span>,
+});</pre></div></div>
             
         </li>
         
@@ -1309,11 +1260,50 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <h5 id="import-and-use-media-stream">Import and use media stream</h5>
+              <p>Create some Label entitys to display landmark points</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> video, model, output;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> landmarkPoints = [
+    <span class="hljs-string">&#x27;Wrist&#x27;</span>,
+    <span class="hljs-string">&#x27;Thumb-cmc&#x27;</span>,
+    <span class="hljs-string">&#x27;Thumb-mcp&#x27;</span>,
+    <span class="hljs-string">&#x27;Thumb-ip&#x27;</span>,
+    <span class="hljs-string">&#x27;Thumb-tip&#x27;</span>,
+    <span class="hljs-string">&#x27;Index-mcp&#x27;</span>,
+    <span class="hljs-string">&#x27;Index-pip&#x27;</span>,
+    <span class="hljs-string">&#x27;Index-dip&#x27;</span>,
+    <span class="hljs-string">&#x27;Index-tip&#x27;</span>,
+    <span class="hljs-string">&#x27;Middle-mcp&#x27;</span>,
+    <span class="hljs-string">&#x27;Middle-pip&#x27;</span>,
+    <span class="hljs-string">&#x27;Middle-dip&#x27;</span>,
+    <span class="hljs-string">&#x27;Middle-tip&#x27;</span>,
+    <span class="hljs-string">&#x27;Ring-mcp&#x27;</span>,
+    <span class="hljs-string">&#x27;Ring-pip&#x27;</span>,
+    <span class="hljs-string">&#x27;Ring-dip&#x27;</span>,
+    <span class="hljs-string">&#x27;Ring-tip&#x27;</span>,
+    <span class="hljs-string">&#x27;Pinky-mcp&#x27;</span>,
+    <span class="hljs-string">&#x27;Pinky-pip&#x27;</span>,
+    <span class="hljs-string">&#x27;Pinky-dip&#x27;</span>,
+    <span class="hljs-string">&#x27;Pinky-tip&#x27;</span>,
+];
+
+<span class="hljs-keyword">const</span> labels = [];
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = landmarkPoints.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+    <span class="hljs-keyword">const</span> label = landmarkPoints[i]
+
+    labels.<span class="hljs-title function_">push</span>(scrawl.<span class="hljs-title function_">makeLabel</span>({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(label),
+        <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;8px monospace&#x27;</span>,
+        <span class="hljs-attr">text</span>: label,
+        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+        <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+    }));
+}</pre></div></div>
             
         </li>
         
@@ -1324,38 +1314,29 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>Capture the media stream</p>
+              <h4 id="google-mediapipe-ml-model-code">Google MediaPipe ML model code</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importMediaStream</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> handLandmarker;
 
-    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;device-camera&#x27;</span>),
-    <span class="hljs-attr">video</span>: {
-        <span class="hljs-attr">width</span>: { <span class="hljs-attr">ideal</span>: width },
-        <span class="hljs-attr">height</span>: { <span class="hljs-attr">ideal</span>: height },
-        <span class="hljs-attr">facingMode</span>: <span class="hljs-string">&#x27;user&#x27;</span>,
-    },
-})
-.<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">mycamera</span> =&gt;</span> {
+<span class="hljs-keyword">const</span> startModel = <span class="hljs-keyword">async</span> () =&gt; {
 
-    video = mycamera;
+    <span class="hljs-keyword">const</span> path = <span class="hljs-string">&#x27;js/mediapipe/tasks-vision/&#x27;</span>
+    <span class="hljs-keyword">const</span> vision = <span class="hljs-keyword">await</span> <span class="hljs-title class_">MediaPipe</span>.<span class="hljs-property">FilesetResolver</span>.<span class="hljs-title function_">forVisionTasks</span>();
 
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
-    video.<span class="hljs-property">source</span>.<span class="hljs-property">width</span> = width;
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
-    video.<span class="hljs-property">source</span>.<span class="hljs-property">height</span> = height;
+    vision.<span class="hljs-property">wasmBinaryPath</span> = <span class="hljs-string">`<span class="hljs-subst">${path}</span>wasm<span class="hljs-subst">${vision.wasmBinaryPath}</span>`</span>;
+    vision.<span class="hljs-property">wasmLoaderPath</span> = <span class="hljs-string">`<span class="hljs-subst">${path}</span>wasm<span class="hljs-subst">${vision.wasmLoaderPath}</span>`</span>;
 
-    scrawl.<span class="hljs-title function_">makePicture</span>({
+    handLandmarker = <span class="hljs-keyword">await</span> <span class="hljs-title class_">MediaPipe</span>.<span class="hljs-property">HandLandmarker</span>.<span class="hljs-title function_">createFromOptions</span>(vision, {
 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;background&#x27;</span>,
-        <span class="hljs-attr">asset</span>: mycamera.<span class="hljs-property">name</span>,
+        <span class="hljs-attr">baseOptions</span>: {
+            <span class="hljs-attr">modelAssetPath</span>: <span class="hljs-string">`<span class="hljs-subst">${path}</span>model/hand_landmarker.task`</span>,
+        },
 
-        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-
-        <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.2</span>,
-    });</pre></div></div>
+        <span class="hljs-attr">runningMode</span>: <span class="hljs-string">&#x27;VIDEO&#x27;</span>,
+    });
+};</pre></div></div>
             
         </li>
         
@@ -1366,25 +1347,14 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p>Start the MediaPipe model</p>
+              <p>We can start the model code running straight away</p>
+<ul>
+<li>It’s the camera for which we need user permission</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* eslint-disable */</span>
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
-    model = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FaceMesh</span>({
-
-<span class="hljs-comment">/* eslint-enable */</span>
-        <span class="hljs-attr">locateFile</span>: <span class="hljs-function">(<span class="hljs-params">file</span>) =&gt;</span> <span class="hljs-string">`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/<span class="hljs-subst">${file}</span>`</span>,
-    });
-
-    model.<span class="hljs-title function_">setOptions</span>({
-        <span class="hljs-attr">maxNumFaces</span>: <span class="hljs-number">1</span>,
-        <span class="hljs-attr">minDetectionConfidence</span>: <span class="hljs-number">0.5</span>,
-        <span class="hljs-attr">minTrackingConfidence</span>: <span class="hljs-number">0.5</span>
-    });
-
-    model.<span class="hljs-title function_">onResults</span>(perform);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">startModel</span>();</pre></div></div>
             
         </li>
         
@@ -1395,27 +1365,48 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p>Use MediaPipe’s camera functionality to get updates to the forever loop</p>
+              <p>This function gets consumed by the model’s handLandmarker object</p>
+<ul>
+<li>handLandmarker doesn’t start its work until it has something to segment</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/* eslint-disable */</span>
-<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
-    <span class="hljs-keyword">const</span> mediaPipeCamera = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Camera</span>(video.<span class="hljs-property">source</span>, {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">processModelData</span> = (<span class="hljs-params">results</span>) =&gt; {
 
-<span class="hljs-comment">/* eslint-enable */</span>
-        <span class="hljs-attr">onFrame</span>: <span class="hljs-keyword">async</span> () =&gt; {
+    <span class="hljs-keyword">if</span> (results &amp;&amp; results.<span class="hljs-property">landmarks</span> &amp;&amp; results.<span class="hljs-property">landmarks</span>.<span class="hljs-property">length</span>) {
 
-            <span class="hljs-keyword">await</span> model.<span class="hljs-title function_">send</span>({<span class="hljs-attr">image</span>: video.<span class="hljs-property">source</span>});
-        },
+        <span class="hljs-keyword">const</span> data = results.<span class="hljs-property">landmarks</span>[<span class="hljs-number">0</span>];
 
-        width,
-        height,
-    });
+        <span class="hljs-keyword">if</span> (data &amp;&amp; data.<span class="hljs-property">length</span>) {
 
-    mediaPipeCamera.<span class="hljs-title function_">start</span>();
-})
-.<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err.<span class="hljs-property">message</span>));</pre></div></div>
+            <span class="hljs-keyword">let</span> point, label;
+
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = labels.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+                point = data[i];
+                label = labels[i];
+
+                label.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${point.x * <span class="hljs-number">100</span>}</span>%`</span>,
+                    <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${point.y * <span class="hljs-number">100</span>}</span>%`</span>,
+                    <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span> - (point.<span class="hljs-property">z</span> * <span class="hljs-number">2</span>),
+                    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
+                });
+            }
+        }
+    }
+
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = labels.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+            labels[i].<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> });
+        }
+    }
+    videoFeedCell.<span class="hljs-title function_">clear</span>();
+    videoFeedCell.<span class="hljs-title function_">compile</span>();
+};</pre></div></div>
             
         </li>
         
@@ -1425,6 +1416,118 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <h4 id="media-stream-capture">Media stream capture</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importMediaStream</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;video-feed&#x27;</span>),
+    <span class="hljs-attr">audio</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">video</span>: {
+        <span class="hljs-attr">width</span>: { <span class="hljs-attr">ideal</span>: <span class="hljs-number">768</span> },
+        <span class="hljs-attr">height</span>: { <span class="hljs-attr">ideal</span>: <span class="hljs-number">768</span> },
+        <span class="hljs-attr">facingMode</span>: <span class="hljs-string">&#x27;user&#x27;</span>,
+    },
+})
+.<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">streamAsset</span> =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>The asset creates a non-DOM video element, which loads metadata asynchronously</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;loadedmetadata&#x27;</span>, <span class="hljs-function">() =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>We need to account for the case when the browser doesn’t return the desired dimensions</p>
+<ul>
+<li>The handle to the non-DOM video element is stored in the <code>asset.source</code> attribute</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> width = streamAsset.<span class="hljs-property">source</span>.<span class="hljs-property">videoWidth</span>,
+            height = streamAsset.<span class="hljs-property">source</span>.<span class="hljs-property">videoHeight</span>,
+            minimumDimension = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(width, height),
+            scale = <span class="hljs-number">768</span> / minimumDimension;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>Use the asset’s actual dimensions, and scale to prevent distortions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        inputPicture.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">dimensions</span>: [width, height],
+            scale,
+            <span class="hljs-attr">asset</span>: streamAsset,
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>We need to feed input data into the model discretely, via an SC animation object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        scrawl.<span class="hljs-title function_">makeAnimation</span>({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;model-segmenter&#x27;</span>),
+            <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fn</span>: <span class="hljs-function">() =&gt;</span> {
+
+                <span class="hljs-keyword">if</span> (handLandmarker &amp;&amp; handLandmarker.<span class="hljs-property">detectForVideo</span>) {
+
+                    <span class="hljs-keyword">const</span> results = handLandmarker.<span class="hljs-title function_">detectForVideo</span>(modelInputCell.<span class="hljs-property">element</span>, performance.<span class="hljs-title function_">now</span>());
+
+                    <span class="hljs-keyword">if</span> (results) <span class="hljs-title function_">processModelData</span>(results);
+                }
+            }
+        });
+
+    }, streamAsset.<span class="hljs-property">source</span>);
+})
+.<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err.<span class="hljs-property">message</span>));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1436,11 +1539,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1448,25 +1551,26 @@
             
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;animation&#x27;</span>),
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,
+  <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;render&#x27;</span>),
+  <span class="hljs-attr">target</span>: canvas,
+  <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-19">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;scrawl.library&#x27;</span>, scrawl.<span class="hljs-property">library</span>);
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;MediaPipe&#x27;</span>, <span class="hljs-title class_">MediaPipe</span>);</pre></div></div>
             
         </li>
         

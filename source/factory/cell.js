@@ -1154,7 +1154,7 @@ P.stashOutputAction = function () {
 
         // Get the imageData object, and stash it
         engine.save();
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        engine.resetTransform();
         this.stashedImageData = engine.getImageData(stashX, stashY, stashWidth, stashHeight);
         engine.restore();
 
@@ -1429,34 +1429,42 @@ P.getCellData = function (opaque = false) {
         halfHeight = _floor(height / 2);
 
     const iData = this.engine.getImageData(0, 0, width, height),
-        data = iData.data;
+        data = iData.data,
+        slider = new Uint32Array(data.buffer,  data.byteOffset,  data.byteLength >>> 2);;
+
+    if (opaque) {
+
+        for (let i = 3, iz = data.length; i < iz; i += 4) {
+
+            data[i] = 255;
+        }
+    }
 
     const pixelState = [];
 
     const coord = requestCoordinate();
 
-    for (let row = 0; row < height; row++) {
+    let row, col, index, angle;
 
-        for (let col = 0; col < width; col++) {
+    for (row = 0; row < height; row++) {
 
-            const index = ((row * width) + col) * 4;
+        for (col = 0; col < width; col++) {
 
-            coord.setFromArray([halfWidth, halfHeight]).subtract([row, col]);
+            index = ((row * width) + col) * 4;
 
-            // We want angle `0deg` to point north, to the top of the screen
-            let angle = 1 - ((_atan2(coord[1], coord[0]) / _piDouble) + 0.5);
-            if (angle > 0.5) angle -= 0.5;
-            else angle += 0.5;
+            // coord.setFromArray([halfWidth, halfHeight]).subtract([row, col]);
+            coord.setFromArray([col, row]).subtract([halfWidth, halfHeight]);
+
+            // We want angle `0.0turn / 1.0turn` to point north, to the top of the screen; `0.25turn` is east (horizontal to the right); etc.
+            angle = (_atan2(coord[1], coord[0]) / _piDouble) + 0.5;
+            angle = (angle + 0.75) % 1;
 
             pixelState.push({
-                indexR: index,
-                indexG: index + 1,
-                indexB: index + 2,
-                indexA: index + 3,
-                red: data[index + 0],
-                green: data[index + 1],
-                blue: data[index + 2],
-                alpha: (opaque) ? 255 : data[index + 3],
+                index,
+                red: data[index],
+                green: data[++index],
+                blue: data[++index],
+                alpha: data[++index],
                 row,
                 col,
                 distance: coord.getMagnitude(),
@@ -1469,7 +1477,9 @@ P.getCellData = function (opaque = false) {
 
     return {
         iData,
+        slider,
         pixelState,
+        opaque,
     }
 };
 
@@ -1477,33 +1487,39 @@ const pixelCleaner = new Uint8ClampedArray(1);
 
 P.paintCellData = function (item = Ωempty) {
 
-    const { iData, pixelState} = item;
+    const { iData, slider, pixelState, opaque} = item;
     const { width, height, data} = iData;
     const [w, h] = this.currentDimensions;
 
     if (width && height && data && pixelState && w === width && h === height) {
 
-        pixelState.forEach(p => {
+        let i, iz, p, red, green, blue, alpha, index,
+            update = false;
 
-            const {indexR, indexG, indexB, indexA} = p;
+        for (i = 0, iz = pixelState.length; i < iz; i++) {
 
-            const red = pixelCleaner[0] = p.red;
-            const green = pixelCleaner[0] = p.green;
-            const blue = pixelCleaner[0] = p.blue;
-            const alpha = pixelCleaner[0] = p.alpha;
+            p = pixelState[i];
 
-            p.red = red;
-            p.green = green;
-            p.blue = blue;
-            p.alpha = alpha;
+            index = p.index;
 
-            data[indexR] = red;
-            data[indexG] = green;
-            data[indexB] = blue;
-            data[indexA] = alpha;
-        });
+            red = pixelCleaner[0] = p.red;
+            green = pixelCleaner[0] = p.green;
+            blue = pixelCleaner[0] = p.blue;
+            alpha = opaque ? 255 : pixelCleaner[0] = p.alpha;
 
-        this.engine.putImageData(iData, 0, 0);
+            if (slider[index >>> 2] !== ((alpha << 24) | (blue << 16) | (green << 8) | red) >>> 0) {
+
+                update = true;
+
+                data[index] = red;
+                data[++index] = green;
+                data[++index] = blue;
+
+                if (!opaque) data[++index] = alpha;
+            }
+        };
+
+        if (update) this.engine.putImageData(iData, 0, 0);
     }
 };
 

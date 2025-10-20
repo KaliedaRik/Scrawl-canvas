@@ -63,6 +63,8 @@ const NoiseAsset = function (items = Ωempty) {
     this.values = [];
     this.grad = [];
 
+    this.noiseValues = [];
+
     this.subscribers = [];
 
     this.set(this.defs);
@@ -471,7 +473,6 @@ P.cleanNoise = function () {
             }
 
             // Update the cached noise values arrays
-            if (!this.noiseValues) this.noiseValues = [];
             this.noiseValues.length = 0;
             this.noiseValues.push(...noiseValues);
             releaseArray(noiseValues);

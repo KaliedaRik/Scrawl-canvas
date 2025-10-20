@@ -130,11 +130,10 @@ import { makeCoordinate, releaseCoordinate, requestCoordinate } from '../untrack
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 // Shared constants
-import { _isArray, _isFinite, _keys, _parse, _values, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, FILTER, LEFT, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, T_ENHANCED_LABEL, T_CELL, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _parse, _values, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, LEFT, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, T_ENHANCED_LABEL, T_CELL, T_GRID, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const ALL = 'all',
-    HANDLE = 'handle',
+const HANDLE = 'handle',
     LOCKTO = 'lockTo',
     STARTX = 'startX',
     STARTY = 'startY';
@@ -294,10 +293,6 @@ export default function (P = Ωempty) {
         noCanvasEngineUpdates: false,
         noFilters: false,
         noPathUpdates: false,
-
-
-// __purge__ - ?
-        purge: null,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -805,66 +800,9 @@ export default function (P = Ωempty) {
 
 // #### Prototype functions
 
-// `purgeArtefact` - Artefact objects gather many attributes during their creation. Many of these may not be subsequentlyt used - for instance, if the artefact is never going to mimic another artefact, then it doesn't need all the attributes and flags associated with mimic functionality. In such cases, we can purge the artefact object of those attributes to free up a tiny bit of extra memory
-// + Argument can be a string of value `pivot`, `mimic`, `path`, `filter`, or an array of such strings.
-// + Passing the argument `all` will purge all attributes listed in the `doPurge` internal function.
-// + Clone functionality - include items to be purged
-    P.purgeArtefact = function (item) {
-
-        const doPurge = function (art, val) {
-
-            switch (val) {
-
-                case PIVOT :
-                    delete art.pivot;
-                    delete art.pivotCorner;
-                    delete art.pivotPin;
-                    delete art.pivotIndex;
-                    delete art.addPivotHandle;
-                    delete art.addPivotOffset;
-                    delete art.addPivotRotation;
-                    break;
-
-                case MIMIC :
-                    delete art.mimic;
-                    delete art.useMimicDimensions;
-                    delete art.useMimicScale;
-                    delete art.useMimicStart;
-                    delete art.useMimicHandle;
-                    delete art.useMimicOffset;
-                    delete art.useMimicRotation;
-                    delete art.useMimicFlip;
-                    delete art.addOwnDimensionsToMimic;
-                    delete art.addOwnScaleToMimic;
-                    delete art.addOwnStartToMimic;
-                    delete art.addOwnHandleToMimic;
-                    delete art.addOwnOffsetToMimic;
-                    delete art.addOwnRotationToMimic;
-                    break;
-
-                case PATH :
-                    delete art.path;
-                    delete art.pathPosition;
-                    delete art.addPathHandle;
-                    delete art.addPathOffset;
-                    delete art.addPathRotation;
-                    break;
-
-                case FILTER :
-                    delete art.filter;
-                    delete art.filters;
-                    delete art.isStencil;
-                    break;
-            }
-        }
-
-        if (item.substring) {
-
-            if (item === ALL) item = [PIVOT, MIMIC, PATH, FILTER];
-            else item = [item];
-        }
-
-        if (_isArray(item)) item.forEach(val => doPurge(this, val));
+// `purgeArtefact` - This functionality has been deprecated, and will be removed in a future release
+// + The function used to delete keys from objects. However this alters the object shape and leads to decreased code-run efficiency (the opposite of the intended code efficiency enhancement)
+    P.purgeArtefact = function () {
 
         return this;
     };
@@ -1475,6 +1413,12 @@ export default function (P = Ωempty) {
                         }
                     }
 
+                    // When the pivot is a Grid entity, need also to confirm which tile to use (default 0)
+                    else if (pivot.type === T_GRID) {
+
+                        coord.setFromArray(pivot.getTilePivotCoordsAt(pivotIndex));
+                    }
+
                     // Everything else
                     else coord.setFromArray(pivot.currentStampPosition);
 
@@ -1517,7 +1461,7 @@ export default function (P = Ωempty) {
                 },
             };
 
-            const localLockArray = requestCoordinate();
+            const localLockArray = [START, START];
 
             let hereFlag = false,
                 lock, here, pathData;
@@ -1563,7 +1507,7 @@ export default function (P = Ωempty) {
             stamp[0] = coord1[0];
             stamp[1] = coord2[1];
 
-            releaseCoordinate(localLockArray, coord1, coord2);
+            releaseCoordinate(coord1, coord2);
         }
 
         if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true;

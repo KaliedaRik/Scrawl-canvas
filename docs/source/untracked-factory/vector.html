@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -1115,12 +1120,27 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <h4 id="vector-pool">Vector pool</h4>
-<p>An attempt to reuse vectors rather than constantly creating and deleting them</p>
+              <p>Dot product with Vector or [x,y,z]</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> vectorPool = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getDot</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item = Ωempty</span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(item)) {
+
+        <span class="hljs-keyword">const</span> [x, y, z] = item;
+
+        <span class="hljs-keyword">return</span> (<span class="hljs-title function_">isa_number</span>(x) ? x : <span class="hljs-number">0</span>) * <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span>
+            + (<span class="hljs-title function_">isa_number</span>(y) ? y : <span class="hljs-number">0</span>) * <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span>
+            + (<span class="hljs-title function_">isa_number</span>(z) ? z : <span class="hljs-number">0</span>) * <span class="hljs-variable language_">this</span>.<span class="hljs-property">z</span>;
+    }
+
+    <span class="hljs-keyword">const</span> { x, y, z } = item;
+
+    <span class="hljs-keyword">return</span> (<span class="hljs-title function_">isa_number</span>(x) ? x : <span class="hljs-number">0</span>) * <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span>
+        + (<span class="hljs-title function_">isa_number</span>(y) ? y : <span class="hljs-number">0</span>) * <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span>
+        + (<span class="hljs-title function_">isa_number</span>(z) ? z : <span class="hljs-number">0</span>) * <span class="hljs-variable language_">this</span>.<span class="hljs-property">z</span>;
+};</pre></div></div>
             
         </li>
         
@@ -1131,20 +1151,11 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
-              <p><code>exported function</code> - retrieve a Vector from the vector pool</p>
+              <p>(Optional alias)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestVector = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
-
-    <span class="hljs-keyword">if</span> (!vectorPool.<span class="hljs-property">length</span>) vectorPool.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Vector</span>());
-
-    <span class="hljs-keyword">const</span> v = vectorPool.<span class="hljs-title function_">shift</span>();
-
-    v.<span class="hljs-title function_">set</span>(x, y, z);
-
-    <span class="hljs-keyword">return</span> v
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">dot</span> = P.<span class="hljs-property">getDot</span>;</pre></div></div>
             
         </li>
         
@@ -1154,6 +1165,81 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
               
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <p>this += scalar * other</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">vectorAddScaled</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">other = Ωempty, scalar = <span class="hljs-number">1</span></span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(other)) {
+
+        <span class="hljs-keyword">const</span> [x, y, z] = other;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(x)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> += scalar * x;
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(y)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> += scalar * y;
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(z)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">z</span> += scalar * z;
+
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+    }
+
+    <span class="hljs-keyword">const</span> { x, y, z } = other;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(x)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">x</span> += scalar * x;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(y)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">y</span> += scalar * y;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(z)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">z</span> += scalar * z;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <h4 id="vector-pool">Vector pool</h4>
+<p>An attempt to reuse vectors rather than constantly creating and deleting them</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> vectorPool = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p><code>exported function</code> - retrieve a Vector from the vector pool</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> requestVector = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
+
+    <span class="hljs-keyword">if</span> (!vectorPool.<span class="hljs-property">length</span>) vectorPool.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Vector</span>());
+
+    <span class="hljs-keyword">const</span> v = vectorPool.<span class="hljs-title function_">pop</span>();
+
+    v.<span class="hljs-title function_">set</span>(x, y, z);
+
+    <span class="hljs-keyword">return</span> v
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - return a Vector to the vector pool. Failing to return Vectors to the pool may lead to more inefficient code and possible memory leaks.</p>
 
@@ -1170,11 +1256,11 @@ P.<span class="hljs-property">vectorMultiplyArray</span> = <span class="hljs-key
         </li>
         
         
-        <li id="section-26">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 

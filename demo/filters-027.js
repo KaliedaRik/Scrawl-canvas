@@ -30,6 +30,8 @@ const myFilter = scrawl.makeFilter({
     method: 'reducePalette',
     palette: 'black-white',
     noiseType: 'bluenoise',
+
+    minimumColorDistance: 650,
 });
 
 
@@ -64,8 +66,7 @@ const original = dithered.clone({
 const report = reportSpeed('#reportmessage', function () {
 
     let LUP = scrawl.getLastUsedReducePalette();
-    if (Array.isArray(LUP)) LUP = JSON.stringify(LUP);
-    console.log(LUP);
+    if (Array.isArray(LUP)) LUP = LUP.join(', ');
 
     return `
     Commonest colors: ${dom.paletteNumber.value}

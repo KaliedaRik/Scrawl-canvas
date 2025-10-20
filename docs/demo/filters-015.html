@@ -380,6 +380,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-073.html">
+                  ./demo/canvas-073.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -1080,13 +1085,14 @@
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;tiles&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tiles&#x27;</span>,
 
-    <span class="hljs-attr">points</span>: <span class="hljs-string">&#x27;rect-grid&#x27;</span>,
+    <span class="hljs-attr">mode</span>: <span class="hljs-string">&#x27;rect&#x27;</span>,
 
-    <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
-    <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">20</span>,
-    <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">14</span>,
-    <span class="hljs-attr">offsetX</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">offsetY</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">rectWidth</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">rectHeight</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">hexRadius</span>: <span class="hljs-number">14</span>,
+    <span class="hljs-attr">randomCount</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">originX</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">originY</span>: <span class="hljs-number">200</span>,
 });</pre></div></div>
             
         </li>
@@ -1129,10 +1135,10 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`
-    Tile dimensions - width: <span class="hljs-subst">${dom.tile_width.value}</span>px, height: <span class="hljs-subst">${dom.tile_height.value}</span>px, radius: <span class="hljs-subst">${dom.tile_radius.value}</span>px
-    Origin offset - x: <span class="hljs-subst">${dom.offset_x.value}</span>px, y: <span class="hljs-subst">${dom.offset_y.value}</span>px
+    Tile dimensions - width: <span class="hljs-subst">${dom.rectWidth.value}</span>px, height: <span class="hljs-subst">${dom.rectHeight.value}</span>px, radius: <span class="hljs-subst">${dom.hexRadius.value}</span>px
+    Origin - x: <span class="hljs-subst">${dom.originX.value}</span>px, y: <span class="hljs-subst">${dom.originY.value}</span>px
     Angle: <span class="hljs-subst">${dom.angle.value}</span>
-    Random points: <span class="hljs-subst">${dom.random_points.value}</span>
+    Random count: <span class="hljs-subst">${dom.randomCount.value}</span>
     Opacity: <span class="hljs-subst">${dom.opacity.value}</span>`</span>;
 });</pre></div></div>
             
@@ -1170,15 +1176,15 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dom = scrawl.<span class="hljs-title function_">initializeDomInputs</span>([
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;tile_width&#x27;</span>, <span class="hljs-string">&#x27;20&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;tile_height&#x27;</span>, <span class="hljs-string">&#x27;20&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;tile_radius&#x27;</span>, <span class="hljs-string">&#x27;14&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;offset_x&#x27;</span>, <span class="hljs-string">&#x27;200&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;offset_y&#x27;</span>, <span class="hljs-string">&#x27;200&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;rectWidth&#x27;</span>, <span class="hljs-string">&#x27;20&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;rectHeight&#x27;</span>, <span class="hljs-string">&#x27;20&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;hexRadius&#x27;</span>, <span class="hljs-string">&#x27;14&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;originX&#x27;</span>, <span class="hljs-string">&#x27;200&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;originY&#x27;</span>, <span class="hljs-string">&#x27;200&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;angle&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;random_points&#x27;</span>, <span class="hljs-string">&#x27;20&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;randomCount&#x27;</span>, <span class="hljs-string">&#x27;100&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
-    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;points&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;mode&#x27;</span>, <span class="hljs-number">0</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;include_red&#x27;</span>, <span class="hljs-number">1</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;include_green&#x27;</span>, <span class="hljs-number">1</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;include_blue&#x27;</span>, <span class="hljs-number">1</span>],
@@ -1193,82 +1199,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <p>Update points value selector</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-string">&#x27;input&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-
-    <span class="hljs-keyword">const</span> t = e.<span class="hljs-property">target</span>,
-        value = t.<span class="hljs-property">value</span>;
-
-    <span class="hljs-keyword">switch</span> (value) {
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;random&#x27;</span> :
-            myFilter.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">points</span>: <span class="hljs-built_in">parseInt</span>(dom.<span class="hljs-property">random_points</span>.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>),
-                <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">100</span>,
-            });
-            dom.<span class="hljs-property">tile_radius</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;100&#x27;</span>;
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;hex-grid&#x27;</span> :
-            myFilter.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">points</span>: value,
-                <span class="hljs-attr">tileRadius</span>: <span class="hljs-number">20</span>,
-                <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">40</span>,
-            });
-            dom.<span class="hljs-property">tile_radius</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;20&#x27;</span>;
-            dom.<span class="hljs-property">tile_height</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;40&#x27;</span>;
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;rect-grid&#x27;</span> :
-            myFilter.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">points</span>: value,
-                <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
-                <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">20</span>,
-            });
-            dom.<span class="hljs-property">tile_width</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;20&#x27;</span>;
-            dom.<span class="hljs-property">tile_height</span>.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;20&#x27;</span>;
-            <span class="hljs-keyword">break</span>;
-    }
-}, dom.<span class="hljs-property">points</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <p>Update random-points value range</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-string">&#x27;input&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-
-    <span class="hljs-keyword">const</span> t = e.<span class="hljs-property">target</span>,
-        value = t.<span class="hljs-property">value</span>;
-
-        <span class="hljs-keyword">if</span> (dom.<span class="hljs-property">points</span>.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;random&#x27;</span>) {
-
-            myFilter.<span class="hljs-title function_">set</span>({
-                <span class="hljs-attr">points</span>: <span class="hljs-built_in">parseInt</span>(value, <span class="hljs-number">10</span>),
-            });
-        }
-}, dom.<span class="hljs-property">random_points</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Setup form observer functionality for remaining inputs/selectors</p>
 
@@ -1286,12 +1216,15 @@
 
     <span class="hljs-attr">updates</span>: {
 
-        <span class="hljs-attr">tile_width</span>: [<span class="hljs-string">&#x27;tileWidth&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">tile_height</span>: [<span class="hljs-string">&#x27;tileHeight&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">tile_radius</span>: [<span class="hljs-string">&#x27;tileRadius&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">offset_x</span>: [<span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">offset_y</span>: [<span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">mode</span>: [<span class="hljs-string">&#x27;mode&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+
+        <span class="hljs-attr">rectWidth</span>: [<span class="hljs-string">&#x27;rectWidth&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">rectHeight</span>: [<span class="hljs-string">&#x27;rectHeight&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">hexRadius</span>: [<span class="hljs-string">&#x27;hexRadius&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">originX</span>: [<span class="hljs-string">&#x27;originX&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">originY</span>: [<span class="hljs-string">&#x27;originY&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-attr">angle</span>: [<span class="hljs-string">&#x27;angle&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">randomCount</span>: [<span class="hljs-string">&#x27;randomCount&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
 
         <span class="hljs-attr">include_red</span>: [<span class="hljs-string">&#x27;includeRed&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
         <span class="hljs-attr">include_green</span>: [<span class="hljs-string">&#x27;includeGreen&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
@@ -1305,11 +1238,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="drag-and-drop-image-loading-functionality">Drag-and-Drop image loading functionality</h4>
 
@@ -1320,11 +1253,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

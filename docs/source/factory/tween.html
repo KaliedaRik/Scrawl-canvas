@@ -335,6 +335,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/document-root-elements.html">
                   ./source/helper/document-root-elements.js
                 </a>
@@ -594,7 +599,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { animationtickers, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { convertTime, doCreate, easeEngines, mergeOver, pushUnique, xt, xtGet, xto, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { convertTime, doCreate, easeEngines, isa_fn, mergeOver, pushUnique, xt, xtGet, xto, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeTicker } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./ticker.js&#x27;</span>;
 
@@ -636,11 +641,9 @@
 
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">getSetObjectKey</span> = (<span class="hljs-params">defs</span>) =&gt; {
 
-    <span class="hljs-keyword">let</span> response = <span class="hljs-string">&#x27;&#x27;</span>;
+    <span class="hljs-keyword">if</span> (!defs || !defs.<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;|&#x27;</span>;
 
-    defs.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> response += d.<span class="hljs-property">attribute</span>);
-
-    <span class="hljs-keyword">return</span> response;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;|&#x27;</span> + defs.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> d.<span class="hljs-property">attribute</span>).<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;|&#x27;</span>) + <span class="hljs-string">&#x27;|&#x27;</span>;
 };
 
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">getSetObject</span> = (<span class="hljs-params">key</span>) =&gt; {
@@ -947,7 +950,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         res.<span class="hljs-property">start</span> = d.<span class="hljs-property">start</span>;
         res.<span class="hljs-property">end</span> = d.<span class="hljs-property">end</span>;
 
-        <span class="hljs-keyword">if</span> (d.<span class="hljs-property">engine</span> &amp;&amp; d.<span class="hljs-property">engine</span>.<span class="hljs-property">substring</span>) res.<span class="hljs-property">engine</span> = d.<span class="hljs-property">engine</span>.<span class="hljs-property">substring</span>;
+        <span class="hljs-keyword">if</span> (d.<span class="hljs-property">engine</span> &amp;&amp; d.<span class="hljs-property">engine</span>.<span class="hljs-property">substring</span>) res.<span class="hljs-property">engine</span> = d.<span class="hljs-property">engine</span>;
         <span class="hljs-keyword">else</span> {
 
             <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(d.<span class="hljs-property">engine</span>) &amp;&amp; d.<span class="hljs-property">engine</span> != <span class="hljs-literal">null</span>) {
@@ -1384,7 +1387,6 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> starts = <span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveTime</span>,
-        actions = <span class="hljs-variable language_">this</span>.<span class="hljs-property">engineActions</span>,
         effectiveDuration = <span class="hljs-variable language_">this</span>.<span class="hljs-property">effectiveDuration</span>,
         status = <span class="hljs-variable language_">this</span>.<span class="hljs-property">status</span>,
         definitions = <span class="hljs-variable language_">this</span>.<span class="hljs-property">definitions</span>,
@@ -1394,36 +1396,24 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
 
     <span class="hljs-keyword">let</span> progress;
 
-    <span class="hljs-keyword">const</span> effectiveTick = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">reversed</span>) ? items.<span class="hljs-property">reverseTick</span> - starts : items.<span class="hljs-property">tick</span> - starts;
+    <span class="hljs-keyword">const</span> end = starts + effectiveDuration;
+    <span class="hljs-keyword">let</span> elapsed;
 
-    <span class="hljs-keyword">if</span> (effectiveDuration &amp;&amp; !status) progress = effectiveTick / effectiveDuration;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">reversed</span>) elapsed = end - items.<span class="hljs-property">tick</span>;
+    <span class="hljs-keyword">else</span> elapsed = items.<span class="hljs-property">tick</span> - starts;
+
+    <span class="hljs-keyword">if</span> (effectiveDuration &amp;&amp; !status) {
+
+        <span class="hljs-keyword">if</span> (elapsed &lt;= <span class="hljs-number">0</span>) progress = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (elapsed &gt;= effectiveDuration) progress = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">else</span> progress = (elapsed / effectiveDuration);
+    }
     <span class="hljs-keyword">else</span> progress = (status &gt; <span class="hljs-number">0</span>) ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = definitions.<span class="hljs-property">length</span>, val, def, engine; i &lt; iz; i++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = definitions.<span class="hljs-property">length</span>, val, def; i &lt; iz; i++) {
 
         def = definitions[i];
-        engine = def.<span class="hljs-property">engine</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
-              </div>
-              <p>Invoke the appropriate easing function for this particular definition object</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (engine.<span class="hljs-property">substring</span>) val = <span class="hljs-title function_">actions</span>(engine, def.<span class="hljs-property">effectiveStart</span>, def.<span class="hljs-property">effectiveChange</span>, progress);
-        <span class="hljs-keyword">else</span> val = <span class="hljs-title function_">engine</span>(def.<span class="hljs-property">effectiveStart</span>, def.<span class="hljs-property">effectiveChange</span>, progress);
-
-        <span class="hljs-keyword">if</span> (def.<span class="hljs-property">integer</span>) val = <span class="hljs-title function_">_round</span>(val);
-
-        <span class="hljs-keyword">if</span> (def.<span class="hljs-property">suffix</span>) val += def.<span class="hljs-property">suffix</span>;
-
+        val = def.<span class="hljs-title function_">compute</span>(progress);
         setObj[def.<span class="hljs-property">attribute</span>] = val;
     }
 
@@ -1438,11 +1428,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>We call the <code>action</code> attribute function (if it is defined) at the completion of every update.</p>
 
@@ -1454,42 +1444,11 @@ S.<span class="hljs-property">definitions</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
-              </div>
-              <p><code>engineActions</code> - internal function to run built-in easing engines</p>
-<ul>
-<li><strong>engine</strong> - String name of the required easing. All built-in easing engines are defined in the <code>core/utilities</code> file</li>
-<li><strong>start</strong> - the <code>effectiveStart</code> value, in milliseconds.</li>
-<li><strong>change</strong> - the time in milliseconds that this animation will take (<code>effectiveEnd - effectiveStart</code>).</li>
-<li><strong>position</strong> - the time elapsed since this Tween started running</li>
-</ul>
-<p>Scrawl-canvas easing engines use the following metaphor to define their names:</p>
-<ul>
-<li><code>out</code> indicates an acceleration. Think of a train leaving the station.</li>
-<li><code>in</code> indicates a deceleration. Think of a train arriving the station.</li>
-<li>For the legacy engines, igher numbers indicates a more intense change between starting, middle and ending speeds</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">engineActions</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">engine, start, change, position</span>) {
-
-    <span class="hljs-keyword">const</span> e = (<span class="hljs-literal">null</span> != easeEngines[engine]) ? engine : <span class="hljs-variable constant_">LINEAR</span>;
-    <span class="hljs-keyword">return</span> start + (change * easeEngines[e](position));
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><code>setDefinitions</code>, <code>clearDefinitions</code></p>
 
@@ -1513,11 +1472,11 @@ P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-38">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><code>setDefinitionsValues</code> - convert <code>start</code> and <code>end</code> values into float Numbers.</p>
 <ul>
@@ -1542,25 +1501,75 @@ P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keywor
             temp = <span class="hljs-title function_">parseDefinitionsValue</span>(def.<span class="hljs-property">start</span>);
             def.<span class="hljs-property">effectiveStart</span> = temp[<span class="hljs-number">1</span>];
             def.<span class="hljs-property">suffix</span> = temp[<span class="hljs-number">0</span>];
+
             temp = <span class="hljs-title function_">parseDefinitionsValue</span>(def.<span class="hljs-property">end</span>);
-            def.<span class="hljs-property">effectiveEnd</span> = temp[<span class="hljs-number">1</span>];</pre></div></div>
+            def.<span class="hljs-property">effectiveEnd</span> = temp[<span class="hljs-number">1</span>];
+
+            def.<span class="hljs-property">effectiveChange</span> = def.<span class="hljs-property">effectiveEnd</span> - def.<span class="hljs-property">effectiveStart</span>;
+
+            <span class="hljs-keyword">const</span> start  = def.<span class="hljs-property">effectiveStart</span>;
+            <span class="hljs-keyword">const</span> change = def.<span class="hljs-property">effectiveChange</span>;
+            <span class="hljs-keyword">const</span> integer = !!def.<span class="hljs-property">integer</span>;
+            <span class="hljs-keyword">const</span> suffix  = def.<span class="hljs-property">suffix</span>;
+
+            <span class="hljs-keyword">let</span> compute, easing;
+
+            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(def.<span class="hljs-property">engine</span>)) {
+
+                easing = easeEngines[<span class="hljs-variable constant_">LINEAR</span>];
+                compute = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> {
+
+                    <span class="hljs-keyword">let</span> v = start + change * <span class="hljs-title function_">easing</span>(p);
+                    <span class="hljs-keyword">if</span> (integer) v = <span class="hljs-title function_">_round</span>(v);
+                    <span class="hljs-keyword">return</span> suffix ? (v + suffix) : v;
+                };</pre></div></div>
             
         </li>
         
         
-        <li id="section-39">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
-              <p>The default easing function is <code>linear</code></p>
+              <p>keep def.engine as string for packets</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(def.<span class="hljs-property">engine</span>)) def.<span class="hljs-property">engine</span> = <span class="hljs-variable constant_">LINEAR</span>;
+            <div class="content"><div class='highlight'><pre>                def.<span class="hljs-property">engine</span> = <span class="hljs-variable constant_">LINEAR</span>;
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (def.<span class="hljs-property">engine</span>.<span class="hljs-property">substring</span>) {
 
-            def.<span class="hljs-property">effectiveChange</span> = def.<span class="hljs-property">effectiveEnd</span> - def.<span class="hljs-property">effectiveStart</span>;
+                easing = easeEngines[def.<span class="hljs-property">engine</span>] || easeEngines[<span class="hljs-variable constant_">LINEAR</span>];
+                compute = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> {
+
+                    <span class="hljs-keyword">let</span> v = start + change * <span class="hljs-title function_">easing</span>(p);
+                    <span class="hljs-keyword">if</span> (integer) v = <span class="hljs-title function_">_round</span>(v);
+                    <span class="hljs-keyword">return</span> suffix ? (v + suffix) : v;
+                };
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(def.<span class="hljs-property">engine</span>)) {
+
+                easing = def.<span class="hljs-property">engine</span>;
+                compute = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> {
+
+                    <span class="hljs-keyword">let</span> v = <span class="hljs-title function_">easing</span>(start, change, p);
+                    <span class="hljs-keyword">if</span> (integer) v = <span class="hljs-title function_">_round</span>(v);
+                    <span class="hljs-keyword">return</span> suffix ? (v + suffix) : v;
+                };
+            }
+            <span class="hljs-keyword">else</span> {
+
+                <span class="hljs-keyword">const</span> easing = easeEngines[<span class="hljs-variable constant_">LINEAR</span>];
+                compute = <span class="hljs-function">(<span class="hljs-params">p</span>) =&gt;</span> {
+
+                    <span class="hljs-keyword">let</span> v = start + change * <span class="hljs-title function_">easing</span>(p);
+                    <span class="hljs-keyword">if</span> (integer) v = <span class="hljs-title function_">_round</span>(v);
+                    <span class="hljs-keyword">return</span> suffix ? (v + suffix) : v;
+                };
+            }
+            def.<span class="hljs-property">compute</span> = compute;
         }
     }
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
@@ -1569,11 +1578,11 @@ P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-40">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>parseDefinitionsValue</code> - internal function invoked by <code>setDefinitionsValues</code> function.</p>
 
@@ -1588,10 +1597,13 @@ P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keywor
         <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) result[<span class="hljs-number">1</span>] = item;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
 
-            <span class="hljs-keyword">const</span> a = item.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/^-?\d+\.?\d*(\D*)/</span>);
+            <span class="hljs-keyword">const</span> m = item.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/^(-?\d*\.?\d+)(\D*)$/</span>);
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(a[<span class="hljs-number">0</span>])) result[<span class="hljs-number">1</span>] = <span class="hljs-built_in">parseFloat</span>(a);
-            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(a[<span class="hljs-number">1</span>])) result[<span class="hljs-number">0</span>] = a[<span class="hljs-number">1</span>];
+            <span class="hljs-keyword">if</span> (m) {
+
+                result[<span class="hljs-number">1</span>] = <span class="hljs-built_in">parseFloat</span>(m[<span class="hljs-number">1</span>]);
+                result[<span class="hljs-number">0</span>] = m[<span class="hljs-number">2</span>] || <span class="hljs-variable constant_">ZERO_STR</span>;
+            }
         }
     }
     <span class="hljs-keyword">return</span> result;
@@ -1600,11 +1612,11 @@ P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-41">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <h4 id="animation-control">Animation control</h4>
 
@@ -1613,11 +1625,11 @@ P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-42">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>run</code></p>
 <ul>
@@ -1644,11 +1656,11 @@ P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-43">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>isRunning</code> - check to see if Tween is in a running state.</p>
 
@@ -1665,11 +1677,11 @@ P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-44">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>halt</code></p>
 <ul>
@@ -1695,11 +1707,11 @@ P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-45">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>reverse</code></p>
 <ul>
@@ -1725,11 +1737,11 @@ P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-46">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>resume</code></p>
 <ul>
@@ -1755,11 +1767,11 @@ P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-47">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>seekTo</code></p>
 <ul>
@@ -1785,11 +1797,11 @@ P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-48">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>seekFor</code></p>
 <ul>
@@ -1815,11 +1827,11 @@ P.<span class="hljs-property">clearDefinitions</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-49">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeTween</span>({

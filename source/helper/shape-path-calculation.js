@@ -8,7 +8,7 @@
 import { releaseArray, requestArray } from './array-pool.js';
 
 // Shared constants
-import { _atan2, _cos, _isFinite, _max, _min, _pow, _sin, _sqrt, BEZIER, CLOSE, LINEAR, MOVE, QUADRATIC, UNKNOWN, ZERO_STR } from './shared-vars.js';
+import { _abs, _acos, _atan2, _cos, _isFinite, _max, _min, _piDouble, _piHalf, _pow, _radian, _sin, _sqrt, _tan, BEZIER, CLOSE, LINEAR, MOVE, QUADRATIC, UNKNOWN, ZERO_STR } from './shared-vars.js';
 
 // Local constants
 const GET_BEZIER = 'getBezierXY',
@@ -62,6 +62,8 @@ export const releasePathCalcObject = function (a) {
 // #### Export function
 export const calculatePath = (d, scale, start, useAsPath, precision, result) => {
 
+    if (precision == null || isNaN(precision)) precision = 10;
+
     // Setup local variables
     const points = requestArray(),
         myData = requestArray(),
@@ -72,8 +74,8 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
         unitPartials = result.unitPartials,
         progression = result.unitProgression,
         positions = result.unitPositions,
-        mySet = d.match(/([A-Za-z][0-9. ,-]*)/g),
-        localMatch = /(-?[0-9.]+\b)/g;
+        mySet = d.match(/([MmZzLlHhVvCcSsQqTtAa][^MmZzLlHhVvCcSsQqTtAa]*)/g) || [],
+        localMatch = /[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/g;
 
     let command = ZERO_STR,
         localPath = ZERO_STR,
@@ -85,7 +87,9 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
         oldX = 0,
         oldY = 0,
         reflectX = 0,
-        reflectY = 0;
+        reflectY = 0,
+        subpathStartX = 0,
+        subpathStartY = 0;
 
     // Local function to populate the temporary myData array with data for every path partial
     const buildArrays = (thesePoints) => {
@@ -170,12 +174,25 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                 case 'M':
                     for (j = 0, jz = points.length; j < jz; j += 2) {
 
+                        const isFirstPair = (j === 0),
+                            saved = command;
+
+                        if (!isFirstPair) command = 'L';
+
                         points[j] = (points[j] * scale) - oldX;
                         points[j + 1] = (points[j + 1] * scale) - oldY;
                         curX += points[j];
                         curY += points[j + 1];
                         reflectX = reflectY = 0;
                         buildArrays(points.slice(j, j + 2));
+
+                        if (isFirstPair) {
+
+                            subpathStartX = curX;
+                            subpathStartY = curY;
+                        }
+
+                        command = saved;
                     }
                     break;
 
@@ -237,6 +254,8 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                 case 'A':
                     for (j = 0, jz = points.length; j < jz; j += 7) {
 
+                        points[j] *= scale;
+                        points[j + 1] *= scale;
                         points[j + 5] = (points[j + 5] * scale) - oldX;
                         points[j + 6] = (points[j + 6] * scale) - oldY;
                         curX += points[j + 5];
@@ -271,6 +290,9 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                 case 't':
                     for (j = 0, jz = points.length; j < jz; j += 2) {
 
+                        const saved = command;
+                        if (saved === 'm' && j > 0) command = 'l';
+
                         points[j] *= scale;
                         points[j + 1] *= scale;
                         curX += points[j];
@@ -286,6 +308,14 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                             reflectX = reflectY = 0;
                         }
                         buildArrays(points.slice(j, j + 2));
+
+                        if (saved === 'm' && j === 0) {
+
+                            subpathStartX = curX;
+                            subpathStartY = curY;
+                        }
+
+                        command = saved;
                     }
                     break;
 
@@ -387,6 +417,9 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                         break;
 
                     case 'm' :
+                        subpathStartX = cx;
+                        subpathStartY = cy;
+
                         units[i] = [MOVE, x, y];
                         break;
 
@@ -395,7 +428,7 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                         break;
 
                     case 't' :
-                        if (prevData && (prevData.rx || prevData.ry)) {
+                        if (prevData && _isFinite(prevData.rx) && _isFinite(prevData.ry)) {
 
                             setVector(v, prevData.rx - cx, prevData.ry - cy);
                             rotateVector(v, 180);
@@ -410,7 +443,7 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                         break;
 
                     case 's' :
-                        if (prevData && (prevData.rx || prevData.ry)) {
+                        if (prevData && _isFinite(prevData.rx) && _isFinite(prevData.ry)) {
 
                             setVector(v, prevData.rx - cx, prevData.ry - cy);
                             rotateVector(v, 180);
@@ -425,13 +458,49 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                         break;
 
                     case 'a' :
-                        units[i] = [LINEAR, x, y, p[5] + x, p[6] + y];
+                        {
+                            const sx = x,
+                                sy = y,
+                                ex = x + p[5],
+                                ey = y + p[6];
+
+                            const curves = arcToCubicBeziers(
+                                sx,
+                                sy,
+                                _abs(p[0]),
+                                _abs(p[1]),
+                                p[2],
+                                p[3] ? 1 : 0,
+                                p[4] ? 1 : 0,
+                                ex,
+                                ey,
+                            );
+
+                            if (!curves.length) units[i] = [LINEAR, sx, sy, ex, ey];
+                            else {
+
+                                const insertAt = i,
+                                    splice = [];
+
+                                let px = sx,
+                                    py = sy;
+
+                                for (const [c1x, c1y, c2x, c2y, x2, y2] of curves) {
+
+                                    splice.push([BEZIER, px, py, c1x, c1y, c2x, c2y, x2, y2]);
+
+                                    px = x2;
+                                    py = y2;
+                                }
+                                units.splice(insertAt, 1, ...splice);
+                            }
+                        }
                         break;
 
                     case 'z' :
                         if (!_isFinite(x)) x = 0;
                         if (!_isFinite(y)) y = 0;
-                        units[i] = [CLOSE, x, y];
+                        units[i] = [CLOSE, x, y, subpathStartX, subpathStartY];
                         break;
 
                     default :
@@ -454,6 +523,7 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
                 case LINEAR :
                 case QUADRATIC :
                 case BEZIER :
+                case CLOSE :
                     localResults = getShapeUnitMetaData(spec, precision, data);
                     unitLengths[i] = localResults.length;
                     xPoints.push(...localResults.xPoints);
@@ -473,17 +543,29 @@ export const calculatePath = (d, scale, start, useAsPath, precision, result) => 
 
         for (i = 0, iz = unitLengths.length; i < iz; i++) {
 
-            mySum += unitLengths[i] / myLen;
-            unitPartials[i] = mySum;
+            if (myLen === 0) unitPartials[i] = 0;
+            else {
+
+                mySum += unitLengths[i] / myLen;
+                unitPartials[i] = mySum;
+            }
         }
     }
     result.length = myLen;
 
     // calculate bounding box dimensions
-    result.maxX = _max(...xPoints);
-    result.maxY = _max(...yPoints);
-    result.minX = _min(...xPoints);
-    result.minY = _min(...yPoints);
+    if (!xPoints.length) {
+
+        result.minX = result.maxX = subpathStartX;
+        result.minY = result.maxY = subpathStartY;
+    }
+    else {
+
+        result.maxX = _max(...xPoints);
+        result.maxY = _max(...yPoints);
+        result.minX = _min(...xPoints);
+        result.minY = _min(...yPoints);
+    }
 
     result.xRange.push(...xPoints);
     result.yRange.push(...yPoints);
@@ -511,7 +593,7 @@ const setVector = function (v, x, y) {
 const rotateVector = function (v, angle) {
 
     let arg = _atan2(v.y, v.x);
-    arg += (angle * 0.01745329251);
+    arg += (angle * _radian);
 
     const mag = _sqrt((v.x * v.x) + (v.y * v.y));
 
@@ -534,7 +616,7 @@ const getShapeUnitMetaData = function (species, precision, args) {
 
     // We want to separate out linear species before going into the while loop
     // + because these calculations will be simple
-    if (species === LINEAR) {
+    if (species === LINEAR || species === CLOSE) {
 
         const [sx, sy, ex, ey] = args;
 
@@ -631,4 +713,121 @@ const getXY = {
             y: T * T * sy + 2 * T * t * cp1y + t * t * ey
         };
     },
+};
+
+// Convert an SVG arc (endpoint param) into an array of cubic Beziers.
+// Returns array of [cp1x, cp1y, cp2x, cp2y, x, y] segments.
+const arcToCubicBeziers = function (x1, y1, rx, ry, phi, fa, fs, x2, y2) {
+
+    // Based on SVG 1.1 spec F.6.5
+    const rad = phi * _radian,
+        cos = _cos(rad),
+        sin = _sin(rad);
+
+    // Step 1: compute (x1', y1')
+    const dx2 = (x1 - x2) / 2,
+        dy2 = (y1 - y2) / 2,
+        x1p = cos * dx2 + sin * dy2,
+        y1p = -sin * dx2 + cos * dy2;
+
+    let rxs = Math.abs(rx),
+        rys = Math.abs(ry);
+
+    if (rxs === 0 || rys === 0) return [];
+
+    // Correct radii
+    const lambda = (x1p * x1p) / (rxs * rxs) + (y1p * y1p) / (rys * rys);
+
+    if (lambda > 1) {
+
+        const s = Math.sqrt(lambda);
+        rxs *= s;
+        rys *= s;
+    }
+
+    // Step 2: compute center (cx', cy')
+    const sign = (fa === fs) ? -1 : 1,
+        rxs2 = rxs * rxs,
+        rys2 = rys * rys,
+        num = rxs2 * rys2 - rxs2 * y1p * y1p - rys2 * x1p * x1p,
+        den = rxs2 * y1p * y1p + rys2 * x1p * x1p;
+
+    if (den === 0) return [];
+
+    const coef = sign * _sqrt(_max(0, num / den)),
+        cxp = coef * (rxs * y1p / rys),
+        cyp = coef * (-rys * x1p / rxs);
+
+    // Step 3: center (cx, cy)
+    const cx = cos * cxp - sin * cyp + (x1 + x2) / 2,
+        cy = sin * cxp + cos * cyp + (y1 + y2) / 2;
+
+    // Angles
+    const angle = function (u, v) {
+
+        const dot = u.x * v.x + u.y * v.y,
+            mag = _sqrt((u.x * u.x + u.y * u.y) * (v.x * v.x + v.y * v.y));
+
+        if (mag === 0) return 0;
+
+        let ang = _acos(_min(1, _max(-1, dot / mag)));
+
+        if (u.x * v.y - u.y * v.x < 0) ang = -ang;
+
+        return ang;
+    };
+
+    const ux = (x1p - cxp) / rxs,
+        uy = (y1p - cyp) / rys,
+        vx = (-x1p - cxp) / rxs,
+        vy = (-y1p - cyp) / rys;
+
+    const theta1 = angle({x:1, y:0}, {x:ux, y:uy});
+
+    let dtheta = angle({x:ux, y:uy}, {x:vx, y:vy});
+
+    if (!fs && dtheta > 0) dtheta -= _piDouble;
+    if (fs && dtheta < 0) dtheta += _piDouble;
+
+    // Split into segments of <= 90°
+    const segs = Math.ceil(Math.abs(dtheta) / _piHalf),
+        delta = dtheta / segs,
+        t = (4 / 3) * _tan(delta / 4);
+
+    const beziers = [];
+
+    let i, th1, th2,
+        cosTh1, sinTh1, cosTh2, sinTh2,
+        _x1, _y1, _x2, _y2, _dx1, _dy1, _dx2, _dy2,
+        cp1x, cp1y, cp2x, cp2y;
+
+
+    for (i = 0; i < segs; i++) {
+
+        th1 = theta1 + i * delta;
+        th2 = th1 + delta;
+
+        cosTh1 = _cos(th1);
+        sinTh1 = _sin(th1);
+        cosTh2 = _cos(th2);
+        sinTh2 = _sin(th2);
+
+        _x1 = cx + rxs * (cos * cosTh1 - sin * sinTh1);
+        _y1 = cy + rys * (sin * cosTh1 + cos * sinTh1);
+        _x2 = cx + rxs * (cos * cosTh2 - sin * sinTh2);
+        _y2 = cy + rys * (sin * cosTh2 + cos * sinTh2);
+
+        _dx1 = -rxs * (cos * sinTh1 + sin * cosTh1);
+        _dy1 = -rys * (sin * sinTh1 - cos * cosTh1);
+        _dx2 = -rxs * (cos * sinTh2 + sin * cosTh2);
+        _dy2 = -rys * (sin * sinTh2 - cos * cosTh2);
+
+        cp1x = _x1 + t * _dx1;
+        cp1y = _y1 + t * _dy1;
+        cp2x = _x2 - t * _dx2;
+        cp2y = _y2 - t * _dy2;
+
+        beziers.push([cp1x, cp1y, cp2x, cp2y, _x2, _y2]);
+    }
+    return beziers;
 };
