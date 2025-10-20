@@ -1,6 +1,6 @@
 {
   "name": "scrawl-canvas",
-  "version": "8.15.0",
+  "version": "8.16.0",
   "description": "Responsive, interactive and more accessible HTML5 canvas elements. Scrawl-canvas is a JavaScript library designed to make using the HTML5 canvas element easier, and more fun",
   "main": "./min/scrawl.js",
   "type": "module",
