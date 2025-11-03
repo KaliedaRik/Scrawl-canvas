@@ -32,19 +32,26 @@ const easel = canvas.buildCell({
 
 
 // #### Pixel data manipulation functions
+const clamp = val => {
+
+    if (val < 0) return 0;
+    if (val > 255) return 255;
+    return val;
+};
+
 const setTowardsRed = () => {
 
     pixelState.forEach(pixel => {
 
         let { red, green, blue } = pixel;
 
-        if (red < 255) red++;
-        if (green > 0) green--;
-        if (blue > 0) blue--;
+        red++;
+        green--;
+        blue--;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -55,13 +62,13 @@ const setTowardsGreen = () => {
 
         let { red, green, blue } = pixel;
 
-        if (red > 0) red--;
-        if (green < 255) green++;
-        if (blue > 0) blue--;
+        red--;
+        green++;
+        blue--;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -72,13 +79,13 @@ const setTowardsBlue = () => {
 
         let { red, green, blue } = pixel;
 
-        if (red > 0) red--;
-        if (green > 0) green--;
-        if (blue < 255) blue++;
+        red--;
+        green--;
+        blue++;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -89,13 +96,13 @@ const setTowardsBlack = () => {
 
         let { red, green, blue } = pixel;
 
-        if (red > 0) red--;
-        if (green > 0) green--;
-        if (blue > 0) blue--;
+        red--;
+        green--;
+        blue--;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -106,13 +113,13 @@ const setTowardsWhite = () => {
 
         let { red, green, blue } = pixel;
 
-        if (red < 255) red++;
-        if (green < 255) green++;
-        if (blue < 255) blue++;
+        red++;
+        green++;
+        blue++;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -129,17 +136,17 @@ const redBlueAxes = () => {
             blueAmount = Math.floor((col / width) * 255);
 
         if (red > redAmount) red--;
-        else if (red < redAmount) red++;
+        else red++;
 
         if (green > greenAmount) green--;
-        else if (green < greenAmount) green++;
+        else green++;
 
         if (blue > blueAmount) blue--;
-        else if (blue < blueAmount) blue++;
+        else blue++;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -156,17 +163,17 @@ const blueGreenAxes = () => {
             blueAmount = Math.floor((row / height) * 255);
 
         if (red > redAmount) red--;
-        else if (red < redAmount) red++;
+        else red++;
 
         if (green > greenAmount) green--;
-        else if (green < greenAmount) green++;
+        else green++;
 
         if (blue > blueAmount) blue--;
-        else if (blue < blueAmount) blue++;
+        else blue++;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -183,17 +190,17 @@ const greenRedAxes = () => {
             blueAmount = 127;
 
         if (red > redAmount) red--;
-        else if (red < redAmount) red++;
+        else red++;
 
         if (green > greenAmount) green--;
-        else if (green < greenAmount) green++;
+        else green++;
 
         if (blue > blueAmount) blue--;
-        else if (blue < blueAmount) blue++;
+        else blue++;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
   update();
 };
@@ -210,17 +217,17 @@ const distancesOne = () => {
             blueDistance = 400;
 
         if (distance > redDistance) red--;
-        else if (distance < redDistance) red++;
+        else red++;
 
         if (distance > greenDistance) green--;
-        else if (distance < greenDistance) green++;
+        else green++;
 
         if (distance > blueDistance) blue--;
-        else if (distance < blueDistance) blue++;
+        else blue++;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -237,17 +244,17 @@ const distancesTwo = () => {
             blueDistance = 270;
 
         if (distance > redDistance) red--;
-        else if (distance < redDistance) red++;
+        else red++;
 
         if (distance > greenDistance) green--;
-        else if (distance < greenDistance) green++;
+        else green++;
 
         if (distance > blueDistance) blue--;
-        else if (distance < blueDistance) blue++;
+        else blue++;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -264,17 +271,17 @@ const distancesThree = () => {
             blueDistance = 80;
 
         if (distance > redDistance) red--;
-        else if (distance < redDistance) red++;
+        else red++;
 
         if (distance > greenDistance) green--;
-        else if (distance < greenDistance) green++;
+        else green++;
 
         if (distance > blueDistance) blue--;
-        else if (distance < blueDistance) blue++;
+        else blue++;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -290,16 +297,16 @@ const yellowStripes = () => {
         const stripeVal = Math.floor(pixel.col / stripeWidth) * 50;
 
         if (red > stripeVal) red--;
-        else if (red < stripeVal) red++;
+        else red++;
 
         if (green > stripeVal) green--;
-        else if (green < stripeVal) green++;
+        else green++;
 
-        if (blue > 0) blue--;
+        blue--;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -315,16 +322,16 @@ const cyanStripes = () => {
         const stripeVal = Math.floor(pixel.row / stripeHeight) * 50;
 
         if (green > stripeVal) green--;
-        else if (green < stripeVal) green++;
+        else green++;
 
         if (blue > stripeVal) blue--;
-        else if (blue < stripeVal) blue++;
+        else blue++;
 
-        if (red > 0) red--;
+        red--;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -355,9 +362,9 @@ const fizzBang = () => {
             blue--;
         }
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -379,9 +386,9 @@ const thinStripe = () => {
             blue++;
         }
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -403,9 +410,9 @@ const thinStripeReverse = () => {
             blue++;
         }
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -427,9 +434,9 @@ const circlesGradient = () => {
         if (blue > d) blue--;
         else blue++;
 
-        pixel.red = red;
-        pixel.green = green;
-        pixel.blue = blue;
+        pixel.red = clamp(red);
+        pixel.green = clamp(green);
+        pixel.blue = clamp(blue);
     });
     update();
 };
@@ -441,9 +448,18 @@ const conicOne = () => {
         let { red, green, blue } = pixel;
         const angle = pixel.angle;
 
-        if (angle < 0.33) red++;
-        else if (angle < 0.67) green++;
-        else blue++;
+        if (angle < 0.33) {
+
+            if (red < 255) red++;
+        }
+        else if (angle < 0.67) {
+
+            if (green < 255) green++;
+        }
+        else {
+
+            if (blue < 255) blue++;
+        }
 
         pixel.red = red;
         pixel.green = green;
@@ -459,9 +475,18 @@ const conicTwo = () => {
         let { red, green, blue } = pixel;
         const angle = pixel.angle;
 
-        if (angle < 0.33) red--;
-        else if (angle < 0.67) green--;
-        else blue--;
+        if (angle < 0.33) {
+
+            if (red > 0) red--;
+        }
+        else if (angle < 0.67) {
+
+            if (green > 0) green--;
+        }
+        else {
+
+            if (blue > 0) blue--;
+        }
 
         pixel.red = red;
         pixel.green = green;

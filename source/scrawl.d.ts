@@ -1030,6 +1030,12 @@ interface EnhancedCellImageDataObject {
     pixelState: CellPixelStateObject[]
 }
 
+interface getCellDataObject {
+    opaque?: boolean;
+    includeGridCoords?: boolean;
+    includePolarCoords?: boolean;
+}
+
 interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions, CascadeMixinFunctions, AssetMixinFunctions, PatternMixinFunctions, FilterMixinFunctions {
     clear: () => void;
     compile: () => void;
@@ -1040,7 +1046,7 @@ interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunction
     updateArtefacts: (items: CommonObjectInput) => void;
     updateHere: () => void;
     splitShift: (item: CellSplitShiftArguments) => void;
-    getCellData: (opaque?: boolean) => EnhancedCellImageDataObject;
+    getCellData: (args?: boolean | getCellDataObject) => EnhancedCellImageDataObject;
     paintCellData: (item: EnhancedCellImageDataObject) => void;
 }
 
