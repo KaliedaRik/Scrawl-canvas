@@ -2844,43 +2844,88 @@ P.theBigActionsObject = {
 // __gaussian-blur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
     [GAUSSIAN_BLUR]: function (requirements) {
 
-        let a0, a1, a2, a3, b1, b2, left_corner, right_corner;
+        const WS_KEY = 'gaussian-blur::workspace';
+        const getWorkspace = (pixelCount, maxSide4) => {
 
-        const gaussCoef = function (sigma) {
+            let ws = getWorkstoreItem(WS_KEY);
+            if (!ws) ws = {};
 
+            if (!ws.bufA32 || ws.bufA32.length !== pixelCount) ws.bufA32 = new Uint32Array(pixelCount);
+            if (!ws.bufB32 || ws.bufB32.length !== pixelCount) ws.bufB32 = new Uint32Array(pixelCount);
+
+            if (!ws.tmpLineF32 || ws.tmpLineF32.length < maxSide4) ws.tmpLineF32 = new Float32Array(maxSide4);
+
+            setWorkstoreItem(WS_KEY, ws);
+            return ws;
+        }
+
+        const COEFFS_KEY = 'gaussian-blur::coeffs';
+        const getCoeffCache = () => {
+
+            let m = getWorkstoreItem(COEFFS_KEY);
+            if (!m) {
+
+                m = new Map();
+                setWorkstoreItem(COEFFS_KEY, m);
+            }
+            return m;
+        };
+
+        const gaussCoefRaw = (sigmaIn) => {
+
+            let sigma = sigmaIn;
             if (sigma < 0.5) sigma = 0.5;
 
             const a = _exp(0.726 * 0.726) / sigma,
                 g1 = _exp(-a),
                 g2 = _exp(-2 * a),
-                k = (1 - g1) * (1 - g1) / (1 + 2 * a * g1 - g2);
+                a0 = (1 - g1) * (1 - g1) / (1 + 2 * a * g1 - g2),
+                a1 = a0 * (a - 1) * g1,
+                a2 = a0 * (a + 1) * g1,
+                a3 = -a0 * g2,
+                b1 = 2 * g1,
+                b2 = -g2,
+                left_corner  = (a0 + a1) / (1 - b1 - b2),
+                right_corner = (a2 + a3) / (1 - b1 - b2);
 
-            a0 = k;
-            a1 = k * (a - 1) * g1;
-            a2 = k * (a + 1) * g1;
-            a3 = -k * g2;
-            b1 = 2 * g1;
-            b2 = -g2;
-            left_corner = (a0 + a1) / (1 - b1 - b2);
-            right_corner = (a2 + a3) / (1 - b1 - b2);
+            return new Float32Array([a0, a1, a2, a3, b1, b2, left_corner, right_corner]);
+        };
 
-            // Attempt to force type to FP32.
-            return new Float32Array([ a0, a1, a2, a3, b1, b2, left_corner, right_corner ]);
-        }
+        const getCoeffs = (sigma) => {
 
-        const convolveRGBA = function (src, out, line, coeff, width, height) {
-            // takes src image and writes the blurred and transposed result into out
+            const s = (sigma > 0 ? sigma : 0) || 0,
+                key = s < 0.5 ? 0.5 : +s,
+                cache = getCoeffCache();
 
-            let rgba;
-            let prev_src_r, prev_src_g, prev_src_b, prev_src_a;
-            let curr_src_r, curr_src_g, curr_src_b, curr_src_a;
-            let curr_out_r, curr_out_g, curr_out_b, curr_out_a;
-            let prev_out_r, prev_out_g, prev_out_b, prev_out_a;
-            let prev_prev_out_r, prev_prev_out_g, prev_prev_out_b, prev_prev_out_a;
+            let c = cache.get(key);
 
-            let src_index, out_index, line_index;
-            let i, j;
-            let coeff_a0, coeff_a1, coeff_b1, coeff_b2;
+            if (!c) {
+
+                c = gaussCoefRaw(key);
+                cache.set(key, c);
+            }
+            return c;
+        };
+
+        const convolveRGBA = (src, out, line, coeff, width, height) => {
+
+            const c_a0L = coeff[0],
+                c_a1L = coeff[1],
+                c_a0R = coeff[2],
+                c_a1R = coeff[3],
+                c_b1  = coeff[4],
+                c_b2  = coeff[5],
+                c_lc  = coeff[6],
+                c_rc  = coeff[7];
+
+            let i, j,
+                src_index, out_index, line_index, rgba,
+                prev_src_r, prev_src_g, prev_src_b, prev_src_a,
+                prev_prev_out_r, prev_prev_out_g, prev_prev_out_b, prev_prev_out_a,
+                prev_out_r, prev_out_g, prev_out_b, prev_out_a,
+                curr_src_r, curr_src_g, curr_src_b, curr_src_a,
+                curr_out_r, curr_out_g, curr_out_b, curr_out_a,
+                pr, pg, pb, pa;
 
             for (i = 0; i < height; i++) {
 
@@ -2888,61 +2933,58 @@ P.theBigActionsObject = {
                 out_index = i;
                 line_index = 0;
 
-                // left to right
                 rgba = src[src_index];
 
                 prev_src_r = rgba & 0xff;
-                prev_src_g = (rgba >> 8) & 0xff;
-                prev_src_b = (rgba >> 16) & 0xff;
-                prev_src_a = (rgba >> 24) & 0xff;
+                prev_src_g = (rgba >>> 8) & 0xff;
+                prev_src_b = (rgba >>> 16) & 0xff;
+                prev_src_a = (rgba >>> 24) & 0xff;
 
-                prev_prev_out_r = prev_src_r * coeff[6];
-                prev_prev_out_g = prev_src_g * coeff[6];
-                prev_prev_out_b = prev_src_b * coeff[6];
-                prev_prev_out_a = prev_src_a * coeff[6];
+                prev_prev_out_r = prev_src_r * c_lc;
+                prev_prev_out_g = prev_src_g * c_lc;
+                prev_prev_out_b = prev_src_b * c_lc;
+                prev_prev_out_a = prev_src_a * c_lc;
 
                 prev_out_r = prev_prev_out_r;
                 prev_out_g = prev_prev_out_g;
                 prev_out_b = prev_prev_out_b;
                 prev_out_a = prev_prev_out_a;
 
-                coeff_a0 = coeff[0];
-                coeff_a1 = coeff[1];
-                coeff_b1 = coeff[4];
-                coeff_b2 = coeff[5];
-
                 for (j = 0; j < width; j++) {
 
                     rgba = src[src_index];
-                    curr_src_r = rgba & 0xff;
-                    curr_src_g = (rgba >> 8) & 0xff;
-                    curr_src_b = (rgba >> 16) & 0xff;
-                    curr_src_a = (rgba >> 24) & 0xff;
 
-                    curr_out_r = curr_src_r * coeff_a0 + prev_src_r * coeff_a1 + prev_out_r * coeff_b1 + prev_prev_out_r * coeff_b2;
-                    curr_out_g = curr_src_g * coeff_a0 + prev_src_g * coeff_a1 + prev_out_g * coeff_b1 + prev_prev_out_g * coeff_b2;
-                    curr_out_b = curr_src_b * coeff_a0 + prev_src_b * coeff_a1 + prev_out_b * coeff_b1 + prev_prev_out_b * coeff_b2;
-                    curr_out_a = curr_src_a * coeff_a0 + prev_src_a * coeff_a1 + prev_out_a * coeff_b1 + prev_prev_out_a * coeff_b2;
+                    curr_src_r = rgba & 0xff;
+                    curr_src_g = (rgba >>> 8) & 0xff;
+                    curr_src_b = (rgba >>> 16) & 0xff;
+                    curr_src_a = (rgba >>> 24) & 0xff;
+
+                    curr_out_r = curr_src_r * c_a0L + prev_src_r * c_a1L + prev_out_r * c_b1 + prev_prev_out_r * c_b2;
+                    curr_out_g = curr_src_g * c_a0L + prev_src_g * c_a1L + prev_out_g * c_b1 + prev_prev_out_g * c_b2;
+                    curr_out_b = curr_src_b * c_a0L + prev_src_b * c_a1L + prev_out_b * c_b1 + prev_prev_out_b * c_b2;
+                    curr_out_a = curr_src_a * c_a0L + prev_src_a * c_a1L + prev_out_a * c_b1 + prev_prev_out_a * c_b2;
 
                     prev_prev_out_r = prev_out_r;
-                    prev_prev_out_g = prev_out_g;
-                    prev_prev_out_b = prev_out_b;
-                    prev_prev_out_a = prev_out_a;
-
                     prev_out_r = curr_out_r;
-                    prev_out_g = curr_out_g;
-                    prev_out_b = curr_out_b;
-                    prev_out_a = curr_out_a;
-
                     prev_src_r = curr_src_r;
+                    
+                    prev_prev_out_g = prev_out_g;
+                    prev_out_g = curr_out_g;
                     prev_src_g = curr_src_g;
+                    
+                    prev_prev_out_b = prev_out_b;
+                    prev_out_b = curr_out_b;
                     prev_src_b = curr_src_b;
+                    
+                    prev_prev_out_a = prev_out_a;
+                    prev_out_a = curr_out_a;
                     prev_src_a = curr_src_a;
 
                     line[line_index] = prev_out_r;
                     line[line_index + 1] = prev_out_g;
                     line[line_index + 2] = prev_out_b;
                     line[line_index + 3] = prev_out_a;
+
                     line_index += 4;
                     src_index++;
                 }
@@ -2951,18 +2993,17 @@ P.theBigActionsObject = {
                 line_index -= 4;
                 out_index += height * (width - 1);
 
-                // right to left
                 rgba = src[src_index];
 
                 prev_src_r = rgba & 0xff;
-                prev_src_g = (rgba >> 8) & 0xff;
-                prev_src_b = (rgba >> 16) & 0xff;
-                prev_src_a = (rgba >> 24) & 0xff;
+                prev_src_g = (rgba >>> 8) & 0xff;
+                prev_src_b = (rgba >>> 16) & 0xff;
+                prev_src_a = (rgba >>> 24) & 0xff;
 
-                prev_prev_out_r = prev_src_r * coeff[7];
-                prev_prev_out_g = prev_src_g * coeff[7];
-                prev_prev_out_b = prev_src_b * coeff[7];
-                prev_prev_out_a = prev_src_a * coeff[7];
+                prev_prev_out_r = prev_src_r * c_rc;
+                prev_prev_out_g = prev_src_g * c_rc;
+                prev_prev_out_b = prev_src_b * c_rc;
+                prev_prev_out_a = prev_src_a * c_rc;
 
                 prev_out_r = prev_prev_out_r;
                 prev_out_g = prev_prev_out_g;
@@ -2974,43 +3015,42 @@ P.theBigActionsObject = {
                 curr_src_b = prev_src_b;
                 curr_src_a = prev_src_a;
 
-                coeff_a0 = coeff[2];
-                coeff_a1 = coeff[3];
-
                 for (j = width - 1; j >= 0; j--) {
 
-                    curr_out_r = curr_src_r * coeff_a0 + prev_src_r * coeff_a1 + prev_out_r * coeff_b1 + prev_prev_out_r * coeff_b2;
-                    curr_out_g = curr_src_g * coeff_a0 + prev_src_g * coeff_a1 + prev_out_g * coeff_b1 + prev_prev_out_g * coeff_b2;
-                    curr_out_b = curr_src_b * coeff_a0 + prev_src_b * coeff_a1 + prev_out_b * coeff_b1 + prev_prev_out_b * coeff_b2;
-                    curr_out_a = curr_src_a * coeff_a0 + prev_src_a * coeff_a1 + prev_out_a * coeff_b1 + prev_prev_out_a * coeff_b2;
+                    curr_out_r = curr_src_r * c_a0R + prev_src_r * c_a1R + prev_out_r * c_b1 + prev_prev_out_r * c_b2;
+                    curr_out_g = curr_src_g * c_a0R + prev_src_g * c_a1R + prev_out_g * c_b1 + prev_prev_out_g * c_b2;
+                    curr_out_b = curr_src_b * c_a0R + prev_src_b * c_a1R + prev_out_b * c_b1 + prev_prev_out_b * c_b2;
+                    curr_out_a = curr_src_a * c_a0R + prev_src_a * c_a1R + prev_out_a * c_b1 + prev_prev_out_a * c_b2;
 
                     prev_prev_out_r = prev_out_r;
-                    prev_prev_out_g = prev_out_g;
-                    prev_prev_out_b = prev_out_b;
-                    prev_prev_out_a = prev_out_a;
-
                     prev_out_r = curr_out_r;
-                    prev_out_g = curr_out_g;
-                    prev_out_b = curr_out_b;
-                    prev_out_a = curr_out_a;
-
                     prev_src_r = curr_src_r;
+                    
+                    prev_prev_out_g = prev_out_g;
+                    prev_out_g = curr_out_g;
                     prev_src_g = curr_src_g;
+                    
+                    prev_prev_out_b = prev_out_b;
+                    prev_out_b = curr_out_b;
                     prev_src_b = curr_src_b;
+                    
+                    prev_prev_out_a = prev_out_a;
+                    prev_out_a = curr_out_a;
                     prev_src_a = curr_src_a;
 
                     rgba = src[src_index];
+
                     curr_src_r = rgba & 0xff;
-                    curr_src_g = (rgba >> 8) & 0xff;
-                    curr_src_b = (rgba >> 16) & 0xff;
-                    curr_src_a = (rgba >> 24) & 0xff;
+                    curr_src_g = (rgba >>> 8) & 0xff;
+                    curr_src_b = (rgba >>> 16) & 0xff;
+                    curr_src_a = (rgba >>> 24) & 0xff;
 
-                    rgba = ((line[line_index] + prev_out_r) << 0) +
-                    ((line[line_index + 1] + prev_out_g) << 8) +
-                    ((line[line_index + 2] + prev_out_b) << 16) +
-                    ((line[line_index + 3] + prev_out_a) << 24);
+                    pr = (line[line_index] + prev_out_r) | 0;
+                    pg = (line[line_index + 1] + prev_out_g) | 0;
+                    pb = (line[line_index + 2] + prev_out_b) | 0;
+                    pa = (line[line_index + 3] + prev_out_a) | 0;
 
-                    out[out_index] = rgba;
+                    out[out_index] = (pr & 0xFF) | ((pg & 0xFF) << 8) | ((pb & 0xFF) << 16) | ((pa & 0xFF) << 24);
 
                     src_index--;
                     line_index -= 4;
@@ -3024,7 +3064,7 @@ P.theBigActionsObject = {
         const iData = input.data,
             oData = output.data;
 
-        const {width, height} = input;
+        const { width, height } = input;
 
         const {
             opacity = 1,
@@ -3038,59 +3078,89 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        const hold = new Uint8ClampedArray(iData);
+        const pixels = (iData.length >>> 2),
+            maxSide4 = _max(width, height) * 4;
 
-        const src32 = new Uint32Array(hold.buffer);
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, pixels),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  pixels);
 
-        const out = new Uint32Array(src32.length),
-            tmp_line = new Float32Array(_max(width, height) * 4);
+        const RM = includeRed   ? 0x000000FF : 0,
+            GM = includeGreen ? 0x0000FF00 : 0,
+            BM = includeBlue  ? 0x00FF0000 : 0,
+            AM = includeAlpha ? 0xFF000000 : 0;
 
-        const horizontalCoeff = gaussCoef(radiusHorizontal),
-            verticalCoeff = gaussCoef(radiusVertical);
+        const CHMASK = (RM | GM | BM | AM) >>> 0;
 
-        convolveRGBA(src32, out, tmp_line, horizontalCoeff, width, height, radiusHorizontal);
-        convolveRGBA(out, src32, tmp_line, verticalCoeff, height, width, radiusVertical);
+        // Short-circuit: both radii <= 0 → no blur; just obey include*/exclude rules
+        if ((radiusHorizontal <= 0) && (radiusVertical <= 0)) {
 
-        let r, g, b, a, i, iz;
+            if (CHMASK === 0xFFFFFFFF && !excludeTransparentPixels) out32.set(src32);
+            else if (!excludeTransparentPixels) {
 
-        if (!excludeTransparentPixels) {
+                let s, p;
 
-            for (i = 0, iz = iData.length; i < iz; i += 4) {
+                for (p = 0; p < pixels; p++) {
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+                    s = src32[p];
+                    out32[p] = (s & CHMASK) | (s & ~CHMASK);
+                }
+            }
+            else {
 
-                oData[r] = (includeRed) ? hold[r] : iData[r];
-                oData[g] = (includeGreen) ? hold[g] : iData[g];
-                oData[b] = (includeBlue) ? hold[b] : iData[b];
-                oData[a] = (includeAlpha) ? hold[a] : iData[a];
+                let s, p;
+
+                for (p = 0; p < pixels; p++) {
+
+                    s = src32[p];
+
+                    if ((s >>> 24) === 0) out32[p] = s;
+                    else out32[p] = (s & CHMASK) | (s & ~CHMASK);
+                }
+            }
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
+
+            return;
+        }
+
+        // Workspace & coeffs
+        const { bufA32, bufB32, tmpLineF32 } = getWorkspace(pixels, maxSide4);
+
+        const hCoeff = getCoeffs(radiusHorizontal),
+            vCoeff = getCoeffs(radiusVertical);
+
+        convolveRGBA(src32, bufA32, tmpLineF32, hCoeff, width, height);
+        convolveRGBA(bufA32, bufB32, tmpLineF32, vCoeff, height, width);
+
+        if (CHMASK === 0xFFFFFFFF && !excludeTransparentPixels) out32.set(bufB32);
+        else if (!excludeTransparentPixels) {
+
+            let p, s, b;
+
+            for (p = 0; p < pixels; p++) {
+
+                s = src32[p];
+                b = bufB32[p];
+
+                out32[p] = (b & CHMASK) | (s & ~CHMASK);
             }
         }
         else {
 
-            for (i = 0, iz = iData.length; i < iz; i += 4) {
+            let p, s, b;
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+            for (p = 0; p < pixels; p++) {
 
-                if (iData[a]) {
+                s = src32[p];
 
-                    oData[r] = (includeRed) ? hold[r] : iData[r];
-                    oData[g] = (includeGreen) ? hold[g] : iData[g];
-                    oData[b] = (includeBlue) ? hold[b] : iData[b];
-                    oData[a] = (includeAlpha) ? hold[a] : iData[a];
+                if ((s >>> 24) === 0) {
+
+                    out32[p] = s;
+                    continue;
                 }
-                else {
 
-                    oData[r] = iData[r];
-                    oData[g] = iData[g];
-                    oData[b] = iData[b];
-                    oData[a] = iData[a];
-                }
+                b = bufB32[p];
+                out32[p] = (b & CHMASK) | (s & ~CHMASK);
             }
         }
 
