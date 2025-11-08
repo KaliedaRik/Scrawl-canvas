@@ -2962,6 +2962,8 @@ P.theBigActionsObject = {
 
         const convolveRGBA = (src, out, line, coeff, width, height) => {
 
+            const sat8 = (x) => x < 0 ? 0 : (x > 255 ? 255 : x);
+
             const c_a0L = coeff[0],
                 c_a1L = coeff[1],
                 c_a0R = coeff[2],
@@ -3098,12 +3100,12 @@ P.theBigActionsObject = {
                     curr_src_b = (rgba >>> 16) & 0xff;
                     curr_src_a = (rgba >>> 24) & 0xff;
 
-                    pr = (line[line_index] + prev_out_r) | 0;
-                    pg = (line[line_index + 1] + prev_out_g) | 0;
-                    pb = (line[line_index + 2] + prev_out_b) | 0;
-                    pa = (line[line_index + 3] + prev_out_a) | 0;
+                    pr = sat8((line[line_index] + prev_out_r) | 0);
+                    pg = sat8((line[line_index + 1] + prev_out_g) | 0);
+                    pb = sat8((line[line_index + 2] + prev_out_b) | 0);
+                    pa = sat8((line[line_index + 3] + prev_out_a) | 0);
 
-                    out[out_index] = (pr & 0xFF) | ((pg & 0xFF) << 8) | ((pb & 0xFF) << 16) | ((pa & 0xFF) << 24);
+                    out[out_index] = pr | (pg << 8) | (pb << 16) | (pa << 24);
 
                     src_index--;
                     line_index -= 4;
