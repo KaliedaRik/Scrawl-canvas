@@ -52,6 +52,7 @@ const report = reportSpeed('#reportmessage', function () {
 
     return `
     Radius - Horizontal: ${dom.radiusHorizontal.value}, Vertical: ${dom.radiusVertical.value}
+    Angle: ${dom.angle.value}
     Opacity: ${dom.opacity.value}`;
 });
 
@@ -71,6 +72,7 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'radiusHorizontal', '10'],
     ['input', 'radiusVertical', '10'],
     ['input', 'opacity', '1'],
+    ['input', 'angle', '0'],
     ['select', 'includeRed', 1],
     ['select', 'includeGreen', 1],
     ['select', 'includeBlue', 1],
@@ -95,6 +97,7 @@ scrawl.makeUpdater({
 
         radiusHorizontal: ['radiusHorizontal', 'round'],
         radiusVertical: ['radiusVertical', 'round'],
+        angle: ['angle', 'round'],
 
         includeRed: ['includeRed', 'boolean'],
         includeGreen: ['includeGreen', 'boolean'],

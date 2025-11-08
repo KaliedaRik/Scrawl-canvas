@@ -24,7 +24,7 @@ import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coord
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _pow, _round, _sin, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, _tan, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
 const _256 = 256,
@@ -2841,7 +2841,7 @@ P.theBigActionsObject = {
         else processResults(cache.work, output, opacity);
     },
 
-// __gaussian-blur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
+// __gaussian-blur__ - adapted and evolved from code in this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
     [GAUSSIAN_BLUR]: function (requirements) {
 
         const WS_KEY = 'gaussian-blur::workspace';
@@ -2958,6 +2958,172 @@ P.theBigActionsObject = {
 
                 buf32[i] = (px & 0xFF000000) | (b << 16) | (g << 8) | r;
             }
+        };
+
+        // Bilinear sample from a packed Uint32 RGBA buffer at (xf, yf).
+        // - Clamps edges. Returns {r,g,b,a} as numbers 0..255.
+        const bilinearResult = [0, 0, 0, 0];
+        const sampleRGBA_bilinear_u32 = (src32, width, height, xf, yf) => {
+
+            if (xf < 0) xf = 0;
+            else if (xf > width  - 1) xf = width  - 1;
+
+            if (yf < 0) yf = 0;
+            else if (yf > height - 1) yf = height - 1;
+
+            const x0 = xf | 0,
+                y0 = yf | 0,
+                x1 = x0 + 1 < width ? x0 + 1 : x0,
+                y1 = y0 + 1 < height ? y0 + 1 : y0;
+
+            const fx = xf - x0,
+                fy = yf - y0;
+
+            const w00 = (1 - fx) * (1 - fy),
+                w10 = (fx) * (1 - fy),
+                w01 = (1 - fx) * (fy),
+                w11 = (fx) * (fy);
+
+            const i00 = y0 * width + x0,
+                i10 = y0 * width + x1,
+                i01 = y1 * width + x0,
+                i11 = y1 * width + x1;
+
+            const p00 = src32[i00],
+                p10 = src32[i10],
+                p01 = src32[i01],
+                p11 = src32[i11];
+
+            // Extract channels
+            const r00 = p00 & 0xFF,
+                g00 = (p00 >>> 8) & 0xFF,
+                b00 = (p00 >>> 16) & 0xFF,
+                a00 = (p00 >>> 24) & 0xFF;
+
+            const r10 = p10 & 0xFF,
+                g10 = (p10 >>> 8) & 0xFF,
+                b10 = (p10 >>> 16) & 0xFF,
+                a10 = (p10 >>> 24) & 0xFF;
+
+            const r01 = p01 & 0xFF,
+                g01 = (p01 >>> 8) & 0xFF,
+                b01 = (p01 >>> 16) & 0xFF,
+                a01 = (p01 >>> 24) & 0xFF;
+
+            const r11 = p11 & 0xFF,
+                g11 = (p11 >>> 8) & 0xFF,
+                b11 = (p11 >>> 16) & 0xFF,
+                a11 = (p11 >>> 24) & 0xFF;
+
+            bilinearResult[0] = r00 * w00 + r10 * w10 + r01 * w01 + r11 * w11;
+            bilinearResult[1] = g00 * w00 + g10 * w10 + g01 * w01 + g11 * w11;
+            bilinearResult[2] = b00 * w00 + b10 * w10 + b01 * w01 + b11 * w11;
+            bilinearResult[3] = a00 * w00 + a10 * w10 + a01 * w01 + a11 * w11;
+
+            return bilinearResult;
+        };
+
+        const pack4 = (r, g, b, a) => {
+
+            r = r < 0 ? 0 : r > 255 ? 255 : r | 0;
+            g = g < 0 ? 0 : g > 255 ? 255 : g | 0;
+            b = b < 0 ? 0 : b > 255 ? 255 : b | 0;
+            a = a < 0 ? 0 : a > 255 ? 255 : a | 0;
+
+            return (a << 24) | (b << 16) | (g << 8) | r;
+        };
+
+        const rotateIntoAngleFrame = (src32, dst32, width, height, theta) => {
+
+            const c = _cos(theta),
+                s = _sin(theta),
+                cx = (width - 1) * 0.5,
+                cy = (height - 1) * 0.5;
+
+            let v, dv, u, du, x, y, r, g, b, a;
+
+            for (v = 0; v < height; v++) {
+
+                dv = v - cy;
+
+                for (u = 0; u < width; u++) {
+
+                    du = u - cx;
+
+                    x =  du * c - dv * s + cx;
+                    y =  du * s + dv * c + cy;
+
+                    [r,g,b,a] = sampleRGBA_bilinear_u32(src32, width, height, x, y);
+
+                    dst32[v * width + u] = pack4(r, g, b, a);
+                }
+            }
+        };
+
+        const rotateBackToImageFrame = (src32, dst32, width, height, theta) => {
+
+            const c = _cos(theta),
+                s = _sin(theta),
+                cx = (width - 1) * 0.5,
+                cy = (height - 1) * 0.5;
+
+            let y, dy, x, dx, u, v, r, g, b, a;
+
+            for (y = 0; y < height; y++) {
+
+                dy = y - cy;
+
+                for (x = 0; x < width; x++) {
+
+                    dx = x - cx;
+
+                    u =  dx * c + dy * s + cx;
+                    v = -dx * s + dy * c + cy;
+
+                    [r,g,b,a] = sampleRGBA_bilinear_u32(src32, width, height, u, v);
+
+                    dst32[y * width + x] = pack4(r, g, b, a);
+                }
+            }
+        };
+
+        const transpose_u32 = (src32, dst32, width, height) => {
+
+            let y, baseY, x;
+
+            for (y = 0; y < height; y++) {
+
+                baseY = y * width;
+                for (x = 0; x < width; x++) {
+
+                    dst32[baseY + x] = src32[x * height + y];
+                }
+            }
+        };
+
+        const runRotatedPath = (angleR) => {
+
+            rotateIntoAngleFrame(src32, bufA32, width, height, angleR);
+
+            if (doH && doV) {
+
+                convolveRGBA(bufA32, bufB32, tmpLineF32, hCoeff, width, height);
+                convolveRGBA(bufB32, bufA32, tmpLineF32, vCoeff, height, width);
+            }
+            else if (doH && !doV) {
+
+                convolveRGBA(bufA32, bufB32, tmpLineF32, hCoeff, width, height);
+                transpose_u32(bufB32, bufA32, width, height);
+            }
+            else if (!doH && doV) {
+
+                transpose_u32(bufA32, bufB32, width, height);
+                convolveRGBA(bufB32, bufA32, tmpLineF32, vCoeff, height, width);
+            }
+            else bufA32.set(bufA32);
+
+            rotateBackToImageFrame(bufA32, bufB32, width, height, angleR);
+            return bufB32;
         };
 
         const convolveRGBA = (src, out, line, coeff, width, height) => {
@@ -3112,7 +3278,9 @@ P.theBigActionsObject = {
                     out_index -= height;
                 }
             }
-        }
+        };
+
+        const near = (t) => _abs(_sin(t)) < 1e-6 || _abs(_cos(t)) < 1e-6;
 
         const [input, output] = getInputAndOutputLines(requirements);
 
@@ -3125,6 +3293,7 @@ P.theBigActionsObject = {
             opacity = 1,
             radiusHorizontal = 1,
             radiusVertical = 1,
+            angle = 0,
             includeRed = true,
             includeGreen = true,
             includeBlue = true,
@@ -3133,6 +3302,8 @@ P.theBigActionsObject = {
             premultiply = false,
             lineOut,
         } = requirements;
+
+        const angleRad = angle * _radian;
 
         const pixels = (iData.length >>> 2),
             maxSide4 = _max(width, height) * 4;
@@ -3182,17 +3353,25 @@ P.theBigActionsObject = {
         // Workspace & coeffs
         const { bufA32, bufB32, tmpLineF32 } = getWorkspace(pixels, maxSide4);
 
-        const hCoeff = getCoeffs(radiusHorizontal),
-            vCoeff = getCoeffs(radiusVertical);
+        const doH = radiusHorizontal > 0,
+            doV = radiusVertical > 0;
+
+        const hCoeff = doH ? getCoeffs(radiusHorizontal) : null,
+            vCoeff = doV ? getCoeffs(radiusVertical) : null;
 
         if (premultiply) premultiply_u32(src32, pixels);
 
-        convolveRGBA(src32, bufA32, tmpLineF32, hCoeff, width, height);
-        convolveRGBA(bufA32, bufB32, tmpLineF32, vCoeff, height, width);
+        let blurred32;
 
-        if (premultiply) unpremultiply_u32(bufB32, pixels);
+        const k = _round(angleRad / _piHalf),
+            snapped = k * _piHalf;
 
-        if (CHMASK === 0xFFFFFFFF && !excludeTransparentPixels) out32.set(bufB32);
+        if (near(angleRad)) blurred32 = runRotatedPath(snapped);
+        else blurred32 = runRotatedPath(angleRad);
+
+        if (premultiply) unpremultiply_u32(blurred32, pixels);
+
+        if (CHMASK === 0xFFFFFFFF && !excludeTransparentPixels) out32.set(blurred32);
         else if (!excludeTransparentPixels) {
 
             let p, s, b;
@@ -3200,7 +3379,7 @@ P.theBigActionsObject = {
             for (p = 0; p < pixels; p++) {
 
                 s = src32[p];
-                b = bufB32[p];
+                b = blurred32[p];
 
                 out32[p] = (b & CHMASK) | (s & ~CHMASK);
             }
@@ -3219,7 +3398,7 @@ P.theBigActionsObject = {
                     continue;
                 }
 
-                b = bufB32[p];
+                b = blurred32[p];
                 out32[p] = (b & CHMASK) | (s & ~CHMASK);
             }
         }

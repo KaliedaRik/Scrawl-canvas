@@ -910,7 +910,10 @@ const setActionsArray = {
         }];
     },
 
-// __gaussianBlur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
+// __gaussianBlur__ -  NOTE: Known issue / potential feature - when `includeAlpha === true` and `excludeTransparentPixels === false`, the rotated blur path uses clamped-edge sampling. This may produce visible “edge rays” or streaks at certain angles. These are harmless and can (possibly) be used as a stylized bloom/glare effect. orkarounds:
+// + set `excludeTransparentPixels = true`, or
+// + set `includeAlpha = false`, or
+// + keep `angle` near 0°, 90°, 180°, 270°.
     gaussianBlur: function (f) {
         if (f.radius != null) {
             f.radiusHorizontal = f.radius;
@@ -931,6 +934,7 @@ const setActionsArray = {
             premultiply: (f.premultiply != null) ? f.premultiply : false,
             radiusHorizontal: (f.radiusHorizontal != null) ? f.radiusHorizontal : 1,
             radiusVertical: (f.radiusVertical != null) ? f.radiusVertical : 1,
+            angle: (f.angle != null) ? f.angle : 0,
         }];
     },
 
