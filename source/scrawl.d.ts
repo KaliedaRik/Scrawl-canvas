@@ -1538,6 +1538,7 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     points?: StringOrNumberInput | number[];
     pointsData?: number[];
     postProcessResults?: boolean;
+    premultiply?: boolean;
     processHorizontal?: boolean;
     processVertical?: boolean;
     ranges?: any;

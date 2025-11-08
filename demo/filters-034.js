@@ -40,10 +40,6 @@ const piccy = scrawl.makePicture({
     dimensions: ['80%', '80%'],
     copyDimensions: ['100%', '100%'],
 
-    delta: {
-        roll: 0.4,
-    },
-
     method: 'fill',
 
     filters: [name('gaussian-blur')],
@@ -80,6 +76,7 @@ const dom = scrawl.initializeDomInputs([
     ['select', 'includeBlue', 1],
     ['select', 'includeAlpha', 1],
     ['select', 'excludeTransparentPixels', 0],
+    ['select', 'premultiply', 0],
     ['select', 'memoizeFilterOutput', 0],
 ]);
 
@@ -104,6 +101,7 @@ scrawl.makeUpdater({
         includeBlue: ['includeBlue', 'boolean'],
         includeAlpha: ['includeAlpha', 'boolean'],
         excludeTransparentPixels: ['excludeTransparentPixels', 'boolean'],
+        premultiply: ['premultiply', 'boolean'],
 
         opacity: ['opacity', 'float'],
     },

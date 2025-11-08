@@ -2894,8 +2894,9 @@ P.theBigActionsObject = {
         const getCoeffs = (sigma) => {
 
             const s = (sigma > 0 ? sigma : 0) || 0,
-                key = s < 0.5 ? 0.5 : +s,
-                cache = getCoeffCache();
+                key = s < 0.5 ? 0.5 : Math.round(s * 1024) / 1024;
+
+            const cache = getCoeffCache();
 
             let c = cache.get(key);
 
@@ -2905,6 +2906,58 @@ P.theBigActionsObject = {
                 cache.set(key, c);
             }
             return c;
+        };
+
+        const premultiply_u32 = (buf32, count) => {
+
+            let i, px, r, g, b, a, f;
+
+            for (i = 0; i < count; i++) {
+
+                px = buf32[i];
+
+                a  = (px >>> 24) & 0xFF;
+
+                if (a === 0 || a === 255) continue;
+
+                f = a / 255;
+
+                r = ((px) & 0xFF);
+                g = ((px >>> 8) & 0xFF);
+                b = ((px >>> 16) & 0xFF);
+
+                r = (r * f + 0.5) | 0;
+                g = (g * f + 0.5) | 0;
+                b = (b * f + 0.5) | 0;
+
+                buf32[i] = (px & 0xFF000000) | (b << 16) | (g << 8) | r;
+            }
+        };
+
+        const unpremultiply_u32 = (buf32, count) => {
+
+            let i, px, r, g, b, a, f;
+
+            for (i = 0; i < count; i++) {
+
+                px = buf32[i];
+
+                a  = (px >>> 24) & 0xFF;
+
+                if (a === 0 || a === 255) continue;
+
+                f = 255 / a;
+
+                r = ((px) & 0xFF);
+                g = ((px >>> 8) & 0xFF);
+                b = ((px >>> 16) & 0xFF);
+
+                r = _min(255, (r * f + 0.5) | 0);
+                g = _min(255, (g * f + 0.5) | 0);
+                b = _min(255, (b * f + 0.5) | 0);
+
+                buf32[i] = (px & 0xFF000000) | (b << 16) | (g << 8) | r;
+            }
         };
 
         const convolveRGBA = (src, out, line, coeff, width, height) => {
@@ -3075,6 +3128,7 @@ P.theBigActionsObject = {
             includeBlue = true,
             includeAlpha = true,
             excludeTransparentPixels = false,
+            premultiply = false,
             lineOut,
         } = requirements;
 
@@ -3129,8 +3183,12 @@ P.theBigActionsObject = {
         const hCoeff = getCoeffs(radiusHorizontal),
             vCoeff = getCoeffs(radiusVertical);
 
+        if (premultiply) premultiply_u32(src32, pixels);
+
         convolveRGBA(src32, bufA32, tmpLineF32, hCoeff, width, height);
         convolveRGBA(bufA32, bufB32, tmpLineF32, vCoeff, height, width);
+
+        if (premultiply) unpremultiply_u32(bufB32, pixels);
 
         if (CHMASK === 0xFFFFFFFF && !excludeTransparentPixels) out32.set(bufB32);
         else if (!excludeTransparentPixels) {

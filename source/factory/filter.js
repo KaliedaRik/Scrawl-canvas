@@ -216,6 +216,7 @@ const defaultAttributes = {
     points: null,
     pointsData: null,
     postProcessResults: true,
+    premultiply: false,
     processHorizontal: true,
     processVertical: true,
     radius: 1,
@@ -927,6 +928,7 @@ const setActionsArray = {
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
             excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : false,
             opacity: (f.opacity != null) ? f.opacity : 1,
+            premultiply: (f.premultiply != null) ? f.premultiply : false,
             radiusHorizontal: (f.radiusHorizontal != null) ? f.radiusHorizontal : 1,
             radiusVertical: (f.radiusVertical != null) ? f.radiusVertical : 1,
         }];
