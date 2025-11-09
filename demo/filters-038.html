@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Filters 036</title>
+  <title>Demo Filters 038</title>
   <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
@@ -54,43 +54,42 @@
 
 <body>
   <div id="test-navigation">
-    <a href="filters-035.html">&larr; Previous</a>
-    <a href="filters-037.html">Next &rarr;</a>
+    <a href="filters-037.html">&larr; Previous</a>
+    <a href="filters-101.html">Next &rarr;</a>
   </div>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 036</h1>
-  <h2>Parameters for: OffsetChannels filter</h2>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 038</h1>
+  <h2>Using the matrix filter to create directional blur effects</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls">
     
-    <div class="pink label">Red offset X</div>
-    <div class="pink"><input class="controlItem" id="offsetRedX" type="range" value="-20" min="-150" max="150" step="1" /></div>
+    <div class="blue label">Length</div>
+    <div class="blue"><input class="controlItem filter-control" id="length" type="range" value="9" min="0" max="40" step="1" /></div>
 
-    <div class="pink label">Red offset Y</div>
-    <div class="pink"><input class="controlItem" id="offsetRedY" type="range" value="-20" min="-150" max="150" step="1" /></div>
+    <div class="blue label">Angle</div>
+    <div class="blue"><input class="controlItem filter-control" id="angle" type="range" value="0" min="0" max="360" step="1" /></div>
 
-    <div class="green label">Green offset X</div>
-    <div class="green"><input class="controlItem" id="offsetGreenX" type="range" value="20" min="-150" max="150" step="1" /></div>
+    <div class="blue label">Profile</div>
+    <div class="blue">
+      <select class="controlItem filter-control" id="profile">
+        <option value="box">Box</option>
+        <option value="gauss">Gauss</option>
+      </select>
+    </div>
 
-    <div class="green label">Green offset Y</div>
-    <div class="green"><input class="controlItem" id="offsetGreenY" type="range" value="20" min="-150" max="150" step="1" /></div>
+    <div class="blue label">Sigma (for gauss profile)</div>
+    <div class="blue"><input class="controlItem filter-control" id="sigma" type="range" value="2" min="0.5" max="6" step="0.1" /></div>
 
-    <div class="blue label">Blue offset X</div>
-    <div class="blue"><input class="controlItem" id="offsetBlueX" type="range" value="-20" min="-150" max="150" step="1" /></div>
+    <div class="lavender label">Opacity</div>
+    <div class="lavender"><input class="controlItem filter-opacity" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
-    <div class="blue label">Blue offset Y</div>
-    <div class="blue"><input class="controlItem" id="offsetBlueY" type="range" value="20" min="-150" max="150" step="1" /></div>
-
-    <div class="lavender label">Use input as mask</div>
-    <div class="lavender">
-      <select class="controlItem" id="useInputAsMask">
+    <div class="yellow label">Memoize filter</div>
+    <div class="yellow">
+      <select class="controlItem" id="memoizeFilterOutput">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
     </div>
-
-    <div class="yellow label">Opacity</div>
-    <div class="yellow"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
   </div>
 
@@ -103,7 +102,7 @@
     >
       <div class="placeholder">
         <img
-          src="thumbs/filters-036.webp"
+          src="thumbs/filters-038.webp"
           alt="Screen capture image of the demo canvas"
         />    
       </div>
@@ -125,16 +124,16 @@
 
     <ul>
       <li>Create a test Picture entity</li>
-      <li>Create a glitch filter and apply it to the test entity</li>
+      <li>Create a matrix filter and apply it to the test entity</li>
       <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
 
     <p><b>Touch test:</b> not required</p>
 
-    <p><a href="../docs/demo/filters-036.html">Annotated code</a></p>
+    <p><a href="../docs/demo/filters-038.html">Annotated code</a></p>
   </div>
 
-  <script src="filters-036.js" type="module"></script>
+  <script src="filters-038.js" type="module"></script>
 
 </body>
 

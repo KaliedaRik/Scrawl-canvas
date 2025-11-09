@@ -38,15 +38,17 @@ scrawl.makePicture({
 
     name: name('edgeDetect-image'),
     asset: 'iris',
-    dimensions: ['50%', '100%'],
     copyDimensions: ['100%', '100%'],
+    dimensions: ['48%', '96%'],
+    handle: ['center', 'center'],
+    start: ['25%', 'center'],
 
     filters: [name('edgeDetect')],
 
 }).clone({
 
     name: name('sharpen-image'),
-    startX: 300,
+    startX: '75%',
     filters: [name('sharpen')],
 });
 

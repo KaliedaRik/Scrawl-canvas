@@ -37,7 +37,7 @@ const piccy = scrawl.makePicture({
 
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    dimensions: ['80%', '80%'],
+    dimensions: ['90%', '90%'],
     copyDimensions: ['100%', '100%'],
 
     method: 'fill',

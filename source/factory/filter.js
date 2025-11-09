@@ -250,6 +250,7 @@ const defaultAttributes = {
     transparentAt: 0,
     transparentEdges: false,
     useBluenoise: false,
+    useInputAsMask: false,
     useLabForPaletteDistance: false,
     useMixedChannel: true,
     useNaturalGrayscale: false,
@@ -1203,6 +1204,7 @@ const setActionsArray = {
             offsetBlueY: (f.offsetY != null) ? f.offsetY : 0,
             offsetAlphaX: (f.offsetX != null) ? f.offsetX : 0,
             offsetAlphaY: (f.offsetY != null) ? f.offsetY : 0,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
     },
 
@@ -1221,6 +1223,7 @@ const setActionsArray = {
             offsetBlueY: (f.offsetBlueY != null) ? f.offsetBlueY : 0,
             offsetAlphaX: (f.offsetAlphaX != null) ? f.offsetAlphaX : 0,
             offsetAlphaY: (f.offsetAlphaY != null) ? f.offsetAlphaY : 0,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
     },
 

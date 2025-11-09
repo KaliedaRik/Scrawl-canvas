@@ -1549,6 +1549,7 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     staticSwirls?: any,
     transparentEdges?: boolean;
     useBluenoise?: boolean;
+    useInputAsMask?: boolean;
     useMixedChannel?: boolean;
     useNaturalGrayscale?: boolean;
     weights?: number[];

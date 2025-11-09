@@ -1,7 +1,7 @@
-// # Demo Filters 025
-// Filter parameters: Glitch filter
+// # Demo Filters 036
+// Parameters for: OffsetChannels filter
 
-// [Run code](../../demo/filters-025.html)
+// [Run code](../../demo/filters-036.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground } from './utilities.js';
@@ -35,6 +35,7 @@ const offset = scrawl.makeFilter({
     offsetGreenY: 20,
     offsetBlueX: -20,
     offsetBlueY: 20,
+    useInputAsMask: false,
 });
 
 
@@ -43,8 +44,10 @@ const piccy = scrawl.makePicture({
 
     name: name('image'),
     asset: 'iris',
-    dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
+    dimensions: ['95%', '95%'],
+    handle: ['center', 'center'],
+    start: ['center', 'center'],
 
     filters: [name('offset')],
 });
@@ -58,7 +61,6 @@ const report = reportSpeed('#reportmessage', function () {
     Red offset - X: ${dom.offsetRedX.value}; Y ${dom.offsetRedY.value}
     Green offset - X: ${dom.offsetGreenX.value}; Y ${dom.offsetGreenY.value}
     Blue offset - X: ${dom.offsetBlueX.value}; Y ${dom.offsetBlueY.value}
-    Alpha offset - X: ${dom.offsetAlphaX.value}; Y ${dom.offsetAlphaY.value}
     Opacity: ${dom.opacity.value}`;
 });
 
@@ -81,9 +83,8 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'offsetGreenY', '20'],
     ['input', 'offsetBlueX', '-20'],
     ['input', 'offsetBlueY', '20'],
-    ['input', 'offsetAlphaX', '0'],
-    ['input', 'offsetAlphaY', '0'],
     ['input', 'opacity', '1'],
+    ['select', 'useInputAsMask', 0],
 ]);
 
 
@@ -107,8 +108,7 @@ scrawl.makeUpdater({
         offsetGreenY: ['offsetGreenY', 'round'],
         offsetBlueX: ['offsetBlueX', 'round'],
         offsetBlueY: ['offsetBlueY', 'round'],
-        offsetAlphaX: ['offsetAlphaX', 'round'],
-        offsetAlphaY: ['offsetAlphaY', 'round'],
+        useInputAsMask: ['useInputAsMask', 'boolean'],
     },
 });
 

@@ -4602,43 +4602,50 @@ P.theBigActionsObject = {
             offsetGreenY = 0,
             offsetBlueX = 0,
             offsetBlueY = 0,
-            offsetAlphaX = 0,
-            offsetAlphaY = 0,
+            useInputAsMask = false,
             lineOut,
         } = requirements;
 
-        if (!(offsetRedX || offsetGreenX || offsetBlueX || offsetAlphaX || offsetRedY || offsetGreenY || offsetBlueY || offsetAlphaY)) out32.set(src32);
+        // No change branch (fastest)
+        if (!(offsetRedX || offsetGreenX || offsetBlueX || offsetRedY || offsetGreenY || offsetBlueY)) out32.set(src32);
+
+        // Pixel manipulation required branch
         else {
 
             const rowStridePx = width | 0;
 
-            const simple = offsetRedX === offsetGreenX && offsetRedX === offsetBlueX && offsetRedX === offsetAlphaX && offsetRedY === offsetGreenY && offsetRedY === offsetBlueY && offsetRedY === offsetAlphaY;
+            const simple = offsetRedX === offsetGreenX && offsetRedX === offsetBlueX && offsetRedY === offsetGreenY && offsetRedY === offsetBlueY;
 
+            // Simple sub-branch - user requires all pixels (including alpha) to be shifted across the canvas by given x/y values (very fast)
             if (simple) {
 
                 const dx = offsetRedX | 0,
-                    dy = offsetRedY | 0;
-
-                let y, ty, xStart, xEnd, n, srcRowBase, destRowBase;
-
-                for (y = 0; y < height; y++) {
-
-                    ty = y + dy;
-                    if (ty < 0 || ty >= height) continue;
-
-                    xStart = dx < 0 ? -dx : 0;
-                    xEnd = dx > 0 ? width - dx : width;
+                    dy = offsetRedY | 0,
+                    xStart = dx < 0 ? -dx : 0,
+                    xEnd = dx > 0 ? width - dx : width,
                     n = (xEnd - xStart) | 0;
 
-                    if (n <= 0) continue;
+                if (n > 0) {
 
-                    srcRowBase = (y  * rowStridePx + xStart) | 0;
-                    destRowBase = (ty * rowStridePx + xStart + dx) | 0;
+                    let y, ty, srcRowBase, destRowBase;
 
-                    // copy whole run of pixels
-                    out32.set(src32.subarray(srcRowBase, srcRowBase + n), destRowBase);
+                    for (y = 0; y < height; y++) {
+
+                        ty = y + dy;
+                        if (ty < 0 || ty >= height) continue;
+
+                        if (n <= 0) continue;
+
+                        srcRowBase = (y  * rowStridePx + xStart) | 0;
+                        destRowBase = (ty * rowStridePx + xStart + dx) | 0;
+
+                        // copy whole run of pixels
+                        out32.set(src32.subarray(srcRowBase, srcRowBase + n), destRowBase);
+                    }
                 }
             }
+
+            // Default sub-branch. Need to move pixels values on a per-channel basis
             else {
 
                 out32.fill(0);
@@ -4649,16 +4656,23 @@ P.theBigActionsObject = {
 
                     if (dx === 0 && dy === 0) {
 
-                        const cm = (0xFF << shift) >>> 0,
+                        const cm  = (0xFF << shift) >>> 0,
                             ncm = (~cm) >>> 0;
 
-                        let p, pz, s, v;
+                        let p, pz, s, v, merged, inA, outA, a;
 
                         for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
                             s = src32[p];
                             v = out32[p];
-                            out32[p] = (v & ncm) | (s & cm);
+
+                            merged = (v & ncm) | (s & cm);
+
+                            inA  = (s >>> 24) & 0xFF;
+                            outA = (v >>> 24) & 0xFF;
+                            a    = inA > outA ? inA : outA;
+
+                            out32[p] = (merged & 0x00FFFFFF) | (a << 24);
                         }
                         return;
                     }
@@ -4666,7 +4680,7 @@ P.theBigActionsObject = {
                     const cm = (0xFF << shift) >>> 0,
                         ncm = (~cm) >>> 0;
 
-                    let y, ty, xStart, xEnd, n, src, dst, v, s, k;
+                    let y, ty, xStart, xEnd, n, src, dst, v, s, merged, k, inA, outA, a;
 
                     for (y = 0; y < height; y++) {
 
@@ -4686,7 +4700,14 @@ P.theBigActionsObject = {
 
                             v = out32[dst];
                             s = src32[src];
-                            out32[dst] = (v & ncm) | (s & cm);
+
+                            merged = (v & ncm) | (s & cm);
+
+                            inA  = (s >>> 24) & 0xFF;
+                            outA = (v >>> 24) & 0xFF;
+                            a = inA > outA ? inA : outA;
+
+                            out32[dst] = (merged & 0x00FFFFFF) | (a << 24);
                         }
                     }
                 };
@@ -4694,7 +4715,18 @@ P.theBigActionsObject = {
                 copyChannel(offsetRedX, offsetRedY, 0);
                 copyChannel(offsetGreenX, offsetGreenY, 8);
                 copyChannel(offsetBlueX, offsetBlueY, 16);
-                copyChannel(offsetAlphaX, offsetAlphaY, 24);
+            }
+
+            if (useInputAsMask) {
+                
+                const pixelCount = src32.length;
+                let p, s;
+
+                for (p = 0; p < pixelCount; p++) {
+                    
+                    s = src32[p];
+                    if ((s >>> 24) === 0) out32[p] = 0;
+                }
             }
         }
 

@@ -41,8 +41,10 @@ const piccy = scrawl.makePicture({
 
     name: name('image'),
     asset: 'iris',
-    dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
+    dimensions: ['95%', '95%'],
+    handle: ['center', 'center'],
+    start: ['center', 'center'],
 
     filters: [name('matrix3')],
 });
