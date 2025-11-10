@@ -24,7 +24,7 @@ import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coord
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, _tan, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, _tan, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, UNSHARP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
 
 // Local constants
 const _256 = 256,
@@ -405,6 +405,264 @@ const transferDataUnchanged = function (oData, iData, len) {
     else oData.set(iData.subarray(0, len));
 };
 
+// Edge-Aware USM helpers (Float32 single-channel)
+
+// Workspace keyed by dimensions so we can reuse buffers safely.
+const getEausmWorkspace = (width, height) => {
+
+    const key = `ea-usm::ws::${width}x${height}`,
+        N = width * height;
+
+    let ws = getWorkstoreItem(key);
+    if (!ws) ws = {};
+
+    if (!ws.L || ws.L.length !== N) ws.L = new Float32Array(N);
+    if (!ws.A || ws.A.length !== N) ws.A = new Float32Array(N);
+    if (!ws.B || ws.B.length !== N) ws.B = new Float32Array(N);
+
+    if (!ws.Lb || ws.Lb.length !== N) ws.Lb = new Float32Array(N);
+    if (!ws.D || ws.D.length !== N) ws.D = new Float32Array(N);
+    if (!ws.G || ws.G.length !== N) ws.G = new Float32Array(N);
+    if (!ws.M || ws.M.length !== N) ws.M = new Float32Array(N);
+
+    if (!ws.tmpLine || ws.tmpLine.length < Math.max(width, height)) ws.tmpLine = new Float32Array(Math.max(width, height));
+
+    setWorkstoreItem(key, ws);
+    return ws;
+};
+
+// Share the same coeff cache as GAUSSIAN_BLUR so sliders feel identical
+const getGaussianCoeffCache = () => {
+
+    const COEFFS_KEY = 'gaussian-blur::coeffs';
+
+    let m = getWorkstoreItem(COEFFS_KEY);
+
+    if (!m) {
+        m = new Map();
+        setWorkstoreItem(COEFFS_KEY, m);
+    }
+    return m;
+};
+
+const gaussCoefRawFloat = (sigmaIn) => {
+
+    let sigma = sigmaIn;
+    if (sigma < 0.5) sigma = 0.5;
+
+    const a  = _exp(0.726 * 0.726) / sigma,
+        g1 = _exp(-a),
+        g2 = _exp(-2 * a);
+
+    const a0 = (1 - g1) * (1 - g1) / (1 + 2 * a * g1 - g2),
+        a1 = a0 * (a - 1) * g1,
+        a2 = a0 * (a + 1) * g1,
+        a3 = -a0 * g2,
+        b1 = 2 * g1,
+        b2 = -g2;
+
+    const left_corner  = (a0 + a1) / (1 - b1 - b2),
+        right_corner = (a2 + a3) / (1 - b1 - b2);
+
+    return new Float32Array([a0, a1, a2, a3, b1, b2, left_corner, right_corner]);
+};
+
+const getGaussianCoeffsFloat = (sigma) => {
+
+    const s = (sigma > 0 ? sigma : 0) || 0,
+        key = s < 0.5 ? 0.5 : Math.round(s * 1024) / 1024,
+        cache = getGaussianCoeffCache();
+
+    let c = cache.get(key);
+
+    if (!c) {
+
+        c = gaussCoefRawFloat(key);
+        cache.set(key, c);
+    }
+    return c;
+};
+
+// 1D recursive Gaussian on a Float32 line (forward+backward; in-place via dstLine)
+const convolve1D_Float = (lineIn, dstLine, length, coeff) => {
+
+    const a0L = coeff[0],
+        a1L = coeff[1],
+        a0R = coeff[2],
+        a1R = coeff[3],
+        b1 = coeff[4],
+        b2 = coeff[5],
+        lc = coeff[6],
+        rc = coeff[7];
+
+    let prev_src = lineIn[0],
+        prev_out = prev_src * lc,
+        prev_prev_out = prev_out,
+        i, x, y;
+
+    dstLine[0] = prev_out;
+
+    for (i = 1; i < length; i++) {
+
+        x = lineIn[i];
+        y = x * a0L + prev_src * a1L + prev_out * b1 + prev_prev_out * b2;
+
+        dstLine[i] = y;
+
+        prev_prev_out = prev_out;
+        prev_out = y;
+        prev_src = x;
+    }
+
+    prev_src = lineIn[length - 1];
+    prev_out = prev_src * rc;
+    prev_prev_out = prev_out;
+    dstLine[length - 1] = dstLine[length - 1] + prev_out;
+
+    for (i = length - 2; i >= 0; i--) {
+
+        x = lineIn[i];
+        y = x * a0R + prev_src * a1R + prev_out * b1 + prev_prev_out * b2;
+
+        dstLine[i] = dstLine[i] + y;
+
+        prev_prev_out = prev_out;
+        prev_out = y;
+        prev_src = x;
+    }
+};
+
+// Separable blur on Float32 single-channel image
+const gaussianBlurL_Float = (src, dst, width, height, sigmaH, sigmaV, tmpLine) => {
+
+    const doH = sigmaH > 0,
+        doV = sigmaV > 0;
+
+    if (!doH && !doV) {
+
+        if (dst !== src) dst.set(src);
+        return;
+    }
+
+    const tmpImg = (doH && doV) ? new Float32Array(width * height) : dst;
+
+    if (doH) {
+
+        const coeffH = getGaussianCoeffsFloat(sigmaH);
+
+        let y, off, x;
+
+        for (y = 0; y < height; y++) {
+
+            off = y * width;
+
+            for (x = 0; x < width; x++){
+
+                tmpLine[x] = src[off + x];
+            }
+
+            convolve1D_Float(tmpLine, tmpLine, width, coeffH);
+
+            for (x = 0; x < width; x++) {
+
+                tmpImg[off + x] = tmpLine[x];
+            }
+        }
+    }
+    else {
+        if (tmpImg !== src) tmpImg.set(src);
+    }
+
+    if (doV) {
+
+        const coeffV = getGaussianCoeffsFloat(sigmaV);
+
+        let x, y;
+
+        for (x = 0; x < width; x++) {
+
+            for (y = 0; y < height; y++) {
+
+                tmpLine[y] = tmpImg[y * width + x];
+            }
+
+            convolve1D_Float(tmpLine, tmpLine, height, coeffV);
+
+            for (y = 0; y < height; y++) {
+
+                dst[y * width + x] = tmpLine[y];
+            }
+        }
+    }
+};
+
+// Sobel magnitude on Float32 single-channel image (clamped borders)
+const sobelMagFloat = (src, dst, width, height) => {
+
+    // kernels:
+    // Gx = [-1 0 +1; -2 0 +2; -1 0 +1]
+    // Gy = [-1 -2 -1; 0 0 0; +1 +2 +1]
+    const clampXY = (x, y) => {
+
+        if (x < 0) x = 0;
+        else if (x >= width) x = width - 1;
+        
+        if (y < 0) y = 0;
+        else if (y >= height) y = height - 1;
+        
+        return (y * width + x) | 0;
+    };
+
+    let y, ym1, y0, yp1, x, xm1, x0, xp1,
+        p00, p10, p20, p01, p11, p21, p02, p12, p22, gx, gy, g;
+
+    for (y = 0; y < height; y++) {
+
+        ym1 = y - 1;
+        y0 = y;
+        yp1 = y + 1;
+        
+        for (x = 0; x < width; x++) {
+
+            xm1 = x - 1;
+            x0 = x;
+            xp1 = x + 1;
+
+            p00 = src[clampXY(xm1, ym1)];
+            p10 = src[clampXY(x0, ym1)];
+            p20 = src[clampXY(xp1, ym1)];
+            p01 = src[clampXY(xm1, y0)]
+            p11 = src[clampXY(x0, y0)];
+            p21 = src[clampXY(xp1, y0)];
+            p02 = src[clampXY(xm1, yp1)];
+            p12 = src[clampXY(x0, yp1)];
+            p22 = src[clampXY(xp1, yp1)];
+
+            gx = (-p00 + p20) + (-2 * p01 + 2 * p21) + (-p02 + p22);
+            gy = (-p00 - 2 * p10 - p20) + (p02 + 2 * p12 + p22);
+
+            g = _abs(gx) + _abs(gy);
+
+            dst[y * width + x] = g;
+        }
+    }
+};
+
+// Smoothstep on Float32 arrays: edgeMask = smoothstep(t0, t1, grad)
+const smoothstepInto = (grad, outMask, t0, t1) => {
+
+    const inv = 1.0 / _max(1e-6, (t1 - t0));
+
+    let i, n, x, s;
+
+    for (i = 0, n = grad.length | 0; i < n; i++) {
+
+        x = (grad[i] - t0) * inv;
+        s = x <= 0 ? 0 : (x >= 1 ? 1 : (x * x * (3 - 2 * x)));
+        
+        outMask[i] = s;
+    }
+};
 
 // ## Filter action functions
 // Each function is held in the `theBigActionsObject` object, for convenience
@@ -6425,38 +6683,6 @@ P.theBigActionsObject = {
                         radius++;
                     }
                     labels[p] = best;
-                    // for (oy = -1; oy <= 1; oy++) {
-
-                    //     gy2 = gy + oy;
-                    //     if (gy2 < 0 || gy2 >= gridRows) continue;
-
-                    //     for (ox = -1; ox <= 1; ox++) {
-
-                    //         gx2 = gx + ox;
-                    //         if (gx2 < 0 || gx2 >= gridCols) continue;
-
-                    //         s = head[gy2 * gridCols + gx2];
-
-                    //         while (s !== -1) {
-
-                    //             sx = seeds[(s << 1)];
-                    //             sy = seeds[(s << 1) + 1];
-                    //             dx = x - sx;
-                    //             dy = y - sy;
-
-                    //             d2 = dx * dx + dy * dy;
-
-                    //             if (d2 < bestD) {
-
-                    //                 bestD = d2;
-                    //                 best = s;
-                    //             }
-
-                    //             s = next[s];
-                    //         }
-                    //     }
-                    // }
-                    // labels[p] = best;
                 }
             }
 
@@ -6652,6 +6878,363 @@ P.theBigActionsObject = {
 
                 out32[p] = ((a << 24) | (nb << 16) | (ng << 8) | nr) >>> 0;
             }
+        }
+
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
+    },
+
+// __unsharp__ - OKLab L-only sharpen with Sobel edge mask
+    [UNSHARP]: function (requirements) {
+
+        // Workspace keyed by dimensions so we can reuse buffers safely.
+        const getEausmWorkspace = (width, height) => {
+
+            const key = `ea-usm::ws::${width}x${height}`,
+                N = width * height;
+
+            let ws = getWorkstoreItem(key);
+            if (!ws) ws = {};
+
+            if (!ws.L || ws.L.length !== N) ws.L = new Float32Array(N);
+            if (!ws.A || ws.A.length !== N) ws.A = new Float32Array(N);
+            if (!ws.B || ws.B.length !== N) ws.B = new Float32Array(N);
+
+            if (!ws.Lb || ws.Lb.length !== N) ws.Lb = new Float32Array(N);
+            if (!ws.D || ws.D.length !== N) ws.D = new Float32Array(N);
+            if (!ws.G || ws.G.length !== N) ws.G = new Float32Array(N);
+            if (!ws.M || ws.M.length !== N) ws.M = new Float32Array(N);
+
+            if (!ws.tmpLine || ws.tmpLine.length < Math.max(width, height)) ws.tmpLine = new Float32Array(Math.max(width, height));
+
+            setWorkstoreItem(key, ws);
+            return ws;
+        };
+
+        // Share the same coeff cache as GAUSSIAN_BLUR so sliders feel identical
+        const getGaussianCoeffCache = () => {
+
+            const COEFFS_KEY = 'gaussian-blur::coeffs';
+
+            let m = getWorkstoreItem(COEFFS_KEY);
+
+            if (!m) {
+                m = new Map();
+                setWorkstoreItem(COEFFS_KEY, m);
+            }
+            return m;
+        };
+
+        const gaussCoefRawFloat = (sigmaIn) => {
+
+            let sigma = sigmaIn;
+            if (sigma < 0.5) sigma = 0.5;
+
+            const a  = _exp(0.726 * 0.726) / sigma,
+                g1 = _exp(-a),
+                g2 = _exp(-2 * a);
+
+            const a0 = (1 - g1) * (1 - g1) / (1 + 2 * a * g1 - g2),
+                a1 = a0 * (a - 1) * g1,
+                a2 = a0 * (a + 1) * g1,
+                a3 = -a0 * g2,
+                b1 = 2 * g1,
+                b2 = -g2;
+
+            const left_corner  = (a0 + a1) / (1 - b1 - b2),
+                right_corner = (a2 + a3) / (1 - b1 - b2);
+
+            return new Float32Array([a0, a1, a2, a3, b1, b2, left_corner, right_corner]);
+        };
+
+        const getGaussianCoeffsFloat = (sigma) => {
+
+            const s = (sigma > 0 ? sigma : 0) || 0,
+                key = s < 0.5 ? 0.5 : Math.round(s * 1024) / 1024,
+                cache = getGaussianCoeffCache();
+
+            let c = cache.get(key);
+
+            if (!c) {
+
+                c = gaussCoefRawFloat(key);
+                cache.set(key, c);
+            }
+            return c;
+        };
+
+        // 1D recursive Gaussian on a Float32 line (forward+backward; in-place via dstLine)
+        const convolve1D_Float = (lineIn, dstLine, length, coeff) => {
+
+            const a0L = coeff[0],
+                a1L = coeff[1],
+                a0R = coeff[2],
+                a1R = coeff[3],
+                b1 = coeff[4],
+                b2 = coeff[5],
+                lc = coeff[6],
+                rc = coeff[7];
+
+            let prev_src = lineIn[0],
+                prev_out = prev_src * lc,
+                prev_prev_out = prev_out,
+                i, x, y;
+
+            dstLine[0] = prev_out;
+
+            for (i = 1; i < length; i++) {
+
+                x = lineIn[i];
+                y = x * a0L + prev_src * a1L + prev_out * b1 + prev_prev_out * b2;
+
+                dstLine[i] = y;
+
+                prev_prev_out = prev_out;
+                prev_out = y;
+                prev_src = x;
+            }
+
+            prev_src = lineIn[length - 1];
+            prev_out = prev_src * rc;
+            prev_prev_out = prev_out;
+            dstLine[length - 1] = dstLine[length - 1] + prev_out;
+
+            for (i = length - 2; i >= 0; i--) {
+
+                x = lineIn[i];
+                y = x * a0R + prev_src * a1R + prev_out * b1 + prev_prev_out * b2;
+
+                dstLine[i] = dstLine[i] + y;
+
+                prev_prev_out = prev_out;
+                prev_out = y;
+                prev_src = x;
+            }
+        };
+
+        // Separable blur on Float32 single-channel image
+        const gaussianBlurL_Float = (src, dst, width, height, sigmaH, sigmaV, tmpLine) => {
+
+            const doH = sigmaH > 0,
+                doV = sigmaV > 0;
+
+            if (!doH && !doV) {
+
+                if (dst !== src) dst.set(src);
+                return;
+            }
+
+            const tmpImg = (doH && doV) ? new Float32Array(width * height) : dst;
+
+            if (doH) {
+
+                const coeffH = getGaussianCoeffsFloat(sigmaH);
+
+                let y, off, x;
+
+                for (y = 0; y < height; y++) {
+
+                    off = y * width;
+
+                    for (x = 0; x < width; x++){
+
+                        tmpLine[x] = src[off + x];
+                    }
+
+                    convolve1D_Float(tmpLine, tmpLine, width, coeffH);
+
+                    for (x = 0; x < width; x++) {
+
+                        tmpImg[off + x] = tmpLine[x];
+                    }
+                }
+            }
+            else {
+                if (tmpImg !== src) tmpImg.set(src);
+            }
+
+            if (doV) {
+
+                const coeffV = getGaussianCoeffsFloat(sigmaV);
+
+                let x, y;
+
+                for (x = 0; x < width; x++) {
+
+                    for (y = 0; y < height; y++) {
+
+                        tmpLine[y] = tmpImg[y * width + x];
+                    }
+
+                    convolve1D_Float(tmpLine, tmpLine, height, coeffV);
+
+                    for (y = 0; y < height; y++) {
+
+                        dst[y * width + x] = tmpLine[y];
+                    }
+                }
+            }
+        };
+
+        // Sobel magnitude on Float32 single-channel image (clamped borders)
+        const sobelMagFloat = (src, dst, width, height) => {
+
+            const clampXY = (x, y) => {
+
+                if (x < 0) x = 0;
+                else if (x >= width) x = width - 1;
+                
+                if (y < 0) y = 0;
+                else if (y >= height) y = height - 1;
+                
+                return (y * width + x) | 0;
+            };
+
+            let y, ym1, y0, yp1, x, xm1, x0, xp1,
+                p00, p10, p20, p01, p11, p21, p02, p12, p22, gx, gy, g;
+
+            for (y = 0; y < height; y++) {
+
+                ym1 = y - 1;
+                y0 = y;
+                yp1 = y + 1;
+                
+                for (x = 0; x < width; x++) {
+
+                    xm1 = x - 1;
+                    x0 = x;
+                    xp1 = x + 1;
+
+                    p00 = src[clampXY(xm1, ym1)];
+                    p10 = src[clampXY(x0, ym1)];
+                    p20 = src[clampXY(xp1, ym1)];
+                    p01 = src[clampXY(xm1, y0)]
+                    p11 = src[clampXY(x0, y0)];
+                    p21 = src[clampXY(xp1, y0)];
+                    p02 = src[clampXY(xm1, yp1)];
+                    p12 = src[clampXY(x0, yp1)];
+                    p22 = src[clampXY(xp1, yp1)];
+
+                    gx = (-p00 + p20) + (-2 * p01 + 2 * p21) + (-p02 + p22);
+                    gy = (-p00 - 2 * p10 - p20) + (p02 + 2 * p12 + p22);
+
+                    g = _abs(gx) + _abs(gy);
+
+                    dst[y * width + x] = g;
+                }
+            }
+        };
+
+        // Smoothstep on Float32 arrays: edgeMask = smoothstep(t0, t1, grad)
+        const smoothstepInto = (grad, outMask, t0, t1) => {
+
+            const inv = 1.0 / _max(1e-6, (t1 - t0));
+
+            let i, n, x, s;
+
+            for (i = 0, n = grad.length | 0; i < n; i++) {
+
+                x = (grad[i] - t0) * inv;
+                s = x <= 0 ? 0 : (x >= 1 ? 1 : (x * x * (3 - 2 * x)));
+                
+                outMask[i] = s;
+            }
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements),
+            width = input.width,
+            height = input.height,
+            iData = input.data,
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.length >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.length >>> 2);
+
+        const {
+            opacity = 1,
+            strength = 0.8,
+            radius = 2.0,
+            level = 0.015,
+            smoothing = 0.015,
+            clamp = 0.08,
+            lineOut,
+        } = requirements;
+
+        const libs = colorEngine.getRgbOkCache(),
+            toOK = colorEngine.getOkValsForRgb,
+            toRGB = colorEngine.getRgbValsForOklab;
+
+        // Workspace
+        const ws = getEausmWorkspace(width, height);
+        const { L, A, B, Lb, D, G, M, tmpLine } = ws;
+
+        // 1) RGB -> OKLab
+        let p, pz, rgba, a, r, g, b, ok, d, Lp, rgb;
+
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+            rgba = src32[p];
+
+            a = (rgba >>> 24) & 0xFF;
+
+            if (a === 0) {
+
+                L[p] = 0;
+                A[p] = 0;
+                B[p] = 0;
+                
+                continue;
+            }
+
+            r = rgba & 0xFF;
+            g = (rgba >>> 8) & 0xFF;
+            b = (rgba >>> 16) & 0xFF;
+
+            ok = toOK(r, g, b, libs);
+
+            L[p] = ok[0];
+            A[p] = ok[1];
+            B[p] = ok[2];
+        }
+
+        // 2) Blur L only (separable recursive Gaussian). Same sigma both directions.
+        const sigmaH = radius,
+            sigmaV = radius;
+
+        gaussianBlurL_Float(L, Lb, width, height, sigmaH, sigmaV, tmpLine);
+
+        // 3) Detail layer on L
+        for (p = 0, pz = L.length | 0; p < pz; p++) {
+
+            D[p] = L[p] - Lb[p];
+        }
+
+        // 4) Edge mask from Sobel magnitude on L, with soft threshold
+        sobelMagFloat(L, G, width, height);
+
+        smoothstepInto(G, M, level, level + _max(1e-6, smoothing));
+
+        // 5) Apply sharpening on L with halo clamp
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+            rgba = src32[p];
+            a = (rgba >>> 24) & 0xFF;
+
+            if (a === 0) {
+
+                out32[p] = rgba;
+                continue;
+            }
+
+            d = D[p];
+            if (d >  clamp) d =  clamp;
+            else if (d < -clamp) d = -clamp;
+
+            Lp = L[p] + strength * M[p] * d;
+
+            rgb = toRGB(Lp, A[p], B[p], libs);
+
+            out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);

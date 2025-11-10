@@ -261,6 +261,7 @@ export const TWEEN = 'tween';
 export const TYPE = 'type';
 export const UNDEF = 'undefined';
 export const UNKNOWN = 'unknown';
+export const UNSHARP = 'unsharp';
 export const UP = 'up';
 export const UPDATE_BY_DELTA = 'updateByDelta';
 export const USER_DEFINED_LEGACY = 'user-defined-legacy';

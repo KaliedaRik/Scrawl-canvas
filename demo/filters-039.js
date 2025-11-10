@@ -1,7 +1,7 @@
-// # Demo Filters 035
-// Filter parameters: Offset filter
+// # Demo Filters 039
+// Parameters for: unsharpen filter
 
-// [Run code](../../demo/filters-035.html)
+// [Run code](../../demo/filters-039.html)
 import * as scrawl from '../source/scrawl.js';
 
 import { reportSpeed, addImageDragAndDrop, addCheckerboardBackground } from './utilities.js';
@@ -25,12 +25,10 @@ addCheckerboardBackground(scrawl, canvas, namespace);
 
 
 // Create the filter
-const offset = scrawl.makeFilter({
+const unsharp = scrawl.makeFilter({
 
-    name: name('offset'),
-    method: 'offset',
-    offsetX: -10,
-    offsetY: 10,
+    name: name('unsharp'),
+    method: 'unsharp',
 });
 
 
@@ -44,7 +42,7 @@ const piccy = scrawl.makePicture({
     handle: ['center', 'center'],
     start: ['center', 'center'],
 
-    filters: [name('offset')],
+    filters: [name('unsharp')],
 });
 
 
@@ -53,7 +51,11 @@ const piccy = scrawl.makePicture({
 const report = reportSpeed('#reportmessage', function () {
 
     return `
-    Offset - X: ${dom.offsetX.value}; Y ${dom.offsetY.value}
+    Strength: ${dom.strength.value}
+    Radius: ${dom.radius.value}
+    Level: ${dom.level.value}
+    Smoothing: ${dom.smoothing.value}
+    Clamp: ${dom.clamp.value}
     Opacity: ${dom.opacity.value}`;
 });
 
@@ -70,12 +72,13 @@ scrawl.makeRender({
 // #### User interaction
 // Setup form
 const dom = scrawl.initializeDomInputs([
-    ['input', 'offsetX', '-10'],
-    ['input', 'offsetY', '10'],
+    ['input', 'strength', '0.8'],
+    ['input', 'radius', '2'],
+    ['input', 'level', '0.015'],
+    ['input', 'smoothing', '0.015'],
+    ['input', 'clamp', '0.08'],
     ['input', 'opacity', '1'],
-    ['select', 'useInputAsMask', 0],
 ]);
-
 
 // Setup form observer functionality
 scrawl.makeUpdater({
@@ -83,17 +86,19 @@ scrawl.makeUpdater({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: offset,
+    target: unsharp,
 
     useNativeListener: true,
     preventDefault: true,
 
     updates: {
 
+        strength: ['strength', 'float'],
+        smoothing: ['smoothing', 'float'],
+        radius: ['radius', 'float'],
+        level: ['level', 'float'],
+        clamp: ['clamp', 'float'],
         opacity: ['opacity', 'float'],
-        offsetX: ['offsetX', 'round'],
-        offsetY: ['offsetY', 'round'],
-        useInputAsMask: ['useInputAsMask', 'boolean'],
     },
 });
 
