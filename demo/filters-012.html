@@ -174,6 +174,22 @@
       </select>
     </div>
 
+    <div class="orange label">Premultiply</div>
+    <div class="orange">
+      <select class="controlItem filter-control" id="premultiply">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="orange label">Use input as mask</div>
+    <div class="orange">
+      <select class="controlItem filter-control" id="useInputAsMask">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
     <div class="yellow label">Opacity</div>
     <div class="yellow"><input class="controlItem filter-control" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
@@ -197,6 +213,8 @@
       <li>Create matrix, matrix5 filters; apply them to the test entity</li>
       <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
+
+    <p><b>Known issue:</b> the 'premultiplied' optiojn is designed for kernels whose total weights summ to ~ 1 (such as blur filters. For kernels whose summed weights approach zero (such as edge, detection filters) the premultiplied option leads to unwanted results and should be avoided.</p>
 
     <p><b>Touch test:</b> not required</p>
 

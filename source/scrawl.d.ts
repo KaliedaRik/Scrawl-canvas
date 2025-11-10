@@ -1526,6 +1526,7 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     includeBlue?: boolean;
     includeGreen?: boolean;
     includeRed?: boolean;
+    keepAlpha?: boolean;
     keepOnlyChangedAreas?: boolean;
     lineIn?: string;
     lineMix?: string;

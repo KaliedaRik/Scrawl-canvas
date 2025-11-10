@@ -4020,44 +4020,53 @@ P.theBigActionsObject = {
         else processResults(cache.work, output, opacity);
     },
 
-// __matrix__ - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights.
+// __matrix__ - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. 
+// + The matrix dimensions can be set using the `width` and `height` arguments
+// + Defining the home pixel's position within the matrix can be set using the `offsetX` and `offsetY` arguments.
+// + The weights to be applied need to be supplied in the `weights` argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix.
+// + By default all color channels are included in the calculations while the alpha channel is excluded.
+//
+// Note: When using the `premultiply` option, the filter operates in premultiplied-alpha space and normalizes color values by the total alpha contribution of the kernel.
+// + This works best for smoothing or blur kernels (where all weights are positive and sum to 1).
+// + For edge-detection or high-pass kernels (where weights sum near zero or include negatives), `premultiply` can produce unpredictable results and should generally be left false.
+// 
+// The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights.
     [MATRIX]: function (requirements) {
 
-        const getMatrixOffsets = function (mWidth, mHeight, mX, mY, image) {
+        const getMatrixOffsetsPx = function (mWidth, mHeight, mX, mY, image) {
 
             if (!image) image = cache.source;
 
-            const iWidth  = image.width | 0,
+            const iWidth  = image.width  | 0,
                 iHeight = image.height | 0;
 
-            mWidth = (_isFinite(mWidth) && mWidth > 0) ? mWidth | 0 : 1;
-            mHeight = (_isFinite(mHeight) && mHeight > 0) ? mHeight | 0 : 1;
+            mWidth = (_isFinite(mWidth) && mWidth  > 0) ? (mWidth | 0) : 1;
+            mHeight = (_isFinite(mHeight) && mHeight > 0) ? (mHeight | 0) : 1;
 
             mX = (_isFinite(mX) ? mX : 0) | 0;
             if (mX < 0) mX = 0;
-            else if (mX >= mWidth) mX = mWidth  - 1;
+            else if (mX >= mWidth)  mX = mWidth  - 1;
 
             mY = (_isFinite(mY) ? mY : 0) | 0;
             if (mY < 0) mY = 0;
             else if (mY >= mHeight) mY = mHeight - 1;
 
-            const name = `matrix-offsets-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`;
+            const name = `matrix-offsets-px-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`;
 
             let res = getWorkstoreItem(name);
             if (res) return res;
 
             res = new Int32Array(mWidth * mHeight);
 
-            let p = 0,
-                rowOff, y, x, yz, xz;
+            let p = 0, y, x, yz, xz, rowOff;
 
             for (y = -mY, yz = mHeight - mY; y < yz; y++) {
 
-                rowOff = (y * iWidth) << 2;
+                rowOff = y * iWidth;
 
                 for (x = -mX, xz = mWidth - mX; x < xz; x++) {
 
-                    res[p++] = rowOff + (x << 2);
+                    res[p++] = rowOff + x;
                 }
             }
             setWorkstoreItem(name, res);
@@ -4066,30 +4075,39 @@ P.theBigActionsObject = {
 
         const [input, output] = getInputAndOutputLines(requirements),
             iData = input.data,
-            oData = output.data,
-            len = iData.length;
+            oData = output.data;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
+
+        const pixels = src32.length;
 
         const {
             opacity = 1,
-            includeRed   = true,
+            includeRed = true,
             includeGreen = true,
-            includeBlue  = true,
+            includeBlue = true,
             includeAlpha = false,
+            premultiply = false,
+            useInputAsMask = false,
             offsetX = 1,
             offsetY = 1,
             lineOut,
         } = requirements;
 
-        // Matrix dims
         let mW = requirements.width;
-        if (!_isFinite(mW) || mW < 1) mW = 3;
-        mW |= 0;
+        if (!_isFinite(mW) || mW < 1) {
+
+            mW = 3; mW |= 0;
+        }
 
         let mH = requirements.height;
-        if (!_isFinite(mH) || mH < 1) mH = 3;
-        mH |= 0;
+        if (!_isFinite(mH) || mH < 1) {
 
-        // Clamp anchor to matrix bounds (so default identity lines up with offsets)
+            mH = 3;
+            mH |= 0;
+        }
+
         let aX = (_isFinite(offsetX) ? offsetX : 0) | 0;
         if (aX < 0) aX = 0;
         else if (aX >= mW) aX = mW - 1;
@@ -4098,9 +4116,7 @@ P.theBigActionsObject = {
         if (aY < 0) aY = 0;
         else if (aY >= mH) aY = mH - 1;
 
-        // Weights
         let weights = requirements.weights;
-
         if (!weights || weights.length !== (mW * mH)) {
 
             weights = new Float32Array(mW * mH);
@@ -4111,11 +4127,10 @@ P.theBigActionsObject = {
             weights = Float32Array.from(weights);
         }
 
-        // Kernel offsets (cached)
         const nzIdx = requestArray(),
-            nzW = requestArray();
+              nzW   = requestArray();
 
-        for (let i = 0, w; i < weights.length; i++) {
+        for (let i = 0, iz = weights.length, w; i < iz; i++) {
 
             w = weights[i];
 
@@ -4128,83 +4143,138 @@ P.theBigActionsObject = {
 
         const nzCount = nzIdx.length;
 
-        if (nzCount === 0) transferDataUnchanged(oData, iData, len);
+        if (nzCount === 0) {
+
+            out32.set(src32);
+
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
+
+            releaseArray(nzIdx, nzW);
+
+            return;
+        }
+
+        const offsPx = getMatrixOffsetsPx(mW, mH, aX, aY, input);
+
+        if (premultiply) {
+
+            const eps = 1e-6;
+
+            let sumW = 0,
+                center, aCenter,
+                accR, accG, accB, accA,
+                t, i, k, w, di, idx, px, r, g, b, a,
+                oR, oG, oB, oA, invA;
+
+            for (t = 0; t < nzCount; t++) {
+
+                sumW += nzW[t];
+            }
+
+            if (sumW === 0) sumW = 1;
+
+            for (i = 0; i < pixels; i++) {
+
+                center = src32[i];
+                aCenter = (center >>> 24) & 0xFF;
+
+                accR = 0;
+                accG = 0;
+                accB = 0;
+                accA = 0;
+
+                // Sum neighbors
+                for (k = 0; k < nzCount; k++) {
+
+                    w  = nzW[k];
+                    di = offsPx[nzIdx[k]];
+
+                    // Wrap like original code
+                    idx = i + di;
+                    if (idx < 0) idx += pixels;
+                    else if (idx >= pixels) idx -= pixels;
+
+                    px = src32[idx];
+
+                    a = (px >>> 24) & 0xFF;
+                    if (a === 0) continue;
+
+                    r = px & 0xFF;
+                    g = (px >>> 8) & 0xFF;
+                    b = (px >>> 16) & 0xFF;
+
+                    if (includeRed) accR += (r * a) * w;
+                    if (includeGreen) accG += (g * a) * w;
+                    if (includeBlue) accB += (b * a) * w;
+
+                    accA += a * w;
+                }
+
+                if (accA <= eps) {
+
+                    oR = 0;
+                    oG = 0;
+                    oB = 0;
+                    oA = useInputAsMask ? aCenter : 0;
+                }
+                else {
+
+                    invA = 1 / accA;
+                    oR = includeRed ? (accR * invA) : (center & 0xFF);
+                    oG = includeGreen ? (accG * invA) : ((center >>> 8) & 0xFF);
+                    oB = includeBlue ? (accB * invA) : ((center >>> 16) & 0xFF);
+                    oA = useInputAsMask ? aCenter : (accA / sumW);
+                }
+
+                out32[i] = ((oA & 0xFF) << 24) | ((oB & 0xFF) << 16) | ((oG & 0xFF) <<  8) | (oR & 0xFF);
+            }
+        }
         else {
 
-            const offs = getMatrixOffsets(mW, mH, aX, aY, input);
+            let i, center, aCenter,
+                oR, oG, oB, oA,
+                k, w, di, idx, px;
 
-            const pixels = (len >> 2);
+            for (i = 0; i < pixels; i++) {
 
-            let base, acc, k, p;
+                center = src32[i];
+                aCenter = (center >>> 24) & 0xFF;
 
-            for (let i = 0; i < pixels; i++) {
+                if (aCenter === 0) {
 
-                base = i << 2;
-
-                if (!iData[base + 3]) continue;
-
-                if (includeRed) {
-
-                    acc = 0;
-
-                    for (k = 0; k < nzCount; k++) {
-
-                        p = base + offs[nzIdx[k]];
-                        if (p < 0) p += len;
-                        else if (p >= len) p -= len;
-
-                        acc += iData[p] * nzW[k];
-                    }
-                    oData[base] = acc;
+                    out32[i] = center;
+                    continue;
                 }
-                else oData[base] = iData[base];
 
-                if (includeGreen) {
+                oR = includeRed ? 0 : (center & 0xFF);
+                oG = includeGreen ? 0 : ((center >>> 8) & 0xFF);
+                oB = includeBlue ? 0 : ((center >>> 16) & 0xFF);
+                oA = includeAlpha ? 0 : aCenter;
 
-                    acc = 0;
+                for (k = 0; k < nzCount; k++) {
 
-                    for (k = 0; k < nzCount; k++) {
+                    w  = nzW[k];
+                    di = offsPx[nzIdx[k]];
 
-                        p = base + offs[nzIdx[k]];
-                        if (p < 0) p += len;
-                        else if (p >= len) p -= len;
+                    idx = i + di;
+                    if (idx < 0) idx += pixels;
+                    else if (idx >= pixels) idx -= pixels;
 
-                        acc += iData[p + 1] * nzW[k];
-                    }
-                    oData[base + 1] = acc;
+                    px = src32[idx];
+
+                    if (includeRed) oR += (px & 0xFF) * w;
+                    if (includeGreen) oG += ((px >>> 8) & 0xFF) * w;
+                    if (includeBlue) oB += ((px >>> 16) & 0xFF) * w;
+                    if (includeAlpha) oA += ((px >>> 24) & 0xFF) * w;
                 }
-                else oData[base + 1] = iData[base + 1];
 
-                if (includeBlue) {
+                oR = oR < 0 ? 0 : oR > 255 ? 255 : oR;
+                oG = oG < 0 ? 0 : oG > 255 ? 255 : oG;
+                oB = oB < 0 ? 0 : oB > 255 ? 255 : oB;
+                oA = oA < 0 ? 0 : oA > 255 ? 255 : oA;
 
-                    acc = 0;
-
-                    for (k = 0; k < nzCount; k++) {
-
-                        p = base + offs[nzIdx[k]];
-                        if (p < 0) p += len;
-                        else if (p >= len) p -= len;
-
-                        acc += iData[p + 2] * nzW[k];
-                    }
-                    oData[base + 2] = acc;
-                }
-                else oData[base + 2] = iData[base + 2];
-
-                if (includeAlpha) {
-
-                    acc = 0;
-                    for (k = 0; k < nzCount; k++) {
-
-                        p = base + offs[nzIdx[k]];
-                        if (p < 0) p += len;
-                        else if (p >= len) p -= len;
-
-                        acc += iData[p + 3] * nzW[k];
-                    }
-                    oData[base + 3] = acc;
-                }
-                else oData[base + 3] = iData[base + 3];
+                out32[i] = ((oA & 0xFF) << 24) | ((oB & 0xFF) << 16) | ((oG & 0xFF) <<  8) | (oR & 0xFF);
             }
         }
 
@@ -4236,7 +4306,7 @@ P.theBigActionsObject = {
         if (channelL === 0 && channelA === 0 && channelB === 0) out32.set(src32);
         else {
 
-            const libs  = colorEngine.getRgbOkCache(),
+            const libs = colorEngine.getRgbOkCache(),
                 getOk = colorEngine.getOkValsForRgb,
                 toRgb = colorEngine.getRgbValsForOklab;
 

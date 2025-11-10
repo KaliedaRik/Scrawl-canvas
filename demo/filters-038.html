@@ -63,25 +63,73 @@
 
   <div class="controls">
     
-    <div class="blue label">Length</div>
-    <div class="blue"><input class="controlItem filter-control" id="length" type="range" value="9" min="0" max="40" step="1" /></div>
+    <div class="yellow label">Length</div>
+    <div class="yellow"><input class="controlItem filter-compute" id="length" type="range" value="9" min="0" max="40" step="1" /></div>
 
-    <div class="blue label">Angle</div>
-    <div class="blue"><input class="controlItem filter-control" id="angle" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow label">Angle</div>
+    <div class="yellow"><input class="controlItem filter-compute" id="angle" type="range" value="0" min="0" max="360" step="1" /></div>
 
-    <div class="blue label">Profile</div>
-    <div class="blue">
-      <select class="controlItem filter-control" id="profile">
+    <div class="yellow label">Profile</div>
+    <div class="yellow">
+      <select class="controlItem filter-compute" id="profile">
         <option value="box">Box</option>
         <option value="gauss">Gauss</option>
       </select>
     </div>
 
-    <div class="blue label">Sigma (for gauss profile)</div>
-    <div class="blue"><input class="controlItem filter-control" id="sigma" type="range" value="2" min="0.5" max="6" step="0.1" /></div>
+    <div class="yellow label">Sigma (for gauss profile)</div>
+    <div class="yellow"><input class="controlItem filter-compute" id="sigma" type="range" value="2" min="0.5" max="6" step="0.1" /></div>
+
+    <div class="pink label">Include red</div>
+    <div class="pink">
+      <select class="controlItem filter-control" id="includeRed">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="green label">Include green</div>
+    <div class="green">
+      <select class="controlItem filter-control" id="includeGreen">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="blue label">Include blue</div>
+    <div class="blue">
+      <select class="controlItem filter-control" id="includeBlue">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="bluegreen label">Include alpha</div>
+    <div class="bluegreen">
+      <select class="controlItem filter-control" id="includeAlpha">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="orange label">Premultiply</div>
+    <div class="orange">
+      <select class="controlItem filter-control" id="premultiply">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="orange label">Use input as mask</div>
+    <div class="orange">
+      <select class="controlItem filter-control" id="useInputAsMask">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
 
     <div class="lavender label">Opacity</div>
-    <div class="lavender"><input class="controlItem filter-opacity" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+    <div class="lavender"><input class="controlItem filter-control" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
     <div class="yellow label">Memoize filter</div>
     <div class="yellow">

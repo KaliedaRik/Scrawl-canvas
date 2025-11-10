@@ -1084,6 +1084,8 @@ const setActionsArray = {
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
             weights: (f.weights != null) ? f.weights : [0,0,0,0,1,0,0,0,0],
+            premultiply: (f.premultiply != null) ? f.premultiply : false,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
     },
 
@@ -1103,6 +1105,8 @@ const setActionsArray = {
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
             weights: (f.weights != null) ? f.weights : [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+            premultiply: (f.premultiply != null) ? f.premultiply : false,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
     },
 

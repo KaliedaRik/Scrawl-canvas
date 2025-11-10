@@ -20,7 +20,9 @@ const name = (n) => `${namespace}-${n}`;
 scrawl.importDomImage('.flowers');
 
 
-// Create the filters
+// Create the filter
+// + Legacy filter methods only cover 3x3 or 5x5 matrix kernels
+// + For differently shaped kernels we need to use the modern filter actions approach
 const matrix = scrawl.makeFilter({
 
     name: name('matrix'),
@@ -30,16 +32,23 @@ const matrix = scrawl.makeFilter({
         height: 1,
         offsetX: 4,
         offsetY: 0,
-        weights: [1/9, 1/9, 1/9, 1/9, 1/9, 1/9, 1/9, 1/9, 1/9],
+        includeRed: true,
+        includeGreen: true,
+        includeBlue: true,
         includeAlpha: false,
+        weights: [1/9, 1/9, 1/9, 1/9, 1/9, 1/9, 1/9, 1/9, 1/9],
+        premultiply: false,
+        useInputAsMask: false,
     }],
 });
 
 const action = matrix.actions[0];
 
-// Build a directional 2D kernel by rasterizing a line through the center.
-// + length = total tap count (odd). angleDeg measured CCW, 0° = +X (to the right).
-// + profile: "box" | "gauss". sigma used only for gauss (in taps, e.g. length/3).
+// Build a directional 2D kernel by rasterizing a line through the center:
+// + `length` = total tap count (odd)
+// + `angleDeg` measured CCW, 0° = +X (to the right).
+// + `profile`: "box" | "gauss"
+// + `sigma` used only for gauss (in taps, e.g. length/3)
 const makeDirectionalKernel = (length, angleDeg, profile = "box", sigma = length / 3) => {
 
     if (length % 2 === 0) length += 1;
@@ -162,6 +171,12 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'sigma', '2'],
     ['input', 'opacity', '1'],
     ['select', 'profile', 0],
+    ['select', 'includeRed', 1],
+    ['select', 'includeGreen', 1],
+    ['select', 'includeBlue', 1],
+    ['select', 'includeAlpha', 0],
+    ['select', 'premultiply', 0],
+    ['select', 'useInputAsMask', 0],
     ['select', 'memoizeFilterOutput', 0],
 ]);
 
@@ -176,15 +191,23 @@ scrawl.addNativeListener(['input', 'change'], memoize, '#memoizeFilterOutput');
 
 
 // Manage filter updates
-const updateOpacity = () => {
+const updateMatrix = () => {
+
+    action.opacity = parseFloat(dom.opacity.value);
+    action.includeRed = !!(parseInt(dom.includeRed.value, 10));
+    action.includeGreen = !!(parseInt(dom.includeGreen.value, 10));
+    action.includeBlue = !!(parseInt(dom.includeBlue.value, 10));
+    action.includeAlpha = !!(parseInt(dom.includeAlpha.value, 10));
+    action.useInputAsMask = !!(parseInt(dom.useInputAsMask.value, 10));
+    action.premultiply = !!(parseInt(dom.premultiply.value, 10));
 
     matrix.set({
-        opacity: parseFloat(dom.opacity.value),
+        actions: [action],
     });
 };
-scrawl.addNativeListener(['input', 'change'], updateOpacity, '.filter-opacity');
+scrawl.addNativeListener(['input', 'change'], updateMatrix, '.filter-control');
 
-const updateMatrix = () => {
+const recalculateMatrix = () => {
 
     const length = parseInt(dom.length.value, 10),
         angle = parseInt(dom.angle.value, 10),
@@ -203,7 +226,7 @@ const updateMatrix = () => {
         actions: [action],
     });
 };
-scrawl.addNativeListener(['input', 'change'], updateMatrix, '.filter-control');
+scrawl.addNativeListener(['input', 'change'], recalculateMatrix, '.filter-compute');
 
 
 // #### Drag-and-Drop image loading functionality
