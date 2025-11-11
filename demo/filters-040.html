@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Filters 039</title>
+  <title>Demo Filters 040</title>
   <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
@@ -54,11 +54,11 @@
 
 <body>
   <div id="test-navigation">
-    <a href="filters-038.html">&larr; Previous</a>
-    <a href="filters-040.html">Next &rarr;</a>
+    <a href="filters-039.html">&larr; Previous</a>
+    <a href="filters-101.html">Next &rarr;</a>
   </div>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 039</h1>
-  <h2>Parameters for: unsharpen filter</h2>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 040</h1>
+  <h2>Parameters for: deconvolute filter</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls">
@@ -67,7 +67,7 @@
     <div class="blue"><input class="controlItem" id="strength" type="range" value="0.8" min="0" max="2" step="0.05" /></div>
 
     <div class="blue label">Radius</div>
-    <div class="blue"><input class="controlItem" id="radius" type="range" value="2" min="0" max="10" step="0.5" /></div>
+    <div class="blue"><input class="controlItem" id="radius" type="range" value="2" min="0" max="10" step="0.1" /></div>
 
     <div class="blue label">Level</div>
     <div class="blue"><input class="controlItem" id="level" type="range" value="0.015" min="0" max="0.05" step="0.001" /></div>
@@ -77,6 +77,28 @@
 
     <div class="blue label">Clamp</div>
     <div class="blue"><input class="controlItem" id="clamp" type="range" value="0.08" min="0" max="0.2" step="0.01" /></div>
+
+    <div class="blue label">Passes</div>
+    <div class="blue"><input class="controlItem" id="passes" type="range" value="8" min="0" max="20" step="1" /></div>
+
+    <div class="blue label">Multiscale</div>
+    <div class="blue">
+      <select class="controlItem filter-control" id="multiscale">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="blue label">Multiscale final passes</div>
+    <div class="blue"><input class="controlItem" id="multiscaleFinalPasses" type="range" value="2" min="0" max="4" step="1" /></div>
+
+    <div class="blue label">Use input as mask</div>
+    <div class="blue">
+      <select class="controlItem filter-control" id="useInputAsMask">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
 
     <div class="yellow label">Opacity</div>
     <div class="yellow"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
@@ -92,7 +114,7 @@
     >
       <div class="placeholder">
         <img
-          src="thumbs/filters-039.webp"
+          src="thumbs/filters-040.webp"
           alt="Screen capture image of the demo canvas"
         />    
       </div>
@@ -120,10 +142,10 @@
 
     <p><b>Touch test:</b> not required</p>
 
-    <p><a href="../docs/demo/filters-039.html">Annotated code</a></p>
+    <p><a href="../docs/demo/filters-040.html">Annotated code</a></p>
   </div>
 
-  <script src="filters-039.js" type="module"></script>
+  <script src="filters-040.js" type="module"></script>
 
 </body>
 

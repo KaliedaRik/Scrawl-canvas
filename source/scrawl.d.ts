@@ -1440,7 +1440,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     lowRed?: number;
     minimumColorDistance?: number;
     mode?: 'rect' | 'hex' | 'random' | 'points';
-    noWrap?: boolean;
+    multiscaleFinalPasses?: number;
     offsetAlphaMax?: number;
     offsetAlphaMin?: number;
     offsetAlphaX?: number;
@@ -1533,7 +1533,9 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     lineOut?: string;
     lowColor?: string;
     method?: string;
+    multiscale?: true;
     noiseType?: 'random' | 'ordered' | 'bluenoise';
+    noWrap?: boolean;
     operation?: string;
     palette?: StringOrNumberInput;
     points?: StringOrNumberInput | number[];
