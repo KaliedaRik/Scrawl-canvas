@@ -24,7 +24,7 @@ import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coord
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, _tan, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DECONVOLUTE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, UNSHARP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR } from './shared-vars.js';
+import { _abs, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, _tan, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DECONVOLUTE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, UNSHARP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR, ZOOM_BLUR } from './shared-vars.js';
 
 // Local constants
 const _256 = 256,
@@ -7960,6 +7960,801 @@ P.theBigActionsObject = {
                 oData[a] = alpha + weights[(alpha * 4) + 3];
             }
         }
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
+    },
+
+// __zoom-blur__ - blur with radial easing & inner/outer radius
+    [ZOOM_BLUR]: function (requirements) {
+
+        const premultiply_u32 = (buf32, count) => {
+
+            let i, px, r, g, b, a, f;
+
+            for (i = 0; i < count; i++) {
+
+                px = buf32[i];
+                a = (px >>> 24) & 0xFF;
+
+            if (a === 0 || a === 255) continue;
+
+            f = a / 255;
+            r = (px & 0xFF);
+            g = ((px >>> 8) & 0xFF);
+            b = ((px >>>16) & 0xFF);
+
+            r = (r * f + 0.5) | 0;
+            g = (g * f + 0.5) | 0;
+            b = (b * f + 0.5) | 0;
+
+            buf32[i] = (px & 0xFF000000) | (b << 16) | (g << 8) | r; }
+        };
+
+        const unpremultiply_u32 = (buf32, count) => {
+
+            let i, px, r, g, b, a, f;
+
+            for (i = 0; i < count; i++) {
+
+                px = buf32[i];
+                a = (px >>> 24) & 0xFF;
+
+                if (a === 0 || a === 255) continue;
+
+                f = 255 / a;
+                r = (px & 0xFF);
+                g = ((px >>> 8) & 0xFF);
+                b = ((px >>>16) & 0xFF);
+                
+                r = _min(255, (r * f + 0.5) | 0);
+                g = _min(255, (g * f + 0.5) | 0);
+                b = _min(255, (b * f + 0.5) | 0);
+
+                buf32[i] = (px & 0xFF000000) | (b << 16) | (g << 8) | r;
+            }
+        };
+
+        const getValuePx = (val, dim) => (val && val.substring)
+            ? _floor((parseFloat(val) / 100) * dim)
+            : (val | 0);
+
+        const getEaseOutWeights = (samples) => {
+
+            const KEY = `zoom-blur::weightsEaseOut::${samples}`;
+            let pack = getWorkstoreItem(KEY);
+            if (pack) return pack;
+
+            const w = new Float32Array(samples);
+
+            let sum = 0,
+                i, t, v;
+
+            for (i = 0; i < samples; i++) {
+
+                t = (samples > 1) ? (i / (samples - 1)) : 0;
+                v = 1 - t * t;
+
+                w[i] = v;
+                sum += v;
+            }
+
+            const inv = sum ? 1 / sum : 1;
+
+            for (i = 0; i < samples; i++) {
+
+                w[i] *= inv;
+            }
+
+            const ps = new Float32Array(samples);
+
+            let acc = 0;
+
+            for (i = 0; i < samples; i++) {
+
+                acc += w[i]; ps[i] = acc;
+            }
+
+            pack = { w, ps };
+            setWorkstoreItem(KEY, pack);
+
+            return pack;
+        };
+
+        const getWs = (w, h) => {
+
+            const key = `zoom-blur::ws::${w}x${h}`;
+            let ws = getWorkstoreItem(key) || {};
+
+            const N = (w * h) | 0;
+
+            if (!ws.dirX || ws.dirX.length !== N) ws.dirX = new Float32Array(N);
+            if (!ws.dirY || ws.dirY.length !== N) ws.dirY = new Float32Array(N);
+            if (!ws.baseT || ws.baseT.length !== samples) ws.baseT = new Float32Array(samples);
+            if (!ws.invBase || ws.invBase.length !== samples) ws.invBase = new Float32Array(samples);
+
+            setWorkstoreItem(key, ws);
+
+            return ws;
+        };
+
+        const getRand = (w, h, seed) => {
+
+            const key = `zoom-blur::rand::${w}x${h}::${seed}`;
+            let r = getWorkstoreItem(key);
+            if (r) return r;
+
+            const N = (w * h) | 0;
+
+            const rnd = getRandomNumbers({ seed, length: N, imgWidth: w, type: RANDOM });
+
+            const arr = new Float32Array(N);
+
+            for (let i = 0; i < N; i++) {
+
+                arr[i] = rnd[i];
+            }
+
+            setWorkstoreItem(key, arr);
+
+            return arr;
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements),
+            iData = input.data,
+            oData = output.data,
+            width = input.width | 0,
+            height = input.height|0,
+            pixels = (iData.length >>> 2) | 0;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, pixels),
+            out32 = new Uint32Array(oData.buffer, oData.byteOffset, pixels);
+
+        const {
+            opacity = 1,
+            startX = '50%',
+            startY = '50%',
+            strength = 0.35,
+            samples = 14,
+            variation = 0,
+            angle = 0,
+            seed = DEFAULT_SEED,
+            innerRadius = 0,
+            outerRadius = 0,
+            easing = 'linear',
+            includeRed = true,
+            includeGreen = true,
+            includeBlue = true,
+            includeAlpha = true,
+            excludeTransparentPixels = true,
+            multiscale = true,
+            premultiply = false,
+            lineOut,
+        } = requirements;
+
+        let cx = getValuePx(startX, width),
+            cy = getValuePx(startY, height);
+
+        let rIn = getValuePx(innerRadius, _min(width, height)),
+            rOut = getValuePx(outerRadius, _min(width, height));
+
+        const userSetInner = (requirements.innerRadius !== undefined);
+        const userSetOuter = (requirements.outerRadius !== undefined);
+
+        if (userSetInner && !userSetOuter) rOut = rIn;
+        if (!userSetInner && userSetOuter) rIn = rOut;
+        if (rIn > rOut) [rIn, rOut] = [rOut, rIn];
+
+        if (!(strength > 0) || !(samples > 0)) {
+
+            out32.set(src32);
+
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
+            return;
+        }
+
+        const RM = includeRed ? 0x000000FF : 0,
+            GM = includeGreen ? 0x0000FF00 : 0,
+            BM = includeBlue  ? 0x00FF0000 : 0,
+            AM = includeAlpha ? 0xFF000000 : 0;
+
+        const INC_MASK = (RM | GM | BM | AM) >>> 0,
+            NOT_INC = (~INC_MASK) >>> 0;
+
+        let ease = easing;
+
+        if (ease && ease.substring) ease = easeEngines[ease] || easeEngines['linear'];
+        if (!isa_fn(ease)) ease = easeEngines['linear'];
+        const easeIsLinear = (ease === easeEngines['linear']);
+
+        const ws = getWs(width, height);
+        const { dirX, dirY, baseT, invBase } = ws;
+
+        const Sminus = _max(1, samples - 1),
+            NO_RADIAL = (rIn === 0 && rOut === 0),
+            variationZero = !(variation > 0);
+
+        const angleRad  = angle * _radian,
+            angleZero = _abs(angleRad) < 1e-12;
+
+        if (!ws.angleT || ws.angleT.length < 64) ws.angleT = new Float32Array(64);
+
+        const angleT = ws.angleT;
+
+        if (ws._cx !== cx || ws._cy !== cy) {
+
+            let p = 0;
+
+            for (let y = 0; y < height; y++) {
+
+                for (let x = 0; x < width; x++, p++) {
+
+                    dirX[p] = (x - cx);
+                    dirY[p] = (y - cy);
+                }
+            }
+            ws._cx = cx; ws._cy = cy;
+        }
+
+        if (ws._samples !== samples) {
+
+            for (let s = 0; s < samples; s++) {
+
+                baseT[s] = s / Sminus;
+            }
+            ws._samples = samples;
+        }
+
+        if (ws._angleSamples !== samples || ws._angleRad !== angleRad) {
+
+            for (let s = 0; s < samples; s++) {
+
+                angleT[s] = angleRad * baseT[s];
+            }
+
+            ws._angleSamples = samples;
+            ws._angleRad = angleRad;
+        }
+
+        const { w: weights, ps: wPrefix } = getEaseOutWeights(samples);
+
+        if (NO_RADIAL && (ws._invBaseSamples !== samples || ws._invBaseStrength !== strength)) {
+
+            for (let s = 0; s < samples; s++) {
+
+                invBase[s] = 1.0 / (1.0 + strength * baseT[s]);
+            }
+            ws._invBaseSamples = samples;
+            ws._invBaseStrength = strength;
+        }
+
+        const rand = variationZero ? null : getRand(width, height, seed);
+
+        const radiiEqual = (rIn === rOut),
+            rIn2  = (rIn|0)  * (rIn|0),
+            rOut2 = (rOut|0) * (rOut|0),
+            invSpan2 = (!radiiEqual && (rOut > rIn)) ? (1.0 / _max(1e-6, (rOut2 - rIn2))) : 0;
+
+        if (premultiply) premultiply_u32(src32, pixels);
+
+        const runAtSize = (W, H, _cx, _cy, writePacked, outPacked32) => {
+
+            const wM1 = width - 1,
+            hM1 = height - 1;
+
+            let dX = dirX,
+                dY = dirY,
+                RND = rand;
+
+            if (W !== width || H !== height || _cx !== cx || _cy !== cy) {
+
+                const key = `zoom-blur::ws-dir::${W}x${H}:${_cx},${_cy}`;
+                let wr = getWorkstoreItem(key);
+                if (!wr) wr = {};
+
+                const N = (W * H) | 0;
+
+                if (!wr.dirX || wr.dirX.length !== N) wr.dirX = new Float32Array(N);
+                if (!wr.dirY || wr.dirY.length !== N) wr.dirY = new Float32Array(N);
+
+                const sx = width  / W,
+                    sy = height / H;
+
+                let p = 0;
+
+                for (let y = 0; y < H; y++) for (let x = 0; x < W; x++, p++) {
+
+                    wr.dirX[p] = (x - _cx) * sx;
+                    wr.dirY[p] = (y - _cy) * sy;
+                }
+
+                setWorkstoreItem(key, wr);
+
+                dX = wr.dirX;
+                dY = wr.dirY;
+
+                if (!variationZero) {
+
+                    const rk = `zoom-blur::rand::${W}x${H}::${seed}`;
+                    let rr = getWorkstoreItem(rk);
+
+                    if (!rr) {
+
+                        const rnd = getRandomNumbers({ seed, length: N, imgWidth: W, type: RANDOM });
+
+                        rr = new Float32Array(N);
+
+                        for (let i = 0; i < N; i++) {
+
+                            rr[i]=rnd[i];
+                        }
+
+                        setWorkstoreItem(rk, rr);
+                    }
+                    RND = rr;
+                }
+            }
+
+            const allChannels = (INC_MASK === 0xFFFFFFFF >>> 0);
+
+            let p = 0,
+                xf = 0,
+                yf = 0,
+                x0 = 0,
+                y0 = 0,
+                x1 = 0,
+                y1 = 0,
+                fx = 0,
+                fy = 0,
+                w00 = 0,
+                w10 = 0,
+                w01 = 0,
+                w11 = 0,
+                sp00 = 0,
+                sp10 = 0,
+                sp01 = 0,
+                sp11 = 0;
+
+            let outR, outG, outB, outA;
+
+            if (!writePacked) {
+
+                const key = `zoom-blur::planes::${W}x${H}`;
+                let planes = getWorkstoreItem(key) || {};
+
+                const N = (W*H)|0;
+
+                if (!planes.R || planes.R.length !== N) planes.R = new Float32Array(N);
+                if (!planes.G || planes.G.length !== N) planes.G = new Float32Array(N);
+                if (!planes.B || planes.B.length !== N) planes.B = new Float32Array(N);
+                if (!planes.A || planes.A.length !== N) planes.A = new Float32Array(N);
+
+                setWorkstoreItem(key, planes);
+
+                outR = planes.R;
+                outG = planes.G;
+                outB = planes.B;
+                outA = planes.A;
+            }
+
+            const invBaseLocal = invBase;
+
+            let y, x, mapX, mapY, srcPix, aSrc,
+                dx, dy, m, r2, packed,
+                effStrength, S_eff, sumW, norm,
+                accR, accG, accB, accA,
+                s, t, inv, sx, sy, row0, row1, wt, jt0, rnd,
+                A_keep, R, G, B, Aout, eps, Ri, Gi, Bi, Ai, scale,
+                theta, ct, st, rx, ry;
+
+            for (y = 0; y < H; y++) {
+
+                for (x = 0; x < W; x++, p++) {
+
+                    mapX = _min(width - 1, _max(0, (x * width / W) | 0));
+                    mapY = _min(height - 1, _max(0, (y * height / H) | 0));
+                    srcPix = src32[mapY * width + mapX];
+                    aSrc = (srcPix >>> 24) & 0xFF;
+
+                    if (excludeTransparentPixels && aSrc === 0) {
+
+                        if (writePacked) out32[mapY * width + mapX] = srcPix;
+                        else {
+
+                            outR[p] = srcPix & 255;
+                            outG[p] = (srcPix >>> 8) & 255;
+                            outB[p] = (srcPix >>> 16) & 255;
+                            outA[p] = (srcPix >>> 24) & 255;
+                        }
+                        continue;
+                    }
+
+                    dx = dX[p];
+                    dy = dY[p];
+
+                    m = 1;
+
+                    if (!NO_RADIAL) {
+
+                        r2 = dx * dx + dy * dy;
+
+                        if (radiiEqual) m = (r2 <= rIn2) ? 0 : 1;
+                        else {
+
+                            if (r2 <= rIn2) m = 0;
+                            else {
+
+                                let u = (r2 - rIn2) * invSpan2;
+
+                                m = (u >= 1) ? 1 : (u <= 0 ? 0 : (easeIsLinear ? u : ease(u)));
+                            }
+                        }
+
+                        if (m === 0) {
+
+                            if (writePacked) {
+
+                                packed = srcPix;
+                                outPacked32[p] = allChannels ? packed : ((srcPix & NOT_INC) | (packed & INC_MASK));
+                            }
+                            else {
+
+                                outR[p] = srcPix & 255;
+                                outG[p] = (srcPix >>> 8) & 255;
+                                outB[p] = (srcPix >>> 16) & 255;
+                                outA[p] = (srcPix >>> 24) & 255;
+                            }
+                            continue;
+                        }
+                    }
+
+                    effStrength = NO_RADIAL ? strength : (strength * m);
+
+                    S_eff = NO_RADIAL ? samples : (1 + (((samples - 1) * (m*m)) | 0));
+                    if (S_eff < 4) S_eff = 4;
+                    if (S_eff > samples) S_eff = samples;
+
+                    sumW = wPrefix[S_eff - 1];
+                    norm = 1.0 / sumW;
+
+                    accR = 0;
+                    accG = 0;
+                    accB = 0;
+                    accA = 0;
+
+                    if (variationZero) {
+
+                        for (s = 0; s < S_eff; s++) {
+
+                            t = baseT[s];
+                            inv = NO_RADIAL ? invBaseLocal[s] : (1.0 / (1.0 + effStrength * t));
+
+                            if (angleZero) {
+
+                                sx = cx + dx * inv;
+                                sy = cy + dy * inv;
+                            }
+                            else {
+
+                                theta = (NO_RADIAL ? angleT[s] : angleT[s] * m);
+                                ct = _cos(theta);
+                                st = _sin(theta);
+                                rx = dx * ct - dy * st;
+                                ry = dx * st + dy * ct;
+
+                                sx = cx + rx * inv;
+                                sy = cy + ry * inv;
+                            }
+
+                            xf = sx;
+                            yf = sy;
+                            
+                            if (xf < 0) xf = 0;
+                            else if (xf > wM1) xf = wM1;
+                            
+                            if (yf < 0) yf = 0;
+                            else if (yf > hM1) yf = hM1;
+
+                            x0 = xf | 0;
+                            y0 = yf | 0;
+
+                            x1 = x0 + 1 < width ? x0 + 1 : x0;
+                            y1 = y0 + 1 < height ? y0 + 1 : y0;
+
+                            fx = xf - x0;
+                            fy = yf - y0;
+
+                            w00 = (1 - fx) * (1 - fy);
+                            w10 = fx * (1 - fy);
+                            w01 = (1 - fx) * fy;
+                            w11 = fx * fy;
+
+                            row0 = y0 * width;
+                            row1 = y1 * width;
+                            
+                            sp00 = src32[row0 + x0];
+                            sp10 = src32[row0 + x1];
+                            sp01 = src32[row1 + x0];
+                            sp11 = src32[row1 + x1];
+
+                            wt = weights[s] * norm;
+
+                            accR += (
+                                (sp00 & 255) * w00 
+                                + (sp10 & 255) * w10
+                                + (sp01 & 255) * w01
+                                + (sp11 & 255) * w11
+                                ) * wt;
+
+                            accG += (
+                                ((sp00 >>> 8) & 255) * w00
+                                + ((sp10 >>> 8) & 255) * w10
+                                + ((sp01 >>> 8) & 255) * w01
+                                + ((sp11 >>> 8) & 255) * w11
+                                ) * wt;
+
+                            accB += (
+                                ((sp00 >>> 16) & 255) * w00
+                                + ((sp10 >>> 16) & 255)* w10
+                                + ((sp01 >>> 16) & 255)* w01
+                                + ((sp11 >>> 16) & 255)* w11
+                                ) * wt;
+
+                            accA += (
+                                ((sp00 >>> 24) & 255) * w00
+                                + ((sp10 >>> 24) & 255) * w10
+                                + ((sp01 >>> 24) & 255) * w01
+                                + ((sp11 >>> 24) & 255)* w11
+                                ) * wt;
+                        }
+                    }
+                    else {
+
+                        rnd = RND[p],
+                        jt0 = (variation * (rnd - 0.5)) / _max(1, (samples - 1));
+
+                        for (s = 0; s < S_eff; s++) {
+
+                            t = baseT[s] + jt0;
+                            if (t < 0) t = 0;
+                            else if (t > 1) t = 1;
+
+                            inv = NO_RADIAL ? invBaseLocal[s] : (1.0 / (1.0 + effStrength * t));
+
+                            if (angleZero) {
+
+                                sx = cx + dx * inv;
+                                sy = cy + dy * inv;
+                            }
+                            else {
+
+                                theta = (NO_RADIAL ? (angleRad * t) : (angleRad * t * m));
+                                ct = _cos(theta);
+                                st = _sin(theta);
+                                rx = dx * ct - dy * st;
+                                ry = dx * st + dy * ct;
+
+                                sx = cx + rx * inv;
+                                sy = cy + ry * inv;
+                            }
+
+                            xf = sx;
+                            yf = sy;
+
+                            if (xf < 0) xf = 0;
+                            else if (xf > wM1) xf = wM1;
+
+                            if (yf < 0) yf = 0;
+                            else if (yf > hM1) yf = hM1;
+
+                            x0 = xf | 0;
+                            y0 = yf | 0;
+
+                            x1 = x0 + 1 < width ? x0 + 1 : x0;
+                            y1 = y0 + 1 < height ? y0 + 1 : y0;
+
+                            fx = xf - x0;
+                            fy = yf - y0;
+                            
+                            w00 = (1 - fx) * (1 - fy);
+                            w10 = fx * (1 - fy);
+                            w01 = (1 - fx) * fy;
+                            w11 = fx * fy;
+
+                            row0 = y0 * width,
+                            row1 = y1 * width;
+                            
+                            sp00 = src32[row0 + x0];
+                            sp10 = src32[row0 + x1];
+                            sp01 = src32[row1 + x0];
+                            sp11 = src32[row1 + x1];
+
+                            wt = weights ? (weights[s] * norm) : (1.0 / S_eff);
+
+                            accR += (
+                                (sp00 & 255) * w00
+                                + (sp10 & 255) * w10
+                                + (sp01 & 255) * w01
+                                + (sp11 & 255) * w11
+                                ) * wt;
+
+                            accG += (
+                                ((sp00 >>> 8) & 255) * w00
+                                + ((sp10 >>> 8) & 255) * w10
+                                + ((sp01 >>> 8) & 255) * w01
+                                + ((sp11 >>> 8) & 255) * w11
+                                ) * wt;
+
+                            accB += (
+                                ((sp00 >>> 16) & 255) * w00
+                                + ((sp10 >>> 16) & 255) * w10
+                                + ((sp01 >>> 16) & 255) * w01
+                                + ((sp11 >>> 16) & 255) * w11
+                                ) * wt;
+                            
+                            accA += (
+                                ((sp00 >>> 24) & 255) * w00
+                                + ((sp10 >>> 24) & 255) * w10
+                                + ((sp01 >>> 24) & 255) * w01
+                                + ((sp11 >>> 24) & 255) * w11
+                                ) * wt;
+                        }
+                    }
+
+                    A_keep = aSrc;
+
+                    R = accR;
+                    G = accG;
+                    B = accB;
+
+                    if (includeAlpha) Aout = accA;
+                    else {
+
+                        eps = 1e-6,
+                        scale = (accA > eps) ? (A_keep / accA) : 0.0;
+
+                        R *= scale;
+                        G *= scale;
+                        B *= scale;
+                        Aout = A_keep;
+                    }
+
+                    Ri = _min(_max(R | 0, 0), 255);
+                    Gi = _min(_max(G | 0, 0), 255);
+                    Bi = _min(_max(B | 0, 0), 255);
+                    Ai = _min(_max(Aout | 0, 0), 255);
+
+                    if (writePacked) {
+
+                        packed = (Ai << 24) | (Bi << 16) | (Gi << 8) | Ri;
+
+                        outPacked32[p] = allChannels ? packed : ((srcPix & NOT_INC) | (packed & INC_MASK));
+                    }
+                    else {
+
+                        outR[p] = Ri;
+                        outG[p] = Gi;
+                        outB[p] = Bi;
+                        outA[p] = Ai;
+                    }
+                }
+            }
+            return writePacked ? null : { outR, outG, outB, outA };
+        };
+
+        if (!multiscale) runAtSize(width, height, cx, cy, true, out32);
+        else {
+
+            const W2  = (width  >> 1) || 1,
+                H2  = (height >> 1) || 1,
+                cx2 = cx * W2 / width,
+                cy2 = cy * H2 / height,
+                planes = runAtSize(W2, H2, cx2|0, cy2|0, false, null);
+
+            const { outR, outG, outB, outA } = planes;
+
+            const keyUp = `zoom-blur::upsampled::${width}x${height}`;
+            let up = getWorkstoreItem(keyUp) || {};
+
+            if (!up.R || up.R.length !== pixels) {
+
+                up.R = new Float32Array(pixels);
+                up.G = new Float32Array(pixels);
+                up.B = new Float32Array(pixels);
+                up.A = new Float32Array(pixels);
+            }
+
+            setWorkstoreItem(keyUp, up);
+
+            const up2 = (src,dst) => {
+
+                let y, y0, y1, fy, row0, row1,
+                    x, x0, x1, fx, a, b, c, d, ab, cd;
+
+                for (y = 0; y < height; y++) {
+
+                    y0 = y >> 1;
+                    y1 = _min(y0 + 1, H2 - 1);
+                    fy = (y & 1) * 0.5;
+                    row0 = y0 * W2;
+                    row1 = y1 * W2;
+
+                    for (x = 0; x < width; x++) {
+
+                        x0 = x >> 1;
+                        x1 =_min(x0 + 1, W2 - 1);
+                        fx = (x & 1) * 0.5;
+
+                        a = src[row0 + x0];
+                        b = src[row0 + x1];
+                        c = src[row1 + x0];
+                        d = src[row1 + x1];
+
+                        ab = a + (b - a) * fx;
+                        cd = c + (d - c) * fx;
+
+                        dst[y * width + x] = ab + (cd - ab) * fy;
+                    }
+                }
+            };
+
+            up2(outR, up.R);
+            up2(outG, up.G);
+            up2(outB, up.B);
+            up2(outA, up.A);
+
+            const allCh = (INC_MASK === 0xFFFFFFFF >>> 0);
+
+            let p, srcPix, A_keep, 
+                R, G, B, Aout,
+                Ri, Gi, Bi, Ai, packed,
+                eps, scale;
+
+            for (p = 0; p < pixels; p++){
+
+                srcPix = src32[p];
+                
+                A_keep = (srcPix >>> 24) & 255;
+
+                R = up.R[p];
+                G = up.G[p];
+                B = up.B[p];
+
+                if (includeAlpha) Aout = up.A[p];
+                else {
+
+                    eps = 1e-6;
+                    scale = (up.A[p] > eps) 
+                        ? (A_keep / up.A[p])
+                        : 0.0;
+
+                    R *= scale;
+                    G *= scale;
+                    B *= scale;
+                    Aout = A_keep;
+                }
+
+                Ri = _min(_max(R | 0, 0), 255);
+                Gi = _min(_max(G | 0, 0), 255);
+                Bi = _min(_max(B | 0, 0), 255);
+                Ai = _min(_max(Aout | 0, 0), 255);
+
+                if (excludeTransparentPixels && ((srcPix >>> 24) & 255) === 0) {
+
+                    out32[p] = srcPix;
+                    continue;
+                }
+
+                packed = (Ai << 24) | (Bi << 16) | (Gi << 8) | Ri;
+
+                out32[p] = allCh
+                    ? packed
+                    : ((srcPix & NOT_INC) | (packed & INC_MASK));
+            }
+        }
+
+        if (premultiply) unpremultiply_u32(out32, pixels);
+
         if (lineOut) processResults(output, input, 1 - opacity);
         else processResults(cache.work, output, opacity);
     },

@@ -273,3 +273,5 @@ export const WHITE = 'rgb(255 255 255 / 1)';
 export const WIDTH = 'width';
 export const ZERO_PATH = 'M0,0';
 export const ZERO_STR = '';
+export const ZOOM_BLUR = 'zoom-blur';
+

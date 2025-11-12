@@ -1478,6 +1478,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     redInBlue?: number;
     redInGreen?: number;
     redInRed?: number;
+    samples?: number;
     scaleX?: number;
     scaleY?: number;
     smoothing?: number;
@@ -1492,6 +1493,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     tileWidth?: StringOrNumberInput;
     tolerance?: number;
     transparentAt?: number;
+    variation?: number;
     width?: StringOrNumberInput;
 }
 

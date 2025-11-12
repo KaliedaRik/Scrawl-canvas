@@ -17,7 +17,7 @@ import { colorEngine } from '../helper/color-engine.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _isArray, _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DECONVOLUTE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NORMAL, OFFSET, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILE_MODES, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, UNSHARP, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DECONVOLUTE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NORMAL, OFFSET, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILE_MODES, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, UNSHARP, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR, ZOOM_BLUR } from '../helper/shared-vars.js';
 
 // Local constants
 const EMBOSS_WORK = 'emboss-work',
@@ -235,6 +235,7 @@ const defaultAttributes = {
     redInGreen: 0,
     redInRed: 0,
     reference: BLACK,
+    samples: 14,
     scaleX: 1,
     scaleY: 1,
     seed: DEFAULT_SEED,
@@ -257,6 +258,7 @@ const defaultAttributes = {
     useLabForPaletteDistance: false,
     useMixedChannel: true,
     useNaturalGrayscale: false,
+    variation: 0,
     weights: null,
     width: 1,
 };
@@ -1633,6 +1635,34 @@ const setActionsArray = {
             includeRed: true,
             includeGreen: true,
             excludeBlue: true,
+        }];
+    },
+
+// __yellow__ - removes blue channel color from the image, and averages the remaining channel colors
+    zoomBlur: function (f) {
+        f.actions = [{
+            action: ZOOM_BLUR,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
+            excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : true,
+            startX: (f.startX != null) ? f.startX : '50%',
+            startY: (f.startY != null) ? f.startY : '50%',
+            innerRadius: (f.innerRadius != null) ? f.innerRadius : 0,
+            outerRadius: (f.outerRadius != null) ? f.outerRadius : 0,
+            easing: (f.easing != null) ? f.easing : 'linear',
+            premultiply: (f.premultiply != null) ? f.premultiply : false,
+            multiscale: (f.multiscale != null) ? f.multiscale : true,
+            strength: (f.strength != null) ? f.strength : 0.35,
+            angle: (f.angle != null) ? f.angle : 0,
+            seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
+            samples: (f.samples != null) ? f.samples : 14,
+            variation: (f.variation != null) ? f.variation : 0,
+
         }];
     },
 };
