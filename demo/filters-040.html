@@ -92,9 +92,9 @@
     <div class="blue label">Multiscale final passes</div>
     <div class="blue"><input class="controlItem" id="multiscaleFinalPasses" type="range" value="2" min="0" max="4" step="1" /></div>
 
-    <div class="blue label">Use input as mask</div>
+    <div class="blue label">Derive mask from image</div>
     <div class="blue">
-      <select class="controlItem filter-control" id="useInputAsMask">
+      <select class="controlItem filter-control" id="deriveMaskFromImage">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -139,6 +139,8 @@
       <li>Create a glitch filter and apply it to the test entity</li>
       <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
+
+    <p><b>To note:</b> this filter performs adaptive, edge-aware Richardson–Lucy deconvolution in OKLab color space, intelligently sharpening image detail while preserving smooth areas and respecting transparency. As such, it performs heavy computation and will run slower than other filters. Use sparingly!</p>
 
     <p><b>Touch test:</b> not required</p>
 

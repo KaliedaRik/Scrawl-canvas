@@ -143,6 +143,7 @@ const defaultAttributes = {
     copyX: 0,
     copyY: 0,
     concurrent: false,
+    deriveMaskFromImage: true,
     easing: LINEAR,
     excludeAlpha: true,
     excludeBlue: false,
@@ -779,6 +780,25 @@ const setActionsArray = {
             includeGreen: true,
             includeBlue: true,
             excludeRed: true,
+        }];
+    },
+
+// __deconvolute__ (new in v8.17.0) - OKLab L-only Richardson_Lucy deconvolution with optional edge mask
+    deconvolute: function (f) {
+        f.actions = [{
+            action: DECONVOLUTE,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            strength: (f.strength != null) ? f.strength : 0.85,
+            radius: (f.radius != null) ? f.radius : 1.25,
+            level: (f.level != null) ? f.level : 0.015,
+            smoothing: (f.smoothing != null) ? f.smoothing : 0.015,
+            clamp: (f.clamp != null) ? f.clamp : 0.08,
+            passes: (f.passes != null) ? f.passes : 8,
+            deriveMaskFromImage: (f.deriveMaskFromImage != null) ? f.deriveMaskFromImage : true,
+            multiscale: (f.multiscale != null) ? f.multiscale : true,
+            multiscaleFinalPasses: (f.multiscaleFinalPasses != null) ? f.multiscaleFinalPasses : 2,
         }];
     },
 
@@ -1590,25 +1610,6 @@ const setActionsArray = {
             level: (f.level != null) ? f.level : 0.015,
             smoothing: (f.smoothing != null) ? f.smoothing : 0.015,
             clamp: (f.clamp != null) ? f.clamp : 0.08,
-        }];
-    },
-
-// __deconvolute__ (new in v8.17.0) - OKLab L-only Richardson_Lucy deconvolution with optional edge mask
-    deconvolute: function (f) {
-        f.actions = [{
-            action: DECONVOLUTE,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            strength: (f.strength != null) ? f.strength : 0.85,
-            radius: (f.radius != null) ? f.radius : 1.25,
-            level: (f.level != null) ? f.level : 0.015,
-            smoothing: (f.smoothing != null) ? f.smoothing : 0.015,
-            clamp: (f.clamp != null) ? f.clamp : 0.08,
-            passes: (f.passes != null) ? f.passes : 8,
-            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : true,
-            multiscale: (f.multiscale != null) ? f.multiscale : true,
-            multiscaleFinalPasses: (f.multiscaleFinalPasses != null) ? f.multiscaleFinalPasses : 2,
         }];
     },
 

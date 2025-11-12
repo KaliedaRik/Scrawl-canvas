@@ -83,7 +83,7 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'passes', '8'],
     ['input', 'multiscaleFinalPasses', '2'],
     ['select', 'multiscale', 1],
-    ['select', 'useInputAsMask', 1],
+    ['select', 'deriveMaskFromImage', 1],
 ]);
 
 // Setup form observer functionality
@@ -108,7 +108,7 @@ scrawl.makeUpdater({
         passes: ['passes', 'int'],
         multiscaleFinalPasses: ['multiscaleFinalPasses', 'int'],
         multiscale: ['multiscale', 'boolean'],
-        useInputAsMask: ['useInputAsMask', 'boolean'],
+        deriveMaskFromImage: ['deriveMaskFromImage', 'boolean'],
     },
 });
 

@@ -1512,6 +1512,7 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     compose?: string;
     concurrent?: boolean;
     delta?: FilterFactoryDeltaInputs;
+    deriveMaskFromImage?: boolean;
     easing?: string;
     excludeAlpha?: boolean;
     excludeBlue?: boolean;
