@@ -1385,6 +1385,7 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     textUnitFlow?: TextUnitFlowValues;
     truncateString?: string;
     useLayoutTemplateAsPath?: boolean;
+    verticalCjkPunctuation?: 'off' | 'auto' | 'forced';
     visibility?: boolean;
 }
 

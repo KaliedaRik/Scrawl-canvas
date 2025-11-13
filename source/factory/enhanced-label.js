@@ -27,13 +27,15 @@ import textMix from '../mixin/text.js';
 import { doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 // Shared constants
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, BOTTOM, CENTER, DESTINATION_OVER, END, ENTITY, FILL, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, START, T_CELL, T_ENHANCED_LABEL, T_GROUP, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, AUTO, BOTTOM, CENTER, DESTINATION_OVER, END, ENTITY, FILL, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, START, T_CELL, T_ENHANCED_LABEL, T_GROUP, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const DRAW = 'draw',
     DRAW_AND_FILL = 'drawAndFill',
     FILL_AND_DRAW = 'fillAndDraw',
     FONT_VIEWPORT_LENGTH_REGEX = /[0-9.,]+(svh|lvh|dvh|vh|svw|lvw|dvw|vw|svmax|lvmax|dvmax|vmax|svmin|lvmin|dvmin|vmin|svb|lvb|dvb|vb|svi|lvi|dvi|vi)/i,
+    FORCE = 'force',
+    OFF = 'off',
     ROW = 'row',
     SPACE_AROUND = 'space-around',
     SPACE_BETWEEN = 'space-between',
@@ -57,6 +59,52 @@ const TEXT_SPACES_REGEX = /[ \f\n\r\t\v\u2028\u2029\u200b]/,
     TEXT_TYPE_TRUNCATE = 'T',
     TEXT_ZERO_SPACE_REGEX = /[\u200b]/;
 
+// Detect any CJK characters (Han, Hiragana, Katakana, CJK punctuation, radicals, compatibility)
+const TEXT_LOOKS_CJK_REGEX = /[\u3000-\u303F\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF\u2E80-\u2EFF]/;
+
+// Horizontal → vertical presentation form map (most common marks)
+const VERTICAL_PUNCT_MAP = new Map([
+    ['，', '\uFE10'],
+    ['、', '\uFE11'],
+    ['。', '\uFE12'],
+    ['：', '\uFE13'],
+    ['；', '\uFE14'],
+    ['！', '\uFE15'],
+    ['？', '\uFE16'],
+    ['…', '\uFE19'],
+    ['—', '\uFE31'],
+    ['（', '\uFE35'],
+    ['）', '\uFE36'],
+    ['｛', '\uFE37'],
+    ['｝', '\uFE38'],
+    ['〔', '\uFE39'],
+    ['〕', '\uFE3A'],
+    ['【', '\uFE3B'],
+    ['】', '\uFE3C'],
+    ['《', '\uFE3D'],
+    ['》', '\uFE3E'],
+    ['〈', '\uFE3F'],
+    ['〉', '\uFE40'],
+    ['「', '\uFE41'],
+    ['」', '\uFE42'],
+    ['『', '\uFE43'],
+    ['』', '\uFE44'],
+    ['［', '\uFE47'],
+    ['］', '\uFE48'],
+]);
+
+const toVerticalCjkForms = (s) => {
+
+    let out = '',
+        i, iz, ch;
+
+    for (let i = 0, iz = s.length; i < iz; i++) {
+
+        ch = s[i];
+        out += VERTICAL_PUNCT_MAP.get(ch) || ch;
+    }
+    return out;
+};
 
 // #### EnhancedLabel constructor
 const EnhancedLabel = function (items = Ωempty) {
@@ -211,6 +259,10 @@ const defaultAttributes = {
 // __textUnitFlow__ - string enum. Allowed values are 'row' (default), 'row-reverse', 'column' (for vertical text), 'column-reverse'
 // + Determines the ordering of text units along the space layout line. Has nothing to do with the `direction` attribute.
     textUnitFlow: ROW,
+
+// Use vertical presentation forms for CJK punctuation when text flows in columns.
+// + 'off' (default), 'auto' (detect CJK in text), 'force' (always, in column flow)
+    verticalCjkPunctuation: AUTO,
 
 // __truncateString__ - string.
     truncateString: '…',
@@ -847,6 +899,9 @@ P.cleanText = function () {
         const languageDirectionIsLtr = (defaultTextStyle.direction === LTR);
         const layoutFlowIsColumns = TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow);
 
+        // Decide whether to use vertical CJK forms for this run
+        const useVerticalCjk = layoutFlowIsColumns && (this.verticalCjkPunctuation === FORCE || (this.verticalCjkPunctuation === AUTO && TEXT_LOOKS_CJK_REGEX.test(text)));
+
         const unit = [];
 
         let noBreak = false;
@@ -916,7 +971,9 @@ P.cleanText = function () {
 
                 // Capturing the last word
                 if (unit.length) textUnits.push(requestUnit({
-                    [UNIT_CHARS]: unit.join(ZERO_STR),
+                    [UNIT_CHARS]: useVerticalCjk 
+                        ? toVerticalCjkForms(unit.join(ZERO_STR))
+                        : unit.join(ZERO_STR),
                     [UNIT_TYPE]: TEXT_TYPE_CHARS,
                     index,
                 }));
@@ -945,7 +1002,9 @@ P.cleanText = function () {
 
                 // Capturing the last word
                 if (unit.length) textUnits.push(requestUnit({
-                    [UNIT_CHARS]: unit.join(ZERO_STR),
+                    [UNIT_CHARS]: useVerticalCjk 
+                        ? toVerticalCjkForms(unit.join(ZERO_STR))
+                        : unit.join(ZERO_STR),
                     [UNIT_TYPE]: TEXT_TYPE_CHARS,
                     index,
                 }));
@@ -955,7 +1014,7 @@ P.cleanText = function () {
 
             textCharacters.forEach((c, i) => {
 
-                unit.push(c);
+                unit.push(useVerticalCjk ? (VERTICAL_PUNCT_MAP.get(c) || c) : c);
 
                 // Some Chinese/Japanese characters simply have to stick together (but not in columns)!
                 if (!layoutFlowIsColumns) {
