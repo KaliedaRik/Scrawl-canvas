@@ -411,17 +411,17 @@
 
     <p><br /><strong>Another special note about Chinese and Japanese scripts</strong></p>
 
-    <p>As much as we would like to treat every Chinese and Japanese character as its own thing, both writing systems insist that certain punctuation marks cannot be separated from their preceding character over a line break. Browsers know about this, and make sure it happens in normal HTML. SC, however, makes no effort to guess when this should happen.</p>
+    <p>SC makes an effort to keep CJK punctuation marks adhered to their neighbouring characters to prevent them separating across lines. Where that functionality fails for a given text, users can manually add word joiner characters - HTML entity <code style="display: inline">&amp;#x2060;</code> - immediately between the punctuation mark and the character it needs to adhere to.</p>
 
-    <p>For this demo, we have manually added word joiner characters - HTML entity <code style="display: inline">&amp;#x2060;</code> - immediately before these punctuation marks. A more robust code solution to pre-process canvas text would be required to handle this sort of thing in production environments. Building such a solution into the SC code is not in scope for the project.</p>
+    <p>SC also makes an effort to display appropriate punctuation marks in column-stacked (vertical) text. Both functionalities are active by default.</p>
 
-    <p><br /><strong>An even more special note about Thai scripts</strong></p>
+    <p><br /><strong>An even more special note about Thai (and related Lao, Khmer, Myanmar) scripts</strong></p>
 
     <p>Breaking Thai "words" across lines is a difficult issue - see the <a href="https://www.w3.org/International/sealreq/thai/">W3C Thai Layout Requirements</a> spec for the latest position.</p>
 
     <p>The Thai script is a complex abugida. Spaces are used, but the tendency is to only insert them at natural breath pauses, which means a Thai "word" (as in: a set of characters not separated by spaces) can get exceptionally long.</p>
 
-    <p>To break such words across lines, one recommendation is to insert zero-space spaces - HTML entity <code style="display: inline">&amp;#x200B;</code> - in places where this can be done. SC attempts to handle this automatically using the browser's <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter">Intl.Segmenter</a> functionality, and <b>setting the <code style="display: inline">autoHyphenate</code> flag to <code style="display: inline">true</code></b>.</p>
+    <p>To break such words across lines, one recommendation is to insert zero-width spaces - HTML entity <code style="display: inline">&amp;#x200B;</code> - in places where this can be done. SC attempts to handle this automatically using the browser's <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter">Intl.Segmenter</a> functionality, and <b>setting the <code style="display: inline">autoHyphenate</code> flag to <code style="display: inline">true</code></b>.</p>
   </div>
 
   <script src="canvas-206.js" type="module"></script>

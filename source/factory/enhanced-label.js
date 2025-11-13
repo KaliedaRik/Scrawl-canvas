@@ -64,10 +64,13 @@ const TEXT_SPACES_REGEX = /[ \f\n\r\t\v\u2028\u2029\u200b]/,
     THAI_REGEX = /[\u0E00-\u0E7F]/,
     LAO_REGEX     = /[\u0E80-\u0EFF]/,
     KHMER_REGEX   = /[\u1780-\u17FF\u19E0-\u19FF]/,
-    MYANMAR_REGEX = /[\u1000-\u109F\uAA60-\uAA7F\uA9E0-\uA9FF]/;
-
-// Detect any CJK characters (Han, Hiragana, Katakana, CJK punctuation, radicals, compatibility)
-const TEXT_LOOKS_CJK_REGEX = /[\u3000-\u303F\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF\u2E80-\u2EFF]/;
+    MYANMAR_REGEX = /[\u1000-\u109F\uAA60-\uAA7F\uA9E0-\uA9FF]/,
+    CJK_CHAR_RE = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u,
+    CJK_CLOSE_RE = /[、。．，：；！？〕〉》」』】］）]/,
+    CJK_OPEN_RE  = /[〔〈《「『【［（]/,
+    WORD_JOINER = '\u2060',
+    LOOKS_CJK_RE = /[\u3000-\u303F\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF]/,
+    TEXT_LOOKS_CJK_REGEX = /[\u3000-\u303F\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF\u2E80-\u2EFF]/;
 
 // Decide if a short string looks "word-like" when Segmenter doesn't provide isWordLike
 const IS_WORDLIKE = (s) => /[\p{L}\p{N}]/u.test(s),
@@ -116,6 +119,35 @@ const toVerticalCjkForms = (s) => {
 
         ch = s[i];
         out += VERTICAL_PUNCT_MAP.get(ch) || ch;
+    }
+    return out;
+};
+
+const autoBindCjkPunctuation = (text) => {
+
+    const len = text.length;
+
+    let out = '',
+        i, ch, next;
+
+    for (let i = 0; i < len; i++) {
+
+        ch = text[i];
+        next = i + 1 < len ? text[i + 1] : '';
+        out += ch;
+
+        // 1) Prevent break AFTER openers: insert joiner after the opener
+        if (CJK_OPEN_RE.test(ch) && next && next !== WORD_JOINER) {
+
+            out += WORD_JOINER;
+            continue;
+        }
+
+        // 2) Prevent break BEFORE closers: insert joiner before the closer
+        if (next && CJK_CLOSE_RE.test(next) && ch !== WORD_JOINER) {
+
+            out += WORD_JOINER;
+        }
     }
     return out;
 };
@@ -292,8 +324,12 @@ const defaultAttributes = {
 // + This allows integration with external, professional hyphenation or language analysis tools.
     lineBreakHook: null,
 
-// Use vertical presentation forms for CJK punctuation when text flows in columns.
-// + `'off'` (default), `'auto'` (detect CJK in text), `'force'` (always, in column flow)
+// __cjkPunctuationBinding__ - keep CJK punctuation tied to the preceding or following character (as appropriate) rather than fall onto the next line (or end the previous line).
+// + `'off'`, `'auto'` (default, detect CJK in text), `'force'` (always)
+    cjkPunctuationBinding: AUTO,
+
+// __verticalCjkPunctuation__ - Use vertical presentation forms for CJK punctuation when text flows in columns.
+// + `'off'`, `'auto'` (default, detect CJK in text), `'force'` (always, in column flow)
     verticalCjkPunctuation: AUTO,
 
 // __truncateString__ - string.
@@ -530,6 +566,13 @@ S.verticalCjkPunctuation = function (item) {
 
     const v = (item === FORCE || item === OFF) ? item : AUTO;
     this.verticalCjkPunctuation = v;
+    this.dirtyText = true;
+};
+
+S.cjkPunctuationBinding = function (item) {
+
+    const v = (item === FORCE || item === OFF) ? item : AUTO;
+    this.cjkPunctuationBinding = v;
     this.dirtyText = true;
 };
 
@@ -944,66 +987,153 @@ P.calculateLines = function () {
     releaseCoordinate(coord);
 };
 
+// P.preprocessTextForLineBreaks = function (src) {
+
+//     const { autoHyphenate, language, lineBreakHook, lineBreakInsert, cjkPunctuationBinding } = this;
+
+//     if (!src || !src.substring) return src;
+
+//     let out = src;
+
+//     if (autoHyphenate) {
+
+//         const insertChar = (lineBreakInsert === SOFT) ? '\u00AD' : '\u200B';
+
+//         // Developer hook has priority
+//         if (isa_fn(lineBreakHook)) {
+
+//             out = lineBreakHook(src, language);
+
+//             if (Array.isArray(out)) return out.join(insertChar);
+
+//             if (out.substring) return out;
+//         }
+
+//         // Built-in fallback: Intl.Segmenter
+//         let lang = language || AUTO;
+
+//         if (lang === AUTO) {
+
+//             if (THAI_REGEX.test(src)) lang = 'th';
+//             else if (LAO_REGEX.test(src)) lang = 'lo';
+//             else if (KHMER_REGEX.test(src)) lang = 'km';
+//             else if (MYANMAR_REGEX.test(src)) lang = 'my';
+//             else return src;
+//         }
+
+//         // Feature + argument sanity checks to avoid constructor errors
+//         const hasSeg = typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function' && LANG_TAG_REGEX.test(lang);
+
+//         if (!hasSeg) return src;
+
+//         // Construct and use Segmenter; with valid lang/options this should not throw
+//         const seg = new Intl.Segmenter(lang, { granularity: WORD });
+//         const parts = seg.segment(src);
+
+//         out = '';
+
+//         let prevWord = false,
+//             segmentText, wordlike;
+
+//         // Insert a break char between consecutive word-like segments.
+//         for (const part of parts) {
+
+//             console.log(part);
+
+//             segmentText = (part && part.segment.substring) ? part.segment : ZERO_STR;
+
+//             if (!segmentText) continue;
+
+//             wordlike = (part && ISWORDLIKE in part) ? !!part.isWordLike : IS_WORDLIKE(segmentText);
+
+//             if (out && prevWord && wordlike) out += insertChar;
+
+//             out += segmentText;
+//             prevWord = wordlike;
+//         }
+//     }
+
+//     const wantCjkBind = cjkPunctuationBinding === 'force' || (cjkPunctuationBinding !== 'off' && LOOKS_CJK_RE.test(out));
+
+//     if (wantCjkBind) out = autoBindCjkPunctuation(out);
+
+//     return out || src;
+// };
 P.preprocessTextForLineBreaks = function (src) {
 
-    const { autoHyphenate, language, lineBreakHook, lineBreakInsert } = this;
+    const { autoHyphenate, language, lineBreakHook, lineBreakInsert, cjkPunctuationBinding } = this;
 
-    if (!autoHyphenate || !src || !src.substring) return src;
+    if (!src || !src.substring) return src;
 
-    const insertChar = (lineBreakInsert === SOFT) ? '\u00AD' : '\u200B';
+    // Always start with the source so later passes (CJK binding) can run
+    let out = src;
 
-    // Developer hook has priority
-    if (isa_fn(lineBreakHook)) {
+    if (autoHyphenate) {
 
-        const out = lineBreakHook(src, language);
+        const insertChar = (lineBreakInsert === SOFT) ? '\u00AD' : '\u200B';
 
-        if (Array.isArray(out)) return out.join(insertChar);
+        // 1) Developer hook
+        if (isa_fn(lineBreakHook)) {
 
-        if (out.substring) return out;
+            const hookRes = lineBreakHook(src, language);
+
+            if (Array.isArray(hookRes)) out = hookRes.join(insertChar);
+            else if (hookRes && hookRes.substring) out = hookRes;
+        }
+
+        // 2) Built-in Intl.Segmenter fallback
+        else {
+
+            let lang = language || AUTO;
+
+            if (lang === AUTO) {
+
+                if (THAI_REGEX.test(src)) lang = 'th';
+                else if (LAO_REGEX.test(src)) lang = 'lo';
+                else if (KHMER_REGEX.test(src)) lang = 'km';
+                else if (MYANMAR_REGEX.test(src))lang = 'my';
+                else lang = null;
+            }
+
+            const hasSeg = lang && typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function' &&
+                           LANG_TAG_REGEX.test(lang);
+
+            if (hasSeg) {
+
+                const seg = new Intl.Segmenter(lang, { granularity: WORD }),
+                    parts = seg.segment(src);
+
+                let assembled = '',
+                    prevWord = false;
+
+                for (const part of parts) {
+
+                    const segmentText = (part && part.segment && part.segment.substring)
+                        ? part.segment
+                        : ZERO_STR;
+
+                    if (!segmentText) continue;
+
+                    const wordlike = (part && ISWORDLIKE in part)
+                        ? !!part.isWordLike
+                        : IS_WORDLIKE(segmentText);
+
+                    if (assembled && prevWord && wordlike) assembled += insertChar;
+
+                    assembled += segmentText;
+                    prevWord = wordlike;
+                }
+                if (assembled) out = assembled;
+            }
+        }
     }
 
-    // Built-in fallback: Intl.Segmenter
-    let lang = language || AUTO;
+    // 3) CJK punctuation binding can (and should) run even when autoHyphenate is false
+    const wantCjkBind = cjkPunctuationBinding === 'force' || (cjkPunctuationBinding !== 'off' && LOOKS_CJK_RE.test(out));
 
-    if (lang === AUTO) {
+    if (wantCjkBind) out = autoBindCjkPunctuation(out);
 
-        if (THAI_REGEX.test(src)) lang = 'th';
-        else if (LAO_REGEX.test(src)) lang = 'lo';
-        else if (KHMER_REGEX.test(src)) lang = 'km';
-        else if (MYANMAR_REGEX.test(src)) lang = 'my';
-        else return src;
-    }
-
-    // Feature + argument sanity checks to avoid constructor errors
-    const hasSeg = typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function' && LANG_TAG_REGEX.test(lang);
-
-    if (!hasSeg) return src;
-
-    // Construct and use Segmenter; with valid lang/options this should not throw
-    const seg = new Intl.Segmenter(lang, { granularity: WORD });
-    const parts = seg.segment(src);
-
-    let out = '',
-        prevWord = false,
-        segmentText, wordlike;
-
-    // Insert a break char between consecutive word-like segments.
-    for (const part of parts) {
-
-        console.log(part);
-
-        segmentText = (part && part.segment.substring) ? part.segment : ZERO_STR;
-
-        if (!segmentText) continue;
-
-        wordlike = (part && ISWORDLIKE in part) ? !!part.isWordLike : IS_WORDLIKE(segmentText);
-
-        if (out && prevWord && wordlike) out += insertChar;
-
-        out += segmentText;
-        prevWord = wordlike;
-    }
-    return out || src;
+    return out;
 };
 
 // `cleanText` - Break the entity's text into smaller TextUnit objects which can be positioned within, or along, the layout entity's shape

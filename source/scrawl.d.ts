@@ -1356,6 +1356,7 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     cacheOutput?: boolean;
     calculateOrder?: number;
     checkHitUseTemplate?: boolean;
+    cjkPunctuationBinding?: boolean;
     constantSpeedAlongPath?: boolean;
     delta?: EnhancedLabelFactoryDeltaInputs;
     dimensions?: CommonTwoElementArrayInput; 
