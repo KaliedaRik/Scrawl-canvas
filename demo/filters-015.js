@@ -119,6 +119,9 @@ scrawl.makeUpdater({
         include_blue: ['includeBlue', 'boolean'],
         include_alpha: ['includeAlpha', 'boolean'],
 
+        premultiply: ['premultiply', 'boolean'],
+        useInputAsMask: ['useInputAsMask', 'boolean'],
+
         opacity: ['opacity', 'float'],
     },
 });
