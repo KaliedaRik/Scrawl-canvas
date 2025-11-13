@@ -483,186 +483,6 @@ const getGaussianCoeffsFloat = (sigma) => {
     return c;
 };
 
-// // 1D recursive Gaussian on a Float32 line (forward+backward; in-place via dstLine)
-// const convolve1D_Float = (lineIn, dstLine, length, coeff) => {
-
-//     const a0L = coeff[0],
-//         a1L = coeff[1],
-//         a0R = coeff[2],
-//         a1R = coeff[3],
-//         b1 = coeff[4],
-//         b2 = coeff[5],
-//         lc = coeff[6],
-//         rc = coeff[7];
-
-//     let prev_src = lineIn[0],
-//         prev_out = prev_src * lc,
-//         prev_prev_out = prev_out,
-//         i, x, y;
-
-//     dstLine[0] = prev_out;
-
-//     for (i = 1; i < length; i++) {
-
-//         x = lineIn[i];
-//         y = x * a0L + prev_src * a1L + prev_out * b1 + prev_prev_out * b2;
-
-//         dstLine[i] = y;
-
-//         prev_prev_out = prev_out;
-//         prev_out = y;
-//         prev_src = x;
-//     }
-
-//     prev_src = lineIn[length - 1];
-//     prev_out = prev_src * rc;
-//     prev_prev_out = prev_out;
-//     dstLine[length - 1] = dstLine[length - 1] + prev_out;
-
-//     for (i = length - 2; i >= 0; i--) {
-
-//         x = lineIn[i];
-//         y = x * a0R + prev_src * a1R + prev_out * b1 + prev_prev_out * b2;
-
-//         dstLine[i] = dstLine[i] + y;
-
-//         prev_prev_out = prev_out;
-//         prev_out = y;
-//         prev_src = x;
-//     }
-// };
-
-// // Separable blur on Float32 single-channel image
-// const gaussianBlurL_Float = (src, dst, width, height, sigmaH, sigmaV, tmpLine) => {
-
-//     const doH = sigmaH > 0,
-//         doV = sigmaV > 0;
-
-//     if (!doH && !doV) {
-
-//         if (dst !== src) dst.set(src);
-//         return;
-//     }
-
-//     const tmpImg = (doH && doV) ? new Float32Array(width * height) : dst;
-
-//     if (doH) {
-
-//         const coeffH = getGaussianCoeffsFloat(sigmaH);
-
-//         let y, off, x;
-
-//         for (y = 0; y < height; y++) {
-
-//             off = y * width;
-
-//             for (x = 0; x < width; x++){
-
-//                 tmpLine[x] = src[off + x];
-//             }
-
-//             convolve1D_Float(tmpLine, tmpLine, width, coeffH);
-
-//             for (x = 0; x < width; x++) {
-
-//                 tmpImg[off + x] = tmpLine[x];
-//             }
-//         }
-//     }
-//     else {
-//         if (tmpImg !== src) tmpImg.set(src);
-//     }
-
-//     if (doV) {
-
-//         const coeffV = getGaussianCoeffsFloat(sigmaV);
-
-//         let x, y;
-
-//         for (x = 0; x < width; x++) {
-
-//             for (y = 0; y < height; y++) {
-
-//                 tmpLine[y] = tmpImg[y * width + x];
-//             }
-
-//             convolve1D_Float(tmpLine, tmpLine, height, coeffV);
-
-//             for (y = 0; y < height; y++) {
-
-//                 dst[y * width + x] = tmpLine[y];
-//             }
-//         }
-//     }
-// };
-
-// // Sobel magnitude on Float32 single-channel image (clamped borders)
-// const sobelMagFloat = (src, dst, width, height) => {
-
-//     // kernels:
-//     // Gx = [-1 0 +1; -2 0 +2; -1 0 +1]
-//     // Gy = [-1 -2 -1; 0 0 0; +1 +2 +1]
-//     const clampXY = (x, y) => {
-
-//         if (x < 0) x = 0;
-//         else if (x >= width) x = width - 1;
-        
-//         if (y < 0) y = 0;
-//         else if (y >= height) y = height - 1;
-        
-//         return (y * width + x) | 0;
-//     };
-
-//     let y, ym1, y0, yp1, x, xm1, x0, xp1,
-//         p00, p10, p20, p01, p11, p21, p02, p12, p22, gx, gy, g;
-
-//     for (y = 0; y < height; y++) {
-
-//         ym1 = y - 1;
-//         y0 = y;
-//         yp1 = y + 1;
-        
-//         for (x = 0; x < width; x++) {
-
-//             xm1 = x - 1;
-//             x0 = x;
-//             xp1 = x + 1;
-
-//             p00 = src[clampXY(xm1, ym1)];
-//             p10 = src[clampXY(x0, ym1)];
-//             p20 = src[clampXY(xp1, ym1)];
-//             p01 = src[clampXY(xm1, y0)]
-//             p11 = src[clampXY(x0, y0)];
-//             p21 = src[clampXY(xp1, y0)];
-//             p02 = src[clampXY(xm1, yp1)];
-//             p12 = src[clampXY(x0, yp1)];
-//             p22 = src[clampXY(xp1, yp1)];
-
-//             gx = (-p00 + p20) + (-2 * p01 + 2 * p21) + (-p02 + p22);
-//             gy = (-p00 - 2 * p10 - p20) + (p02 + 2 * p12 + p22);
-
-//             g = _abs(gx) + _abs(gy);
-
-//             dst[y * width + x] = g;
-//         }
-//     }
-// };
-
-// // Smoothstep on Float32 arrays: edgeMask = smoothstep(t0, t1, grad)
-// const smoothstepInto = (grad, outMask, t0, t1) => {
-
-//     const inv = 1.0 / _max(1e-6, (t1 - t0));
-
-//     let i, n, x, s;
-
-//     for (i = 0, n = grad.length | 0; i < n; i++) {
-
-//         x = (grad[i] - t0) * inv;
-//         s = x <= 0 ? 0 : (x >= 1 ? 1 : (x * x * (3 - 2 * x)));
-        
-//         outMask[i] = s;
-//     }
-// };
 
 // ## Filter action functions
 // Each function is held in the `theBigActionsObject` object, for convenience
@@ -1000,14 +820,304 @@ P.theBigActionsObject = {
 // + The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'.
 // + Scrawl-canvas uses the OKLCH color space to calculate color, hue, luminosity and saturation blends, which may lead to unexpecgted results for users coming from other products. SC also includes the "missing" combinations: 'hue-match', and 'chroma-match'.
 // + Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
+    // [BLEND]: function (requirements) {
+
+    //     const [input, output, mix] = getInputAndOutputLines(requirements);
+
+    //     const iWidth  = input.width  | 0,
+    //         iHeight = input.height | 0,
+    //         iData = input.data,
+    //         mWidth  = mix.width | 0,
+    //         mHeight = mix.height | 0,
+    //         mData = mix.data,
+    //         oData = output.data;
+
+    //     const {
+    //         opacity = 1,
+    //         blend = ZERO_STR,
+    //         offsetX = 0,
+    //         offsetY = 0,
+    //         lineOut,
+    //     } = requirements;
+
+    //     if (!iWidth || !iHeight) {
+
+    //         if (lineOut) processResults(output, input, 1 - opacity);
+    //         else processResults(cache.work, output, opacity);
+    //         return;
+    //     }
+
+    //     // Baseline: outside overlap should be the input
+    //     oData.set(iData);
+
+    //     // Overlap rectangle (dest coords where mix contributes)
+    //     const x0 = (offsetX > 0 ? offsetX : 0) | 0,
+    //         y0 = (offsetY > 0 ? offsetY : 0) | 0,
+    //         x1 = _min(iWidth,  offsetX + mWidth)  | 0,
+    //         y1 = _min(iHeight, offsetY + mHeight) | 0;
+
+    //     const hasOverlap = (x1 > x0) && (y1 > y0);
+    //     if (!hasOverlap) {
+
+    //         if (lineOut) processResults(output, input, 1 - opacity);
+    //         else processResults(cache.work, output, opacity);
+    //         return;
+    //     }
+
+    //     const inv255 = 1 / 255;
+
+    //     const f_colorburn = (S, B) => (S === 0 ? 0 : (B === 1 ? 255 : (1 - _min(1, (1 - B) / S)) * 255));
+
+    //     const f_colordodge = (S, B) => (S === 1 ? 255 : (B === 0 ? 0 : _min(1, B / (1 - S)) * 255));
+
+    //     const D = b => (b <= 0.25 ? (((16 * b - 12) * b) + 4) * b : _sqrt(b));
+
+    //     const libs = colorEngine.getRgbOkCache();
+
+    //     // Row strides
+    //     const rowI = iWidth  << 2,
+    //         rowM = mWidth  << 2,
+    //         rowO = rowI;
+
+    //     // Starting mix coords
+    //     const mx0 = (x0 - offsetX) | 0,
+    //         my0 = (y0 - offsetY) | 0;
+
+    //     // Inner loop helpers for OKLCH modes
+    //     const okResult = [0, 0, 0];
+
+    //     const doOK = (mode, ir, ig, ib, mr, mg, mb) => {
+
+    //         const [IL, , , IC, IH] = colorEngine.getOkValsForRgb(ir, ig, ib, libs);
+    //         const [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mr, mg, mb, libs);
+
+    //         let cr, cg, cb;
+
+    //         switch (mode) {
+
+    //             case COLOR:
+    //                 [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, IH, libs);
+    //                 break;
+
+    //             case HUE_MATCH:
+    //                 [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, IH, libs);
+    //                 break;
+
+    //             case CHROMA_MATCH:
+    //                 [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, IC, MH, libs);
+    //                 break;
+
+    //             case HUE:
+    //                 [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, MC, IH, libs);
+    //                 break;
+
+    //             case SATURATION:
+    //                 [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, MH, libs);
+    //                 break;
+
+    //             case LUMINOSITY:
+    //                 [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, MH, libs);
+    //                 break;
+
+    //         }
+    //         okResult[0] = cr;
+    //         okResult[1] = cg;
+    //         okResult[2] = cb;
+    //         return okResult;
+    //     };
+
+    //     // Process overlap
+    //     let y, my, iRow, oRow, mRow,
+    //         x, mx, iIdx, mIdx, oIdx,
+    //         ir, ig, ib, ia8, mr, mg, mb, ma8,
+    //         As, Ab, br, bg, bb,
+    //         Fr, Fg, Fb, Sr, Sg, Sb, Br, Bg, Bb,
+    //         k, oneMinusAs, oneMinusAb, R, G, B, A;
+
+    //     for (y = y0, my = my0; y < y1; y++, my++) {
+
+    //         iRow = (y * rowI) | 0;
+    //         oRow = (y * rowO) | 0;
+    //         mRow = (my * rowM) | 0;
+
+    //         for (x = x0, mx = mx0; x < x1; x++, mx++) {
+
+    //             iIdx = iRow + ((x  << 2) | 0);
+    //             mIdx = mRow + ((mx << 2) | 0);
+    //             oIdx = oRow + ((x  << 2) | 0);
+
+    //             ia8 = iData[iIdx + 3];
+    //             ma8 = mData[mIdx + 3];
+
+    //             if (ia8 === 0) continue;
+    //             if (ma8 === 0) continue;
+
+    //             ir = iData[iIdx];
+    //             ig = iData[iIdx + 1];
+    //             ib = iData[iIdx + 2];
+    //             mr = mData[mIdx];
+    //             mg = mData[mIdx + 1];
+    //             mb = mData[mIdx + 2];
+
+    //             As = ia8 * inv255;
+    //             Ab = ma8 * inv255;
+
+    //             if (OK_BLENDS.includes(blend)) {
+
+    //                 [br, bg, bb] = doOK(blend, ir, ig, ib, mr, mg, mb);
+
+    //                 Fr = br * inv255;
+    //                 Fg = bg * inv255;
+    //                 Fb = bb * inv255;
+    //                 Sr = ir * inv255;
+    //                 Sg = ig * inv255;
+    //                 Sb = ib * inv255;
+    //                 Br = mr * inv255;
+    //                 Bg = mg * inv255;
+    //                 Bb = mb * inv255;
+
+    //                 k = As * Ab;
+    //                 oneMinusAs = 1 - As;
+    //                 oneMinusAb = 1 - Ab;
+
+    //                 R = Sr * oneMinusAb + Br * oneMinusAs + Fr * k;
+    //                 G = Sg * oneMinusAb + Bg * oneMinusAs + Fg * k;
+    //                 B = Sb * oneMinusAb + Bb * oneMinusAs + Fb * k;
+    //                 A = As + Ab - As * Ab;
+
+    //                 oData[oIdx] = (R * 255) | 0;
+    //                 oData[oIdx + 1] = (G * 255) | 0;
+    //                 oData[oIdx + 2] = (B * 255) | 0;
+    //                 oData[oIdx + 3] = (A * 255) | 0;
+    //             }
+    //             else {
+
+    //                 Sr = ir * inv255;
+    //                 Sg = ig * inv255;
+    //                 Sb = ib * inv255;
+
+    //                 Br = mr * inv255;
+    //                 Bg = mg * inv255;
+    //                 Bb = mb * inv255;
+
+    //                 switch (blend) {
+
+    //                     case COLOR_BURN:
+    //                         Fr = f_colorburn(Sr, Br) * inv255;
+    //                         Fg = f_colorburn(Sg, Bg) * inv255;
+    //                         Fb = f_colorburn(Sb, Bb) * inv255;
+    //                         break;
+
+    //                     case COLOR_DODGE:
+    //                         Fr = f_colordodge(Sr, Br) * inv255;
+    //                         Fg = f_colordodge(Sg, Bg) * inv255;
+    //                         Fb = f_colordodge(Sb, Bb) * inv255;
+    //                         break;
+
+    //                     case DARKEN:
+    //                         Fr = _min(Sr, Br);
+    //                         Fg = _min(Sg, Bg);
+    //                         Fb = _min(Sb, Bb);
+    //                         break;
+
+    //                     case LIGHTEN:
+    //                         Fr = _max(Sr, Br);
+    //                         Fg = _max(Sg, Bg);
+    //                         Fb = _max(Sb, Bb);
+    //                         break;
+
+    //                     case LIGHTER:
+    //                         Fr = _min(1, Sr + Br);
+    //                         Fg = _min(1, Sg + Bg);
+    //                         Fb = _min(1, Sb + Bb);
+    //                         break;
+
+    //                     case MULTIPLY:
+    //                         Fr = Sr * Br;
+    //                         Fg = Sg * Bg;
+    //                         Fb = Sb * Bb;
+    //                         break;
+
+    //                     case SCREEN:
+    //                         Fr = Br + Sr - Br * Sr;
+    //                         Fg = Bg + Sg - Bg * Sg;
+    //                         Fb = Bb + Sb - Bb * Sb;
+    //                         break;
+
+    //                     case DIFFERENCE:
+    //                         Fr = _abs(Sr - Br);
+    //                         Fg = _abs(Sg - Bg);
+    //                         Fb = _abs(Sb - Bb);
+    //                         break;
+
+    //                     case EXCLUSION:
+    //                         Fr = Sr + Br - 2 * Sr * Br;
+    //                         Fg = Sg + Bg - 2 * Sg * Bg;
+    //                         Fb = Sb + Bb - 2 * Sb * Bb;
+    //                         break;
+
+    //                     case OVERLAY:
+    //                         Fr = (Br <= 0.5 ? 2 * Sr * Br : 1 - 2 * (1 - Sr) * (1 - Br));
+    //                         Fg = (Bg <= 0.5 ? 2 * Sg * Bg : 1 - 2 * (1 - Sg) * (1 - Bg));
+    //                         Fb = (Bb <= 0.5 ? 2 * Sb * Bb : 1 - 2 * (1 - Sb) * (1 - Bb));
+    //                         break;
+
+    //                     case HARD_LIGHT:
+    //                         Fr = (Sr <= 0.5 ? 2 * Sr * Br : 1 - 2 * (1 - Sr) * (1 - Br));
+    //                         Fg = (Sg <= 0.5 ? 2 * Sg * Bg : 1 - 2 * (1 - Sg) * (1 - Bg));
+    //                         Fb = (Sb <= 0.5 ? 2 * Sb * Bb : 1 - 2 * (1 - Sb) * (1 - Bb));
+    //                         break;
+
+    //                     case SOFT_LIGHT:
+
+    //                         Fr = (Sr <= 0.5)
+    //                             ? (Br - (1 - 2 * Sr) * Br * (1 - Br))
+    //                             : (Br + (2 * Sr - 1) * (D(Br) - Br));
+
+    //                         Fg = (Sg <= 0.5)
+    //                             ? (Bg - (1 - 2 * Sg) * Bg * (1 - Bg))
+    //                             : (Bg + (2 * Sg - 1) * (D(Bg) - Bg));
+
+    //                         Fb = (Sb <= 0.5)
+    //                             ? (Bb - (1 - 2 * Sb) * Bb * (1 - Bb))
+    //                             : (Bb + (2 * Sb - 1) * (D(Bb) - Bb));
+
+    //                         break;
+
+    //                     default:
+    //                         Fr = Sr;
+    //                         Fg = Sg;
+    //                         Fb = Sb;
+    //                 }
+
+    //                 k = As * Ab;
+    //                 oneMinusAs = 1 - As;
+    //                 oneMinusAb = 1 - Ab;
+
+    //                 R = Sr * oneMinusAb + Br * oneMinusAs + Fr * k;
+    //                 G = Sg * oneMinusAb + Bg * oneMinusAs + Fg * k;
+    //                 B = Sb * oneMinusAb + Bb * oneMinusAs + Fb * k;
+    //                 A = As + Ab - As * Ab;
+
+    //                 oData[oIdx] = (R * 255) | 0;
+    //                 oData[oIdx + 1] = (G * 255) | 0;
+    //                 oData[oIdx + 2] = (B * 255) | 0;
+    //                 oData[oIdx + 3] = (A * 255) | 0;
+    //             }
+    //         }
+    //     }
+
+    //     if (lineOut) processResults(output, input, 1 - opacity);
+    //     else processResults(cache.work, output, opacity);
+    // },
     [BLEND]: function (requirements) {
 
         const [input, output, mix] = getInputAndOutputLines(requirements);
 
-        const iWidth  = input.width  | 0,
+        const iWidth  = input.width | 0,
             iHeight = input.height | 0,
             iData = input.data,
-            mWidth  = mix.width | 0,
+            mWidth = mix.width | 0,
             mHeight = mix.height | 0,
             mData = mix.data,
             oData = output.data;
@@ -1018,7 +1128,7 @@ P.theBigActionsObject = {
             offsetX = 0,
             offsetY = 0,
             lineOut,
-        } = requirements;
+        } = requirements || {};
 
         if (!iWidth || !iHeight) {
 
@@ -1027,10 +1137,15 @@ P.theBigActionsObject = {
             return;
         }
 
-        // Baseline: outside overlap should be the input
         oData.set(iData);
 
-        // Overlap rectangle (dest coords where mix contributes)
+        const nPixInput = (iWidth * iHeight) | 0,
+            nPixMix = (mWidth * mHeight) | 0;
+
+        const i32 = new Uint32Array(iData.buffer, iData.byteOffset, nPixInput),
+            m32 = new Uint32Array(mData.buffer, mData.byteOffset, nPixMix),
+            o32 = new Uint32Array(oData.buffer, oData.byteOffset, nPixInput);
+
         const x0 = (offsetX > 0 ? offsetX : 0) | 0,
             y0 = (offsetY > 0 ? offsetY : 0) | 0,
             x1 = _min(iWidth,  offsetX + mWidth)  | 0,
@@ -1054,16 +1169,10 @@ P.theBigActionsObject = {
 
         const libs = colorEngine.getRgbOkCache();
 
-        // Row strides
-        const rowI = iWidth  << 2,
-            rowM = mWidth  << 2,
-            rowO = rowI;
-
         // Starting mix coords
         const mx0 = (x0 - offsetX) | 0,
             my0 = (y0 - offsetY) | 0;
 
-        // Inner loop helpers for OKLCH modes
         const okResult = [0, 0, 0];
 
         const doOK = (mode, ir, ig, ib, mr, mg, mb) => {
@@ -1098,7 +1207,6 @@ P.theBigActionsObject = {
                 case LUMINOSITY:
                     [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, MH, libs);
                     break;
-
             }
             okResult[0] = cr;
             okResult[1] = cg;
@@ -1107,37 +1215,39 @@ P.theBigActionsObject = {
         };
 
         // Process overlap
-        let y, my, iRow, oRow, mRow,
-            x, mx, iIdx, mIdx, oIdx,
-            ir, ig, ib, ia8, mr, mg, mb, ma8,
+        let y, my, x, mx,
+            iPix, mPix,
+            ip, mp,
+            ia8, ma8,
+            ir, ig, ib, mr, mg, mb,
             As, Ab, br, bg, bb,
             Fr, Fg, Fb, Sr, Sg, Sb, Br, Bg, Bb,
-            k, oneMinusAs, oneMinusAb, R, G, B, A;
+            k, oneMinusAs, oneMinusAb, R, G, B, A,
+            outR, outG, outB, outA;
 
         for (y = y0, my = my0; y < y1; y++, my++) {
 
-            iRow = (y * rowI) | 0;
-            oRow = (y * rowO) | 0;
-            mRow = (my * rowM) | 0;
-
             for (x = x0, mx = mx0; x < x1; x++, mx++) {
 
-                iIdx = iRow + ((x  << 2) | 0);
-                mIdx = mRow + ((mx << 2) | 0);
-                oIdx = oRow + ((x  << 2) | 0);
+                iPix = (y * iWidth + x) | 0;
+                mPix = (my * mWidth + mx) | 0;
 
-                ia8 = iData[iIdx + 3];
-                ma8 = mData[mIdx + 3];
+                ip = i32[iPix];
+                mp = m32[mPix];
 
-                if (ia8 === 0) continue;
-                if (ma8 === 0) continue;
+                ia8 = ip >>> 24;
+                ma8 = mp >>> 24;
 
-                ir = iData[iIdx];
-                ig = iData[iIdx + 1];
-                ib = iData[iIdx + 2];
-                mr = mData[mIdx];
-                mg = mData[mIdx + 1];
-                mb = mData[mIdx + 2];
+                if (ia8 === 0 || ma8 === 0) continue;
+
+                // Extract RGB (0–255)
+                ir = ip & 0xFF;
+                ig = (ip >>> 8) & 0xFF;
+                ib = (ip >>> 16) & 0xFF;
+
+                mr = mp & 0xFF;
+                mg = (mp >>> 8) & 0xFF;
+                mb = (mp >>> 16) & 0xFF;
 
                 As = ia8 * inv255;
                 Ab = ma8 * inv255;
@@ -1164,11 +1274,6 @@ P.theBigActionsObject = {
                     G = Sg * oneMinusAb + Bg * oneMinusAs + Fg * k;
                     B = Sb * oneMinusAb + Bb * oneMinusAs + Fb * k;
                     A = As + Ab - As * Ab;
-
-                    oData[oIdx] = (R * 255) | 0;
-                    oData[oIdx + 1] = (G * 255) | 0;
-                    oData[oIdx + 2] = (B * 255) | 0;
-                    oData[oIdx + 3] = (A * 255) | 0;
                 }
                 else {
 
@@ -1278,12 +1383,14 @@ P.theBigActionsObject = {
                     G = Sg * oneMinusAb + Bg * oneMinusAs + Fg * k;
                     B = Sb * oneMinusAb + Bb * oneMinusAs + Fb * k;
                     A = As + Ab - As * Ab;
-
-                    oData[oIdx] = (R * 255) | 0;
-                    oData[oIdx + 1] = (G * 255) | 0;
-                    oData[oIdx + 2] = (B * 255) | 0;
-                    oData[oIdx + 3] = (A * 255) | 0;
                 }
+
+                outR = (R * 255) | 0;
+                outG = (G * 255) | 0;
+                outB = (B * 255) | 0;
+                outA = (A * 255) | 0;
+
+                o32[iPix] = (outA << 24) | (outB << 16) | (outG << 8) | outR;
             }
         }
 
@@ -1525,9 +1632,9 @@ P.theBigActionsObject = {
 
                                     for (c = sx; c <= ex; c += stepHorizontal) {
 
-                                        if (includeRed)   sumR += hold[idx];
+                                        if (includeRed) sumR += hold[idx];
                                         if (includeGreen) sumG += hold[idx + 1];
-                                        if (includeBlue)  sumB += hold[idx + 2];
+                                        if (includeBlue) sumB += hold[idx + 2];
                                         if (includeAlpha) sumA += hold[idx + 3];
                                         idx += step4;
                                     }
@@ -2268,11 +2375,12 @@ P.theBigActionsObject = {
 
         const iWidth  = input.width | 0,
             iHeight = input.height | 0,
-            iData = input.data,
             mWidth  = mix.width | 0,
-            mHeight = mix.height | 0,
+            mHeight = mix.height | 0;
+
+        const iData = input.data,
             mData = mix.data,
-            oData   = output.data;
+            oData = output.data;
 
         const {
             opacity = 1,
@@ -2280,15 +2388,21 @@ P.theBigActionsObject = {
             offsetX = 0,
             offsetY = 0,
             lineOut,
-        } = requirements;
+        } = requirements || {};
 
-        // Early outs
         if (!iWidth || !iHeight) {
 
             if (lineOut) processResults(output, input, 1 - opacity);
             else processResults(cache.work, output, opacity);
             return;
         }
+
+        const nPixIn = (iWidth * iHeight) | 0,
+            nPixMix = (mWidth * mHeight) | 0;
+
+        const i32 = new Uint32Array(iData.buffer, iData.byteOffset, nPixIn),
+            o32 = new Uint32Array(oData.buffer, oData.byteOffset, nPixIn),
+            m32 = new Uint32Array(mData.buffer, mData.byteOffset, nPixMix);
 
         const x0 = (offsetX > 0 ? offsetX : 0) | 0,
             y0 = (offsetY > 0 ? offsetY : 0) | 0,
@@ -2301,10 +2415,11 @@ P.theBigActionsObject = {
 
             case SOURCE_ONLY:
 
-                // Just copy source over wholesale and finish
-                oData.set(iData);
+                o32.set(i32);
+
                 if (lineOut) processResults(output, input, 1 - opacity);
                 else processResults(cache.work, output, opacity);
+
                 return;
 
             case SOURCE_OVER:
@@ -2313,14 +2428,13 @@ P.theBigActionsObject = {
             case DESTINATION_ATOP:
             case XOR:
 
-                oData.set(iData);
+                o32.set(i32);
                 break;
 
             default:
                 break;
         }
 
-        // If no overlap, we're done (baseline already correct)
         if (!hasOverlap || compose === CLEAR) {
 
             if (lineOut) processResults(output, input, 1 - opacity);
@@ -2328,140 +2442,153 @@ P.theBigActionsObject = {
             return;
         }
 
-        // Blend only over overlap rows
-        // + Helpers use normalized alphas (ia, ma in [0..1])
-        const blend_sourceAtop = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs * ma) + (ma * Cd * (1 - ia));
-        const blend_sourceIn = (Cs, As,ia, ma) => ia * Cs * ma;
-        const blend_sourceOut = (Cs, As, ia, ma) => ia * Cs * (1 - ma);
+        const inv255 = 1 / 255;
 
-        const blend_destAtop = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs * (1 - ma)) + (ma * Cd * ia);
-        const blend_destOver = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs * (1 - ma)) + (ma * Cd);
-        const blend_destIn = (Cd, Ad, ia, ma) => ia * Cd * ma;
-        const blend_destOut = (Cd, Ad, ia, ma) => ma * Cd * (1 - ia);
+        // Utility: unpack ABGR → RGBA
+        const unpack = (p) => [(p) & 0xFF, (p >> 8) & 0xFF, (p >> 16) & 0xFF, (p >> 24) & 0xFF,];
 
-        const blend_xor = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs * (1 - ma)) + (ma * Cd * (1 - ia));
-        const blend_sourceOver = (Cs, As, Cd, Ad, ia, ma) => (ia * Cs) + (ma * Cd * (1 - ia));
+        const pack = (r, g, b, a) => ((a & 255) << 24) | ((b & 255) << 16) | ((g & 255) <<  8) | (r & 255);
 
-        // Process overlap area
-        const rowStrideI = iWidth << 2,
-            rowStrideM = mWidth << 2,
-            rowStrideO = rowStrideI;
-
-        // Starting mix offsets
+        // Mix starting coords
         const mx0 = (x0 - offsetX) | 0,
             my0 = (y0 - offsetY) | 0;
 
-        let y, my, iRow, oRow, mRow, x, mx, iIdx, mIdx, oIdx,
-            ir, ig, ib, ia8, mr, mg, mb, ma8, or, og, ob, oa, ia, ma;
+        const rowIn  = iWidth,
+            rowMix = mWidth;
+
+        let y, my, baseIn, baseMix, x, mx,
+            srcIndex, dstIndex, srcPacked, dstPacked,
+            Sr8, Sg8, Sb8, Sa8, Dr8, Dg8, Db8, Da8,
+            As, Ad, Sr, Sg, Sb, Dr, Dg, Db,
+            outR, outG, outB, outA, t, t1, t2,
+            r8, g8, b8, a8;
 
         for (y = y0, my = my0; y < y1; y++, my++) {
 
-            iRow = (y * rowStrideI) | 0;
-            oRow = (y * rowStrideO) | 0;
-            mRow = (my * rowStrideM) | 0;
+            baseIn  = y  * rowIn;
+            baseMix = my * rowMix;
 
-            // Scan across overlap
             for (x = x0, mx = mx0; x < x1; x++, mx++) {
 
-                iIdx = iRow + ((x << 2) | 0);
-                mIdx = mRow + ((mx << 2) | 0);
-                oIdx = oRow + ((x  << 2) | 0);
+                srcIndex = baseIn + x;      // source = line IN
+                dstIndex = baseMix + mx;    // dest   = line MIX
 
-                ir = iData[iIdx];
-                ig = iData[iIdx + 1];
-                ib = iData[iIdx + 2];
-                ia8 = iData[iIdx + 3];
+                srcPacked = i32[srcIndex];
+                dstPacked = m32[dstIndex];
 
-                mr = mData[mIdx];
-                mg = mData[mIdx + 1];
-                mb = mData[mIdx + 2];
-                ma8 = mData[mIdx + 3];
+                [Sr8, Sg8, Sb8, Sa8] = unpack(srcPacked); // source RGBA
+                [Dr8, Dg8, Db8, Da8] = unpack(dstPacked); // dest RGBA
 
-                // Normalize alphas once
-                ia = ia8 * (1 / 255);
-                ma = ma8 * (1 / 255);
+                As = Sa8 * inv255;  // source alpha [0..1]
+                Ad = Da8 * inv255;  // dest alpha   [0..1]
+
+                // Normalized colours [0..1]
+                Sr = Sr8 * inv255;
+                Sg = Sg8 * inv255;
+                Sb = Sb8 * inv255;
+
+                Dr = Dr8 * inv255;
+                Dg = Dg8 * inv255;
+                Db = Db8 * inv255;
 
                 switch (compose) {
 
-                    case SOURCE_ATOP:
-                        or = blend_sourceAtop(ir, ia, mr, ma, ia, ma);
-                        og = blend_sourceAtop(ig, ia, mg, ma, ia, ma);
-                        ob = blend_sourceAtop(ib, ia, mb, ma, ia, ma);
-                        oa = ((ia * ma) + (ma * (1 - ia))) * 255;
+                    case SOURCE_ATOP: {
+                        t1 = As * Ad;
+                        outR = Sr * t1 + Dr * Ad * (1 - As);
+                        outG = Sg * t1 + Dg * Ad * (1 - As);
+                        outB = Sb * t1 + Db * Ad * (1 - As);
+                        outA = Ad;
                         break;
+                    }
 
-                    case SOURCE_IN:
-                        or = blend_sourceIn(ir, ia, ia, ma);
-                        og = blend_sourceIn(ig, ia, ia, ma);
-                        ob = blend_sourceIn(ib, ia, ia, ma);
-                        oa = (ia * ma) * 255;
+                    case SOURCE_IN: {
+                        t = As * Ad;
+                        outR = Sr * t;
+                        outG = Sg * t;
+                        outB = Sb * t;
+                        outA = t;
                         break;
+                    }
 
-                    case SOURCE_OUT:
-                        // Baseline already contains input; overwrite inside overlap
-                        or = blend_sourceOut(ir, ia, ia, ma);
-                        og = blend_sourceOut(ig, ia, ia, ma);
-                        ob = blend_sourceOut(ib, ia, ia, ma);
-                        oa = ia * (1 - ma) * 255;
+                    case SOURCE_OUT: {
+                        t = As * (1 - Ad);
+                        outR = Sr * t;
+                        outG = Sg * t;
+                        outB = Sb * t;
+                        outA = t;
                         break;
+                    }
 
-                    case DESTINATION_ONLY:
-                        // Just copy mix into output (within overlap). Outside remained transparent.
-                        or = mr; og = mg; ob = mb; oa = ma8;
+                    case DESTINATION_ONLY: {
+                        o32[srcIndex] = dstPacked;
+                        continue;
+                    }
+
+                    case DESTINATION_ATOP: {
+                        t1 = As * (1 - Ad);
+                        t2 = Ad * As;
+                        outR = Sr * t1 + Dr * t2;
+                        outG = Sg * t1 + Dg * t2;
+                        outB = Sb * t1 + Db * t2;
+                        outA = As;
                         break;
+                    }
 
-                    case DESTINATION_ATOP:
-                        or = blend_destAtop(ir, ia, mr, ma, ia, ma);
-                        og = blend_destAtop(ig, ia, mg, ma, ia, ma);
-                        ob = blend_destAtop(ib, ia, mb, ma, ia, ma);
-                        oa = ((ia * (1 - ma)) + (ma * ia)) * 255;
+                    case DESTINATION_OVER: {
+                        t = As * (1 - Ad);
+                        outR = Sr * t + Dr * Ad;
+                        outG = Sg * t + Dg * Ad;
+                        outB = Sb * t + Db * Ad;
+                        outA = Ad + As * (1 - Ad);
                         break;
+                    }
 
-                    case DESTINATION_OVER:
-                        or = blend_destOver(ir, ia, mr, ma, ia, ma);
-                        og = blend_destOver(ig, ia, mg, ma, ia, ma);
-                        ob = blend_destOver(ib, ia, mb, ma, ia, ma);
-                        oa = ((ia * (1 - ma)) + ma) * 255;
+                    case DESTINATION_IN: {
+                        t = Ad * As;
+                        outR = Dr * t;
+                        outG = Dg * t;
+                        outB = Db * t;
+                        outA = t;
                         break;
+                    }
 
-                    case DESTINATION_IN:
-                        or = blend_destIn(mr, ma, ia, ma);
-                        og = blend_destIn(mg, ma, ia, ma);
-                        ob = blend_destIn(mb, ma, ia, ma);
-                        oa = ia * ma * 255;
+                    case DESTINATION_OUT: {
+                        t = Ad * (1 - As);
+                        outR = Dr * t;
+                        outG = Dg * t;
+                        outB = Db * t;
+                        outA = t;
                         break;
+                    }
 
-                    case DESTINATION_OUT:
-                        or = blend_destOut(mr, ma, ia, ma);
-                        og = blend_destOut(mg, ma, ia, ma);
-                        ob = blend_destOut(mb, ma, ia, ma);
-                        oa = ma * (1 - ia) * 255;
+                    case XOR: {
+                        t1 = As * (1 - Ad);
+                        t2 = Ad * (1 - As);
+                        outR = Sr * t1 + Dr * t2;
+                        outG = Sg * t1 + Dg * t2;
+                        outB = Sb * t1 + Db * t2;
+                        outA = As * (1 - Ad) + Ad * (1 - As);
                         break;
+                    }
 
-                    case XOR:
-                        // Baseline outside overlap is input; inside we compute XOR
-                        or = blend_xor(ir, ia, mr, ma, ia, ma);
-                        og = blend_xor(ig, ia, mg, ma, ia, ma);
-                        ob = blend_xor(ib, ia, mb, ma, ia, ma);
-                        oa = ((ia * (1 - ma)) + (ma * (1 - ia))) * 255;
+                    case SOURCE_OVER:
+                    default: {
+                        t = Ad * (1 - As);
+                        outR = Sr * As + Dr * t;
+                        outG = Sg * As + Dg * t;
+                        outB = Sb * As + Db * t;
+                        outA = As + Ad * (1 - As);
                         break;
-
-                    case CLEAR:
-                        // (already early-returned)
-                        or = 0; og = 0; ob = 0; oa = 0;
-                        break;
-
-                    default:
-                        or = blend_sourceOver(ir, ia, mr, ma, ia, ma);
-                        og = blend_sourceOver(ig, ia, mg, ma, ia, ma);
-                        ob = blend_sourceOver(ib, ia, mb, ma, ia, ma);
-                        oa = (ia + (ma * (1 - ia))) * 255;
+                    }
                 }
 
-                oData[oIdx] = or;
-                oData[oIdx + 1] = og;
-                oData[oIdx + 2] = ob;
-                oData[oIdx + 3] = oa;
+                r8 = (outR * 255 + 0.5) | 0;
+                g8 = (outG * 255 + 0.5) | 0;
+                b8 = (outB * 255 + 0.5) | 0;
+                a8 = (outA * 255 + 0.5) | 0;
+
+                o32[srcIndex] = pack(r8, g8, b8, a8);
             }
         }
 
@@ -6829,25 +6956,39 @@ P.theBigActionsObject = {
 
         const iData = input.data,
             oData = output.data,
-            len   = iData.length,
-            iWidth  = input.width,
+            len = iData.length,
+            iWidth = input.width,
             iHeight = input.height;
 
-        const tData = new Uint8ClampedArray(iData);
+        const nPix = (len >>> 2);
+
+        const tData = new Uint8ClampedArray(iData),
+            t32 = new Uint32Array(tData.buffer, tData.byteOffset, nPix),
+            o32 = new Uint32Array(oData.buffer, oData.byteOffset, nPix);
 
         const {
             opacity = 1,
             swirls = [],
+            transparentEdges = false,
+            useInputAsMask   = false,
             lineOut,
-        } = requirements;
+        } = requirements || {};
 
         if (_isArray(swirls) && !swirls.length) transferDataUnchanged(oData, iData, len);
         else {
 
-            tData.set(iData);
+            // Initial output = original image
             oData.set(iData);
 
-            let s, sz, startX, startY, innerRadius, outerRadius, angle, easing, sx, sy, outer, inner, complexLen, x, xz, y, yz, e, ename, swirlName, swirlCoords, start, coord, iy, ix, destIdx, distance, srcIdx, factor, dx, dy, cursor, rowBase, bytesPerPx, spanPx, spanBytes, off;
+            let s, sz, startX, startY, innerRadius, outerRadius, angle, easing,
+                sx, sy, outer, inner, complexLen, x, xz, y, yz,
+                e, ename, swirlName, swirlCoords, start, coord,
+                iy, ix, distance, srcPixIndex, factor, dx, dy,
+                cursor, rowBase, spanPx, offPix,
+                destPixIndex, destPx, destA,
+                srcPx, srcA,
+                movedZero, destZero,
+                outPx;
 
             for (s = 0, sz = swirls.length; s < sz; s++) {
 
@@ -6887,13 +7028,12 @@ P.theBigActionsObject = {
                     // Resolve easing
                     e = easing;
                     ename = easing;
-                    if (isa_fn(e)) {
 
-                        ename = `ude-${e(0)}-${e(0.1)}-${e(0.2)}-${e(0.3)}-${e(0.4)}-${e(0.5)}-${e(0.6)}-${e(0.7)}-${e(0.8)}-${e(0.9)}-${e(1)}`;
-                    }
+                    if (isa_fn(e)) ename = `ude-${e(0)}-${e(0.1)}-${e(0.2)}-${e(0.3)}-${e(0.4)}-${e(0.5)}-${e(0.6)}-${e(0.7)}-${e(0.8)}-${e(0.9)}-${e(1)}`;
                     else e = (null != easeEngines[e]) ? easeEngines[e] : easeEngines['linear'];
 
-                    swirlName = `swirl-${startX}-${startY}-${innerRadius}-${outerRadius}-${angle}-${ename}-${iWidth}-${iHeight}`;
+                    // transparentEdges affects geometry (wrap vs transparent)
+                    swirlName = `swirl-${startX}-${startY}-${innerRadius}-${outerRadius}-${angle}-${ename}-${iWidth}-${iHeight}-${transparentEdges ? 1 : 0}`;
 
                     swirlCoords = getOrAddWorkstoreItem(swirlName);
 
@@ -6908,14 +7048,15 @@ P.theBigActionsObject = {
 
                             for (ix = x; ix < xz; ix++) {
 
-                                destIdx = (((iy * iWidth) + ix) << 2);
+                                const destIndex = (iy * iWidth + ix);
 
                                 distance = coord.set([ix, iy]).subtract(start).getMagnitude();
 
-                                if (distance > outer) srcIdx = destIdx;
+                                if (distance > outer) srcPixIndex = destIndex;
                                 else {
 
                                     factor = 1;
+
                                     if (distance >= inner) {
 
                                         factor = 1 - ((distance - inner) / complexLen);
@@ -6927,16 +7068,23 @@ P.theBigActionsObject = {
                                     dx = _floor(coord[0]);
                                     dy = _floor(coord[1]);
 
-                                    if (dx < 0) dx += iWidth;
-                                    else if (dx >= iWidth) dx -= iWidth;
+                                    if (!transparentEdges) {
 
-                                    if (dy < 0) dy += iHeight;
-                                    else if (dy >= iHeight) dy -= iHeight;
+                                        if (dx < 0) dx += iWidth;
+                                        else if (dx >= iWidth) dx -= iWidth;
 
-                                    srcIdx = (((dy * iWidth) + dx) << 2);
+                                        if (dy < 0) dy += iHeight;
+                                        else if (dy >= iHeight) dy -= iHeight;
+
+                                        srcPixIndex = (dy * iWidth + dx) | 0;
+                                    }
+                                    else {
+
+                                        if (dx < 0 || dx >= iWidth || dy < 0 || dy >= iHeight) srcPixIndex = -1;
+                                        else srcPixIndex = (dy * iWidth + dx) | 0;
+                                    }
                                 }
-
-                                swirlCoords.push(srcIdx);
+                                swirlCoords.push(srcPixIndex);
                             }
                         }
                         releaseCoordinate(coord, start);
@@ -6946,29 +7094,64 @@ P.theBigActionsObject = {
 
                     for (iy = y; iy < yz; iy++) {
 
-                        rowBase = (iy * iWidth) << 2;
+                        rowBase = iy * iWidth;
 
                         for (ix = x; ix < xz; ix++) {
 
-                            destIdx = rowBase + (ix << 2);
-                            srcIdx  = swirlCoords[cursor++];
+                            destPixIndex = rowBase + ix;
+                            destPx = t32[destPixIndex];
+                            destA = (destPx >>> 24) & 0xFF;
 
-                            oData[destIdx] = tData[srcIdx];
-                            oData[destIdx + 1] = tData[srcIdx + 1];
-                            oData[destIdx + 2] = tData[srcIdx + 2];
-                            oData[destIdx + 3] = tData[srcIdx + 3];
+                            srcPixIndex = swirlCoords[cursor++];
+
+                            if (!transparentEdges) {
+
+                                srcPx = t32[srcPixIndex];
+                                srcA = (srcPx >>> 24) & 0xFF;
+
+                            }
+                            else {
+
+                                if (srcPixIndex < 0) {
+
+                                    srcPx = 0;
+                                    srcA  = 0;
+                                }
+                                else {
+
+                                    srcPx = t32[srcPixIndex];
+                                    srcA  = (srcPx >>> 24) & 0xFF;
+                                }
+                            }
+
+                            if (!useInputAsMask) {
+
+                                if (transparentEdges && srcPixIndex < 0) outPx = 0;
+                                else outPx = srcPx;
+
+                                o32[destPixIndex] = outPx;
+                                continue;
+                            }
+
+                            movedZero = (srcA  === 0);
+                            destZero = (destA === 0);
+
+                            outPx = destPx;
+
+                            if (!movedZero && !destZero) outPx = srcPx;
+                            else if (movedZero && !destZero && transparentEdges) outPx = 0;
+
+                            o32[destPixIndex] = outPx;
                         }
                     }
 
-                    bytesPerPx = 4;
                     spanPx = (xz - x);
-                    spanBytes = spanPx * bytesPerPx;
 
                     for (iy = y; iy < yz; iy++) {
 
-                        off = (((iy * iWidth) + x) << 2);
+                        offPix = iy * iWidth + x;
 
-                        tData.set(oData.subarray(off, off + spanBytes), off);
+                        t32.set(o32.subarray(offPix, offPix + spanPx), offPix);
                     }
                 }
             }

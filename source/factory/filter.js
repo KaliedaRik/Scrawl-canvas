@@ -1429,6 +1429,8 @@ const setActionsArray = {
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             swirls,
+            transparentEdges: (f.transparentEdges != null) ? f.transparentEdges : false,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
     },
 

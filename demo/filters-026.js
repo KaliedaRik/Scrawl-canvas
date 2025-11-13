@@ -106,6 +106,8 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'angle', '90'],
     ['input', 'opacity', '1'],
     ['select', 'easing', 0],
+    ['select', 'useInputAsMask', 0],
+    ['select', 'transparentEdges', 0],
 ]);
 
 
@@ -154,6 +156,7 @@ scrawl.makeUpdater({
         outerRadius_absolute: ['outerRadius', 'round'],
         angle: ['angle', 'round'],
         transparentEdges: ['transparentEdges', 'boolean'],
+        useInputAsMask: ['useInputAsMask', 'boolean'],
     },
 });
 
