@@ -223,8 +223,13 @@
       </select>
     </div>
 
-    <div class="none">&nbsp;</div>
-    <div class="none">&nbsp;</div>
+    <div class="blue label">Auto-hyphenate<br><span style="font-size: 85%">set to true for Thai scripts</span></div>
+    <div class="blue">
+      <select class="controlItem" id="autoHyphenate">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
 
     <div class="orange label">Letter spacing</div>
     <div class="orange">
@@ -416,12 +421,8 @@
 
     <p>The Thai script is a complex abugida. Spaces are used, but the tendency is to only insert them at natural breath pauses, which means a Thai "word" (as in: a set of characters not separated by spaces) can get exceptionally long.</p>
 
-    <p>To break such words across lines, one recommendation is to insert zero-space spaces - HTML entity <code style="display: inline">&amp;#x200B;</code> - in places where this can be done. Browser engines seem to do this internally, but getting that data from the text string doesn't seem possible. For the two Thai fonts above, this has been done manually by copying the raw string into a <code style="display: inline">&lt;p style='width: 10px; font: 16px "Noto Thai Looped Sans"'></code> element and then counting the characters. Not recommended for production!</p>
+    <p>To break such words across lines, one recommendation is to insert zero-space spaces - HTML entity <code style="display: inline">&amp;#x200B;</code> - in places where this can be done. SC attempts to handle this automatically using the browser's <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter">Intl.Segmenter</a> functionality, and <b>setting the <code style="display: inline">autoHyphenate</code> flag to <code style="display: inline">true</code></b>.</p>
   </div>
-
-  <p style='width: 10px; font: 16px "Noto Thai Looped Sans"'>
-    ในแผนเดิมรถไฟฟ้าแอร์พอร์ต เรล ลิงก์ สถานีมักกะสันจะเชื่อมต่อกับสถานีเพชรบุรีของรถไฟฟ้ามหานครที่ชั้น ของตัวอาคาร แต่เนื่องจากเมื่อสำรวจเส้นทางแล้ว พบว่าเส้นทางดังกล่าว มีท่อส่งน้ำมันของปตท. ตามแนวทางรถไฟสายตะวันออก ท่อน้ำประปาของการประปานครหลวง และท่อน้ำทิ้งลงคลองแสนแสบของกรุงเทพมหานคร ที่การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทยรื้อย้ายจากจุดเดิมเพื่อก่อสร้างสถานีเพชรบุรี ขวางอยู่จึงทำให้การขุดเจาะทางเชื่อมเข้าตัวสถานีรถไฟฟ้ามหานครไม่สามารถทำได้
-  </p>
 
   <script src="canvas-206.js" type="module"></script>
 

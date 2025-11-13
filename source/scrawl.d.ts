@@ -1350,6 +1350,7 @@ interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMix
 
 interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, FilterMixinInputs, TextMixinInputs, TextStyleFactoryInputs, StateFactoryInputs, EnhancedLabelFactoryDeltaInputs {
     alignTextUnitsToPath?: boolean;
+    autoHyphenate?: boolean;
     breakTextOnSpaces?: boolean;
     breakWordsOnHyphens?: boolean;
     cacheOutput?: boolean;
@@ -1366,7 +1367,10 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     handle?: CommonTwoElementArrayInput; 
     hyphenString?: string;
     justifyLine?: TextLineJustifyValues;
+    language?: string;
     layoutTemplate?: ArtefactInstance | string;
+    lineBreakHook?: (text: string, lang: string) => string | string[];
+    lineBreakInsert?: 'soft' | 'zwsp';
     lockFillStyleToEntity?: boolean;
     lockStrokeStyleToEntity?: boolean;
     method?: 'fill' | 'draw' | 'fillAndDraw' | 'drawAndFill';
