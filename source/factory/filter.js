@@ -819,6 +819,7 @@ const setActionsArray = {
             scaleX: (f.scaleX != null) ? f.scaleX : 1,
             scaleY: (f.scaleY != null) ? f.scaleY : 1,
             transparentEdges: (f.transparentEdges != null) ? f.transparentEdges : false,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
     },
 

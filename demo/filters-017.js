@@ -95,6 +95,7 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'scale_y', '20'],
     ['input', 'opacity', '1'],
     ['select', 'transparent_edges', 0],
+    ['select', 'useInputAsMask', 0],
 ]);
 
 
@@ -116,6 +117,7 @@ scrawl.makeUpdater({
         scale_x: ['scaleX', 'float'],
         scale_y: ['scaleY', 'float'],
         transparent_edges: ['transparentEdges', 'boolean'],
+        useInputAsMask: ['useInputAsMask', 'boolean'],
         opacity: ['opacity', 'float'],
     },
 });

@@ -3468,52 +3468,16 @@ P.theBigActionsObject = {
 // __displace__ - Shift pixels around the image, based on the values supplied in a displacement image
     [DISPLACE]: function (requirements) {
 
-        const copyPixel = function (fromPos, toPos, data) {
-
-            if (fromPos < 0) oData[toPos + 3] = 0;
-            else {
-
-                oData[toPos] = data[fromPos];
-
-                fromPos++;
-                toPos++;
-                oData[toPos] = data[fromPos];
-
-                fromPos++;
-                toPos++;
-                oData[toPos] = data[fromPos];
-
-                fromPos++;
-                toPos++;
-                oData[toPos] = data[fromPos];
-            }
-        };
-
-        const lPosResult = [0, 0];
-
-        const getLinePositions = function (x, y) {
-
-            const ix = x,
-                iy = y,
-                mx = x + offsetX,
-                my = y + offsetY;
-
-            let mPos = -1;
-
-            lPosResult[0] = ((iy * iWidth) + ix) * 4;
-
-            if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = ((my * mWidth) + mx) * 4;
-
-            lPosResult[1] = mPos;
-
-            return lPosResult;
-        };
-
         const [input, output, mix] = getInputAndOutputLines(requirements);
 
-        const {width:iWidth, height:iHeight, data:iData} = input;
-        const {data:oData} = output;
-        const {width:mWidth, height:mHeight, data:mData} = mix;
+        const { width: iWidth, height: iHeight, data: iData } = input;
+        const { data: oData } = output;
+        const { width: mWidth, height: mHeight, data: mData } = mix;
+
+        const nPix = (iWidth * iHeight) | 0;
+
+        const i32 = new Uint32Array(iData.buffer, iData.byteOffset, nPix),
+            o32 = new Uint32Array(oData.buffer, oData.byteOffset, nPix);
 
         const {
             opacity = 1,
@@ -3524,9 +3488,11 @@ P.theBigActionsObject = {
             offsetX = 0,
             offsetY = 0,
             transparentEdges = false,
+            useInputAsMask = false,
             lineOut,
-        } = requirements;
+        } = requirements || {};
 
+        // Determine which channels to use in the displacement map
         let offsetForChannelX = 3;
         if (channelX === RED) offsetForChannelX = 0;
         else if (channelX === GREEN) offsetForChannelX = 1;
@@ -3537,39 +3503,95 @@ P.theBigActionsObject = {
         else if (channelY === GREEN) offsetForChannelY = 1;
         else if (channelY === BLUE) offsetForChannelY = 2;
 
-        let x, y, dx, dy, dPos, iPos, mPos;
+        let p = 0,
+            y, iy, my, iRowBase, mRowBase, x, ix, mx,
+            destPx, destA, mPos, dispX, dispY, dx, dy,
+            srcPx, srcA, dIndex, movedZero, destZero, outPx;
 
         for (y = 0; y < iHeight; y++) {
 
-            for (x = 0; x < iWidth; x++) {
+            iy = y;
+            my = y + offsetY;
+            iRowBase = iy * iWidth;
+            mRowBase = my * mWidth;
 
-                [iPos, mPos] = getLinePositions(x, y);
+            for (x = 0; x < iWidth; x++, p++) {
 
-                if (mPos >= 0) {
+                ix = x;
+                mx = x + offsetX;
 
-                    dx = _floor(x + ((127 - mData[mPos + offsetForChannelX]) / 127) * scaleX);
-                    dy = _floor(y + ((127 - mData[mPos + offsetForChannelY]) / 127) * scaleY);
+                destPx = i32[p];
+                destA  = (destPx >>> 24) & 0xFF;
 
-                    if (!transparentEdges) {
+                // Locate displacement pixel in mix image
+                mPos = -1;
 
-                        if (dx < 0) dx = 0;
-                        if (dx >= iWidth) dx = iWidth - 1;
+                if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = ((mRowBase + mx) * 4) | 0;
 
-                        if (dy < 0) dy = 0;
-                        if (dy >= iHeight) dy = iHeight - 1;
+                // No displacement info here: just copy original
+                if (mPos < 0) {
 
-                        dPos = ((dy * iWidth) + dx) * 4;
+                    o32[p] = destPx;
+                    continue;
+                }
+
+                dispX = mData[mPos + offsetForChannelX];
+                dispY = mData[mPos + offsetForChannelY];
+
+                dx = _floor(ix + ((127 - dispX) / 127) * scaleX);
+                dy = _floor(iy + ((127 - dispY) / 127) * scaleY);
+
+                dIndex = -1;
+
+                if (!transparentEdges) {
+
+                    // Clamp to edge
+                    if (dx < 0) dx = 0;
+                    else if (dx >= iWidth) dx = iWidth - 1;
+
+                    if (dy < 0) dy = 0;
+                    else if (dy >= iHeight) dy = iHeight - 1;
+
+                    dIndex = (dy * iWidth + dx) | 0;
+                    srcPx  = i32[dIndex];
+                    srcA   = (srcPx >>> 24) & 0xFF;
+                }
+                else {
+
+                    // Let it fall off the edge: outside = transparent
+                    if (dx >= 0 && dx < iWidth && dy >= 0 && dy < iHeight) {
+
+                        dIndex = (dy * iWidth + dx) | 0;
+                        srcPx  = i32[dIndex];
+                        srcA   = (srcPx >>> 24) & 0xFF;
                     }
                     else {
 
-                        if (dx < 0 || dx >= iWidth || dy < 0 || dy >= iHeight) dPos = -1;
-                        else dPos = ((dy * iWidth) + dx) * 4;
+                        srcPx = 0;
+                        srcA  = 0;
+                        dIndex = -1;
                     }
-                    copyPixel(dPos, iPos, iData);
                 }
-                else copyPixel(iPos, iPos, iData);
+
+                if (!useInputAsMask) {
+
+                    if (transparentEdges && dIndex < 0) o32[p] = 0;
+                    else o32[p] = srcPx;
+                    continue;
+                }
+
+                movedZero = (srcA === 0);
+                destZero = (destA === 0);
+
+                outPx = destPx;
+
+                if (!movedZero && !destZero) outPx = srcPx;
+                else if (movedZero && !destZero && transparentEdges) outPx = 0;
+
+                o32[p] = outPx;
             }
         }
+
         if (lineOut) processResults(output, input, 1 - opacity);
         else processResults(cache.work, output, opacity);
     },
@@ -6980,527 +7002,6 @@ P.theBigActionsObject = {
         else processResults(cache.work, output, opacity);
     },
 
-// // __tiles__ - Cover the image with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a Delauney-like output
-// // + Four `modes` are supported: 'rect', 'hex', 'random', 'points'
-//     [TILES]: function (requirements) {
-
-//         // Build a compact label map
-//         const buildGeneralTileLabels = function (requirements, image) {
-
-//             if (!image) image = cache.source;
-
-//             const iWidth = image.width | 0,
-//                 iHeight = image.height | 0,
-//                 nPix = (iWidth * iHeight) | 0;
-
-//             if (!iWidth || !iHeight) return { labels: new Int32Array(0), nTiles: 0, mode: 'rect' };
-
-//             const {
-//                 mode = RECT,
-//                 originX = 0,
-//                 originY = 0,
-//                 angle = 0,
-//                 rectWidth = 10,
-//                 rectHeight = 10,
-//                 hexRadius = 5,
-//                 randomCount = 20,
-//                 seed = DEFAULT_SEED,
-//                 pointsData = [],
-//             } = requirements || {};
-
-//             const ox = (_isFinite(originX) ? originX : 0) | 0,
-//                 oy = (_isFinite(originY) ? originY : 0) | 0;
-
-//             // Cache key - a small stable key; for "points" we avoid dumping the full array into the key
-//             let key = `tiles-v2-${mode}-${iWidth}-${iHeight}-${ox}-${oy}-${_round(angle*1000)}`;
-
-//             let w, h, r, c, sd, arr, len;
-
-//             if (mode === RECT) {
-
-//                 w = _max(1, _isFinite(rectWidth) ? rectWidth  | 0 : 1);
-//                 h = _max(1, _isFinite(rectHeight) ? rectHeight | 0 : 1);
-//                 key += `-rect-${w}-${h}`;
-//             }
-//             else if (mode === HEX) {
-
-//                 r = _max(1, _isFinite(hexRadius) ? hexRadius | 0 : 1);
-//                 key += `-hex-${r}`;
-//             }
-//             else if (mode === RANDOM) {
-
-//                 c = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
-//                 sd = seed || DEFAULT_SEED;
-//                 key += `-rnd-${c}-${sd}`;
-//             }
-//             else if (mode === POINTS) {
-
-//                 arr = _isArray(pointsData) ? pointsData : [];
-//                 len = (arr && arr.length) | 0;
-
-//                 // rolling checksum to detect changes cheaply
-//                 let hash = 2166136261 | 0;
-
-//                 for (let i = 0; i < len; i += _max(1, (len / 64) | 0)) {
-
-//                     hash ^= (arr[i] | 0);
-//                     hash = (hash * 16777619) | 0;
-//                 }
-//                 key += `-pts-${len}-${hash >>> 0}`;
-//             }
-
-//             const cached = getWorkstoreItem(key);
-//             if (cached) return cached;
-
-//             // Utility: inverse rotation (for lattice modes)
-//             const toRad = angle * Math.PI / 180,
-//                 cosNeg = _cos(-toRad), sinNeg = _sin(-toRad);
-
-//             // Output labels
-//             const labels = new Int32Array(nPix);
-
-//             let nTiles = 0;
-
-//             if (mode === RECT) {
-
-//                 if (w < 1) w = 1;
-//                 if (h < 1) h = 1;
-
-//                 // Project four corners to grid space to get stable index ranges
-//                 const corners = [[0,0],[iWidth-1,0],[0,iHeight-1],[iWidth-1,iHeight-1]];
-
-//                 let iMin =  1e9,
-//                     iMax = -1e9,
-//                     jMin =  1e9,
-//                     jMax = -1e9,
-//                     dx, dy, xp, yp, iIdx, jIdx, ii, jj, p, y, x;
-
-//                 for (let c = 0; c < 4; c++) {
-
-//                     dx = corners[c][0] - ox;
-//                     dy = corners[c][1] - oy;
-//                     xp =  cosNeg * dx - sinNeg * dy;
-//                     yp =  sinNeg * dx + cosNeg * dy;
-//                     iIdx = _round(xp / w - 0.5);
-//                     jIdx = _round(yp / h - 0.5);
-
-//                     if (iIdx < iMin) iMin = iIdx; if (iIdx > iMax) iMax = iIdx;
-//                     if (jIdx < jMin) jMin = jIdx; if (jIdx > jMax) jMax = jIdx;
-//                 }
-
-//                 const nI = (iMax - iMin + 1) | 0,
-//                     nJ = (jMax - jMin + 1) | 0;
-
-//                 nTiles = (nI * nJ) | 0;
-
-//                 p = 0;
-
-//                 for (y = 0; y < iHeight; y++) {
-
-//                     dy = y - oy;
-
-//                     for (x = 0; x < iWidth; x++, p++) {
-
-//                         dx = x - ox;
-//                         xp = cosNeg * dx - sinNeg * dy;
-//                         yp = sinNeg * dx + cosNeg * dy;
-//                         iIdx = _round(xp / w - 0.5);
-//                         jIdx = _round(yp / h - 0.5);
-//                         ii = (iIdx - iMin) | 0;
-//                         jj = (jIdx - jMin) | 0;
-//                         labels[p] = (jj * nI + ii) | 0;
-//                     }
-//                 }
-
-//                 const res = { labels, nTiles, mode: RECT };
-//                 setWorkstoreItem(key, res);
-
-//                 return res;
-//             }
-
-//             if (mode === HEX) {
-
-//                 let s = _isFinite(hexRadius) ? hexRadius | 0 : 1;
-//                 if (s < 1) s = 1;
-
-//                 const invA = _sqrt(3) / 3,
-//                     invB = 1 / 3,
-//                     invC = 2 / 3;
-
-//                 // Compute bounds by projecting corners into lattice space and rounding
-//                 const corners = [
-//                     [0, 0],
-//                     [iWidth-1, 0],
-//                     [0, iHeight-1],
-//                     [iWidth-1, iHeight-1]
-//                 ];
-
-//                 let qMin = 1e9,
-//                     qMax = -1e9,
-//                     rMin = 1e9,
-//                     rMax = -1e9;
-
-//                 const roundCubeReturn = [0, 0];
-//                 const roundCube = (x, y, z) => {
-
-//                     let rx = _round(x),
-//                         ry = _round(y),
-//                         rz = _round(z);
-
-//                     const dx = _abs(rx - x),
-//                         dy = _abs(ry - y),
-//                         dz = _abs(rz - z);
-
-//                     if (dx > dy && dx > dz) rx = -ry - rz;
-//                     else if (dy > dz) ry = -rx - rz;
-//                     else rz = -rx - ry;
-
-//                     roundCubeReturn[0] = rx;
-//                     roundCubeReturn[1] = ry;
-
-//                     return roundCubeReturn;
-//                 };
-
-//                 let dx, dy, xp, yp, qf, rf, xf, zf, yf, qi, ri, qq, rr, p, y, x;
-
-//                 for (let c = 0; c < 4; c++) {
-
-//                     dx = corners[c][0] - ox;
-//                     dy = corners[c][1] - oy;
-
-//                     xp =  cosNeg * dx - sinNeg * dy;
-//                     yp =  sinNeg * dx + cosNeg * dy;
-
-//                     qf = (invA * xp - invB * yp) / s;
-//                     rf = (invC * yp) / s;
-
-//                     xf = qf;
-//                     zf = rf;
-//                     yf = -xf - zf;
-
-//                     [qi, ri] = roundCube(xf, yf, zf);
-
-//                     if (qi < qMin) qMin = qi;
-//                     if (qi > qMax) qMax = qi;
-//                     if (ri < rMin) rMin = ri;
-//                     if (ri > rMax) rMax = ri;
-//                 }
-
-//                 // Add a small guard to ensure full coverage
-//                 qMin -= 1;
-//                 rMin -= 1;
-//                 qMax += 1;
-//                 rMax += 1;
-
-//                 const nQ = (qMax - qMin + 1) | 0,
-//                     nR = (rMax - rMin + 1) | 0;
-
-//                 nTiles = (nQ * nR) | 0;
-
-//                 p = 0;
-
-//                 for (y = 0; y < iHeight; y++) {
-
-//                     dy = y - oy;
-
-//                     for (x = 0; x < iWidth; x++, p++) {
-
-//                         dx = x - ox;
-//                         xp =  cosNeg * dx - sinNeg * dy;
-//                         yp =  sinNeg * dx + cosNeg * dy;
-
-//                         qf = (invA * xp - invB * yp) / s;
-//                         rf = (invC * yp) / s;
-
-//                         xf = qf;
-//                         zf = rf;
-//                         yf = -xf - zf;
-
-//                         [qi, ri] = roundCube(xf, yf, zf);
-
-//                         qq = (qi - qMin) | 0;
-//                         rr = (ri - rMin) | 0;
-
-//                         labels[p] = (rr * nQ + qq) | 0;
-//                     }
-//                 }
-
-//                 const res = { labels, nTiles, mode: HEX };
-//                 setWorkstoreItem(key, res);
-
-//                 return res;
-//             }
-
-//             const seeds = [];
-
-//             if (mode === RANDOM) {
-
-//                 let count = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
-//                 if (count < 10) count = 10;
-
-//                 const rng = seededRandomNumberGenerator(seed);
-
-//                 let x, y;
-
-//                 for (let i = 0; i < count; i++) {
-
-//                     x = (rng.random() * iWidth)  | 0;
-//                     y = (rng.random() * iHeight) | 0;
-
-//                     seeds.push(x, y);
-//                 }
-//             }
-//             else if (mode === POINTS) {
-
-//                 const arr = _isArray(pointsData) ? pointsData : [];
-
-//                 let x, y;
-
-//                 for (let i = 0, iz = arr.length; i < iz; i += 2) {
-
-//                     x = arr[i] | 0;
-//                     y = arr[i + 1] | 0;
-
-//                     if (x >= 0 && x < iWidth && y >= 0 && y < iHeight) seeds.push(x, y);
-//                 }
-//             }
-
-//             const nSeeds = (seeds.length / 2) | 0;
-
-//             if (!nSeeds) {
-
-//                 const res = { labels: new Int32Array(nPix), nTiles: 0, mode };
-//                 setWorkstoreItem(key, res);
-
-//                 return res;
-//             }
-
-//             // Spatial hash parameters: choose cell so ~1 seed per cell
-//             let cell = _floor(_sqrt((iWidth * iHeight) / nSeeds));
-//             if (cell < 4) cell = 4;
-
-//             const gridCols = ((iWidth + cell - 1) / cell) | 0,
-//                 gridRows = ((iHeight + cell - 1) / cell) | 0;
-
-//             const head = new Int32Array(gridCols * gridRows);
-//             head.fill(-1);
-
-//             const next = new Int32Array(nSeeds);
-//             next.fill(-1);
-
-//             // Insert seeds (clamp to grid)
-//             let sx, sy, gx, gy, g;
-
-//             for (let s = 0; s < nSeeds; s++) {
-
-//                 sx = seeds[(s << 1)];
-//                 sy = seeds[(s << 1) + 1];
-
-//                 let gx = (sx / cell) | 0;
-//                 if (gx < 0) gx = 0;
-//                 else if (gx >= gridCols) gx = gridCols - 1;
-
-//                 let gy = (sy / cell) | 0;
-//                 if (gy < 0) gy = 0;
-//                 else if (gy >= gridRows) gy = gridRows - 1;
-
-//                 g = gy * gridCols + gx;
-
-//                 next[s] = head[g];
-
-//                 head[g] = s;
-//             }
-
-//             // Nearest seed per pixel (search 3×3 neighborhood with clamp)
-//             let p = 0;
-
-//             let best, bestD, y, x, gy2, gx2, dx, dy, d2, s, radius;
-
-//             for (y = 0; y < iHeight; y++) {
-
-//                 for (x = 0; x < iWidth; x++, p++) {
-
-//                     gx = (x / cell) | 0;
-//                     if (gx < 0) gx = 0;
-//                     else if (gx >= gridCols) gx = gridCols - 1;
-
-//                     gy = (y / cell) | 0;
-//                     if (gy < 0) gy = 0;
-//                     else if (gy >= gridRows) gy = gridRows - 1;
-
-//                     best = -1;
-//                     bestD = Infinity;
-
-//                     radius = 1;
-
-//                     while (best === -1) {
-
-//                         for (dy = -radius; dy <= radius; dy++) {
-
-//                             gy2 = gy + dy;
-
-//                             if (gy2 < 0 || gy2 >= gridRows) continue;
-
-//                             for (dx = -radius; dx <= radius; dx++) {
-
-//                                 gx2 = gx + dx;
-
-//                                 if (gx2 < 0 || gx2 >= gridCols) continue;
-
-//                                 s = head[gy2 * gridCols + gx2];
-
-//                                 while (s !== -1) {
-
-//                                     sx = seeds[(s << 1)]
-//                                     sy = seeds[(s << 1) + 1];
-
-//                                     d2 = (x - sx) * (x - sx) + (y - sy) * (y - sy);
-
-//                                     if (d2 < bestD) {
-
-//                                         bestD = d2;
-//                                         best = s;
-//                                     }
-//                                     s = next[s];
-//                                 }
-//                             }
-//                         }
-//                         radius++;
-//                     }
-//                     labels[p] = best;
-//                 }
-//             }
-
-//             nTiles = nSeeds;
-
-//             const res = { labels, nTiles, mode };
-//             setWorkstoreItem(key, res);
-
-//             return res;
-//         };
-
-//         const [input, output] = getInputAndOutputLines(requirements);
-
-//         const iData = input.data,
-//               oData = output.data,
-//               len = iData.length,
-//               nPix = (len >>> 2);
-
-//         const {
-//             opacity = 1,
-//             includeRed   = true,
-//             includeGreen = true,
-//             includeBlue  = true,
-//             includeAlpha = false,
-//             lineOut,
-//         } = requirements || {};
-
-//         // Build labels via new API
-//         const { labels, nTiles } = buildGeneralTileLabels(requirements, input);
-
-//         if (!nTiles) {
-
-//             transferDataUnchanged(oData, iData, len);
-//             if (lineOut) processResults(output, input, 1 - opacity);
-//             else processResults(cache.work, output, opacity);
-//             return;
-//         }
-
-//         // Accumulators (reused via workstore)
-//         const accKey = `tiles-acc-v2-${nTiles}`;
-
-//         let acc = getWorkstoreItem(accKey);
-
-//         if (!acc) {
-
-//             acc = {
-//                 r: new Uint32Array(nTiles),
-//                 g: new Uint32Array(nTiles),
-//                 b: new Uint32Array(nTiles),
-//                 a: new Uint32Array(nTiles),
-//                 c: new Uint32Array(nTiles),
-//             };
-
-//             setWorkstoreItem(accKey, acc);
-//         }
-//         else {
-
-//             acc.r.fill(0);
-//             acc.g.fill(0);
-//             acc.b.fill(0);
-//             acc.a.fill(0);
-//             acc.c.fill(0);
-//         }
-
-//         const rAcc = acc.r,
-//             gAcc = acc.g,
-//             bAcc = acc.b,
-//             aAcc = acc.a,
-//             cnt = acc.c;
-
-//         // Pass 1: accumulate per tile
-//         let t, c, p, i;
-
-//         for (p = 0, i = 0; p < nPix; p++, i += 4) {
-
-//             t = labels[p];
-
-//             if (t < 0) continue;
-
-//             cnt[t]++;
-
-//             if (includeRed) rAcc[t] += iData[i    ];
-//             if (includeGreen) gAcc[t] += iData[i + 1];
-//             if (includeBlue) bAcc[t] += iData[i + 2];
-//             if (includeAlpha) aAcc[t] += iData[i + 3];
-//         }
-
-//         // Averages (uint8)
-//         const rAvg = includeRed ? new Uint8Array(nTiles) : null,
-//             gAvg = includeGreen ? new Uint8Array(nTiles) : null,
-//             bAvg = includeBlue ? new Uint8Array(nTiles) : null,
-//             aAvg = includeAlpha ? new Uint8Array(nTiles) : null;
-
-//         for (t = 0; t < nTiles; t++) {
-
-//             c = cnt[t] || 1;
-
-//             if (includeRed) rAvg[t] = (rAcc[t] / c) | 0;
-//             if (includeGreen) gAvg[t] = (gAcc[t] / c) | 0;
-//             if (includeBlue) bAvg[t] = (bAcc[t] / c) | 0;
-//             if (includeAlpha) aAvg[t] = (aAcc[t] / c) | 0;
-//         }
-
-//         // Pass 2: write out
-//         for (p = 0, i = 0; p < nPix; p++, i += 4) {
-
-//             t = labels[p];
-
-//             if (t < 0) {
-
-//                 oData[i] = iData[i];
-//                 oData[i + 1] = iData[i + 1];
-//                 oData[i + 2] = iData[i + 2];
-//                 oData[i + 3] = iData[i + 3];
-//                 continue;
-//             }
-
-//             if (includeRed) oData[i] = rAvg[t];
-//             else oData[i] = iData[i];
-
-//             if (includeGreen) oData[i + 1] = gAvg[t];
-//             else oData[i + 1] = iData[i + 1];
-
-//             if (includeBlue) oData[i + 2] = bAvg[t];
-//             else oData[i + 2] = iData[i + 2];
-
-//             if (includeAlpha) oData[i + 3] = aAvg[t];
-//             else oData[i + 3] = iData[i + 3];
-//         }
-
-//         if (lineOut) processResults(output, input, 1 - opacity);
-//         else processResults(cache.work, output, opacity);
-//     },
 // __tiles__ - Cover the image with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a Delauney-like output
 // + Four `modes` are supported: 'rect', 'hex', 'random', 'points'
 [TILES]: function (requirements) {
