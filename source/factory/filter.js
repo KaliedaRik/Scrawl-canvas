@@ -985,6 +985,7 @@ const setActionsArray = {
             offsetAlphaMin: (f.offsetAlphaMin != null) ? f.offsetAlphaMin : 0,
             offsetAlphaMax: (f.offsetAlphaMax != null) ? f.offsetAlphaMax : 0,
             transparentEdges: (f.transparentEdges != null) ? f.transparentEdges : false,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
             level: (f.level != null) ? f.level : 0,
         }];
     },

@@ -4388,11 +4388,16 @@ P.theBigActionsObject = {
 
         const [input, output] = getInputAndOutputLines(requirements);
 
-        const iData = input.data,
-            oData = output.data,
-            len = iData.length,
+        const iData  = input.data,
+            oData  = output.data,
             iWidth = input.width,
-            iHeight = input.height;
+            iHeight = input.height,
+            len    = iData.length;
+
+        const nPix = (iWidth * iHeight) | 0;
+
+        const i32 = new Uint32Array(iData.buffer, iData.byteOffset, nPix),
+            o32 = new Uint32Array(oData.buffer, oData.byteOffset, nPix);
 
         const {
             opacity = 1,
@@ -4410,11 +4415,14 @@ P.theBigActionsObject = {
             offsetAlphaMin = 0,
             offsetAlphaMax = 0,
             transparentEdges = false,
+            useInputAsMask = false,
             lineOut,
-        } = requirements;
+        } = requirements || {};
 
         let step = _floor(requirements.step);
         if (step < 1) step = 1;
+
+        // --- Precompute per-row channel offsets (in BYTES) ---
 
         const rnd = getRandomNumbers({
             seed,
@@ -4429,15 +4437,14 @@ P.theBigActionsObject = {
 
         let rndCursor = -1;
 
+        // rows[y*4 + 0..3] = [shiftR, shiftG, shiftB, shiftA] for that row (in bytes)
         const rows = [];
 
-        let i, j, affectedRow, shift, shiftR, shiftG, shiftB, shiftA,
-            r, g, b, a, w, currentRow, currentRowStart, currentRowEnd, cursor,
-            dr, dg, db, da, ur, ug, ub, ua;
+        let i, j, affectedRow, shift, shiftR, shiftG, shiftB, shiftA;
 
         for (i = 0; i < iHeight; i += step) {
 
-            affectedRow = (rnd[++rndCursor] < level) ? true : false;
+            affectedRow = (rnd[++rndCursor] < level);
 
             if (affectedRow) {
 
@@ -4472,41 +4479,104 @@ P.theBigActionsObject = {
             }
         }
 
-        for (i = 0; i < len; i += 4) {
+        const rowStrideBytes = (iWidth << 2); // width * 4
+        let p = 0; // pixel index for i32/o32
 
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
+        let y, x, rowStart, rowEnd, baseByte, cursor,
+            dr, dg, db, da,
+            ur, ug, ub, ua,
+            srcR, srcG, srcB, srcA,
+            destPx, destR, destG, destB, destA,
+            movedZero, destZero,
+            outR, outG, outB, outA,
+            outOfRow;
 
-            w = iWidth * 4;
-            currentRow = _floor(i / w);
-            cursor = currentRow * 4;
+        for (y = 0; y < iHeight; y++) {
 
+            rowStart = y * rowStrideBytes;
+            rowEnd   = rowStart + rowStrideBytes;
+
+            // offsets for this row
+            cursor = (y << 2);
             dr = rows[cursor];
-            dg = rows[++cursor];
-            db = rows[++cursor];
-            da = rows[++cursor];
+            dg = rows[cursor + 1];
+            db = rows[cursor + 2];
+            da = rows[cursor + 3];
 
-            ur = r + dr;
-            ug = g + dg;
-            ub = b + db;
-            ua = a + da;
+            for (x = 0; x < iWidth; x++, p++) {
 
-            oData[r] = iData[ur];
-            oData[g] = iData[ug];
-            oData[b] = iData[ub];
+                baseByte = rowStart + (x << 2); // byte index for R of this pixel
 
-            if (transparentEdges) {
+                // Destination (original) pixel
+                destPx = i32[p];
+                destR =  destPx & 0xFF;
+                destG = (destPx >>> 8) & 0xFF;
+                destB = (destPx >>>16) & 0xFF;
+                destA = (destPx >>>24) & 0xFF;
 
-                currentRowStart = currentRow * w;
-                currentRowEnd = currentRowStart + w;
+                // Per-channel displaced byte indices
+                ur = baseByte + dr;
+                ug = baseByte + 1 + dg;
+                ub = baseByte + 2 + db;
+                ua = baseByte + 3 + da;
 
-                if (ur < currentRowStart || ur > currentRowEnd || ug < currentRowStart || ug > currentRowEnd || ub < currentRowStart || ub > currentRowEnd || ua < currentRowStart || ua > currentRowEnd) oData[a] = 0;
-                else oData[a] = iData[ua];
+                // Colours always sampled from iData (same as original),
+                // regardless of transparentEdges or mask.
+                srcR = iData[ur];
+                srcG = iData[ug];
+                srcB = iData[ub];
+
+                // Determine alpha for the "moved" pixel
+                if (transparentEdges) {
+
+                    outOfRow =
+                        (ur < rowStart || ur > rowEnd) ||
+                        (ug < rowStart || ug > rowEnd) ||
+                        (ub < rowStart || ub > rowEnd) ||
+                        (ua < rowStart || ua > rowEnd);
+
+                    srcA = outOfRow ? 0 : iData[ua];
+                }
+                else srcA = iData[ua];
+
+                if (!useInputAsMask) {
+
+                    outR = srcR;
+                    outG = srcG;
+                    outB = srcB;
+                    outA = srcA;
+
+                    o32[p] = (outA << 24) | (outB << 16) | (outG << 8) | outR;
+                    continue;
+                }
+
+                movedZero = (srcA === 0);
+                destZero  = (destA === 0);
+
+                // default: no-op (keep destination)
+                outR = destR;
+                outG = destG;
+                outB = destB;
+                outA = destA;
+
+                if (!movedZero && !destZero) {
+
+                    outR = srcR;
+                    outG = srcG;
+                    outB = srcB;
+                    outA = srcA;
+                }
+                else if (movedZero && !destZero && transparentEdges) {
+
+                    outR = 0;
+                    outG = 0;
+                    outB = 0;
+                    outA = 0;
+                }
+                o32[p] = (outA << 24) | (outB << 16) | (outG << 8) | outR;
             }
-            else oData[a] = iData[ua];
         }
+
         if (lineOut) processResults(output, input, 1 - opacity);
         else processResults(cache.work, output, opacity);
     },
