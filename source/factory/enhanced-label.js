@@ -1155,8 +1155,6 @@ P.cleanText = function () {
         // Language-aware preprocessing (opt-in)
         const processed = this.preprocessTextForLineBreaks(text);
 
-        // Keep assessTextForStyle() in sync with unitization
-        this.rawText = processed;
         const textCharacters = [...processed];
 
         const languageDirectionIsLtr = (defaultTextStyle.direction === LTR);
