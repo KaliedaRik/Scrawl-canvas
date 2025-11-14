@@ -661,7 +661,6 @@ P.theBigActionsObject = {
 
         transferDataUnchanged(oData, iData, len);
 
-        // Clamp/correct like the old builder did
         let tW = (_isFinite(tileWidth) ? tileWidth : 1) | 0,
             tH = (_isFinite(tileHeight) ? tileHeight : 1) | 0,
             gW = (_isFinite(gutterWidth) ? gutterWidth : 1) | 0,
@@ -820,296 +819,6 @@ P.theBigActionsObject = {
 // + The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'.
 // + Scrawl-canvas uses the OKLCH color space to calculate color, hue, luminosity and saturation blends, which may lead to unexpecgted results for users coming from other products. SC also includes the "missing" combinations: 'hue-match', and 'chroma-match'.
 // + Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
-    // [BLEND]: function (requirements) {
-
-    //     const [input, output, mix] = getInputAndOutputLines(requirements);
-
-    //     const iWidth  = input.width  | 0,
-    //         iHeight = input.height | 0,
-    //         iData = input.data,
-    //         mWidth  = mix.width | 0,
-    //         mHeight = mix.height | 0,
-    //         mData = mix.data,
-    //         oData = output.data;
-
-    //     const {
-    //         opacity = 1,
-    //         blend = ZERO_STR,
-    //         offsetX = 0,
-    //         offsetY = 0,
-    //         lineOut,
-    //     } = requirements;
-
-    //     if (!iWidth || !iHeight) {
-
-    //         if (lineOut) processResults(output, input, 1 - opacity);
-    //         else processResults(cache.work, output, opacity);
-    //         return;
-    //     }
-
-    //     // Baseline: outside overlap should be the input
-    //     oData.set(iData);
-
-    //     // Overlap rectangle (dest coords where mix contributes)
-    //     const x0 = (offsetX > 0 ? offsetX : 0) | 0,
-    //         y0 = (offsetY > 0 ? offsetY : 0) | 0,
-    //         x1 = _min(iWidth,  offsetX + mWidth)  | 0,
-    //         y1 = _min(iHeight, offsetY + mHeight) | 0;
-
-    //     const hasOverlap = (x1 > x0) && (y1 > y0);
-    //     if (!hasOverlap) {
-
-    //         if (lineOut) processResults(output, input, 1 - opacity);
-    //         else processResults(cache.work, output, opacity);
-    //         return;
-    //     }
-
-    //     const inv255 = 1 / 255;
-
-    //     const f_colorburn = (S, B) => (S === 0 ? 0 : (B === 1 ? 255 : (1 - _min(1, (1 - B) / S)) * 255));
-
-    //     const f_colordodge = (S, B) => (S === 1 ? 255 : (B === 0 ? 0 : _min(1, B / (1 - S)) * 255));
-
-    //     const D = b => (b <= 0.25 ? (((16 * b - 12) * b) + 4) * b : _sqrt(b));
-
-    //     const libs = colorEngine.getRgbOkCache();
-
-    //     // Row strides
-    //     const rowI = iWidth  << 2,
-    //         rowM = mWidth  << 2,
-    //         rowO = rowI;
-
-    //     // Starting mix coords
-    //     const mx0 = (x0 - offsetX) | 0,
-    //         my0 = (y0 - offsetY) | 0;
-
-    //     // Inner loop helpers for OKLCH modes
-    //     const okResult = [0, 0, 0];
-
-    //     const doOK = (mode, ir, ig, ib, mr, mg, mb) => {
-
-    //         const [IL, , , IC, IH] = colorEngine.getOkValsForRgb(ir, ig, ib, libs);
-    //         const [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mr, mg, mb, libs);
-
-    //         let cr, cg, cb;
-
-    //         switch (mode) {
-
-    //             case COLOR:
-    //                 [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, IH, libs);
-    //                 break;
-
-    //             case HUE_MATCH:
-    //                 [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, IH, libs);
-    //                 break;
-
-    //             case CHROMA_MATCH:
-    //                 [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, IC, MH, libs);
-    //                 break;
-
-    //             case HUE:
-    //                 [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, MC, IH, libs);
-    //                 break;
-
-    //             case SATURATION:
-    //                 [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, MH, libs);
-    //                 break;
-
-    //             case LUMINOSITY:
-    //                 [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, MH, libs);
-    //                 break;
-
-    //         }
-    //         okResult[0] = cr;
-    //         okResult[1] = cg;
-    //         okResult[2] = cb;
-    //         return okResult;
-    //     };
-
-    //     // Process overlap
-    //     let y, my, iRow, oRow, mRow,
-    //         x, mx, iIdx, mIdx, oIdx,
-    //         ir, ig, ib, ia8, mr, mg, mb, ma8,
-    //         As, Ab, br, bg, bb,
-    //         Fr, Fg, Fb, Sr, Sg, Sb, Br, Bg, Bb,
-    //         k, oneMinusAs, oneMinusAb, R, G, B, A;
-
-    //     for (y = y0, my = my0; y < y1; y++, my++) {
-
-    //         iRow = (y * rowI) | 0;
-    //         oRow = (y * rowO) | 0;
-    //         mRow = (my * rowM) | 0;
-
-    //         for (x = x0, mx = mx0; x < x1; x++, mx++) {
-
-    //             iIdx = iRow + ((x  << 2) | 0);
-    //             mIdx = mRow + ((mx << 2) | 0);
-    //             oIdx = oRow + ((x  << 2) | 0);
-
-    //             ia8 = iData[iIdx + 3];
-    //             ma8 = mData[mIdx + 3];
-
-    //             if (ia8 === 0) continue;
-    //             if (ma8 === 0) continue;
-
-    //             ir = iData[iIdx];
-    //             ig = iData[iIdx + 1];
-    //             ib = iData[iIdx + 2];
-    //             mr = mData[mIdx];
-    //             mg = mData[mIdx + 1];
-    //             mb = mData[mIdx + 2];
-
-    //             As = ia8 * inv255;
-    //             Ab = ma8 * inv255;
-
-    //             if (OK_BLENDS.includes(blend)) {
-
-    //                 [br, bg, bb] = doOK(blend, ir, ig, ib, mr, mg, mb);
-
-    //                 Fr = br * inv255;
-    //                 Fg = bg * inv255;
-    //                 Fb = bb * inv255;
-    //                 Sr = ir * inv255;
-    //                 Sg = ig * inv255;
-    //                 Sb = ib * inv255;
-    //                 Br = mr * inv255;
-    //                 Bg = mg * inv255;
-    //                 Bb = mb * inv255;
-
-    //                 k = As * Ab;
-    //                 oneMinusAs = 1 - As;
-    //                 oneMinusAb = 1 - Ab;
-
-    //                 R = Sr * oneMinusAb + Br * oneMinusAs + Fr * k;
-    //                 G = Sg * oneMinusAb + Bg * oneMinusAs + Fg * k;
-    //                 B = Sb * oneMinusAb + Bb * oneMinusAs + Fb * k;
-    //                 A = As + Ab - As * Ab;
-
-    //                 oData[oIdx] = (R * 255) | 0;
-    //                 oData[oIdx + 1] = (G * 255) | 0;
-    //                 oData[oIdx + 2] = (B * 255) | 0;
-    //                 oData[oIdx + 3] = (A * 255) | 0;
-    //             }
-    //             else {
-
-    //                 Sr = ir * inv255;
-    //                 Sg = ig * inv255;
-    //                 Sb = ib * inv255;
-
-    //                 Br = mr * inv255;
-    //                 Bg = mg * inv255;
-    //                 Bb = mb * inv255;
-
-    //                 switch (blend) {
-
-    //                     case COLOR_BURN:
-    //                         Fr = f_colorburn(Sr, Br) * inv255;
-    //                         Fg = f_colorburn(Sg, Bg) * inv255;
-    //                         Fb = f_colorburn(Sb, Bb) * inv255;
-    //                         break;
-
-    //                     case COLOR_DODGE:
-    //                         Fr = f_colordodge(Sr, Br) * inv255;
-    //                         Fg = f_colordodge(Sg, Bg) * inv255;
-    //                         Fb = f_colordodge(Sb, Bb) * inv255;
-    //                         break;
-
-    //                     case DARKEN:
-    //                         Fr = _min(Sr, Br);
-    //                         Fg = _min(Sg, Bg);
-    //                         Fb = _min(Sb, Bb);
-    //                         break;
-
-    //                     case LIGHTEN:
-    //                         Fr = _max(Sr, Br);
-    //                         Fg = _max(Sg, Bg);
-    //                         Fb = _max(Sb, Bb);
-    //                         break;
-
-    //                     case LIGHTER:
-    //                         Fr = _min(1, Sr + Br);
-    //                         Fg = _min(1, Sg + Bg);
-    //                         Fb = _min(1, Sb + Bb);
-    //                         break;
-
-    //                     case MULTIPLY:
-    //                         Fr = Sr * Br;
-    //                         Fg = Sg * Bg;
-    //                         Fb = Sb * Bb;
-    //                         break;
-
-    //                     case SCREEN:
-    //                         Fr = Br + Sr - Br * Sr;
-    //                         Fg = Bg + Sg - Bg * Sg;
-    //                         Fb = Bb + Sb - Bb * Sb;
-    //                         break;
-
-    //                     case DIFFERENCE:
-    //                         Fr = _abs(Sr - Br);
-    //                         Fg = _abs(Sg - Bg);
-    //                         Fb = _abs(Sb - Bb);
-    //                         break;
-
-    //                     case EXCLUSION:
-    //                         Fr = Sr + Br - 2 * Sr * Br;
-    //                         Fg = Sg + Bg - 2 * Sg * Bg;
-    //                         Fb = Sb + Bb - 2 * Sb * Bb;
-    //                         break;
-
-    //                     case OVERLAY:
-    //                         Fr = (Br <= 0.5 ? 2 * Sr * Br : 1 - 2 * (1 - Sr) * (1 - Br));
-    //                         Fg = (Bg <= 0.5 ? 2 * Sg * Bg : 1 - 2 * (1 - Sg) * (1 - Bg));
-    //                         Fb = (Bb <= 0.5 ? 2 * Sb * Bb : 1 - 2 * (1 - Sb) * (1 - Bb));
-    //                         break;
-
-    //                     case HARD_LIGHT:
-    //                         Fr = (Sr <= 0.5 ? 2 * Sr * Br : 1 - 2 * (1 - Sr) * (1 - Br));
-    //                         Fg = (Sg <= 0.5 ? 2 * Sg * Bg : 1 - 2 * (1 - Sg) * (1 - Bg));
-    //                         Fb = (Sb <= 0.5 ? 2 * Sb * Bb : 1 - 2 * (1 - Sb) * (1 - Bb));
-    //                         break;
-
-    //                     case SOFT_LIGHT:
-
-    //                         Fr = (Sr <= 0.5)
-    //                             ? (Br - (1 - 2 * Sr) * Br * (1 - Br))
-    //                             : (Br + (2 * Sr - 1) * (D(Br) - Br));
-
-    //                         Fg = (Sg <= 0.5)
-    //                             ? (Bg - (1 - 2 * Sg) * Bg * (1 - Bg))
-    //                             : (Bg + (2 * Sg - 1) * (D(Bg) - Bg));
-
-    //                         Fb = (Sb <= 0.5)
-    //                             ? (Bb - (1 - 2 * Sb) * Bb * (1 - Bb))
-    //                             : (Bb + (2 * Sb - 1) * (D(Bb) - Bb));
-
-    //                         break;
-
-    //                     default:
-    //                         Fr = Sr;
-    //                         Fg = Sg;
-    //                         Fb = Sb;
-    //                 }
-
-    //                 k = As * Ab;
-    //                 oneMinusAs = 1 - As;
-    //                 oneMinusAb = 1 - Ab;
-
-    //                 R = Sr * oneMinusAb + Br * oneMinusAs + Fr * k;
-    //                 G = Sg * oneMinusAb + Bg * oneMinusAs + Fg * k;
-    //                 B = Sb * oneMinusAb + Bb * oneMinusAs + Fb * k;
-    //                 A = As + Ab - As * Ab;
-
-    //                 oData[oIdx] = (R * 255) | 0;
-    //                 oData[oIdx + 1] = (G * 255) | 0;
-    //                 oData[oIdx + 2] = (B * 255) | 0;
-    //                 oData[oIdx + 3] = (A * 255) | 0;
-    //             }
-    //         }
-    //     }
-
-    //     if (lineOut) processResults(output, input, 1 - opacity);
-    //     else processResults(cache.work, output, opacity);
-    // },
     [BLEND]: function (requirements) {
 
         const [input, output, mix] = getInputAndOutputLines(requirements);
@@ -1161,69 +870,26 @@ P.theBigActionsObject = {
 
         const inv255 = 1 / 255;
 
-        const f_colorburn = (S, B) => (S === 0 ? 0 : (B === 1 ? 255 : (1 - _min(1, (1 - B) / S)) * 255));
-
-        const f_colordodge = (S, B) => (S === 1 ? 255 : (B === 0 ? 0 : _min(1, B / (1 - S)) * 255));
-
-        const D = b => (b <= 0.25 ? (((16 * b - 12) * b) + 4) * b : _sqrt(b));
-
         const libs = colorEngine.getRgbOkCache();
 
-        // Starting mix coords
+        const isOkBlend = OK_BLENDS.includes(blend);
+
         const mx0 = (x0 - offsetX) | 0,
             my0 = (y0 - offsetY) | 0;
 
-        const okResult = [0, 0, 0];
-
-        const doOK = (mode, ir, ig, ib, mr, mg, mb) => {
-
-            const [IL, , , IC, IH] = colorEngine.getOkValsForRgb(ir, ig, ib, libs);
-            const [ML, , , MC, MH] = colorEngine.getOkValsForRgb(mr, mg, mb, libs);
-
-            let cr, cg, cb;
-
-            switch (mode) {
-
-                case COLOR:
-                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, IH, libs);
-                    break;
-
-                case HUE_MATCH:
-                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, IH, libs);
-                    break;
-
-                case CHROMA_MATCH:
-                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, IC, MH, libs);
-                    break;
-
-                case HUE:
-                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, MC, IH, libs);
-                    break;
-
-                case SATURATION:
-                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(ML, IC, MH, libs);
-                    break;
-
-                case LUMINOSITY:
-                    [cr, cg, cb] = colorEngine.getRgbValsForOklch(IL, MC, MH, libs);
-                    break;
-            }
-            okResult[0] = cr;
-            okResult[1] = cg;
-            okResult[2] = cb;
-            return okResult;
-        };
-
-        // Process overlap
         let y, my, x, mx,
             iPix, mPix,
             ip, mp,
             ia8, ma8,
             ir, ig, ib, mr, mg, mb,
-            As, Ab, br, bg, bb,
+            As, Ab,
+            br, bg, bb,
             Fr, Fg, Fb, Sr, Sg, Sb, Br, Bg, Bb,
             k, oneMinusAs, oneMinusAb, R, G, B, A,
-            outR, outG, outB, outA;
+            outR, outG, outB, outA,
+            IL, IC, IH, ML, MC, MH,
+            okSrc, okMix,
+            tmp;
 
         for (y = y0, my = my0; y < y1; y++, my++) {
 
@@ -1240,7 +906,6 @@ P.theBigActionsObject = {
 
                 if (ia8 === 0 || ma8 === 0) continue;
 
-                // Extract RGB (0–255)
                 ir = ip & 0xFF;
                 ig = (ip >>> 8) & 0xFF;
                 ib = (ip >>> 16) & 0xFF;
@@ -1252,16 +917,54 @@ P.theBigActionsObject = {
                 As = ia8 * inv255;
                 Ab = ma8 * inv255;
 
-                if (OK_BLENDS.includes(blend)) {
+                if (isOkBlend) {
 
-                    [br, bg, bb] = doOK(blend, ir, ig, ib, mr, mg, mb);
+                    okSrc = colorEngine.getOkValsForRgb(ir, ig, ib, libs);
+                    okMix = colorEngine.getOkValsForRgb(mr, mg, mb, libs);
+
+                    IL = okSrc[0];
+                    IC = okSrc[3];
+                    IH = okSrc[4];
+
+                    ML = okMix[0];
+                    MC = okMix[3];
+                    MH = okMix[4];
+
+                    switch (blend) {
+
+                        case COLOR:
+                            [br, bg, bb] = colorEngine.getRgbValsForOklch(ML, IC, IH, libs);
+                            break;
+
+                        case HUE_MATCH:
+                            [br, bg, bb] = colorEngine.getRgbValsForOklch(IL, MC, IH, libs);
+                            break;
+
+                        case CHROMA_MATCH:
+                            [br, bg, bb] = colorEngine.getRgbValsForOklch(IL, IC, MH, libs);
+                            break;
+
+                        case HUE:
+                            [br, bg, bb] = colorEngine.getRgbValsForOklch(ML, MC, IH, libs);
+                            break;
+
+                        case SATURATION:
+                            [br, bg, bb] = colorEngine.getRgbValsForOklch(ML, IC, MH, libs);
+                            break;
+
+                        case LUMINOSITY:
+                            [br, bg, bb] = colorEngine.getRgbValsForOklch(IL, MC, MH, libs);
+                            break;
+                    }
 
                     Fr = br * inv255;
                     Fg = bg * inv255;
                     Fb = bb * inv255;
+
                     Sr = ir * inv255;
                     Sg = ig * inv255;
                     Sb = ib * inv255;
+
                     Br = mr * inv255;
                     Bg = mg * inv255;
                     Bb = mb * inv255;
@@ -1288,15 +991,52 @@ P.theBigActionsObject = {
                     switch (blend) {
 
                         case COLOR_BURN:
-                            Fr = f_colorburn(Sr, Br) * inv255;
-                            Fg = f_colorburn(Sg, Bg) * inv255;
-                            Fb = f_colorburn(Sb, Bb) * inv255;
+                            if (Sr === 0) Fr = 0;
+                            else if (Br === 1) Fr = 1;
+                            else {
+                                tmp = (1 - Br) / Sr;
+                                if (tmp > 1) tmp = 1;
+                                Fr = 1 - tmp;
+                            }
+
+                            if (Sg === 0) Fg = 0;
+                            else if (Bg === 1) Fg = 1;
+                            else {
+                                tmp = (1 - Bg) / Sg;
+                                if (tmp > 1) tmp = 1;
+                                Fg = 1 - tmp;
+                            }
+
+                            if (Sb === 0) Fb = 0;
+                            else if (Bb === 1) Fb = 1;
+                            else {
+                                tmp = (1 - Bb) / Sb;
+                                if (tmp > 1) tmp = 1;
+                                Fb = 1 - tmp;
+                            }
                             break;
 
                         case COLOR_DODGE:
-                            Fr = f_colordodge(Sr, Br) * inv255;
-                            Fg = f_colordodge(Sg, Bg) * inv255;
-                            Fb = f_colordodge(Sb, Bb) * inv255;
+                            if (Sr === 1) Fr = 1;
+                            else if (Br === 0) Fr = 0;
+                            else {
+                                tmp = Br / (1 - Sr);
+                                Fr = tmp > 1 ? 1 : tmp;
+                            }
+
+                            if (Sg === 1) Fg = 1;
+                            else if (Bg === 0) Fg = 0;
+                            else {
+                                tmp = Bg / (1 - Sg);
+                                Fg = tmp > 1 ? 1 : tmp;
+                            }
+
+                            if (Sb === 1) Fb = 1;
+                            else if (Bb === 0) Fb = 0;
+                            else {
+                                tmp = Bb / (1 - Sb);
+                                Fb = tmp > 1 ? 1 : tmp;
+                            }
                             break;
 
                         case DARKEN:
@@ -1353,21 +1093,34 @@ P.theBigActionsObject = {
                             Fb = (Sb <= 0.5 ? 2 * Sb * Bb : 1 - 2 * (1 - Sb) * (1 - Bb));
                             break;
 
-                        case SOFT_LIGHT:
+                        case SOFT_LIGHT: {
+
+                            const DBr = (Br <= 0.25)
+                                ? (((16 * Br - 12) * Br) + 4) * Br
+                                : _sqrt(Br);
+
+                            const DBg = (Bg <= 0.25)
+                                ? (((16 * Bg - 12) * Bg) + 4) * Bg
+                                : _sqrt(Bg);
+
+                            const DBb = (Bb <= 0.25)
+                                ? (((16 * Bb - 12) * Bb) + 4) * Bb
+                                : _sqrt(Bb);
 
                             Fr = (Sr <= 0.5)
                                 ? (Br - (1 - 2 * Sr) * Br * (1 - Br))
-                                : (Br + (2 * Sr - 1) * (D(Br) - Br));
+                                : (Br + (2 * Sr - 1) * (DBr - Br));
 
                             Fg = (Sg <= 0.5)
                                 ? (Bg - (1 - 2 * Sg) * Bg * (1 - Bg))
-                                : (Bg + (2 * Sg - 1) * (D(Bg) - Bg));
+                                : (Bg + (2 * Sg - 1) * (DBg - Bg));
 
                             Fb = (Sb <= 0.5)
                                 ? (Bb - (1 - 2 * Sb) * Bb * (1 - Bb))
-                                : (Bb + (2 * Sb - 1) * (D(Bb) - Bb));
+                                : (Bb + (2 * Sb - 1) * (DBb - Bb));
 
                             break;
+                        }
 
                         default:
                             Fr = Sr;
@@ -1844,9 +1597,9 @@ P.theBigActionsObject = {
 
         const {
             opacity = 1,
-            includeRed   = true,
+            includeRed = true,
             includeGreen = true,
-            includeBlue  = true,
+            includeBlue = true,
             lineOut,
         } = requirements;
 
@@ -2300,7 +2053,6 @@ P.theBigActionsObject = {
 
         const key = `cta::${R},${G},${B}::${tAt},${oAt}`;
 
-        // Try workstore
         let pack = getWorkstoreItem(key);
 
         if (!pack) {
@@ -2335,7 +2087,6 @@ P.theBigActionsObject = {
 
         const { diffR, diffG, diffB, tScaled, oScaled, rangeScaled, binaryStep } = pack;
 
-        // Copy frame once; we’ll overwrite alpha only for the pixels we touch.
         out32.set(src32);
 
         let p, pz, rgba, a, r, g, b, sumDiff, na;
@@ -2406,7 +2157,7 @@ P.theBigActionsObject = {
 
         const x0 = (offsetX > 0 ? offsetX : 0) | 0,
             y0 = (offsetY > 0 ? offsetY : 0) | 0,
-            x1 = _min(iWidth, offsetX + mWidth) | 0,
+            x1 = _min(iWidth,  offsetX + mWidth)  | 0,
             y1 = _min(iHeight, offsetY + mHeight) | 0;
 
         const hasOverlap = (x1 > x0) && (y1 > y0);
@@ -2444,11 +2195,6 @@ P.theBigActionsObject = {
 
         const inv255 = 1 / 255;
 
-        // Utility: unpack ABGR → RGBA
-        const unpack = (p) => [(p) & 0xFF, (p >> 8) & 0xFF, (p >> 16) & 0xFF, (p >> 24) & 0xFF,];
-
-        const pack = (r, g, b, a) => ((a & 255) << 24) | ((b & 255) << 16) | ((g & 255) <<  8) | (r & 255);
-
         // Mix starting coords
         const mx0 = (x0 - offsetX) | 0,
             my0 = (y0 - offsetY) | 0;
@@ -2470,19 +2216,26 @@ P.theBigActionsObject = {
 
             for (x = x0, mx = mx0; x < x1; x++, mx++) {
 
-                srcIndex = baseIn + x;      // source = line IN
-                dstIndex = baseMix + mx;    // dest   = line MIX
+                srcIndex = baseIn + x;
+                dstIndex = baseMix + mx;
 
                 srcPacked = i32[srcIndex];
                 dstPacked = m32[dstIndex];
 
-                [Sr8, Sg8, Sb8, Sa8] = unpack(srcPacked); // source RGBA
-                [Dr8, Dg8, Db8, Da8] = unpack(dstPacked); // dest RGBA
+                // Inline unpack(srcPacked)
+                Sr8 = srcPacked & 0xFF;
+                Sg8 = (srcPacked >>> 8) & 0xFF;
+                Sb8 = (srcPacked >>> 16) & 0xFF;
+                Sa8 = (srcPacked >>> 24) & 0xFF;
 
-                As = Sa8 * inv255;  // source alpha [0..1]
-                Ad = Da8 * inv255;  // dest alpha   [0..1]
+                Dr8 = dstPacked & 0xFF;
+                Dg8 = (dstPacked >>> 8) & 0xFF;
+                Db8 = (dstPacked >>> 16) & 0xFF;
+                Da8 = (dstPacked >>> 24) & 0xFF;
 
-                // Normalized colours [0..1]
+                As = Sa8 * inv255;
+                Ad = Da8 * inv255;
+
                 Sr = Sr8 * inv255;
                 Sg = Sg8 * inv255;
                 Sb = Sb8 * inv255;
@@ -2588,7 +2341,7 @@ P.theBigActionsObject = {
                 b8 = (outB * 255 + 0.5) | 0;
                 a8 = (outA * 255 + 0.5) | 0;
 
-                o32[srcIndex] = pack(r8, g8, b8, a8);
+                o32[srcIndex] = ((a8 & 255) << 24) | ((b8 & 255) << 16) | ((g8 & 255) <<  8) | ( r8 & 255);
             }
         }
 
@@ -2886,8 +2639,8 @@ P.theBigActionsObject = {
 
                         horizontalPass(iData, midMin, ch, true);
                         horizontalPass(iData, midMax, ch, false);
-                        verticalPass  (midMin, tmpVMin, ch, true);
-                        verticalPass  (midMax, tmpVMax, ch, false);
+                        verticalPass(midMin, tmpVMin, ch, true);
+                        verticalPass(midMax, tmpVMax, ch, false);
 
                         for (let i = ch; i < len; i += 4) {
 
@@ -3304,7 +3057,6 @@ P.theBigActionsObject = {
             toOK  = colorEngine.getOkValsForRgb,
             toRGB = colorEngine.getRgbValsForOklab;
 
-        // --- Workspace (full-res)
         const ws = getRlWorkspace(width, height);
         const { L, A, B, Gs, Gb, R, M, Am, tmpLine, tmpImg, hist } = ws;
 
@@ -3313,7 +3065,6 @@ P.theBigActionsObject = {
 
         let i, iz, p, pz, rgba, rgb, a, r, g, b, ok;
 
-        // 1) RGB -> OKLab
         for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
             rgba = src32[p];
@@ -3343,7 +3094,6 @@ P.theBigActionsObject = {
 
         const SOLID_ALPHA = alphaIsSolid(Am);
 
-        // Fast path: nothing to do if radius <= 0 or passes <= 0
         if (!(radius > 0) || !(passes > 0)) {
 
             for (p = 0, pz = src32.length | 0; p < pz; p++) {
@@ -3358,16 +3108,13 @@ P.theBigActionsObject = {
 
         const runRL = (W, H, _L, _Am, _Ab, _invAb, _Gs, _Gb, _R, _M, _tmpLine, _tmpImg, _hist, _passes, _coeffH, _coeffV) => {
 
-            // init guess
             _Gs.set(_L);
 
-            // pre-blur
             if (!SOLID_ALPHA) precomputeAlphaReciprocal(_Am, _Ab, _invAb, W, H, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
 
             if (SOLID_ALPHA) gaussianBlurL_Float(_Gs, _Gb, W, H, radius, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
             else alphaAwareBlurFast(_Gs, _Gb, _Am, _invAb, W, H, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
 
-            // mask from blurred luminance
             if (deriveMaskFromImage) {
 
                 sobelMagFloat(_Gb, _M, W, H);
@@ -3387,7 +3134,6 @@ P.theBigActionsObject = {
                 _M[i] = _M[i] * strength * _Am[i];
             }
 
-            // auto epsilon
             const total = SOLID_ALPHA 
                 ? buildHist01Float(_Gb, _hist)
                 : buildMaskedHist01Float(_Gb, _Am, _hist);
@@ -3397,7 +3143,6 @@ P.theBigActionsObject = {
                 epsilon_abs = _max(5e-4, 0.25 * p1),
                 epsilon_rel = (med > 0.2) ? 0.01 : 0.015;
 
-            // other constants
             const onePlus = 1 + epsilon_rel,
                 up = 1 + clamp,
                 dn = 1 - clamp,
@@ -3405,7 +3150,6 @@ P.theBigActionsObject = {
                 rLo = hard ? 0.5 : 0.25,
                 rHi = hard ? 2.0 : 4.0;
 
-            // iterations
             const Npix = _L.length | 0;
 
             let it, den, v, accDelta, d, u;
@@ -3418,7 +3162,6 @@ P.theBigActionsObject = {
                     else alphaAwareBlurFast(_Gs, _Gb, _Am, _invAb, W, H, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
                 }
 
-                // ratio
                 for (i = 0; i < Npix; i++) {
 
                     den = _Gb[i] * onePlus + epsilon_abs;
@@ -3429,11 +3172,9 @@ P.theBigActionsObject = {
                     _R[i] = v;
                 }
 
-                // blur(R) in-place
                 if (SOLID_ALPHA) gaussianBlurL_Float(_R, _R, W, H, radius, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
                 else alphaAwareBlurFast(_R, _R, _Am, _invAb, W, H, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
 
-                // multiplicative update, accumulate convergence metric
                 accDelta = 0;
                 
                 for (i = 0; i < Npix; i++) {
@@ -3450,7 +3191,6 @@ P.theBigActionsObject = {
             }
         };
 
-        // === Multiscale: half-res coarse RL, then upsample guess and finish full-res
         const canHalf = (width >= 2 && height >= 2),
             doMS = multiscale && canHalf && passes > multiscaleFinalPasses;
 
@@ -3462,7 +3202,6 @@ P.theBigActionsObject = {
 
             const { L: Lh, Gs: Gsh, Gb: Gbh, R: Rh, M: Mh, Am: Amh, tmpLine: tmpLineH, tmpImg: tmpImgH, hist: histH } = wsH;
 
-            // downsample luminance only (AB are unused at half-res)
             downsample2xFloat(L, Lh, width, height);
             downsample2xFloat(Am, Amh, width, height);
 
@@ -3473,16 +3212,13 @@ P.theBigActionsObject = {
 
             runRL(w2, h2, Lh, Amh, wsH.Ab, wsH.invAb, Gsh, Gbh, Rh, Mh, tmpLineH, tmpImgH, histH, halfPasses, _coeffH, _coeffV);
 
-            // upsample coarse guess to full-res initial guess
             upsample2xBilinear(Gsh, Gs, w2, h2, width, height);
         }
         else {
 
-            // start from original L
             Gs.set(L);
         }
 
-        // Finish full-res RL (all passes if no multiscale, or multiscaleFinalPasses if multiscale)
         const finalPasses = doMS ? _max(1, multiscaleFinalPasses | 0) : passes | 0;
 
         if (!SOLID_ALPHA) {
@@ -3494,7 +3230,6 @@ P.theBigActionsObject = {
         if (SOLID_ALPHA) gaussianBlurL_Float(Gs, Gb, width, height, radius, radius, tmpLine, tmpImg, _coeffH, _coeffV);
         else alphaAwareBlurFast(Gs, Gb, Am, ws.invAb, width, height, radius, tmpLine, tmpImg, _coeffH, _coeffV);
 
-        // Mask from blurred luminance (full-res)
         if (deriveMaskFromImage) {
 
             sobelMagFloat(Gb, M, width, height);
@@ -3508,7 +3243,6 @@ P.theBigActionsObject = {
             M[i] = M[i] * strength * Am[i];
         }
 
-        // Auto-epsilon (full-res, uses Gb)
         const totalF = SOLID_ALPHA
             ? buildHist01Float(Gb, hist)
             : buildMaskedHist01Float(Gb, Am, hist);
@@ -3525,13 +3259,11 @@ P.theBigActionsObject = {
             rLoF = hardF ? 0.5 : 0.25,
             rHiF = hardF ? 2.0 : 4.0;
 
-        // Fold strength into mask once (overwrite M)
         for (i = 0, iz = M.length | 0; i < iz; i++) {
 
             M[i] *= strength;
         }
 
-        // Iterations (full-res), with in-place R blur
         const Npix = L.length | 0;
 
         let iters, DEN, V, ACCDELTA, D, U;
@@ -3571,7 +3303,6 @@ P.theBigActionsObject = {
             if ((ACCDELTA / Npix) < 0.003) break;
         }
 
-        // 7) Write back: replace L with Gs; keep A,B
         for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
             rgba = src32[p];
@@ -3619,7 +3350,6 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements || {};
 
-        // Determine which channels to use in the displacement map
         let offsetForChannelX = 3;
         if (channelX === RED) offsetForChannelX = 0;
         else if (channelX === GREEN) offsetForChannelX = 1;
@@ -3650,12 +3380,10 @@ P.theBigActionsObject = {
                 destPx = i32[p];
                 destA  = (destPx >>> 24) & 0xFF;
 
-                // Locate displacement pixel in mix image
                 mPos = -1;
 
                 if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = ((mRowBase + mx) * 4) | 0;
 
-                // No displacement info here: just copy original
                 if (mPos < 0) {
 
                     o32[p] = destPx;
@@ -3672,7 +3400,6 @@ P.theBigActionsObject = {
 
                 if (!transparentEdges) {
 
-                    // Clamp to edge
                     if (dx < 0) dx = 0;
                     else if (dx >= iWidth) dx = iWidth - 1;
 
@@ -3685,7 +3412,6 @@ P.theBigActionsObject = {
                 }
                 else {
 
-                    // Let it fall off the edge: outside = transparent
                     if (dx >= 0 && dx < iWidth && dy >= 0 && dy < iHeight) {
 
                         dIndex = (dy * iWidth + dx) | 0;
@@ -3723,6 +3449,7 @@ P.theBigActionsObject = {
         else processResults(cache.work, output, opacity);
     },
 
+// __emboss__ - applies a directional 3×3 convolution to turn local color differences into a raised or recessed relief effect, with optional post-processing to keep or highlight only the changed areas.
     [EMBOSS]: function (requirements) {
 
         const [input, output] = getInputAndOutputLines(requirements);
@@ -3741,7 +3468,6 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        // --- Build 3x3 weights from strength + angle
         const strength = _abs(requirements.strength || 1),
             angle = correctAngle(requirements.angle || 0),
             slices  = (angle / 45) | 0,
@@ -3803,14 +3529,10 @@ P.theBigActionsObject = {
             w[3] = -w[5];
         }
 
-        // Copy input → output as a base (alpha passthrough needed anyway)
-        // oData.set(iData);
-
         let x, y, yU, yD, rowU, rowM, rowD, xL, xC, xR,
             p00, p01, p02, p10, p11, p12, p20, p21, p22,
             r, g, b, iR, iG, iB, unchanged;
 
-        // Main pass (toroidal wrap)
         for (y = 0; y < H; y++) {
 
             yU = (y === 0 ? H - 1 : y - 1);
@@ -3826,7 +3548,6 @@ P.theBigActionsObject = {
                 xC = (x << 2);
                 xR = (x === W - 1 ? 0 : x + 1) << 2;
 
-                // Indices for 3x3 neighborhood, row-major
                 p00 = rowU + xL;
                 p01 = rowU + xC;
                 p02 = rowU + xR;
@@ -3856,7 +3577,6 @@ P.theBigActionsObject = {
                 oData[p11 + 2] = b;
                 oData[p11 + 3] = iData[p11 + 3];
 
-                // Optional post-process (unchanged → midgray or transparent)
                 if (postProcessResults) {
 
                     iR = iData[p11];
@@ -4410,7 +4130,6 @@ P.theBigActionsObject = {
 
         const CHMASK = (RM | GM | BM | AM) >>> 0;
 
-        // Short-circuit: both radii <= 0 → no blur; just obey include*/exclude rules
         if ((radiusHorizontal <= 0) && (radiusVertical <= 0)) {
 
             if (CHMASK === 0xFFFFFFFF && !excludeTransparentPixels) out32.set(src32);
@@ -4442,7 +4161,6 @@ P.theBigActionsObject = {
             return;
         }
 
-        // Workspace & coeffs
         const { bufA32, bufB32, tmpLineF32 } = getWorkspace(pixels, maxSide4);
 
         const doH = radiusHorizontal > 0,
@@ -4549,8 +4267,6 @@ P.theBigActionsObject = {
         let step = _floor(requirements.step);
         if (step < 1) step = 1;
 
-        // --- Precompute per-row channel offsets (in BYTES) ---
-
         const rnd = getRandomNumbers({
             seed,
             length: iHeight * 5,
@@ -4564,7 +4280,6 @@ P.theBigActionsObject = {
 
         let rndCursor = -1;
 
-        // rows[y*4 + 0..3] = [shiftR, shiftG, shiftB, shiftA] for that row (in bytes)
         const rows = [];
 
         let i, j, affectedRow, shift, shiftR, shiftG, shiftB, shiftA;
@@ -4607,7 +4322,7 @@ P.theBigActionsObject = {
         }
 
         const rowStrideBytes = (iWidth << 2); // width * 4
-        let p = 0; // pixel index for i32/o32
+        let p = 0;
 
         let y, x, rowStart, rowEnd, baseByte, cursor,
             dr, dg, db, da,
@@ -4634,26 +4349,21 @@ P.theBigActionsObject = {
 
                 baseByte = rowStart + (x << 2); // byte index for R of this pixel
 
-                // Destination (original) pixel
                 destPx = i32[p];
                 destR =  destPx & 0xFF;
                 destG = (destPx >>> 8) & 0xFF;
-                destB = (destPx >>>16) & 0xFF;
-                destA = (destPx >>>24) & 0xFF;
+                destB = (destPx >>> 16) & 0xFF;
+                destA = (destPx >>> 24) & 0xFF;
 
-                // Per-channel displaced byte indices
                 ur = baseByte + dr;
                 ug = baseByte + 1 + dg;
                 ub = baseByte + 2 + db;
                 ua = baseByte + 3 + da;
 
-                // Colours always sampled from iData (same as original),
-                // regardless of transparentEdges or mask.
                 srcR = iData[ur];
                 srcG = iData[ug];
                 srcB = iData[ub];
 
-                // Determine alpha for the "moved" pixel
                 if (transparentEdges) {
 
                     outOfRow =
@@ -4680,7 +4390,6 @@ P.theBigActionsObject = {
                 movedZero = (srcA === 0);
                 destZero  = (destA === 0);
 
-                // default: no-op (keep destination)
                 outR = destR;
                 outG = destG;
                 outB = destB;
@@ -5838,10 +5547,8 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        // No change branch (fastest)
         if (!(offsetRedX || offsetGreenX || offsetBlueX || offsetRedY || offsetGreenY || offsetBlueY)) out32.set(src32);
 
-        // Pixel manipulation required branch
         else {
 
             const rowStridePx = width | 0;
@@ -6403,7 +6110,7 @@ P.theBigActionsObject = {
             return BTPRes;
         }
 
-        // == Grayscale palettes ==
+        // Grayscale palettes
         if (isGray) {
 
             const selectedPalette = predefinedPalette[palette],
@@ -6482,7 +6189,7 @@ P.theBigActionsObject = {
             return;
         }
 
-        // == Array-of-colors palette ==
+        // Array-of-colors palette
         if (isArrayPalette) {
 
             const name = palette.join(ARG_SPLITTER);
@@ -6562,7 +6269,7 @@ P.theBigActionsObject = {
             return;
         }
 
-        // == Commonest colors palette ==
+        // Commonest colors palette
         const metadata = new Map(),
             seen = [],
             selectedPalette = [];
@@ -6775,7 +6482,6 @@ P.theBigActionsObject = {
         const iData = input.data,
             oData = output.data;
 
-        // 32-bit pixel views that respect byteOffset/length
         const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
             out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
 
@@ -6789,7 +6495,6 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        // Clamp level to [0, 255] and make it an int
         const L = level < 0 ? 0 : level > 255 ? 255 : (level | 0);
 
         const Rm = includeRed   ? 0x000000FF : 0,
@@ -6797,18 +6502,12 @@ P.theBigActionsObject = {
             Bm = includeBlue  ? 0x00FF0000 : 0,
             Am = includeAlpha ? 0xFF000000 : 0;
 
-        // Mask that zeroes the included channels; keeps others intact
         const clearMask = (~(Rm | Gm | Bm | Am)) >>> 0;
 
-        // Mask that sets included channels to 'level'
         const setMask = (includeRed ? (L <<  0) : 0) | (includeGreen ? (L <<  8) : 0) | (includeBlue  ? (L << 16) : 0) | (includeAlpha ? ((L & 255) << 24) : 0);
 
-        // Fast fill cases:
-        // + If no channels included: just copy
-        // + If all channels included: build one constant pixel and fill
         if ((Rm | Gm | Bm | Am) === 0) {
 
-            // nothing to change
             for (let p = 0; p < src32.length; p++) {
 
                 out32[p] = src32[p];
@@ -6816,7 +6515,6 @@ P.theBigActionsObject = {
         }
         else if ((Rm | Gm | Bm | Am) === 0xFFFFFFFF >>> 0) {
 
-            // all channels forced to level
             const constantPixel = setMask >>> 0;
 
             for (let p = 0; p < out32.length; p++) {
@@ -6826,7 +6524,6 @@ P.theBigActionsObject = {
         }
         else {
 
-            // General case: clear included bits, then OR in the level
             for (let p = 0, src; p < src32.length; p++) {
 
                 src = src32[p];
@@ -6865,7 +6562,6 @@ P.theBigActionsObject = {
         let clamp = requirements.clamp;
         if (!CLAMP_VALUES.includes(clamp)) clamp = DOWN;
 
-        // Fast identity path: divisors == 1 => no change for any mode
         if (red === 1 && green === 1 && blue === 1) out32.set(src32);
 
         else {
@@ -6874,7 +6570,6 @@ P.theBigActionsObject = {
 
                 const div = d > 0 ? d : 1;
 
-                // Power-of-two fast path for DOWN
                 if (clamp === DOWN && (div & (div - 1)) === 0) {
 
                     const mask = ~(div - 1) & 0xFF,
@@ -7661,7 +7356,6 @@ P.theBigActionsObject = {
           len = iData.length,
           nPix = (len >>> 2);
 
-    // 32-bit views for packed RGBA (little-endian: 0xAABBGGRR)
     const i32 = new Uint32Array(iData.buffer, iData.byteOffset, nPix),
         o32 = new Uint32Array(oData.buffer, oData.byteOffset, nPix);
 
@@ -7676,7 +7370,6 @@ P.theBigActionsObject = {
         lineOut,
     } = requirements || {};
 
-    // Build labels via new API
     const { labels, nTiles } = buildGeneralTileLabels(requirements, input);
 
     if (!nTiles) {
@@ -7687,7 +7380,6 @@ P.theBigActionsObject = {
         return;
     }
 
-    // Accumulators (reused via workstore)
     const accKey = `tiles-acc-v2-${nTiles}`;
 
     let acc = getWorkstoreItem(accKey);
@@ -7721,7 +7413,7 @@ P.theBigActionsObject = {
 
     let t, c, p, r, g, b, a, af, px, srcPx, srcA;
 
-    // Pass 1: accumulate per tile (optionally premultiplied, optionally masked)
+    // Pass 1: accumulate per tile
     for (p = 0; p < nPix; p++) {
 
         t = labels[p];
@@ -7739,7 +7431,6 @@ P.theBigActionsObject = {
 
         cnt[t]++;
 
-        // premultiply RGB by alpha if requested
         if (premultiply && a > 0 && a < 255) {
 
             af = a / 255;
@@ -7752,11 +7443,9 @@ P.theBigActionsObject = {
         if (includeGreen) gAcc[t] += g;
         if (includeBlue) bAcc[t] += b;
 
-        // always accumulate alpha so we can unpremultiply even if includeAlpha is false
         aAcc[t] += a;
     }
 
-    // Averages (uint8)
     const rAvg = includeRed ? new Uint8Array(nTiles) : null,
         gAvg = includeGreen ? new Uint8Array(nTiles) : null,
         bAvg = includeBlue ? new Uint8Array(nTiles) : null,
@@ -7773,7 +7462,6 @@ P.theBigActionsObject = {
         aAvg[t] = (aAcc[t] / c) | 0;
     }
 
-    // If premultiplied: unpremultiply the tile averages back to straight alpha
     if (premultiply) {
 
         let a, invA, r, g, b;
@@ -7813,12 +7501,10 @@ P.theBigActionsObject = {
 
         if (t < 0) {
 
-            // outside of any tile: copy unchanged
             o32[p] = srcPx;
             continue;
         }
 
-        // Optional masking in output as well: leave fully transparent source pixels unchanged
         srcA = (srcPx >>> 24) & 0xFF;
         if (useInputAsMask && srcA === 0) {
 
@@ -7836,7 +7522,6 @@ P.theBigActionsObject = {
         if (includeBlue) b = bAvg[t];
         if (includeAlpha) a = aAvg[t];
 
-        // re-pack (0xAABBGGRR)
         o32[p] = (a << 24) | (b << 16) | (g << 8) | r;
     }
 
@@ -8139,7 +7824,6 @@ P.theBigActionsObject = {
             toOK = colorEngine.getOkValsForRgb,
             toRGB = colorEngine.getRgbValsForOklab;
 
-        // Workspace
         const ws = getEausmWorkspace(width, height);
         const { L, A, B, Lb, D, G, M, tmpLine } = ws;
 
