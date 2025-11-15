@@ -1772,6 +1772,7 @@ export default function (P = Ωempty) {
         if (this.pivoted && this.pivoted.length) this.updatePivotSubscribers();
         if (this.mimicked && this.mimicked.length) this.updateMimicSubscribers();
         if (this.pathed && this.pathed.length) this.updatePathSubscribers();
+        if (this.enhanced && this.enhanced.length) this.updateEnhancedSubscribers();
     };
 
 // `updatePivotSubscribers`
@@ -1782,6 +1783,9 @@ export default function (P = Ωempty) {
 
 // `updatePathSubscribers`
     P.updatePathSubscribers = λnull;
+
+// `updateEnhancedSubscribers`
+    P.updateEnhancedSubscribers = λnull;
 
 // `updateImageSubscribers`
     P.updateImageSubscribers = λnull;

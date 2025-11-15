@@ -59,9 +59,13 @@ export default function (P = Ωempty) {
 // __path__
     S.path = function (item) {
 
+        const oldPath = this.path,
+            name = this.name;
+
         if (isa_boolean(item) && !item) {
 
             this.path = null;
+            if (oldPath && oldPath.name) removeItem(oldPath.pathed, name);
 
             if (this.lockTo[0] === PATH) this.lockTo[0] = START;
             if (this.lockTo[1] === PATH) this.lockTo[1] = START;
@@ -71,9 +75,7 @@ export default function (P = Ωempty) {
         }
         else {
 
-            const oldPath = this.path,
-                newPath = (item.substring) ? artefact[item] : item,
-                name = this.name;
+            const newPath = (item.substring) ? artefact[item] : item;
 
             if (newPath && newPath.name && newPath.useAsPath) {
 

@@ -16,7 +16,7 @@ import { calculatePath, releasePathCalcObject, requestPathCalcObject } from '../
 import entityMix from './entity.js';
 
 // Shared constants
-import { _atan2, _isFinite, _parse, _piHalf, _pow, _radian, BEZIER, CLOSE, DESTINATION_OUT, LINEAR, MOUSE, MOVE, PARTICLE, QUADRATIC, SOURCE_OVER, T_BEZIER, T_LINE, T_POLYLINE, T_QUADRATIC, UNKNOWN, ZERO_STR } from '../helper/shared-vars.js';
+import { _atan2, _isFinite, _parse, _piHalf, _pow, _radian, BEZIER, CLOSE, DESTINATION_OUT, LINEAR, MOUSE, MOVE, PARTICLE, QUADRATIC, SOURCE_OVER, T_BEZIER, T_ENHANCED_SHAPE, T_LINE, T_POLYLINE, T_QUADRATIC, UNKNOWN, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const HALFTRANS = 'rgb(0 0 0 / 0.5)';
@@ -49,7 +49,7 @@ export default function (P = Ωempty) {
 
 
 // #### Packet management
-    P.packetExclusions = pushUnique(P.packetExclusions, ['dimensions', 'pathed']);
+    P.packetExclusions = pushUnique(P.packetExclusions, ['dimensions', 'pathed', 'enhanced']);
 
     P.finalizePacketOut = function (copy, items) {
 
@@ -127,6 +127,7 @@ export default function (P = Ωempty) {
         this.unitPartials = [];
 
         this.pathed = [];
+        this.enhanced = [];
 
         this.localBox = [];
 
@@ -562,6 +563,20 @@ export default function (P = Ωempty) {
                 if (art.type === T_POLYLINE) art.dirtyPins = true;
                 else if (art.type === T_LINE || art.type === T_QUADRATIC || art.type === T_BEZIER) art.dirtyPins.push(this.name);
             }
+        }, this);
+    };
+
+// `updateEnhancedSubscribers`
+    P.updateEnhancedSubscribers = function () {
+
+        let art;
+
+        this.enhanced.forEach(name => {
+
+            art = artefact[name];
+
+            if (art && art.type === T_ENHANCED_SHAPE) art.dirtyContributors = true;
+
         }, this);
     };
 

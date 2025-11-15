@@ -221,6 +221,7 @@ export const T_CELL = 'Cell';
 export const T_COLOR = 'Color';
 export const T_COORDINATE = 'Coordinate';
 export const T_ENHANCED_LABEL = 'EnhancedLabel';
+export const T_ENHANCED_SHAPE = 'EnhancedShape';
 export const T_FILTER = 'Filter';
 export const T_GRID = 'Grid';
 export const T_GROUP = 'Group';
