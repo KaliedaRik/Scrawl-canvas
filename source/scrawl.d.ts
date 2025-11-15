@@ -672,7 +672,7 @@ interface TweenMixinFunctions {
 // =====================================
 type ControlsShapeInstance = BezierInstance | LineInstance | QuadraticInstance;
 
-type ShapeBasedInstance = ControlsShapeInstance | CogInstance | LineSpiralInstance | OvalInstance | PolygonInstance | PolylineInstance | RectangleInstance | ShapeInstance | SpiralInstance | StarInstance | TetragonInstance;
+type ShapeBasedInstance = ControlsShapeInstance | CogInstance | EnhancedShapeInstance | LineSpiralInstance | OvalInstance | PolygonInstance | PolylineInstance | RectangleInstance | ShapeInstance | SpiralInstance | StarInstance | TetragonInstance;
 
 type EntityInstance = ShapeBasedInstance | BlockInstance | CrescentInstance | EmitterInstance | EnhancedLabelInstance | GridInstance | LabelInstance | LoomInstance | MeshInstance | NetInstance | PictureInstance | TracerInstance | WheelInstance;
 
@@ -2490,6 +2490,38 @@ export interface ShapeInstance extends ShapeFactoryInputs, ShapeFactoryFunctions
 
 
 
+// EnhancedShapeInstance factory
+// -------------------------------------
+interface EnhancedShapeComponentsObject {
+    component: EntityInstance | string;
+    order: number;
+    operation: 'base' | 'add' | 'subtract' | 'intersect';
+}
+
+interface EnhancedShapeFactoryDeltaInputs extends BaseMixinDeltaInputs, ShapeBasicMixinDeltaInputs {}
+
+interface EnhancedShapeFactoryInputs extends BaseMixinInputs, ShapeBasicMixinInputs, EnhancedShapeFactoryDeltaInputs {
+    delta?: ShapeFactoryDeltaInputs;
+    components?: EnhancedShapeComponentsObject[];
+}
+
+interface EnhancedShapeSaveInputs extends EnhancedShapeFactoryInputs, SaveInputs {}
+
+interface EnhancedShapeFactoryFunctions extends BaseMixinFunctions, EnhancedShapeBasicMixinFunctions {
+    clone: (item?: EnhancedShapeFactoryInputs) => EnhancedShapeInstance;
+    saveAsPacket: (item?: EnhancedShapeSaveInputs | boolean) => string;
+    set: (item?: EnhancedShapeFactoryInputs) => EnhancedShapeInstance;
+    setDelta: (item?: EnhancedShapeFactoryDeltaInputs) => EnhancedShapeInstance;
+    simpleStamp: (host: CellInstance, items?: EnhancedShapeFactoryInputs) => void;
+}
+
+export interface EnhancedShapeInstance extends EnhancedShapeFactoryInputs, EnhancedShapeFactoryFunctions {
+    length: number;
+}
+
+
+
+
 // SpiralInstance factory
 // -------------------------------------
 interface SpiralFactoryDeltaInputs extends BaseMixinDeltaInputs, ShapeBasicMixinDeltaInputs {
@@ -3226,6 +3258,7 @@ export function makeConicGradient(items: ConicGradientFactoryInputs): ConicGradi
 export function makeCrescent(items: CrescentFactoryInputs): CrescentInstance;
 export function makeEmitter(items: EmitterFactoryInputs): EmitterInstance;
 export function makeEnhancedLabel(items: EnhancedLabelFactoryInputs): EnhancedLabelInstance;
+export function makeEnhancedShape(items: EnhancedShapeFactoryInputs): EnhancedShapeInstance;
 export function makeFilter(items: FilterFactoryInputs): FilterInstance;
 export function makeForce(items: ForceFactoryInputs): ForceInstance;
 export function makeGradient(items: GradientFactoryInputs): GradientInstance;

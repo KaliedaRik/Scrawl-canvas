@@ -11,7 +11,7 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { _isArray, _isFinite, ENTITY, T_COG, T_ENHANCED_SHAPE, T_OVAL, T_POLYGON, T_RECTANGLE, T_STAR, T_TETRAGON } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, ENTITY, T_COG, T_ENHANCED_SHAPE, T_OVAL, T_POLYGON, T_RECTANGLE, T_STAR, T_TETRAGON, ZERO_PATH } from '../helper/shared-vars.js';
 
 // Local constants
 const BASE = 'base',
@@ -31,9 +31,6 @@ const EnhancedShape = function (items = Ωempty) {
 
     this.components = [];
     this.shapeInit(items);
-
-    this.dirtyContributors = true;
-    this.dirtyComponentOrder = true;
 
     return this;
 };
@@ -77,22 +74,32 @@ let S = P.setters;
 
 S.components = function (item) {
 
+console.log('components - item', item);
     if (_isArray(item)) {
 
-        const sanitisedItems = items.map(i => this.getSanitisedComponentObject(i)).filter(i = i !== false);
-console.log(sanitisedItems);
+        const existing = [];
 
+        const sanitisedItems = item.map(i => {
+
+            const s = this.getSanitisedComponentObject(i, existing);
+            if (s) existing.push(s.component);
+            return s;
+
+        }).filter(i => i !== false);
+
+console.log('components - sanitisedItems', JSON.stringify(sanitisedItems));
+
+        // TODO: Do work here to go through each component entity and remove the ES name from their `enhanced` array
         const name = this.name;
-
-        // Do work here to go through each component entity and remove the ES name from their `enhanced` array
 
         this.components.length = 0;
 
         this.components.push(...sanitisedItems);
 
-        // Do work here to go through each component entity and add the ES name to their `enhanced` array
+        // TODO: Do work here to go through each component entity and add the ES name to their `enhanced` array
+        // + This sets up the signalling system. When the component changes shape, position, scale or rotation it should then be able to communicate back to the EnhancedShape entity (using the `dirtySpecies` flag) that our entity needs to recalculate its path
 
-        this.dirtyContributors = true;
+        this.dirtySpecies = true;
         this.dirtyComponentOrder = true;
     }
 };
@@ -107,30 +114,38 @@ console.log(sanitisedItems);
 //   order: positive-finite-number,
 // }
 // ```
-P.getSanitisedComponentObject = function (item) {
+P.getSanitisedComponentObject = function (item, existing) {
 
+    // All required attributes must be present
     if (!isa_obj(item)) return false;
     if (item.component == null || item.operation == null || item.order == null) return false;
 
     const res = {
         component: item.component,
-        operation: item.component,
-        order: item.component,
+        operation: item.operation,
+        order: item.order,
     };
 
+    // Reject non-finite, non-positive numbers
     if (!_isFinite(res.order) || res.order < 0) return false;
     res.order = _floor(res.order);
 
+    // Reject unsupported operations
     if (!OPERATIONS.includes(res.operation)) return false;
 
     // Reject if the entity has not yet been defined and registered in the library
     if (res.component.substring && !entitynames.includes(res.component)) return false;
     if (res.component.name && !entitynames.includes(res.component.name)) return false;
 
+    // Component attribute must be a string
     if (res.component.name) res.component = res.component.name;
 
+    // Reject non-permitted components
     const e = entity[res.component];
     if (e == null || !PERMITTED_ENTITYS.includes(e.type)) return false;
+
+    // Reject duplicate entitys
+    if (existing.includes(res.component)) return false;
 
     return res;
 };
@@ -162,14 +177,30 @@ P.cleanStampHandlePositionsAdditionalActions = function () {
 // `makeEnhancedShapePath` - internal helper function - called by `cleanSpecies`
 P.makeEnhancedShapePath = function () {
 
+console.log('makeEnhancedShapePath triggered');
+
+    // Step 1: sort components, if required
+    if (this.dirtyComponentOrder) this.sortComponents();
+
+
     // This is where we get path-related data from contributing shape-based entitys and then combine them following the instructions in the `components` array
 
     let myData = ZERO_PATH;
 
     // Temporary for development - just to display something
-    myData += 'h10v10h-10z';
+    myData += 'h50v50h-50z';
 
     return myData;
+};
+
+P.sortComponents = function () {
+
+console.log('sortComponents triggered');
+    this.dirtyComponentOrder = false;
+
+    this.components.sort((a, b) => a.order - b.order);
+
+console.log(JSON.stringify(this.components))
 };
 
 P.calculateLocalPathAdditionalActions = function () {

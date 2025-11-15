@@ -575,7 +575,7 @@ export default function (P = Ωempty) {
 
             art = artefact[name];
 
-            if (art && art.type === T_ENHANCED_SHAPE) art.dirtyContributors = true;
+            if (art && art.type === T_ENHANCED_SHAPE) art.dirtySpecies = true;
 
         }, this);
     };
