@@ -13,11 +13,10 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { ENTITY, ZERO_PATH } from '../helper/shared-vars.js';
+import { ENTITY, T_LINE_SPIRAL, ZERO_PATH } from '../helper/shared-vars.js';
 
 // Local constants
-const LINE_SPIRAL = 'linespiral',
-    T_LINE_SPIRAL = 'LineSpiral';
+const LINE_SPIRAL = 'linespiral';
 
 
 // #### LineSpiral constructor

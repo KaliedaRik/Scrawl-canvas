@@ -13,11 +13,10 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { ENTITY, ZERO_PATH, ZERO_STR } from '../helper/shared-vars.js';
+import { ENTITY, T_STAR, ZERO_PATH, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const STAR = 'star',
-    T_STAR = 'Star';
+const STAR = 'star';
 
 
 // #### Star constructor

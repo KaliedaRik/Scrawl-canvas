@@ -11,11 +11,10 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { ENTITY, RADIUS_X, RADIUS_XY, RADIUS_Y, ZERO_PATH } from '../helper/shared-vars.js';
+import { ENTITY, RADIUS_X, RADIUS_XY, RADIUS_Y, T_TETRAGON, ZERO_PATH } from '../helper/shared-vars.js';
 
 // Local constants
-const T_TETRAGON = 'Tetragon',
-    TETRAGON = 'tetragon';
+const TETRAGON = 'tetragon';
 
 
 // #### Tetragon constructor

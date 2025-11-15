@@ -11,10 +11,9 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { ENTITY } from '../helper/shared-vars.js';
+import { ENTITY, T_SHAPE } from '../helper/shared-vars.js';
 
-// Local constants
-const T_SHAPE = 'Shape';
+// Local constants (none defined)
 
 
 // #### Shape constructor

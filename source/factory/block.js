@@ -10,10 +10,9 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
 // Shared constants
-import { ENTITY } from '../helper/shared-vars.js';
+import { ENTITY, T_BLOCK } from '../helper/shared-vars.js';
 
 // Local constants
-const T_BLOCK = 'Block';
 
 
 // #### Block constructor

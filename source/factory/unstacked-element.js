@@ -14,12 +14,11 @@ import { makeCanvas } from './canvas.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _computed, _entries, _floor, _max, ABSOLUTE, AUTO, CANVAS, HEIGHT, RELATIVE, WIDTH } from '../helper/shared-vars.js';
+import { _computed, _entries, _floor, _max, ABSOLUTE, AUTO, CANVAS, HEIGHT, RELATIVE, T_UNSTACKED_ELEMENT, WIDTH } from '../helper/shared-vars.js';
 
 // Local constants
 const DATA_SCRAWL_NAME = 'data-scrawl-name',
     STATIC = 'static',
-    T_UNSTACKED_ELEMENT = 'UnstackedElement',
     UE_INCLUDED_STYLES = ['width', 'height', 'zIndex', 'borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'],
     UE_MIMICKED_STYLES = ['borderBottomLeftRadius', 'borderBottomRightRadius', 'borderTopLeftRadius', 'borderTopRightRadius'],
     UNSTACKEDELEMENT = 'unstackedelement',

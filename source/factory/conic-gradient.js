@@ -11,10 +11,9 @@ import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
 // Shared constants
-import { _radian, BLANK, STYLES } from '../helper/shared-vars.js';
+import { _radian, BLANK, STYLES, T_CONIC_GRADIENT } from '../helper/shared-vars.js';
 
 // Local constants
-const T_CONIC_GRADIENT = 'ConicGradient';
 
 
 // #### ConicGradient constructor

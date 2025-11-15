@@ -16,10 +16,9 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
 // Shared constants
-import { _isArray, _isFinite, _piDouble, BLACK, ENTITY } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _piDouble, BLACK, ENTITY, T_TRACER } from '../helper/shared-vars.js';
 
-// Local constants
-const T_TRACER = 'Tracer';
+// Local constants (none defined)
 
 
 // #### Tracer constructor

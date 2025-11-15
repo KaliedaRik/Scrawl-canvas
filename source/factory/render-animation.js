@@ -37,6 +37,7 @@ import { _assign, _isArray, ANIMATION, T_RENDER_ANIMATION } from '../helper/shar
 
 // Local constants (none defined)
 
+
 // #### RenderAnimation constructor
 const RenderAnimation = function (items = Ωempty) {
 

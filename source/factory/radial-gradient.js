@@ -11,10 +11,9 @@ import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
 // Shared constants
-import { BLANK, BOTTOM, CENTER, LEFT, RIGHT, STYLES, TOP } from '../helper/shared-vars.js';
+import { BLANK, BOTTOM, CENTER, LEFT, RIGHT, STYLES, T_RADIAL_GRADIENT, TOP } from '../helper/shared-vars.js';
 
-// Local constants
-const T_RADIAL_GRADIENT = 'RadialGradient';
+// Local constants (none defined)
 
 
 // #### RadialGradient constructor

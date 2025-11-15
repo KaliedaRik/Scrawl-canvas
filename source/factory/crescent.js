@@ -15,10 +15,9 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
 // Shared constants
-import { _radian, DESTINATION_OUT, ENTITY } from '../helper/shared-vars.js';
+import { _radian, DESTINATION_OUT, ENTITY, T_CRESCENT } from '../helper/shared-vars.js';
 
 // Local constants
-const T_CRESCENT = 'Crescent';
 
 
 // #### Crescent constructor

@@ -15,11 +15,10 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { _abs, _max, _min, ENTITY, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _max, _min, ENTITY, T_POLYGON, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const POLYGON = 'polygon',
-    T_POLYGON = 'Polygon';
+const POLYGON = 'polygon';
 
 
 // #### Polygon constructor

@@ -26,10 +26,9 @@ import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 
 // Shared constants
-import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_LOOM, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const T_LOOM = 'Loom';
 
 
 // #### Loom constructor

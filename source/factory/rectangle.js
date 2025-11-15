@@ -11,7 +11,7 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { ENTITY, RECTANGLE, ZERO_PATH } from '../helper/shared-vars.js';
+import { ENTITY, RECTANGLE, T_RECTANGLE, ZERO_PATH } from '../helper/shared-vars.js';
 
 // Local constants
 const RADIUS_ARRAY_ALL = ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY'],
@@ -40,8 +40,7 @@ const RADIUS_ARRAY_ALL = ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX', 'r
     RADIUS_ARRAY_TOP_X = ['radiusTLX', 'radiusTRX'],
     RADIUS_ARRAY_TOP_Y = ['radiusTLY', 'radiusTRY'],
     RADIUS_ARRAY_X = ['radiusTLX', 'radiusTRX', 'radiusBRX', 'radiusBLX'],
-    RADIUS_ARRAY_Y = ['radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY'],
-    T_RECTANGLE = 'Rectangle';
+    RADIUS_ARRAY_Y = ['radiusTLY', 'radiusTRY', 'radiusBRY', 'radiusBLY'];
 
 
 // #### Rectangle constructor

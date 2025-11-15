@@ -11,11 +11,10 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { ENTITY, RADIUS_X, RADIUS_XY, RADIUS_Y, ZERO_PATH } from '../helper/shared-vars.js';
+import { ENTITY, RADIUS_X, RADIUS_XY, RADIUS_Y, T_OVAL, ZERO_PATH } from '../helper/shared-vars.js';
 
 // Local constants
-const OVAL = 'oval',
-    T_OVAL = 'Oval';
+const OVAL = 'oval';
 
 
 // #### Oval constructor

@@ -13,11 +13,10 @@ import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shape-basic.js';
 
 // Shared constants
-import { _floor, ENTITY, ZERO_PATH } from '../helper/shared-vars.js';
+import { _floor, ENTITY, T_SPIRAL, ZERO_PATH } from '../helper/shared-vars.js';
 
 // Local constants
-const SPIRAL = 'spiral',
-    T_SPIRAL = 'Spiral';
+const SPIRAL = 'spiral';
 
 const FIRST_TURN = [
     [0.043, 0, 0.082, -0.035, 0.088, -0.088],

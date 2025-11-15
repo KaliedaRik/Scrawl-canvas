@@ -16,10 +16,9 @@ import { animateAdd, animateIncludes, animateRemove } from '../core/animation-lo
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { ANIMATION } from '../helper/shared-vars.js';
+import { ANIMATION, T_ANIMATION } from '../helper/shared-vars.js';
 
 // Local constants
-const T_ANIMATION = 'Animation';
 
 
 // #### Animation constructor

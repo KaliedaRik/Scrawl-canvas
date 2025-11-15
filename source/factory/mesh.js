@@ -28,10 +28,9 @@ import anchorMix from '../mixin/anchor.js';
 import buttonMix from '../mixin/button.js';
 
 // Shared constants
-import { _atan2, _ceil, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _atan2, _ceil, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sqrt, ARG_SPLITTER, DESTINATION_OUT, ENTITY, FILL, NAME, STATE_KEYS, T_CELL, T_GROUP, T_MESH, T_NET, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const T_MESH = 'Mesh';
 
 
 // #### Mesh constructor

@@ -11,10 +11,9 @@ import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
 // Shared constants
-import { BLANK, STYLES } from '../helper/shared-vars.js';
+import { BLANK, STYLES, T_GRADIENT } from '../helper/shared-vars.js';
 
 // Local constants
-const T_GRADIENT = 'Gradient';
 
 
 // #### Gradient constructor

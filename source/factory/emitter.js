@@ -23,11 +23,10 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
 // Shared constants
-import { _abs, _floor, _isArray, _isFinite, _now, _piDouble, _random, _tick, BLACK, ENTITY, EULER, MOUSE, PARTICLE, T_WORLD } from '../helper/shared-vars.js';
+import { _abs, _floor, _isArray, _isFinite, _now, _piDouble, _random, _tick, BLACK, ENTITY, EULER, MOUSE, PARTICLE, T_EMITTER, T_WORLD } from '../helper/shared-vars.js';
 
 // Local constants
-const T_EMITTER = 'Emitter',
-    NEWEST = 'newest';
+const NEWEST = 'newest';
 
 
 // #### Emitter constructor

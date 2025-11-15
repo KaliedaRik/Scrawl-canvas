@@ -16,11 +16,10 @@ import { doCreate, isa_fn, mergeOver, pushUnique, Ωempty } from '../helper/util
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _keys, ANCHOR, BLUR, CLICK, DATA_TAB_ORDER, DOWNLOAD, FOCUS, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, TARGET, UNDEF, TYPE, ZERO_STR } from '../helper/shared-vars.js';
+import { _keys, ANCHOR, BLUR, CLICK, DATA_TAB_ORDER, DOWNLOAD, FOCUS, HREF, HREFLANG, NAME, PING, REFERRERPOLICY, REL, T_ANCHOR, TARGET, UNDEF, TYPE, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const _A = 'a',
-    T_ANCHOR = 'Anchor';
+const _A = 'a';
 
 
 // #### Anchor constructor
