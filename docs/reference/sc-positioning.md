@@ -8,7 +8,7 @@ As background knowledge, we need to understand that a DOM `<canvas>` element, an
 
 + **DOM `<canvas>` elements** are part of the HTML5 specification. The element includes attributes – `height=`, `width=` – used to define a ***coordinate space*** (measured in CSS pixels) within which drawing operations can take place. The visual representation of the canvas element in the web page can be styled using CSS; note that when the element's CSS styling dimensions diverge from its coordinate space dimensions, browsers will scale the coordinate space (ignoring aspect ratio) to fit into the styled dimensions. Drawing operations are, for 2D graphics, defined by the [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API); these operations are managed by a [context interface](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D). 
 
-+ **SC Canvas artefacts** wrap DOM `<canvas>` elements and bring them into the SC ecosystem. They include handles to the DOM element itself and its context interface, though dev-users should generally avoid directly interacting with them. Instead, graphical operations are handled by Cell artefacts, of which each Canvas wrapper will have at least one – the ***base Cell***. Dev-users can control how the base cell will display in the DOM `<canvas>` element, allowing us to build real-time responsive graphical displays.
++ **SC Canvas artefacts** wrap DOM `<canvas>` elements and bring them into the SC ecosystem. They include handles to the DOM element itself and its context interface, though product-devs should generally avoid directly interacting with them. Instead, graphical operations are handled by Cell artefacts, of which each Canvas wrapper will have at least one – the ***base Cell***. Product-devs can control how the base cell will display in the DOM `<canvas>` element, allowing us to build real-time responsive graphical displays.
 
 + **SC Cell artefacts** wrap regular (auto-generated) `<canvas>` elements that are **not** added to the web page's DOM. Every Canvas wrapper includes, at a minimum, a ***base Cell***, and can include additional Cell artefacts as necessary. Note that these additional `<canvas>` elements are nothing special: SC does not make use of the [OffscreenCanvas interface](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas) or, indeed, Web Workers.
 
@@ -40,7 +40,7 @@ SC allows us to position an entity's rotation-reflection point in several differ
 + ***Positioning by reference*** where an entity can use the current position of another entity to calculate its own position on the Cell.
 
 ## Absolute and relative positioning
-The most direct way to position an entity is to give it `start`, `offset` and `handle` values, from which it will calculate its position on the Cell. Each of these attributes are Coordinates with a default value of `[0,0]`. Each attribute also comes with a set of pseudo-attributes which allow the dev-user to set and get the x and y components of the Coordinate separately.
+The most direct way to position an entity is to give it `start`, `offset` and `handle` values, from which it will calculate its position on the Cell. Each of these attributes are Coordinates with a default value of `[0,0]`. Each attribute also comes with a set of pseudo-attributes which allow the product-dev to set and get the x and y components of the Coordinate separately.
 
 ### The `start` artefact attribute
 We **set** an artefact's rotation-reflection point using its `start` attribute. For convenience, we can also set each part of the point's coordinate using the `startX` and `startY` pseudo-attributes.
@@ -126,7 +126,7 @@ The `start` and `offset` attributes discussed above both feed into the first ste
 
 Every artefact has a [path2D object](https://developer.mozilla.org/en-US/docs/Web/API/Path2D), which SC uses for stroke/fill painting operations as well as the artefact's ***hit*** functionality (for example: hover, and drag-and-drop, operations).
 
-When building the artefact's path2D object, SC takes into account the artefact's ***dimensions*** and ***scale***. It also includes a (scaled) ***local displacement*** value which has the apparent effect of moving the rotation-reflection point away from the artefact's top-left corner. Dev-users can set this displacement value in the artefact's `handle` attribute.
+When building the artefact's path2D object, SC takes into account the artefact's ***dimensions*** and ***scale***. It also includes a (scaled) ***local displacement*** value which has the apparent effect of moving the rotation-reflection point away from the artefact's top-left corner. Product-devs can set this displacement value in the artefact's `handle` attribute.
 
 Similar to the `start` and `offset` values, `handle` values can be ***absolute*** (measured in pixels) or ***relative*** (as a percentage of the artefact's current scaled dimensions). When we **set** the artefact's `handle` (`handleX`, `handleY`) value, we also set its `dirtyHandle` boolean flag to `true`. After cleaning, the handle's calculated values get stored in the private `currentHandle` attribute.
 
@@ -193,23 +193,23 @@ In essence, this means that instead of using its own `currentStart` values when 
 ### The `lockTo` artefact attribute
 The `lockTo` attribute is an Array containing two String values. Each value indicates how the artefact wants to calculate its position along the Cell's `x` and `y` axes – `['x-axis-string', 'y-axis-string']`. The default value is `['start', 'start']`, indicating that the artefact wishes both parts of its start coordinate to use absolute or relative positioning as described above.
 
-Like the other coordinate-like attributes, `lockTo` comes with a set of pseudo-attributes – `lockXTo`, `lockYTo` – which dev-users can use to set the individual elements of the attribute.
+Like the other coordinate-like attributes, `lockTo` comes with a set of pseudo-attributes – `lockXTo`, `lockYTo` – which product-devs can use to set the individual elements of the attribute.
 
 The following String values can be used in the `lockTo` attribute's Array:
 
 + `start` – (default): use absolute or relative positioning
 
-+ `pivot`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point. Dev-users can reference an artefact by setting the artefact's `pivot` attribute to the artefact's name String, or the artefact itself.
++ `pivot`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point. Product-devs can reference an artefact by setting the artefact's `pivot` attribute to the artefact's name String, or the artefact itself.
 
-+ `mimic`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point. Dev-users can reference an artefact by setting the artefact's `mimic` attribute to the artefact's name String, or the artefact itself, alongside setting its `useMimicStart` flag to `true`.
++ `mimic`: use the referenced artefact's `currentStart` values to calculate the rotation-reflection point. Product-devs can reference an artefact by setting the artefact's `mimic` attribute to the artefact's name String, or the artefact itself, alongside setting its `useMimicStart` flag to `true`.
 
-+ `path`: use a given position's coordinates along the referenced artefact's ***path*** to calculate the rotation-reflection point. Dev-users can reference a [path-based entity](sc-path-based-entitys.html) by setting our artefact's `path` attribute to the referenced entity's name String, or the referenced entity itself. The position along the path is a float Number between `0` and `1` set on our artefact's `pathPosition` attribute; note that this position can be affected by the value of the `constantSpeedAlongPath` boolean attribute – see [demo Canvas-030](../demo/canvas-030.html) for an example of this in action.
++ `path`: use a given position's coordinates along the referenced artefact's ***path*** to calculate the rotation-reflection point. Product-devs can reference a [path-based entity](sc-path-based-entitys.html) by setting our artefact's `path` attribute to the referenced entity's name String, or the referenced entity itself. The position along the path is a float Number between `0` and `1` set on our artefact's `pathPosition` attribute; note that this position can be affected by the value of the `constantSpeedAlongPath` boolean attribute – see [demo Canvas-030](../demo/canvas-030.html) for an example of this in action.
 
 + `particle`: use the referenced particle's current position to calculate the rotation-reflection point.
 
 + `mouse`: use the mouse cursor's calculated position relative to the Cell to calculate the rotation-reflection point
 
-Dev-users are able to set an artefact to reference multiple artefacts, one each for the `pivot`, `mimic`, `path` and `particle` attributes. These attributes can be updated at any time. It is the `lockTo` attribute which determines which reference will be used to position the artefact.
+Product-devs are able to set an artefact to reference multiple artefacts, one each for the `pivot`, `mimic`, `path` and `particle` attributes. These attributes can be updated at any time. It is the `lockTo` attribute which determines which reference will be used to position the artefact.
 
 #### Pivot specifics
 + If the referenced artefact is an ***Element*** artefact, the artefact is able to pivot to either the Element's start value, or to the position of any of the Element's current corner positions, depending on the value set on the artefact's `pivotCorner` attribute.

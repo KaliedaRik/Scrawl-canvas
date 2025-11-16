@@ -1,10 +1,10 @@
 # Scrawl-canvas objects overview
 The [`<canvas>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas), alongside the [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) used to program it, is an **[immediate mode](https://learn.microsoft.com/en-us/windows/win32/learnwin32/retained-mode-versus-immediate-mode) graphics system**. What this means in practical terms is that all Canvas API drawing instructions have to be set out in a JavaScript file, or written directly in a `<script>` element, and run in their entirety to generate the canvas display. For animation, this needs to be repeated for every frame of the animation.
 
-Most canvas libraries – including Scrawl-canvas – act as a buffer between the dev-user and the Canvas API by introducing a stateful [scene graph](https://en.wikipedia.org/wiki/Scene_graph) composed of objects, and groups of objects, which define a set of entities to be drawn onto the canvas. The scene graph gets **rendered** onto the canvas once, then re-rendered only when changes to its state require it. Some canvas libraries are sophisticated enough to only re-render those parts of their scene graph that change, thus minimising the work the browser needs to do. They are, effectively, **retained mode graphics systems**.
+Most canvas libraries – including Scrawl-canvas – act as a buffer between the product-dev and the Canvas API by introducing a stateful [scene graph](https://en.wikipedia.org/wiki/Scene_graph) composed of objects, and groups of objects, which define a set of entities to be drawn onto the canvas. The scene graph gets **rendered** onto the canvas once, then re-rendered only when changes to its state require it. Some canvas libraries are sophisticated enough to only re-render those parts of their scene graph that change, thus minimising the work the browser needs to do. They are, effectively, **retained mode graphics systems**.
 
 ## Object creation and the SC library
-When a dev-user develops an SC canvas display they start by defining the set of artefacts and entitys they will use in the display, using [factory functions](https://en.wikipedia.org/wiki/Factory_(object-oriented_programming)) supplied by SC for that purpose. These factory functions are easy to identify because they are all named along the lines of `makeSomething`:
+When a product-dev develops an SC canvas display they start by defining the set of artefacts and entitys they will use in the display, using [factory functions](https://en.wikipedia.org/wiki/Factory_(object-oriented_programming)) supplied by SC for that purpose. These factory functions are easy to identify because they are all named along the lines of `makeSomething`:
 
 ```
 // Factory functions always return the object they've just created
@@ -23,7 +23,7 @@ Factory functions are each defined in their own JavaScript files in the repo. Lo
 
 ```
 | - scrawl.js                       Entry file
-| - scrawl.d.ts                     TS types definitions for the dev-user API
+| - scrawl.d.ts                     TS types definitions for the product-dev API
 |
 | - asset-management
 |   | - [...]
@@ -65,13 +65,13 @@ The key difference between the files in the `factory` and `untracked-factory` fo
 + Registering and deregistering objects in the SC library, including object **kill functionality** – `.kill()`.
 
 ### Object naming
-Every tracked SC object needs a name – if the dev-user fails to provide the factory function with a `name` attribute SC will assign the object a random (and very ugly) name.
+Every tracked SC object needs a name – if the product-dev fails to provide the factory function with a `name` attribute SC will assign the object a random (and very ugly) name.
 
-Object names need to be (mostly) unique because SC uses the `name` attribute as that object's key in the SC library. The dev-user should always be able to locate an object in the library, and retrieve it, if they know its name.
+Object names need to be (mostly) unique because SC uses the `name` attribute as that object's key in the SC library. The product-dev should always be able to locate an object in the library, and retrieve it, if they know its name.
 
 > **tl;dr: namespacing objects in the SC library is highly recommended!** Because the SC library can quickly fill with objects, keeping the library tidy becomes a priority – particularly when objects are no longer required for the `<canvas>` display.
 
-A simple way for the dev-user to namespace objects is to use a small piece of boilerplate code in their project files, along the lines of: 
+A simple way for the product-dev to namespace objects is to use a small piece of boilerplate code in their project files, along the lines of: 
 
 ```
 const namespace = `${canvas.name}-somenamespacestring`;
@@ -253,7 +253,7 @@ scrawl.makeBlock({
 const myRedBlock = scrawl.findEntity(name('red-block'));
 ```
 
-Alternatively, dev-users can get the object directly from the library using dot.notation:
+Alternatively, product-devs can get the object directly from the library using dot.notation:
 
 ```
 const myRedBlock = scrawl.library.entity[name('red-block')];
@@ -262,14 +262,14 @@ const myRedBlock = scrawl.library.entity[name('red-block')];
 ### Deleting objects, and SC library hygiene
 The easiest way to delete an object is to invoke its **kill** function: `myRedBlock.kill()`. This will delete all references to the object across the SC system and remove it from the SC library.
 
-However there may be times when a dev-user wants to delete many objects, for instance if they have set up a static background and want to free up some memory for other tasks. This is where **namespacing** the objects becomes really useful as SC exports a function – `scrawl.purge('namespace-string')` – to purge all objects whose names start with that namespace string from the system. See [Demo Canvas-046](../../demo/canvas-046.html) for a working example.
+However there may be times when a product-dev wants to delete many objects, for instance if they have set up a static background and want to free up some memory for other tasks. This is where **namespacing** the objects becomes really useful as SC exports a function – `scrawl.purge('namespace-string')` – to purge all objects whose names start with that namespace string from the system. See [Demo Canvas-046](../../demo/canvas-046.html) for a working example.
 
 ## Getting and setting object attributes
 While the SC (bespoke) property accessor functionality may seem over-complicated on first glance, the system has been built in this way for reasons that have evolved over the course of the repo's history:
 
 + Every factory function constructs its object instances in the same way, assigning all the attributes that the object instance will ever hold with default values before populating those attributes with values supplied to it in the function's argument object. This is done to establish the [object instance's shape](https://mathiasbynens.be/notes/shapes-ics) in a way that promotes JavaScript engine speed.
-+ The object instance's setter (`.set()`, `.setDelta()`) functions do the necessary work to maintain the instance's shape: if the dev-user tries to add a new attribute to the instance, it will be ignored. These functions also manage part of the [SC signals system](sc-events-signals.html), which tells objects that they need to update (some of) their attribute values as a result of updates in other parts of the ecosystem.
-+ The object instances that a factory function generates can be complicated, with nested arrays, functions and objects assigned to attributes. SC property accessors try to simplify the getting and setting of instance attributes so that dev-users don't need to remember the instance's shape to get work done (thus, a better developer experience).
++ The object instance's setter (`.set()`, `.setDelta()`) functions do the necessary work to maintain the instance's shape: if the product-dev tries to add a new attribute to the instance, it will be ignored. These functions also manage part of the [SC signals system](sc-events-signals.html), which tells objects that they need to update (some of) their attribute values as a result of updates in other parts of the ecosystem.
++ The object instances that a factory function generates can be complicated, with nested arrays, functions and objects assigned to attributes. SC property accessors try to simplify the getting and setting of instance attributes so that product-devs don't need to remember the instance's shape to get work done (thus, a better developer experience).
 
 > **tl;dr:** SC does ***not*** encourage the use of [JavaScript property accessors](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors) (dot-notation or bracket-notation syntax) for getting or setting values on factory-generated object instances in product code. Use the `.get('attribute')`, `.set({key: value, ...})` and `.setDelta({key: value, ...})` functions instead.
 
@@ -284,12 +284,12 @@ The SC property accessor functionality is initially defined in the [base mixin f
 + [factory/pattern.js](../source/factory/pattern.html) – to include asset object attributes and functionality
 + [mixin/text.js](../source/mixin/text.html) – to include text-style functionality
 
-(For future consideration: there may be some merit to reworking the SC property accessor functionality, to use [Object.defineProperty()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty) – it could simplify the code base and allow dev-users to more safely use dot-notation/bracket-notation syntax in their product code. This would, however, be a significant amount of work for – potentially! – minimal benefit.)
+(For future consideration: there may be some merit to reworking the SC property accessor functionality, to use [Object.defineProperty()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty) – it could simplify the code base and allow product-devs to more safely use dot-notation/bracket-notation syntax in their product code. This would, however, be a significant amount of work for – potentially! – minimal benefit.)
 
 ## Object serialization and cloning
 SC objects can be [serialized](https://en.wikipedia.org/wiki/Serialization) into strings – for storage, transmission over networks, etc – and deserialized from those strings back into objects. This includes serializing functions assigned to object attributes.
 
-JavaScript does not tell a good story when it comes to serializing functions. By necessity, SC has to use the JavaScript [`Function() constructor`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function) as part of the deserialization process. Some dev-users may consider this to be a security risk but, compared to using `eval()` to deserialize the function, the risk is minimal (but not eliminated).
+JavaScript does not tell a good story when it comes to serializing functions. By necessity, SC has to use the JavaScript [`Function() constructor`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function) as part of the deserialization process. Some product-devs may consider this to be a security risk but, compared to using `eval()` to deserialize the function, the risk is minimal (but not eliminated).
 
 Because of the issues surrounding JavaScript object serialization, SC implements its own serialization functionality called **packet management**. Much of this functionality gets defined in the [base mixin file](../source/mixin/base.html) using the following prototype attributes and functions:
 + [internal] `packetExclusions – string[]`
@@ -359,14 +359,14 @@ The SC cloning functionality is tied closely to the packet functionality. To cre
 Most SC clone functionality is coded into the [base mixin file](../source/mixin/base.html) `.clone({key: value, ...})` function. Various mixin and factory functions will finesse that functionality to better match their instance object shape requirements by overwriting the base mixin's `postCloneAction()` function.
 
 ## Exceptions to the outlined processes
-The ecosystem of mixin and factory functions which make up the SC stateful scene graph is necessarily complex, partly to meet the requirements of a (hopefully) fast and memory-efficient code base, but also to make the creation of `<canvas>` displays with SC as simple as possible for dev-users (good UX).
+The ecosystem of mixin and factory functions which make up the SC stateful scene graph is necessarily complex, partly to meet the requirements of a (hopefully) fast and memory-efficient code base, but also to make the creation of `<canvas>` displays with SC as simple as possible for product-devs (good UX).
 
 Most factory function and mixin files follow the above outlined processes; a few do not. Brief details of these divergent files are given below.
 
 ### Canvas and Stack factory functions
 The [Canvas](../source/factory/canvas.html) and [Stack](../source/factory/stack.html) factory functions do not contribute (for the most part) to the SC scene graph. Instead they are the mechanisms by which the scene graph deploys to the web page. Because of this intimate connection to the web page's [Document Object Model](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model), these functions do not export a `makeCanvas` or `makeStack` function.
 
-There's three ways a dev-user can add an SC-controlled `<canvas>` or `<div>` stack to a web page:
+There's three ways a product-dev can add an SC-controlled `<canvas>` or `<div>` stack to a web page:
 + Hard-code the elements into the web page, so that SC can discover and wrap the elements into the SC ecosystem as part of [initialization discovery](sc-initialization.html). Most of the test demos rely on this approach.
 + Use the SC functions `scrawl.addCanvas()` and `scrawl.addStack()` to insert and wrap new `<canvas>` and `<div>` stack elements into the DOM after page load completes. See demos [DOM-010](../../demo/dom-010.html) (for Stacks) and [DOM-012](../../demo/dom-012.html) (for Canvases) for examples of using this approach.
 + Rely on a 3rd party framework – such as React, Angular, Vue, Svelte, etc – to create and add the canvas or stack elements to the DOM as part of their normal component functionality, and then wrap those elements into the SC ecosystem using the `scrawl.getCanvas()` and `scrawl.getStack()` functions. See demo [DOM-017](../../demo/dom-017.html) for an example of using this approach.
@@ -378,7 +378,7 @@ The `myStack.kill()` and `myCanvas.kill()` functions will not only remove the Ca
 ### Cell factory function
 The [Cell factory function](../source/factory/cell.html) does export a `makeCell()` function, but this is only used internally by other modules in the repo code.
 
-Instead, dev-users have to create new cells against the Canvas wrapper object which will host the Cell object: `myCanvas.buildCell({name: string, key: value, ...})`.
+Instead, product-devs have to create new cells against the Canvas wrapper object which will host the Cell object: `myCanvas.buildCell({name: string, key: value, ...})`.
 
 For the moment, SC does not support packet management and cloning functionality for Cell instances. This may change in the future.
 
@@ -399,21 +399,21 @@ Packet management support has been coded for these entitys, but tests have not y
 ### Image-based asset management factory functions
 Image-based asset code does not include factory functions to create instances of the assets. This is because image-based assets are often closely tied to image files which need to be fetched across the network, or to `<img>` and `<video>` elements in the DOM.
 
-To fetch and wrap an image or video file, dev-users can set the file URL in a `.source` attribute when creating [Picture](../source/factory/picture.html) entity or [Pattern](../source/factory/pattern.html) style instances.
+To fetch and wrap an image or video file, product-devs can set the file URL in a `.source` attribute when creating [Picture](../source/factory/picture.html) entity or [Pattern](../source/factory/pattern.html) style instances.
 
-Alternatively, dev-users can invoke `scrawl.importImage('url-string')`, `scrawl.importSprite('url-string')` and `scrawl.importVideo('url-string')` to load these assets from remote files.
+Alternatively, product-devs can invoke `scrawl.importImage('url-string')`, `scrawl.importSprite('url-string')` and `scrawl.importVideo('url-string')` to load these assets from remote files.
 
-However the best approach for managing visual assets is to define them in the DOM and then import them using the `scrawl.importDomImage('css-query-string')` and `scrawl.importDomVideo('css-query-string')` functions. This allows the dev-user to define these assets in a responsive manner, and to import multiple assets in a single invocation. The associated SC files include functionality to manage responsive image and video elements (TODO code up similar functionality for sprite assets):
+However the best approach for managing visual assets is to define them in the DOM and then import them using the `scrawl.importDomImage('css-query-string')` and `scrawl.importDomVideo('css-query-string')` functions. This allows the product-dev to define these assets in a responsive manner, and to import multiple assets in a single invocation. The associated SC files include functionality to manage responsive image and video elements (TODO code up similar functionality for sprite assets):
 + [ImageAsset](../source/asset-management/image-asset.html)
 + [SpriteAsset](../source/asset-management/sprite-asset.html)
 + [VideoAsset](../source/asset-management/video-asset.html)
 
-Dev-users can, in a similar way, import browser [media streams](https://developer.mozilla.org/en-US/docs/Web/API/MediaStream) and [screen capture streams](https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API) for use in canvas displays by invoking the `scrawl.importMediaStream()` and `scrawl.importScreenCapture()` functions. Note that browsers will impose an [end-user consent check](https://developer.mozilla.org/en-US/docs/Web/Privacy#opt-in_for_powerful_features) before the asset can be imported into the SC environment.
+Product-devs can, in a similar way, import browser [media streams](https://developer.mozilla.org/en-US/docs/Web/API/MediaStream) and [screen capture streams](https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API) for use in canvas displays by invoking the `scrawl.importMediaStream()` and `scrawl.importScreenCapture()` functions. Note that browsers will impose an [end-user consent check](https://developer.mozilla.org/en-US/docs/Web/Privacy#opt-in_for_powerful_features) before the asset can be imported into the SC environment.
 
 SC does not support packet management and cloning functionality for any asset instances (including [NoiseAsset](../source/asset-management/noise-asset.html), [RawAsset](../source/asset-management/raw-asset.html) and [ReactionDiffusionAsset](../source/asset-management/reaction-diffusion-asset.html)). Kill functionality works as expected.
 
 ### Pool-based factory functions
-Dev-users can request the following pool-based objects. **It is imperative that if the dev-user requests an object, they must release it when done with it** – failure to do so may lead to slow memory leaks and degraded performance over time:
+Product-devs can request the following pool-based objects. **It is imperative that if the product-dev requests an object, they must release it when done with it** – failure to do so may lead to slow memory leaks and degraded performance over time:
 + [Coordinate](../source/untracked-factory/coordinate.html) – `requestCoordinate()`, `releaseCoordinate()`
 + [Quaternion](../source/untracked-factory/quaternion.html) – `requestQuaternion()`, `releaseQuaternion()`
 + [Vector](../source/untracked-factory/vector.html) – `requestVector()`, `releaseVector()`

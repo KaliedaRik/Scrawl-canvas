@@ -28,9 +28,9 @@
 
       <p>This Runbook tries to explain the design, architecture, code and toolchains associated with the Scrawl-canvas repository.</p>
 
-      <p>The Runbook is not, in a strict sense, a technical document because it doesn't set out in fine-grain detail how contributing developers (<b>repo-devs</b>) should structure their contributions to the library, or how developers using the library for their own products/projects (<b>dev-users</b>) should approach their work.</p>
+      <p>The Runbook is not, in a strict sense, a technical document because it doesn't set out in fine-grain detail how contributing developers (<b>repo-devs</b>) should structure their contributions to the library, or how developers using the library for their own products/projects (<b>product-devs</b>) should approach their work.</p>
 
-      <p>Rather, the Runbook is more of a brain-dump which gives information on the design patterns and architectural choices repo-devs made while developing SC, alongside pointers to where in the repo particular functionality lives and how it works. It also offers advice to dev-users on some best practices when using SC which may, hopefully, save them a bit of time.</p>
+      <p>Rather, the Runbook is more of a brain-dump which gives information on the design patterns and architectural choices repo-devs made while developing SC, alongside pointers to where in the repo particular functionality lives and how it works. It also offers advice to product-devs on some best practices when using SC which may, hopefully, save them a bit of time.</p>
 
       <h2>Contents</h2>
 
@@ -561,6 +561,7 @@
             <li>Action: newsprint</li>
             <li>Action: pixelate</li>
             <li>Action: tiles</li>
+            <li>Action: zoom-blur</li>
           </ul>
           <li>Displacement filters</li>
           <ul>
@@ -570,15 +571,17 @@
             <li>Action: random-noise</li>
             <li>Action: swirl</li>
           </ul>
-          <li>OK filters</li>
+          <li>OK color space filters</li>
           <ul>
-            <li>Action: alpha-to-luminance</li>
-            <li>Action: luminance-to-alpha</li>
-            <li>Action: modify-ok-channels</li>
-            <li>Action: modulate-ok-channels</li>
-            <li>Action: negative</li>
-            <li>Action: reduce-palette</li>
-            <li>Action: rotate-hue</li>
+            <li>Action: alpha-to-luminance - <i>color channels filter</i></li>
+            <li>Action: deconvolute - <i>convolution filter</i></li>
+            <li>Action: luminance-to-alpha - <i>alpha channels filter</i></li>
+            <li>Action: modify-ok-channels - <i>color channels filter</i></li>
+            <li>Action: modulate-ok-channels - <i>color channels filter</i></li>
+            <li>Action: negative - <i>color channels filter</i></li>
+            <li>Action: reduce-palette - <i>color channels filter</i></li>
+            <li>Action: rotate-hue - <i>color channels filter</i></li>
+            <li>Action: unsharp - <i>convolution filter</i></li>
           </ul>
         </ul>
         <li><a href="sc-filter-engine.html#sc-predefined-filter-effects">SC predefined filter effects</a></li>
@@ -601,6 +604,7 @@
           <li>Method: corrode</li>
           <li>Method: curveWeights</li>
           <li>Method: cyan</li>
+          <li>Method: deconvolute</li>
           <li>Method: displace</li>
           <li>Method: edgeDetect</li>
           <li>Method: emboss</li>
@@ -638,7 +642,9 @@
           <li>Method: threshold</li>
           <li>Method: tiles</li>
           <li>Method: tint</li>
+          <li>Method: unsharp</li>
           <li>Method: yellow</li>
+          <li>Method: zoomBlur</li>
         </ul>
       </ul>
 

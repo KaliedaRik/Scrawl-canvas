@@ -23,11 +23,11 @@
 
     <main>
         <h1 id="scrawl-canvas-page-load-initialization">Scrawl-canvas page load initialization</h1>
-<p>Scrawl-canvas is a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">modular javascript</a> repo, which needs to be <strong><em>imported</em></strong> into other TypeScript/JavaScript code. For instance, if the repo has been added via <code>npm install</code> or <code>yarn add</code> then dev-users can import the repo into code like this:</p>
+<p>Scrawl-canvas is a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules">modular javascript</a> repo, which needs to be <strong><em>imported</em></strong> into other TypeScript/JavaScript code. For instance, if the repo has been added via <code>npm install</code> or <code>yarn add</code> then product-devs can import the repo into code like this:</p>
 <pre><code>import * as scrawl from 'scrawl-canvas';</code></pre>
 <p>While such <code>import</code> statements may be encountered many times across different JS/TS files in a web page, <strong><em>the SC code itself will run only once, during page load</em></strong>, when the browser first finds the <code>import</code> statement. For every subsequent encounter, the browser just returns the SC object (<code>scrawl</code>) that was generated on that first meeting. This has implications when using SC in framework environments such as React, Vue, Angular, Svelte, etc.</p>
 <blockquote>
-  <p><strong>tl;dr: It is strongly recommended that code using SC only runs after the page's HTML download completes.</strong> This is because SC initialization code will interrogate the web page's DOM, looking for <code>&lt;canvas&gt;</code> and <code>&lt;div&gt;</code> stack elements that dev-users want it to manage … but this only happens once per page load!</p>
+  <p><strong>tl;dr: It is strongly recommended that code using SC only runs after the page's HTML download completes.</strong> This is because SC initialization code will interrogate the web page's DOM, looking for <code>&lt;canvas&gt;</code> and <code>&lt;div&gt;</code> stack elements that product-devs want it to manage … but this only happens once per page load!</p>
 </blockquote>
 <h2 id="the-scrawljs-file">The <code>scrawl.js</code> file</h2>
 <p>The <code>package.json</code> file has the following structure:</p>
@@ -48,7 +48,7 @@
 }</code></pre>
 <p>The repo's entry point is the <code>min/scrawl.js</code> file (which includes all of the repo's <code>source</code> folder's code). Note that the minified file has not been <a href="https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking">tree-shaken</a> – a known issue that has not yet been fixed.</p>
 <blockquote>
-  <p><strong>tl;dr: If tree shaking is essential</strong> then dev-users can edit the <code>scrawl.js</code> file, commenting out the functionality they do not need in their project. They will have to rebuild the repo locally, and be aware that updating the repo at any point will destroy their prior work with this file (unless they take action in their dev toolchain to somehow preserve the file between updates).</p>
+  <p><strong>tl;dr: If tree shaking is essential</strong> then product-devs can edit the <code>scrawl.js</code> file, commenting out the functionality they do not need in their project. They will have to rebuild the repo locally, and be aware that updating the repo at any point will destroy their prior work with this file (unless they take action in their dev toolchain to somehow preserve the file between updates).</p>
 </blockquote>
 <p>The <code>source/scrawl.js</code> file looks like this:</p>
 <pre><code>// ## Initialize Scrawl-canvas
@@ -107,7 +107,7 @@ export const init = function () {
     startCoreListeners();
 };</code></pre>
 <h3 id="imports">Imports</h3>
-<p>For a project whose only action relating to SC is to import the repo into code, where dev-users have commented out all the export lines in the <code>scrawl.js</code> file except the first four, the browser will read and run code from the following repo modules:</p>
+<p>For a project whose only action relating to SC is to import the repo into code, where product-devs have commented out all the export lines in the <code>scrawl.js</code> file except the first four, the browser will read and run code from the following repo modules:</p>
 <ul>
 <li><code>asset-management/image-asset.js</code></li>
 <li><code>core/animation-loop.js</code></li>
@@ -166,10 +166,10 @@ export const init = function () {
 </ul>
 <p>Because this discovery activity happens as soon as the SC code loads, and only happens once per page load, it is imperative that the code does not run until the browser has downloaded the HTML file and constructed its Document Object Model from the file's content.</p>
 <p>It's also important to remember that this discovery activity will only find <code>&lt;canvas&gt;</code> elements (and stacks) that already exist in (have been hard-coded into) the HTML file. Any <code>&lt;canvas&gt;</code> element added to the DOM after page load – for instance through <a href="https://en.wikipedia.org/wiki/Hydration_(web_development)">framework client-side hydration</a> or an <a href="https://www.patterns.dev/vanilla/islands-architecture/">Islands architecture</a> pattern – will not be found during the discovery phase and thus will not have been wrapped into the SC library.</p>
-<p>This has implications for when dev-users want to retrieve the generated artefacts from the SC library for further use:</p>
+<p>This has implications for when product-devs want to retrieve the generated artefacts from the SC library for further use:</p>
 <ul>
-<li>If the artefact was created as part of the discovery process, dev-users can use the <code>scrawl.findArtefact('element-id')</code>, <code>scrawl.findCanvas('element-id')</code> or <code>scrawl.findStack('element-id')</code> functions to retrieve them. Most of the <a href="../../demo/index.html">SC demo tests</a> include this functionality</li>
-<li>If, however, the HTML element was added to the DOM after the initial load - as happens in various component-based frameworks such as React, Angular, Vue, Svelte, etc – then dev-users need to use the <code>scrawl.getCanvas('element-id')</code> and <code>scrawl.getStack('element-id')</code> functions, which perform a post-load discovery operation and wrap the element in a Canvas or Stack wrapper artefact. This functionality can be seen in <a href="../demo/dom-017.html">demo DOM-017</a></li>
+<li>If the artefact was created as part of the discovery process, product-devs can use the <code>scrawl.findArtefact('element-id')</code>, <code>scrawl.findCanvas('element-id')</code> or <code>scrawl.findStack('element-id')</code> functions to retrieve them. Most of the <a href="../../demo/index.html">SC demo tests</a> include this functionality</li>
+<li>If, however, the HTML element was added to the DOM after the initial load - as happens in various component-based frameworks such as React, Angular, Vue, Svelte, etc – then product-devs need to use the <code>scrawl.getCanvas('element-id')</code> and <code>scrawl.getStack('element-id')</code> functions, which perform a post-load discovery operation and wrap the element in a Canvas or Stack wrapper artefact. This functionality can be seen in <a href="../demo/dom-017.html">demo DOM-017</a></li>
 </ul>
 <p>Note that when SC wraps <code>&lt;canvas&gt;</code>, <code>&lt;div&gt;</code> stacks and stack elements into SC artefact objects, it will mutate those DOM elements. Further details about this can be found in the <a href="sc-dom-artefacts.html">SC artefacts and the DOM</a> page in the Runbook.</p>
 <h2 id="the-scrawl-canvas-animation-loop">The Scrawl-canvas animation loop</h2>
@@ -254,7 +254,7 @@ export const setPrefersContrastChanged = (val) =&gt; prefersContrastChanged = va
 <h3 id="browser-mousetouchpointer-scroll-and-resize-events">Browser mouse/touch/pointer, scroll, and resize events</h3>
 <p>During initialization SC will add a set of event listeners to the <code>window</code> object which react to various <code>mouse/touch/pointer</code> events. When such events occur the listeners will set the appropriate system flags to true (ie: something has changed) and store the cursor's current position data in the <code>currentCorePosition</code> object. Functionality to react to these changes is deferred until the next animation loop runs.</p>
 <p>Similarly, SC sets event listeners on the <code>window</code> object to listen for browser <code>resize</code> and <code>scroll</code> events.</p>
-<p>After initialization completes the dev-user can stop and restart these core listeners by invoking the <code>scrawl.stopCoreListeners()</code> and <code>scrawl.startCoreListeners()</code> functions. See <a href="../demo/dom-009.html">demo test DOM-009</a> for an example of this functionality in action.</p>
+<p>After initialization completes the product-dev can stop and restart these core listeners by invoking the <code>scrawl.stopCoreListeners()</code> and <code>scrawl.startCoreListeners()</code> functions. See <a href="../demo/dom-009.html">demo test DOM-009</a> for an example of this functionality in action.</p>
 <h3 id="end-user-preferences-media-queries-and-events">End-user preferences media queries and events</h3>
 <p>SC uses evented media queries to listen out for changes in various system settings. For example:</p>
 <pre><code>const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -280,11 +280,11 @@ currentCorePosition.prefersDarkColorScheme = colorSchemeMediaQuery.matches;</cod
 <li><code>prefers-reduced-motion</code></li>
 <li><code>prefers-reduced-transparency</code></li>
 </ul>
-<p>SC, by default, doesn't react to changes in these settings. It's up to the dev-user to add hook functions to each Canvas wrapper object to supply the appropriate functionality for that canvas's output when changes occur. See the <a href="sc-objects-overview.html">Objects overview page</a> in the Runbook for further details. </p>
-<p>SC also tracks the current <code>pixel-ratio</code> and <code>color-gamut: p3</code> settings for the device/screen on which the browser is displaying. This can change when, for instance, an end-user drags the browser window between screens. Such changes are handled by SC internally with little need for additional dev-user intervention.</p>
+<p>SC, by default, doesn't react to changes in these settings. It's up to the product-dev to add hook functions to each Canvas wrapper object to supply the appropriate functionality for that canvas's output when changes occur. See the <a href="sc-objects-overview.html">Objects overview page</a> in the Runbook for further details. </p>
+<p>SC also tracks the current <code>pixel-ratio</code> and <code>color-gamut: p3</code> settings for the device/screen on which the browser is displaying. This can change when, for instance, an end-user drags the browser window between screens. Such changes are handled by SC internally with little need for additional product-dev intervention.</p>
 <h2 id="scrawl-canvas-pools">Scrawl-canvas pools</h2>
 <p>SC code needs to run fast. For this reason functional programming approaches, where new objects get created rather than existing objects mutated, adds computational weight (and excessive garbage collection) which is best avoided.</p>
-<p>Instead, SC code makes use of a set of pooled objects and arrays for much of its functionality. These pools get initialized when the browser first imports the relevant modules, and start as empty arrays. While some of these pools are made available to the dev-user via scrawl functions, others are strictly internal.</p>
+<p>Instead, SC code makes use of a set of pooled objects and arrays for much of its functionality. These pools get initialized when the browser first imports the relevant modules, and start as empty arrays. While some of these pools are made available to the product-dev via scrawl functions, others are strictly internal.</p>
 <p>Internal pooled objects/arrays include:</p>
 <ul>
 <li>Generic <strong>zero-length arrays</strong>, from <a href="../source/helper/array-pool.html">helper/array-pool.js</a>; note that the pool will be periodically culled – <code>requestArray()</code>, <code>releaseArray()</code></li>
@@ -292,7 +292,7 @@ currentCorePosition.prefersDarkColorScheme = colorSchemeMediaQuery.matches;</cod
 <li>SC <strong>particle objects</strong> from <a href="../source/factory/particle.html">factory/particle.js</a>; note that the pool will be periodically culled – <code>requestParticle()</code>, <code>releaseParticle()</code></li>
 <li>SC <strong>particle history arrays</strong> from <a href="../source/untracked-factory/particle-history.html">untracked-factory/particle-history.js</a>; note that the pool will be periodically culled – <code>requestParticleHistory()</code>, <code>releaseParticleHistory()</code></li>
 </ul>
-<p>Scrawl-exported pooled objects/arrays, which can be used by dev-users, include:</p>
+<p>Scrawl-exported pooled objects/arrays, which can be used by product-devs, include:</p>
 <ul>
 <li>SC <strong>coordinate arrays</strong>, from <a href="../source/untracked-factory/coordinate.html">untracked-factory/coordinate.js</a> – <code>requestCoordinate()</code>, <code>releaseCoordinate()</code></li>
 <li>SC <strong>quaternion objects</strong>, from <a href="../source/untracked-factory/quaternion.html">untracked-factory/quaternion.js</a> – <code>requestQuaternion()</code>, <code>releaseQuaternion()</code></li>

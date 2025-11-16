@@ -654,7 +654,7 @@ P.theBigActionsObject = {
             offsetY = 0,
             gutterWidth = 1,
             gutterHeight = 1,
-            // [core, bottom-strip, right-strip, bottom-right corner]
+            // [top-left, bottom-left, top-right, bottom-right]
             areaAlphaLevels = [255, 0, 0, 0],
             lineOut,
         } = requirements;
@@ -4579,9 +4579,9 @@ P.theBigActionsObject = {
 
         const {
             opacity = 1,
-            red   = [0],
+            red = [0],
             green = [0],
-            blue  = [0],
+            blue = [0],
             alpha = [255],
             lineOut,
         } = requirements;

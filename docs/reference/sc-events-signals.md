@@ -7,7 +7,7 @@ Instead SC relies on the normal [event system](https://developer.mozilla.org/en-
   – Similarly, event listeners to react to user-initiated page scrolling and browser window resize events.
   – [Intersection observers](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) to report on `<canvas>` and stack DOM element positioning within the browser viewport.
   – Event listeners assigned to various [CSS matchMedia() queries](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries) to monitor, in particular, user-set media preferences.
-+ SC also supplies the dev-user with a set of convenience functions to capture various user interactions with a Canvas or Stack display, including:
++ SC also supplies the product-dev with a set of convenience functions to capture various user interactions with a Canvas or Stack display, including:
   – Mouse, touch and pointer events.
   – Drag-and-drop functionality.
   – Keyboard navigation and trigger events.
@@ -188,7 +188,7 @@ The code may seem over-complicated ... but it works! Repo-devs have chosen to us
 + It keeps the factory file code understandable:
   – Object attributes can be defined and explained in the `defs` object.
   – Attribute updates requiring `dirty` flags to be set can be managed more easily.
-+ It prevents dev-users accidentally damaging object shapes, which can lead to code efficiency degredation
++ It prevents product-devs accidentally damaging object shapes, which can lead to code efficiency degredation
 + It couples tightly with the object `packet` (serialization) system, and thus with the accompanying object `clone` system.
 + Mixin and factory files can easily add attributes to the `defs` object to meet their particular requirements.
 + Mixin and factory files can easily overwrite the `get`, `set` and `setDelta` functions, and individual `getter`, `setter` and `deltaSetter` attribute functions, to meet their particular requirements.
@@ -197,7 +197,7 @@ The downside to this approach is that the SC signals system has not been central
 
 Because of the need to set `dirty` flags to notify objects that they will need to do work to update their state, repo-devs should always use the `set` functions within the code base. For instance Tween animation objects use `target.set()` to communicate time-based updates to target objects. Similarly the observe-update object uses `target.set()` to inform an SC object of end-user interactions with DOM form elements.
 
-> **tl;dr:** Dev-users should never update an SC object using `object.attribute = newValue` or `object['attribute'] = newValue` approaches. Such code will break SC functionality!
+> **tl;dr:** Product-devs should never update an SC object using `object.attribute = newValue` or `object['attribute'] = newValue` approaches. Such code will break SC functionality!
 > 
 > Instead all object updates should be performed using the `object.set({ key: value, ...})` or `object.setDelta({ key: value, ...})` functions.
 

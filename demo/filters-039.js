@@ -1,5 +1,5 @@
 // # Demo Filters 039
-// Parameters for: unsharpen filter
+// Parameters for: unsharp filter
 
 // [Run code](../../demo/filters-039.html)
 import * as scrawl from '../source/scrawl.js';
