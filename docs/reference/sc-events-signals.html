@@ -26,25 +26,46 @@
 <p>SC does not include a bespoke implementation of an event-driven system. SC artefact, entity and animation objects do not generate any <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">custom events</a> as part of their functionality.</p>
 <p>Instead SC relies on the normal <a href="https://developer.mozilla.org/en-US/docs/Web/Events">event system</a> provided by the browser to handle user interactions with an SC Canvas or Stack display:</p>
 <ul>
-<li>SC uses a number of system-generated event listeners to handle changes in the browser environment, for instance:<br />
-– A single event listener to track mouse movement across the viewport.<br />
-– Similarly, event listeners to react to user-initiated page scrolling and browser window resize events.<br />
-– <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">Intersection observers</a> to report on <code>&lt;canvas&gt;</code> and stack DOM element positioning within the browser viewport.<br />
-– Event listeners assigned to various <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries">CSS matchMedia() queries</a> to monitor, in particular, user-set media preferences.</li>
-<li>SC also supplies the product-dev with a set of convenience functions to capture various user interactions with a Canvas or Stack display, including:<br />
-– Mouse, touch and pointer events.<br />
-– Drag-and-drop functionality.<br />
-– Keyboard navigation and trigger events.<br />
-– Interactions with form element controls.<br />
-– Responsive image management.<br />
-– Media stream, and screen capture, events.</li>
+<li><p>SC uses a number of system-generated event listeners to handle changes in the browser environment, for instance:</p>
+<ul>
+<li><p>A single event listener to track mouse movement across the viewport.</p></li>
+<li><p>Similarly, event listeners to react to user-initiated page scrolling and browser window resize events.</p></li>
+<li><p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">Intersection observers</a> to report on <code>&lt;canvas&gt;</code> and stack DOM element positioning within the browser viewport.</p></li>
+<li><p>Event listeners assigned to various <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries">CSS matchMedia() queries</a> to monitor, in particular, user-set media preferences.</p></li></ul></li>
+<li><p>SC also supplies the product-dev with a set of convenience functions to capture various user interactions with a Canvas or Stack display, including:</p>
+<ul>
+<li>Mouse, touch and pointer events.</li>
+<li>Drag-and-drop functionality.</li>
+<li>Keyboard navigation and trigger events.</li>
+<li>Interactions with form element controls.</li>
+<li>Responsive image management.</li>
+<li>Media stream, and screen capture, events.</li></ul></li>
 </ul>
 <p>For the most part, these events do not trigger immediate changes in the SC system or its data. Rather they will update values held in the <code>currentCorePosition</code> object (which acts as SC's Single Source of Truth for this data) and set relevant <a href="https://gameprogrammingpatterns.com/dirty-flag.html">dirty flags</a> which the system can then address during the next Display cycle.</p>
 <p>This <strong>signals system</strong> pattern is also used by other SC objects – in particular artefact and entity objects – to communicate changes in their data to other objects that rely on the changed data for their own calculations: when a change occurs dirty flags will be set, but actioning those changes and alerting subscribed objects of those changes is deferred until the next Display cycle.</p>
 <h2 id="system-events">System events</h2>
 <p>[write up]</p>
+<ul>
+<li>Intro text - can divide system listeners into 2 groups: those that listen on the window, and those that listen on the canvas</li>
+<li>Most code is in core/user-interactions.js and helper/system-flags.js</li>
+<li>We can divide functionality into groups:<ul>
+<li>Core listeners, which track the browser viewport dimensions (resize), the page position within the viewport (scroll), and the pointer/touch position over the viewport (move). Product-devs can switch these listeners on/off as a whole (tied to RAF animation) and trigger each individually if the need arises</li>
+<li>Environment listeners: dynamically tracking accessibility preferences; and the device and screen capabilities on which the window currently displays (display-p3, device ixel ratio). Also includes some font management functionality.</li></ul></li>
+</ul>
 <h3 id="the-core-listeners-tracker-function">The core listeners tracker function</h3>
 <p>[write up]</p>
+<ul>
+<li>SC doesn't debounce system event listeners. Instead, it limits the functionality triggered - setting dirty flags maintained in the system-flags.js file, alongside updating the tracked data values in the <code>currentCorePosition</code> object.</li>
+<li>user-interaction.js exports an array - <code>uiSubscribedElements</code> - which Canvas/Stack wrapper artefacts can add their name values to (and remove them).</li>
+<li>The <code>coreListenersTracker</code> function is an SC animation object which runs once at the start of each RAF<ul>
+<li>Can be controlled by Product-devs using <code>scrawl.startCoreListeners()</code> and <code>scrawl.stopCoreListeners()</code> functions.</li>
+<li>Triggers the <code>updateUiSubscribedElements</code> function when required, and also updates font-related data.</li></ul></li>
+<li>The <code>updateUiSubscribedElements</code> function loops through the <code>uiSubscribedElements</code> array and, for each artefact object:<ul>
+<li>Updates the artefact's <code>here</code> object with updated data</li>
+<li>Triggers the artefact's accessibility hook functions</li>
+<li>Updates the artefact's dimensions using its <code>set</code> functionality (so the artefact can set its own appropriate dirty flags)</li></ul></li>
+<li>core/user-interactions.js also exports some internal functions - <code>applyCoreResizeListener</code>, <code>applyCoreScrollListener</code>, <code>purgeFontMetadata</code>, <code>purgeFontMetadata</code> - which repo-devs can import into other SC files. Use with care!</li>
+</ul>
 <h4 id="resize-action">Resize action</h4>
 <p>[write up]</p>
 <h4 id="scroll-action">Scroll action</h4>
@@ -178,18 +199,26 @@ object.set({
 //   - this includes setting some associated dirty flags
 // - attributeThree is neither defined in the defs object, nor the setters object
 //   - the update is ignored</code></pre>
-<p>The code may seem over-complicated … but it works! Repo-devs have chosen to use this approach because:</p>
+<p>Repo-devs have chosen to use this approach because:</p>
 <ul>
-<li>It keeps the factory file code understandable:<br />
-– Object attributes can be defined and explained in the <code>defs</code> object.<br />
-– Attribute updates requiring <code>dirty</code> flags to be set can be managed more easily.</li>
-<li>It prevents product-devs accidentally damaging object shapes, which can lead to code efficiency degredation</li>
+<li>It keeps the factory file code understandable:<ul>
+<li>Object attributes can be defined and explained in the <code>defs</code> object.</li>
+<li>Attribute updates requiring <code>dirty</code> flags to be set can be managed more easily.</li></ul></li>
+<li>It prevents product-devs accidentally damaging object shapes, which can lead to code efficiency degredation.</li>
 <li>It couples tightly with the object <code>packet</code> (serialization) system, and thus with the accompanying object <code>clone</code> system.</li>
 <li>Mixin and factory files can easily add attributes to the <code>defs</code> object to meet their particular requirements.</li>
 <li>Mixin and factory files can easily overwrite the <code>get</code>, <code>set</code> and <code>setDelta</code> functions, and individual <code>getter</code>, <code>setter</code> and <code>deltaSetter</code> attribute functions, to meet their particular requirements.</li>
 </ul>
-<p>The downside to this approach is that the SC signals system has not been centralised as it needs to adapt to the individual requirements of each mixin and factory file code. For instance, the code base includes a total of 75 <code>dirty</code> flag attributes which may be defined in one file but actioned in various ways by various downstream files. The current list of <code>dirty</code> flag attributes includes: <code>dirtyAnchor</code>, <code>dirtyAria</code>, <code>dirtyAsset</code>, <code>dirtyAssetSubscribers</code>, <code>dirtyButton</code>, <code>dirtyCache</code>, <code>dirtyCells</code>, <code>dirtyClasses</code>, <code>dirtyContent</code>, <code>dirtyControl</code>, <code>dirtyControlLock</code>, <code>dirtyCopyDimensions</code>, <code>dirtyCopyStart</code>, <code>dirtyCss</code>, <code>dirtyData</code>, <code>dirtyDimensions</code>, <code>dirtyDimensionsOverride</code>, <code>dirtyDisplayArea</code>, <code>dirtyDisplayShape</code>, <code>dirtyDomDimensions</code>, <code>dirtyEnd</code>, <code>dirtyEndControl</code>, <code>dirtyEndControlLock</code>, <code>dirtyEndLock</code>, <code>dirtyFilterIdentifier</code>, <code>dirtyFilters</code>, <code>dirtyFiltersCache</code>, <code>dirtyFont</code>, <code>dirtyHandle</code>, <code>dirtyHeight</code>, <code>dirtyHost</code>, <code>dirtyImage</code>, <code>dirtyImageSubscribers</code>, <code>dirtyInput</code>, <code>dirtyLayout</code>, <code>dirtyLock</code>, <code>dirtyMimicDimensions</code>, <code>dirtyMimicHandle</code>, <code>dirtyMimicOffset</code>, <code>dirtyMimicRotation</code>, <code>dirtyMimicScale</code>, <code>dirtyNavigationTabOrder</code>, <code>dirtyNoise</code>, <code>dirtyOffset</code>, <code>dirtyOffsetZ</code>, <code>dirtyOutput</code>, <code>dirtyPalette</code>, <code>dirtyPaletteData</code>, <code>dirtyParticles</code>, <code>dirtyPaste</code>, <code>dirtyPathData</code>, <code>dirtyPathObject</code>, <code>dirtyPerspective</code>, <code>dirtyPins</code>, <code>dirtyPivotRotation</code>, <code>dirtyPosition</code>, <code>dirtyPositionSubscribers</code>, <code>dirtyRotation</code>, <code>dirtyScale</code>, <code>dirtyScene</code>, <code>dirtySpecies</code>, <code>dirtyStampHandlePositions</code>, <code>dirtyStampOrder</code>, <code>dirtyStampPositions</code>, <code>dirtyStart</code>, <code>dirtyStartControl</code>, <code>dirtyStartControlLock</code>, <code>dirtyStyle</code>, <code>dirtyTargetImage</code>, <code>dirtyText</code>, <code>dirtyTextLayout</code>, <code>dirtyTextTabOrder</code>, <code>dirtyTransform</code>, <code>dirtyTransformOrigin</code>, <code>dirtyVisibility</code>, <code>dirtyZIndex</code>.</p>
-<p>Because of the need to set <code>dirty</code> flags to notify objects that they will need to do work to update their state, repo-devs should always use the <code>set</code> functions within the code base. For instance Tween animation objects use <code>target.set()</code> to communicate time-based updates to target objects. Similarly the observe-update object uses <code>target.set()</code> to inform an SC object of end-user interactions with DOM form elements.</p>
+<p>The downside to this approach is that the SC signals system has not been centralised. Instead it adapts to the individual requirements of each mixin and factory file code.</p>
+<p>The code base currently (as of Nov 2025) includes a total of 75 <code>dirty</code> flag attributes, which may be defined in one file but actioned in various ways by downstream files: </p>
+<ul>
+<li><code>dirtyAnchor</code>, <code>dirtyAria</code>, <code>dirtyAsset</code>, <code>dirtyAssetSubscribers</code>, <code>dirtyButton</code>, <code>dirtyCache</code>, <code>dirtyCells</code>, <code>dirtyClasses</code>, <code>dirtyContent</code>, <code>dirtyControl</code>, <code>dirtyControlLock</code>, <code>dirtyCopyDimensions</code>, <code>dirtyCopyStart</code>, <code>dirtyCss</code>, <code>dirtyData</code>, <code>dirtyDimensions</code>, <code>dirtyDimensionsOverride</code>, <code>dirtyDisplayArea</code>, <code>dirtyDisplayShape</code>, <code>dirtyDomDimensions</code>, <code>dirtyEnd</code>, <code>dirtyEndControl</code>, <code>dirtyEndControlLock</code>, <code>dirtyEndLock</code>, <code>dirtyFilterIdentifier</code>, <code>dirtyFilters</code>, <code>dirtyFiltersCache</code>, <code>dirtyFont</code>, <code>dirtyHandle</code>, <code>dirtyHeight</code>, <code>dirtyHost</code>, <code>dirtyImage</code>, <code>dirtyImageSubscribers</code>, <code>dirtyInput</code>, <code>dirtyLayout</code>, <code>dirtyLock</code>, <code>dirtyMimicDimensions</code>, <code>dirtyMimicHandle</code>, <code>dirtyMimicOffset</code>, <code>dirtyMimicRotation</code>, <code>dirtyMimicScale</code>, <code>dirtyNavigationTabOrder</code>, <code>dirtyNoise</code>, <code>dirtyOffset</code>, <code>dirtyOffsetZ</code>, <code>dirtyOutput</code>, <code>dirtyPalette</code>, <code>dirtyPaletteData</code>, <code>dirtyParticles</code>, <code>dirtyPaste</code>, <code>dirtyPathData</code>, <code>dirtyPathObject</code>, <code>dirtyPerspective</code>, <code>dirtyPins</code>, <code>dirtyPivotRotation</code>, <code>dirtyPosition</code>, <code>dirtyPositionSubscribers</code>, <code>dirtyRotation</code>, <code>dirtyScale</code>, <code>dirtyScene</code>, <code>dirtySpecies</code>, <code>dirtyStampHandlePositions</code>, <code>dirtyStampOrder</code>, <code>dirtyStampPositions</code>, <code>dirtyStart</code>, <code>dirtyStartControl</code>, <code>dirtyStartControlLock</code>, <code>dirtyStyle</code>, <code>dirtyTargetImage</code>, <code>dirtyText</code>, <code>dirtyTextLayout</code>, <code>dirtyTextTabOrder</code>, <code>dirtyTransform</code>, <code>dirtyTransformOrigin</code>, <code>dirtyVisibility</code>, <code>dirtyZIndex</code>.</li>
+</ul>
+<p>Because of the need to set <code>dirty</code> flags to notify objects that they will need to do work to update their state, repo-devs should always use the <code>set</code> functions within the code base.</p>
+<ul>
+<li>For instance Tween animation objects use <code>target.set()</code> to communicate time-based updates to target objects.</li>
+<li>Similarly the observe-update object uses <code>target.set()</code> to inform an SC object of end-user interactions with DOM form elements.</li>
+</ul>
 <blockquote>
   <p><strong>tl;dr:</strong> Product-devs should never update an SC object using <code>object.attribute = newValue</code> or <code>object['attribute'] = newValue</code> approaches. Such code will break SC functionality!</p>
   <p>Instead all object updates should be performed using the <code>object.set({ key: value, ...})</code> or <code>object.setDelta({ key: value, ...})</code> functions.</p>

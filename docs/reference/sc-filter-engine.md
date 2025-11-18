@@ -1299,8 +1299,8 @@ Default object
 Covers the input with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a more Delaunay-like output.
 
 The filter has four modes, set on the `mode` attribute: `'rect'`, `'hex'`, `'random'`, `'points'`. Each mode has its own set of attributes:
-+ **rect** - `rectWidth`, `rectHeight`, `originX`, `originY`, `angle`
-+ **hex** - `hexRadius`, `originX`, `originY`, `angle`
++ **rect** - `rectWidth`, `rectHeight`, `originX`, `originY`, `angle`, `spiralStrength`
++ **hex** - `hexRadius`, `originX`, `originY`, `angle`, `spiralStrength`
 + **random** - `randomCount`, `seed`
 + **points** - `pointsData`
 
@@ -1326,6 +1326,8 @@ Default object
   rectHeight: 10,
 
   hexRadius: 5,
+
+  spiralStrength: 0,
 
   randomCount: 20,
   seed: DEFAULT_SEED,
@@ -3102,8 +3104,8 @@ useMixedChannel             yes         true
 **(Convolution filter)** Covers the input with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a more Delaunay-like output.
 
 The filter has four modes, set on the `mode` attribute: `'rect'`, `'hex'`, `'random'`, `'points'`. Each mode has its own set of attributes:
-+ **rect** - `rectWidth`, `rectHeight`, `originX`, `originY`, `angle`
-+ **hex** - `hexRadius`, `originX`, `originY`, `angle`
++ **rect** - `rectWidth`, `rectHeight`, `originX`, `originY`, `angle`, `spiralStrength`
++ **hex** - `hexRadius`, `originX`, `originY`, `angle`, `spiralStrength`
 + **random** - `randomCount`, `seed`
 + **points** - `pointsData`
 
@@ -3115,33 +3117,35 @@ Used by factory function method: `tiles`.
 
 See test demo [Filters-015](../../demo/filters-015.html).
 ```
-Default object
-{
-  lineIn: '',
-  lineOut: '',
-  opacity: 1,
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
 
-  mode: 'rect',
+mode:                       yes         'rect'
 
-  angle: 0,
-  originX: 0,
-  originY: 0,
+angle                       yes         0
+originX                     yes         0
+originY                     yes         0
 
-  rectWidth: 10,
-  rectHeight: 10,
+rectWidth                   yes         10
+rectHeight                  yes         10
 
-  hexRadius: 5,
+hexRadius                   yes         5
 
-  randomCount: 20,
-  seed: DEFAULT_SEED,
+randomCount                 yes         20
+seed                        yes         DEFAULT_SEED
 
-  pointsData: [],
+pointsData                  yes         []
 
-  includeAlpha: false,
-  includeBlue: true,
-  includeGreen: true,
-  includeRed: true,
-}
+includeAlpha                yes         false
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+
+Where:
+  mode: 'rect' | 'hex' | 'points' | 'random'
 ```
 
 ### Method: `tint`

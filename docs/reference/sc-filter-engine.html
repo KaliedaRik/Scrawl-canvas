@@ -1132,8 +1132,8 @@ The operation attribute permitted values are:
 <p>Covers the input with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the <code>pixelate</code> filter, but uses a set of coordinate points to generate the tiles which results in a more Delaunay-like output.</p>
 <p>The filter has four modes, set on the <code>mode</code> attribute: <code>'rect'</code>, <code>'hex'</code>, <code>'random'</code>, <code>'points'</code>. Each mode has its own set of attributes:</p>
 <ul>
-<li><strong>rect</strong> - <code>rectWidth</code>, <code>rectHeight</code>, <code>originX</code>, <code>originY</code>, <code>angle</code></li>
-<li><strong>hex</strong> - <code>hexRadius</code>, <code>originX</code>, <code>originY</code>, <code>angle</code></li>
+<li><strong>rect</strong> - <code>rectWidth</code>, <code>rectHeight</code>, <code>originX</code>, <code>originY</code>, <code>angle</code>, <code>spiralStrength</code></li>
+<li><strong>hex</strong> - <code>hexRadius</code>, <code>originX</code>, <code>originY</code>, <code>angle</code>, <code>spiralStrength</code></li>
 <li><strong>random</strong> - <code>randomCount</code>, <code>seed</code></li>
 <li><strong>points</strong> - <code>pointsData</code></li>
 </ul>
@@ -1156,6 +1156,8 @@ The operation attribute permitted values are:
   rectHeight: 10,
 
   hexRadius: 5,
+
+  spiralStrength: 0,
 
   randomCount: 20,
   seed: DEFAULT_SEED,
@@ -2556,8 +2558,8 @@ useMixedChannel             yes         true</code></pre>
 <p><strong>(Convolution filter)</strong> Covers the input with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the <code>pixelate</code> filter, but uses a set of coordinate points to generate the tiles which results in a more Delaunay-like output.</p>
 <p>The filter has four modes, set on the <code>mode</code> attribute: <code>'rect'</code>, <code>'hex'</code>, <code>'random'</code>, <code>'points'</code>. Each mode has its own set of attributes:</p>
 <ul>
-<li><strong>rect</strong> - <code>rectWidth</code>, <code>rectHeight</code>, <code>originX</code>, <code>originY</code>, <code>angle</code></li>
-<li><strong>hex</strong> - <code>hexRadius</code>, <code>originX</code>, <code>originY</code>, <code>angle</code></li>
+<li><strong>rect</strong> - <code>rectWidth</code>, <code>rectHeight</code>, <code>originX</code>, <code>originY</code>, <code>angle</code>, <code>spiralStrength</code></li>
+<li><strong>hex</strong> - <code>hexRadius</code>, <code>originX</code>, <code>originY</code>, <code>angle</code>, <code>spiralStrength</code></li>
 <li><strong>random</strong> - <code>randomCount</code>, <code>seed</code></li>
 <li><strong>points</strong> - <code>pointsData</code></li>
 </ul>
@@ -2565,33 +2567,35 @@ useMixedChannel             yes         true</code></pre>
 <p>Channels can be included in the calculation by setting the appropriate <code>include</code> flags.</p>
 <p>Used by factory function method: <code>tiles</code>.</p>
 <p>See test demo <a href="../../demo/filters-015.html">Filters-015</a>.</p>
-<pre><code>Default object
-{
-  lineIn: '',
-  lineOut: '',
-  opacity: 1,
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
 
-  mode: 'rect',
+mode:                       yes         'rect'
 
-  angle: 0,
-  originX: 0,
-  originY: 0,
+angle                       yes         0
+originX                     yes         0
+originY                     yes         0
 
-  rectWidth: 10,
-  rectHeight: 10,
+rectWidth                   yes         10
+rectHeight                  yes         10
 
-  hexRadius: 5,
+hexRadius                   yes         5
 
-  randomCount: 20,
-  seed: DEFAULT_SEED,
+randomCount                 yes         20
+seed                        yes         DEFAULT_SEED
 
-  pointsData: [],
+pointsData                  yes         []
 
-  includeAlpha: false,
-  includeBlue: true,
-  includeGreen: true,
-  includeRed: true,
-}</code></pre>
+includeAlpha                yes         false
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+
+Where:
+  mode: 'rect' | 'hex' | 'points' | 'random'</code></pre>
 <h3 id="method-tint">Method: <code>tint</code></h3>
 <p><strong>(Color channels filter)</strong> Transforms an input's pixel values based on an interplay between the values of each pixel's channel values:</p>
 <pre><code>Red channel     = (val * redInRed)   + (val * greenInRed)   + (val * blueInRed)

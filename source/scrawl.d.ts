@@ -1488,6 +1488,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     scaleX?: number;
     scaleY?: number;
     smoothing?: number;
+    spiralStrength?: number;
     startX?: StringOrNumberInput;
     startY?: StringOrNumberInput;
     step?: number;

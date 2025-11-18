@@ -240,6 +240,7 @@ const defaultAttributes = {
     scaleY: 1,
     seed: DEFAULT_SEED,
     smoothing: 0,
+    spiralStrength: 0,
     startX: PC50,
     startY: PC50,
     step: 1,
@@ -1520,6 +1521,7 @@ const setActionsArray = {
             pointsData: (f.pointsData != null && _isArray(f.pointsData)) ? f.pointsData : [],
 
             angle: (f.angle != null) ? f.angle : 0,
+            spiralStrength: (f.spiralStrength != null) ? f.spiralStrength : 0,
             seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
 
             includeRed: (f.includeRed != null) ? f.includeRed : true,

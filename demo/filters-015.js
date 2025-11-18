@@ -59,6 +59,7 @@ const report = reportSpeed('#reportmessage', function () {
     Tile dimensions - width: ${dom.rectWidth.value}px, height: ${dom.rectHeight.value}px, radius: ${dom.hexRadius.value}px
     Origin - x: ${dom.originX.value}px, y: ${dom.originY.value}px
     Angle: ${dom.angle.value}
+    Spiral strength: ${dom.spiralStrength.value}
     Random count: ${dom.randomCount.value}
     Opacity: ${dom.opacity.value}`;
 });
@@ -80,6 +81,7 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'hexRadius', '14'],
     ['input', 'originX', '200'],
     ['input', 'originY', '200'],
+    ['input', 'spiralStrength', '0'],
     ['input', 'angle', '0'],
     ['input', 'randomCount', '100'],
     ['input', 'opacity', '1'],
@@ -112,6 +114,7 @@ scrawl.makeUpdater({
         originX: ['originX', 'round'],
         originY: ['originY', 'round'],
         angle: ['angle', 'round'],
+        spiralStrength: ['spiralStrength', 'float'],
         randomCount: ['randomCount', 'round'],
 
         include_red: ['includeRed', 'boolean'],
