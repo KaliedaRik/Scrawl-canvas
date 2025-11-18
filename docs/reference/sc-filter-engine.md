@@ -3134,6 +3134,8 @@ rectHeight                  yes         10
 
 hexRadius                   yes         5
 
+spiralStrength              yes         0
+
 randomCount                 yes         20
 seed                        yes         DEFAULT_SEED
 
