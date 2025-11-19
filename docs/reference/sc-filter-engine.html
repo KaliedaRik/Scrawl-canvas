@@ -1546,6 +1546,7 @@ The noiseType permitted values are:
   level: 0.015,
   smoothing: 0.015,
   clamp: 0.08,
+  useEdgeMask: true,
 }</code></pre>
 <h2 id="sc-predefined-filter-effects">SC predefined filter effects</h2>
 <p>The Filter factory function <code>scrawl.makeFilter()</code> comes with a large set of predefined filter <strong><em>methods</em></strong> which are, in many ways, easier to use than using the alternative, <strong><em>actions</em></strong> approach of defining a filter. Even so, these <em>method</em> filters allow the product-dev to chain filters together (using <code>lineIn</code>, <code>lineMix</code> and <code>lineOut</code> attributes) and to control each filter's strength in the final output (using the <code>opacity</code> attribute).</p>
@@ -2647,7 +2648,8 @@ strength:                   yes         0.8,
 radius:                     yes         2.0,
 level:                      yes         0.015,
 smoothing:                  yes         0.015,
-clamp:                      yes         0.08,</code></pre>
+clamp:                      yes         0.08,
+useEdgeMask                 yes         true</code></pre>
 <h3 id="method-yellow">Method: <code>yellow</code></h3>
 <p><strong>(Color channels filter)</strong> Sets the input's blue channel values to zero, and averages the remaining channel colors for each pixel</p>
 <p>Creates an ActionObject for the <code>average-channels</code> primitive function.</p>

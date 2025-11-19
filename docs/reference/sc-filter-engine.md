@@ -1793,6 +1793,7 @@ Default object
   level: 0.015,
   smoothing: 0.015,
   clamp: 0.08,
+  useEdgeMask: true,
 }
 ```
 
@@ -3215,6 +3216,7 @@ radius:                     yes         2.0,
 level:                      yes         0.015,
 smoothing:                  yes         0.015,
 clamp:                      yes         0.08,
+useEdgeMask                 yes         true
 ```
 
 ### Method: `yellow`
