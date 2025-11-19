@@ -78,6 +78,7 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'smoothing', '0.015'],
     ['input', 'clamp', '0.08'],
     ['input', 'opacity', '1'],
+    ['select', 'useEdgeMask', 1],
 ]);
 
 // Setup form observer functionality
@@ -99,6 +100,7 @@ scrawl.makeUpdater({
         level: ['level', 'float'],
         clamp: ['clamp', 'float'],
         opacity: ['opacity', 'float'],
+        useEdgeMask: ['useEdgeMask', 'boolean'],
     },
 });
 

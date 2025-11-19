@@ -255,6 +255,7 @@ const defaultAttributes = {
     transparentAt: 0,
     transparentEdges: false,
     useBluenoise: false,
+    useEdgeMask: true,
     useInputAsMask: false,
     useLabForPaletteDistance: false,
     useMixedChannel: true,
@@ -1620,6 +1621,7 @@ const setActionsArray = {
             level: (f.level != null) ? f.level : 0.015,
             smoothing: (f.smoothing != null) ? f.smoothing : 0.015,
             clamp: (f.clamp != null) ? f.clamp : 0.08,
+            useEdgeMask: (f.useEdgeMask != null) ? f.useEdgeMask : true,
         }];
     },
 
