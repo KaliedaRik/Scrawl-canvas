@@ -1717,6 +1717,35 @@ Default object
 }
 ```
 
+#### Action: `ok-perceptual-curves`
+Apply a set of ok-channel-based curve weightings to the input image. For each pixel:
++ Retrieve OKLAB/OKLCH color data for each pixel
++ If the `actions` object includes a `curves` object:
+  - If the `curves` object includes a `chroma` array, process in the OKLCH color space - `curves` and `luminance` weights arrays only
+  - Otherwise, process in the OKLAB color space - `aChannel` (red-green), `bChannel` (yellow-blue) and `luminance` weights arrays only
++ Convert results back to RGB
+
+Used by factory function method: `okCurveWeights`.
+
+See test demo [Filters-042](../../demo/filters-042.html)
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+  curves: {},
+}
+
+Default curves attribute values
+{
+  luminosity: [],  // length: 0 or 501
+  chroma: [],      // length: 0 or 201
+  aChannel: [],    // length: 0 or 501
+  bChannel: [],    // length: 0 or 501
+}
+```
+
 #### Action: `reduce-palette`
 Analyses the input and, dependent on settings:
 + If necessary, calculate a "commonest colors" reduced palette based on the input colors, guided by the number of colors required and a [minimum color distance](https://en.wikipedia.org/wiki/Color_difference) between the selected colors.
@@ -2830,6 +2859,28 @@ offsetRedX                  yes         0
 offsetRedY                  yes         0
 
 useInputAsMask              yes         false
+```
+
+### Method: `okCurveWeights`
+**(OK filter)** Apply a set of ok-channel-based curve weightings to the input image.
+
+Creates an ActionObject for the `ok-perceptual-curves` primitive function.
+
+See test demo [Filters-042](../../demo/filters-042.html).
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+curves                      yes         {}
+
+Where the curves object can have the following attributes:
+curves.luminosity           yes         [] - must be length: 0 or 501
+curves.chroma               yes         [] - must be length: 0 or 201
+curves.aChannel             yes         [] - must be length: 0 or 501
+curves.bChannel             yes         [] - must be length: 0 or 501
 ```
 
 ### Method: `pixelate`

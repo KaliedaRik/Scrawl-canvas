@@ -1482,6 +1482,32 @@ The noiseType permitted values are:
   lineOut: '',
   opacity: 1,
 }</code></pre>
+<h4 id="action-ok-perceptual-curves">Action: <code>ok-perceptual-curves</code></h4>
+<p>Apply a set of ok-channel-based curve weightings to the input image. For each pixel:</p>
+<ul>
+<li>Retrieve OKLAB/OKLCH color data for each pixel</li>
+<li>If the <code>actions</code> object includes a <code>curves</code> object:<ul>
+<li>If the <code>curves</code> object includes a <code>chroma</code> array, process in the OKLCH color space - <code>curves</code> and <code>luminance</code> weights arrays only</li>
+<li>Otherwise, process in the OKLAB color space - <code>aChannel</code> (red-green), <code>bChannel</code> (yellow-blue) and <code>luminance</code> weights arrays only</li></ul></li>
+<li>Convert results back to RGB</li>
+</ul>
+<p>Used by factory function method: <code>okCurveWeights</code>.</p>
+<p>See test demo <a href="../../demo/filters-042.html">Filters-042</a></p>
+<pre><code>Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+  curves: {},
+}
+
+Default curves attribute values
+{
+  luminosity: [],  // length: 0 or 501
+  chroma: [],      // length: 0 or 201
+  aChannel: [],    // length: 0 or 501
+  bChannel: [],    // length: 0 or 501
+}</code></pre>
 <h4 id="action-reduce-palette">Action: <code>reduce-palette</code></h4>
 <p>Analyses the input and, dependent on settings:</p>
 <ul>
@@ -2339,6 +2365,23 @@ offsetRedX                  yes         0
 offsetRedY                  yes         0
 
 useInputAsMask              yes         false</code></pre>
+<h3 id="method-okcurveweights">Method: <code>okCurveWeights</code></h3>
+<p><strong>(OK filter)</strong> Apply a set of ok-channel-based curve weightings to the input image.</p>
+<p>Creates an ActionObject for the <code>ok-perceptual-curves</code> primitive function.</p>
+<p>See test demo <a href="../../demo/filters-042.html">Filters-042</a>.</p>
+<pre><code>Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+curves                      yes         {}
+
+Where the curves object can have the following attributes:
+curves.luminosity           yes         [] - must be length: 0 or 501
+curves.chroma               yes         [] - must be length: 0 or 201
+curves.aChannel             yes         [] - must be length: 0 or 501
+curves.bChannel             yes         [] - must be length: 0 or 501</code></pre>
 <h3 id="method-pixelate">Method: <code>pixelate</code></h3>
 <p><strong>(Convolution filter)</strong> Averages the colors within a set of rectangular blocks across the input to produce a series of obscuring tiles.</p>
 <p>Individual channels can be included in the calculation by setting their respective <code>include</code> flags.</p>
