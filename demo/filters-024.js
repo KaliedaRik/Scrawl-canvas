@@ -166,7 +166,7 @@ const currentPin = scrawl.makeDragZone({
 /** @ts-expect-error */
                 pin.isBeingDragged = false;
                 pin.set({
-                    lockXTo: 'mouse',
+                    lockYTo: 'mouse',
                 });
             }
         }
@@ -183,7 +183,7 @@ const currentPin = scrawl.makeDragZone({
 
                 pin.set({
                     start: pin.get('position'),
-                    lockXTo: 'start',
+                    lockYTo: 'start',
                 });
             }
         }

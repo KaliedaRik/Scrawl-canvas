@@ -159,6 +159,7 @@ export const NEGATIVE = 'negative';
 export const NEWSPRINT = 'newsprint';
 export const NONE = 'none';
 export const NORMAL = 'normal';
+export const OK_PERCEPTUAL_CURVES = 'ok-perceptual-curves';
 export const OFFSET = 'offset';
 export const PARTICLE = 'particle';
 export const PATH = 'path';

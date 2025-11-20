@@ -1418,6 +1418,13 @@ export interface EnhancedLabelInstance extends EnhancedLabelFactoryInputs, Enhan
 
 // FilterInstance factory
 // -------------------------------------
+interface CurveWeights {
+    luminance?: number[];
+    chroma?: number[];
+    aChannel?: number[];
+    bChannel?: number[];
+}
+
 interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     angle?: number;
     blueInBlue?: number;
@@ -1520,6 +1527,7 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     clamp?: string | number;
     compose?: string;
     concurrent?: boolean;
+    curves?: CurveWeights;
     delta?: FilterFactoryDeltaInputs;
     deriveMaskFromImage?: boolean;
     easing?: string;
