@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 042</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    /* For progressive enhancement */
+    .canvas-progressive-enhancement-wrapper {
+      display: flex;
+      justify-content: center;
+
+      & canvas {
+        box-shadow: 0px 0px 0px 1px black;
+
+        /* In no-JS environments, the image should display in place of the canvas element */
+        & .placeholder {
+
+          text-align: center;
+          max-width: 100%;
+
+          & img {
+            width: 100%;
+          }
+        }
+      }
+
+      & #output-canvas {
+
+        & .placeholder {
+          width: 400px;
+        }
+
+        & .assets {
+          width: 0;
+          height: 0;
+          overflow: hidden;
+        }
+      }
+
+      & #channel-weights-canvas {
+        margin-bottom: 1em;
+
+        & .placeholder {
+          width: 360px;
+        }
+      }
+    }
+
+    .controls {
+      grid-template-columns: 1fr 2fr;
+
+      @media (min-width: 600px) {
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
+
+      @media (scripting: none) {
+        display: none;
+      }
+    }
+
+    .grid {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+      grid-column-gap: 2px;
+
+      grid-template-rows: auto;
+      grid-row-gap: 2px;
+
+      font-size:  12px;
+
+      margin: 1em;
+    }
+
+    .channel-buttons {
+      text-align: center;
+
+      & button {
+        background-color: lightblue;
+      }
+
+      & button.selected {
+        background-color: yellow;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="filters-041.html">&larr; Previous</a>
+    <a href="filters-101.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 042</h1>
+  <h2>Parameters for: okCurveWeights filter</h2>
+  <h3>To change image, drag-and-drop an image file over the canvas</h3>
+
+  <div class="controls">
+
+    <div class="yellow label">Opacity</div>
+    <div class="yellow"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+
+  </div>
+
+  <div class="grid">
+    
+    <div class="canvas-progressive-enhancement-wrapper">
+      <canvas 
+        id="output-canvas" 
+        width="400" 
+        height="400"
+        data-scrawl-canvas
+      >
+        <div class="placeholder">
+          <img
+            src="thumbs/filters-042-01.webp"
+            alt="Screen capture image of the demo output canvas"
+          />    
+        </div>
+      <div class="assets" aria-hidden="true">
+          <img
+            id="iris"
+            src="img/iris.png"
+            class="flowers"
+            alt="A purple-mauve iris flower"
+          />    
+        </div>
+      </canvas>
+    </div>
+
+    <div>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="channel-weights-canvas" 
+          width="360" 
+          height="360"
+          data-base-background-color="beige"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-042-02.webp"
+              alt="Screen capture image of the demo controls canvas"
+            />    
+          </div>
+        </canvas>
+      </div>
+
+      <div class="channel-buttons">
+        <button id="black" class="channel-selector selected">Luminance<br />&nbsp;</button>
+        <button id="red" class="channel-selector">Chroma<br />&nbsp;</button>
+        <button id="green" class="channel-selector">A channel<br />(red-green)</button>
+        <button id="blue" class="channel-selector">B channel<br />(blue-yellow)</button>
+      </div>
+    </div>
+  </div>
+
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas elements are ignored; instead placeholder images display where the canvases would have appeared.</p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a test Picture entity</li>
+      <li>Create an okWeight filter and apply it to the test entity</li>
+      <li>Update the weights array using a second canvas displaying a set of curve controls</li>
+    </ul>
+
+    <p>It is usually best to create the weights array with the help of some sort of tool where the user can shape and manipulate the curve - and also curves for each individual channel - to get the output they require for a given image.</p>
+
+    <p><b>Touch test:</b> should work as expected. Known issue: the pins are currently too small for effective UX on touch devices.</p>
+
+    <p><a href="../docs/demo/filters-042.html">Annotated code</a></p>
+  </div>
+
+  <script src="filters-042.js" type="module"></script>
+
+</body>
+
+</html>

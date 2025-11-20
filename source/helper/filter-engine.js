@@ -24,7 +24,7 @@ import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coord
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, _tan, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DECONVOLUTE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, UNSHARP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR, ZOOM_BLUR } from './shared-vars.js';
+import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, _tan, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DECONVOLUTE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, OK_PERCEPTUAL_CURVES, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, UNSHARP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR, ZOOM_BLUR } from './shared-vars.js';
 
 // Local constants
 const _256 = 256,
@@ -2351,7 +2351,7 @@ P.theBigActionsObject = {
 
 // __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values.
 // + The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments.
-// + The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the "level" attribute.
+// + The operation will set the pixel's channel value to match either the lowest, highest or mean values as dictated by its neighbours - this value is set in the "level" attribute.
 // + Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags.
     [CORRODE]: function (requirements) {
 
@@ -7630,358 +7630,358 @@ P.theBigActionsObject = {
     },
 
 // __unsharp__ - OKLab L-only sharpen with Sobel edge mask
-[UNSHARP]: function (requirements) {
+    [UNSHARP]: function (requirements) {
 
-    const getEausmWorkspace = (width, height) => {
+        const getEausmWorkspace = (width, height) => {
 
-        const key = `ea-usm::ws::${width}x${height}`,
-              N   = width * height;
+            const key = `ea-usm::ws::${width}x${height}`,
+                  N   = width * height;
 
-        let ws = getWorkstoreItem(key);
-        if (!ws) ws = {};
+            let ws = getWorkstoreItem(key);
+            if (!ws) ws = {};
 
-        if (!ws.L || ws.L.length !== N) ws.L = new Float32Array(N);
-        if (!ws.A || ws.A.length !== N) ws.A = new Float32Array(N);
-        if (!ws.B || ws.B.length !== N) ws.B = new Float32Array(N);
+            if (!ws.L || ws.L.length !== N) ws.L = new Float32Array(N);
+            if (!ws.A || ws.A.length !== N) ws.A = new Float32Array(N);
+            if (!ws.B || ws.B.length !== N) ws.B = new Float32Array(N);
 
-        if (!ws.Lb || ws.Lb.length !== N) ws.Lb = new Float32Array(N);
-        if (!ws.D || ws.D.length !== N) ws.D = new Float32Array(N);
-        if (!ws.G || ws.G.length !== N) ws.G = new Float32Array(N);
-        if (!ws.M || ws.M.length !== N) ws.M = new Float32Array(N);
+            if (!ws.Lb || ws.Lb.length !== N) ws.Lb = new Float32Array(N);
+            if (!ws.D || ws.D.length !== N) ws.D = new Float32Array(N);
+            if (!ws.G || ws.G.length !== N) ws.G = new Float32Array(N);
+            if (!ws.M || ws.M.length !== N) ws.M = new Float32Array(N);
 
-        if (!ws.Am || ws.Am.length !== N) ws.Am = new Float32Array(N);
+            if (!ws.Am || ws.Am.length !== N) ws.Am = new Float32Array(N);
 
-        if (!ws.tmpImg || ws.tmpImg.length !== N) ws.tmpImg = new Float32Array(N);
+            if (!ws.tmpImg || ws.tmpImg.length !== N) ws.tmpImg = new Float32Array(N);
 
-        const maxWH = _max(width, height);
-        if (!ws.tmpLine || ws.tmpLine.length < maxWH) ws.tmpLine = new Float32Array(maxWH);
+            const maxWH = _max(width, height);
+            if (!ws.tmpLine || ws.tmpLine.length < maxWH) ws.tmpLine = new Float32Array(maxWH);
 
-        setWorkstoreItem(key, ws);
-        return ws;
-    };
+            setWorkstoreItem(key, ws);
+            return ws;
+        };
 
-    const getGaussianCoeffsCached = (sigma) => {
+        const getGaussianCoeffsCached = (sigma) => {
 
-        if (!(sigma > 0)) return null;
+            if (!(sigma > 0)) return null;
 
-        const key = `gauss-f32::${(sigma * 1000) | 0}`;
-        let coeff = getWorkstoreItem(key);
+            const key = `gauss-f32::${(sigma * 1000) | 0}`;
+            let coeff = getWorkstoreItem(key);
 
-        if (!coeff) {
+            if (!coeff) {
 
-            coeff = getGaussianCoeffsFloat(sigma);
-            setWorkstoreItem(key, coeff);
-        }
-        return coeff;
-    };
+                coeff = getGaussianCoeffsFloat(sigma);
+                setWorkstoreItem(key, coeff);
+            }
+            return coeff;
+        };
 
-    const convolve1D_Float = (lineIn, dstLine, length, coeff) => {
+        const convolve1D_Float = (lineIn, dstLine, length, coeff) => {
 
-        const a0L = coeff[0],
-            a1L = coeff[1],
-            a0R = coeff[2],
-            a1R = coeff[3],
-            b1 = coeff[4],
-            b2 = coeff[5],
-            lc = coeff[6],
-            rc = coeff[7];
+            const a0L = coeff[0],
+                a1L = coeff[1],
+                a0R = coeff[2],
+                a1R = coeff[3],
+                b1 = coeff[4],
+                b2 = coeff[5],
+                lc = coeff[6],
+                rc = coeff[7];
 
-        let prev_src = lineIn[0],
-            prev_out = prev_src * lc,
-            prev_prev_out = prev_out,
-            i, x, y;
+            let prev_src = lineIn[0],
+                prev_out = prev_src * lc,
+                prev_prev_out = prev_out,
+                i, x, y;
 
-        dstLine[0] = prev_out;
+            dstLine[0] = prev_out;
 
-        for (i = 1; i < length; i++) {
+            for (i = 1; i < length; i++) {
 
-            x = lineIn[i];
-            y = x * a0L + prev_src * a1L + prev_out * b1 + prev_prev_out * b2;
+                x = lineIn[i];
+                y = x * a0L + prev_src * a1L + prev_out * b1 + prev_prev_out * b2;
 
-            dstLine[i] = y;
+                dstLine[i] = y;
 
+                prev_prev_out = prev_out;
+                prev_out = y;
+                prev_src = x;
+            }
+
+            prev_src = lineIn[length - 1];
+            prev_out = prev_src * rc;
             prev_prev_out = prev_out;
-            prev_out = y;
-            prev_src = x;
-        }
 
-        prev_src = lineIn[length - 1];
-        prev_out = prev_src * rc;
-        prev_prev_out = prev_out;
+            dstLine[length - 1] += prev_out;
 
-        dstLine[length - 1] += prev_out;
+            for (i = length - 2; i >= 0; i--) {
 
-        for (i = length - 2; i >= 0; i--) {
+                x = lineIn[i];
+                y = x * a0R + prev_src * a1R + prev_out * b1 + prev_prev_out * b2;
 
-            x = lineIn[i];
-            y = x * a0R + prev_src * a1R + prev_out * b1 + prev_prev_out * b2;
+                dstLine[i] += y;
 
-            dstLine[i] += y;
+                prev_prev_out = prev_out;
+                prev_out = y;
+                prev_src = x;
+            }
+        };
 
-            prev_prev_out = prev_out;
-            prev_out = y;
-            prev_src = x;
-        }
-    };
+        const gaussianBlurL_Float = (src, dst, width, height, sigmaH, sigmaV, tmpLine, tmpImg, coeffHOpt, coeffVOpt) => {
 
-    const gaussianBlurL_Float = (src, dst, width, height, sigmaH, sigmaV, tmpLine, tmpImg, coeffHOpt, coeffVOpt) => {
+            const doH = sigmaH > 0;
+            const doV = sigmaV > 0;
 
-        const doH = sigmaH > 0;
-        const doV = sigmaV > 0;
+            if (!doH && !doV) {
 
-        if (!doH && !doV) {
+                if (dst !== src) dst.set(src);
+                return;
+            }
 
-            if (dst !== src) dst.set(src);
-            return;
-        }
+            const tmp = (doH && doV) ? tmpImg : dst;
 
-        const tmp = (doH && doV) ? tmpImg : dst;
+            let y, x, off;
 
-        let y, x, off;
+            if (doH) {
 
-        if (doH) {
+                const coeffH = coeffHOpt || getGaussianCoeffsCached(sigmaH);
 
-            const coeffH = coeffHOpt || getGaussianCoeffsCached(sigmaH);
+                for (y = 0; y < height; y++) {
 
-            for (y = 0; y < height; y++) {
+                    off = y * width;
 
-                off = y * width;
+                    for (x = 0; x < width; x++) {
+
+                        tmpLine[x] = src[off + x];
+                    }
+
+                    convolve1D_Float(tmpLine, tmpLine, width, coeffH);
+
+                    for (let x = 0; x < width; x++) {
+
+                        tmp[off + x] = tmpLine[x];
+                    }
+                }
+            }
+            else if (tmp !== src) tmp.set(src);
+
+            if (doV) {
+
+                const coeffV = coeffVOpt || getGaussianCoeffsCached(sigmaV);
 
                 for (x = 0; x < width; x++) {
 
-                    tmpLine[x] = src[off + x];
-                }
+                    for (y = 0; y < height; y++) {
 
-                convolve1D_Float(tmpLine, tmpLine, width, coeffH);
+                        tmpLine[y] = tmp[y * width + x];
+                    }
 
-                for (let x = 0; x < width; x++) {
+                    convolve1D_Float(tmpLine, tmpLine, height, coeffV);
 
-                    tmp[off + x] = tmpLine[x];
-                }
-            }
-        }
-        else if (tmp !== src) tmp.set(src);
+                    for (y = 0; y < height; y++) {
 
-        if (doV) {
-
-            const coeffV = coeffVOpt || getGaussianCoeffsCached(sigmaV);
-
-            for (x = 0; x < width; x++) {
-
-                for (y = 0; y < height; y++) {
-
-                    tmpLine[y] = tmp[y * width + x];
-                }
-
-                convolve1D_Float(tmpLine, tmpLine, height, coeffV);
-
-                for (y = 0; y < height; y++) {
-
-                    dst[y * width + x] = tmpLine[y];
+                        dst[y * width + x] = tmpLine[y];
+                    }
                 }
             }
-        }
-    };
-
-    const sobelMagFloat = (src, dst, width, height) => {
-
-        const clampXY = (x, y) => {
-
-            if (x < 0) x = 0;
-            else if (x >= width) x = width - 1;
-
-            if (y < 0) y = 0;
-            else if (y >= height) y = height - 1;
-
-            return (y * width + x) | 0;
         };
 
-        let x, y, ym1, y0, yp1, xm1, x0, xp1, gx, gy,
-            p00, p10, p20, p01, p11, p21, p02, p12, p22;
+        const sobelMagFloat = (src, dst, width, height) => {
 
-        for (y = 0; y < height; y++) {
+            const clampXY = (x, y) => {
 
-            ym1 = y - 1;
-            y0 = y;
-            yp1 = y + 1;
+                if (x < 0) x = 0;
+                else if (x >= width) x = width - 1;
 
-            for (x = 0; x < width; x++) {
+                if (y < 0) y = 0;
+                else if (y >= height) y = height - 1;
 
-                xm1 = x - 1;
-                x0 = x;
-                xp1 = x + 1;
+                return (y * width + x) | 0;
+            };
 
-                p00 = src[clampXY(xm1, ym1)];
-                p10 = src[clampXY(x0,  ym1)];
-                p20 = src[clampXY(xp1, ym1)];
+            let x, y, ym1, y0, yp1, xm1, x0, xp1, gx, gy,
+                p00, p10, p20, p01, p11, p21, p02, p12, p22;
 
-                p01 = src[clampXY(xm1, y0 )];
-                p11 = src[clampXY(x0,  y0 )];
-                p21 = src[clampXY(xp1, y0 )];
+            for (y = 0; y < height; y++) {
 
-                p02 = src[clampXY(xm1, yp1)];
-                p12 = src[clampXY(x0,  yp1)];
-                p22 = src[clampXY(xp1, yp1)];
+                ym1 = y - 1;
+                y0 = y;
+                yp1 = y + 1;
 
-                gx = (-p00 + p20) + (-2 * p01 + 2 * p21) + (-p02 + p22);
-                gy = (-p00 - 2 * p10 - p20) + (p02 + 2 * p12 + p22);
+                for (x = 0; x < width; x++) {
 
-                dst[y * width + x] = _abs(gx) + _abs(gy);
+                    xm1 = x - 1;
+                    x0 = x;
+                    xp1 = x + 1;
+
+                    p00 = src[clampXY(xm1, ym1)];
+                    p10 = src[clampXY(x0,  ym1)];
+                    p20 = src[clampXY(xp1, ym1)];
+
+                    p01 = src[clampXY(xm1, y0 )];
+                    p11 = src[clampXY(x0,  y0 )];
+                    p21 = src[clampXY(xp1, y0 )];
+
+                    p02 = src[clampXY(xm1, yp1)];
+                    p12 = src[clampXY(x0,  yp1)];
+                    p22 = src[clampXY(xp1, yp1)];
+
+                    gx = (-p00 + p20) + (-2 * p01 + 2 * p21) + (-p02 + p22);
+                    gy = (-p00 - 2 * p10 - p20) + (p02 + 2 * p12 + p22);
+
+                    dst[y * width + x] = _abs(gx) + _abs(gy);
+                }
+            }
+        };
+
+        const smoothstepInto = (grad, outMask, t0, t1) => {
+
+            const inv = 1.0 / _max(1e-6, (t1 - t0));
+
+            let i, iz, x;
+
+            for (i = 0, iz = grad.length | 0; i < iz; i++) {
+
+                x = (grad[i] - t0) * inv;
+
+                outMask[i] =
+                    x <= 0 ? 0 :
+                    x >= 1 ? 1 :
+                    x * x * (3 - 2 * x);
+            }
+        };
+
+        const [input, output] = getInputAndOutputLines(requirements),
+            width = input.width,
+            height = input.height,
+            iData = input.data,
+            oData = output.data,
+            len = iData.length;
+
+        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, len >>> 2),
+            out32 = new Uint32Array(oData.buffer,  oData.byteOffset, len >>> 2);
+
+        const {
+            opacity = 1,
+            strength = 0.8,
+            radius = 2.0,
+            level = 0.015,
+            smoothing = 0.015,
+            clamp = 0.08,
+            useEdgeMask = true,
+            lineOut,
+        } = requirements || {};
+
+        if (strength === 0 || radius <= 0) {
+
+            transferDataUnchanged(oData, iData, len);
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity);
+            return;
+        }
+
+        const libs = colorEngine.getRgbOkCache(),
+            toOK  = colorEngine.getOkValsForRgb,
+            toRGB = colorEngine.getRgbValsForOklab;
+
+        const ws = getEausmWorkspace(width, height);
+        const { L, A, B, Lb, D, G, M, Am, tmpLine, tmpImg } = ws;
+
+        let p, pz, rgba, a, r, g, b, ok, d, Lp, rgb;
+
+        // 1) RGB -> OKLab + alpha mask
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+            rgba = src32[p];
+            a = (rgba >>> 24) & 0xFF;
+
+            Am[p] = a > 0 ? 1.0 : 0.0;
+
+            if (a === 0) {
+
+                L[p] = 0;
+                A[p] = 0;
+                B[p] = 0;
+                continue;
+            }
+
+            r = rgba & 0xFF;
+            g = (rgba >>> 8) & 0xFF;
+            b = (rgba >>> 16) & 0xFF;
+
+            ok = toOK(r, g, b, libs);
+
+            L[p] = ok[0];
+            A[p] = ok[1];
+            B[p] = ok[2];
+        }
+
+        // 2) Blur L (main radius). Reuse tmpImg buffer.
+        const coeffMain = getGaussianCoeffsCached(radius);
+
+        gaussianBlurL_Float(L, Lb, width, height, radius, radius, tmpLine, tmpImg, coeffMain, coeffMain);
+
+        // 3) Detail layer D = L - Lb
+        for (p = 0, pz = L.length | 0; p < pz; p++) {
+
+            D[p] = L[p] - Lb[p];
+        }
+
+        // 4) Edge mask (optional)
+        if (useEdgeMask && (level > 0 || smoothing > 0)) {
+
+            sobelMagFloat(Lb, G, width, height);
+
+            // Soft threshold using user level/smoothing
+            smoothstepInto(G, M, level, level + _max(1e-6, smoothing));
+
+            // Optional extra smoothing on mask; only if smoothing > 0
+            if (smoothing > 0) {
+
+                const maskSigma = 0.7;
+                const coeffMask = getGaussianCoeffsCached(maskSigma);
+
+                gaussianBlurL_Float(M, M, width, height, maskSigma, maskSigma, tmpLine, tmpImg, coeffMask, coeffMask);
+            }
+
+            // Respect alpha mask
+            for (p = 0, pz = M.length | 0; p < pz; p++) {
+
+                M[p] *= Am[p];
             }
         }
-    };
+        else {
+            // No edge-limiting requested: mask is just alpha
+            for (p = 0, pz = M.length | 0; p < pz; p++) {
 
-    const smoothstepInto = (grad, outMask, t0, t1) => {
-
-        const inv = 1.0 / _max(1e-6, (t1 - t0));
-
-        let i, iz, x;
-
-        for (i = 0, iz = grad.length | 0; i < iz; i++) {
-
-            x = (grad[i] - t0) * inv;
-
-            outMask[i] =
-                x <= 0 ? 0 :
-                x >= 1 ? 1 :
-                x * x * (3 - 2 * x);
+                M[p] = Am[p];
+            }
         }
-    };
 
-    const [input, output] = getInputAndOutputLines(requirements),
-        width = input.width,
-        height = input.height,
-        iData = input.data,
-        oData = output.data,
-        len = iData.length;
+        // 5) Apply sharpening on L with halo clamp
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
 
-    const src32 = new Uint32Array(iData.buffer, iData.byteOffset, len >>> 2),
-        out32 = new Uint32Array(oData.buffer,  oData.byteOffset, len >>> 2);
+            rgba = src32[p];
+            a = (rgba >>> 24) & 0xFF;
 
-    const {
-        opacity = 1,
-        strength = 0.8,
-        radius = 2.0,
-        level = 0.015,
-        smoothing = 0.015,
-        clamp = 0.08,
-        useEdgeMask = true,
-        lineOut,
-    } = requirements || {};
+            if (a === 0) {
 
-    if (strength === 0 || radius <= 0) {
+                out32[p] = rgba;
+                continue;
+            }
 
-        transferDataUnchanged(oData, iData, len);
+            d = D[p];
+
+            if (d > clamp) d = clamp;
+            else if (d < -clamp) d = -clamp;
+
+            Lp = L[p] + strength * M[p] * d;
+
+            rgb = toRGB(Lp, A[p], B[p], libs);
+
+            out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
+        }
+
         if (lineOut) processResults(output, input, 1 - opacity);
         else processResults(cache.work, output, opacity);
-        return;
-    }
-
-    const libs = colorEngine.getRgbOkCache(),
-        toOK  = colorEngine.getOkValsForRgb,
-        toRGB = colorEngine.getRgbValsForOklab;
-
-    const ws = getEausmWorkspace(width, height);
-    const { L, A, B, Lb, D, G, M, Am, tmpLine, tmpImg } = ws;
-
-    let p, pz, rgba, a, r, g, b, ok, d, Lp, rgb;
-
-    // 1) RGB -> OKLab + alpha mask
-    for (p = 0, pz = src32.length | 0; p < pz; p++) {
-
-        rgba = src32[p];
-        a = (rgba >>> 24) & 0xFF;
-
-        Am[p] = a > 0 ? 1.0 : 0.0;
-
-        if (a === 0) {
-
-            L[p] = 0;
-            A[p] = 0;
-            B[p] = 0;
-            continue;
-        }
-
-        r = rgba & 0xFF;
-        g = (rgba >>> 8) & 0xFF;
-        b = (rgba >>> 16) & 0xFF;
-
-        ok = toOK(r, g, b, libs);
-
-        L[p] = ok[0];
-        A[p] = ok[1];
-        B[p] = ok[2];
-    }
-
-    // 2) Blur L (main radius). Reuse tmpImg buffer.
-    const coeffMain = getGaussianCoeffsCached(radius);
-
-    gaussianBlurL_Float(L, Lb, width, height, radius, radius, tmpLine, tmpImg, coeffMain, coeffMain);
-
-    // 3) Detail layer D = L - Lb
-    for (p = 0, pz = L.length | 0; p < pz; p++) {
-
-        D[p] = L[p] - Lb[p];
-    }
-
-    // 4) Edge mask (optional)
-    if (useEdgeMask && (level > 0 || smoothing > 0)) {
-
-        sobelMagFloat(Lb, G, width, height);
-
-        // Soft threshold using user level/smoothing
-        smoothstepInto(G, M, level, level + _max(1e-6, smoothing));
-
-        // Optional extra smoothing on mask; only if smoothing > 0
-        if (smoothing > 0) {
-
-            const maskSigma = 0.7;
-            const coeffMask = getGaussianCoeffsCached(maskSigma);
-
-            gaussianBlurL_Float(M, M, width, height, maskSigma, maskSigma, tmpLine, tmpImg, coeffMask, coeffMask);
-        }
-
-        // Respect alpha mask
-        for (p = 0, pz = M.length | 0; p < pz; p++) {
-
-            M[p] *= Am[p];
-        }
-    }
-    else {
-        // No edge-limiting requested: mask is just alpha
-        for (p = 0, pz = M.length | 0; p < pz; p++) {
-
-            M[p] = Am[p];
-        }
-    }
-
-    // 5) Apply sharpening on L with halo clamp
-    for (p = 0, pz = src32.length | 0; p < pz; p++) {
-
-        rgba = src32[p];
-        a = (rgba >>> 24) & 0xFF;
-
-        if (a === 0) {
-
-            out32[p] = rgba;
-            continue;
-        }
-
-        d = D[p];
-
-        if (d > clamp) d = clamp;
-        else if (d < -clamp) d = -clamp;
-
-        Lp = L[p] + strength * M[p] * d;
-
-        rgb = toRGB(Lp, A[p], B[p], libs);
-
-        out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
-    }
-
-    if (lineOut) processResults(output, input, 1 - opacity);
-    else processResults(cache.work, output, opacity);
-},
+    },
 
 
 // __user-defined-legacy__ - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter engine, which the engine would then run against the source input image as-and-when required. This functionality has been removed from the new filter functionality. All such filters will now return the input image unchanged.
@@ -8073,6 +8073,220 @@ P.theBigActionsObject = {
         if (lineOut) processResults(output, input, 1 - opacity);
         else processResults(cache.work, output, opacity);
     },
+
+// __ok-perceptual-curves__ - manipulate OK* channels using per-bucket offsets. Curves are supplied as delta arrays:
+// + luminance: length 501, values added directly to L   (0..1)
+// + chroma: length 201, values added to normalised C (0..1) then scaled
+// + aChannel: length 501, values added to normalised A (0..1) then re-mapped
+// + bChannel: length 501, values added to normalised B (0..1) then re-mapped
+// + If an array is empty or all-zero (within EPS), that channel is left unchanged.
+[OK_PERCEPTUAL_CURVES]: function (requirements) {
+
+    const [input, output] = getInputAndOutputLines(requirements);
+
+    const iData = input.data,
+        oData = output.data,
+        len = iData.length;
+
+    const {
+        opacity = 1,
+        curves = null,
+        lineOut,
+    } = requirements;
+
+    let lumWeights = [],
+        chrWeights = [],
+        aWeights = [],
+        bWeights = [];
+
+    if (curves) {
+
+        if (_isArray(curves.luminance)) lumWeights = curves.luminance;
+        if (_isArray(curves.chroma)) chrWeights = curves.chroma;
+        if (_isArray(curves.aChannel)) aWeights = curves.aChannel;
+        if (_isArray(curves.bChannel)) bWeights = curves.bChannel;
+    }
+
+    const L_SIZE  = 501,
+        AB_SIZE = 501,
+        C_SIZE  = 201,
+        MAX_A_B = 0.4,
+        RANGE_A_B = MAX_A_B * 2,
+        INV_RANGE_A_B = 1 / RANGE_A_B,
+        MAX_CHROMA = 0.4,
+        EPS = 1e-7;
+
+    const hasNonZero = (arr, expectedLen) => {
+
+        if (!_isArray(arr) || arr.length !== expectedLen) return false;
+
+        for (let i = 0, iz = arr.length, v; i < iz; i++) {
+
+            v = arr[i];
+            if (_isFinite(v) && _abs(v) > EPS) return true;
+        }
+        return false;
+    };
+
+    const useLum = hasNonZero(lumWeights, L_SIZE),
+        useChr = hasNonZero(chrWeights, C_SIZE),
+        useA = hasNonZero(aWeights, AB_SIZE),
+        useB = hasNonZero(bWeights, AB_SIZE);
+
+    if (!useLum && !useChr && !useA && !useB) {
+
+        transferDataUnchanged(oData, iData, len);
+
+        if (lineOut) processResults(output, input, 1 - opacity);
+        else processResults(cache.work, output, opacity);
+
+        return;
+    }
+
+    const libs  = colorEngine.getRgbOkCache(),
+        getOk = colorEngine.getOkValsForRgb,
+        toRgbL = colorEngine.getRgbValsForOklab,
+        toRgbC = colorEngine.getRgbValsForOklch;
+
+    const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+        out32 = new Uint32Array(oData.buffer, oData.byteOffset, oData.byteLength >>> 2);
+
+    let p, pz, rgba, r, g, b, a, ok, L, A, B, C, H, rgb,
+        idxL, dL, Cnorm, idxC, dCnorm,
+        aNorm, idxA, dANorm,
+        bNorm, idxB, dBNorm;
+
+    if (useChr) {
+
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+            rgba = src32[p];
+
+            r = rgba & 0xFF;
+            g = (rgba >>> 8) & 0xFF;
+            b = (rgba >>> 16) & 0xFF;
+            a = (rgba >>> 24) & 0xFF;
+
+            if (a === 0) {
+
+                out32[p] = rgba;
+                continue;
+            }
+
+            ok = getOk(r, g, b, libs);
+            L = ok[0];
+            C = ok[3];
+            H = ok[4];
+
+            if (useLum) {
+
+                idxL = (L * (L_SIZE - 1) + 0.5) | 0;
+                idxL = _min(_max(idxL, 0), L_SIZE - 1);
+
+                dL = lumWeights[idxL];
+                if (!_isFinite(dL)) dL = 0;
+
+                L += dL;
+                L = _min(_max(L, 0), 1);
+            }
+
+            Cnorm = C / MAX_CHROMA;
+            if (Cnorm < 0) Cnorm = 0;
+            else if (Cnorm > 1) Cnorm = 1;
+
+            idxC = (Cnorm * (C_SIZE - 1) + 0.5) | 0;
+            idxC = _min(_max(idxC, 0), C_SIZE - 1);
+
+            dCnorm = chrWeights[idxC];
+            if (!_isFinite(dCnorm)) dCnorm = 0;
+
+            Cnorm += dCnorm;
+            Cnorm = _min(_max(Cnorm, 0), 1);
+
+            C = Cnorm * MAX_CHROMA;
+
+            rgb = toRgbC(L, C, H, libs);
+
+            out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
+        }
+    }
+    else {
+
+        for (p = 0, pz = src32.length | 0; p < pz; p++) {
+
+            rgba = src32[p];
+
+            r = rgba & 0xFF;
+            g = (rgba >>> 8) & 0xFF;
+            b = (rgba >>> 16) & 0xFF;
+            a = (rgba >>> 24) & 0xFF;
+
+            if (a === 0) {
+
+                out32[p] = rgba;
+                continue;
+            }
+
+            ok = getOk(r, g, b, libs);
+            L = ok[0];
+            A = ok[1];
+            B = ok[2];
+
+            if (useLum) {
+
+                idxL = (L * (L_SIZE - 1) + 0.5) | 0;
+                idxL = _min(_max(idxL, 0), L_SIZE - 1);
+
+                dL = lumWeights[idxL];
+                if (!_isFinite(dL)) dL = 0;
+
+                L += dL;
+                L = _min(_max(L, 0), 1);
+            }
+
+            if (useA) {
+
+                aNorm = (A + MAX_A_B) * INV_RANGE_A_B;
+                aNorm = _min(_max(aNorm, 0), 1);
+
+                idxA = (aNorm * (AB_SIZE - 1) + 0.5) | 0;
+                idxA = _min(_max(idxA, 0), AB_SIZE - 1);
+
+                dANorm = aWeights[idxA];
+                if (!_isFinite(dANorm)) dANorm = 0;
+
+                aNorm += dANorm;
+                aNorm = _min(_max(aNorm, 0), 1);
+
+                A = (aNorm * RANGE_A_B) - MAX_A_B;
+            }
+
+            if (useB) {
+
+                bNorm = (B + MAX_A_B) * INV_RANGE_A_B;   // 0..1
+                bNorm = _min(_max(bNorm, 0), 1);
+
+                idxB = (bNorm * (AB_SIZE - 1) + 0.5) | 0;
+                idxB = _min(_max(idxB, 0), AB_SIZE - 1);
+
+                dBNorm = bWeights[idxB];
+                if (!_isFinite(dBNorm)) dBNorm = 0;
+
+                bNorm += dBNorm;
+                bNorm = _min(_max(bNorm, 0), 1);
+
+                B = (bNorm * RANGE_A_B) - MAX_A_B;
+            }
+
+            rgb = toRgbL(L, A, B, libs);
+
+            out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
+        }
+    }
+
+    if (lineOut) processResults(output, input, 1 - opacity);
+    else processResults(cache.work, output, opacity);
+},
 
 // __zoom-blur__ - blur with radial easing & inner/outer radius
     [ZOOM_BLUR]: function (requirements) {
