@@ -221,87 +221,15 @@ Similar to shared constants, SC defines a set of exported shared variables in th
 + Object manipulation functions – `mergeOver()`, `mergeDiscard()`
 + Type checking functions, which all begin with `isa_` – `isa_boolean()`, `isa_fn()`, `isa_canvas()`
 
-### System flags
-SC uses flags – commonly Boolean – for much of its internal signalling and communications work. Many of the flags related to system state get defined in the [helper/system-flags.js](../source/helper/system-flags.html) file. For example:
+### System listeners and user interactions
+SC initialises a system of event listeners and system flags to keep track of user interactions with the browser, and with system-wide user preferences:
+- Browser resize events
+- Browser scroll events
+- browser drag events (between device screens)
+- Mouse/touch/pointer movement events
+- Updates to system-wide user preferences (for example: `prefers-reduced-motion`)
 
-```
-let mouseChanged = false;
-export const getMouseChanged = () => mouseChanged;
-export const setMouseChanged = (val) => mouseChanged = val;
-
-let viewportChanged = false;
-export const getViewportChanged = () => viewportChanged;
-export const setViewportChanged = (val) => viewportChanged = val;
-
-let prefersContrastChanged = false;
-export const getPrefersContrastChanged = () => prefersContrastChanged;
-export const setPrefersContrastChanged = (val) => prefersContrastChanged = val;
-```
-
-### The `currentCorePosition` object
-SC keeps track of system state, and changes to that state, in its `currentCorePosition` object:
-
-```
-export const currentCorePosition = {
-    x: 0,
-    y: 0,
-    scrollX: 0,
-    scrollY: 0,
-    w: 0,
-    h: 0,
-    type: MOUSE,
-    prefersReducedMotion: false,
-    prefersDarkColorScheme: false,
-    prefersReduceTransparency: false,
-    prefersContrast: false,
-    prefersReduceData: false,
-    displaySupportsP3Color: false,
-    canvasSupportsP3Color: false,
-    devicePixelRatio: 0,
-    rawTouches: [],
-};
-```
-
-SC checks for changes to system state using an animation object – `SC-core-listeners-tracker` – that runs once at the start of each animation loop. When changes are detected Canvas and Stack artefacts will be informed (via `dirty flags`). When they in turn run their [Display cycle](sc-animation-systems.html) functionality they will cascade that information to their constituent objects which will, if necessary, update their state to reflect the changed environment. 
-
-### Browser mouse/touch/pointer, scroll, and resize events
-During initialization SC will add a set of event listeners to the `window` object which react to various `mouse/touch/pointer` events. When such events occur the listeners will set the appropriate system flags to true (ie: something has changed) and store the cursor's current position data in the `currentCorePosition` object. Functionality to react to these changes is deferred until the next animation loop runs.
-
-Similarly, SC sets event listeners on the `window` object to listen for browser `resize` and `scroll` events.
-
-After initialization completes the product-dev can stop and restart these core listeners by invoking the `scrawl.stopCoreListeners()` and `scrawl.startCoreListeners()` functions. See [demo test DOM-009](../demo/dom-009.html) for an example of this functionality in action.
-
-### End-user preferences media queries and events
-SC uses evented media queries to listen out for changes in various system settings. For example:
-
-```
-const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-colorSchemeMediaQuery.addEventListener(CHANGE, () => {
-
-    const res = colorSchemeMediaQuery.matches;
-
-    if (currentCorePosition.prefersDarkColorScheme !== res) {
-
-        currentCorePosition.prefersDarkColorScheme = res;
-        setPrefersDarkColorSchemeChanged(true);
-    }
-});
-currentCorePosition.prefersDarkColorScheme = colorSchemeMediaQuery.matches;
-```
-
-SC tracks the following system settings:
-+ `forced-colors`
-+ `inverted-colors`
-+ `prefers-color-scheme`
-+ `prefers-contrast`
-+ `prefers-reduced-data`
-+ `prefers-reduced-motion`
-+ `prefers-reduced-transparency`
-
-SC, by default, doesn't react to changes in these settings. It's up to the product-dev to add hook functions to each Canvas wrapper object to supply the appropriate functionality for that canvas's output when changes occur. See the [Objects overview page](sc-objects-overview.html) in the Runbook for further details. 
-
-SC also tracks the current `pixel-ratio` and `color-gamut: p3` settings for the device/screen on which the browser is displaying. This can change when, for instance, an end-user drags the browser window between screens. Such changes are handled by SC internally with little need for additional product-dev intervention.
+Implementation details can be found in the [Scrawl-canvas events and signals](./sc-events-signals.html#system-events) page of this Run Book.
 
 ## Scrawl-canvas pools
 SC code needs to run fast. For this reason functional programming approaches, where new objects get created rather than existing objects mutated, adds computational weight (and excessive garbage collection) which is best avoided.

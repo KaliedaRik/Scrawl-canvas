@@ -217,71 +217,16 @@ export const ZERO_STR = '';</code></pre>
 <li>Object manipulation functions – <code>mergeOver()</code>, <code>mergeDiscard()</code></li>
 <li>Type checking functions, which all begin with <code>isa_</code> – <code>isa_boolean()</code>, <code>isa_fn()</code>, <code>isa_canvas()</code></li>
 </ul>
-<h3 id="system-flags">System flags</h3>
-<p>SC uses flags – commonly Boolean – for much of its internal signalling and communications work. Many of the flags related to system state get defined in the <a href="../source/helper/system-flags.html">helper/system-flags.js</a> file. For example:</p>
-<pre><code>let mouseChanged = false;
-export const getMouseChanged = () =&gt; mouseChanged;
-export const setMouseChanged = (val) =&gt; mouseChanged = val;
-
-let viewportChanged = false;
-export const getViewportChanged = () =&gt; viewportChanged;
-export const setViewportChanged = (val) =&gt; viewportChanged = val;
-
-let prefersContrastChanged = false;
-export const getPrefersContrastChanged = () =&gt; prefersContrastChanged;
-export const setPrefersContrastChanged = (val) =&gt; prefersContrastChanged = val;</code></pre>
-<h3 id="the-currentcoreposition-object">The <code>currentCorePosition</code> object</h3>
-<p>SC keeps track of system state, and changes to that state, in its <code>currentCorePosition</code> object:</p>
-<pre><code>export const currentCorePosition = {
-    x: 0,
-    y: 0,
-    scrollX: 0,
-    scrollY: 0,
-    w: 0,
-    h: 0,
-    type: MOUSE,
-    prefersReducedMotion: false,
-    prefersDarkColorScheme: false,
-    prefersReduceTransparency: false,
-    prefersContrast: false,
-    prefersReduceData: false,
-    displaySupportsP3Color: false,
-    canvasSupportsP3Color: false,
-    devicePixelRatio: 0,
-    rawTouches: [],
-};</code></pre>
-<p>SC checks for changes to system state using an animation object – <code>SC-core-listeners-tracker</code> – that runs once at the start of each animation loop. When changes are detected Canvas and Stack artefacts will be informed (via <code>dirty flags</code>). When they in turn run their <a href="sc-animation-systems.html">Display cycle</a> functionality they will cascade that information to their constituent objects which will, if necessary, update their state to reflect the changed environment. </p>
-<h3 id="browser-mousetouchpointer-scroll-and-resize-events">Browser mouse/touch/pointer, scroll, and resize events</h3>
-<p>During initialization SC will add a set of event listeners to the <code>window</code> object which react to various <code>mouse/touch/pointer</code> events. When such events occur the listeners will set the appropriate system flags to true (ie: something has changed) and store the cursor's current position data in the <code>currentCorePosition</code> object. Functionality to react to these changes is deferred until the next animation loop runs.</p>
-<p>Similarly, SC sets event listeners on the <code>window</code> object to listen for browser <code>resize</code> and <code>scroll</code> events.</p>
-<p>After initialization completes the product-dev can stop and restart these core listeners by invoking the <code>scrawl.stopCoreListeners()</code> and <code>scrawl.startCoreListeners()</code> functions. See <a href="../demo/dom-009.html">demo test DOM-009</a> for an example of this functionality in action.</p>
-<h3 id="end-user-preferences-media-queries-and-events">End-user preferences media queries and events</h3>
-<p>SC uses evented media queries to listen out for changes in various system settings. For example:</p>
-<pre><code>const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-colorSchemeMediaQuery.addEventListener(CHANGE, () =&gt; {
-
-    const res = colorSchemeMediaQuery.matches;
-
-    if (currentCorePosition.prefersDarkColorScheme !== res) {
-
-        currentCorePosition.prefersDarkColorScheme = res;
-        setPrefersDarkColorSchemeChanged(true);
-    }
-});
-currentCorePosition.prefersDarkColorScheme = colorSchemeMediaQuery.matches;</code></pre>
-<p>SC tracks the following system settings:</p>
+<h3 id="system-listeners-and-user-interactions">System listeners and user interactions</h3>
+<p>SC initialises a system of event listeners and system flags to keep track of user interactions with the browser, and with system-wide user preferences:</p>
 <ul>
-<li><code>forced-colors</code></li>
-<li><code>inverted-colors</code></li>
-<li><code>prefers-color-scheme</code></li>
-<li><code>prefers-contrast</code></li>
-<li><code>prefers-reduced-data</code></li>
-<li><code>prefers-reduced-motion</code></li>
-<li><code>prefers-reduced-transparency</code></li>
+<li>Browser resize events</li>
+<li>Browser scroll events</li>
+<li>browser drag events (between device screens)</li>
+<li>Mouse/touch/pointer movement events</li>
+<li>Updates to system-wide user preferences (for example: <code>prefers-reduced-motion</code>)</li>
 </ul>
-<p>SC, by default, doesn't react to changes in these settings. It's up to the product-dev to add hook functions to each Canvas wrapper object to supply the appropriate functionality for that canvas's output when changes occur. See the <a href="sc-objects-overview.html">Objects overview page</a> in the Runbook for further details. </p>
-<p>SC also tracks the current <code>pixel-ratio</code> and <code>color-gamut: p3</code> settings for the device/screen on which the browser is displaying. This can change when, for instance, an end-user drags the browser window between screens. Such changes are handled by SC internally with little need for additional product-dev intervention.</p>
+<p>Implementation details can be found in the <a href="./sc-events-signals.html#system-events">Scrawl-canvas events and signals</a> page of this Run Book.</p>
 <h2 id="scrawl-canvas-pools">Scrawl-canvas pools</h2>
 <p>SC code needs to run fast. For this reason functional programming approaches, where new objects get created rather than existing objects mutated, adds computational weight (and excessive garbage collection) which is best avoided.</p>
 <p>Instead, SC code makes use of a set of pooled objects and arrays for much of its functionality. These pools get initialized when the browser first imports the relevant modules, and start as empty arrays. While some of these pools are made available to the product-dev via scrawl functions, others are strictly internal.</p>

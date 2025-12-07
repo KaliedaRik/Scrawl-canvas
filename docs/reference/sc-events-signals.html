@@ -44,15 +44,73 @@
 <p>For the most part, these events do not trigger immediate changes in the SC system or its data. Rather they will update values held in the <code>currentCorePosition</code> object (which acts as SC's Single Source of Truth for this data) and set relevant <a href="https://gameprogrammingpatterns.com/dirty-flag.html">dirty flags</a> which the system can then address during the next Display cycle.</p>
 <p>This <strong>signals system</strong> pattern is also used by other SC objects – in particular artefact and entity objects – to communicate changes in their data to other objects that rely on the changed data for their own calculations: when a change occurs dirty flags will be set, but actioning those changes and alerting subscribed objects of those changes is deferred until the next Display cycle.</p>
 <h2 id="system-events">System events</h2>
-<p>[write up]</p>
+<p>System events are a set of <strong>event listeners</strong>, and <strong>media queries</strong>, that SC adds to the browser <code>window</code> object as part of its <a href="./sc-initialization.html">initialization process</a>. SC divides this listener functionality into two groups:</p>
 <ul>
-<li>Intro text - can divide system listeners into 2 groups: those that listen on the window, and those that listen on the canvas</li>
-<li>Most code is in core/user-interactions.js and helper/system-flags.js</li>
-<li>We can divide functionality into groups:<ul>
-<li>Core listeners, which track the browser viewport dimensions (resize), the page position within the viewport (scroll), and the pointer/touch position over the viewport (move). Product-devs can switch these listeners on/off as a whole (tied to RAF animation) and trigger each individually if the need arises</li>
-<li>Environment listeners: dynamically tracking accessibility preferences; and the device and screen capabilities on which the window currently displays (display-p3, device ixel ratio). Also includes some font management functionality.</li></ul></li>
+<li><p><strong>Core listeners</strong> are groups of event listeners set directly on the <code>window</code> object. They track the browser viewport dimensions (resize), the page position within the viewport (scroll), and the pointer/touch position over the viewport (move).</p></li>
+<li><p><strong>Environment listeners</strong> are event listeners set on <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Media_queries/Using">match-media</a> queries which are set on the <code>window</code> object (using the methods described in the MDN <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Media_queries/Testing">Testing media queries programmatically</a> page). SC uses them to test user preference settings and device screen capabilities.</p></li>
 </ul>
-<h3 id="the-core-listeners-tracker-function">The core listeners tracker function</h3>
+<p>Both groups of listeners will fire when triggered by the appropriate user interaction:</p>
+<ul>
+<li>mouse/touch movement over the browser;</li>
+<li>scrolling the page (by whatever means);</li>
+<li>resizing the browser viewport;</li>
+<li>dragging the browser window between screens;</li>
+<li>updating settings in the user's device system UI;</li>
+<li>font loading events.</li>
+</ul>
+<blockquote>
+  <p><strong>tl;dr:</strong> SC makes no attempt to <a href="https://www.joshwcomeau.com/snippets/javascript/debounce/">debounce event listeners</a>; instead it minimises the amount of work undertaken when each event listener fires.</p>
+</blockquote>
+<p>SC keeps track of current system state, and changes to that state, in its <code>currentCorePosition</code> object (kept in the <a href="../source/core/user-interaction.html">core/user-interactions.js</a> file):</p>
+<pre><code>export const currentCorePosition = {
+    x: 0,
+    y: 0,
+    scrollX: 0,
+    scrollY: 0,
+    w: 0,
+    h: 0,
+    type: MOUSE,
+    prefersReducedMotion: false,
+    prefersDarkColorScheme: false,
+    prefersReduceTransparency: false,
+    prefersContrast: false,
+    prefersReduceData: false,
+    displaySupportsP3Color: false,
+    canvasSupportsP3Color: false,
+    devicePixelRatio: 0,
+    rawTouches: [],
+};</code></pre>
+<p>SC also records changes to state in a set of system flags (kept in the <a href="../source/helper/system-flags.html">helper/system-flags.js</a> file), for example:</p>
+<pre><code>let mouseChanged = false;
+export const getMouseChanged = () =&gt; mouseChanged;
+export const setMouseChanged = (val) =&gt; mouseChanged = val;</code></pre>
+<p>The system event listeners touch only these structures. The function triggered by the mouse/touch related event listeners is typical:</p>
+<pre><code>const moveAction = function (e) {
+
+    const x = _round(e.pageX),
+        y = _round(e.pageY);
+
+    if (currentCorePosition.x !== x || currentCorePosition.y !== y) {
+        currentCorePosition.type = (navigator.pointerEnabled) ? POINTER : MOUSE;
+        currentCorePosition.x = x;
+        currentCorePosition.y = y;
+        setMouseChanged(true);
+    }
+};</code></pre>
+<p>The system preferences event listeners work in a similar fashion:</p>
+<pre><code>const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+colorSchemeMediaQuery.addEventListener(CHANGE, () =&gt; {
+
+    const res = colorSchemeMediaQuery.matches;
+
+    if (currentCorePosition.prefersDarkColorScheme !== res) {
+
+        currentCorePosition.prefersDarkColorScheme = res;
+        setPrefersDarkColorSchemeChanged(true);
+    }
+});</code></pre>
+<h3 id="actioning-systemic-user-interactions">Actioning systemic user interactions</h3>
 <p>[write up]</p>
 <ul>
 <li>SC doesn't debounce system event listeners. Instead, it limits the functionality triggered - setting dirty flags maintained in the system-flags.js file, alongside updating the tracked data values in the <code>currentCorePosition</code> object.</li>
@@ -66,35 +124,6 @@
 <li>Updates the artefact's dimensions using its <code>set</code> functionality (so the artefact can set its own appropriate dirty flags)</li></ul></li>
 <li>core/user-interactions.js also exports some internal functions - <code>applyCoreResizeListener</code>, <code>applyCoreScrollListener</code>, <code>purgeFontMetadata</code>, <code>purgeFontMetadata</code> - which repo-devs can import into other SC files. Use with care!</li>
 </ul>
-<h4 id="resize-action">Resize action</h4>
-<p>[write up]</p>
-<h4 id="scroll-action">Scroll action</h4>
-<p>[write up]</p>
-<h4 id="move-action">Move action</h4>
-<p>[write up]</p>
-<h3 id="tracking-the-browser-environment">Tracking the browser environment</h3>
-<p>[write up]</p>
-<h4 id="accessibility-preferences">Accessibility preferences</h4>
-<p>[write up]</p>
-<p>Preferences:</p>
-<ul>
-<li>prefers-contrast</li>
-<li>prefers-reduced-motion</li>
-<li>prefers-color-scheme</li>
-<li>prefers-reduced-transparency</li>
-<li>prefers-reduced-data</li>
-<li>inverted-colors</li>
-<li>forced-colors</li>
-</ul>
-<h4 id="system-and-device-screen-capabilities">System and device screen capabilities</h4>
-<p>[write up]</p>
-<p>Capabilities:</p>
-<ul>
-<li>Display-P3 support</li>
-<li>Device pixel ratio</li>
-</ul>
-<h4 id="font-management">Font management</h4>
-<p>[write up]</p>
 <h2 id="dynamic-asset-management">Dynamic asset management</h2>
 <p>[write up]</p>
 <h3 id="responsive-images">Responsive images</h3>

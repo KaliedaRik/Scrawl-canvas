@@ -25,14 +25,91 @@ For the most part, these events do not trigger immediate changes in the SC syste
 This **signals system** pattern is also used by other SC objects – in particular artefact and entity objects – to communicate changes in their data to other objects that rely on the changed data for their own calculations: when a change occurs dirty flags will be set, but actioning those changes and alerting subscribed objects of those changes is deferred until the next Display cycle.
 
 ## System events
-[write up]
-+ Intro text - can divide system listeners into 2 groups: those that listen on the window, and those that listen on the canvas
-+ Most code is in core/user-interactions.js and helper/system-flags.js
-+ We can divide functionality into groups:
-  - Core listeners, which track the browser viewport dimensions (resize), the page position within the viewport (scroll), and the pointer/touch position over the viewport (move). Product-devs can switch these listeners on/off as a whole (tied to RAF animation) and trigger each individually if the need arises
-  - Environment listeners: dynamically tracking accessibility preferences; and the device and screen capabilities on which the window currently displays (display-p3, device ixel ratio). Also includes some font management functionality.
+System events are a set of **event listeners**, and **media queries**, that SC adds to the browser `window` object as part of its [initialization process](./sc-initialization.html). SC divides this listener functionality into two groups:
 
-### The core listeners tracker function
+- **Core listeners** are groups of event listeners set directly on the `window` object. They track the browser viewport dimensions (resize), the page position within the viewport (scroll), and the pointer/touch position over the viewport (move).
+
+- **Environment listeners** are event listeners set on [match-media](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Media_queries/Using) queries which are set on the `window` object (using the methods described in the MDN [Testing media queries programmatically](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Media_queries/Testing) page). SC uses them to test user preference settings and device screen capabilities.
+
+Both groups of listeners will fire when triggered by the appropriate user interaction:
+- mouse/touch movement over the browser;
+- scrolling the page (by whatever means);
+- resizing the browser viewport;
+- dragging the browser window between screens;
+- updating settings in the user's device system UI;
+- font loading events.
+
+> **tl;dr:** SC makes no attempt to [debounce event listeners](https://www.joshwcomeau.com/snippets/javascript/debounce/); instead it minimises the amount of work undertaken when each event listener fires.
+
+SC keeps track of current system state, and changes to that state, in its `currentCorePosition` object (kept in the [core/user-interactions.js](../source/core/user-interaction.html) file):
+
+```
+export const currentCorePosition = {
+    x: 0,
+    y: 0,
+    scrollX: 0,
+    scrollY: 0,
+    w: 0,
+    h: 0,
+    type: MOUSE,
+    prefersReducedMotion: false,
+    prefersDarkColorScheme: false,
+    prefersReduceTransparency: false,
+    prefersContrast: false,
+    prefersReduceData: false,
+    displaySupportsP3Color: false,
+    canvasSupportsP3Color: false,
+    devicePixelRatio: 0,
+    rawTouches: [],
+};
+```
+
+SC also records changes to state in a set of system flags (kept in the [helper/system-flags.js](../source/helper/system-flags.html) file), for example:
+
+```
+let mouseChanged = false;
+export const getMouseChanged = () => mouseChanged;
+export const setMouseChanged = (val) => mouseChanged = val;
+```
+
+The system event listeners touch only these structures. The function triggered by the mouse/touch related event listeners is typical:
+
+```
+const moveAction = function (e) {
+
+    const x = _round(e.pageX),
+        y = _round(e.pageY);
+
+    if (currentCorePosition.x !== x || currentCorePosition.y !== y) {
+        currentCorePosition.type = (navigator.pointerEnabled) ? POINTER : MOUSE;
+        currentCorePosition.x = x;
+        currentCorePosition.y = y;
+        setMouseChanged(true);
+    }
+};
+```
+
+The system preferences event listeners work in a similar fashion:
+
+```
+const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+colorSchemeMediaQuery.addEventListener(CHANGE, () => {
+
+    const res = colorSchemeMediaQuery.matches;
+
+    if (currentCorePosition.prefersDarkColorScheme !== res) {
+
+        currentCorePosition.prefersDarkColorScheme = res;
+        setPrefersDarkColorSchemeChanged(true);
+    }
+});
+```
+
+### Actioning systemic user interactions
+
+
+
 [write up]
 + SC doesn't debounce system event listeners. Instead, it limits the functionality triggered - setting dirty flags maintained in the system-flags.js file, alongside updating the tracked data values in the `currentCorePosition` object.
 + user-interaction.js exports an array - `uiSubscribedElements` - which Canvas/Stack wrapper artefacts can add their name values to (and remove them).
@@ -44,40 +121,6 @@ This **signals system** pattern is also used by other SC objects – in particul
   - Triggers the artefact's accessibility hook functions
   - Updates the artefact's dimensions using its `set` functionality (so the artefact can set its own appropriate dirty flags)
 + core/user-interactions.js also exports some internal functions - `applyCoreResizeListener`, `applyCoreScrollListener`, `purgeFontMetadata`, `purgeFontMetadata` - which repo-devs can import into other SC files. Use with care!
-
-#### Resize action
-[write up]
-
-#### Scroll action
-[write up]
-
-#### Move action
-[write up]
-
-### Tracking the browser environment
-[write up]
-
-#### Accessibility preferences
-[write up]
-
-Preferences:
-+ prefers-contrast
-+ prefers-reduced-motion
-+ prefers-color-scheme
-+ prefers-reduced-transparency
-+ prefers-reduced-data
-+ inverted-colors
-+ forced-colors
-
-#### System and device screen capabilities
-[write up]
-
-Capabilities:
-+ Display-P3 support
-+ Device pixel ratio
-
-#### Font management
-[write up]
 
 ## Dynamic asset management
 [write up]
