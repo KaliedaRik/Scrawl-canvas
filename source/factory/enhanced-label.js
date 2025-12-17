@@ -306,6 +306,10 @@ const defaultAttributes = {
 // + Determines the ordering of text units along the space layout line. Has nothing to do with the `direction` attribute.
     textUnitFlow: ROW,
 
+// __startTextOnLine__ - positive integer number. Default: `0`
+// + Determines on which line the text layout will start.
+    startTextOnLine: 0,
+
 // __autoHyphenate__ – boolean flag to opt in to language-aware word breaking and auto-hyphenation. When true, the text is pre-processed before layout using either the user-defined `lineBreakHook` or the browser’s built-in [Intl.Segmenter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter).
 // + Inserts either `\u200B` (zero-width space) or `\u00AD` (soft hyphen) between word-like segments, depending on the value of `lineBreakInsert`.
     autoHyphenate: false,
@@ -1713,6 +1717,7 @@ P.assignTextUnitsToLines = function () {
         lines,
         textUnitFlow,
         textUnits,
+        startTextOnLine,
     } = this;
 
     const languageDirectionIsLtr = (defaultTextStyle.direction === LTR);
@@ -1732,12 +1737,12 @@ P.assignTextUnitsToLines = function () {
         ++unitCursor;
     };
 
-    lines.forEach(line => {
+    for (let j = startTextOnLine, jz = lines.length; j < jz; j++) {
 
         ({
             length: lineLength,
             unitData,
-        } = line);
+        } = lines[j]);
 
         lengthRemaining = _ceil(lineLength);
 
@@ -1804,7 +1809,7 @@ P.assignTextUnitsToLines = function () {
             // + For the moment, we will not implement this alternative approach. It's up to developers and designers to use words that can fit into the available line space. Overlong words can be hyphenated with soft (&amp;shy;) hyphens, or zero-width spaces, if required.
             else break;
         }
-    });
+    };
 
     // Truncation check
     // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts

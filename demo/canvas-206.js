@@ -139,6 +139,7 @@ const dom = scrawl.initializeDomInputs([
     ['select', 'textUnitFlow', 0],
     ['select', 'truncateString', 0],
     ['select', 'autoHyphenate', 0],
+    ['select', 'startTextOnLine', 0],
 ]);
 
 
@@ -198,6 +199,7 @@ scrawl.makeUpdater({
         letterSpacing: ['letterSpacing', 'px'],
         wordSpacing: ['wordSpacing', 'px'],
         autoHyphenate: ['autoHyphenate', 'boolean'],
+        startTextOnLine: ['startTextOnLine', 'int'],
     },
 
     callback: updateDisplayText,
