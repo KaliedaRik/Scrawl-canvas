@@ -1342,7 +1342,8 @@ interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMix
     offsetY?: StringOrNumberInput; 
     pathPosition?: number;
     roll?: number; 
-    scale?: number; 
+    scale?: number;
+    startTextOnLine?: number;
     startX?: StringOrNumberInput; 
     startY?: StringOrNumberInput; 
     width?: StringOrNumberInput; 
