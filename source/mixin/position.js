@@ -133,7 +133,10 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 import { _isArray, _isFinite, _keys, _parse, _values, AUTO, BOTTOM, CENTER, DIMENSIONS, ENTITY, LEFT, MIMIC, MOUSE, OFFSET, PARTICLE, PATH, PIVOT, RIGHT, START, T_ENHANCED_LABEL, T_CELL, T_GRID, T_GROUP, T_POLYLINE, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const HANDLE = 'handle',
+const DELTA = 'delta',
+    DELTA_CONSTRAINTS = 'deltaConstraints',
+    FILTERS = 'filters',
+    HANDLE = 'handle',
     LOCKTO = 'lockTo',
     STARTX = 'startX',
     STARTY = 'startY';
@@ -308,6 +311,30 @@ export default function (P = Ωempty) {
         let result = true;
 
         switch (key) {
+
+            case DELTA :
+
+                if (!_keys(value).length) {
+
+                    result = (inc.includes(DELTA)) ? true : false;
+                }
+                break;
+
+            case DELTA_CONSTRAINTS :
+
+                if (!_keys(value).length) {
+
+                    result = (inc.includes(DELTA_CONSTRAINTS)) ? true : false;
+                }
+                break;
+
+            case FILTERS :
+
+                if (!value.length) {
+
+                    result = (inc.includes(FILTERS)) ? true : false;
+                }
+                break;
 
             case LOCKTO :
 
