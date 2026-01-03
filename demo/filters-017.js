@@ -57,8 +57,10 @@ const piccy = scrawl.makePicture({
 
     name: name('image'),
     asset: 'iris',
-    dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
+    dimensions: ['95%', '95%'],
+    handle: ['center', 'center'],
+    start: ['center', 'center'],
 
     filters: [name('noise'), name('displace')],
 });
@@ -93,6 +95,7 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'scale_y', '20'],
     ['input', 'opacity', '1'],
     ['select', 'transparent_edges', 0],
+    ['select', 'useInputAsMask', 0],
 ]);
 
 
@@ -114,6 +117,7 @@ scrawl.makeUpdater({
         scale_x: ['scaleX', 'float'],
         scale_y: ['scaleY', 'float'],
         transparent_edges: ['transparentEdges', 'boolean'],
+        useInputAsMask: ['useInputAsMask', 'boolean'],
         opacity: ['opacity', 'float'],
     },
 });

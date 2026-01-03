@@ -337,9 +337,9 @@ scrawl.addNativeListener('click', changeDirection, stack.domElement);
 console.log(scrawl.library);
 
 // Test Tween object packet
-console.log(scrawl.findTween(name('mySecondClonedTween')).saveAsPacket())
-//     RESULT:
-
+console.log(scrawl.findTween(name('mySecondClonedTween')).saveAsPacket());
+// ```
+// RESULT:
 // [
 //     "mystack-mySecondClonedTween",
 //     "Tween",
@@ -347,24 +347,25 @@ console.log(scrawl.findTween(name('mySecondClonedTween')).saveAsPacket())
 //     {
 //         "name":"mystack-mySecondClonedTween",
 //         "ticker":"mystack-mySecondClonedTween_ticker",
-//         "action":"~~~",
 //         "duration":"10s",
-//         "commenceAction":"~~~",
 //         "onHalt":"~~~\n        if (myTracker) myTracker.send('event', 'Tween state', 'halt', `Tween ${this.name} on ${this.ticker}`)\n    ",
 //         "onResume":"~~~\n        if (myTracker) myTracker.send('event', 'Tween state', 'resume', `Tween ${this.name} on ${this.ticker}`)\n    ",
-//         "completeAction":"~~~",
 //         "targets":["mystack-mythirdelement"],
-//         "definitions":[{
-//             "attribute":"roll",
-//             "start":-40,
-//             "end":320,
-//             "engine":"linear"
-//         }]
+//         "definitions":[
+//             {
+//                 "attribute":"roll",
+//                 "start":-40,
+//                 "end":320,
+//                 "engine":"linear"
+//             }
+//         ]
 //     }
 // ]
+// ```
 
 // Test Ticker object packet
 console.log(modelTicker.saveAsPacket());
+// ```
 //     RESULT:
 // [
 //     "mystack-modelTicker",
@@ -376,3 +377,4 @@ console.log(modelTicker.saveAsPacket());
 //         "cycles":0
 //     }
 // ]
+// ```

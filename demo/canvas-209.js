@@ -265,7 +265,8 @@ scrawl.makeEnhancedLabel({
     layoutTemplate: name('Britain-template'),
 
     fontString: 'bold 24px "Roboto Serif',
-    text: '<p class="welcome-text">Welcome&nbsp;to <span class="country-name">Britain</span></p>',
+    text: '<p class="welcome-text">Welcome to <span class="country-name">Britain</span></p>',
+    startTextOnLine: 1,
 
     delta: calculateInitialDeltaObject(),
     noDeltaUpdates: true,
@@ -315,7 +316,7 @@ scrawl.makeEnhancedLabel({
     layoutTemplate: name('Egypt-template'),
 
     fontString: 'bold 24px "Noto Arabic Sans',
-    text: '<p class="welcome-text">مرحبا&nbsp;بكم&nbsp;فى <span class="country-name">مصر</span></p>',
+    text: '<p class="welcome-text">مرحبا بكم فى <span class="country-name">مصر</span></p>',
 
     delta: calculateInitialDeltaObject(),
 

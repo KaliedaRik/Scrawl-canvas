@@ -340,13 +340,13 @@ export default function (P = Ωempty) {
 // `stringifyFunction`
     P.stringifyFunction = function (val) {
 
-        // The dotAll /s regex flag currently not supported by Firefox
-        // let matches = val.toString().match(/\((.*?)\).*?\{(.*)\}/s);
         const matches = val.toString().match(/\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/),
             vars = matches[1],
             func = matches[2];
 
-        return (xta(vars, func)) ? `${vars}${PACKET_DIVIDER}${func}` : false;
+        const check = `${vars}${PACKET_DIVIDER}${func}`;
+
+        return (check !== PACKET_DIVIDER) ? check : false;
     };
 
 // `processPacketOut`

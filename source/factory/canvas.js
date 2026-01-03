@@ -354,7 +354,7 @@ P.clone = λcloneError;
 
 
 // #### Kill functionality
-P.factoryKill = function () {
+P.factoryKill = function (removeDomArtefact = true) {
 
     const name = this.name,
         host = this.host;
@@ -385,7 +385,7 @@ P.factoryKill = function () {
     this.base.kill();
 
     // DOM removals
-    this.domElement.remove();
+    if (removeDomArtefact) this.domElement.remove();
 };
 
 

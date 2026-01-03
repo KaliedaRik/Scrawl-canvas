@@ -35,8 +35,12 @@ const easel = canvas.buildCell({
 });
 
 // Get handles to the Cell's engine and pixel data
-const easelData = easel.getCellData(true),
-    pixelState = easelData.pixelState;
+const easelData = easel.getCellData({
+    opaque: true,
+    includeGridCoords: false,
+    includePolarCoords: false,
+});
+const pixelState = easelData.pixelState;
 
 easel.paintCellData(easelData);
 

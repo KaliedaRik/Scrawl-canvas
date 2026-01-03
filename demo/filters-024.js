@@ -42,8 +42,10 @@ const piccy = scrawl.makePicture({
     name: oName('image'),
     group: oCanvas.get('baseGroup'),
     asset: 'iris',
-    dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
+    dimensions: ['95%', '95%'],
+    handle: ['center', 'center'],
+    start: ['center', 'center'],
 
     filters: [oName('weighted')],
 });
@@ -164,7 +166,7 @@ const currentPin = scrawl.makeDragZone({
 /** @ts-expect-error */
                 pin.isBeingDragged = false;
                 pin.set({
-                    lockXTo: 'mouse',
+                    lockYTo: 'mouse',
                 });
             }
         }
@@ -181,7 +183,7 @@ const currentPin = scrawl.makeDragZone({
 
                 pin.set({
                     start: pin.get('position'),
-                    lockXTo: 'start',
+                    lockYTo: 'start',
                 });
             }
         }

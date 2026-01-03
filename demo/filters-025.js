@@ -40,8 +40,10 @@ const piccy = scrawl.makePicture({
 
     name: name('image'),
     asset: 'iris',
-    dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
+    dimensions: ['95%', '95%'],
+    handle: ['center', 'center'],
+    start: ['center', 'center'],
 
     filters: [name('glitch')],
 });
@@ -88,6 +90,7 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'offsetAlphaMax', '0'],
     ['input', 'opacity', '1'],
     ['select', 'useMixedChannel', 1],
+    ['select', 'useInputAsMask', 0],
     ['select', 'transparentEdges', 0],
 ]);
 
@@ -118,6 +121,7 @@ scrawl.makeUpdater({
         offsetBlueMax: ['offsetBlueMax', 'round'],
         useMixedChannel: ['useMixedChannel', 'boolean'],
         transparentEdges: ['transparentEdges', 'boolean'],
+        useInputAsMask: ['useInputAsMask', 'boolean'],
     },
 });
 
