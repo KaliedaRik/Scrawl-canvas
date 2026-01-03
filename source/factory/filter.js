@@ -17,7 +17,7 @@ import { colorEngine } from '../helper/color-engine.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _isArray, _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NORMAL, OFFSET, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILE_MODES, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DECONVOLUTE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NORMAL, OK_PERCEPTUAL_CURVES, OFFSET, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILE_MODES, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, UNSHARP, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR, ZOOM_BLUR } from '../helper/shared-vars.js';
 
 // Local constants
 const EMBOSS_WORK = 'emboss-work',
@@ -61,7 +61,7 @@ const defaultAttributes = {
     // The __method__ attribute is a String which, in legacy filters, determines the actions which that filter will take on the image. An entity, Group or Cell can include more than one filter object in its `filters` Array.
     // + Filter factory invocations which include the `method` attribute in their argument object do not need to include an `actions` attribute; the factory will build the action objects for us.
     // + When using the `method` attribute, other attributes can be included alongside it. The filter factory will automatically transpose these attributes to the action object.
-    // + The following Strings are valid methods: `'alphaToChannels', 'areaAlpha', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'corrode', 'curveWeights', 'cyan', 'displace', 'edgeDetect',  'emboss', 'flood', 'gaussianBlur', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'mapToGradient', 'matrix', 'matrix5', 'modifyOk', 'modulateOk', 'negative', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'randomNoise', 'red', 'reducePalette', 'rotateHue', 'saturation', 'sepia', 'sharpen', 'swirl', 'threshold', 'tint', 'userDefined', 'yellow'`.
+    // + The following Strings are valid methods: `'alphaToChannels', 'areaAlpha', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'corrode', 'curveWeights', 'cyan', 'deconvolute', 'displace', 'edgeDetect',  'emboss', 'flood', 'gaussianBlur', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'mapToGradient', 'matrix', 'matrix5', 'modifyOk', 'modulateOk', 'negative', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'randomNoise', 'red', 'reducePalette', 'rotateHue', 'saturation', 'sepia', 'sharpen', 'swirl', 'threshold', 'tint', 'unsharp', 'userDefined', 'yellow'`.
     method: ZERO_STR,
 
     // ##### How filters process data
@@ -143,6 +143,8 @@ const defaultAttributes = {
     copyX: 0,
     copyY: 0,
     concurrent: false,
+    curves: null,
+    deriveMaskFromImage: true,
     easing: LINEAR,
     excludeAlpha: true,
     excludeBlue: false,
@@ -182,6 +184,8 @@ const defaultAttributes = {
     lowRed: 0,
     minimumColorDistance: 1000,
     mode: 'rect',
+    multiscale: true,
+    multiscaleFinalPasses: 2,
     noiseType: RANDOM,
     noWrap: false,
     offsetAlphaX: 0,
@@ -216,6 +220,7 @@ const defaultAttributes = {
     points: null,
     pointsData: null,
     postProcessResults: true,
+    premultiply: false,
     processHorizontal: true,
     processVertical: true,
     radius: 1,
@@ -231,10 +236,12 @@ const defaultAttributes = {
     redInGreen: 0,
     redInRed: 0,
     reference: BLACK,
+    samples: 14,
     scaleX: 1,
     scaleY: 1,
     seed: DEFAULT_SEED,
     smoothing: 0,
+    spiralStrength: 0,
     startX: PC50,
     startY: PC50,
     step: 1,
@@ -249,9 +256,12 @@ const defaultAttributes = {
     transparentAt: 0,
     transparentEdges: false,
     useBluenoise: false,
+    useEdgeMask: true,
+    useInputAsMask: false,
     useLabForPaletteDistance: false,
     useMixedChannel: true,
     useNaturalGrayscale: false,
+    variation: 0,
     weights: null,
     width: 1,
 };
@@ -778,6 +788,25 @@ const setActionsArray = {
         }];
     },
 
+// __deconvolute__ (new in v8.17.0) - OKLab L-only Richardson_Lucy deconvolution with optional edge mask
+    deconvolute: function (f) {
+        f.actions = [{
+            action: DECONVOLUTE,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            strength: (f.strength != null) ? f.strength : 0.85,
+            radius: (f.radius != null) ? f.radius : 1.25,
+            level: (f.level != null) ? f.level : 0.015,
+            smoothing: (f.smoothing != null) ? f.smoothing : 0.015,
+            clamp: (f.clamp != null) ? f.clamp : 0.08,
+            passes: (f.passes != null) ? f.passes : 8,
+            deriveMaskFromImage: (f.deriveMaskFromImage != null) ? f.deriveMaskFromImage : true,
+            multiscale: (f.multiscale != null) ? f.multiscale : true,
+            multiscaleFinalPasses: (f.multiscaleFinalPasses != null) ? f.multiscaleFinalPasses : 2,
+        }];
+    },
+
 // __displace__ (new in v8.4.0) - moves pixels around the image, based on the color channel values supplied by a displacement map image
     displace: function (f) {
         f.actions = [{
@@ -793,6 +822,7 @@ const setActionsArray = {
             scaleX: (f.scaleX != null) ? f.scaleX : 1,
             scaleY: (f.scaleY != null) ? f.scaleY : 1,
             transparentEdges: (f.transparentEdges != null) ? f.transparentEdges : false,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
     },
 
@@ -909,7 +939,10 @@ const setActionsArray = {
         }];
     },
 
-// __gaussianBlur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
+// __gaussianBlur__ -  NOTE: Known issue / potential feature - when `includeAlpha === true` and `excludeTransparentPixels === false`, the rotated blur path uses clamped-edge sampling. This may produce visible “edge rays” or streaks at certain angles. These are harmless and can (possibly) be used as a stylized bloom/glare effect. orkarounds:
+// + set `excludeTransparentPixels = true`, or
+// + set `includeAlpha = false`, or
+// + keep `angle` near 0°, 90°, 180°, 270°.
     gaussianBlur: function (f) {
         if (f.radius != null) {
             f.radiusHorizontal = f.radius;
@@ -927,8 +960,10 @@ const setActionsArray = {
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
             excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : false,
             opacity: (f.opacity != null) ? f.opacity : 1,
+            premultiply: (f.premultiply != null) ? f.premultiply : false,
             radiusHorizontal: (f.radiusHorizontal != null) ? f.radiusHorizontal : 1,
             radiusVertical: (f.radiusVertical != null) ? f.radiusVertical : 1,
+            angle: (f.angle != null) ? f.angle : 0,
         }];
     },
 
@@ -953,6 +988,7 @@ const setActionsArray = {
             offsetAlphaMin: (f.offsetAlphaMin != null) ? f.offsetAlphaMin : 0,
             offsetAlphaMax: (f.offsetAlphaMax != null) ? f.offsetAlphaMax : 0,
             transparentEdges: (f.transparentEdges != null) ? f.transparentEdges : false,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
             level: (f.level != null) ? f.level : 0,
         }];
     },
@@ -1077,6 +1113,8 @@ const setActionsArray = {
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
             weights: (f.weights != null) ? f.weights : [0,0,0,0,1,0,0,0,0],
+            premultiply: (f.premultiply != null) ? f.premultiply : false,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
     },
 
@@ -1096,6 +1134,8 @@ const setActionsArray = {
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
             weights: (f.weights != null) ? f.weights : [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+            premultiply: (f.premultiply != null) ? f.premultiply : false,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
     },
 
@@ -1197,6 +1237,7 @@ const setActionsArray = {
             offsetBlueY: (f.offsetY != null) ? f.offsetY : 0,
             offsetAlphaX: (f.offsetX != null) ? f.offsetX : 0,
             offsetAlphaY: (f.offsetY != null) ? f.offsetY : 0,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
     },
 
@@ -1215,6 +1256,33 @@ const setActionsArray = {
             offsetBlueY: (f.offsetBlueY != null) ? f.offsetBlueY : 0,
             offsetAlphaX: (f.offsetAlphaX != null) ? f.offsetAlphaX : 0,
             offsetAlphaY: (f.offsetAlphaY != null) ? f.offsetAlphaY : 0,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
+        }];
+    },
+
+// __okCurveWeights__ (new in v8.17.0) - TODO: one sentence summary
+    okCurveWeights: function (f) {
+        const curvesObject = {
+            luminance: [],
+            chroma: [],
+            aChannel: [],
+            bChannel: [],
+        }
+
+        if (f.curves != null) {
+            const c = f.curves;
+            if (_isArray(c.luminance)) curvesObject.luminance = c.luminance;
+            if (_isArray(c.chroma)) curvesObject.chroma = c.chroma;
+            if (_isArray(c.aChannel)) curvesObject.aChannel = c.aChannel;
+            if (_isArray(c.bChannel)) curvesObject.bChannel = c.bChannel;
+        }
+
+        f.actions = [{
+            action: OK_PERCEPTUAL_CURVES,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            curves: curvesObject,
         }];
     },
 
@@ -1390,6 +1458,8 @@ const setActionsArray = {
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             opacity: (f.opacity != null) ? f.opacity : 1,
             swirls,
+            transparentEdges: (f.transparentEdges != null) ? f.transparentEdges : false,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
     },
 
@@ -1479,12 +1549,15 @@ const setActionsArray = {
             pointsData: (f.pointsData != null && _isArray(f.pointsData)) ? f.pointsData : [],
 
             angle: (f.angle != null) ? f.angle : 0,
+            spiralStrength: (f.spiralStrength != null) ? f.spiralStrength : 0,
             seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
 
             includeRed: (f.includeRed != null) ? f.includeRed : true,
             includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            premultiply: (f.premultiply != null) ? f.premultiply : false,
+            useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
     },
 
@@ -1563,6 +1636,22 @@ const setActionsArray = {
         }];
     },
 
+// __unsharp__ (new in v8.17.0) - OKLab L-only sharpen with Sobel edge mask
+    unsharp: function (f) {
+        f.actions = [{
+            action: UNSHARP,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            strength: (f.strength != null) ? f.strength : 0.8,
+            radius: (f.radius != null) ? f.radius : 2,
+            level: (f.level != null) ? f.level : 0.015,
+            smoothing: (f.smoothing != null) ? f.smoothing : 0.015,
+            clamp: (f.clamp != null) ? f.clamp : 0.08,
+            useEdgeMask: (f.useEdgeMask != null) ? f.useEdgeMask : true,
+        }];
+    },
+
 // __userDefined__ - DEPRECATED - this filter method no longer has any effect, returning an unchanged image
     userDefined: function (f) {
         f.actions = [{
@@ -1583,6 +1672,34 @@ const setActionsArray = {
             includeRed: true,
             includeGreen: true,
             excludeBlue: true,
+        }];
+    },
+
+// __yellow__ - removes blue channel color from the image, and averages the remaining channel colors
+    zoomBlur: function (f) {
+        f.actions = [{
+            action: ZOOM_BLUR,
+            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
+            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
+            excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : true,
+            startX: (f.startX != null) ? f.startX : '50%',
+            startY: (f.startY != null) ? f.startY : '50%',
+            innerRadius: (f.innerRadius != null) ? f.innerRadius : 0,
+            outerRadius: (f.outerRadius != null) ? f.outerRadius : 0,
+            easing: (f.easing != null) ? f.easing : 'linear',
+            premultiply: (f.premultiply != null) ? f.premultiply : false,
+            multiscale: (f.multiscale != null) ? f.multiscale : true,
+            strength: (f.strength != null) ? f.strength : 0.35,
+            angle: (f.angle != null) ? f.angle : 0,
+            seed: (f.seed != null) ? f.seed : DEFAULT_SEED,
+            samples: (f.samples != null) ? f.samples : 14,
+            variation: (f.variation != null) ? f.variation : 0,
+
         }];
     },
 };

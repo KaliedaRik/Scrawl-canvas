@@ -14,7 +14,7 @@
 // #### Imports
 import { artefact, asset, canvas, constructors, group } from '../core/library.js';
 
-import { addStrings, doCreate, isa_canvas, mergeOver, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, isa_boolean, isa_canvas, isa_obj, mergeOver, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { getIgnorePixelRatio, getPixelRatio } from '../core/user-interaction.js';
 
@@ -1422,7 +1422,7 @@ P.splitShift = function (item) {
 // + Works best on Cells that are not being cleared and compiled
 // + The `paintCellData` functionality will fail if the Cell resizes for any reason; when that happens, a new image data object needs to be obtained before it can be repainted back to the Cell
 // + An alternative approach is to use a RawAsset asset object, which comes with its own dedicated Canvas element
-P.getCellData = function (opaque = false) {
+P.getCellData = function (args = Ωempty) {
 
     const [width, height] = this.currentDimensions,
         halfWidth = _floor(width / 2),
@@ -1430,7 +1430,19 @@ P.getCellData = function (opaque = false) {
 
     const iData = this.engine.getImageData(0, 0, width, height),
         data = iData.data,
-        slider = new Uint32Array(data.buffer,  data.byteOffset,  data.byteLength >>> 2);;
+        slider = new Uint32Array(data.buffer, data.byteOffset, data.byteLength >>> 2);
+
+    let opaque = false,
+        includeGridCoords = true,
+        includePolarCoords = true;
+
+    if (isa_boolean(args) && args) opaque = true;
+    else if (isa_obj(args)) {
+
+        if (args.opaque != null) opaque = args.opaque;
+        if (args.includeGridCoords != null) includeGridCoords = args.includeGridCoords;
+        if (args.includePolarCoords != null) includePolarCoords = args.includePolarCoords;
+    }
 
     if (opaque) {
 
@@ -1444,35 +1456,43 @@ P.getCellData = function (opaque = false) {
 
     const coord = requestCoordinate();
 
-    let row, col, index, angle;
+    let row, col, index, angle, res, s;
 
     for (row = 0; row < height; row++) {
 
         for (col = 0; col < width; col++) {
 
-            index = ((row * width) + col) * 4;
+            index = (row * width) + col;
 
-            // coord.setFromArray([halfWidth, halfHeight]).subtract([row, col]);
-            coord.setFromArray([col, row]).subtract([halfWidth, halfHeight]);
+            s = slider[index];
 
-            // We want angle `0.0turn / 1.0turn` to point north, to the top of the screen; `0.25turn` is east (horizontal to the right); etc.
-            angle = (_atan2(coord[1], coord[0]) / _piDouble) + 0.5;
-            angle = (angle + 0.75) % 1;
+            res = {
+                red: s & 0xFF,
+                green: (s >>> 8) & 0xFF,
+                blue: (s >>> 16) & 0xFF,
+                alpha: (s >>> 24) & 0xFF,
+            };
 
-            pixelState.push({
-                index,
-                red: data[index],
-                green: data[++index],
-                blue: data[++index],
-                alpha: data[++index],
-                row,
-                col,
-                distance: coord.getMagnitude(),
-                angle,
-            });
+            if (includeGridCoords) {
+
+                res.row = row;
+                res.col = col;
+            }
+
+            if (includePolarCoords) {
+
+                coord.setFromArray([col, row]).subtract([halfWidth, halfHeight]);
+
+                // We want angle `0.0turn / 1.0turn` to point north, to the top of the screen; `0.25turn` is east (horizontal to the right); etc.
+                angle = (_atan2(coord[1], coord[0]) / _piDouble) + 0.5;
+                angle = (angle + 0.75) % 1;
+
+                res.distance = coord.getMagnitude();
+                res.angle = angle;
+            }
+            pixelState.push(res);
         }
     }
-
     releaseCoordinate(coord);
 
     return {
@@ -1483,8 +1503,6 @@ P.getCellData = function (opaque = false) {
     }
 };
 
-const pixelCleaner = new Uint8ClampedArray(1);
-
 P.paintCellData = function (item = Ωempty) {
 
     const { iData, slider, pixelState, opaque} = item;
@@ -1493,33 +1511,22 @@ P.paintCellData = function (item = Ωempty) {
 
     if (width && height && data && pixelState && w === width && h === height) {
 
-        let i, iz, p, red, green, blue, alpha, index,
+        let i, iz, p, red, green, blue, alpha,
             update = false;
 
         for (i = 0, iz = pixelState.length; i < iz; i++) {
 
             p = pixelState[i];
 
-            index = p.index;
+            red = p.red & 0xFF;
+            green = p.green & 0xFF;
+            blue = p.blue & 0xFF;
+            alpha = p.alpha & 0xFF;
 
-            red = pixelCleaner[0] = p.red;
-            green = pixelCleaner[0] = p.green;
-            blue = pixelCleaner[0] = p.blue;
-            alpha = opaque ? 255 : pixelCleaner[0] = p.alpha;
-
-            if (slider[index >>> 2] !== ((alpha << 24) | (blue << 16) | (green << 8) | red) >>> 0) {
-
-                update = true;
-
-                data[index] = red;
-                data[++index] = green;
-                data[++index] = blue;
-
-                if (!opaque) data[++index] = alpha;
-            }
+            slider[i] = ((alpha << 24) | (blue << 16) | (green << 8) | red) >>> 0;
         };
 
-        if (update) this.engine.putImageData(iData, 0, 0);
+        this.engine.putImageData(iData, 0, 0);
     }
 };
 

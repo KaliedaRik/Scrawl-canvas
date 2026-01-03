@@ -72,16 +72,16 @@ const boxPacket3 = box.saveAsPacket({
 
 //     Test 4 - argument.includeDefaults === Array
 const boxPacket4 = box.saveAsPacket({
-    includeDefaults: ['handle', 'miterLimit', 'onUp', 'useMimicScale', 'anchor'],
+    includeDefaults: ['handle', 'miterLimit', 'onUp', 'useMimicScale', 'anchor', 'delta', 'filter', 'filters'],
 });
 
-console.log('Save test 1 result: ', boxPacket1);
-console.log('Save test 2 result: ', boxPacket2);
-console.log('Save test 3 result: ', boxPacket3);
-console.log('Save test 4 result: ', boxPacket4);
+console.log('Save test 1 result: ', JSON.parse(boxPacket1));
+console.log('Save test 2 result: ', JSON.parse(boxPacket2));
+console.log('Save test 3 result: ', JSON.parse(boxPacket3));
+console.log('Save test 4 result: ', JSON.parse(boxPacket4));
 // Save tests - expected results
 // ```
-// TEST 1
+// TEST 1  
 // [
 //     "mycanvas-my-box",
 //     "Block",
@@ -90,21 +90,21 @@ console.log('Save test 4 result: ', boxPacket4);
 //         "name":"mycanvas-my-box",
 //         "dimensions":[100,50],
 //         "start":[10,10],
-//         "delta":{},
-//         "onEnter":"~~~\n\t\tthis.set({\n\t\t\tfillStyle: 'pink',\n\t\t});\n\t",
-//         "onLeave":"~~~\n\t\tthis.set({\n\t\t\tfillStyle: 'red',\n\t\t});\n\t",
+//         "onEnter":"~~~\n/** @ts-expect-error */\n        this.set({\n            fillStyle: 'pink',\n        });\n    ",
+//         "onLeave":"~~~\n/** @ts-expect-error */\n        this.set({\n            fillStyle: 'red',\n        });\n    ",
 //         "onUp":"~~~ this.clickAnchor() ",
 //         "anchor":{
 //             "name":"wikipedia-box-link",
 //             "description":"Link to the Wikipedia article on boxes (opens in new tab)",
 //             "href":"https://en.wikipedia.org/wiki/Box",
-//             "clickAction":"~~~ return `console.log('box clicked')`"
+//             "host":"mycanvas-my-box",
+//             "clickAction":"~~~ return `console.log('box clicked')` "
 //         },
 //         "group":"mycanvas_base",
 //         "fillStyle":"red"
 //     }
 // ]
-//
+
 // TEST 2, TEST 3
 // [
 //     "mycanvas-my-box",
@@ -117,16 +117,32 @@ console.log('Save test 4 result: ', boxPacket4);
 //         "handle":[0,0],
 //         "offset":[0,0],
 //         "delta":{},
+//         "deltaConstraints":{},
 //         "lockTo":["start","start"],
+//         "pivot":"",
+//         "mimic":"",
+//         "filters":[],
 //         "visibility":true,
-//         "order":0,
+//         "calculateOrder":0,
+//         "stampOrder":0,
+//         "bringToFrontOnDrag":true,
+//         "ignoreDragForX":false,
+//         "ignoreDragForY":false,
+//         "scale":1,
+//         "roll":0,
+//         "noUserInteraction":false,
+//         "noPositionDependencies":false,
+//         "noCanvasEngineUpdates":false,
+//         "noFilters":false,
+//         "noPathUpdates":false,
+//         "noDeltaUpdates":false,
+//         "checkDeltaConstraints":false,
+//         "performDeltaChecks":false,
+//         "pivotPin":0,
+//         "pivotIndex":-1,
 //         "addPivotHandle":false,
 //         "addPivotOffset":true,
 //         "addPivotRotation":false,
-//         "pathPosition":0,
-//         "addPathHandle":false,
-//         "addPathOffset":true,
-//         "addPathRotation":false,
 //         "useMimicDimensions":false,
 //         "useMimicScale":false,
 //         "useMimicStart":false,
@@ -140,34 +156,30 @@ console.log('Save test 4 result: ', boxPacket4);
 //         "addOwnHandleToMimic":false,
 //         "addOwnOffsetToMimic":false,
 //         "addOwnRotationToMimic":false,
-//         "scale":1,
-//         "roll":0,
-//         "collides":false,
-//         "sensorSpacing":50,
-//         "noUserInteraction":false,
-//         "noDeltaUpdates":false,
-//         "noPositionDependencies":false,
-//         "noCanvasEngineUpdates":false,
-//         "noFilters":false,
-//         "noPathUpdates":false,
+//         "path":"",
+//         "pathPosition":0,
+//         "addPathHandle":false,
+//         "addPathOffset":true,
+//         "addPathRotation":false,
+//         "constantSpeedAlongPath":false,
+//         "isStencil":false,
+//         "memoizeFilterOutput":false,
 //         "method":"fill",
 //         "winding":"nonzero",
 //         "flipReverse":false,
 //         "flipUpend":false,
 //         "scaleOutline":true,
+//         "scaleShadow":false,
 //         "lockFillStyleToEntity":false,
 //         "lockStrokeStyleToEntity":false,
-//         "isStencil":false,
-//         "filterAlpha":1,
-//         "filterComposite":"source-over",
-//         "onEnter":"~~~\n\t\tthis.set({\n\t\t\tfillStyle: 'pink',\n\t\t});\n\t",
-//         "onLeave":"~~~\n\t\tthis.set({\n\t\t\tfillStyle: 'red',\n\t\t});\n\t",
-//         "onDown":"~~~",
-//         "onUp":"~~~",
+//         "onEnter":"~~~\n/** @ts-expect-error */\n        this.set({\n            fillStyle: 'pink',\n        });\n    ",
+//         "onLeave":"~~~\n/** @ts-expect-error */\n        this.set({\n            fillStyle: 'red',\n        });\n    ",
+//         "onUp":"~~~ this.clickAnchor() ",
 //         "anchor":{
 //             "name":"wikipedia-box-link",
-//             "description":
-//             "Link to the Wikipedia article on boxes (opens in new tab)",
+//             "description":"Link to the Wikipedia article on boxes (opens in new tab)",
+//             "disabled":false,
+//             "tabOrder":0,
 //             "download":"",
 //             "href":"https://en.wikipedia.org/wiki/Box",
 //             "hreflang":"",
@@ -176,7 +188,10 @@ console.log('Save test 4 result: ', boxPacket4);
 //             "rel":"noreferrer",
 //             "target":"_blank",
 //             "anchorType":"",
-//             "clickAction":"~~~ return `console.log('box clicked')`"
+//             "focusAction":true,
+//             "blurAction":true,
+//             "host":"mycanvas-my-box",
+//             "clickAction":"~~~ return `console.log('box clicked')` "
 //         },
 //         "group":"mycanvas_base",
 //         "fillStyle":"red",
@@ -186,19 +201,29 @@ console.log('Save test 4 result: ', boxPacket4);
 //         "lineWidth":1,
 //         "lineCap":"butt",
 //         "lineJoin":"miter",
-//         "lineDash":[],
 //         "lineDashOffset":0,
 //         "miterLimit":10,
 //         "shadowOffsetX":0,
 //         "shadowOffsetY":0,
 //         "shadowBlur":0,
-//         "shadowColor":"rgb(0 0 0 / 0)",
-//         "fontString":"12px sans-serif",
-//         "textAlign":"start",
-//         "textBaseline":"alphabetic"
+//         "shadowColor":"rgb(0 0 0 / 1)",
+//         "font":"12px sans-serif",
+//         "direction":"ltr",
+//         "fontKerning":"normal",
+//         "textRendering":"auto",
+//         "letterSpacing":"0px",
+//         "wordSpacing":"0px",
+//         "fontStretch":"normal",
+//         "fontVariantCaps":"normal",
+//         "filter":"none",
+//         "imageSmoothingEnabled":true,
+//         "imageSmoothingQuality":"high",
+//         "textAlign":"left",
+//         "textBaseline":"top",
+//         "lineDash":[]
 //     }
 // ]
-//
+
 // TEST 4
 // [
 //     "mycanvas-my-box",
@@ -210,22 +235,26 @@ console.log('Save test 4 result: ', boxPacket4);
 //         "start":[10,10],
 //         "handle":[0,0],
 //         "delta":{},
+//         "filters":[],
 //         "useMimicScale":false,
-//         "onEnter":"~~~\n\t\tthis.set({\n\t\t\tfillStyle: 'pink',\n\t\t});\n\t",
-//         "onLeave":"~~~\n\t\tthis.set({\n\t\t\tfillStyle: 'red',\n\t\t});\n\t",
-//         "onUp":"~~~",
+//         "onEnter":"~~~\n/** @ts-expect-error */\n        this.set({\n            fillStyle: 'pink',\n        });\n    ",
+//         "onLeave":"~~~\n/** @ts-expect-error */\n        this.set({\n            fillStyle: 'red',\n        });\n    ",
+//         "onUp":"~~~ this.clickAnchor() ",
 //         "anchor":{
 //             "name":"wikipedia-box-link",
 //             "description":"Link to the Wikipedia article on boxes (opens in new tab)",
 //             "href":"https://en.wikipedia.org/wiki/Box",
-//             "clickAction":"~~~ return `console.log('box clicked')`"
+//             "host":"mycanvas-my-box",
+//             "clickAction":"~~~ return `console.log('box clicked')` "
 //         },
 //         "group":"mycanvas_base",
 //         "fillStyle":"red",
-//         "miterLimit":10
+//         "miterLimit":10,
+//         "filter":"none"
 //     }
 // ]
 // ```
+
 
 // Import tests - note that __importPacket() is an asynchronous function that returns a promise__
 box.kill();
@@ -244,19 +273,19 @@ canvas.importPacket(boxPacket1)
 setTimeout(() => {
 
     // __Import test 3__ - expect the import to fail due to incorrect url (missing .txt)
-    canvas.importPacket('./packets/packets-003-block')
+    canvas.importPacket('./packets/packets-001-block')
     .then(res => console.log('Import test 3 success -', res))
     .catch(err => console.log('Import test 3 error -', err));
 
     // __Import test 4__ - expect the import to succeed
-    canvas.importPacket('./packets/packets-003-block.txt')
+    canvas.importPacket('./packets/packets-001-block.txt')
     .then(res => console.log('Import test 4 success -', res))
     .catch(err => console.log('Import test 4 error -', err));
 
     setTimeout(() => {
 
         // __Import test 5__ - expect the import to succeed
-        canvas.importPacket('./packets/packets-003-block-updated.txt')
+        canvas.importPacket('./packets/packets-001-block-updated.txt')
         .then(res => console.log('Import test 5 success -', res))
         .catch(err => console.log('Import test 5 error -', err));
     }, 5000);

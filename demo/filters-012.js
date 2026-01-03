@@ -41,8 +41,10 @@ const piccy = scrawl.makePicture({
 
     name: name('image'),
     asset: 'iris',
-    dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
+    dimensions: ['95%', '95%'],
+    handle: ['center', 'center'],
+    start: ['center', 'center'],
 
     filters: [name('matrix3')],
 });
@@ -104,6 +106,8 @@ const dom = scrawl.initializeDomInputs([
     ['select', 'includeBlue', 1],
     ['select', 'includeGreen', 1],
     ['select', 'includeAlpha', 0],
+    ['select', 'premultiply', 0],
+    ['select', 'useInputAsMask', 0],
     ['select', 'memoizeFilterOutput', 0],
 ]);
 
@@ -163,6 +167,8 @@ const updateFilters = () => {
         includeGreen: dom.includeGreen.value === '0' ? false : true,
         includeBlue: dom.includeBlue.value === '0' ? false : true,
         includeAlpha: dom.includeAlpha.value === '0' ? false : true,
+        premultiply: dom.premultiply.value === '0' ? false : true,
+        useInputAsMask: dom.useInputAsMask.value === '0' ? false : true,
         opacity: parseFloat(dom.opacity.value),
     };
 

@@ -1,5 +1,5 @@
 // # Demo Filters 035
-// Filter parameters: Glitch filter
+// Filter parameters: Offset filter
 
 // [Run code](../../demo/filters-035.html)
 import * as scrawl from '../source/scrawl.js';
@@ -39,8 +39,10 @@ const piccy = scrawl.makePicture({
 
     name: name('image'),
     asset: 'iris',
-    dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
+    dimensions: ['95%', '95%'],
+    handle: ['center', 'center'],
+    start: ['center', 'center'],
 
     filters: [name('offset')],
 });
@@ -68,11 +70,10 @@ scrawl.makeRender({
 // #### User interaction
 // Setup form
 const dom = scrawl.initializeDomInputs([
-    ['input', 'level', '0.2'],
-    ['input', 'step', '1'],
     ['input', 'offsetX', '-10'],
     ['input', 'offsetY', '10'],
     ['input', 'opacity', '1'],
+    ['select', 'useInputAsMask', 0],
 ]);
 
 
@@ -92,6 +93,7 @@ scrawl.makeUpdater({
         opacity: ['opacity', 'float'],
         offsetX: ['offsetX', 'round'],
         offsetY: ['offsetY', 'round'],
+        useInputAsMask: ['useInputAsMask', 'boolean'],
     },
 });
 

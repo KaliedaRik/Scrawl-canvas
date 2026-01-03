@@ -75,8 +75,9 @@ const piccy = scrawl.makePicture({
     name: name('luminanceToAlpha-image'),
     group: myPictures,
     asset: 'iris',
-    dimensions: [300, 300],
     copyDimensions: ['100%', '100%'],
+    dimensions: [290, 290],
+    start: [5, 5],
 
     filters: [name('luminanceToAlpha')],
 });
@@ -84,7 +85,7 @@ const piccy = scrawl.makePicture({
 piccy.clone({
 
     name: name('reversed-luminanceToAlpha-image'),
-    startY: 300,
+    startY: 305,
 
     filters: [name('luminanceToAlpha'), name('alphaToLuminance')],
 });
@@ -92,7 +93,7 @@ piccy.clone({
 piccy.clone({
 
     name: name('channelsToAlpha-image'),
-    startX: 300,
+    startX: 305,
 
     filters: [name('channelsToAlpha'), name('floodToBlack')],
 });
@@ -100,8 +101,8 @@ piccy.clone({
 piccy.clone({
 
     name: name('reversed-channelsToAlpha-image'),
-    startX: 300,
-    startY: 300,
+    startX: 305,
+    startY: 305,
 
     filters: [name('channelsToAlpha'), name('floodToBlack'), name('alphaToChannels')],
 });
@@ -109,7 +110,7 @@ piccy.clone({
 piccy.clone({
 
     name: name('gray-image'),
-    startX: 600,
+    startX: 605,
 
     filters: [name('gray')],
 });
@@ -117,8 +118,8 @@ piccy.clone({
 piccy.clone({
 
     name: name('grayscale-image'),
-    startX: 600,
-    startY: 300,
+    startX: 605,
+    startY: 305,
 
     filters: [name('grayscale')],
 });

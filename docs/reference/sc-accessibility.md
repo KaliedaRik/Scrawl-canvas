@@ -17,7 +17,7 @@ The purpose of this page in the SC Developer Runbook is to look at (some of) the
 
 This page also considers the functionality repo-devs have built into Scrawl-canvas to help mitigate those weaknesses, and what further work can be done.
 
-> **tl;dr:** SC does not solve the (many!) accessibility issues that `<canvas>` elements introduce into a web page; it only tries to make the work of solving those issues as easy as possible for designers and dev-users. ***A poorly conceived, designed and coded SC `<canvas>` display IS NOT an accessible `<canvas>` display!***
+> **tl;dr:** SC does not solve the (many!) accessibility issues that `<canvas>` elements introduce into a web page; it only tries to make the work of solving those issues as easy as possible for designers and product-devs. ***A poorly conceived, designed and coded SC `<canvas>` display IS NOT an accessible `<canvas>` display!***
 
 Key documentation links:
 + [Accessibility Fundamentals Overview](https://www.w3.org/WAI/fundamentals/)
@@ -82,11 +82,11 @@ Text alternatives can be presented in a variety of ways. For instance, they can 
 #### SC and `<canvas>` element children
 The HTML specification for the `<canvas>` element permits the element to contain mainly [phrasing content](https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Content_categories#phrasing_content), though it [specifically excludes interactive content](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/canvas#technical_summary) except for: `<a>` and `<button>` elements; and `<input>` elements whose type attribute is `checkbox`, `radio`, or `button`.
 
-The HTML markup placed between the `<canvas>` element's opening and closing tags is known as its [fallback content](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage#accessible_content). This is the main approach to making the `<canvas>` element accessible. Decisions about what markup to include in this fallback content need to be made by the designer and dev-user as they develop the web page.
+The HTML markup placed between the `<canvas>` element's opening and closing tags is known as its [fallback content](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage#accessible_content). This is the main approach to making the `<canvas>` element accessible. Decisions about what markup to include in this fallback content need to be made by the designer and product-dev as they develop the web page.
 
-Designers and dev-users should consider supplying an image of the canvas display as minimal fallback content. Many of the SC test demos include example code for such approaches – for instance see test demo [Filters-006](../../demo/filters-006.html).
+Designers and product-devs should consider supplying an image of the canvas display as minimal fallback content. Many of the SC test demos include example code for such approaches – for instance see test demo [Filters-006](../../demo/filters-006.html).
 
-SC performs significant work when importing a `<canvas>` element into the SC system, which includes mutating the element's DOM markup and adding SC-specific child elements to its fallback content. This work has been documented in the [Canvas artefact notes](sc-dom-artefacts.html#canvas-artefact-notes) section of the Artefacts and the DOM page of this Runbook. These changes will not replace or modify any existing fallback content that has been defined for the element, nor do they prevent the dev-user from adding, manipulating or deleting such content after SC completes its import work.
+SC performs significant work when importing a `<canvas>` element into the SC system, which includes mutating the element's DOM markup and adding SC-specific child elements to its fallback content. This work has been documented in the [Canvas artefact notes](sc-dom-artefacts.html#canvas-artefact-notes) section of the Artefacts and the DOM page of this Runbook. These changes will not replace or modify any existing fallback content that has been defined for the element, nor do they prevent the product-dev from adding, manipulating or deleting such content after SC completes its import work.
 
 To summarise, SC adds the following markup to the `<canvas>` element as part of the import functionality:
 ```
@@ -151,7 +151,7 @@ Descriptions can add supplementary details about what the canvas does, such as a
 
 The [title attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/title) is defined in the HTML specification as global, thus available on all HTML elements. However the attribute comes with [significant accessibility concerns](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/title#accessibility_concerns) – the general advice is to avoid using it to convey information to the end-user.
 
-Dev-users can tell SC to add labels, descriptions and titles to a `<canvas>` element by adding the following attributes to the element's HTML markup:
+Product-devs can tell SC to add labels, descriptions and titles to a `<canvas>` element by adding the following attributes to the element's HTML markup:
 
 ```
 <canvas
@@ -170,7 +170,7 @@ Dev-users can tell SC to add labels, descriptions and titles to a `<canvas>` ele
 </canvas>
 ```
 
-Once SC has finished importing the `<canvas>` element into the SC system, dev-users can change the values of the `<div>` elements containing the `label` and `description` strings using normal SC `set()` functionality. When the update occurs in the DOM the affected `<div>` element's `aria-busy` attribute will be set to `true`, then set back to `false` when the update completes. The change will be announced to the end-user politely:
+Once SC has finished importing the `<canvas>` element into the SC system, product-devs can change the values of the `<div>` elements containing the `label` and `description` strings using normal SC `set()` functionality. When the update occurs in the DOM the affected `<div>` element's `aria-busy` attribute will be set to `true`, then set back to `false` when the update completes. The change will be announced to the end-user politely:
 
 ```
 <script>
@@ -183,14 +183,14 @@ Once SC has finished importing the `<canvas>` element into the SC system, dev-us
 </script>
 ```
 
-> **WARNING:** Dev-users should never attempt to set or update the label and description `<div>` elements directly! Nor should these elements be removed from the DOM – do not be tempted to update the `<canvas>` element's contents using `.innerHTML=[...new markup]` or similar functionality.
+> **WARNING:** Product-devs should never attempt to set or update the label and description `<div>` elements directly! Nor should these elements be removed from the DOM – do not be tempted to update the `<canvas>` element's contents using `.innerHTML=[...new markup]` or similar functionality.
 
 #### Canvas roles
 The [role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles) of a `<canvas>` element can vary depending on how it is being used in the web page. 
 
 SC, by default, will assign an imported `<canvas>` element to the [ARIA `img` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/img_role). For the most part this seems to work reasonably well with screen reader technology. This is because while most screen readers will consider the element with `role="img"` set on it to be like a black box (and not access the individual elements inside it), they are far more likely to just disregard the `<canvas>` element when they encounter it and process its fallback content instead.
 
-However `<canvas>` elements are eminently adaptable; dev-users can find many use cases for them. Thus it is important for designers and dev-users to carefully consider the work being done by each canvas display in the web page and adapt the element's `role` value accordingly:
+However `<canvas>` elements are eminently adaptable; product-devs can find many use cases for them. Thus it is important for designers and product-devs to carefully consider the work being done by each canvas display in the web page and adapt the element's `role` value accordingly:
 + Static canvas displays should keep the **`img`** role if the display is relevant (but not essential) to understanding the surrounding text.
 + Static or animated canvas displays that don't contribute to the user's understanding of the surrounding text – for instance background or decorative artwork – should use the [ARIA `presentation` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/presentation_role), or its synonym **`none`**.
 + Chart and graph canvas displays should probably be given the [ARIA `figure` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/figure_role).
@@ -200,7 +200,7 @@ However `<canvas>` elements are eminently adaptable; dev-users can find many use
 + If the entire `<canvas>` element (not just part of it) is being used as a visual progress bar, or conveying timer information (for instance a video playback progress bar, or a clock readout) then it might be appropriate to give the element an [ARIA `progressbar` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/progressbar_role) or [ARIA `timer` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/timer_role).
 + Highly interactive `<canvas>` elements need to be given the [ARIA `application` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/application_role) – but use this role with care! The **`application`** role should be reserved for app-like canvas displays such as: spreadsheets; monitoring/analytic consoles; image or video editing studios; design suites; (collaborative) whiteboard experiences; etc.
 
-Dev-users can set a `<canvas>` element's `role` attribute in the normal way. While SC includes functionality to update the attribute after the canvas import completes, this is (almost certainly) not best practice:
+Product-devs can set a `<canvas>` element's `role` attribute in the normal way. While SC includes functionality to update the attribute after the canvas import completes, this is (almost certainly) not best practice:
 
 ```
 <canvas
@@ -256,7 +256,7 @@ Well-written text transcripts containing the correct sequence of any auditory or
 #### SC and accessible multimedia
 > **tl;dr:** Many of the above requirements are best met during audio-visual production and post-production, long before the resulting files are supplied to the developer for inclusion in a web page. This includes generating subtitle and caption data in [Web Video Text Tracks Format](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API/Web_Video_Text_Tracks_Format) rather than adding them directly to the video as graphical text – which is entirely inaccessible!
 
-SC makes it reasonably easy for dev-users to add video playback to a canvas scene. It achieves this using a set of [Asset objects](sc-assets.html), which load animatable or streamed assets into the SC system and then serve them to [Picture entitys](sc-image-based-entitys.html) and [Pattern objects](sc-styles.html) for display in the `<canvas>` element:
+SC makes it reasonably easy for product-devs to add video playback to a canvas scene. It achieves this using a set of [Asset objects](sc-assets.html), which load animatable or streamed assets into the SC system and then serve them to [Picture entitys](sc-image-based-entitys.html) and [Pattern objects](sc-styles.html) for display in the `<canvas>` element:
 + SC **sprite assets** take a series of images, or a spritesheet image, and – with the help of a manifest file or definition object – creates small animation loops for display.
 + SC **noise assets** and **reaction-diffusion assets** use images generated by the SC system for various purposes; given that these images can be animated in various ways they need to be considered as in-scope for accessibility purposes.
 + SC includes **raw assets** as a means to interact with, and display, third-party-generated `<canvas>` elements which may themselves be animated.
@@ -272,7 +272,7 @@ The requirements listed above are all concerned with making sure a web page can 
 + Additional visual, sign-based recitation and/or commentary on video- or audio-based assets. Given the recent improvements in machine learning and AI computing functionality in this space, this requirement may become easier to meet going forward – in particular by combining video and AI-generated sign language animation in a `<canvas>` element.
 
 #### Managing audio assets
-SC does not (at this time) include any functionality to import `<audio>` elements as SC assets. It is up to the dev-user to find ways to import and make use of such files within the context of an SC-managed canvas display. 
+SC does not (at this time) include any functionality to import `<audio>` elements as SC assets. It is up to the product-dev to find ways to import and make use of such files within the context of an SC-managed canvas display. 
 
 For the intrepid developer, check out the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) page on MDN. If that feels too overwhelming, then the [awesome-webaudio](https://github.com/notthetup/awesome-webaudio) page on GitHub has links to many JavaScript libraries that may help a web page meet a designer's audio-related demands.
 
@@ -281,9 +281,9 @@ SC functionality for importing video into the SC system as an asset, for use in 
 
 SC does not (at this time) include functionality to access or display [HTMLTrackElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLTrackElement) data. The native `<video>` element expects to find `<track>` element children placed between its opening and closing tags. The text supplied in those text tracks are not part of the video stream data itself. Instead the text tends to be displayed in normal HTML elements placed over the `<video>` element's display.
 
-If dev-users want to play a user-controlled video in an SC-managed `<canvas>` element, then they need to implement the video controls themselves. The control inputs and buttons should (ideally!) be created using normal HTML `<button>` and `<input>` elements, though SC does not prevent the dev-user from creating them using SC entitys – see test demo [Canvas-027](../../demo/canvas-027.html) for a proof-of-concept example.
+If product-devs want to play a user-controlled video in an SC-managed `<canvas>` element, then they need to implement the video controls themselves. The control inputs and buttons should (ideally!) be created using normal HTML `<button>` and `<input>` elements, though SC does not prevent the product-dev from creating them using SC entitys – see test demo [Canvas-027](../../demo/canvas-027.html) for a proof-of-concept example.
 
-Similarly, dev-users can – once they have built the functionality to capture change events emitted by the video's `<track>` element – display those captions near to (or over) the `<canvas>` element, preferable in normal HTML elements or, alternatively, in SC Label and EnhancedLabel entitys.
+Similarly, product-devs can – once they have built the functionality to capture change events emitted by the video's `<track>` element – display those captions near to (or over) the `<canvas>` element, preferable in normal HTML elements or, alternatively, in SC Label and EnhancedLabel entitys.
 
 ### Content can be presented in different ways
 For users to be able to change the presentation of content, it is necessary that:
@@ -383,7 +383,7 @@ Meeting this requirement helps separate foreground from background, to make impo
 #### SC Color space support 
 While the use of accessible color is (almost entirely) a design issue, SC does help a little by supporting all legitimate absolute (that is, [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/)) color strings – including CIELAB LCH and OKLCH color space strings. See test demos [Canvas-015](../../demo/canvas-015.html) and [Canvas-016](../../demo/canvas-016.html).
 
-SC does not support [CSS Color Module Level 5](https://www.w3.org/TR/css-color-5/) relative colors. Dev-users can instead precalculate those colors and store them in [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables/Using_CSS_custom_properties), then extract those variables into code using the JavaScript `getPropertyValue()` function.
+SC does not support [CSS Color Module Level 5](https://www.w3.org/TR/css-color-5/) relative colors. Product-devs can instead precalculate those colors and store them in [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables/Using_CSS_custom_properties), then extract those variables into code using the JavaScript `getPropertyValue()` function.
 
 Details about SC's support for [wide-gamut color support](sc-dom-artefacts.html#wide-gamut-color-support---display-p3) – `display-p3` – can be found at the linked section in the Artefacts and the DOM page of this Runbook.
 
@@ -393,7 +393,7 @@ SC comes with built-in support to action changes to a canvas display based on an
 #### SC support for browser zoom (not pinch zoom)
 Browser implementations for zoom generally follow the pattern of modifying the browser's [window.devicePixelRatio](https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio) value. This has a direct impact on any `<canvas>` elements in the web page, which need to adapt to the user interaction as it happens, to maintain the canvas display or animation's clarity.
 
-While SC makes a best effort to manage `devicePixelRatio` update functionality behind-the-scenes, dev-users are strongly advised to test any `<canvas>` elements they add to the page across a range of devices and screens at a variety of zoom levels.
+While SC makes a best effort to manage `devicePixelRatio` update functionality behind-the-scenes, product-devs are strongly advised to test any `<canvas>` elements they add to the page across a range of devices and screens at a variety of zoom levels.
 
 Note that browsers operating in touch-enabled environments will generally handle user [pinch-zoom gestures](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events/Pinch_zoom_gestures) in a different way. SC relies entirely on the browser "doing the right thing" in such situations, and makes no effort to listen for, or react to, such events.
 
@@ -422,13 +422,13 @@ Meeting this requirement helps keyboard users, including people using alternativ
 #### Keyboard event management for SC Canvas artefacts
 The best approach to giving end-users more accessible control over a canvas display is to add a set of `<input>` elements to the DOM markup next to the `<canvas>` element, which they can then use to manipulate the canvas output. This approach makes use of the browser's built-in `<input>` and `<select>` element accessibility functionality (for selectors, ranges, etc). Many of the test demos include such controls.
 
-Adding `<input>` and `<select>` element controls can lead to some convoluted code to wire user updates to the canvas display. SC includes two helper functions which attempt to make this a little easier for dev-users to implement and manage. More detail can be found in the [user interaction with form controls](sc-events-signals.html#user-interaction-with-form-controls) section of the Events and Signals page of this Runbook:
+Adding `<input>` and `<select>` element controls can lead to some convoluted code to wire user updates to the canvas display. SC includes two helper functions which attempt to make this a little easier for product-devs to implement and manage. More detail can be found in the [user interaction with form controls](sc-events-signals.html#user-interaction-with-form-controls) section of the Events and Signals page of this Runbook:
 + `scrawl.initializeDomInputs()` locates the DOM control elements, sets them to initial values and returns an object of those elements keyed to their `id` values.
 + `scrawl.makeUpdater()` adds event listeners to the DOM control elements and manages the process of channeling user updates to the targeted SC artefact, entity or Group object.
 
 While including input controls in the web page may often detract from the page's design and aesthetic, designers can overcome this issue by adding in methods to show/hide the controls – for instance by placing them inside a `<details>` element. The controls themselves can also be styled to match the surrounding content (because: they're just elements in the DOM). See test demo [Canvas-023](../../demo/canvas-023.html) for an example.
 
-For more application-like interactive canvas displays – for instance: spreadsheets; monitoring/analytic consoles; image or video editing studios; design suites; etc – best practice is to include keyboard shortcuts for each of the possible interactions. To help dev-users, SC includes a **keyboardZone** convenience object in which dev-users can define the shortcut and associated action for the targeted `<canvas>` element. See the following test demos for examples:
+For more application-like interactive canvas displays – for instance: spreadsheets; monitoring/analytic consoles; image or video editing studios; design suites; etc – best practice is to include keyboard shortcuts for each of the possible interactions. To help product-devs, SC includes a **keyboardZone** convenience object in which product-devs can define the shortcut and associated action for the targeted `<canvas>` element. See the following test demos for examples:
 + [Snippets-005](../../demo/snippets-005.html) – Create a responsive, interactive and accessible before/after slider infographic.
 + [Modules-005](../../demo/modules-005.html) – Accessible GUI-based simple canvas editor.
 + [Canvas-211](../../demo/canvas-211.html) – EnhancedLabel entity – keyboard navigation.
@@ -474,9 +474,9 @@ All SC animation objects can be started and stopped at any time using the `anim.
 + [DOM-009](../../demo/dom-009.html) – Stop and restart the main animation loop.
 + [Snippets-006](../../demo/snippets-006.html) – Editable header text colorizer and animation effect snippets.
 
-SC Ticker animation objects are the only time-based animations in the SC system. There is (at this time) no simple way for the dev-user to dilate a Ticker animation (make it run faster or slower) to meet end-user preferences, but there's also nothing to prevent them changing the duration of a Ticker animation at any time. 
+SC Ticker animation objects are the only time-based animations in the SC system. There is (at this time) no simple way for the product-dev to dilate a Ticker animation (make it run faster or slower) to meet end-user preferences, but there's also nothing to prevent them changing the duration of a Ticker animation at any time. 
 
-SC Tween and Action objects can take temporal-relative String% values for their `.start` and `.duration` attributes, meaning that a Tween can be defined to start `20%` of the Ticker's duration after it starts running, and last for `30%` of its duration. This should make the work of dilating a Ticker animation a little easier for the dev-user.
+SC Tween and Action objects can take temporal-relative String% values for their `.start` and `.duration` attributes, meaning that a Tween can be defined to start `20%` of the Ticker's duration after it starts running, and last for `30%` of its duration. This should make the work of dilating a Ticker animation a little easier for the product-dev.
 
 More information about managing SC animations can be found in the [Animation and Display cycle](sc-animation-systems.html) page of this Runbook.
 
@@ -578,7 +578,7 @@ Further details of this functionality can be found in the [interactive entitys](
 #### Apply canvas decoration to HTML headers using SC Snippet functionality
 SC includes experimental functionality – [SC Snippets](sc-snippets.html) – to associate a `<canvas>` element with normal (non-SC controlled) DOM elements. The results are similar to the [Houdini](https://ishoudinireadyyet.com/) [CSS Painting API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Painting_API), though the path to achieving those results is different.
 
-When a dev-user chooses to apply an SC Snippet to a DOM element such as a heading, then they will need to make sure that the added `<canvas>` does not interfere with the accessibility of the header.
+When a product-dev chooses to apply an SC Snippet to a DOM element such as a heading, then they will need to make sure that the added `<canvas>` does not interfere with the accessibility of the header.
 
 Test demo [Snippets-006](../../demo/snippets-006.html) investigates this issue, including the need to accommodate end-user preferences (eg: `prefers-dark-mode`, `prefers-contrast`), and to include mechanisms to afford end-users control of animated effects.
 
@@ -655,13 +655,13 @@ Meeting this requirement helps software, including assistive technology, to proc
 #### SC text management functionality
 SC manages graphical text through the Label and EnhancedLabel entitys. In both cases the entitys, by default, replicate their text into dedicated `<div>` elements which are part of the `<canvas>` element's *fallback content* – thus making the text available to accessibility technologies like screen readers. These elements will announce text changes to the end-user **politely**.
 
-However, not all of the text in a canvas display may be relevant to an end-user's understanding of the wider web page. For instance in a chart, it is often enough to inform the end-user of the start and end values of each axis without the need to tell them the value of each tick displayed in the chart – information which could distract them from the more important information which the chart demonstrates visually. To this end, SC allows dev-users to suppress an entity's text replication into the DOM on a case-by-case basis, controlled by the `entity.textIsAccessible` boolean attribute.
+However, not all of the text in a canvas display may be relevant to an end-user's understanding of the wider web page. For instance in a chart, it is often enough to inform the end-user of the start and end values of each axis without the need to tell them the value of each tick displayed in the chart – information which could distract them from the more important information which the chart demonstrates visually. To this end, SC allows product-devs to suppress an entity's text replication into the DOM on a case-by-case basis, controlled by the `entity.textIsAccessible` boolean attribute.
 
 Furthermore, it is not enough to replicate graphical text into the DOM. That replicated text needs to make coherent sense to the end-user, which means:
 + The text may need to be manipulated to turn it into a meaningful phrase; and
 + Separate phrases need to be ordered within the DOM generate a coherent sequential output.
 
-To help meet these requirements SC text-related entitys include a vary simple templating system controlled by the `entity.accessibleText` and `entity.accessibleTextPlaceholder` attributes. Dev-users can set the order in which multiple text-related entitys present their text to the end-user using the `entity.accessibleTextOrder` attribute.
+To help meet these requirements SC text-related entitys include a vary simple templating system controlled by the `entity.accessibleText` and `entity.accessibleTextPlaceholder` attributes. Product-devs can set the order in which multiple text-related entitys present their text to the end-user using the `entity.accessibleTextOrder` attribute.
 
 A fuller investigation of Label and EnhancedLabel entity functionality can be found in the [Text-based entitys](sc-text-based-entitys.html) page of this Runbook.
 

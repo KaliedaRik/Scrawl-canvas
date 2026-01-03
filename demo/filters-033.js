@@ -38,11 +38,10 @@ const piccy = scrawl.makePicture({
     name: name('image'),
     asset: 'iris',
 
-    width: '100%',
-    height: '100%',
-
-    copyWidth: '100%',
-    copyHeight: '100%',
+    copyDimensions: ['100%', '100%'],
+    dimensions: ['95%', '95%'],
+    handle: ['center', 'center'],
+    start: ['center', 'center'],
 
     method: 'fill',
 

@@ -37,12 +37,8 @@ const piccy = scrawl.makePicture({
 
     start: ['center', 'center'],
     handle: ['center', 'center'],
-    dimensions: ['80%', '80%'],
+    dimensions: ['90%', '90%'],
     copyDimensions: ['100%', '100%'],
-
-    delta: {
-        roll: 0.4,
-    },
 
     method: 'fill',
 
@@ -56,6 +52,7 @@ const report = reportSpeed('#reportmessage', function () {
 
     return `
     Radius - Horizontal: ${dom.radiusHorizontal.value}, Vertical: ${dom.radiusVertical.value}
+    Angle: ${dom.angle.value}
     Opacity: ${dom.opacity.value}`;
 });
 
@@ -75,11 +72,13 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'radiusHorizontal', '10'],
     ['input', 'radiusVertical', '10'],
     ['input', 'opacity', '1'],
+    ['input', 'angle', '0'],
     ['select', 'includeRed', 1],
     ['select', 'includeGreen', 1],
     ['select', 'includeBlue', 1],
     ['select', 'includeAlpha', 1],
     ['select', 'excludeTransparentPixels', 0],
+    ['select', 'premultiply', 0],
     ['select', 'memoizeFilterOutput', 0],
 ]);
 
@@ -98,12 +97,14 @@ scrawl.makeUpdater({
 
         radiusHorizontal: ['radiusHorizontal', 'round'],
         radiusVertical: ['radiusVertical', 'round'],
+        angle: ['angle', 'round'],
 
         includeRed: ['includeRed', 'boolean'],
         includeGreen: ['includeGreen', 'boolean'],
         includeBlue: ['includeBlue', 'boolean'],
         includeAlpha: ['includeAlpha', 'boolean'],
         excludeTransparentPixels: ['excludeTransparentPixels', 'boolean'],
+        premultiply: ['premultiply', 'boolean'],
 
         opacity: ['opacity', 'float'],
     },

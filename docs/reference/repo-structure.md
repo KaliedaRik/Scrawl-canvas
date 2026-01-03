@@ -56,7 +56,7 @@ Running the `yarn build-min` command (also invoked when running `yarn build`) wi
 + `min/scrawl.js`
 
 #### Building: Docco
-SC uses [Docco](https://ashkenas.com/docco/) to auto-generate dev-user documentation from inline comments in both the SC frontend (source) and demo code. Running the `yarn build-docco` command (also invoked when running `yarn build`) will generate the documentation files, which live in the `docs/demo` and `docs/source` folders.
+SC uses [Docco](https://ashkenas.com/docco/) to auto-generate product-dev documentation from inline comments in both the SC frontend (source) and demo code. Running the `yarn build-docco` command (also invoked when running `yarn build`) will generate the documentation files, which live in the `docs/demo` and `docs/source` folders.
 
 Additional documentation files were generated when Docco was first added to the repo, and can be updated by hand:
 
@@ -128,7 +128,7 @@ SC uses the [browser-sync](https://browsersync.io/) server to handle browser tes
 
 When creating a new demo test, remember to update these local site files (`demo/index.html`, `docs/index.html`) appropriately with links to the demo. The demos on each side of the new test will also need their `.html` files updated to align to the new test navigation experience.
 
-For ad-hoc or speculative development, repo-devs and dev-users can create a new demo and prefix the files associated with it with `temp-` (eg `demo/temp-mytest-01.html`, `demo/temp-mytest-01.js`). Files in the `demo` and `docs` folders which start with `temp-` are git-ignored and won't be saved as part of the repo.
+For ad-hoc or speculative development, repo-devs and product-devs can create a new demo and prefix the files associated with it with `temp-` (eg `demo/temp-mytest-01.html`, `demo/temp-mytest-01.js`). Files in the `demo` and `docs` folders which start with `temp-` are git-ignored and won't be saved as part of the repo.
 
 ### Development and testing: source code
 See the [Scrawl-canvas source code structure](source-code-structure.html) page for details.

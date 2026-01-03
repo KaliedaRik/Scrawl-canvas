@@ -4,24 +4,24 @@ The purpose of a computer graphics filter is to take an input graphic, apply a s
 > **tl;dr:** Filter effects – however they are used in a web page – are often computationally expensive and risk slowing down page speed and responsiveness. Use filters wisely!
 
 ## CSS and SVG filters
-CSS filters are a set of functions which the dev-user can use to quickly apply a range of effects – `blur()`, `saturate()`, `drop-shadow()`, etc – either to a DOM element or to the background behind that element. While these filters can be stacked (eg: sepia + blur), for more advanced effects CSS offers a `url()` filter, which allows the dev-user to apply an [SVG-defined filter effect](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/filter) to the element.
+CSS filters are a set of functions which the product-dev can use to quickly apply a range of effects – `blur()`, `saturate()`, `drop-shadow()`, etc – either to a DOM element or to the background behind that element. While these filters can be stacked (eg: sepia + blur), for more advanced effects CSS offers a `url()` filter, which allows the product-dev to apply an [SVG-defined filter effect](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/filter) to the element.
 
 Note that SVG filters are complex and powerful. In addition to the MDN page linked above, the following resources may be of interest to the inquisitive:
 + (Webplatform, 2015) – [A summary of the various SVG filter primitives](https://webplatform.github.io/docs/svg/tutorials/smarter_svg_filters/)
 + (Codrops, 2019) – [A series of articles around SVG filters](https://tympanus.net/codrops/2019/01/15/svg-filters-101/)
 + (yoksel.github.io) – [An interactive SVG filters playground](https://yoksel.github.io/svg-filters/#/)
 
-Browsers extend the use of these filters to JavaScript-driven paint operations in the `<canvas>` element. The canvas context engine includes a [filter property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) (note: the key is singular), which dev-users can use to apply CSS filters to specific fill and stroke invocations. SC implements this functionality via regular `set` function calls: `cell.set({filter: string})` for the entire Cell object's display, and `entity.set({filter: string})` for individual entity objects within the display. Test demo [Filters-501](../../demo/filters-501.html) shows this functionality in action.
+Browsers extend the use of these filters to JavaScript-driven paint operations in the `<canvas>` element. The canvas context engine includes a [filter property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) (note: the key is singular), which product-devs can use to apply CSS filters to specific fill and stroke invocations. SC implements this functionality via regular `set` function calls: `cell.set({filter: string})` for the entire Cell object's display, and `entity.set({filter: string})` for individual entity objects within the display. Test demo [Filters-501](../../demo/filters-501.html) shows this functionality in action.
 
 ## The SC filter factory
-While browsers have (for the most part) supported general CSS filter functionality since 2013, extending that support to the canvas context engine `engine.filter` property has lagged and (as of March 2025, with respect to Safari browsers) remains incomplete.
+While browsers have (for the most part) supported general CSS filter functionality since 2013, extending that support to the canvas context engine `engine.filter` property has lagged and (as of November 2025, with respect to Safari browsers) remains incomplete.
 
 Given how useful filter functionality can be for creating various `<canvas>`-based displays and products, repo-devs built a bespoke filter engine into SC. Much of the functionality for the filter engine is defined in the [helper/filter-engine.js](../source/helper/filter-engine.html) file. This filter engine – which is an entirely novel filter system, separate from CSS filters – acts as a singleton object, created during SC initialization, and handles all SC-specific filter effect processing across all `<canvas>` elements present on the web page.
 
 > **tl;dr:** The SC filter engine has been inspired by (the better parts of) the [Filter Effects Module Level 1](https://drafts.fxtf.org/filter-effects/) specification (which itself is based on the [SVG 1.1 (Second Edition) Filter Effects](https://www.w3.org/TR/SVG11/filters.html) specification). *It is* ***NOT an emulation*** *of that specification*.
 
 ### The `scrawl.makeFilter()` factory function
-SC filters have been built to operate seamlessly with the wider SC environment. Dev-users can create a Filter object using the `scrawl.makeFilter()` factory function. Once created, the filter can be applied multiple times to Cell, Group and entity objects by adding it to their `filters` (note: the key is plural!) Array:
+SC filters have been built to operate seamlessly with the wider SC environment. Product-devs can create a Filter object using the `scrawl.makeFilter()` factory function. Once created, the filter can be applied multiple times to Cell, Group and entity objects by adding it to their `filters` (note: the key is plural!) Array:
 + Filter objects can be applied to entity, Group and Cell objects during their instantiation using the `filters: ['name-string', Filter-object, ...]` attribute. This attribute expects to receive an Array of Filter objects and/or those objects' `name` strings.
 + Following instantiation, any entity, Group or Cell object can have its `filters` Array updated using the `object.addFilters('name-string', Filter-object, ...)`, `object.removeFilters('name-string', Filter-object, ...)` and `object.clearFilters()` functions.
 
@@ -45,7 +45,7 @@ opacity     Number           1                     Float number between 0 and 1
 The Filter objects generated by the `scrawl.makeFilter()` factory function are *tracked objects*, thus each object requires its own unique `name` attribute when being instantiated. Once created, they can be retrieved from the SC library using the `scrawl.findFilter('name-string')` function.
 
 There are actually two ways to use the factory function, both of which are equally valid:
-+ For the *modern* approach, dev-users can define an Array of **action objects** keyed to the `actions` attribute. These action objects outline a set of **filter primative functions**, alongside the values to be fed into those functions, which together create the desired filter effect.
++ For the *modern* approach, product-devs can define an Array of **action objects** keyed to the `actions` attribute. These action objects outline a set of **filter primitive functions**, alongside the values to be fed into those functions, which together create the desired filter effect.
 + The *legacy* approach uses the `method` attribute, alongside the required attributes for the method. SC will automatically create the appropriate action objects for the stipulated method as part of the Filter object's instantiation.
 
 While the modern approach offers more versatility when it comes to chaining filter primitive functions together to create complex effects, the legacy approach is often more convenient for creating simpler effects. It is also easier to animate legacy filter attributes. Compare the different approaches to creating a simple pixellation filter:
@@ -128,7 +128,7 @@ Filter objects are not part of the SC scene graph. Instead they are applied dire
 + Group objects set up their filtered output by instructing their associated entity Objects to stamp themselves onto a `pool` Cell that the Group instantiates and supplies; the filters are then applied to the pool Cell before it is stamped into the Group object's host Cell (near the end of the `compile` operation of the Display cycle).
 + Entity objects also make use of `pool` Cells to generate their filtered output, which then gets stamped onto whichever Cell object their Group object has supplied to them (that is: the host Cell for unfiltered Groups, or another `pool` Cell for filtered Groups).
 
-Note that both CSS/SVG filters, and SC Filter objects, can (in theory) be applied to a Cell or entity object at the same time. The advice to dev-users considering such an approach is: don't! Filters are expensive operations; invoking two entirely separate filter systems on the same object will increase the risk of page performance degredation.
+Note that both CSS/SVG filters, and SC Filter objects, can (in theory) be applied to a Cell or entity object at the same time. The advice to product-devs considering such an approach is: don't! Filters are expensive operations; invoking two entirely separate filter systems on the same object will increase the risk of page performance degredation.
 
 ### Stacking filters
 CSS filters can be combined:
@@ -148,7 +148,7 @@ In the above example, the browser will first apply the `hue-rotate` filter to th
 
 The simplest way to think of this is as a form of layer stacking: the original input goes at the bottom of the stack then each filter is added, in turn, over the original input until all the filters have been applied. In effect, the output from the previous filter becomes the input for the next filter. The end-user only sees the top of the stack; that is, the final result of the entire operation.
 
-The SC filter engine follows much the same process (unless directed otherwise). When an entity with an Array of Filter objects gets stamped on its host Cell, the filter engine will take all of those filters and apply their primative functions, in turn, to the entity display. Only after the last primative function completes does the filter engine return the results to the SC system for stamping onto the host Cell.
+The SC filter engine follows much the same process (unless directed otherwise). When an entity with an Array of Filter objects gets stamped on its host Cell, the filter engine will take all of those filters and apply their primitive functions, in turn, to the entity display. Only after the last primitive function completes does the filter engine return the results to the SC system for stamping onto the host Cell.
 
 This means that the order in which Filter objects appear in the `entity.filters` Array becomes very important:
 
@@ -186,7 +186,7 @@ scrawl.makePicture({
 ### Chaining filters
 SVG filters include a way to define the inputs for an SVG filter primitive, and label the primitive's output so that it can be used as an input for a subsequent primitive operation. This method of **filter chaining** is what gives SVG filters their unique power to break away from the linear stacking approach to filter composition.
 
-SC follows in SVG's footsteps. Every SC filter primative function includes `lineIn` and `lineOut` argument attributes to define the primitive's input data and output label; some functions also require a `lineMix` attribute 
+SC follows in SVG's footsteps. Every SC filter primitive function includes `lineIn` and `lineOut` argument attributes to define the primitive's input data and output label; some functions also require a `lineMix` attribute 
 
 #### Input and output identifiers
 When an SC object invokes the filter engine to create a filtered output, it will include an [imageData object](https://developer.mozilla.org/en-US/docs/Web/API/ImageData) of its unfiltered display for the filter engine to work on. The imageData dimensions will match the dimensions of the host Cell on which the filtered output will eventually be stamped.
@@ -227,12 +227,12 @@ All SC filter primitive functions include a final step – a crude channel-by-ch
 + For `opacity: 0.4`, the final output is 60% input + 40% calculated effect
 + ... etc.
 
-Most of the Filter test demos include an `opacity` control for repo-dev testing and dev-user investigation.
+Most of the Filter test demos include an `opacity` control for repo-dev testing and product-dev investigation.
 
 ### Using objects as filter stencils
 CSS/SVG filters can be used to add a filter effect to the background behind a DOM element, via the [CSS backdrop-filter property](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter).
 
-In a similar vein, SC filters can be applied to the (currently stamped) display behind an SC entity object, or a Group of such objects. Dev-users can set up this effect by setting the object's `isStencil` attribute to `true`.
+In a similar vein, SC filters can be applied to the (currently stamped) display behind an SC entity object, or a Group of such objects. Product-devs can set up this effect by setting the object's `isStencil` attribute to `true`.
 
 Note that the object will not be able to memoize its filtered output – there's no way that SC can predict whether the background behind an entity has changed between Display cycle frames.
 
@@ -243,9 +243,9 @@ For any SC-controlled `<canvas>` which includes any animated effects in its disp
 
 This means that SC must complete all of a Display cycle's required updates – across all `<canvas>` elements currently animating on the web page – within 16ms. For scenes which include filtered Cell, Group or entity objects this can be a difficult ask, given the intense computational nature of filter calculations.
 
-Thus it makes sense for filtered objects to cache – ***memoize*** – their filtered output as comprehensively as possible. Dev-users can achieve this by setting the `memoizeFilterOutput` attribute to `true` on these objects.
+Thus it makes sense for filtered objects to cache – ***memoize*** – their filtered output as comprehensively as possible. Product-devs can achieve this by setting the `memoizeFilterOutput` attribute to `true` on these objects.
 
-SC attempts to make the memoization process as painless as possible for dev-users. Much of the functionality has been internalized so setting the `memoizeFilterOutput` flag should be the only action the dev-user has to take.
+SC attempts to make the memoization process as painless as possible for product-devs. Much of the functionality has been internalized so setting the `memoizeFilterOutput` flag should be the only action the product-dev has to take.
 
 #### Internal memoization functionality
 When a filtered object first has its `memoizeFilterOutput` flag set to `true` it will generate a random String and associate it to its internal `filterIdentifier` attribute. The first time the filter engine processes the object's filters and generates an output it will lodge that output in the SC workstore, keyed to the identifier string, before returning the output for stamping.
@@ -258,7 +258,7 @@ There are a number of actions that can invalidate the memoized filter output. Th
 + Objects acting as a filter stencil cannot be memoized as there's no way to predict that the canvas display behind the object has not changed
 + Filtered Cell object output cannot be memoized (for the same reason).
 
-Whenever the dev-user triggers such changes, the object will set a `dirtyFilterIdentifier` flag which in turn will cause the object to set its `filterIdentifier` attribute to a new random String. The next time the filter engine encounters the object it will not find the new identifier in the SC workstore, leading to it running all the required filter operations on the object and lodging that output in the workstore keyed to the new identifier.
+Whenever the product-dev triggers such changes, the object will set a `dirtyFilterIdentifier` flag which in turn will cause the object to set its `filterIdentifier` attribute to a new random String. The next time the filter engine encounters the object it will not find the new identifier in the SC workstore, leading to it running all the required filter operations on the object and lodging that output in the workstore keyed to the new identifier.
 
 The workstore regularly purges unaccessed keys – the output keyed to the old identifier will generally be purged one second after it was last accessed.
 
@@ -274,7 +274,7 @@ Where:
 
 These functions are one-shot functions: the capture will happen as part of the next Display cycle. The functionality includes adding the visual output to an `<img>` element in the DOM, as a child of an appropriately hidden `<div>` element within the `<canvas>` element. The action is necessarily asynchronous, thus the new Asset object may take a few additional iterations of the Display cycle to show up.
 
-There are various reasons why a dev-user may want to capture a static image of a Cell, Group or entity object – for instance when a particularly complicated filter has been applied to that object's display but it is not possible to memoize the object's output.
+There are various reasons why a product-dev may want to capture a static image of a Cell, Group or entity object – for instance when a particularly complicated filter has been applied to that object's display but it is not possible to memoize the object's output.
 
 Once the new asset is captured it can be displayed multiple times in canvas scenes using Picture entitys. For example, see test demos [Canvas-046](../../demo/canvas-046.html), and [Canvas-020](../../demo/canvas-020.html).
 
@@ -283,7 +283,7 @@ The code associated with this functionality is closely tied with the filter func
 ### Internal coding protocols
 The work to set up a Cell, Group or entity object to be modified by SC filters, and to display the filtered results on a host Cell, happens outside of the SC filter engine and factory code. 
 
-Due to Cell, Group and entity objects having distinct roles in the Display cycle, the protocols for applying filters to them necessarily differ – as described below. All of this functionality happens internally; the dev-user only needs to add filters to the objects for the processes to take place.
+Due to Cell, Group and entity objects having distinct roles in the Display cycle, the protocols for applying filters to them necessarily differ – as described below. All of this functionality happens internally; the product-dev only needs to add filters to the objects for the processes to take place.
 
 #### Apply filters to Cell objects
 SC Cell object filters are applied at the end of the Cell's participation in the Display cycle `compile` operation, after all entitys have stamped themselves onto its display. This filtered result will directly replace the original image data, ready for final display as part of the Display cycle `show` operation.
@@ -343,6 +343,7 @@ Each pixel in the image data is coded in the [sRGB color space](https://develope
 
 Given the (potentially huge) sizes that these image data Arrays can reach, repo-devs need to be particularly strict when it comes to coding up the data manipulations for filter primitive functions. The following guidelines may help:
 + Precalculate any requirements that a primitive function may have – for instance, the locations of pixels in a matrix calculation, or the pixels that make up a tile – and cache the results in case other primitive functions can make use of them.
++ Where it makes sense, use appropriate JS typed arrays to process data, alongside binary operators and masks, to reduce the number of array accesses performed by the filter.
 + Always try to process the data array in a single pass. For instance, rather than use two loops to process image data by rows and columns, repo devs should use a single loop and calculate row/column positions within that loop.
 + Always check to see if the current pixel is transparent (its alpha channel has a value of `0`) and, if yes, skip the calculations for that pixel if possible.
 + When dealing with non-RGB color space calculations, use the color caches – calculating a pixel's OKLCH channel values is very computationally expensive which is why the results of the first calculation for a given color should be cached.
@@ -350,7 +351,7 @@ Given the (potentially huge) sizes that these image data Arrays can reach, repo-
 #### Filter regions
 A key difference between SVG filters and SC filters is that the SVG restricts its filter computations to a [filter effects region](https://www.w3.org/TR/SVG11/filters.html#FilterEffectsRegion). It takes this approach to limit the pixel area that needs to be processed by its filter functions.
 
-SC does not take this approach. Instead the ImageData object that the filter engine receives will have the dimensions of the host Cell where the filter results will be applied. When a dev-user applies a filter to a `10px x 10px` Block entity, and a Wheel entity with radius `10px`, both appearing on a `100px x 100px` Cell, the ImageData objects presented to the filter engine will include a data Array containing (`100 x 100 x 4 = 40,000`) elements.
+SC does not take this approach. Instead the ImageData object that the filter engine receives will have the dimensions of the host Cell where the filter results will be applied. When a product-dev applies a filter to a `10px x 10px` Block entity, and a Wheel entity with radius `10px`, both appearing on a `100px x 100px` Cell, the ImageData objects presented to the filter engine will include a data Array containing (`100 x 100 x 4 = 40,000`) elements.
 
 Consider the situation where both the Block and Wheel entitys have the same `pixellate` filter applied to them. The pixellate primitive function, as part of its work, will generate a set of objects containing the location details (the data Array indexes) for the pixels contained in each of the tiles required to generate the effect. It calculates this locations data across the entire ImageData, and stashes the results in the SC workstore. Thus while the calculation may happen for the first entity the primitive function encounters, for every other entity on that Cell using the same filter the primitive function only needs to retrieve those calculated results from the workstore – and this remains true even if the Block or Wheel entitys subsequently change their dimensions, scale or position.
 
@@ -531,7 +532,7 @@ Places a tile schema across the input, quarters each tile and then sets the alph
 The `offset` values represent an offset from the top-left corner of the display. Partial tiles will be displayed as appropriate along the top and left edges of the display.
 
 Specify the new alpha channel values in the `areaAlphaLevels` attribute Array as follows:
-+ [top-left quadrant, top-right quadrant, bottom-left quadrant, bottom-right quadrant]
++ [top-left quadrant, bottom-left quadrant, top-right quadrant, bottom-right quadrant]
 
 Used by factory function method: `areaAlpha`.
 
@@ -741,7 +742,7 @@ Default object
 #### Action: `invert-channels`
 Inverts the color channel values in the input (`0 > 255`, `200 > 55`, etc), producing an effect similar to a photograph negative. 
 
-Color channels can be excluded from the calculation using the `include` flags. Has no impact on the alpha channel.
+Color channels can be excluded from the calculation using the `include` flags.
 
 Used by factory function method: `invert`.
 
@@ -756,6 +757,7 @@ Default object
   includeBlue: true,
   includeGreen: true,
   includeRed: true,
+  includeAlpha: false,
 }
 ```
 
@@ -786,7 +788,7 @@ Default object
 #### Action: `map-to-gradient`
 Applies a gradient to a grayscaled input. 
 
-The type of grayscale can be set using the `useNaturalGrayscale` flag. The grayscale is applied as part of the primative function and does not need to be created in a prior chained ActionObject.
+The type of grayscale can be set using the `useNaturalGrayscale` flag. The grayscale is applied as part of the primitive function and does not need to be created in a prior chained ActionObject.
 
 The `gradient` attribute can be a Gradient object, or that object's `name` attribute.
 
@@ -966,7 +968,7 @@ The `weights` Array needs to be exactly (256 * 4 = 1024) elements long. For each
 
 Used by factory function method: `curveWeights`.
 
-Dev-users are advised to find some way to generate the array data programmatically. See test demo [Filters-024](../../demo/filters-024.html) for inspiration.
+Product-devs are advised to find some way to generate the array data programmatically. See test demo [Filters-024](../../demo/filters-024.html) for inspiration.
 ```
 Default object
 {
@@ -1078,7 +1080,7 @@ By default the visible chanels are included in the calculation while the `alpha`
 
 The functionality defines separate `radius` (box width and height) values for the vertical and horizontal passes. The number of `passes` performed can also be increased.
 
-The `step` values are used to determined which pixels within the box should be included in the calculation; a greater `step` value will lead to more (potentially useful) visual artefacts in the result.
+The `step` values are used to determine which pixels within the box should be included in the calculation; a greater `step` value will lead to more (potentially useful) visual artefacts in the result.
 
 Used by factory function method: `blur`.
 
@@ -1109,7 +1111,7 @@ Default object
 ```
 
 #### Action: `corrode`
-Performs a special form of matrix operation on each input pixel's color and alpha channels, calculating the new value using neighbouring pixel values. This is (roughly) equivalent to the SVG [`<feMorphology>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology) filter primative.
+Performs a special form of matrix operation on each input pixel's color and alpha channels, calculating the new value using neighbouring pixel values. This is (roughly) equivalent to the SVG [`<feMorphology>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology) filter primitive.
 
 The matrix dimensions can be set using the `width` and `height` arguments, while setting the home pixel's position within the matrix can be set using the `offsetX` and `offsetY` arguments.
 
@@ -1141,7 +1143,7 @@ Default object
 }
 
 The operation attribute permitted values are:
-  'lowest'    'highest'   'mean'      'median'
+  'lowest'    'highest'   'mean'
 ```
 
 #### Action: `emboss`
@@ -1177,6 +1179,12 @@ The code behind this approach uses an [infinite impulse response](https://en.wik
 
 The horizontal and vertical parts of the blur can be separately set. Channels can also be excluded from the blur calculations, and the blur effect can be restricted to just the non-transparent parts of the input.
 
+This filter can also be used to create a "single direction" motion blur effect, by setting the horizontal and vertical radius values to opposing large/small values and applying an angle value.
+
+Note that this filter is prone to generating edge artefacts, such as a dark or gray border, or the blur displaying beyond the borders of the original image. These effects can be mitigated through an interplay of the `includeAlpha`, `excludeTransparentPixels` and `premultiply` flags.
+
+Additionally, color channels can be excluded (to create halo effects) using the appropriate `include*` flags.
+
 Used by factory function method: `gaussianBlur`.
 
 See test demo [Filters-034](../../demo/filters-034.html).
@@ -1187,14 +1195,17 @@ Default object
   lineOut: '',
   opacity: 1,
 
+  radiusHorizontal: 1,
+  radiusVertical: 1,
+  angle: 0,
+
+  premultiply: false,
   excludeTransparentPixels: false,
   includeAlpha: true,
+
   includeBlue: true,
   includeGreen: true,
   includeRed: true,
-
-  radiusHorizontal: 1,
-  radiusVertical: 1,
 }
 ```
 
@@ -1207,9 +1218,11 @@ The matrix does not need to be centered. Use the `offset` attributes to define t
 
 Individual channels can be excluded from the calculation.
 
+When used for blurring effects, the filter can create edge artefacts (dark or gray borders, extension beyond the original image) - these can be controlled with an interplay between the `includeAlpha`, `premultiply` and `useInputAsMask` flags.
+
 Used by factory function methods: `edgeDetect`, `matrix`, `matrix5`, `sharpen`.
 
-See test demo [Filters-012](../../demo/filters-012.html)
+See test demos [Filters-012](../../demo/filters-012.html), [Filters-038](../../demo/filters-038.html)
 ```
 Default object
 {
@@ -1224,10 +1237,13 @@ Default object
 
   weights: [],
 
-  includeAlpha: false,
   includeBlue: true,
   includeGreen: true,
   includeRed: true,
+
+  includeAlpha: false,
+  premultiply: false,
+  useInputAsMask: false,
 }
 ```
 
@@ -1280,15 +1296,13 @@ Default object
 ```
 
 #### Action: `tiles`
-Covers the input with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a more Delauney-like output.
+Covers the input with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a more Delaunay-like output.
 
 The filter has four modes, set on the `mode` attribute: `'rect'`, `'hex'`, `'random'`, `'points'`. Each mode has its own set of attributes:
-+ **rect** - `rectWidth`, `rectHeight`, `originX`, `originY`, `angle`
-+ **hex** - `hexRadius`, `originX`, `originY`, `angle`
++ **rect** - `rectWidth`, `rectHeight`, `originX`, `originY`, `angle`, `spiralStrength`
++ **hex** - `hexRadius`, `originX`, `originY`, `angle`, `spiralStrength`
 + **random** - `randomCount`, `seed`
 + **points** - `pointsData`
-
-Dev-users should be aware that initial calculation of the tile sets is very computationally intensive.
 
 Channels can be included in the calculation by setting the appropriate `include` flags.
 
@@ -1313,6 +1327,8 @@ Default object
 
   hexRadius: 5,
 
+  spiralStrength: 0,
+
   randomCount: 20,
   seed: DEFAULT_SEED,
 
@@ -1325,15 +1341,60 @@ Default object
 }
 ```
 
+#### Action: `zoom-blur`
+Applies a bespoke ease-weighted radial (“zoom”) blur with optional angle and jitter variation.
+
+The filter samples along the line from each pixel to a chosen centre point, combining those samples with an ease-out weighting so the streaking increases with distance. An inner and outer radius define where the blur begins and ends, with an easing function controlling how smoothly it transitions across that span.
+
+Parameters such as strength, samples, variation (per-pixel jitter driven by a seed), and angle (for an optional spin component) shape the overall character of the blur.
+
+The include* channel flags, includeAlpha, excludeTransparentPixels, premultiply, and multiscale settings provide additional control over colour and alpha handling and help mitigate artefacts.
+
+Product-devs should note that this filter is computationally heavy and should be used judiciously.
+
+Used by factory function method: `zoomBlur`.
+
+See test demo [Filters-041](../../demo/filters-041.html).
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  startX: '50%',
+  startY: '50%',
+
+  strength: 0.35,
+  samples: 14,
+  variation: 0,
+  seed: DEFAULT_SEED,
+
+  innerRadius: 0,
+  outerRadius: 0,
+  angle: 0,
+  easing: 'linear',
+
+  includeRed: true,
+  includeGreen: true,
+  includeBlue: true,
+
+  includeAlpha: true,
+  excludeTransparentPixels: true,
+  multiscale: true,
+  premultiply: false,
+}
+```
+
 ### Displacement filters
 The following primitive functions handle the movement of pixel data around the image data Array
 
 #### Action: `displace`
-Moves pixels around the input image, based on the color channel values supplied by a displacement map image. This is the SC filter engine's attempt to reproduce the SVG [`<feDisplacementMap>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap) filter primative.
+Moves pixels around the input image, based on the color channel values supplied by a displacement map image. This is the SC filter engine's attempt to reproduce the SVG [`<feDisplacementMap>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap) filter primitive.
 
 Note that the `lineMix` input – which MUST be specified – can be offset using the `offsetX` and `offsetY` attributes. Ideally, the mix image should be the same size as the input image, but it can be larger or smaller – hence the inclusion of these attributes. The displacement transform will only happen when both inputs have pixels at the appropriate coordinate
 
-As for the SVG filter primative, translations in the `x` and `y` axes are tied to the pixel values in a given color channel. These pixel values can be scaled.
+As for the SVG filter primitive, translations in the `x` and `y` axes are tied to the pixel values in a given color channel. These pixel values can be scaled.
 
 When a pixel moves it can leave a copy of itself behind in case another pixel doesn't replace itself. If this behaviour is not wanted it can be switched off using the `transparentEdges` flag.
 
@@ -1354,8 +1415,9 @@ Default object
   offsetY: 0,
   scaleX: 1,
   scaleY: 1,
+
   transparentEdges: false,
-}
+  useInputAsMask: false,
 
 The channelX and channelY attribute permitted values are:
   'red'       'green'     'blue'      'alpha'
@@ -1366,7 +1428,7 @@ Generates a semi-random shift across the input's horizontal rows.
 
 The effect can be generated across channels, or applied to channels separately, through the `useMixedChannel` flag. 
 
-The `level` value (a float Number between `0` and `1`) determines the likliness of a glitch occurring in a row, while the `step` value (a positive integer Number greater than 0) controls the number of rows to be included in each glitch.
+The `level` value (a float Number between `0` and `1`) determines the liklihood of a glitch occurring in a row, while the `step` value (a positive integer Number greater than 0) controls the number of rows to be included in each glitch.
 
 The strength of the glitch is controlled by the various `offset` attributes.
 
@@ -1397,6 +1459,9 @@ Default object
   offsetGreenMin: 0,
   offsetRedMax: 0,
   offsetRedMin: 0,
+
+  transparentEdges: false,
+  useInputAsMask: false,
 }
 ```
 
@@ -1421,13 +1486,15 @@ Default object
   offsetGreenY: 0,
   offsetRedX: 0,
   offsetRedY: 0,
+
+  useInputAsMask: false,
 }
 ```
 
 #### Action: `random-noise`
 Creates a stippling effect across the image.
 
-The spread of the effect can be controlled using the `width` and `height` attributes (which can be negative). Dev-users can manage the intensity of the effect using the `level` attribute, which ranges from `0` to `1`.
+The spread of the effect can be controlled using the `width` and `height` attributes (which can be negative). Product-devs can manage the intensity of the effect using the `level` attribute, which ranges from `0` to `1`.
 
 The effect can be wrapped by setting the `noWrap` Boolean flag. Channels can be excluded from the calculations using their respective `include` flags.
 
@@ -1470,7 +1537,7 @@ For each input pixel, move the pixel radially according to its distance from a g
 This filter can handle multiple swirls in a single pass. Each swirl is defined in an object with the following attributes:
 + The `start` and `radius` attributes can be defined in absolute `px` Number values, or relative `%` String values – relative to the input width.
 + The `angle` Number value is measured in degrees – a value of `720` will result in a swirl of 2 complete turns.
-+ The `easing` value can be any valid easing string identifier (for example `'linear'`, `'easeOutIn'`, etc) or, alternatively, a dev-user defined easing function.
++ The `easing` value can be any valid easing string identifier (for example `'linear'`, `'easeOutIn'`, etc) or, alternatively, a product-dev defined easing function.
 
 ```
 {
@@ -1494,11 +1561,16 @@ Default object
   opacity: 1,
 
   swirls: [],
+
+  transparentEdges: false,
+  useInputAsMask: false,
 }
 ```
 
-### OK filters
+### OK color space filters
 The following primitive functions manipulate pixel image data in the [CIELAB color space](https://developer.mozilla.org/en-US/docs/Glossary/Color_space#cielab_color_spaces) – in particular OKLAB and OKLCH.
+
+Note also that the following <b>blend filter</b> effects - `color`, `hue`, `luminosity`, `saturation`, `hue-match` and `chroma-match` - perform their calculations in the OKLCH color space.
 
 #### Action: `alpha-to-luminance`
 For each pixel in the input, where alpha is not `0`:
@@ -1516,6 +1588,41 @@ Default object
   lineIn: '',
   lineOut: '',
   opacity: 1,
+}
+```
+
+#### Action: `deconvolute`
+Performs an OKLab lightness-only deconvolution using a Richardson–Lucy–style iterative solver, with optional edge masking and multiscale processing for stability.
++ RGB input is converted to OKLab;
++ The L channel is iteratively deblurred assuming a Gaussian point-spread function implemented via a recursive IIR Gaussian blur
++ The A and B channels are preserved so colour remains stable while perceived sharpness increases.
++ An edge mask can be derived from a blurred Sobel magnitude of the lightness channel, passed through a smoothstep and small Gaussian to produce a soft, edge-focused weighting.
++ The radius, passes, strength, and clamp parameters control the effective PSF width, number of deconvolution iterations, aggressiveness, and the range of per-iteration corrections, with percentile-based heuristics helping to keep the solver numerically well-behaved.
++ Multiscale is used to speed calculations
+
+Product-devs should note that this filter is computationally heavy and should be used judiciously.
+
+Used by factory function method: `deconvolute`.
+
+See test demo [Filters-040](../../demo/filters-040.html)
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  radius: 1.25,
+  passes: 8,
+  strength: 0.85,
+  clamp: 0.08,
+  level: 0.015,
+  smoothing: 0.015,
+
+  multiscale: true,
+  multiscaleFinalPasses: 2,
+
+  deriveMaskFromImage: true,
 }
 ```
 
@@ -1610,8 +1717,37 @@ Default object
 }
 ```
 
+#### Action: `ok-perceptual-curves`
+Apply a set of ok-channel-based curve weightings to the input image. For each pixel:
++ Retrieve OKLAB/OKLCH color data for each pixel
++ If the `actions` object includes a `curves` object:
+  - If the `curves` object includes a `chroma` array, process in the OKLCH color space - `curves` and `luminance` weights arrays only
+  - Otherwise, process in the OKLAB color space - `aChannel` (red-green), `bChannel` (yellow-blue) and `luminance` weights arrays only
++ Convert results back to RGB
+
+Used by factory function method: `okCurveWeights`.
+
+See test demo [Filters-042](../../demo/filters-042.html)
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+  curves: {},
+}
+
+Default curves attribute values
+{
+  luminosity: [],  // length: 0 or 501
+  chroma: [],      // length: 0 or 201
+  aChannel: [],    // length: 0 or 501
+  bChannel: [],    // length: 0 or 501
+}
+```
+
 #### Action: `reduce-palette`
-Analyses the input and, dependant on settings:
+Analyses the input and, dependent on settings:
 + If necessary, calculate a "commonest colors" reduced palette based on the input colors, guided by the number of colors required and a [minimum color distance](https://en.wikipedia.org/wiki/Color_difference) between the selected colors.
 + Apply the palette to the input, using a given [dithering effect](https://en.wikipedia.org/wiki/Dither).
 
@@ -1662,8 +1798,36 @@ Default object
 }
 ```
 
+#### Action: `unsharp`
+Applies an edge-aware unsharp mask in OKLab space, sharpening only the lightness (L) channel while leaving chroma (a/b) intact.
+
+The filter converts each non-transparent pixel from RGB to OKLab, then applies a separable recursive (IIR) Gaussian blur to the L channel only. A “detail” layer is formed by subtracting the blurred L from the original L. In parallel, a Sobel magnitude is computed on the same L channel and mapped through a smoothstep curve to produce an edge mask, ensuring that sharpening is concentrated around genuine edges.
+
+Strength controls how much of the detail layer is re-applied; radius sets the Gaussian blur size (and thus the scale of features being sharpened). The level and smoothing parameters define the soft threshold for the Sobel edge mask, while clamp limits the maximum L-channel change per pixel to reduce halos and ringing.
+
+Product-devs should note that this filter is computationally heavy and should be used judiciously.
+
+Used by factory function method: `unsharp`.
+
+See test demo [Filters-039](../../demo/filters-039.html)
+```
+Default object
+{
+  lineIn: '',
+  lineOut: '',
+  opacity: 1,
+
+  strength: 0.8,
+  radius: 2.0,
+  level: 0.015,
+  smoothing: 0.015,
+  clamp: 0.08,
+  useEdgeMask: true,
+}
+```
+
 ## SC predefined filter effects
-The Filter factory function `scrawl.makeFilter()` comes with a large set of predefined filter ***methods*** which are, in many ways, easier to use than using the alternative, ***actions*** approach of defining a filter. Even so, these *method* filters allow the dev-user to chain filters together (using `lineIn`, `lineMix` and `lineOut` attributes) and to control each filter's strength in the final output (using the `opacity` attribute).
+The Filter factory function `scrawl.makeFilter()` comes with a large set of predefined filter ***methods*** which are, in many ways, easier to use than using the alternative, ***actions*** approach of defining a filter. Even so, these *method* filters allow the product-dev to chain filters together (using `lineIn`, `lineMix` and `lineOut` attributes) and to control each filter's strength in the final output (using the `opacity` attribute).
 
 So the only disadvantage to using *method* objects is that a complex filter effect will require the generation of several objects which all need to be added to a Cell, Group or entity object, compared to defining the filter in a single *actions* object.
 
@@ -1786,13 +1950,13 @@ opacity                     yes         1
 ### Method: `blur`
 **(Convolution filter)** A bespoke [box blur](https://en.wikipedia.org/wiki/Box_blur) function. Creates visual artefacts with various settings that might be useful. 
 
-Dev-users are strongly advised to memoize the results from this filter as it is very resource-intensive. Use the gaussian blur filter for a smoother result.
+Product-devs are strongly advised to memoize the results from this filter as it is very resource-intensive. Use the gaussian blur filter for a smoother result.
 
 By default the visible chanels are included in the calculation while the `alpha` channel is excluded. Transparent pixels (which tend to be transparent black) can also be excluded from the calculation.
 
 The functionality defines separate `radius` (box width and height) values for the vertical and horizontal passes. The number of `passes` performed can also be increased.
 
-The `step` values are used to determined which pixels within the box should be included in the calculation; a greater `step` value will lead to more (potentially useful) visual artefacts in the result.
+The `step` values are used to determine which pixels within the box should be included in the calculation; a greater `step` value will lead to more (potentially useful) visual artefacts in the result.
 
 Creates an ActionObject for the `blur` primitive function.
 
@@ -1936,11 +2100,11 @@ Using an array of `range` arrays, determines whether a pixel's values lie entire
 Each `range` array comprises six integer Numbers (between `0` and `255`) representing the following channel values: 
 + `[minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue]`
 
-Dev-users can also define `range` Arrays as 
+Product-devs can also define `range` Arrays as 
 + `[minimum-CSS-color-string, maximum-CSS-color-string]`
 
 The feather variables - `featherRed`, `featherGreen`, `featherBlue` - are integers in the range `0` (default) to `255`.
-+ For convenience, dev-users can set all feather variables to the same value using a `feather` pseudo-attribute.
++ For convenience, product-devs can set all feather variables to the same value using a `feather` pseudo-attribute.
 
 Creates an ActionObject for the `chroma` primitive function.
 
@@ -1965,7 +2129,7 @@ featherBlue                 yes         0
 
 Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the `red`, `green` and `blue` arguments. These attributes' values should be integer Numbers (between `0` and `255`).
 
-Dev-users can also supply the reference color as a CSS-color-string, in a `reference` attribute.
+Product-devs can also supply the reference color as a CSS-color-string, in a `reference` attribute.
 
 The sensitivity of the effect can be manipulated using the `transparentAt` and `opaqueAt` attribute values, both of which lie in the range `0-1`.
 
@@ -1991,7 +2155,7 @@ opaqueAt                    yes         1
 ### Method: `clampChannels`
 **(Color channels filter)** Clamp each color channel to a range determined by a set of `low` and `high` channel values. These attributes' values should be integer Numbers (between `0` and `255`). 
 
-Dev-users can also supply the reference colors as CSS-color-strings, in `lowColor` and `highColor` attributes.
+Product-devs can also supply the reference colors as CSS-color-strings, in `lowColor` and `highColor` attributes.
 
 Creates an ActionObject for the `clamp-channels` primitive function.
 
@@ -2043,7 +2207,7 @@ The compose attribute permitted values are:
 ```
 
 ### Method: `corrode`
-**(Convolution filter)** Performs a special form of matrix operation on each input pixel's color and alpha channels, calculating the new value using neighbouring pixel values. This is (roughly) equivalent to the SVG [`<feMorphology>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology) filter primative.
+**(Convolution filter)** Performs a special form of matrix operation on each input pixel's color and alpha channels, calculating the new value using neighbouring pixel values. This is (roughly) equivalent to the SVG [`<feMorphology>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feMorphology) filter primitive.
 
 The matrix dimensions can be set using the `width` and `height` arguments, while setting the home pixel's position within the matrix can be set using the `offsetX` and `offsetY` arguments.
 
@@ -2051,7 +2215,7 @@ The operation will set the pixel's channel value to match either the lowest, hig
 
 Channels can be selected for inclusion in the calculation by setting the `includeRed`, `includeGreen`, `includeBlue` (all false by default) and `includeAlpha` (default: true) flags.
 
-Dev-users should note that this filter is expensive, thus much slower to complete compared to other filter effects. Memoization is strongly advised!
+Product-devs should note that this filter is expensive, thus much slower to complete compared to other filter effects. Memoization is strongly advised!
 
 Creates an ActionObject for the `corrode` primitive function.
 
@@ -2088,7 +2252,7 @@ The `weights` Array needs to be exactly (256 * 4 = 1024) elements long. For each
 
 Creates an ActionObject for the `vary-channels-by-weights` primitive function.
 
-Dev-users are advised to find some way to generate the array data programmatically. See test demo [Filters-024](../../demo/filters-024.html) for inspiration.
+Product-devs are advised to find some way to generate the array data programmatically. See test demo [Filters-024](../../demo/filters-024.html) for inspiration.
 ```
 Attribute                   Retained?   Default
 --------------------------  ----------  ----------------
@@ -2114,12 +2278,40 @@ lineOut                     yes         ''
 opacity                     yes         1
 ```
 
+### Method: `deconvolute`
+**(OK filter)** Performs an OKLab lightness-only deconvolution using a Richardson–Lucy–style iterative solver, with optional edge masking and multiscale processing for stability.
+
+Product-devs should note that this filter is computationally heavy and should be used judiciously.
+
+Creates an ActionObject for the `deconvolute` primitive function.
+
+See test demo [Filters-040](../../demo/filters-040.html)
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+clamp:                      yes         0.08,
+level:                      yes         0.015,
+passes:                     yes         8,
+radius:                     yes         1.25,
+smoothing:                  yes         0.015,
+strength:                   yes         0.85,
+
+multiscale:                 yes         true,
+multiscaleFinalPasses:      yes         2,
+
+deriveMaskFromImage:        yes         true,
+```
+
 ### Method: `displace`
-**(Displacement filter)** Moves pixels around the input image, based on the color channel values supplied by a displacement map image. This is the SC filter engine's attempt to reproduce the SVG [`<feDisplacementMap>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap) filter primative.
+**(Displacement filter)** Moves pixels around the input image, based on the color channel values supplied by a displacement map image. This is the SC filter engine's attempt to reproduce the SVG [`<feDisplacementMap>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap) filter primitive.
 
 Note that the `lineMix` input – which MUST be specified – can be offset using the `offsetX` and `offsetY` attributes. Ideally, the mix image should be the same size as the input image, but it can be larger or smaller – hence the inclusion of these attributes. The displacement transform will only happen when both inputs have pixels at the appropriate coordinate
 
-As for the SVG filter primative, translations in the `x` and `y` axes are tied to the pixel values in a given color channel. These pixel values can be scaled.
+As for the SVG filter primitive, translations in the `x` and `y` axes are tied to the pixel values in a given color channel. These pixel values can be scaled.
 
 When a pixel moves it can leave a copy of itself behind in case another pixel doesn't replace itself. If this behaviour is not wanted it can be switched off using the `transparentEdges` flag.
 
@@ -2140,7 +2332,9 @@ offsetX                     yes         0
 offsetY                     yes         0
 scaleX                      yes         1
 scaleY                      yes         1
+
 transparentEdges            yes         false
+useInputAsMask              yes         false
 
 The channelX and channelY attribute permitted values are:
   'red'       'green'     'blue'      'alpha'
@@ -2163,12 +2357,12 @@ opacity                     yes         1
 ### Method: `emboss`
 **(Convolution filter)** Outputs an emboss effect across the input.
 
-This method creates a chain of FilterAction objects, the composition of which can be controlled by a set of flags supplied by the dev-user:
+This method creates a chain of FilterAction objects, the composition of which can be controlled by a set of flags supplied by the product-dev:
 + `useNaturalGrayscale` Boolean – if `true` the filter will start with a `grayscale` pass; default is to use an `average-channels` pass.
 + `clamp` positive integer Number – clamps each color channel by the given value, using a `clampChannels` pass; pushes channel values towards a value of 127. Default is `0` (no pass).
 + `smoothing` positive float Number – adds a `gaussianBlur` pass with the attribute's value acting as the radius. Default is `0` (no pass).
 
-The final FilterAction object added to the chain performs an `emboss` pass on what has gone before. This filter primative function, which calculates and applies a 3x3 convolution matrix to the image data, accepts a number of attributes:
+The final FilterAction object added to the chain performs an `emboss` pass on what has gone before. This filter primitive function, which calculates and applies a 3x3 convolution matrix to the image data, accepts a number of attributes:
 + `angle` float Number (measured in degrees) – contributes to the weights used in the matrix
 + `strength` float Number – contributes to the weights used in the matrix
 + `postProcessResults` Boolean – if set to `true`, extra work happens after the matrix pass completes to either smooth pixel channels towards `127`, taking into account a `tolerance` value, or alternatively make qualifying pixels transparent
@@ -2201,7 +2395,7 @@ keepOnlyChangedAreas        yes         false
 ### Method: `flood`
 **(Color channels filter)** Creates a uniform sheet of the required color, which can then be used by other filter actions. The color are set through the `red`, `green`, `blue` and `alpha` attributes; these attributes' values should be integer Numbers (between `0` and `255`). 
 
-Dev-users can also supply a `reference` color as a CSS-color-string.
+Product-devs can also supply a `reference` color as a CSS-color-string.
 
 The flood can be restricted to only apply to non-transparent input pixels using the `excludeAlpha` flag.
 
@@ -2229,6 +2423,10 @@ excludeAlpha                yes         false
 
 The horizontal and vertical parts of the blur can be separately set. Channels can also be excluded from the blur calculations, and the blur effect can be restricted to just the non-transparent parts of the input.
 
+This filter can also be used to create a "single direction" motion blur effect, by setting the horizontal and vertical radius values to opposing large/small values and applying an angle value.
+
+Edge artefacts can be mitigated through an interplay of the `includeAlpha`, `excludeTransparentPixels` and `premultiply` flags.
+
 Creates an ActionObject for the `gaussian-blur` primitive function.
 
 See test demo [Filters-034](../../demo/filters-034.html).
@@ -2239,15 +2437,18 @@ lineIn                      yes         ''
 lineOut                     yes         ''
 opacity                     yes         1
 
-excludeTransparentPixels    yes         false
-includeAlpha                yes         true
-includeBlue                 yes         true
-includeGreen                yes         true
-includeRed                  yes         true
-
 radius                      no          (pseudo-attribute)
 radiusHorizontal            yes         1
 radiusVertical              yes         1
+angle                       yes         0
+
+premultiply                 yes         false
+excludeTransparentPixels    yes         false
+includeAlpha                yes         true
+
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
 ```
 
 ### Method: `glitch`
@@ -2255,7 +2456,7 @@ radiusVertical              yes         1
 
 The effect can be generated across channels, or applied to channels separately, through the `useMixedChannel` flag. 
 
-The `level` value (a float Number between `0` and `1`) determines the likliness of a glitch occurring in a row, while the `step` value (a positive integer Number greater than 0) controls the number of rows to be included in each glitch.
+The `level` value (a float Number between `0` and `1`) determines the liklihood of a glitch occurring in a row, while the `step` value (a positive integer Number greater than 0) controls the number of rows to be included in each glitch.
 
 The strength of the glitch is controlled by the various `offset` attributes.
 
@@ -2272,7 +2473,10 @@ opacity                     yes         1
 level                       yes         0
 seed                        yes         DEFAULT_SEED string
 step                        yes         1
-transparentEdges            yes         false
+
+useMixedChannel             yes         true
+offsetMax                   yes         0
+offsetMin                   yes         0
 
 offsetAlphaMax              yes         0
 offsetAlphaMin              yes         0
@@ -2280,12 +2484,11 @@ offsetBlueMax               yes         0
 offsetBlueMin               yes         0
 offsetGreenMax              yes         0
 offsetGreenMin              yes         0
-offsetMax                   yes         0
-offsetMin                   yes         0
 offsetRedMax                yes         0
 offsetRedMin                yes         0
 
-useMixedChannel             yes         true
+transparentEdges            yes         false
+useInputAsMask              yes         false
 ```
 
 ### Method: `gray`
@@ -2411,7 +2614,7 @@ opacity                     yes         1
 ### Method: `mapToGradient`
 **(Color channels filter)** Applies a gradient to a grayscaled input. 
 
-The type of grayscale can be set using the `useNaturalGrayscale` flag. The grayscale is applied as part of the primative function and does not need to be created in a prior chained ActionObject.
+The type of grayscale can be set using the `useNaturalGrayscale` flag. The grayscale is applied as part of the primitive function and does not need to be created in a prior chained ActionObject.
 
 The `gradient` attribute can be a Gradient object, or that object's `name` attribute.
 
@@ -2629,6 +2832,8 @@ opacity                     yes         1
 
 offsetX                     yes         0
 offsetY                     yes         0
+
+useInputAsMask              yes         false
 ```
 
 ### Method: `offsetChannels`
@@ -2652,6 +2857,30 @@ offsetGreenX                yes         0
 offsetGreenY                yes         0
 offsetRedX                  yes         0
 offsetRedY                  yes         0
+
+useInputAsMask              yes         false
+```
+
+### Method: `okCurveWeights`
+**(OK filter)** Apply a set of ok-channel-based curve weightings to the input image.
+
+Creates an ActionObject for the `ok-perceptual-curves` primitive function.
+
+See test demo [Filters-042](../../demo/filters-042.html).
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+curves                      yes         {}
+
+Where the curves object can have the following attributes:
+curves.luminosity           yes         [] - must be length: 0 or 501
+curves.chroma               yes         [] - must be length: 0 or 201
+curves.aChannel             yes         [] - must be length: 0 or 501
+curves.bChannel             yes         [] - must be length: 0 or 501
 ```
 
 ### Method: `pixelate`
@@ -2685,7 +2914,7 @@ tileWidth                   yes         1
 ### Method: `randomNoise`
 **(Displacement filter)** Creates a stippling effect across the image.
 
-The spread of the effect can be controlled using the `width` and `height` attributes (which can be negative). Dev-users can manage the intensity of the effect using the `level` attribute, which ranges from `0` to `1`.
+The spread of the effect can be controlled using the `width` and `height` attributes (which can be negative). Product-devs can manage the intensity of the effect using the `level` attribute, which ranges from `0` to `1`.
 
 The effect can be wrapped by setting the `noWrap` Boolean flag. Channels can be excluded from the calculations using their respective `include` flags.
 
@@ -2736,7 +2965,7 @@ opacity                     yes         1
 ```
 
 ### Method: `reducePalette`
-**(OK filter)** Analyses the input and, dependant on settings:
+**(OK filter)** Analyses the input and, dependent on settings:
 + If necessary, calculate a "commonest colors" reduced palette based on the input colors, guided by the number of colors required and a [minimum color distance](https://en.wikipedia.org/wiki/Color_difference) between the selected colors.
 + Apply the palette to the input, using a given [dithering effect](https://en.wikipedia.org/wiki/Dither).
 
@@ -2747,7 +2976,7 @@ The `palette` attribute is multi-functional. It can accept:
 
 The effect can output different dithering results dependent on the selected `noiseType` value.
 
-Be aware this is a complex and expensive filter! Dev-users are strongly advised to memoize its output.
+Be aware this is a complex and expensive filter! Product-devs are strongly advised to memoize its output.
 
 Creates an ActionObject for the `reduce-palette` primitive function.
 
@@ -2837,7 +3066,7 @@ opacity                     yes         1
 This filter can handle multiple swirls in a single pass. Each swirl is defined in an object with the following attributes:
 + The `start` and `radius` attributes can be defined in absolute `px` Number values, or relative `%` String values – relative to the input width.
 + The `angle` Number value is measured in degrees – a value of `720` will result in a swirl of 2 complete turns.
-+ The `easing` value can be any valid easing string identifier (for example `'linear'`, `'easeOutIn'`, etc) or, alternatively, a dev-user defined easing function.
++ The `easing` value can be any valid easing string identifier (for example `'linear'`, `'easeOutIn'`, etc) or, alternatively, a product-dev defined easing function.
 
 ```
 {
@@ -2870,6 +3099,9 @@ angle                       yes         0
 easing                      yes         'linear'
 
 swirls                      yes         []
+
+transparentEdges            yes         false
+useInputAsMask              yes         false
 ```
 
 ### Method: `threshold`
@@ -2879,7 +3111,7 @@ swirls                      yes         []
   – pixels with channel values above the level value are assigned to the `high` color;
   – otherwise they are updated to the `low` color.
 
-The `high` and `low` color channels can be set using their related attributes. Alternatively dev-users can set the `highColor` and `lowColor` attributes to CSS Color strings.
+The `high` and `low` color channels can be set using their related attributes. Alternatively product-devs can set the `highColor` and `lowColor` attributes to CSS Color strings.
 
 If the `useMixedChannel` flag is set to `true`, processing occurs on a per-pixel level; otherwise processing happens on a per-channel basis. Individual channel levels can be set in the `red`, `green`, `blue` and `alpha` attributes. Channels can also be excluded from the calculation.
 
@@ -2921,15 +3153,15 @@ useMixedChannel             yes         true
 ```
 
 ### Method: `tiles`
-**(Convolution filter)** Covers the input with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a more Delauney-like output.
+**(Convolution filter)** Covers the input with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a more Delaunay-like output.
 
 The filter has four modes, set on the `mode` attribute: `'rect'`, `'hex'`, `'random'`, `'points'`. Each mode has its own set of attributes:
-+ **rect** - `rectWidth`, `rectHeight`, `originX`, `originY`, `angle`
-+ **hex** - `hexRadius`, `originX`, `originY`, `angle`
++ **rect** - `rectWidth`, `rectHeight`, `originX`, `originY`, `angle`, `spiralStrength`
++ **hex** - `hexRadius`, `originX`, `originY`, `angle`, `spiralStrength`
 + **random** - `randomCount`, `seed`
 + **points** - `pointsData`
 
-Dev-users should be aware that initial calculation of the tile sets is very computationally intensive.
+Product-devs should be aware that initial calculation of the tile sets is very computationally intensive.
 
 Channels can be included in the calculation by setting the appropriate `include` flags.
 
@@ -2937,33 +3169,37 @@ Used by factory function method: `tiles`.
 
 See test demo [Filters-015](../../demo/filters-015.html).
 ```
-Default object
-{
-  lineIn: '',
-  lineOut: '',
-  opacity: 1,
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
 
-  mode: 'rect',
+mode:                       yes         'rect'
 
-  angle: 0,
-  originX: 0,
-  originY: 0,
+angle                       yes         0
+originX                     yes         0
+originY                     yes         0
 
-  rectWidth: 10,
-  rectHeight: 10,
+rectWidth                   yes         10
+rectHeight                  yes         10
 
-  hexRadius: 5,
+hexRadius                   yes         5
 
-  randomCount: 20,
-  seed: DEFAULT_SEED,
+spiralStrength              yes         0
 
-  pointsData: [],
+randomCount                 yes         20
+seed                        yes         DEFAULT_SEED
 
-  includeAlpha: false,
-  includeBlue: true,
-  includeGreen: true,
-  includeRed: true,
-}
+pointsData                  yes         []
+
+includeAlpha                yes         false
+includeBlue                 yes         true
+includeGreen                yes         true
+includeRed                  yes         true
+
+Where:
+  mode: 'rect' | 'hex' | 'points' | 'random'
 ```
 
 ### Method: `tint`
@@ -2978,7 +3214,7 @@ Where:
   multipliers are float Number values between 0 and 1
 ```
 
-Dev-users can set the multipliers either as float Numbers in the nine supplied attributes, or by using the `redColor`, `greenColor`, `blueColor` attributes, which can be set to CSS Color string values:
+Product-devs can set the multipliers either as float Numbers in the nine supplied attributes, or by using the `redColor`, `greenColor`, `blueColor` attributes, which can be set to CSS Color string values:
 ```
 redColor     -> [ redInRed,   greenInRed,   blueInRed   ]
 greenColor   -> [ redInGreen, greenInGreen, blueInGreen ]
@@ -3009,6 +3245,31 @@ redInGreen                  yes         0
 redInRed                    yes         1
 ```
 
+### Method: `unsharp`
+**(OK filter)** Applies an edge-aware unsharp mask in OKLab space, sharpening only the lightness (L) channel while leaving chroma (a/b) intact.
+
+Strength controls how much of the detail layer is re-applied; radius sets the Gaussian blur size (and thus the scale of features being sharpened). The level and smoothing parameters define the soft threshold for the Sobel edge mask, while clamp limits the maximum L-channel change per pixel to reduce halos and ringing.
+
+Product-devs should note that this filter is computationally heavy and should be used judiciously.
+
+Creates an ActionObject for the `unsharp` primitive function.
+
+See test demo [Filters-039](../../demo/filters-039.html)
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+strength:                   yes         0.8,
+radius:                     yes         2.0,
+level:                      yes         0.015,
+smoothing:                  yes         0.015,
+clamp:                      yes         0.08,
+useEdgeMask                 yes         true
+```
+
 ### Method: `yellow`
 **(Color channels filter)** Sets the input's blue channel values to zero, and averages the remaining channel colors for each pixel
 
@@ -3021,4 +3282,46 @@ Attribute                   Retained?   Default
 lineIn                      yes         ''
 lineOut                     yes         ''
 opacity                     yes         1
+```
+
+### Method: `zoomBlur`
+**(Convolution filter)** Applies a bespoke ease-weighted radial (“zoom”) blur with optional angle and jitter variation.
+
+Creates an ActionObject for the `zoom-blur` primitive function.
+
+Parameters such as strength, samples, variation (per-pixel jitter driven by a seed), and angle (for an optional spin component) shape the overall character of the blur.
+
+The include* channel flags, includeAlpha, excludeTransparentPixels, premultiply, and multiscale settings provide additional control over colour and alpha handling and help mitigate artefacts.
+
+Product-devs should note that this filter is computationally heavy and should be used judiciously.
+
+See test demo [Filters-041](../../demo/filters-041.html).
+```
+Attribute                   Retained?   Default
+--------------------------  ----------  ----------------
+lineIn                      yes         ''
+lineOut                     yes         ''
+opacity                     yes         1
+
+startX:                     yes         '50%',
+startY:                     yes         '50%',
+
+strength:                   yes         0.35,
+samples:                    yes         14,
+variation:                  yes         0,
+seed:                       yes         DEFAULT_SEED,
+
+innerRadius:                yes         0,
+outerRadius:                yes         0,
+angle:                      yes         0,
+easing:                     yes         'linear',
+
+includeRed:                 yes         true,
+includeGreen:               yes         true,
+includeBlue:                yes         true,
+
+includeAlpha:               yes         true,
+excludeTransparentPixels:   yes         true,
+multiscale:                 yes         true,
+premultiply:                yes         false,
 ```

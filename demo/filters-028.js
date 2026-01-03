@@ -142,8 +142,10 @@ const piccy = scrawl.makePicture({
 
     name: name('background'),
     asset: 'iris',
-    dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
+    dimensions: ['95%', '95%'],
+    handle: ['center', 'center'],
+    start: ['center', 'center'],
 });
 
 const group = scrawl.makeGroup({
