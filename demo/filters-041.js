@@ -113,7 +113,16 @@ const dom = scrawl.initializeDomInputs([
     ['select', 'multiscale', 1],
     ['select', 'premultiply', 0],
     ['select', 'easing', 0],
+    ['select', 'memoizeFilterOutput', 0],
 ]);
+
+const memoize = () => {
+
+    piccy.set({
+        memoizeFilterOutput: dom.memoizeFilterOutput.value === '0' ? false : true,
+    });
+};
+scrawl.addNativeListener(['input', 'change'], memoize, '#memoizeFilterOutput');
 
 
 // Handle easing input

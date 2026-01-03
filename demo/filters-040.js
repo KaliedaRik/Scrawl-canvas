@@ -84,7 +84,17 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'multiscaleFinalPasses', '2'],
     ['select', 'multiscale', 1],
     ['select', 'deriveMaskFromImage', 1],
+    ['select', 'memoizeFilterOutput', 0],
 ]);
+
+const memoize = () => {
+
+    piccy.set({
+        memoizeFilterOutput: dom.memoizeFilterOutput.value === '0' ? false : true,
+    });
+};
+scrawl.addNativeListener(['input', 'change'], memoize, '#memoizeFilterOutput');
+
 
 // Setup form observer functionality
 scrawl.makeUpdater({

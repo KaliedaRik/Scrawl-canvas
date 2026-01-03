@@ -79,7 +79,17 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'clamp', '0.08'],
     ['input', 'opacity', '1'],
     ['select', 'useEdgeMask', 1],
+    ['select', 'memoizeFilterOutput', 0],
 ]);
+
+const memoize = () => {
+
+    piccy.set({
+        memoizeFilterOutput: dom.memoizeFilterOutput.value === '0' ? false : true,
+    });
+};
+scrawl.addNativeListener(['input', 'change'], memoize, '#memoizeFilterOutput');
+
 
 // Setup form observer functionality
 scrawl.makeUpdater({
