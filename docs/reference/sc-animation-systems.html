@@ -23,10 +23,10 @@
 
     <main>
         <h1 id="animation-and-the-display-cycle">Animation and the Display cycle</h1>
-<p>All SC animation runs off a single <strong><em>core animation loop</em></strong> whose functionality is defined in the <a href="../source/core/animation-loop.html">core/animation-loop.js</a> file. This loop is instantiated during <a href="sc-initialization.html">SC initialization</a> and continues to run until the dev-user instructs it to halt, or the end-user navigates away from the web page.</p>
+<p>All SC animation runs off a single <strong><em>core animation loop</em></strong> whose functionality is defined in the <a href="../source/core/animation-loop.html">core/animation-loop.js</a> file. This loop is instantiated during <a href="sc-initialization.html">SC initialization</a> and continues to run until the product-dev instructs it to halt, or the end-user navigates away from the web page.</p>
 <p>End-user browsers, devices and screens can all have an effect on the speed at which the core animation loop runs – some combinations will allow the loop to run at 120 frames-per-second (fps), or more. SC makes no attempt to control the loop speed; instead, the individual functions that run during each loop can be choked down to run at 60fps, or less.</p>
-<p>The core animation loop itself doesn't include any functionality beyond running and invoking various <strong><em>Animation objects</em></strong> which either SC, or the dev-user, define. These functions get added to an <code>animation</code> Array. At the start of each loop the array will be sorted (if sorting is required), then the loop will check each Animation object to see if its <strong><em>animation function</em></strong> can be run and, if yes, invoke it.</p>
-<p>SC exports the following functions which the dev-user can use to control the core animation loop. Note that halting the loop halts <strong>all</strong> animations across the entire SC system (for all Canvas and Stack artefacts). See <a href="../../demo/dom-009.html">test demo DOM-009</a> for an example:</p>
+<p>The core animation loop itself doesn't include any functionality beyond running and invoking various <strong><em>Animation objects</em></strong> which either SC, or the product-dev, define. These functions get added to an <code>animation</code> Array. At the start of each loop the array will be sorted (if sorting is required), then the loop will check each Animation object to see if its <strong><em>animation function</em></strong> can be run and, if yes, invoke it.</p>
+<p>SC exports the following functions which the product-dev can use to control the core animation loop. Note that halting the loop halts <strong>all</strong> animations across the entire SC system (for all Canvas and Stack artefacts). See <a href="../../demo/dom-009.html">test demo DOM-009</a> for an example:</p>
 <ul>
 <li><code>scrawl.startCoreAnimationLoop()</code></li>
 <li><code>scrawl.stopCoreAnimationLoop()</code></li>
@@ -110,16 +110,16 @@
 <li><code>kill()</code> – invokes the <code>onKill</code> hook function, then removes the object from the SC system.</li>
 <li><code>isRunning()</code> – returns a Boolean: <code>true</code> if the object is currently included in the core animation loop's <code>animation</code> Array.</li>
 </ul>
-<p>The default behaviour of a generic Animation object, when created, is to run immediately. Dev-users can prevent this by adding a <code>delay: true</code> attribute to the factory function's argument object.</p>
+<p>The default behaviour of a generic Animation object, when created, is to run immediately. Product-devs can prevent this by adding a <code>delay: true</code> attribute to the factory function's argument object.</p>
 <h3 id="the-fn-function">The <code>fn</code> function</h3>
 <p>When the Animation object is added to the core animation loop, the loop will invoke the object's <code>fn</code> function – choke permitting – as part of each iteration of the loop. By default, the <code>fn</code> does nothing (in SC repo terms, it defaults to the <code>λnull</code> lambda function defined in the <a href="../source/helper/utilities.html">helper/utilities.js</a> file).</p>
-<p>Dev-users can associate a function object to the <code>fn</code> attribute. That function can perform any task either within the SC ecosystem, or beyond. This includes building a bespoke Display cycle animation – see test demo <a href="../../demo/canvas-041.html">Canvas-041</a> for an example.</p>
+<p>Product-devs can associate a function object to the <code>fn</code> attribute. That function can perform any task either within the SC ecosystem, or beyond. This includes building a bespoke Display cycle animation – see test demo <a href="../../demo/canvas-041.html">Canvas-041</a> for an example.</p>
 <h3 id="the-hook-functions">The hook functions</h3>
-<p>Similar to the <code>fn</code> function, the hook functions – <code>onRun</code>, <code>onHalt</code>, <code>onKill</code> – default to <code>λnull</code> lambda functions. Dev-users can use these hooks to perform setup and cleanup actions each time the animation run or halts.</p>
+<p>Similar to the <code>fn</code> function, the hook functions – <code>onRun</code>, <code>onHalt</code>, <code>onKill</code> – default to <code>λnull</code> lambda functions. Product-devs can use these hooks to perform setup and cleanup actions each time the animation run or halts.</p>
 <h3 id="animation-choke-functionality">Animation choke functionality</h3>
 <p>By default, generic Animation objects are choked to run at a maximum of 60 frames-per-second. Testing to see if sufficient time has passed since the <code>fn</code> function's last invocation, to allow a new invocation, happens in the core animation loop's <code>animationLoop()</code> function.</p>
-<p>If dev-users want their Animation object's <code>fn</code> function to be invoked on every loop iteration, they can set the object's <code>chokedAnimation</code> attribute to <code>false</code>. </p>
-<p>Note that the choking functionality is not precise: if a web page is slow (for any reason), then the core animation loop will be similarly slow. While dev-users could define an Animation object to run, say, every 2 seconds (by setting the object's <code>maxFrameRate</code> attribute to <code>0.5</code>), SC cannot guarantee that the function <em>will</em> run precisely every 2 seconds.</p>
+<p>If product-devs want their Animation object's <code>fn</code> function to be invoked on every loop iteration, they can set the object's <code>chokedAnimation</code> attribute to <code>false</code>. </p>
+<p>Note that the choking functionality is not precise: if a web page is slow (for any reason), then the core animation loop will be similarly slow. While product-devs could define an Animation object to run, say, every 2 seconds (by setting the object's <code>maxFrameRate</code> attribute to <code>0.5</code>), SC cannot guarantee that the function <em>will</em> run precisely every 2 seconds.</p>
 <h3 id="system-instantiated-animations">System-instantiated animations</h3>
 <p>During the <a href="sc-initialization.html">SC initialization process</a> a number of system Animation objects get created and added to the core animation loop. During each iteration of the loop they will run in the following order:</p>
 <ul>
@@ -127,12 +127,12 @@
 <li><code>SC-core-tickers-animation</code> – defined in <a href="../source/factory/ticker.html">factory/ticker.js</a>; order value: <code>0</code>. Ticker objects have their own animation subsystem within the core animation loop; tweens update affected artefact and entity objects (via <code>dirty</code> flags) prior to the main Display cycle iteration starting.</li>
 <li><code>SC-core-gradient-delta-animation</code> – defined in <a href="../source/mixin/styles.html">mixin/styles.js</a>; order value <code>1</code>. Used to delta-animate gradient-related Styles objects.</li>
 <li><code>SC-core-workstore-hygiene</code> – defined in <a href="../source/helper/workstore.html">helper/workstore.js</a>; order value: <code>1</code>. The <code>workstore</code> object has its contents purged on a regular basis, controlled by this function. Note that the function implements its own choke functionality; by default the function only runs every 200 milliseconds (or just over).</li>
-<li><em>(Dev-user defined Animation objects)</em></li>
+<li><em>(Product-dev defined Animation objects)</em></li>
 <li><code>SC-core-filters-cleanup-action</code> – defined in <a href="../source/helper/filter-engine.html">helper/filter-engine.js</a>; order value <code>999</code>. At the end of each core animation loop iteration this function checks every Filter object and resets its <code>dirtyFilterIdentifier</code> flag to <code>false</code>.</li>
 </ul>
-<p>Dev-user defined <code>generic</code> and <code>display</code> Animation object functions will (by default) run before the <code>SC-core-filters-cleanup-action</code> function, but after the other system-defined functions complete. <code>Time-based</code> animations defined by dev-users will run when the <code>SC-core-tickers-animation</code> function runs.</p>
+<p>Product-dev defined <code>generic</code> and <code>display</code> Animation object functions will (by default) run before the <code>SC-core-filters-cleanup-action</code> function, but after the other system-defined functions complete. <code>Time-based</code> animations defined by product-devs will run when the <code>SC-core-tickers-animation</code> function runs.</p>
 <h2 id="time-based-animations">Time-based animations</h2>
-<p>SC comes with its own bespoke <em>delimited</em> <a href="https://en.wikipedia.org/wiki/Inbetweening">inbetweening</a> system that dev-users can use to create animation effects.</p>
+<p>SC comes with its own bespoke <em>delimited</em> <a href="https://en.wikipedia.org/wiki/Inbetweening">inbetweening</a> system that product-devs can use to create animation effects.</p>
 <p>The basic premise of an SC time-based animation is as follows:</p>
 <ul>
 <li>Create a <strong>Ticker object</strong> with a given timeline duration.</li>
@@ -140,7 +140,7 @@
 <li>Add <strong>Action objects</strong> to the ticker, which define a (reversible) function to be run at a given moment along the ticker's timeline.</li>
 <li>Start the Ticker object running using the <code>ticker.run()</code> function. Control the ticker's progress using <code>ticker.halt()</code>, <code>ticker.resume()</code>, <code>ticker.seekTo()</code>, etc.</li>
 </ul>
-<p>For a better dev-user experience, simple time-based animations can also be created using just a Tween object, in which case SC will automatically create an associated Ticker object with the same duration as the tween. These animations can be controlled by invoking <code>tween.run()</code>,  <code>tween.halt()</code>, <code>tween.resume()</code>, <code>tween.seekTo()</code>, etc.</p>
+<p>For a better product-dev experience, simple time-based animations can also be created using just a Tween object, in which case SC will automatically create an associated Ticker object with the same duration as the tween. These animations can be controlled by invoking <code>tween.run()</code>,  <code>tween.halt()</code>, <code>tween.resume()</code>, <code>tween.seekTo()</code>, etc.</p>
 <p>The code for SC time-based animations can be found in the following files:</p>
 <ul>
 <li><a href="../source/factory/action.html">factory/action.js</a> – defines the <code>scrawl.makeAction()</code> factory function.</li>
@@ -152,7 +152,7 @@
 <h3 id="ticker-objects">Ticker objects</h3>
 <p>SC Ticker objects are the only <em>time-based</em> animation objects in the SC system. Tween and Action objects have no functionality if they are not associated with a Ticker object. </p>
 <blockquote>
-  <p><strong>tl;dr:</strong> Even though dev-users can create a tween animation using the <code>scrawl.makeTween()</code> factory, and then run it using <code>tween.run()</code>, SC does not recognise the Tween object as an animation object; instead, if the dev-user has not associated the Tween object with a Ticker object, SC will automatically create a Ticker object for that tween and run the animation on the ticker.</p>
+  <p><strong>tl;dr:</strong> Even though product-devs can create a tween animation using the <code>scrawl.makeTween()</code> factory, and then run it using <code>tween.run()</code>, SC does not recognise the Tween object as an animation object; instead, if the product-dev has not associated the Tween object with a Ticker object, SC will automatically create a Ticker object for that tween and run the animation on the ticker.</p>
 </blockquote>
 <p>The <a href="../source/factory/ticker.html">factory/ticker.js</a> file does more than just provide a factory function for creating tickers. When the file is first run (during SC initialization) it creates a local <code>tickerAnimations</code> Array (and an associated <code>tickerAnimationsFlag</code> signal boolean) alongside the <code>SC-core-tickers-animation</code> generic Animation object</p>
 <p>The purpose of the <code>SC-core-tickers-animation</code> Animation object is to invoke each of the Ticker objects currently included in the <code>tickerAnimations</code> Array at the start of each iteration of the core animation loop. When the Animation object is invoked, it will:</p>
@@ -161,16 +161,16 @@
 <li>Interrogate each of the Ticker objects to see if it is currently running and, if yes, invoke its <code>fn</code> function.</li>
 </ul>
 <p>Note that in the repo code, a single iteration of the Animation object is referred to as a <strong>tick</strong>.</p>
-<p>Ticker object sorting is required whenever a Ticker object is added to, or removed from, the <code>tickerAnimations</code> Array, and also when the dev-user updates a Ticker object's <code>order</code> attribute. Any of these actions will result in the <code>tickerAnimationsFlag</code> signal boolean being set to <code>true</code>, which in turns triggers the sorting functionality. As for other SC order functionality, sorting is performed by means of a bucket sort algorithm.</p>
+<p>Ticker object sorting is required whenever a Ticker object is added to, or removed from, the <code>tickerAnimations</code> Array, and also when the product-dev updates a Ticker object's <code>order</code> attribute. Any of these actions will result in the <code>tickerAnimationsFlag</code> signal boolean being set to <code>true</code>, which in turns triggers the sorting functionality. As for other SC order functionality, sorting is performed by means of a bucket sort algorithm.</p>
 <h4 id="create-serialize-and-clone-ticker-objects">Create, serialize and clone Ticker objects</h4>
-<p>Dev-users can create a Ticker object using the <code>scrawl.makeTicker({key: value, ...})</code> factory function.</p>
+<p>Product-devs can create a Ticker object using the <code>scrawl.makeTicker({key: value, ...})</code> factory function.</p>
 <p>Ticker objects can be serialized using the <code>ticker.saveAsPacket()</code> function, and restored against any SC object that includes <code>mixin/base</code> functionality using the <code>obj.actionPacket('packet-string')</code> function.</p>
 <p>Any Ticker object can be cloned using the <code>ticker.clone({key: value, ...})</code> function.</p>
 <h4 id="kill-ticker-objects">Kill Ticker objects</h4>
 <p>To remove a Ticker object from the SC environment, invoke <code>ticker.kill(killTweens = true, autokill = true)</code> on it:</p>
 <ul>
 <li>If the <code>killTweens</code> argument is set to <code>true</code> then SC will also remove all Tween/Action objects currently subscribed to the Ticker.</li>
-<li>To remove the Tween/Action objects while retaining the Ticker object, dev-users can invoke the <code>ticker.killTweens()</code> function – this is a convenience function for <code>ticker.kill(true, false)</code>.</li>
+<li>To remove the Tween/Action objects while retaining the Ticker object, product-devs can invoke the <code>ticker.killTweens()</code> function – this is a convenience function for <code>ticker.kill(true, false)</code>.</li>
 <li>Tickers can be set up to automatically delete themselves once their run completes, by setting their <code>killOnComplete</code> flag to <code>true</code>. This action will automatically remove all Tween and Action objects associated with the Ticker.</li>
 </ul>
 <h4 id="ticker-attributes">Ticker attributes</h4>
@@ -196,7 +196,7 @@ onSeekFor         Function                           λnull
 onComplete        Function                           λnull
 onReset           Function                           λnull</code></pre>
 <h4 id="ticker-duration">Ticker duration</h4>
-<p>By default, Tickers objects have a <code>duration</code> value of <code>0</code>. If the dev-user does not set a duration value when creating the Ticker object then it will, when first run, consult its subscribed Tween/Action objects to calculate an <code>effectiveDuration</code> value sufficiently long to accommodate their timing requirements.</p>
+<p>By default, Tickers objects have a <code>duration</code> value of <code>0</code>. If the product-dev does not set a duration value when creating the Ticker object then it will, when first run, consult its subscribed Tween/Action objects to calculate an <code>effectiveDuration</code> value sufficiently long to accommodate their timing requirements.</p>
 <p>Internally, the <code>effectiveDuration</code> value is the canonical duration. Calculating this value is handled automatically using the <code>setEffectiveDuration()</code> and <code>recalculateEffectiveDuration()</code> functions.</p>
 <p>The <code>duration</code> attribute can be either a Number or a String value:</p>
 <ul>
@@ -204,14 +204,14 @@ onReset           Function                           λnull</code></pre>
 <li><strong>String</strong> values can be used to mark the duration as being measured in either milliseconds (<code>'2000ms'</code>) or seconds (<code>'2s'</code>).</li>
 </ul>
 <blockquote>
-  <p><strong>tl;dr:</strong> Dev-users need to remember that their Ticker object's effective duration may be longer than the value they set in the <code>duration</code> attribute. This happens when, for instance, they set a Tween object to run at or near the end of the Ticker object's duration; in such cases SC will automatically extend the Ticker object's <code>effectiveDuration</code> to include the Tween object's duration.</p>
+  <p><strong>tl;dr:</strong> Product-devs need to remember that their Ticker object's effective duration may be longer than the value they set in the <code>duration</code> attribute. This happens when, for instance, they set a Tween object to run at or near the end of the Ticker object's duration; in such cases SC will automatically extend the Ticker object's <code>effectiveDuration</code> to include the Tween object's duration.</p>
 </blockquote>
 <h4 id="ticker-cycles">Ticker cycles</h4>
-<p>By default a Ticker object will, once started, run once and then halt. Dev-users can set the ticker to loop multiple times by setting the object's <code>cycles</code> attribute to an integer number value greater than <code>1</code>.</p>
+<p>By default a Ticker object will, once started, run once and then halt. Product-devs can set the ticker to loop multiple times by setting the object's <code>cycles</code> attribute to an integer number value greater than <code>1</code>.</p>
 <p>Note that if the Ticker object's <code>killOnComplete</code> flag has been set to <code>true</code>, then the Ticker object (and all of its associated Tween/Action objects) will auto-destruct once the ticker completes its required number of cycles.</p>
-<p>Setting the <code>cycles</code> attribute to <code>0</code> will cause the Ticker object to loop indefinitely, until halted by the dev-user.</p>
+<p>Setting the <code>cycles</code> attribute to <code>0</code> will cause the Ticker object to loop indefinitely, until halted by the product-dev.</p>
 <h4 id="ticker-subscribers">Ticker subscribers</h4>
-<p>When a dev-user creates a Ticker object, they can assign existing Tween/Action objects to the ticker by including their <code>name</code> attribute values in an Array keyed to the Ticker object's <code>subscribers</code> attribute.</p>
+<p>When a product-dev creates a Ticker object, they can assign existing Tween/Action objects to the ticker by including their <code>name</code> attribute values in an Array keyed to the Ticker object's <code>subscribers</code> attribute.</p>
 <p>After instantiation, the best way to add or remove Tween/Action objects to the Ticker object is by using the <code>ticker.subscribe(arg, ...)</code> and <code>ticker.unsubscribe(arg, ...)</code> functions:</p>
 <ul>
 <li>Both functions can accept one or more arguments.</li>
@@ -220,7 +220,7 @@ onReset           Function                           λnull</code></pre>
 </ul>
 <p>Note that Tween and Action objects can also add or remove themselves from a Ticker object using their <code>tween.addToTicker()</code> and <code>tween.removeFromTicker()</code> functions.</p>
 <h4 id="running-and-halting-tickers">Running and halting tickers</h4>
-<p>Unlike generic and display animations, Ticker Animation objects do not start running as soon as they are created. Instead the dev-user needs to invoke the object's <code>ticker.run()</code> function as-and-when they want the animation to commence.</p>
+<p>Unlike generic and display animations, Ticker Animation objects do not start running as soon as they are created. Instead the product-dev needs to invoke the object's <code>ticker.run()</code> function as-and-when they want the animation to commence.</p>
 <p>For immediate invocation on creation, use <code>scrawl.makeTicker({key: value, ...}).run()</code>.</p>
 <p>Ticker objects have a rich selection of control functions: </p>
 <ul>
@@ -234,8 +234,8 @@ onReset           Function                           λnull</code></pre>
 <li><code>ticker.seekFor(milliseconds: Number = 0, resume: Boolean = false)</code> – update the elapsed time by adding the <code>milliseconds</code> argument to it; this action will halt the ticker (if it is currently running) unless the <code>resume</code> argument is <code>true</code>.</li>
 <li><code>ticker.seekTo(milliseconds: Number = 0, resume: Boolean = false)</code> – set the elapsed time to the <code>milliseconds</code> argument; this action will halt the ticker (if it is currently running) unless the <code>resume</code> argument is <code>true</code>.</li>
 </ul>
-<p>Just as for generic Animation objects, Ticker objects come with a series of hook functions (defaulting to <code>λnull</code> functions) which will trigger as part of each control function invocation. Dev-users can use these hooks for any functionality they require, for instance tracking the progress of the ticker animation.</p>
-<p>Ticker objects do not need to be running to animate. When the dev-user invokes the <code>seekTo</code> or <code>seekFor()</code> functions the ticker will update its elapsed time and then invoke its <code>fn</code> function to inform all of its subscribed Tween/Action objects of the change. </p>
+<p>Just as for generic Animation objects, Ticker objects come with a series of hook functions (defaulting to <code>λnull</code> functions) which will trigger as part of each control function invocation. Product-devs can use these hooks for any functionality they require, for instance tracking the progress of the ticker animation.</p>
+<p>Ticker objects do not need to be running to animate. When the product-dev invokes the <code>seekTo</code> or <code>seekFor()</code> functions the ticker will update its elapsed time and then invoke its <code>fn</code> function to inform all of its subscribed Tween/Action objects of the change. </p>
 <ul>
 <li>Tween objects will in turn apply the required updates to their target objects.</li>
 <li>Action objects will check to see if the change triggers their functionality and, if yes, fire their <code>action</code> or <code>revert</code> functions as appropriate.</li>
@@ -258,10 +258,10 @@ onReset           Function                           λnull</code></pre>
 <p>Note that these attribute values will be affected not only by the ongoing passage of time, but also by operations such as halting, resuming, or seeking along the ticker timeline. Code for these adjustments can be found in the relevant hook functions.</p>
 <h4 id="ticker-observer">Ticker observer</h4>
 <p>By default Ticker objects will run whenever they are triggered; they are not tied to the SC Display cycle in any way. However this can lead to suboptimal performance, particularly if their animation takes place in a <code>&lt;canvas&gt;</code> element not currently visible in the end-user's device viewport.</p>
-<p>If a dev-user creates a Display animation object to control a <code>&lt;canvas&gt;</code> animation – using the <code>scrawl.makeRender()</code> factory function – and they have not set the <code>observe</code> attribute in the factory function's argument to <code>false</code>, then that object will only run when the <code>&lt;canvas&gt;</code> element becomes visible in the end-user's device viewport.</p>
+<p>If a product-dev creates a Display animation object to control a <code>&lt;canvas&gt;</code> animation – using the <code>scrawl.makeRender()</code> factory function – and they have not set the <code>observe</code> attribute in the factory function's argument to <code>false</code>, then that object will only run when the <code>&lt;canvas&gt;</code> element becomes visible in the end-user's device viewport.</p>
 <p>Dev users can extend this functionality to include Ticker animations running on the <code>&lt;canvas&gt;</code> element simply by including the <code>observer</code> attribute in the <code>scrawl.makeTicker()</code> factory function's argument object, setting its value to the Display animation object itself, or to its <code>name</code> String. This will force the ticker to check whether its associated Display animation is currently running before actioning its subscribed Tween/Action objects.</p>
 <h4 id="temporal-direction">Temporal direction</h4>
-<p>SC Ticker objects can run both forwards and backwards. Dev-users can change the <em>temporal direction</em> of the ticker by invoking the <code>ticker.reverse()</code> function when required. This function acts like a switch: if the ticker was running forwards, it will immediately start running backwards; if it was running backwards it will now run forwards.</p>
+<p>SC Ticker objects can run both forwards and backwards. Product-devs can change the <em>temporal direction</em> of the ticker by invoking the <code>ticker.reverse()</code> function when required. This function acts like a switch: if the ticker was running forwards, it will immediately start running backwards; if it was running backwards it will now run forwards.</p>
 <p>Internally, SC doesn't actually reverse time; rather it updates the ticker's currently subscribed Tween/Action objects with the new temporal direction of travel (using the <code>changeSubscriberDirection()</code> function). It is up to Tween and Action objects to interpret the data that their Ticker object sends to them on each tick.</p>
 <h4 id="subscriber-communication">Subscriber communication</h4>
 <p>During each iteration of the Ticker object's run, the overarching ticker Animation object will, if relevant, invoke the Ticker object's <code>ticker.fn(reverse: Boolean)</code> function. Here, the ticker calculates relevant timing data which it passes onto each of its Tween/Action object subscribers' <code>tween.update()</code> function.</p>
@@ -290,13 +290,13 @@ onReset           Function                           λnull</code></pre>
 <li>Test demo <a href="../../demo/dom-005.html">DOM-005</a> – DOM element tween stress test.</li>
 </ul>
 <h4 id="create-and-serialize-tween-objects">Create and serialize Tween objects</h4>
-<p>Dev-users can create a Tween object using the <code>scrawl.makeTween({key: value, ...})</code> factory function.</p>
+<p>Product-devs can create a Tween object using the <code>scrawl.makeTween({key: value, ...})</code> factory function.</p>
 <p>If the factory function's argument object includes a valid <code>ticker</code> attribute, then the new Tween will associate itself to that Ticker object. If however the attribute is not included in the argument object, or the desired Ticker object does not (yet) exist, then the new Tween will create its own ticker, giving it the name <code>${tween.name}_ticker</code>.</p>
 <p>Tweens are not animation objects,  but they do include functionality that makes them seem like they are animation objects. For instance, the invocation <code>scrawl.makeTween({key: value, ...}).run()</code> will make the Ticker associated with the new Tween run immediately after the Tween's creation.</p>
 <p>Tween objects can be serialized using the <code>tween.saveAsPacket()</code> function, and restored against any SC <em>tracked object</em> using the <code>obj.actionPacket('packet-string')</code> function.</p>
 <h4 id="clone-tween-objects">Clone Tween objects</h4>
 <p>Any Tween object can be cloned using the <code>tween.clone({key: value, ...})</code> function.</p>
-<p>When a Tween is cloned it will, by default, associate itself to its original's Ticker object. Dev-users can force the Tween to create its own new Ticker object by including the attribute <code>useNewTicker: true</code> in the clone function's argument object – see test demo <a href="../../demo/dom-005.html">DOM-005</a> for an example.</p>
+<p>When a Tween is cloned it will, by default, associate itself to its original's Ticker object. Product-devs can force the Tween to create its own new Ticker object by including the attribute <code>useNewTicker: true</code> in the clone function's argument object – see test demo <a href="../../demo/dom-005.html">DOM-005</a> for an example.</p>
 <h4 id="kill-tween-objects">Kill Tween objects</h4>
 <p>To remove a Tween object from the SC environment, invoke <code>tween.kill()</code> on it.</p>
 <p>If the Tween object, when created or cloned, created its own Ticker object, then killing the Tween will also kill that Ticker. Otherwise the Tween will disassociate itself from any Ticker objects before terminating its existence.</p>
@@ -331,14 +331,14 @@ cycles              positive integer Number            1
 killOnComplete      Boolean                            false
 observer            RenderAnimation object | String    undefined</code></pre>
 <h4 id="tweens-and-tickers">Tweens and Tickers</h4>
-<p>Dev-users can associate a Tween object with an existing Ticker object as part of its creation via the <code>scrawl.makeTween(arg)</code> factory function. To do this, they need to set the factory function's <code>ticker</code> attribute to the Ticker object, or that object's <code>name</code> attribute.</p>
+<p>Product-devs can associate a Tween object with an existing Ticker object as part of its creation via the <code>scrawl.makeTween(arg)</code> factory function. To do this, they need to set the factory function's <code>ticker</code> attribute to the Ticker object, or that object's <code>name</code> attribute.</p>
 <p>For Tween objects created without a Ticker object association, the factory function will create a new Ticker animation object for that Tween at the same time as the Tween object instantiates. To facilitate this, the factory function's argument object can include attributes to be used specifically with the new Ticker object:</p>
 <ul>
 <li><code>cycles</code> – the number of times the Ticker should loop before completing its run.</li>
 <li><code>killOnComplete</code> – whether the Ticker and Tween should self-destruct when the Ticker completes its run.</li>
 <li><code>observer</code> – whether a Ticker object should observe a Render animation object, only continuing to run while the Render animation object is running.</li>
 </ul>
-<p>After the Tween object has been created dev-users can move it between Ticker objects, or remove it, using the <code>tween.addToTicker(arg)</code> and <code>tween.removeFromTicker(arg)</code> functions, where the argument is the Ticker object itself, or that object's <code>name</code> attribute.</p>
+<p>After the Tween object has been created product-devs can move it between Ticker objects, or remove it, using the <code>tween.addToTicker(arg)</code> and <code>tween.removeFromTicker(arg)</code> functions, where the argument is the Ticker object itself, or that object's <code>name</code> attribute.</p>
 <h4 id="tween-start-and-duration-times">Tween start and duration times</h4>
 <p>The Tween object's <code>time</code> and <code>duration</code> attributes define the object's timing constraints. </p>
 <ul>
@@ -354,7 +354,7 @@ observer            RenderAnimation object | String    undefined</code></pre>
 <h4 id="tween-targets">Tween targets</h4>
 <p>Tween objects can target any SC object with an <code>entity.set()</code> (or similar) function. These objects can be subscribed to the Tween as part of the Tween's instantiation using the factory function's argument object <code>target</code> attribute, which accepts an Array of SC objects and/or the <code>name</code> attributes of those objects.</p>
 <p>Tween objects can also target Group objects, which will use their <code>group.setArtefacts()</code> function to update all of their associated artefact and entity objects at the Tween object's request.</p>
-<p>After the Tween has been created dev-users can update its <code>targets</code> array using the following functions, each of which accepts a comma-separated list of items which can be either the target object itself, or the object's <code>name</code> value, or arrays thereof:</p>
+<p>After the Tween has been created product-devs can update its <code>targets</code> array using the following functions, each of which accepts a comma-separated list of items which can be either the target object itself, or the object's <code>name</code> value, or arrays thereof:</p>
 <ul>
 <li><code>tween.setTargets(item, ...)</code> – replace the current <code>targets</code> Array members with the new items.</li>
 <li><code>tween.addToTargets(item, ...)</code> – add the new items to the <code>targets</code> Array.</li>
@@ -386,7 +386,7 @@ observer            RenderAnimation object | String    undefined</code></pre>
               - Flag indicating whether tween calculation results should be integer form
 
   engine:     Optional    Function | String   (default: 'linear')
-              - String name of an SC easing function, or a dev-user-defined function
+              - String name of an SC easing function, or a product-dev-defined function
 }</code></pre>
 <p>SC allows definition object <code>start</code> and <code>end</code> values to be defined as Strings with a measurement suffix (<code>%</code>, <code>px</code>, etc) attached to the number. All <code>start|end</code> values should be of a type that a target object (generally an SC artefact) expects to receive in its <code>set</code> function.</p>
 <p>SC also allows <code>start|end</code> value calculations (for both Number and String-suffixed values) to be rounded to integer-equivalent values. For example see test demo <a href="../../demo/canvas-005.html">Canvas-005</a> which includes a Tween object that uses a bespoke easing engine to calculate a Gradient animation. The Tween changes the Gradient object's <code>paletteStart</code> and <code>paletteEnd</code> values, both of which must be integer Numbers in the range <code>0</code>-<code>999</code>:</p>
@@ -448,7 +448,7 @@ easeOutBack       easeOutInBack                       easeInBack
 easeOutElastic    easeOutInElastic                    easeInElastic
 easeOutBounce     easeOutInBounce                     easeInBounce </code></pre>
 <p>Easing functions are not restricted to Tween objects. SC also uses them to help interpret Color object <code>range</code> requests, and applies them to various gradient-based objects – <strong>eased linear gradients</strong> – and even the swirl filter.</p>
-<p>Dev-users can also define their own easing engines. The function will need to take the following arguments:</p>
+<p>Product-devs can also define their own easing engines. The function will need to take the following arguments:</p>
 <pre><code>const myEasingFunction = function (start, change, position) {
 
   // code here
@@ -471,7 +471,7 @@ Where:
 <p>SC Action objects add (reversible) functions to a Ticker object. These are particularly useful for updating SC object attributes that are not tweenable – for instance showing and hiding objects as the Ticker animation progresses.</p>
 <p>Action object functionality is defined in the <a href="../source/factory/action.html">factory/action.js</a> file, and also inherit functionality from the <a href="../source/mixin/tween.html">mixin/tween.js</a> file.</p>
 <h4 id="create-serialize-clone-and-kill-action-objects">Create, serialize, clone and kill Action objects</h4>
-<p>Dev-users can create an Action object using the <code>scrawl.makeAction({key: value, ...})</code> factory function.</p>
+<p>Product-devs can create an Action object using the <code>scrawl.makeAction({key: value, ...})</code> factory function.</p>
 <p>Action objects can be serialized using the <code>action.saveAsPacket()</code> function, and restored against any SC <em>tracked object</em> using the <code>obj.actionPacket('packet-string')</code> function.</p>
 <p>Any Action object can be cloned using the <code>action.clone({key: value, ...})</code> function.</p>
 <p>To remove an Action object from the SC environment, invoke <code>action.kill()</code> on it. Unlike Tweens, deleting an Action object has no effect on its associated Ticker object.</p>
@@ -493,7 +493,7 @@ revert              Function                           λnull</code></pre>
 <h4 id="action-and-revert-functions">Action and revert functions</h4>
 <p>The <code>action</code> and <code>revert</code> functions should, ideally, reflect each other: whatever the <code>action</code> function does, the <code>revert</code> function should undo. A good example of this can be seen in test demo <a href="../../demo/dom-006.html">DOM-006</a>, where the <code>action</code> functions change the Element artefact's background color, while the <code>revert</code> functions change the color back again.</p>
 <h2 id="display-animations-and-the-display-cycle">Display animations and the Display cycle</h2>
-<p>As described in the <a href="sc-objects-overview.html">objects overview</a> page of this Runbook, SC acts as a buffer between the dev-user and the Canvas API by introducing a <a href="sc-groups-cells.html">stateful scene graph</a> composed of objects, and groups of objects, which define a set of entities to be drawn onto the canvas. </p>
+<p>As described in the <a href="sc-objects-overview.html">objects overview</a> page of this Runbook, SC acts as a buffer between the product-dev and the Canvas API by introducing a <a href="sc-groups-cells.html">stateful scene graph</a> composed of objects, and groups of objects, which define a set of entities to be drawn onto the canvas. </p>
 <p>Unlike the native <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a>, which performs each line of code as soon as it reads it (<a href="https://learn.microsoft.com/en-us/windows/win32/learnwin32/retained-mode-versus-immediate-mode">immediate mode rendering</a>), SC requires that its scene graph be defined before it is painted onto the <code>&lt;canvas&gt;</code> element.</p>
 <p>This painting <em>action</em> is called, in SC, the <strong>Display cycle</strong>. It consists of three distinct <em>operations</em>:</p>
 <ul>
@@ -503,7 +503,7 @@ revert              Function                           λnull</code></pre>
 <p>– The <strong><em><code>stamp</code></em></strong> phase paints the scene graph onto the Cell object's display.</p></li>
 <li><p>Finally, the <strong><em><code>show</code></em></strong> operation clears the <code>&lt;canvas&gt;</code> element's display and paints the finalized Cell display onto it.</p></li>
 </ul>
-<p>Dev-users can implement a Display cycle with the various <code>.clear()</code>, <code>.compile()</code> and <code>.show()</code> functions. Alternatively they can use the <code>.render()</code> convenience functions to perform all three operations in one call. These functions can be invoked on:</p>
+<p>Product-devs can implement a Display cycle with the various <code>.clear()</code>, <code>.compile()</code> and <code>.show()</code> functions. Alternatively they can use the <code>.render()</code> convenience functions to perform all three operations in one call. These functions can be invoked on:</p>
 <ul>
 <li>Individual Cell objects – <code>cell.clear()</code>, <code>cell.compile()</code>, <code>cell.show()</code>.</li>
 <li>Canvas artefact objects, which invokes the relevant functions on all Cell objects associated with that Canvas object – <code>canvas.clear()</code>, <code>canvas.compile()</code>, <code>canvas.show()</code>, <code>canvas.render()</code>.</li>
@@ -543,21 +543,21 @@ revert              Function                           λnull</code></pre>
 <li><code>kill()</code> – invokes the <code>onKill</code> hook function, then removes the object from the SC system.</li>
 <li><code>isRunning()</code> – returns a Boolean: <code>true</code> if the object is currently included in the core animation loop's <code>animation</code> Array.</li>
 </ul>
-<p>The default behaviour of a RenderAnimation object, when created, is to run immediately. Dev-users can prevent this by adding a <code>delay: true</code> attribute to the factory function's argument object.</p>
+<p>The default behaviour of a RenderAnimation object, when created, is to run immediately. Product-devs can prevent this by adding a <code>delay: true</code> attribute to the factory function's argument object.</p>
 <h4 id="renderanimation-targets">RenderAnimation targets</h4>
-<p>A RenderAnimation object needs a <em>target</em> object to control. For the most part these targets will be SC artefact – Canvas, Stack – objects. The dev-user can specify the target when creating the RenderAnimation object by setting the factory's argument object's <code>target</code> attribute to either the target object itself, or to its <code>name</code> String.</p>
-<p>Note that while SC allows the target attribute to take an Array of targets, this is generally not a Good Idea – dev-users should instead create separate RenderAnimation objects for each target as this allows for more fine-grained control of that target's animation.</p>
+<p>A RenderAnimation object needs a <em>target</em> object to control. For the most part these targets will be SC artefact – Canvas, Stack – objects. The product-dev can specify the target when creating the RenderAnimation object by setting the factory's argument object's <code>target</code> attribute to either the target object itself, or to its <code>name</code> String.</p>
+<p>Note that while SC allows the target attribute to take an Array of targets, this is generally not a Good Idea – Product-devs should instead create separate RenderAnimation objects for each target as this allows for more fine-grained control of that target's animation.</p>
 <p>Note also that the <code>target</code> attribute is not mandatory. For instance a few of the test demos involving multiple SC animated Artefact objects define an additional RenderAnimation object to render a frame rate readout that appears in a normal <code>&lt;div&gt;</code> element – see test demo <a href="../../demo/filters-103.html">Filters-103</a> for an example: note that the factory function argument's <code>noTarget</code> attribute has to be set to <code>true</code> for this to work correctly.</p>
 <p>(For info: the code that creates the frame rate readout can be found in the <a href="../demo/utilities.html">demo suite's utility.js</a> file. Like the test demo files, the utilities file is not part of the SC library.)</p>
 <h4 id="renderanimation-observers">RenderAnimation observers</h4>
 <p>SC does not, by default, run RenderAnimation object code if the object's target Artefact object is not currently visible in the end user's device's viewport. SC does this to minimize the impact of (often computationally heavy) Display cycle code on the end-user's device.</p>
 <p>This functionality is controlled by an <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">IntersectionObserver API object</a> which SC will create for each RenderAnimation object it instantiates.</p>
-<p>If the dev-user decides they don't want an observer running alongside their RenderAnimation object they can disable it by setting the factory function's argument object's <code>observer</code> attribute to <code>false</code>. They can also change the observer's functionality by setting that attribute to an <code>options object</code>, as described in the linked MDN page.</p>
+<p>If the product-dev decides they don't want an observer running alongside their RenderAnimation object they can disable it by setting the factory function's argument object's <code>observer</code> attribute to <code>false</code>. They can also change the observer's functionality by setting that attribute to an <code>options object</code>, as described in the linked MDN page.</p>
 <p>Note that because SC actively suppresses code running on non-displayed Artefact animations, edge cases can appear where the web page environment changes (eg: the end-user resizes their browser window) which triggers changes that the Artefact display needs to action but, because they are not running their Display cycle, those changes won't get picked up. To handle such situations non-running RenderAnimation objects can be triggered to run a single Display cycle tick using the <code>animation.updateOnce()</code> function. See the code in the <a href="../demo/snippets/animated-highlight-gradient-text-snippet.html">animated-highlight-gradient-text-snippet.js</a> file for an example.</p>
 <p>Observer object functionality is defined in the <a href="../source/core/events.html">core/events.js</a> file.</p>
-<p>(TODO: Dev-users have access to the <code>scrawl.makeAnimationObserver()</code> factory function, should they ever feel the need to create their own IntersectionObserver objects – but does the factory function really need to be exported to the outside world? Note that the scrawl-canvas-website canvas components do use the function, so any change here will need to take that "test" into account.)</p>
+<p>(TODO: Product-devs have access to the <code>scrawl.makeAnimationObserver()</code> factory function, should they ever feel the need to create their own IntersectionObserver objects – but does the factory function really need to be exported to the outside world? Note that the scrawl-canvas-website canvas components do use the function, so any change here will need to take that "test" into account.)</p>
 <h4 id="renderanimation-hook-functions">RenderAnimation hook functions</h4>
-<p>Unlike generic Animations, the <code>makeRender()</code> factory function does not allow the dev-user to define their own <code>fn</code> function. Instead, RenderAnimation objects all use the same <code>fn</code> object defined on their prototype object:</p>
+<p>Unlike generic Animations, the <code>makeRender()</code> factory function does not allow the product-dev to define their own <code>fn</code> function. Instead, RenderAnimation objects all use the same <code>fn</code> object defined on their prototype object:</p>
 <pre><code>RenderAnimation.prototype.fn = function () {
 
   if (this.noTarget) {
@@ -600,10 +600,10 @@ revert              Function                           λnull</code></pre>
 <li><code>afterShow</code> – triggers at the end of the Display cycle, after the <code>show</code> operation completes.</li>
 <li><code>afterCreated</code> – triggers once, after the first Display cycle completes.</li>
 </ul>
-<p>Dev-users can define these hook functions when they invoke the <code>makeRender()</code> factory function. If they need to be updated at any point after creation, this can be achieved using the <code>animation.updateHook(hook: String, func: Function)</code> function – note that if the second argument is not included, the current hook function will be updated to the <code>λnull</code> function. See the code in the <a href="../demo/snippets/before-after-slider-infographic.html">before-after-slider-infographic.js</a> file for an example.</p>
+<p>Product-devs can define these hook functions when they invoke the <code>makeRender()</code> factory function. If they need to be updated at any point after creation, this can be achieved using the <code>animation.updateHook(hook: String, func: Function)</code> function – note that if the second argument is not included, the current hook function will be updated to the <code>λnull</code> function. See the code in the <a href="../demo/snippets/before-after-slider-infographic.html">before-after-slider-infographic.js</a> file for an example.</p>
 <h2 id="delta-animation">Delta animation</h2>
-<p>SC delta animations are <em>unlimited</em> animations – that is, (by default) they have no start and end values, and they run continuously until the dev-user stops them.</p>
-<p>Dev-users can define delta animations directly as part of the SC objects on which they will run. They can be used for continuous animations such as artefact or entity rotations. See the following test demos for examples:</p>
+<p>SC delta animations are <em>unlimited</em> animations – that is, (by default) they have no start and end values, and they run continuously until the product-dev stops them.</p>
+<p>Product-devs can define delta animations directly as part of the SC objects on which they will run. They can be used for continuous animations such as artefact or entity rotations. See the following test demos for examples:</p>
 <ul>
 <li>Continuous rotation animations – <a href="../../demo/canvas-002.html">Canvas-002</a>, <a href="../../demo/canvas-009.html">Canvas-009</a>, <a href="../../demo/canvas-031.html">Canvas-031</a>, <a href="../../demo/dom-008.html">DOM-008</a>, <a href="../../demo/modules-003.html">Modules-003</a>, <a href="../../demo/modules-004.html">Modules-004</a>, <a href="../../demo/particles-013.html">Particles-013</a>.</li>
 <li>Animation along a path – <a href="../../demo/canvas-012.html">Canvas-012</a>, <a href="../../demo/canvas-014.html">Canvas-014</a>, <a href="../../demo/canvas-030.html">Canvas-030</a>, <a href="../../demo/canvas-208.html">Canvas-208</a>.</li>
@@ -625,11 +625,11 @@ revert              Function                           λnull</code></pre>
 });</code></pre>
 <p>The values assigned to the delta object keys should be the amount of change to be added to the attribute during each Display cycle tick. The above code will make the Wheel entity rotate aoround its <em>rotation-reflection</em> coordinate by -0.5 degrees each tick.</p>
 <blockquote>
-  <p><strong>tl;dr:</strong> Only a subset of attributes can be delta-animated – specifically those attributes that take a Number value, or a String value which can be ennumerated. The <code>/scrawl.d.ts</code> type definitions file takes this into account, in the hope that this will help dev-users.</p>
+  <p><strong>tl;dr:</strong> Only a subset of attributes can be delta-animated – specifically those attributes that take a Number value, or a String value which can be ennumerated. The <code>/scrawl.d.ts</code> type definitions file takes this into account, in the hope that this will help product-devs.</p>
 </blockquote>
 <h3 id="control-a-delta-animation">Control a delta animation</h3>
-<p>Delta updates run automatically as part of the Display cycle. To halt these updates, dev-users can set the Artefact or entity's <code>noDeltaUpdates</code> flag attribute to <code>true</code>.</p>
-<p>SC includes functionality to add min/max <em>limits</em> to a delta animation, and to define the action an animation should take when it reaches those limits. Dev-users can implement this functionality by adding a companion <code>deltaConstraints</code> attribute to the Artefact or entity object:</p>
+<p>Delta updates run automatically as part of the Display cycle. To halt these updates, product-devs can set the Artefact or entity's <code>noDeltaUpdates</code> flag attribute to <code>true</code>.</p>
+<p>SC includes functionality to add min/max <em>limits</em> to a delta animation, and to define the action an animation should take when it reaches those limits. Product-devs can implement this functionality by adding a companion <code>deltaConstraints</code> attribute to the Artefact or entity object:</p>
 <pre><code>scrawl.makeWheel({
 
   ...

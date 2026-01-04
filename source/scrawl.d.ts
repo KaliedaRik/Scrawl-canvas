@@ -1,4 +1,4 @@
-// Type definitions for Scrawl-canvas 8.16.0
+// Type definitions for Scrawl-canvas 8.17.0
 
 
 
@@ -1030,6 +1030,12 @@ interface EnhancedCellImageDataObject {
     pixelState: CellPixelStateObject[]
 }
 
+interface getCellDataObject {
+    opaque?: boolean;
+    includeGridCoords?: boolean;
+    includePolarCoords?: boolean;
+}
+
 interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunctions, DeltaMixinFunctions, PivotMixinFunctions, MimicMixinFunctions, PathMixinFunctions, AnchorMixinFunctions, ButtonMixinFunctions, CascadeMixinFunctions, AssetMixinFunctions, PatternMixinFunctions, FilterMixinFunctions {
     clear: () => void;
     compile: () => void;
@@ -1040,7 +1046,7 @@ interface CellFactoryFunctions extends BaseMixinFunctions, PositionMixinFunction
     updateArtefacts: (items: CommonObjectInput) => void;
     updateHere: () => void;
     splitShift: (item: CellSplitShiftArguments) => void;
-    getCellData: (opaque?: boolean) => EnhancedCellImageDataObject;
+    getCellData: (args?: boolean | getCellDataObject) => EnhancedCellImageDataObject;
     paintCellData: (item: EnhancedCellImageDataObject) => void;
 }
 
@@ -1336,7 +1342,8 @@ interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMix
     offsetY?: StringOrNumberInput; 
     pathPosition?: number;
     roll?: number; 
-    scale?: number; 
+    scale?: number;
+    startTextOnLine?: number;
     startX?: StringOrNumberInput; 
     startY?: StringOrNumberInput; 
     width?: StringOrNumberInput; 
@@ -1344,11 +1351,13 @@ interface EnhancedLabelFactoryDeltaInputs extends BaseMixinDeltaInputs, DeltaMix
 
 interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, FilterMixinInputs, TextMixinInputs, TextStyleFactoryInputs, StateFactoryInputs, EnhancedLabelFactoryDeltaInputs {
     alignTextUnitsToPath?: boolean;
+    autoHyphenate?: boolean;
     breakTextOnSpaces?: boolean;
     breakWordsOnHyphens?: boolean;
     cacheOutput?: boolean;
     calculateOrder?: number;
     checkHitUseTemplate?: boolean;
+    cjkPunctuationBinding?: boolean;
     constantSpeedAlongPath?: boolean;
     delta?: EnhancedLabelFactoryDeltaInputs;
     dimensions?: CommonTwoElementArrayInput; 
@@ -1360,7 +1369,10 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     handle?: CommonTwoElementArrayInput; 
     hyphenString?: string;
     justifyLine?: TextLineJustifyValues;
+    language?: string;
     layoutTemplate?: ArtefactInstance | string;
+    lineBreakHook?: (text: string, lang: string) => string | string[];
+    lineBreakInsert?: 'soft' | 'zwsp';
     lockFillStyleToEntity?: boolean;
     lockStrokeStyleToEntity?: boolean;
     method?: 'fill' | 'draw' | 'fillAndDraw' | 'drawAndFill';
@@ -1379,6 +1391,7 @@ interface EnhancedLabelFactoryInputs extends BaseMixinInputs, DeltaMixinInputs, 
     textUnitFlow?: TextUnitFlowValues;
     truncateString?: string;
     useLayoutTemplateAsPath?: boolean;
+    verticalCjkPunctuation?: 'off' | 'auto' | 'forced';
     visibility?: boolean;
 }
 
@@ -1406,6 +1419,13 @@ export interface EnhancedLabelInstance extends EnhancedLabelFactoryInputs, Enhan
 
 // FilterInstance factory
 // -------------------------------------
+interface CurveWeights {
+    luminance?: number[];
+    chroma?: number[];
+    aChannel?: number[];
+    bChannel?: number[];
+}
+
 interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     angle?: number;
     blueInBlue?: number;
@@ -1434,7 +1454,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     lowRed?: number;
     minimumColorDistance?: number;
     mode?: 'rect' | 'hex' | 'random' | 'points';
-    noWrap?: boolean;
+    multiscaleFinalPasses?: number;
     offsetAlphaMax?: number;
     offsetAlphaMin?: number;
     offsetAlphaX?: number;
@@ -1472,9 +1492,11 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     redInBlue?: number;
     redInGreen?: number;
     redInRed?: number;
+    samples?: number;
     scaleX?: number;
     scaleY?: number;
     smoothing?: number;
+    spiralStrength?: number;
     startX?: StringOrNumberInput;
     startY?: StringOrNumberInput;
     step?: number;
@@ -1486,6 +1508,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     tileWidth?: StringOrNumberInput;
     tolerance?: number;
     transparentAt?: number;
+    variation?: number;
     width?: StringOrNumberInput;
 }
 
@@ -1505,7 +1528,9 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     clamp?: string | number;
     compose?: string;
     concurrent?: boolean;
+    curves?: CurveWeights;
     delta?: FilterFactoryDeltaInputs;
+    deriveMaskFromImage?: boolean;
     easing?: string;
     excludeAlpha?: boolean;
     excludeBlue?: boolean;
@@ -1520,18 +1545,22 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     includeBlue?: boolean;
     includeGreen?: boolean;
     includeRed?: boolean;
+    keepAlpha?: boolean;
     keepOnlyChangedAreas?: boolean;
     lineIn?: string;
     lineMix?: string;
     lineOut?: string;
     lowColor?: string;
     method?: string;
+    multiscale?: true;
     noiseType?: 'random' | 'ordered' | 'bluenoise';
+    noWrap?: boolean;
     operation?: string;
     palette?: StringOrNumberInput;
     points?: StringOrNumberInput | number[];
     pointsData?: number[];
     postProcessResults?: boolean;
+    premultiply?: boolean;
     processHorizontal?: boolean;
     processVertical?: boolean;
     ranges?: any;
@@ -1542,6 +1571,8 @@ interface FilterFactoryInputs extends BaseMixinInputs, FilterFactoryDeltaInputs 
     staticSwirls?: any,
     transparentEdges?: boolean;
     useBluenoise?: boolean;
+    useEdgeMask?: boolean;
+    useInputAsMask?: boolean;
     useMixedChannel?: boolean;
     useNaturalGrayscale?: boolean;
     weights?: number[];

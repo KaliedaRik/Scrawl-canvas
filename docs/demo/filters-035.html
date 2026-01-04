@@ -740,6 +740,31 @@
                 </a>
               
                 
+                <a class="source" href="filters-038.html">
+                  ./demo/filters-038.js
+                </a>
+              
+                
+                <a class="source" href="filters-039.html">
+                  ./demo/filters-039.js
+                </a>
+              
+                
+                <a class="source" href="filters-040.html">
+                  ./demo/filters-040.js
+                </a>
+              
+                
+                <a class="source" href="filters-041.html">
+                  ./demo/filters-041.js
+                </a>
+              
+                
+                <a class="source" href="filters-042.html">
+                  ./demo/filters-042.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1000,7 +1025,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="demo-filters-035">Demo Filters 035</h1>
-<p>Filter parameters: Glitch filter</p>
+<p>Filter parameters: Offset filter</p>
 
             </div>
             
@@ -1120,8 +1145,10 @@
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;image&#x27;</span>),
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
     <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;95%&#x27;</span>, <span class="hljs-string">&#x27;95%&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
 
     <span class="hljs-attr">filters</span>: [<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;offset&#x27;</span>)],
 });</pre></div></div>
@@ -1182,11 +1209,10 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dom = scrawl.<span class="hljs-title function_">initializeDomInputs</span>([
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;level&#x27;</span>, <span class="hljs-string">&#x27;0.2&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;step&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;-10&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;10&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;useInputAsMask&#x27;</span>, <span class="hljs-number">0</span>],
 ]);</pre></div></div>
             
         </li>
@@ -1217,6 +1243,7 @@
         <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
         <span class="hljs-attr">offsetX</span>: [<span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-attr">offsetY</span>: [<span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">useInputAsMask</span>: [<span class="hljs-string">&#x27;useInputAsMask&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
     },
 });</pre></div></div>
             

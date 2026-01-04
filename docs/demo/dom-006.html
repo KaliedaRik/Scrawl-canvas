@@ -740,6 +740,31 @@
                 </a>
               
                 
+                <a class="source" href="filters-038.html">
+                  ./demo/filters-038.js
+                </a>
+              
+                
+                <a class="source" href="filters-039.html">
+                  ./demo/filters-039.js
+                </a>
+              
+                
+                <a class="source" href="filters-040.html">
+                  ./demo/filters-040.js
+                </a>
+              
+                
+                <a class="source" href="filters-041.html">
+                  ./demo/filters-041.js
+                </a>
+              
+                
+                <a class="source" href="filters-042.html">
+                  ./demo/filters-042.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1617,7 +1642,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-title function_">findTween</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mySecondClonedTween&#x27;</span>)).<span class="hljs-title function_">saveAsPacket</span>())</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-title function_">findTween</span>(<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;mySecondClonedTween&#x27;</span>)).<span class="hljs-title function_">saveAsPacket</span>());</pre></div></div>
             
         </li>
         
@@ -1629,6 +1654,27 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-attr">RESULT</span>:
+[
+    <span class="hljs-string">&quot;mystack-mySecondClonedTween&quot;</span>,
+    <span class="hljs-string">&quot;Tween&quot;</span>,
+    <span class="hljs-string">&quot;tween&quot;</span>,
+    {
+        <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;mystack-mySecondClonedTween&quot;</span>,
+        <span class="hljs-string">&quot;ticker&quot;</span>:<span class="hljs-string">&quot;mystack-mySecondClonedTween_ticker&quot;</span>,
+        <span class="hljs-string">&quot;duration&quot;</span>:<span class="hljs-string">&quot;10s&quot;</span>,
+        <span class="hljs-string">&quot;onHalt&quot;</span>:<span class="hljs-string">&quot;~~~\n        if (myTracker) myTracker.send(&#x27;event&#x27;, &#x27;Tween state&#x27;, &#x27;halt&#x27;, `Tween ${this.name} on ${this.ticker}`)\n    &quot;</span>,
+        <span class="hljs-string">&quot;onResume&quot;</span>:<span class="hljs-string">&quot;~~~\n        if (myTracker) myTracker.send(&#x27;event&#x27;, &#x27;Tween state&#x27;, &#x27;resume&#x27;, `Tween ${this.name} on ${this.ticker}`)\n    &quot;</span>,
+        <span class="hljs-string">&quot;targets&quot;</span>:[<span class="hljs-string">&quot;mystack-mythirdelement&quot;</span>],
+        <span class="hljs-string">&quot;definitions&quot;</span>:[
+            {
+                <span class="hljs-string">&quot;attribute&quot;</span>:<span class="hljs-string">&quot;roll&quot;</span>,
+                <span class="hljs-string">&quot;start&quot;</span>:-<span class="hljs-number">40</span>,
+                <span class="hljs-string">&quot;end&quot;</span>:<span class="hljs-number">320</span>,
+                <span class="hljs-string">&quot;engine&quot;</span>:<span class="hljs-string">&quot;linear&quot;</span>
+            }
+        ]
+    }
+]
 </code></pre>
 
             </div>
@@ -1642,30 +1688,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <p>[
-    “mystack-mySecondClonedTween”,
-    “Tween”,
-    “tween”,
-    {
-        “name”:”mystack-mySecondClonedTween”,
-        “ticker”:”mystack-mySecondClonedTween_ticker”,
-        “action”:”~~~”,
-        “duration”:”10s”,
-        “commenceAction”:”~~~”,
-        “onHalt”:”~~~\n        if (myTracker) myTracker.send(‘event’, ‘Tween state’, ‘halt’, <code>Tween ${this.name} on ${this.ticker}</code>)\n    “,
-        “onResume”:”~~~\n        if (myTracker) myTracker.send(‘event’, ‘Tween state’, ‘resume’, <code>Tween ${this.name} on ${this.ticker}</code>)\n    “,
-        “completeAction”:”~~~”,
-        “targets”:[“mystack-mythirdelement”],
-        “definitions”:[{
-            “attribute”:”roll”,
-            “start”:-40,
-            “end”:320,
-            “engine”:”linear”
-        }]
-    }
-]</p>
+              <p>Test Ticker object packet</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(modelTicker.<span class="hljs-title function_">saveAsPacket</span>());</pre></div></div>
             
         </li>
         
@@ -1676,33 +1703,18 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
-              <p>Test Ticker object packet</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(modelTicker.<span class="hljs-title function_">saveAsPacket</span>());</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <pre><code><span class="hljs-attr">RESULT</span>:
-</code></pre>
-<p>[
-    “mystack-modelTicker”,
-    “Ticker”,
-    “animationtickers”,
+              <pre><code>    <span class="hljs-attr">RESULT</span>:
+[
+    <span class="hljs-string">&quot;mystack-modelTicker&quot;</span>,
+    <span class="hljs-string">&quot;Ticker&quot;</span>,
+    <span class="hljs-string">&quot;animationtickers&quot;</span>,
     {
-        “name”:”mystack-modelTicker”,
-        “duration”:”12s”,
-        “cycles”:0
+        <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;mystack-modelTicker&quot;</span>,
+        <span class="hljs-string">&quot;duration&quot;</span>:<span class="hljs-string">&quot;12s&quot;</span>,
+        <span class="hljs-string">&quot;cycles&quot;</span>:<span class="hljs-number">0</span>
     }
-]</p>
+]
+</code></pre>
 
             </div>
             

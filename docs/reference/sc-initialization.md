@@ -1,5 +1,5 @@
 # Scrawl-canvas page load initialization
-Scrawl-canvas is a [modular javascript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) repo, which needs to be ***imported*** into other TypeScript/JavaScript code. For instance, if the repo has been added via `npm install` or `yarn add` then dev-users can import the repo into code like this:
+Scrawl-canvas is a [modular javascript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) repo, which needs to be ***imported*** into other TypeScript/JavaScript code. For instance, if the repo has been added via `npm install` or `yarn add` then product-devs can import the repo into code like this:
 
 ```
 import * as scrawl from 'scrawl-canvas';
@@ -7,7 +7,7 @@ import * as scrawl from 'scrawl-canvas';
 
 While such `import` statements may be encountered many times across different JS/TS files in a web page, ***the SC code itself will run only once, during page load***, when the browser first finds the `import` statement. For every subsequent encounter, the browser just returns the SC object (`scrawl`) that was generated on that first meeting. This has implications when using SC in framework environments such as React, Vue, Angular, Svelte, etc.
 
-> **tl;dr: It is strongly recommended that code using SC only runs after the page's HTML download completes.** This is because SC initialization code will interrogate the web page's DOM, looking for `<canvas>` and `<div>` stack elements that dev-users want it to manage ... but this only happens once per page load!
+> **tl;dr: It is strongly recommended that code using SC only runs after the page's HTML download completes.** This is because SC initialization code will interrogate the web page's DOM, looking for `<canvas>` and `<div>` stack elements that product-devs want it to manage ... but this only happens once per page load!
 
 ## The `scrawl.js` file
 The `package.json` file has the following structure:
@@ -32,7 +32,7 @@ The `package.json` file has the following structure:
 
 The repo's entry point is the `min/scrawl.js` file (which includes all of the repo's `source` folder's code). Note that the minified file has not been [tree-shaken](https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking) – a known issue that has not yet been fixed.
 
-> **tl;dr: If tree shaking is essential** then dev-users can edit the `scrawl.js` file, commenting out the functionality they do not need in their project. They will have to rebuild the repo locally, and be aware that updating the repo at any point will destroy their prior work with this file (unless they take action in their dev toolchain to somehow preserve the file between updates).
+> **tl;dr: If tree shaking is essential** then product-devs can edit the `scrawl.js` file, commenting out the functionality they do not need in their project. They will have to rebuild the repo locally, and be aware that updating the repo at any point will destroy their prior work with this file (unless they take action in their dev toolchain to somehow preserve the file between updates).
 
 The `source/scrawl.js` file looks like this:
 
@@ -101,7 +101,7 @@ export const init = function () {
 ```
 
 ### Imports
-For a project whose only action relating to SC is to import the repo into code, where dev-users have commented out all the export lines in the `scrawl.js` file except the first four, the browser will read and run code from the following repo modules:
+For a project whose only action relating to SC is to import the repo into code, where product-devs have commented out all the export lines in the `scrawl.js` file except the first four, the browser will read and run code from the following repo modules:
 + `asset-management/image-asset.js`
 + `core/animation-loop.js`
 + `core/document.js`
@@ -161,9 +161,9 @@ Because this discovery activity happens as soon as the SC code loads, and only h
 
 It's also important to remember that this discovery activity will only find `<canvas>` elements (and stacks) that already exist in (have been hard-coded into) the HTML file. Any `<canvas>` element added to the DOM after page load – for instance through [framework client-side hydration](https://en.wikipedia.org/wiki/Hydration_(web_development)) or an [Islands architecture](https://www.patterns.dev/vanilla/islands-architecture/) pattern – will not be found during the discovery phase and thus will not have been wrapped into the SC library.
 
-This has implications for when dev-users want to retrieve the generated artefacts from the SC library for further use:
-+ If the artefact was created as part of the discovery process, dev-users can use the `scrawl.findArtefact('element-id')`, `scrawl.findCanvas('element-id')` or `scrawl.findStack('element-id')` functions to retrieve them. Most of the [SC demo tests](../../demo/index.html) include this functionality
-+ If, however, the HTML element was added to the DOM after the initial load - as happens in various component-based frameworks such as React, Angular, Vue, Svelte, etc – then dev-users need to use the `scrawl.getCanvas('element-id')` and `scrawl.getStack('element-id')` functions, which perform a post-load discovery operation and wrap the element in a Canvas or Stack wrapper artefact. This functionality can be seen in [demo DOM-017](../demo/dom-017.html)
+This has implications for when product-devs want to retrieve the generated artefacts from the SC library for further use:
++ If the artefact was created as part of the discovery process, product-devs can use the `scrawl.findArtefact('element-id')`, `scrawl.findCanvas('element-id')` or `scrawl.findStack('element-id')` functions to retrieve them. Most of the [SC demo tests](../../demo/index.html) include this functionality
++ If, however, the HTML element was added to the DOM after the initial load - as happens in various component-based frameworks such as React, Angular, Vue, Svelte, etc – then product-devs need to use the `scrawl.getCanvas('element-id')` and `scrawl.getStack('element-id')` functions, which perform a post-load discovery operation and wrap the element in a Canvas or Stack wrapper artefact. This functionality can be seen in [demo DOM-017](../demo/dom-017.html)
 
 Note that when SC wraps `<canvas>`, `<div>` stacks and stack elements into SC artefact objects, it will mutate those DOM elements. Further details about this can be found in the [SC artefacts and the DOM](sc-dom-artefacts.html) page in the Runbook.
 
@@ -221,92 +221,20 @@ Similar to shared constants, SC defines a set of exported shared variables in th
 + Object manipulation functions – `mergeOver()`, `mergeDiscard()`
 + Type checking functions, which all begin with `isa_` – `isa_boolean()`, `isa_fn()`, `isa_canvas()`
 
-### System flags
-SC uses flags – commonly Boolean – for much of its internal signalling and communications work. Many of the flags related to system state get defined in the [helper/system-flags.js](../source/helper/system-flags.html) file. For example:
+### System listeners and user interactions
+SC initialises a system of event listeners and system flags to keep track of user interactions with the browser, and with system-wide user preferences:
+- Browser resize events
+- Browser scroll events
+- browser drag events (between device screens)
+- Mouse/touch/pointer movement events
+- Updates to system-wide user preferences (for example: `prefers-reduced-motion`)
 
-```
-let mouseChanged = false;
-export const getMouseChanged = () => mouseChanged;
-export const setMouseChanged = (val) => mouseChanged = val;
-
-let viewportChanged = false;
-export const getViewportChanged = () => viewportChanged;
-export const setViewportChanged = (val) => viewportChanged = val;
-
-let prefersContrastChanged = false;
-export const getPrefersContrastChanged = () => prefersContrastChanged;
-export const setPrefersContrastChanged = (val) => prefersContrastChanged = val;
-```
-
-### The `currentCorePosition` object
-SC keeps track of system state, and changes to that state, in its `currentCorePosition` object:
-
-```
-export const currentCorePosition = {
-    x: 0,
-    y: 0,
-    scrollX: 0,
-    scrollY: 0,
-    w: 0,
-    h: 0,
-    type: MOUSE,
-    prefersReducedMotion: false,
-    prefersDarkColorScheme: false,
-    prefersReduceTransparency: false,
-    prefersContrast: false,
-    prefersReduceData: false,
-    displaySupportsP3Color: false,
-    canvasSupportsP3Color: false,
-    devicePixelRatio: 0,
-    rawTouches: [],
-};
-```
-
-SC checks for changes to system state using an animation object – `SC-core-listeners-tracker` – that runs once at the start of each animation loop. When changes are detected Canvas and Stack artefacts will be informed (via `dirty flags`). When they in turn run their [Display cycle](sc-animation-systems.html) functionality they will cascade that information to their constituent objects which will, if necessary, update their state to reflect the changed environment. 
-
-### Browser mouse/touch/pointer, scroll, and resize events
-During initialization SC will add a set of event listeners to the `window` object which react to various `mouse/touch/pointer` events. When such events occur the listeners will set the appropriate system flags to true (ie: something has changed) and store the cursor's current position data in the `currentCorePosition` object. Functionality to react to these changes is deferred until the next animation loop runs.
-
-Similarly, SC sets event listeners on the `window` object to listen for browser `resize` and `scroll` events.
-
-After initialization completes the dev-user can stop and restart these core listeners by invoking the `scrawl.stopCoreListeners()` and `scrawl.startCoreListeners()` functions. See [demo test DOM-009](../demo/dom-009.html) for an example of this functionality in action.
-
-### End-user preferences media queries and events
-SC uses evented media queries to listen out for changes in various system settings. For example:
-
-```
-const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-colorSchemeMediaQuery.addEventListener(CHANGE, () => {
-
-    const res = colorSchemeMediaQuery.matches;
-
-    if (currentCorePosition.prefersDarkColorScheme !== res) {
-
-        currentCorePosition.prefersDarkColorScheme = res;
-        setPrefersDarkColorSchemeChanged(true);
-    }
-});
-currentCorePosition.prefersDarkColorScheme = colorSchemeMediaQuery.matches;
-```
-
-SC tracks the following system settings:
-+ `forced-colors`
-+ `inverted-colors`
-+ `prefers-color-scheme`
-+ `prefers-contrast`
-+ `prefers-reduced-data`
-+ `prefers-reduced-motion`
-+ `prefers-reduced-transparency`
-
-SC, by default, doesn't react to changes in these settings. It's up to the dev-user to add hook functions to each Canvas wrapper object to supply the appropriate functionality for that canvas's output when changes occur. See the [Objects overview page](sc-objects-overview.html) in the Runbook for further details. 
-
-SC also tracks the current `pixel-ratio` and `color-gamut: p3` settings for the device/screen on which the browser is displaying. This can change when, for instance, an end-user drags the browser window between screens. Such changes are handled by SC internally with little need for additional dev-user intervention.
+Implementation details can be found in the [Scrawl-canvas events and signals](./sc-events-signals.html#system-events) page of this Run Book.
 
 ## Scrawl-canvas pools
 SC code needs to run fast. For this reason functional programming approaches, where new objects get created rather than existing objects mutated, adds computational weight (and excessive garbage collection) which is best avoided.
 
-Instead, SC code makes use of a set of pooled objects and arrays for much of its functionality. These pools get initialized when the browser first imports the relevant modules, and start as empty arrays. While some of these pools are made available to the dev-user via scrawl functions, others are strictly internal.
+Instead, SC code makes use of a set of pooled objects and arrays for much of its functionality. These pools get initialized when the browser first imports the relevant modules, and start as empty arrays. While some of these pools are made available to the product-dev via scrawl functions, others are strictly internal.
 
 Internal pooled objects/arrays include:
 + Generic **zero-length arrays**, from [helper/array-pool.js](../source/helper/array-pool.html); note that the pool will be periodically culled – `requestArray()`, `releaseArray()`
@@ -314,7 +242,7 @@ Internal pooled objects/arrays include:
 + SC **particle objects** from [factory/particle.js](../source/factory/particle.html); note that the pool will be periodically culled – `requestParticle()`, `releaseParticle()`
 + SC **particle history arrays** from [untracked-factory/particle-history.js](../source/untracked-factory/particle-history.html); note that the pool will be periodically culled – `requestParticleHistory()`, `releaseParticleHistory()`
 
-Scrawl-exported pooled objects/arrays, which can be used by dev-users, include:
+Scrawl-exported pooled objects/arrays, which can be used by product-devs, include:
 + SC **coordinate arrays**, from [untracked-factory/coordinate.js](../source/untracked-factory/coordinate.html) – `requestCoordinate()`, `releaseCoordinate()`
 + SC **quaternion objects**, from [untracked-factory/quaternion.js](../source/untracked-factory/quaternion.html) – `requestQuaternion()`, `releaseQuaternion()`
 + SC **vector objects**, from [untracked-factory/vector.js](../source/untracked-factory/vector.html) – `requestVector()`, `releaseVector()`

@@ -89,7 +89,8 @@ scrawl.makePicture({
 
     asset: 'iris',
 
-    dimensions: [200, 200],
+    dimensions: [190, 190],
+    start: [10, 10],
 
     copyDimensions: ['100%', '100%'],
 
@@ -100,19 +101,19 @@ scrawl.makePicture({
 }).clone({
 
     name: name('saturation-picture'),
-    startX: 200,
+    startX: 205,
     filters: [name('saturation')],
 
 }).clone({
 
     name: name('advanced-saturation-picture'),
-    startY: 200,
+    startY: 205,
     filters: [name('advanced-saturation')],
 
 }).clone({
 
     name: name('advanced-brightness-picture'),
-    startX: 0,
+    startX: 10,
     filters: [name('advanced-brightness')],
 });
 

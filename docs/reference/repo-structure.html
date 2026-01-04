@@ -68,7 +68,7 @@
 <li><code>min/scrawl.js</code></li>
 </ul>
 <h4 id="building-docco">Building: Docco</h4>
-<p>SC uses <a href="https://ashkenas.com/docco/">Docco</a> to auto-generate dev-user documentation from inline comments in both the SC frontend (source) and demo code. Running the <code>yarn build-docco</code> command (also invoked when running <code>yarn build</code>) will generate the documentation files, which live in the <code>docs/demo</code> and <code>docs/source</code> folders.</p>
+<p>SC uses <a href="https://ashkenas.com/docco/">Docco</a> to auto-generate product-dev documentation from inline comments in both the SC frontend (source) and demo code. Running the <code>yarn build-docco</code> command (also invoked when running <code>yarn build</code>) will generate the documentation files, which live in the <code>docs/demo</code> and <code>docs/source</code> folders.</p>
 <p>Additional documentation files were generated when Docco was first added to the repo, and can be updated by hand:</p>
 <ul>
 <li><code>docs/public/fonts/*</code></li>
@@ -132,7 +132,7 @@
 <li><code>demo/thumbs/*.webp</code></li>
 </ul>
 <p>When creating a new demo test, remember to update these local site files (<code>demo/index.html</code>, <code>docs/index.html</code>) appropriately with links to the demo. The demos on each side of the new test will also need their <code>.html</code> files updated to align to the new test navigation experience.</p>
-<p>For ad-hoc or speculative development, repo-devs and dev-users can create a new demo and prefix the files associated with it with <code>temp-</code> (eg <code>demo/temp-mytest-01.html</code>, <code>demo/temp-mytest-01.js</code>). Files in the <code>demo</code> and <code>docs</code> folders which start with <code>temp-</code> are git-ignored and won't be saved as part of the repo.</p>
+<p>For ad-hoc or speculative development, repo-devs and product-devs can create a new demo and prefix the files associated with it with <code>temp-</code> (eg <code>demo/temp-mytest-01.html</code>, <code>demo/temp-mytest-01.js</code>). Files in the <code>demo</code> and <code>docs</code> folders which start with <code>temp-</code> are git-ignored and won't be saved as part of the repo.</p>
 <h3 id="development-and-testing-source-code">Development and testing: source code</h3>
 <p>See the <a href="source-code-structure.html">Scrawl-canvas source code structure</a> page for details.</p>
 <h2 id="releasing-a-new-version-of-scrawl-canvas">Releasing a new version of Scrawl-canvas</h2>

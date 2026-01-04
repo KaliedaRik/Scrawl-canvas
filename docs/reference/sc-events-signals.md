@@ -3,61 +3,124 @@ SC does not include a bespoke implementation of an event-driven system. SC artef
 
 Instead SC relies on the normal [event system](https://developer.mozilla.org/en-US/docs/Web/Events) provided by the browser to handle user interactions with an SC Canvas or Stack display:
 + SC uses a number of system-generated event listeners to handle changes in the browser environment, for instance:
-  – A single event listener to track mouse movement across the viewport.
-  – Similarly, event listeners to react to user-initiated page scrolling and browser window resize events.
-  – [Intersection observers](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) to report on `<canvas>` and stack DOM element positioning within the browser viewport.
-  – Event listeners assigned to various [CSS matchMedia() queries](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries) to monitor, in particular, user-set media preferences.
-+ SC also supplies the dev-user with a set of convenience functions to capture various user interactions with a Canvas or Stack display, including:
-  – Mouse, touch and pointer events.
-  – Drag-and-drop functionality.
-  – Keyboard navigation and trigger events.
-  – Interactions with form element controls.
-  – Responsive image management.
-  – Media stream, and screen capture, events.
+
+  - A single event listener to track mouse movement across the viewport.
+
+  - Similarly, event listeners to react to user-initiated page scrolling and browser window resize events.
+
+  - [Intersection observers](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) to report on `<canvas>` and stack DOM element positioning within the browser viewport.
+
+  - Event listeners assigned to various [CSS matchMedia() queries](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries) to monitor, in particular, user-set media preferences.
+
++ SC also supplies the product-dev with a set of convenience functions to capture various user interactions with a Canvas or Stack display, including:
+  - Mouse, touch and pointer events.
+  - Drag-and-drop functionality.
+  - Keyboard navigation and trigger events.
+  - Interactions with form element controls.
+  - Responsive image management.
+  - Media stream, and screen capture, events.
 
 For the most part, these events do not trigger immediate changes in the SC system or its data. Rather they will update values held in the `currentCorePosition` object (which acts as SC's Single Source of Truth for this data) and set relevant [dirty flags](https://gameprogrammingpatterns.com/dirty-flag.html) which the system can then address during the next Display cycle.
 
 This **signals system** pattern is also used by other SC objects – in particular artefact and entity objects – to communicate changes in their data to other objects that rely on the changed data for their own calculations: when a change occurs dirty flags will be set, but actioning those changes and alerting subscribed objects of those changes is deferred until the next Display cycle.
 
 ## System events
+System events are a set of **event listeners**, and **media queries**, that SC adds to the browser `window` object as part of its [initialization process](./sc-initialization.html). SC divides this listener functionality into two groups:
+
+- **Core listeners** are groups of event listeners set directly on the `window` object. They track the browser viewport dimensions (resize), the page position within the viewport (scroll), and the pointer/touch position over the viewport (move).
+
+- **Environment listeners** are event listeners set on [match-media](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Media_queries/Using) queries which are set on the `window` object (using the methods described in the MDN [Testing media queries programmatically](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Media_queries/Testing) page). SC uses them to test user preference settings and device screen capabilities.
+
+Both groups of listeners will fire when triggered by the appropriate user interaction:
+- mouse/touch movement over the browser;
+- scrolling the page (by whatever means);
+- resizing the browser viewport;
+- dragging the browser window between screens;
+- updating settings in the user's device system UI;
+- font loading events.
+
+> **tl;dr:** SC makes no attempt to [debounce event listeners](https://www.joshwcomeau.com/snippets/javascript/debounce/); instead it minimises the amount of work undertaken when each event listener fires.
+
+SC keeps track of current system state, and changes to that state, in its `currentCorePosition` object (kept in the [core/user-interactions.js](../source/core/user-interaction.html) file):
+
+```
+export const currentCorePosition = {
+    x: 0,
+    y: 0,
+    scrollX: 0,
+    scrollY: 0,
+    w: 0,
+    h: 0,
+    type: MOUSE,
+    prefersReducedMotion: false,
+    prefersDarkColorScheme: false,
+    prefersReduceTransparency: false,
+    prefersContrast: false,
+    prefersReduceData: false,
+    displaySupportsP3Color: false,
+    canvasSupportsP3Color: false,
+    devicePixelRatio: 0,
+    rawTouches: [],
+};
+```
+
+SC also records changes to state in a set of system flags (kept in the [helper/system-flags.js](../source/helper/system-flags.html) file), for example:
+
+```
+let mouseChanged = false;
+export const getMouseChanged = () => mouseChanged;
+export const setMouseChanged = (val) => mouseChanged = val;
+```
+
+The system event listeners touch only these structures. The function triggered by the mouse/touch related event listeners is typical:
+
+```
+const moveAction = function (e) {
+
+    const x = _round(e.pageX),
+        y = _round(e.pageY);
+
+    if (currentCorePosition.x !== x || currentCorePosition.y !== y) {
+        currentCorePosition.type = (navigator.pointerEnabled) ? POINTER : MOUSE;
+        currentCorePosition.x = x;
+        currentCorePosition.y = y;
+        setMouseChanged(true);
+    }
+};
+```
+
+The system preferences event listeners work in a similar fashion:
+
+```
+const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+colorSchemeMediaQuery.addEventListener(CHANGE, () => {
+
+    const res = colorSchemeMediaQuery.matches;
+
+    if (currentCorePosition.prefersDarkColorScheme !== res) {
+
+        currentCorePosition.prefersDarkColorScheme = res;
+        setPrefersDarkColorSchemeChanged(true);
+    }
+});
+```
+
+### Actioning systemic user interactions
+
+
+
 [write up]
-
-### The core listeners tracker function
-[write up]
-
-#### Resize action
-[write up]
-
-#### Scroll action
-[write up]
-
-#### Move action
-[write up]
-
-### Tracking the browser environment
-[write up]
-
-#### Accessibility preferences
-[write up]
-
-Preferences:
-+ prefers-contrast
-+ prefers-reduced-motion
-+ prefers-color-scheme
-+ prefers-reduced-transparency
-+ prefers-reduced-data
-+ inverted-colors
-+ forced-colors
-
-#### System and device screen capabilities
-[write up]
-
-Capabilities:
-+ Display-P3 support
-+ Device pixel ratio
-
-#### Font management
-[write up]
++ SC doesn't debounce system event listeners. Instead, it limits the functionality triggered - setting dirty flags maintained in the system-flags.js file, alongside updating the tracked data values in the `currentCorePosition` object.
++ user-interaction.js exports an array - `uiSubscribedElements` - which Canvas/Stack wrapper artefacts can add their name values to (and remove them).
++ The `coreListenersTracker` function is an SC animation object which runs once at the start of each RAF
+  - Can be controlled by Product-devs using `scrawl.startCoreListeners()` and `scrawl.stopCoreListeners()` functions.
+  - Triggers the `updateUiSubscribedElements` function when required, and also updates font-related data.
++ The `updateUiSubscribedElements` function loops through the `uiSubscribedElements` array and, for each artefact object:
+  - Updates the artefact's `here` object with updated data
+  - Triggers the artefact's accessibility hook functions
+  - Updates the artefact's dimensions using its `set` functionality (so the artefact can set its own appropriate dirty flags)
++ core/user-interactions.js also exports some internal functions - `applyCoreResizeListener`, `applyCoreScrollListener`, `purgeFontMetadata`, `purgeFontMetadata` - which repo-devs can import into other SC files. Use with care!
 
 ## Dynamic asset management
 [write up]
@@ -184,20 +247,25 @@ object.set({
 //   - the update is ignored
 ```
 
-The code may seem over-complicated ... but it works! Repo-devs have chosen to use this approach because:
+Repo-devs have chosen to use this approach because:
 + It keeps the factory file code understandable:
-  – Object attributes can be defined and explained in the `defs` object.
-  – Attribute updates requiring `dirty` flags to be set can be managed more easily.
-+ It prevents dev-users accidentally damaging object shapes, which can lead to code efficiency degredation
+  - Object attributes can be defined and explained in the `defs` object.
+  - Attribute updates requiring `dirty` flags to be set can be managed more easily.
++ It prevents product-devs accidentally damaging object shapes, which can lead to code efficiency degredation.
 + It couples tightly with the object `packet` (serialization) system, and thus with the accompanying object `clone` system.
 + Mixin and factory files can easily add attributes to the `defs` object to meet their particular requirements.
 + Mixin and factory files can easily overwrite the `get`, `set` and `setDelta` functions, and individual `getter`, `setter` and `deltaSetter` attribute functions, to meet their particular requirements.
 
-The downside to this approach is that the SC signals system has not been centralised as it needs to adapt to the individual requirements of each mixin and factory file code. For instance, the code base includes a total of 75 `dirty` flag attributes which may be defined in one file but actioned in various ways by various downstream files. The current list of `dirty` flag attributes includes: `dirtyAnchor`, `dirtyAria`, `dirtyAsset`, `dirtyAssetSubscribers`, `dirtyButton`, `dirtyCache`, `dirtyCells`, `dirtyClasses`, `dirtyContent`, `dirtyControl`, `dirtyControlLock`, `dirtyCopyDimensions`, `dirtyCopyStart`, `dirtyCss`, `dirtyData`, `dirtyDimensions`, `dirtyDimensionsOverride`, `dirtyDisplayArea`, `dirtyDisplayShape`, `dirtyDomDimensions`, `dirtyEnd`, `dirtyEndControl`, `dirtyEndControlLock`, `dirtyEndLock`, `dirtyFilterIdentifier`, `dirtyFilters`, `dirtyFiltersCache`, `dirtyFont`, `dirtyHandle`, `dirtyHeight`, `dirtyHost`, `dirtyImage`, `dirtyImageSubscribers`, `dirtyInput`, `dirtyLayout`, `dirtyLock`, `dirtyMimicDimensions`, `dirtyMimicHandle`, `dirtyMimicOffset`, `dirtyMimicRotation`, `dirtyMimicScale`, `dirtyNavigationTabOrder`, `dirtyNoise`, `dirtyOffset`, `dirtyOffsetZ`, `dirtyOutput`, `dirtyPalette`, `dirtyPaletteData`, `dirtyParticles`, `dirtyPaste`, `dirtyPathData`, `dirtyPathObject`, `dirtyPerspective`, `dirtyPins`, `dirtyPivotRotation`, `dirtyPosition`, `dirtyPositionSubscribers`, `dirtyRotation`, `dirtyScale`, `dirtyScene`, `dirtySpecies`, `dirtyStampHandlePositions`, `dirtyStampOrder`, `dirtyStampPositions`, `dirtyStart`, `dirtyStartControl`, `dirtyStartControlLock`, `dirtyStyle`, `dirtyTargetImage`, `dirtyText`, `dirtyTextLayout`, `dirtyTextTabOrder`, `dirtyTransform`, `dirtyTransformOrigin`, `dirtyVisibility`, `dirtyZIndex`.
+The downside to this approach is that the SC signals system has not been centralised. Instead it adapts to the individual requirements of each mixin and factory file code.
 
-Because of the need to set `dirty` flags to notify objects that they will need to do work to update their state, repo-devs should always use the `set` functions within the code base. For instance Tween animation objects use `target.set()` to communicate time-based updates to target objects. Similarly the observe-update object uses `target.set()` to inform an SC object of end-user interactions with DOM form elements.
+The code base currently (as of Nov 2025) includes a total of 75 `dirty` flag attributes, which may be defined in one file but actioned in various ways by downstream files: 
++ `dirtyAnchor`, `dirtyAria`, `dirtyAsset`, `dirtyAssetSubscribers`, `dirtyButton`, `dirtyCache`, `dirtyCells`, `dirtyClasses`, `dirtyContent`, `dirtyControl`, `dirtyControlLock`, `dirtyCopyDimensions`, `dirtyCopyStart`, `dirtyCss`, `dirtyData`, `dirtyDimensions`, `dirtyDimensionsOverride`, `dirtyDisplayArea`, `dirtyDisplayShape`, `dirtyDomDimensions`, `dirtyEnd`, `dirtyEndControl`, `dirtyEndControlLock`, `dirtyEndLock`, `dirtyFilterIdentifier`, `dirtyFilters`, `dirtyFiltersCache`, `dirtyFont`, `dirtyHandle`, `dirtyHeight`, `dirtyHost`, `dirtyImage`, `dirtyImageSubscribers`, `dirtyInput`, `dirtyLayout`, `dirtyLock`, `dirtyMimicDimensions`, `dirtyMimicHandle`, `dirtyMimicOffset`, `dirtyMimicRotation`, `dirtyMimicScale`, `dirtyNavigationTabOrder`, `dirtyNoise`, `dirtyOffset`, `dirtyOffsetZ`, `dirtyOutput`, `dirtyPalette`, `dirtyPaletteData`, `dirtyParticles`, `dirtyPaste`, `dirtyPathData`, `dirtyPathObject`, `dirtyPerspective`, `dirtyPins`, `dirtyPivotRotation`, `dirtyPosition`, `dirtyPositionSubscribers`, `dirtyRotation`, `dirtyScale`, `dirtyScene`, `dirtySpecies`, `dirtyStampHandlePositions`, `dirtyStampOrder`, `dirtyStampPositions`, `dirtyStart`, `dirtyStartControl`, `dirtyStartControlLock`, `dirtyStyle`, `dirtyTargetImage`, `dirtyText`, `dirtyTextLayout`, `dirtyTextTabOrder`, `dirtyTransform`, `dirtyTransformOrigin`, `dirtyVisibility`, `dirtyZIndex`.
 
-> **tl;dr:** Dev-users should never update an SC object using `object.attribute = newValue` or `object['attribute'] = newValue` approaches. Such code will break SC functionality!
+Because of the need to set `dirty` flags to notify objects that they will need to do work to update their state, repo-devs should always use the `set` functions within the code base.
++ For instance Tween animation objects use `target.set()` to communicate time-based updates to target objects.
++ Similarly the observe-update object uses `target.set()` to inform an SC object of end-user interactions with DOM form elements.
+
+> **tl;dr:** Product-devs should never update an SC object using `object.attribute = newValue` or `object['attribute'] = newValue` approaches. Such code will break SC functionality!
 > 
 > Instead all object updates should be performed using the `object.set({ key: value, ...})` or `object.setDelta({ key: value, ...})` functions.
 

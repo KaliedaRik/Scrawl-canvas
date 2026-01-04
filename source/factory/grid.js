@@ -15,11 +15,12 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
 // Shared constants
-import { _isArray, _isFinite, _parse, BLACK, COLOR, ENTITY, FILL, SOURCE_IN, SOURCE_OVER, T_GRID, WHITE } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _parse, BLACK, COLOR, ENTITY, FILL, SOURCE_OVER, T_GRID, WHITE } from '../helper/shared-vars.js';
 
 // Local constants
 const _isInteger = Number.isSafeInteger || Number.isInteger,
     CELL_GRADIENT = 'cellGradient',
+    DESTINATION_IN = 'destination-in',
     GRAY = 'rgb(127 127 127 / 1)',
     GRID_GRADIENT = 'gridGradient',
     GRID_PICTURE = 'gridPicture',
@@ -723,36 +724,60 @@ P.performFill = function (engine) {
 
                 switch (obj.type) {
 
-                    // Use pool canvas to compose the output
-                    case GRID_PICTURE :
+                    // Use pool canvases to compose the output
+                    case GRID_PICTURE : {
 
                         currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
 
                         if (currentPicture.simpleStamp) {
 
-                            compCanvas.width = dims[0] * currentScale;
-                            compCanvas.height = dims[1] * currentScale;
+                            const W = dims[0] * currentScale,
+                                H = dims[1] * currentScale;
+
+                            compCanvas.width = W;
+                            compCanvas.height = H;
                             compEngine.globalCompositeOperation = SOURCE_OVER;
-                            compEngine.fillStyle = BLACK;
-
-                            validTiles.forEach((tile, pos) => {
-
-                                if (tile) compEngine.fillRect(tileVirtualCoords[pos][0], tileVirtualCoords[pos][1], tileWidth, tileHeight);
-                            });
-
-                            compEngine.globalCompositeOperation = SOURCE_IN;
 
                             currentPicture.simpleStamp(composer, {
-                                startX: 0,
+                            startX: 0,
                                 startY: 0,
-                                width: dims[0] * currentScale,
-                                height: dims[1] * currentScale,
+                                width: W,
+                                height: H,
                                 method: FILL,
                             });
 
+                            const masker = requestCell(),
+                                mEngine = masker.engine,
+                                mCanvas = masker.element;
+
+                            mCanvas.width = W;
+                            mCanvas.height = H;
+
+                            mEngine.fillStyle = WHITE;
+
+                            let use, ux, uy;
+
+                            for (let i = 0, iz = validTiles.length; i < iz; i++) {
+
+                                use = validTiles[i];
+
+                                if (use) {
+
+                                    [ux, uy] = tileVirtualCoords[i];
+
+                                    mEngine.fillRect(ux, uy, tileWidth, tileHeight);
+                                }
+                            }
+
+                            compEngine.globalCompositeOperation = DESTINATION_IN;
+                            compEngine.drawImage(mCanvas, 0, 0);
+
                             engine.drawImage(compCanvas, ~~tileRealCoords[0][0], ~~tileRealCoords[0][1]);
+
+                            releaseCell(masker);
                         }
                         break;
+                    }
 
                     case TILE_PICTURE :
 
@@ -828,9 +853,9 @@ P.performFill = function (engine) {
                 // Use pool canvas to compose the output
                 // + gridPicture and tilePicture both treated the same
                 case GRID_PICTURE :
-                case TILE_PICTURE :
+                case TILE_PICTURE : {
 
-                    if(gRow || gCol) {
+                    if (gRow || gCol) {
 
                         currentPicture = (gObject.source.substring) ? entity[gObject.source] : gObject.source;
 
@@ -838,42 +863,53 @@ P.performFill = function (engine) {
 
                             const handle = this.currentStampHandlePosition,
                                 x = handle[0] * currentScale,
-                                y = handle[1] * currentScale;
+                                y = handle[1] * currentScale,
+                                W = dims[0] * currentScale,
+                                H = dims[1] * currentScale;
 
-                            compCanvas.width = dims[0] * currentScale;
-                            compCanvas.height = dims[1] * currentScale;
+                            compCanvas.width = W;
+                            compCanvas.height = H;
                             compEngine.globalCompositeOperation = SOURCE_OVER;
-                            compEngine.strokeStyle = BLACK;
-                            compEngine.translate(x, y);
-
-                            if (gRow) {
-
-                                compEngine.lineWidth = gRow;
-                                compEngine.stroke(this.rowLines);
-                            }
-
-                            if (gCol) {
-
-                                compEngine.lineWidth = gCol;
-                                compEngine.stroke(this.columnLines);
-                            }
-
-                            compEngine.globalCompositeOperation = SOURCE_IN;
 
                             currentPicture.simpleStamp(composer, {
                                 startX: 0,
                                 startY: 0,
-                                width: dims[0] * currentScale,
-                                height: dims[1] * currentScale,
+                                width: W,
+                                height: H,
                                 method: FILL,
                             });
 
+                            const masker = requestCell(),
+                                mEngine = masker.engine,
+                                mCanvas = masker.element;
+
+                            mCanvas.width = W;
+                            mCanvas.height = H;
+
+                            mEngine.translate(x, y);
+                            mEngine.strokeStyle = WHITE;
+
+                            if (gRow) {
+
+                                mEngine.lineWidth = gRow;
+                                mEngine.stroke(this.rowLines);
+                            }
+                            if (gCol) {
+
+                                mEngine.lineWidth = gCol;
+                                mEngine.stroke(this.columnLines);
+                            }
+
+                            compEngine.globalCompositeOperation = DESTINATION_IN;
+                            compEngine.drawImage(mCanvas, 0, 0);
+
                             engine.drawImage(compCanvas, ~~tileRealCoords[0][0], ~~tileRealCoords[0][1]);
-                            compEngine.translate(0, 0);
+
+                            releaseCell(masker);
                         }
                     }
                     break;
-
+                }
                 // We have a color/gradient all set up - stroke the lines directly onto grid
                 default :
 
@@ -890,7 +926,6 @@ P.performFill = function (engine) {
                     }
             }
         }
-
         releaseCell(composer);
 
         engine.restore();

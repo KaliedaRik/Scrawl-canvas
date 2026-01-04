@@ -3,7 +3,7 @@ Scrawl-canvas works by generating a **retained mode** description – an object 
 
 > **tl;dr: *SC is not a game engine!*** The SC scene graph does not use the classic [tree structure](https://en.wikipedia.org/wiki/Tree_(abstract_data_type)) approach to build out a top-down hierarchy of layers and nodes to describe the scene. Rather, SC uses a more bottom-up approach to creating the scene graph where entity objects control how, where and when they will appear in the canvas display. Using a tree structure for the scene graph may have been a more efficient design choice, but *SC is not a game engine!*
 > 
-> Dev-users should be aware that this – *somewhat different* – approach may take a bit of getting used to but, once the concepts are in place, it should be relatively simple to work with.
+> Product-devs should be aware that this – *somewhat different* – approach may take a bit of getting used to but, once the concepts are in place, it should be relatively simple to work with.
 
 ## SC scene graph hierarchy
 The following code creates a canvas display with this output. Note that the code is creating a deliberately complex scene graph, for demonstration purposes; few of the test demos generate scene graphs as complex as this one:
@@ -199,7 +199,7 @@ SC uses Group objects for a range of functionalities across the repo code base:
 + Every SC Stack artefact and Cell object is given a **namesake Group** when they are created, to which can be added other Artefact objects (for Stacks) or entity objects (for Cells) which need to be displayed in them.
 + (Note that SC Canvas artefacts do not have their own *namesake Group* as they only have one Cell object to worry about – their `base` Cell).
 + Dev users can create new Group objects at any time using the `scrawl.makeGroup({ key: value, ...})` factory function.
-+ ***Stack artefacts and Cell objects can include more than one Group object*** – dev-users can add/remove their user-created Group objects to Stacks and Cells at any time. Any Element/entity objects included in the Group object will become part of the Stack/Cell output display.
++ ***Stack artefacts and Cell objects can include more than one Group object*** – product-devs can add/remove their user-created Group objects to Stacks and Cells at any time. Any Element/entity objects included in the Group object will become part of the Stack/Cell output display.
 + For convenience, Element/entity objects belonging to a Group object can have their attributes modified at any time via Group object functions.
 + Group objects can be used to define the set of Element/entity objects which can be dragged-and-dropped as part of a `dragZone` object. See test demo [Canvas-026](../demo/canvas-026.html) for an example.
 + Group objects can be used to define a set of entity objects to which a [filter effect](sc-filter-engine.html) can be applied.
@@ -215,7 +215,7 @@ For the most part, Group objects act like regular SC objects, with a few quirks 
 
 #### Create
 A new Group object can be created using the `scrawl.makeGroup({key: value, ...})` factory function:
-+ While Group objects can share a `name` attribute with a Stack artefact or Cell object, dev-users should try to keep Group names unique – just to be on the safe side.
++ While Group objects can share a `name` attribute with a Stack artefact or Cell object, product-devs should try to keep Group names unique – just to be on the safe side.
 + Group objects do not need to be associated with a Stack artefact or Cell object `host`, but when they are being created specifically to be part of such objects then include the `host` attribute in the argument object, setting its value to either the host object itself, or the object's `name` string.
 + Element artefacts and entity objects can be added to the Group during its creation by setting the argument object's `artefacts` attribute to an array of Element/entity `name` strings; alternatively, populate the Group with Element/entity objects after Group creation completes – `scrawl.makeGroup({...}).addArtefacts(item, item, ...)`.
 
@@ -242,9 +242,9 @@ Group objects also include functionality to kill all their currently associated 
 + `group.killArtefacts(true)` – any artefact elements will be deleted from the DOM
 
 ### Group discovery in the SC library, and beyond
-Group objects are tracked in the SC library, in the `library.group` section. If the dev-user needs to retrieve a handle to a Group object, and they know the object's name attribute, they can do this using `scrawl.findGroup('name-string')`.
+Group objects are tracked in the SC library, in the `library.group` section. If the product-dev needs to retrieve a handle to a Group object, and they know the object's name attribute, they can do this using `scrawl.findGroup('name-string')`.
 
-SC also includes functionality for the dev-user to retrieve Group objects via their Stack/Canvas artefact host object, and from Cell objects:
+SC also includes functionality for the product-dev to retrieve Group objects via their Stack/Canvas artefact host object, and from Cell objects:
 + `stack.getGroup()` – retrieve the Stack artefact's *namesake* Group object.
 + `stack.get('groups')` – get an Array of Group name strings currently associated with the Stack artefact.
 + `canvas.get('baseGroup')` – retrieve the Canvas artefact's `base` Cell object's Group object.
@@ -254,9 +254,9 @@ SC also includes functionality for the dev-user to retrieve Group objects via th
 ### Add Group objects to Stack/Cell objects, and remove them
 There's three approaches to associating a Group object with a Stack artefact or Cell object. The simplest method is during Group instantiation, by including a `host` attribute in the `scrawl.makeGroup()` factory function's argument object.
 
-Dev-users can also use the `stack.addGroup(...items)` and `cell.addGroup(...items)` functions, where either the `name` attribute strings of the Group objects, or the Group objects themselves, are used as the function's arguments. Similarly, remove Group objects using the `stack.removeGroup(...items)` and `cell.removeGroup(...items)` functions.
+Product-devs can also use the `stack.addGroup(...items)` and `cell.addGroup(...items)` functions, where either the `name` attribute strings of the Group objects, or the Group objects themselves, are used as the function's arguments. Similarly, remove Group objects using the `stack.removeGroup(...items)` and `cell.removeGroup(...items)` functions.
 
-SC recommends that dev-users avoid the `stack.set({ group })`, `cell.set({ group })` options because: only one group can be handled using this approach; and the operation will clear out all other associated Groups (including the *namesake* Group) before associating the new Group object.
+SC recommends that product-devs avoid the `stack.set({ group })`, `cell.set({ group })` options because: only one group can be handled using this approach; and the operation will clear out all other associated Groups (including the *namesake* Group) before associating the new Group object.
 
 ### Group visibility, order and sorting
 *The following only applies to Group objects associated with Cell objects that are part of the Display cycle.*
@@ -265,7 +265,7 @@ Group objects include a `visibility` attribute which, when set to `false`, will 
 
 Group objects also include an `order` attribute, which should be set to a positive integer value (default: `0`). Entitys associated with a Group will all be **batch processed** on a per-group basis, with the artefacts in a Group with a lower `order` value completing their processing before the next group of entitys start their processing.
 
-Cell objects store the `name` strings of the Group objects associated with them in an Array keyed to their `cell.groups` attribute. As part of any sorting operation, the Cell object will retrieve the Group objects from the SC library, sort these objects in ascending `order` values and then store references to the now sorted Group objects in an internal `cell.groupBucket` Array. The `groups` Array should never itself be sorted as this represents the order in which Groups get associated with the Cell – which is itself determined in the the code written by dev-users.
+Cell objects store the `name` strings of the Group objects associated with them in an Array keyed to their `cell.groups` attribute. As part of any sorting operation, the Cell object will retrieve the Group objects from the SC library, sort these objects in ascending `order` values and then store references to the now sorted Group objects in an internal `cell.groupBucket` Array. The `groups` Array should never itself be sorted as this represents the order in which Groups get associated with the Cell – which is itself determined in the the code written by product-devs.
 
 Cell objects only re-sort their Group objects when they have to:
 + During the first Display cycle
@@ -275,7 +275,7 @@ Cell objects only re-sort their Group objects when they have to:
 
 Whenever any of these things happen, the Cell object's `batchResort` flag will be set to `true`, thus triggering a re-sort on the next Display cycle. SC uses a simple [bucket sort algorithm](https://en.wikipedia.org/wiki/Bucket_sort) for the sorting operation. Much of this functionality gets defined in the [mixin/cascade.js](../source/mixin/cascade.html) file.
 
-(Repo-dev note: current functionality is that when a Group object's `order` value changes – via a `group.set({order: newValue})` invocation – the Group will only signal the change to its current host Cell object. This may cause unexpected outcomes (edge cases) for more complex dev-user projects and may need to be revisited at some point.)
+(Repo-dev note: current functionality is that when a Group object's `order` value changes – via a `group.set({order: newValue})` invocation – the Group will only signal the change to its current host Cell object. This may cause unexpected outcomes (edge cases) for more complex product-dev projects and may need to be revisited at some point.)
 
 (Repo-dev note: Group object visibility for Stack Element artefacts has not been investigated or tested, even though the functionality is – in theory – present. Needs review.)
 
@@ -288,7 +288,7 @@ Artefact/entity objects can be added to, and removed from, a Group object after 
 
 These operations have to be invoked on the Group object itself; SC does not supply convenience functions for the Stack artefact or Cell object to feed through arguments to their *namesake* Group objects.
 
-Dev-users can retrieve a specified artefact/entity object from a Group object using the `group.getArtefact('name-string')` function.
+Product-devs can retrieve a specified artefact/entity object from a Group object using the `group.getArtefact('name-string')` function.
 
 #### Artefact sorting
 The functionality previously described for Group ordering and sorting within Cell objects also applies to sorting artefact/entity objects within Group objects:
@@ -308,7 +308,7 @@ Group objects only sort their artefact/entity objects when they have to, signall
 
 SC uses a bucket-sort algorithm to perform these sort operations. Both sorts are handled in a single internal function – `group.sortArtefacts()` – defined in the [factory/group.js](../source/factory/group.html) file.
 
-(Repo-dev note: current functionality is that when an artefact/entity object's `calculateOrder` or `stampOrder` value changes, the artefact/entity will only signal the change to its current host Group object. This may cause unexpected outcomes (edge cases) for more complex dev-user projects and may need to be revisited at some point.)
+(Repo-dev note: current functionality is that when an artefact/entity object's `calculateOrder` or `stampOrder` value changes, the artefact/entity will only signal the change to its current host Group object. This may cause unexpected outcomes (edge cases) for more complex product-dev projects and may need to be revisited at some point.)
 
 ### Batch update artefact/entity object attributes using Group object functions
 Any SC *tracked object* (an object that inherits functionality from the `mixin/base.js` file) can have its attributes updated at any time using its `.set({key: value, ...})` and `.setDelta({key: value, ...})` functions. 
@@ -327,14 +327,14 @@ SC `delta` animation is explained in the [Animation and Display cycle](sc-animat
 + `group.reverseByDelta()` – **subtract** the keyed attribute values in the artefact/entity object's `delta` attribute object to its existing attribute values.
 
 #### Artefact class manipulations
-Specifically for associated artefact objects, dev-users can add or remove CSS class labels to/from those objects' DOM elements using the following Group object functions – note that the function argument is a String of space-separated classNames:
+Specifically for associated artefact objects, product-devs can add or remove CSS class labels to/from those objects' DOM elements using the following Group object functions – note that the function argument is a String of space-separated classNames:
 + `group.addArtefactClasses('css-classname-1 css-classname-2 ...')` – adds the supplied CSS classname strings to the end of the existing `artefact.classes` attribute.
 + `group.removeArtefactClasses('css-classname-1 css-classname-2 ...')` – removes each of the CSS classname strings from the existing `artefact.classes` attribute.
 
 The actual update to the DOM elements doesn't happen straight away. Instead a `dirtyClasses` flag is set to `true`, which then gets actioned during the `show` operation of the Display cycle.
 
 #### Stack artefact and Cell object equivalent functionality
-The [mixin/cascade.js](../source/mixin/cascade.html) file, consumed by the Stack and Cell factory files, provides an equivalent set of manipulation functions which the dev-user can invoke on Stack artefact and Cell object instances. The functions pass their argument through to all of the Group objects currently associated with that Stack or Cell:
+The [mixin/cascade.js](../source/mixin/cascade.html) file, consumed by the Stack and Cell factory files, provides an equivalent set of manipulation functions which the product-dev can invoke on Stack artefact and Cell object instances. The functions pass their argument through to all of the Group objects currently associated with that Stack or Cell:
 + `cell.setArtefacts({key: value, ...})`
 + `cell.updateArtefacts({key: value, ...})`
 + `cell.updateByDelta()`
@@ -345,21 +345,21 @@ The [mixin/cascade.js](../source/mixin/cascade.html) file, consumed by the Stack
 ### Apply visual filters to Groups containing entity objects
 SC filters can be applied to entity objects at the Cell, Group and entity object level of the Display cycle. See test demo [Canvas-007](../../demo/canvas-007.html) for an example of this functionality in action. Details about filter operations can be found in the [SC filter engine](sc-filter-engine.html) page of this Runbook.
 
-If the same set of filters need to be applied to several entity objects at the same time, those objects can be gathered together into their own Group object for processing. However dev-users should be aware of the limitations surrounding this approach:
+If the same set of filters need to be applied to several entity objects at the same time, those objects can be gathered together into their own Group object for processing. However product-devs should be aware of the limitations surrounding this approach:
 + The Group object must be associated with the Cell object where the entitys will be stamped.
 + The entitys will be stamped onto the Cell together, in a single operation – this means that if some of the entitys need to appear behind a non-filtered entity, while other entitys in the same Group need to appear in front of that entity, the operation will fail:
-  – Either the dev-user will have to separate the entitys into two separate Group objects, with the unfiltered entity in an additional Group object whose `order` value lies between that of the two filtered Groups;
+  – Either the product-dev will have to separate the entitys into two separate Group objects, with the unfiltered entity in an additional Group object whose `order` value lies between that of the two filtered Groups;
   – Or the filters will need to be applied to each entity separately, at the entity level.
 
 Note that while the Group object filtering functionality is very similar to Cell object and entity object functionality, it differs from them in several small-yet-key areas. Repo-devs need to be aware that changes in filter functionality in one of these three areas of the code base may need to be reflected in the other two areas.
 
 ### Cell entity, and Stack artefact, end-user interactions
-Group objects come with a set of attributes and functions which, for end-users interacting with a Stack or Canvas element in a desktop (screen + mouse) environment, can quickly detect when the end-user's cursor is hovering over an Element artefact or entity object and take actions accordingly to change the Stack/Canvas display. Note that once these attributes are set, SC will handle the associated functionality automatically for the dev-user:
+Group objects come with a set of attributes and functions which, for end-users interacting with a Stack or Canvas element in a desktop (screen + mouse) environment, can quickly detect when the end-user's cursor is hovering over an Element artefact or entity object and take actions accordingly to change the Stack/Canvas display. Note that once these attributes are set, SC will handle the associated functionality automatically for the product-dev:
 + `group.checkForEntityHover` – Boolean (default: `false`)
 + `group.onEntityHover` – Function (default: no action taken)
 + `group.onEntityNoHover` – Function (default: no action taken)
 
-For dev-user convenience, these attributes can also be set via the Canvas artefact and Cell objects:
+For product-dev convenience, these attributes can also be set via the Canvas artefact and Cell objects:
 + Canvas artefact objects will pipe the attribute values through to their `base` Cell's *namesake* Group object – see test demo [Canvas-001](../../demo/canvas-001.html) for an example:
   – `canvas.checkForEntityHover`
   – `canvas.onEntityHover`
@@ -369,7 +369,7 @@ For dev-user convenience, these attributes can also be set via the Canvas artefa
   – `cell.onEntityHover`
   – `cell.onEntityNoHover`
 
-Beyond hovering, dev-users can obtain a list of entitys currently under the cursor's location by invoking the following functions. The function argument will generally be an appropriate `here` object (see below for details on `here` objects):
+Beyond hovering, product-devs can obtain a list of entitys currently under the cursor's location by invoking the following functions. The function argument will generally be an appropriate `here` object (see below for details on `here` objects):
 + `group.getArtefactAt(here)` – see test demos [Canvas-026](../../demo/canvas-026.html), [Canvas-037](../../demo/canvas-037.html), [Canvas-058](../../demo/canvas-058.html), [DOM-007](../../demo/dom-007.html).
 + `group.getAllArtefactsAt(here)` see test demo [DOM-009](../../demo/dom-009.html).
 
@@ -400,7 +400,7 @@ Most SC functionality revolves around the *base Cell*, with the *display canvas*
 Note that the ***hidden `<canvas>` elements*** that SC generates as part of its work are just normal `<canvas>` elements, created using the browser's `document.createElement('canvas')` function. It is because of this reliance on access to the `document` object (alongside a number of other things such as the SC event system requiring access to the web page DOM) that SC is limited, *by design*, to work only in the frontend browser.
 + SC has not been designed to run in [web workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API), and makes no use of web worker code in any part of its code base. The same goes for [WebAssembly](https://developer.mozilla.org/en-US/docs/WebAssembly).
 + SC deliberately avoids the [OffscreenCanvas API](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas) as testing over the years has failed to demonstrate any significant speed/efficiency improvements for SC's specific requirements.
-+ SC does not include any code to help it run successfully on the server side, or in native apps. Honestly, if dev-users want a graphics generator to run on the server, their best bet is to look at something like [Skia](https://skia.org/) (which has bindings for the [Rust](https://crates.io/crates/skia-safe), [Java](https://github.com/JetBrains/skija), [Scala](https://github.com/nornagon/scanvas), [Python](https://pypi.org/project/skia-python/), etc languages), or alternatively [Cairo](https://www.cairographics.org/), to create graphical output for downloading or streaming to the frontend.
++ SC does not include any code to help it run successfully on the server side, or in native apps. Honestly, if product-devs want a graphics generator to run on the server, their best bet is to look at something like [Skia](https://skia.org/) (which has bindings for the [Rust](https://crates.io/crates/skia-safe), [Java](https://github.com/JetBrains/skija), [Scala](https://github.com/nornagon/scanvas), [Python](https://pypi.org/project/skia-python/), etc languages), or alternatively [Cairo](https://www.cairographics.org/), to create graphical output for downloading or streaming to the frontend.
 
 ### Types of Cell objects
 SC uses hidden `<canvas>` elements for a variety of different purposes, and codes them up in different ways:
@@ -410,10 +410,10 @@ SC uses hidden `<canvas>` elements for a variety of different purposes, and code
 
 Base Cells share a lot of functionality with layer Cells, with code defined in the [factory/cell.js](../source/factory/cell.html) and [mixin/cell-key-functions.js](../source/mixin/cell-key-functions.html) files.
 
-Dev-users are strongly advised to not interfere with base Cell objects, unless they enjoy frustration!
+Product-devs are strongly advised to not interfere with base Cell objects, unless they enjoy frustration!
 
 #### Pool Cells
-SC maintains a pool of hidden `<canvas>` elements, wrapped in **CellFragment** objects, for various internal purposes. These `pool` Cells are not tracked in the SC library, and are not available for dev-user use. 
+SC maintains a pool of hidden `<canvas>` elements, wrapped in **CellFragment** objects, for various internal purposes. These `pool` Cells are not tracked in the SC library, and are not available for product-dev use. 
 
 CellFragment objects contain only the minimum functionality required so the Cells can perform their various jobs around the code base. The code for CellFragment objects, alongside the pool infrastructure, can be found in the [untracked-factory/cell-fragment.js](../source/untracked-factory/cell-fragment.html) file, with additional, shared functionality defined in the [mixin/cell-key-functions.js](../source/mixin/cell-key-functions.html) file.
 
@@ -438,9 +438,9 @@ SC uses `pool` Cell objects extensively through the code base. Repo-devs retriev
 #### Layer Cells
 A canvas scene can include multiple Cell objects alongside the `base` Cell. Each of these `layer` Cell objects will include a *namesake* Group object with which entity objects can associate themselves, to be included in the `layer's` output which will be stamped onto the `base` Cell as part of the `show` operation of the Display cycle.
 
-Dev-users can add a new `layer` Cell to a canvas at any time using the `canvas.buildCell({key: value, ...})` function. Be aware that the `base` Cell will stamp its own entitys into its display before stamping the `layer` Cell output on top.
+Product-devs can add a new `layer` Cell to a canvas at any time using the `canvas.buildCell({key: value, ...})` function. Be aware that the `base` Cell will stamp its own entitys into its display before stamping the `layer` Cell output on top.
 
-`Layer` Cells are highly versatile containers. Dev-users can:
+`Layer` Cells are highly versatile containers. Product-devs can:
 + Define which parts of the Display cycle each `layer` will participate in, by setting the Cell's `cleared`, `compiled` and `shown` flags.
 + Determine the order in which `layer` Cells are processed during a Display cycle, using the Cell's `compileOrder` and `showOrder` attributes.
 + Use the Canvas artefact, or `base` Cell, object dimensions to set their dimensions (with help from the `setRelativeDimensionsUsingBase` flag).
@@ -454,7 +454,7 @@ Dev-users can add a new `layer` Cell to a canvas at any time using the `canvas.b
 ### Create, serialize, clone and kill Cell objects
 SC handles the creation of `base` and `pool` Cells internally, as required.
 
-Dev-users can **create** new `layer` Cell objects using the `canvas.buildCell({key: value, ...})` function. While `layer` Cells can, in theory, be moved between Canvas artefacts, Repo-devs currently work on the assumption that layers will be created for a specific canvas display and will not be transferred or shared between displays.
+Product-devs can **create** new `layer` Cell objects using the `canvas.buildCell({key: value, ...})` function. While `layer` Cells can, in theory, be moved between Canvas artefacts, Repo-devs currently work on the assumption that layers will be created for a specific canvas display and will not be transferred or shared between displays.
 
 Cell objects cannot, at this time, be **serialized** or **cloned**. Repo-devs need to address serialization work at some point.
 
@@ -467,7 +467,7 @@ Dev users can retrieve Cell objects from the library (as long as they know the o
 
 `Base` Cell objects can also be retrieved using the Canvas artefact object `canvas.getBase()` function. If only the `base` Cell object's name is required, use `canvas.get('baseName')`.
 
-For dev-user convenience, `base` Cell object attributes can be updated using the `canvas.setBase({key: value, ...})` and `canvas.deltaSetBase({key: value, ...})` function (with apologies for the function naming discrepancy here).
+For product-dev convenience, `base` Cell object attributes can be updated using the `canvas.setBase({key: value, ...})` and `canvas.deltaSetBase({key: value, ...})` function (with apologies for the function naming discrepancy here).
 
 `Pool` Cell objects are *untracked objects* – repo-devs can get a `pool` Cell using the `requestCell()` function and return it to the pool using the `releaseCell(object)` function.
 
@@ -481,7 +481,7 @@ When the Cell object wraps a `<canvas>` element, it will register handles to bot
 Much of the functionality of SC revolves around translating the SC scene graph into [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) instructions which then get invoked on the Cell element using the Cell engine's functions.
 
 #### Cell dimensions
-Cell dimensions are set on the `cell.element` DOM element, using that element's `width` and `height` attributes. Dev-users should never need to set these attributes directly!
+Cell dimensions are set on the `cell.element` DOM element, using that element's `width` and `height` attributes. Product-devs should never need to set these attributes directly!
 
 Internally, Cell objects keep dimension details in the `cell.dimensions` attribute, whose value is an Array comprising of `[width, height]` data. These values can be either absolute Number values, or relative 'string%' values, where the value is a percentage of either the host Canvas artefact's dimensions, or (for `layer` Cells) the `base` Cell object's dimensions. 
 
@@ -491,9 +491,9 @@ These values will be recalculated into pixel values each time the dimensions cha
 
 For `base` and `pool` Cell objects, all of this functionality is automated by SC.
 + All `pool` Cells have default dimensions `[1, 1]`. Repo code that requests a `pool` Cell will generally set the Cell's dimensions directly on the `cell.element`
-+ `Base` Cell dimensions will generally be set in the DOM `<canvas>` element's markup using the `data-base-width` and `data-base-height` attributes. When not included, the `base` Cell dimensions will match the `canvas` element's display `width`  and `height` dimensions (taking into account the device screen's `device-pixel-ratio`). Beyond these settings, dev-users are advised to not interfere with `base` Cell dimensions – see the [Canvas artefact notes](http://localhost:3000/docs/reference/sc-dom-artefacts.html#canvas-artefact-notes) section of the Artefacts page of this Runbook for more information.
++ `Base` Cell dimensions will generally be set in the DOM `<canvas>` element's markup using the `data-base-width` and `data-base-height` attributes. When not included, the `base` Cell dimensions will match the `canvas` element's display `width`  and `height` dimensions (taking into account the device screen's `device-pixel-ratio`). Beyond these settings, product-devs are advised to not interfere with `base` Cell dimensions – see the [Canvas artefact notes](http://localhost:3000/docs/reference/sc-dom-artefacts.html#canvas-artefact-notes) section of the Artefacts page of this Runbook for more information.
 
-`Layer` Cells get created by dev-users, thus setting their dimensions is a dev-user responsibility. For the most part `layer` Cells act like Element artefacts or Block entitys with respect to dimensions management. Cell `dimensions` values – which can also be set individually using the `width` and `height` pseudo-attributes – can be:
+`Layer` Cells get created by product-devs, thus setting their dimensions is a product-dev responsibility. For the most part `layer` Cells act like Element artefacts or Block entitys with respect to dimensions management. Cell `dimensions` values – which can also be set individually using the `width` and `height` pseudo-attributes – can be:
 + Absolute number values, measured in CSS pixels
 + Relative 'string%' values (for example, `10%`, `60%`, etc), where the relationship is:
   – by default, to the dimensions of the Canvas artefact object's ***display canvas***; or
@@ -518,15 +518,15 @@ See test demo [Canvas-002](../../demo/canvas-002.html) for an example of this fu
 
 The `backgroundColor` and `clearAlpha` attributes can be set for `base` and `layer` Cells in the normal way, using the `cell.set({...})` function.
 
-Dev-users can also set the `base` background color via HTML by adding the `data-base-background-color="color-value"` and `data-base-clear-alpha="number"` attributes to the `<canvas>` markup.
+Product-devs can also set the `base` background color via HTML by adding the `data-base-background-color="color-value"` and `data-base-clear-alpha="number"` attributes to the `<canvas>` markup.
 
 #### Cell display manipulation – the `splitShift()` function
 SC offers a function – `cell.splitShift()` which gives direct access to a Cell object's engine to perform an animation effect where a given number of rows/columns on one side of the display get copied over to the other side of the display, with the remaining part of the display shifted to take up the vacated space. Code for this function can be found in the [factory/cell.js](../source/factory/cell.html) file.
 
-Dev-users wanting to use this functionality should be aware that it works best on `layer` Cell objects whose `cleared` and `compiled` flags have been set to `false`. Example test demos include [Canvas-069](../../demo/canvas-069.html) and [Canvas-070](../../demo/canvas-070.html).
+Product-devs wanting to use this functionality should be aware that it works best on `layer` Cell objects whose `cleared` and `compiled` flags have been set to `false`. Example test demos include [Canvas-069](../../demo/canvas-069.html) and [Canvas-070](../../demo/canvas-070.html).
 
 #### Cell data manipulation – the `getCellData()` and `paintCellData()` functions
-SC includes two Cell functions – `cell.getCellData()` and `cell.paintCellData()` – which give dev-users direct access to a Cell object's pixel data.
+SC includes two Cell functions – `cell.getCellData()` and `cell.paintCellData()` – which give product-devs direct access to a Cell object's pixel data.
 
 The `getCellData(opaqueFlag = false)` function returns an object with two attributes:
 + `obj.iData` – a copy of the Cell object's current display's [imageData object](https://developer.mozilla.org/en-US/docs/Web/API/ImageData).
@@ -562,7 +562,7 @@ The `getCellData(opaqueFlag = false)` function returns an object with two attrib
 
 Dev users can then manipulate the pixelState object – for instance, run functions across the pixelState data to change their color channel values – and then apply them to the Cell display using the `paintCellData(obj)` function. Note that the object returned by `getCellData` must be the argument supplied to `paintCellData`.
 
-Code for this function can be found in the [factory/cell.js](../source/factory/cell.html) file. Dev-users wanting to use this functionality should be aware that it works best on `layer` Cell objects whose `cleared` and `compiled` flags have been set to `false`. Example test demos include [Canvas-071](../../demo/canvas-071.html), [Canvas-072](../../demo/canvas-072.html) and [Canvas-073](../../demo/canvas-073.html).
+Code for this function can be found in the [factory/cell.js](../source/factory/cell.html) file. Product-devs wanting to use this functionality should be aware that it works best on `layer` Cell objects whose `cleared` and `compiled` flags have been set to `false`. Example test demos include [Canvas-071](../../demo/canvas-071.html), [Canvas-072](../../demo/canvas-072.html) and [Canvas-073](../../demo/canvas-073.html).
 
 ### Display cycle considerations
 Cell objects are central to the SC Display cycle, which is covered in detail in the [Animation and Display cycle](sc-animation-systems.html) page of this Runbook.
@@ -579,17 +579,17 @@ Cell objects will clear their display using different functions, dependant on th
 + If the `backgroundColor` attribute is unset, but the `clearAlpha` attribute value is &gt; 0, then the Cell will copy its current display, clear itself, and paste the copy back into its display using a mix of `engine.drawImage()` and `engine.clearRect()` Canvas API functions.
 + The fallback default action is for the Cell to clear itself using `engine.clearRect()`.
 
-Dev-users can stop a Cell object clearing itself by setting the Cell's `cleared` flag to `false`.
+Product-devs can stop a Cell object clearing itself by setting the Cell's `cleared` flag to `false`.
 
 #### Cell compile functionality
-The role of Cell objects during the `compile` operation is to instruct its associated Group objects to tell their associated entity objects to stamp themselves into the Cell. Dev-users can stop a Cell object compiling itself by setting the Cell's `compiled` flag to `false`.
+The role of Cell objects during the `compile` operation is to instruct its associated Group objects to tell their associated entity objects to stamp themselves into the Cell. Product-devs can stop a Cell object compiling itself by setting the Cell's `compiled` flag to `false`.
 
 The order in which a Cell object compiles can become important for the final display `<canvas>` output. Canvas artefacts sort Cell objects in ascending order according to their `compileOrder` attributes. By default:
 + `layer` Cells have a `compileOrder` value of `0`
 + `base` Cells have a `compileOrder` value of `10`
 
 #### `Layer` Cell show functionality
-`Layer` Cell functionality includes the ability to stamp themselves onto `base` Cell displays during the Display cycle `show` operation. The order in which `layer` Cells stamp themselves is determined by their `showOrder` attribute. By default `layer` Cells will display; dev-users can prevent this by setting the Cell's `shown` attribute to `false`.
+`Layer` Cell functionality includes the ability to stamp themselves onto `base` Cell displays during the Display cycle `show` operation. The order in which `layer` Cells stamp themselves is determined by their `showOrder` attribute. By default `layer` Cells will display; product-devs can prevent this by setting the Cell's `shown` attribute to `false`.
 
 Each `layer` Cell can be positioned in, and animated across, their `base` Cell just like artefact objects in Stacks and entity objects in Cells – see the [positioning system](sc-positioning.html) page in this Runbook for details, and test demo [Canvas-036](../../demo/canvas-036.html) for a working example.
 
@@ -622,7 +622,7 @@ Cell objects have a similar object – `cell.here` – which, when populated wit
 
 For `base` Cells, the `here` object will be automatically updated at the start of every Display cycle by the Cell object's host Canvas artefact. The code for this update can be found in the Cell factory file's `cell.updateBaseHere()` function.
 
-For `layer` Cells, the update process is manual – dev-users will need to include a call to the Cell object's `cell.updateHere()` function whenever they need up-to-date data. Examples of this can be found in the test demos [Canvas-039](../../demo/canvas-039.html) and [Canvas-059](../../demo/canvas-059.html).
+For `layer` Cells, the update process is manual – product-devs will need to include a call to the Cell object's `cell.updateHere()` function whenever they need up-to-date data. Examples of this can be found in the test demos [Canvas-039](../../demo/canvas-039.html) and [Canvas-059](../../demo/canvas-059.html).
 
 `Pool` Cells never get shown in `<canvas>` displays, thus never need to have their `cell.here` objects updated.
 
@@ -690,7 +690,7 @@ State objects track the following engine properties:
 #### Updating State object attributes
 The functionality for updating State object attributes is tightly linked to entity object update code. This code is defined in the [mixin/entity.js](../source/mixin/entity.html) file, but a number of factory functions overwrite those `get()`, `set()` and `setDelta()` functions to extend them in various ways.
 
-> **tl;dr:** Dev-users should never update State objects attributes directly. Instead they can be updated via their entity object's `entity.set({ key: value, ... })` and `entity.setDelta({ key: value, ... })` functions.
+> **tl;dr:** Product-devs should never update State objects attributes directly. Instead they can be updated via their entity object's `entity.set({ key: value, ... })` and `entity.setDelta({ key: value, ... })` functions.
 
 #### Fill and stroke details
 The State object's `fillStyle` and `strokeStyle` attributes can be set to the following:
@@ -708,12 +708,12 @@ The State object's `fillStyle` and `strokeStyle` attributes can be set to the fo
 #### Line styling details
 The State object's `lineWidth` attribute represents the width of the line when the entity `scale` attribute is set to `1`. By default, the line width will scale relative to the entity object's current scale.
 
-Dev-users who want a constant line width regardless of entity scale can set the entity object's `scaleOutline` flag to `false`.
+Product-devs who want a constant line width regardless of entity scale can set the entity object's `scaleOutline` flag to `false`.
 
 #### Shadow styling details
 The State object's `shadowOffsetX`, `shadowOffsetY` and `shadowBlur` attributes are, by default, constant – regardless of the entity object's `scale` attribute's value. The values applied when `scale === 1` are the same as when `scale === 2`.
 
-Dev-users can make the shadow scale with the entity by setting the entity object's `scaleShadow` flag to `true`.
+Product-devs can make the shadow scale with the entity by setting the entity object's `scaleShadow` flag to `true`.
 
 #### Text styling details
 The State object's (many) text styling attributes are relevant only to Label and EnhancedLabel entitys – details of how each attribute affects the displayed text is covered in more detail in the [text-based entitys](sc-text-based-entitys.html) page of this Runbook.
@@ -736,9 +736,9 @@ Cell objects can act as State object `fillStyle` and `strokeStyle` attribute pat
 Further details about Pattern styles objects can be found in the [Styles management and use](sc-styles.html) page of this Runbook.
 
 ## Object processing order within the scene graph
-When the dev-user adds `pivot`, `mimic`, and `path` references into their SC code (see the [positioning system](sc-positioning.html) page for details), they also introduce **artefact dependencies**: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependent artefact begins its own calculations.
+When the product-dev adds `pivot`, `mimic`, and `path` references into their SC code (see the [positioning system](sc-positioning.html) page for details), they also introduce **artefact dependencies**: if an artefact depends on another artefact to calculate some part of its own display (position, rotation, dimensions, scale), then the need arises for the referenced artefacts to complete their calculations for those attributes before the dependent artefact begins its own calculations.
 
-> **tl;dr: – SC includes no functionality to internally construct and maintain a [dependency graph](https://en.wikipedia.org/wiki/Dependency_graph)** describing which artefacts need to calculate values before dependent artefact can calculate theirs. It is up to the dev-user to tell SC the order in which artefacts should calculate/update their state.
+> **tl;dr: – SC includes no functionality to internally construct and maintain a [dependency graph](https://en.wikipedia.org/wiki/Dependency_graph)** describing which artefacts need to calculate values before dependent artefact can calculate theirs. It is up to the product-dev to tell SC the order in which artefacts should calculate/update their state.
 
 The [SC Display cycle](sc-animation-systems.html) comprises the following steps:
 
@@ -895,7 +895,7 @@ Canvas {name: 'my-canvas'}
 |---|---|
 |![Original code output](sc-groups-cells-asset-001.webp)|![Rearranged code output](sc-groups-cells-asset-002.webp)|
 
-To fix this, the dev-user can either: 
+To fix this, the product-dev can either: 
 + Rearrange the factory functions to get SC to process them in the desired order (because: when SC objects have the same order values, SC will process them in the order they were declared in the code)
 + Tell SC the order in which the Cell, Group and Block objects should be processed by setting their `compileOrder` / `order` values, as follows:
 

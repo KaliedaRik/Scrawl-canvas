@@ -740,6 +740,31 @@
                 </a>
               
                 
+                <a class="source" href="filters-038.html">
+                  ./demo/filters-038.js
+                </a>
+              
+                
+                <a class="source" href="filters-039.html">
+                  ./demo/filters-039.js
+                </a>
+              
+                
+                <a class="source" href="filters-040.html">
+                  ./demo/filters-040.js
+                </a>
+              
+                
+                <a class="source" href="filters-041.html">
+                  ./demo/filters-041.js
+                </a>
+              
+                
+                <a class="source" href="filters-042.html">
+                  ./demo/filters-042.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1208,6 +1233,8 @@ Loaded fonts:<span class="hljs-subst">${fontReadout}</span>`</span>;
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;textHandleY&#x27;</span>, <span class="hljs-number">4</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;textUnitFlow&#x27;</span>, <span class="hljs-number">0</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;truncateString&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;autoHyphenate&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;startTextOnLine&#x27;</span>, <span class="hljs-number">0</span>],
 ]);
 
 
@@ -1266,6 +1293,8 @@ scrawl.<span class="hljs-title function_">makeUpdater</span>({
         <span class="hljs-attr">textUnitFlow</span>: [<span class="hljs-string">&#x27;textUnitFlow&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
         <span class="hljs-attr">letterSpacing</span>: [<span class="hljs-string">&#x27;letterSpacing&#x27;</span>, <span class="hljs-string">&#x27;px&#x27;</span>],
         <span class="hljs-attr">wordSpacing</span>: [<span class="hljs-string">&#x27;wordSpacing&#x27;</span>, <span class="hljs-string">&#x27;px&#x27;</span>],
+        <span class="hljs-attr">autoHyphenate</span>: [<span class="hljs-string">&#x27;autoHyphenate&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">startTextOnLine</span>: [<span class="hljs-string">&#x27;startTextOnLine&#x27;</span>, <span class="hljs-string">&#x27;int&#x27;</span>],
     },
 
     <span class="hljs-attr">callback</span>: updateDisplayText,
@@ -1534,7 +1563,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;noto-chinese-simple-sans&#x27;</span> :
                 mylabel.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;16px &quot;Noto Chinese Simple Sans&quot;&#x27;</span>,
-                    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;鉴于对人类家庭所有成员的固有尊严及其平等的和不移的权利的承认,乃是世界自由&amp;#x2060;、正义与和平的基础, 鉴于对人权的无视和侮蔑已发展为野蛮暴行,这些暴行玷污了人类的良心,而一个人人享有言论和信仰自由并免予恐惧和匮乏的世界的来临,已被宣布为普通人民的最高愿望, 鉴于为使人类不致迫不得已铤而走险对暴政和压迫进行反叛,有必要使人权受法治的保护, 鉴于有必要促进各国间友好关系的发展&amp;#x2060;。&#x27;</span>,
+                    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;鉴于对人类家庭所有成员的固有尊严及其平等的和不移的权利的承认,乃是世界自由、正义与和平的基础, 鉴于对人权的无视和侮蔑已发展为野蛮暴行,这些暴行玷污了人类的良心,而一个人人享有言论和信仰自由并免予恐惧和匮乏的世界的来临,已被宣布为普通人民的最高愿望, 鉴于为使人类不致迫不得已铤而走险对暴政和压迫进行反叛,有必要使人权受法治的保护, 鉴于有必要促进各国间友好关系的发展。&#x27;</span>,
                     <span class="hljs-attr">direction</span>: <span class="hljs-string">&#x27;ltr&#x27;</span>,
                     <span class="hljs-attr">breakTextOnSpaces</span>: <span class="hljs-literal">false</span>,
                     <span class="hljs-attr">lineSpacing</span>: <span class="hljs-number">1.5</span>,
@@ -1544,7 +1573,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;noto-chinese-simple-serif&#x27;</span> :
                 mylabel.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;16px &quot;Noto Chinese Simple Serif&quot;&#x27;</span>,
-                    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;鉴于对人类家庭所有成员的固有尊严及其平等的和不移的权利的承认,乃是世界自由&amp;#x2060;、正义与和平的基础, 鉴于对人权的无视和侮蔑已发展为野蛮暴行,这些暴行玷污了人类的良心,而一个人人享有言论和信仰自由并免予恐惧和匮乏的世界的来临,已被宣布为普通人民的最高愿望, 鉴于为使人类不致迫不得已铤而走险对暴政和压迫进行反叛,有必要使人权受法治的保护, 鉴于有必要促进各国间友好关系的发展&amp;#x2060;。&#x27;</span>,
+                    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;鉴于对人类家庭所有成员的固有尊严及其平等的和不移的权利的承认,乃是世界自由、正义与和平的基础, 鉴于对人权的无视和侮蔑已发展为野蛮暴行,这些暴行玷污了人类的良心,而一个人人享有言论和信仰自由并免予恐惧和匮乏的世界的来临,已被宣布为普通人民的最高愿望, 鉴于为使人类不致迫不得已铤而走险对暴政和压迫进行反叛,有必要使人权受法治的保护, 鉴于有必要促进各国间友好关系的发展。&#x27;</span>,
                     <span class="hljs-attr">direction</span>: <span class="hljs-string">&#x27;ltr&#x27;</span>,
                     <span class="hljs-attr">breakTextOnSpaces</span>: <span class="hljs-literal">false</span>,
                     <span class="hljs-attr">lineSpacing</span>: <span class="hljs-number">1.5</span>,
@@ -1594,7 +1623,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;noto-japanese-sans&#x27;</span> :
                 mylabel.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;16px &quot;Noto Japanese Sans&quot;&#x27;</span>,
-                    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;人類社会のすべての構成員の固有の尊厳と平等で譲ることのできない権利とを承認することは&amp;#x2060;、世界における自由&amp;#x2060;、正義及び平和の基礎であるので&amp;#x2060;、 人権の無視及び軽侮が&amp;#x2060;、人類の良心を踏みにじった野蛮行為をもたらし&amp;#x2060;、言論及び信仰の自由が受けられ&amp;#x2060;、恐怖及び欠乏のない世界の到来が&amp;#x2060;、一般の人々の最高の願望として宣言されたので&amp;#x2060;、 人間が専制と圧迫とに対する最後の手段として反逆に訴えることがないようにするためには&amp;#x2060;、法の支配によって人権を保護することが肝要であるので&amp;#x2060;、 諸国間の友好関係の発展を促進することが肝要であるので&amp;#x2060;、&#x27;</span>,
+                    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;人類社会のすべての構成員の固有の尊厳と平等で譲ることのできない権利とを承認することは&amp;#x2060;、世界における自由、正義及び平和の基礎であるので、 人権の無視及び軽侮が、人類の良心を踏みにじった野蛮行為をもたらし、言論及び信仰の自由が受けられ、恐怖及び欠乏のない世界の到来が、一般の人々の最高の願望として宣言されたので、 人間が専制と圧迫とに対する最後の手段として反逆に訴えることがないようにするためには、法の支配によって人権を保護することが肝要であるので、 諸国間の友好関係の発展を促進することが肝要であるので、&#x27;</span>,
                     <span class="hljs-attr">direction</span>: <span class="hljs-string">&#x27;ltr&#x27;</span>,
                     <span class="hljs-attr">breakTextOnSpaces</span>: <span class="hljs-literal">false</span>,
                     <span class="hljs-attr">lineSpacing</span>: <span class="hljs-number">1.5</span>,
@@ -1604,7 +1633,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;noto-japanese-serif&#x27;</span> :
                 mylabel.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;16px &quot;Noto Japanese Serif&quot;&#x27;</span>,
-                    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;人類社会のすべての構成員の固有の尊厳と平等で譲ることのできない権利とを承認することは&amp;#x2060;、世界における自由&amp;#x2060;、正義及び平和の基礎であるので&amp;#x2060;、 人権の無視及び軽侮が&amp;#x2060;、人類の良心を踏みにじった野蛮行為をもたらし&amp;#x2060;、言論及び信仰の自由が受けられ&amp;#x2060;、恐怖及び欠乏のない世界の到来が&amp;#x2060;、一般の人々の最高の願望として宣言されたので&amp;#x2060;、 人間が専制と圧迫とに対する最後の手段として反逆に訴えることがないようにするためには&amp;#x2060;、法の支配によって人権を保護することが肝要であるので&amp;#x2060;、 諸国間の友好関係の発展を促進することが肝要であるので&amp;#x2060;、&#x27;</span>,
+                    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;人類社会のすべての構成員の固有の尊厳と平等で譲ることのできない権利とを承認することは&amp;#x2060;、世界における自由、正義及び平和の基礎であるので、 人権の無視及び軽侮が、人類の良心を踏みにじった野蛮行為をもたらし、言論及び信仰の自由が受けられ、恐怖及び欠乏のない世界の到来が、一般の人々の最高の願望として宣言されたので、 人間が専制と圧迫とに対する最後の手段として反逆に訴えることがないようにするためには、法の支配によって人権を保護することが肝要であるので、 諸国間の友好関係の発展を促進することが肝要であるので、&#x27;</span>,
                     <span class="hljs-attr">direction</span>: <span class="hljs-string">&#x27;ltr&#x27;</span>,
                     <span class="hljs-attr">breakTextOnSpaces</span>: <span class="hljs-literal">false</span>,
                     <span class="hljs-attr">lineSpacing</span>: <span class="hljs-number">1.5</span>,
@@ -1664,7 +1693,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;noto-thai-sans&#x27;</span> :
                 mylabel.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;16px &quot;Noto Thai Sans&quot;&#x27;</span>,
-                    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;ใน&amp;#x200Bแผน&amp;#x200Bเดิม&amp;#x200Bรถไฟฟ้า&amp;#x200Bแอร์&amp;#x200Bพอร์ต เรล ลิงก์ สถานี&amp;#x200Bมักกะสัน&amp;#x200Bจะ&amp;#x200Bเชื่อม&amp;#x200Bต่อ&amp;#x200Bกับ&amp;#x200Bสถานี&amp;#x200Bเพชรบุรี&amp;#x200Bของ&amp;#x200Bรถไฟฟ้า&amp;#x200Bมหานคร&amp;#x200Bที่&amp;#x200Bชั้น ของ&amp;#x200Bตัว&amp;#x200Bอาคาร แต่&amp;#x200Bเนื่องจาก&amp;#x200Bเมื่อ&amp;#x200Bสำรวจ&amp;#x200Bเส้น&amp;#x200Bทาง&amp;#x200Bแล้ว พบ&amp;#x200Bว่า&amp;#x200Bเส้น&amp;#x200Bทาง&amp;#x200Bดัง&amp;#x200Bกล่าว มี&amp;#x200Bท่อ&amp;#x200Bส่ง&amp;#x200Bน้ำ&amp;#x200Bมัน&amp;#x200Bของ&amp;#x200Bปตท. ตาม&amp;#x200Bแนวทาง&amp;#x200Bรถไฟ&amp;#x200Bสาย&amp;#x200Bตะวัน&amp;#x200Bออก ท่อ&amp;#x200Bน้ำ&amp;#x200Bประปา&amp;#x200Bของ&amp;#x200Bการ&amp;#x200Bประปา&amp;#x200Bนครหลวง และ&amp;#x200Bท่อ&amp;#x200Bน้ำ&amp;#x200Bทิ้ง&amp;#x200Bลง&amp;#x200Bคลอง&amp;#x200Bแสน&amp;#x200Bแสบ&amp;#x200Bของ&amp;#x200Bกรุงเทพมหานคร ที่&amp;#x200Bการ&amp;#x200Bรถไฟฟ้า&amp;#x200Bขนส่ง&amp;#x200Bมวลชน&amp;#x200Bแห่ง&amp;#x200Bประเทศไทย&amp;#x200Bรื้อ&amp;#x200Bย้าย&amp;#x200Bจาก&amp;#x200Bจุด&amp;#x200Bเดิม&amp;#x200Bเพื่อ&amp;#x200Bก่อสร้าง&amp;#x200Bสถานี&amp;#x200Bเพชรบุรี ขวาง&amp;#x200Bอยู่&amp;#x200Bจึง&amp;#x200Bทำให้&amp;#x200Bการ&amp;#x200Bขุด&amp;#x200Bเจาะ&amp;#x200Bทาง&amp;#x200Bเชื่อม&amp;#x200Bเข้า&amp;#x200Bตัว&amp;#x200Bสถานี&amp;#x200Bรถไฟฟ้า&amp;#x200Bมหานคร&amp;#x200Bไม่&amp;#x200Bสามารถ&amp;#x200Bทำได้&#x27;</span>,
+                    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;ในแผนเดิมรถไฟฟ้าแอร์พอร์ต เรล ลิงก์ สถานีมักกะสันจะเชื่อมต่อกับสถานีเพชรบุรีของรถไฟฟ้ามหานครที่ชั้น ของตัวอาคาร แต่เนื่องจากเมื่อสำรวจเส้นทางแล้ว พบว่าเส้นทางดังกล่าว มีท่อส่งน้ำมันของปตท. ตามแนวทางรถไฟสายตะวันออก ท่อน้ำประปาของการประปานครหลวง และท่อน้ำทิ้งลงคลองแสนแสบของกรุงเทพมหานคร ที่การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทยรื้อย้ายจากจุดเดิมเพื่อก่อสร้างสถานีเพชรบุรี ขวางอยู่จึงทำให้การขุดเจาะทางเชื่อมเข้าตัวสถานีรถไฟฟ้ามหานครไม่สามารถทำได้&#x27;</span>,
                     <span class="hljs-attr">direction</span>: <span class="hljs-string">&#x27;ltr&#x27;</span>,
                     <span class="hljs-attr">breakTextOnSpaces</span>: <span class="hljs-literal">true</span>,
                     <span class="hljs-attr">lineSpacing</span>: <span class="hljs-number">1.5</span>,
@@ -1674,7 +1703,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;noto-thai-serif&#x27;</span> :
                 mylabel.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">fontString</span>: <span class="hljs-string">&#x27;16px &quot;Noto Thai Serif&quot;&#x27;</span>,
-                    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;ใน&amp;#x200Bแผน&amp;#x200Bเดิม&amp;#x200Bรถไฟฟ้า&amp;#x200Bแอร์&amp;#x200Bพอร์ต เรล ลิงก์ สถานี&amp;#x200Bมักกะสัน&amp;#x200Bจะ&amp;#x200Bเชื่อม&amp;#x200Bต่อ&amp;#x200Bกับ&amp;#x200Bสถานี&amp;#x200Bเพชรบุรี&amp;#x200Bของ&amp;#x200Bรถไฟฟ้า&amp;#x200Bมหานคร&amp;#x200Bที่&amp;#x200Bชั้น ของ&amp;#x200Bตัว&amp;#x200Bอาคาร แต่&amp;#x200Bเนื่องจาก&amp;#x200Bเมื่อ&amp;#x200Bสำรวจ&amp;#x200Bเส้น&amp;#x200Bทาง&amp;#x200Bแล้ว พบ&amp;#x200Bว่า&amp;#x200Bเส้น&amp;#x200Bทาง&amp;#x200Bดัง&amp;#x200Bกล่าว มี&amp;#x200Bท่อ&amp;#x200Bส่ง&amp;#x200Bน้ำ&amp;#x200Bมัน&amp;#x200Bของ&amp;#x200Bปตท. ตาม&amp;#x200Bแนวทาง&amp;#x200Bรถไฟ&amp;#x200Bสาย&amp;#x200Bตะวัน&amp;#x200Bออก ท่อ&amp;#x200Bน้ำ&amp;#x200Bประปา&amp;#x200Bของ&amp;#x200Bการ&amp;#x200Bประปา&amp;#x200Bนครหลวง และ&amp;#x200Bท่อ&amp;#x200Bน้ำ&amp;#x200Bทิ้ง&amp;#x200Bลง&amp;#x200Bคลอง&amp;#x200Bแสน&amp;#x200Bแสบ&amp;#x200Bของ&amp;#x200Bกรุงเทพมหานคร ที่&amp;#x200Bการ&amp;#x200Bรถไฟฟ้า&amp;#x200Bขนส่ง&amp;#x200Bมวลชน&amp;#x200Bแห่ง&amp;#x200Bประเทศไทย&amp;#x200Bรื้อ&amp;#x200Bย้าย&amp;#x200Bจาก&amp;#x200Bจุด&amp;#x200Bเดิม&amp;#x200Bเพื่อ&amp;#x200Bก่อสร้าง&amp;#x200Bสถานี&amp;#x200Bเพชรบุรี ขวาง&amp;#x200Bอยู่&amp;#x200Bจึง&amp;#x200Bทำให้&amp;#x200Bการ&amp;#x200Bขุด&amp;#x200Bเจาะ&amp;#x200Bทาง&amp;#x200Bเชื่อม&amp;#x200Bเข้า&amp;#x200Bตัว&amp;#x200Bสถานี&amp;#x200Bรถไฟฟ้า&amp;#x200Bมหานคร&amp;#x200Bไม่&amp;#x200Bสามารถ&amp;#x200Bทำได้&#x27;</span>,
+                    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;ในแผนเดิมรถไฟฟ้าแอร์พอร์ต เรล ลิงก์ สถานีมักกะสันจะเชื่อมต่อกับสถานีเพชรบุรีของรถไฟฟ้ามหานครที่ชั้น ของตัวอาคาร แต่เนื่องจากเมื่อสำรวจเส้นทางแล้ว พบว่าเส้นทางดังกล่าว มีท่อส่งน้ำมันของปตท. ตามแนวทางรถไฟสายตะวันออก ท่อน้ำประปาของการประปานครหลวง และท่อน้ำทิ้งลงคลองแสนแสบของกรุงเทพมหานคร ที่การรถไฟฟ้าขนส่งมวลชนแห่งประเทศไทยรื้อย้ายจากจุดเดิมเพื่อก่อสร้างสถานีเพชรบุรี ขวางอยู่จึงทำให้การขุดเจาะทางเชื่อมเข้าตัวสถานีรถไฟฟ้ามหานครไม่สามารถทำได้&#x27;</span>,
                     <span class="hljs-attr">direction</span>: <span class="hljs-string">&#x27;ltr&#x27;</span>,
                     <span class="hljs-attr">breakTextOnSpaces</span>: <span class="hljs-literal">true</span>,
                     <span class="hljs-attr">lineSpacing</span>: <span class="hljs-number">1.5</span>,

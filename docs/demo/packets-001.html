@@ -740,6 +740,31 @@
                 </a>
               
                 
+                <a class="source" href="filters-038.html">
+                  ./demo/filters-038.js
+                </a>
+              
+                
+                <a class="source" href="filters-039.html">
+                  ./demo/filters-039.js
+                </a>
+              
+                
+                <a class="source" href="filters-040.html">
+                  ./demo/filters-040.js
+                </a>
+              
+                
+                <a class="source" href="filters-041.html">
+                  ./demo/filters-041.js
+                </a>
+              
+                
+                <a class="source" href="filters-042.html">
+                  ./demo/filters-042.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1184,13 +1209,13 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> boxPacket4 = box.<span class="hljs-title function_">saveAsPacket</span>({
-    <span class="hljs-attr">includeDefaults</span>: [<span class="hljs-string">&#x27;handle&#x27;</span>, <span class="hljs-string">&#x27;miterLimit&#x27;</span>, <span class="hljs-string">&#x27;onUp&#x27;</span>, <span class="hljs-string">&#x27;useMimicScale&#x27;</span>, <span class="hljs-string">&#x27;anchor&#x27;</span>],
+    <span class="hljs-attr">includeDefaults</span>: [<span class="hljs-string">&#x27;handle&#x27;</span>, <span class="hljs-string">&#x27;miterLimit&#x27;</span>, <span class="hljs-string">&#x27;onUp&#x27;</span>, <span class="hljs-string">&#x27;useMimicScale&#x27;</span>, <span class="hljs-string">&#x27;anchor&#x27;</span>, <span class="hljs-string">&#x27;delta&#x27;</span>, <span class="hljs-string">&#x27;filter&#x27;</span>, <span class="hljs-string">&#x27;filters&#x27;</span>],
 });
 
-<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Save test 1 result: &#x27;</span>, boxPacket1);
-<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Save test 2 result: &#x27;</span>, boxPacket2);
-<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Save test 3 result: &#x27;</span>, boxPacket3);
-<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Save test 4 result: &#x27;</span>, boxPacket4);</pre></div></div>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Save test 1 result: &#x27;</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(boxPacket1));
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Save test 2 result: &#x27;</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(boxPacket2));
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Save test 3 result: &#x27;</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(boxPacket3));
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Save test 4 result: &#x27;</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(boxPacket4));</pre></div></div>
             
         </li>
         
@@ -1211,139 +1236,18 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;mycanvas-my-box&quot;</span>,
         <span class="hljs-string">&quot;dimensions&quot;</span>:[<span class="hljs-number">100</span>,<span class="hljs-number">50</span>],
         <span class="hljs-string">&quot;start&quot;</span>:[<span class="hljs-number">10</span>,<span class="hljs-number">10</span>],
-        <span class="hljs-string">&quot;delta&quot;</span>:{},
-        <span class="hljs-string">&quot;onEnter&quot;</span>:<span class="hljs-string">&quot;~~~\n\t\tthis.set({\n\t\t\tfillStyle: &#x27;pink&#x27;,\n\t\t});\n\t&quot;</span>,
-        <span class="hljs-string">&quot;onLeave&quot;</span>:<span class="hljs-string">&quot;~~~\n\t\tthis.set({\n\t\t\tfillStyle: &#x27;red&#x27;,\n\t\t});\n\t&quot;</span>,
+        <span class="hljs-string">&quot;onEnter&quot;</span>:<span class="hljs-string">&quot;~~~\n/** @ts-expect-error */\n        this.set({\n            fillStyle: &#x27;pink&#x27;,\n        });\n    &quot;</span>,
+        <span class="hljs-string">&quot;onLeave&quot;</span>:<span class="hljs-string">&quot;~~~\n/** @ts-expect-error */\n        this.set({\n            fillStyle: &#x27;red&#x27;,\n        });\n    &quot;</span>,
         <span class="hljs-string">&quot;onUp&quot;</span>:<span class="hljs-string">&quot;~~~ this.clickAnchor() &quot;</span>,
         <span class="hljs-string">&quot;anchor&quot;</span>:{
             <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;wikipedia-box-link&quot;</span>,
             <span class="hljs-string">&quot;description&quot;</span>:<span class="hljs-string">&quot;Link to the Wikipedia article on boxes (opens in new tab)&quot;</span>,
             <span class="hljs-string">&quot;href&quot;</span>:<span class="hljs-string">&quot;https://en.wikipedia.org/wiki/Box&quot;</span>,
-            <span class="hljs-string">&quot;clickAction&quot;</span>:<span class="hljs-string">&quot;~~~ return `console.log(&#x27;box clicked&#x27;)`&quot;</span>
+            <span class="hljs-string">&quot;host&quot;</span>:<span class="hljs-string">&quot;mycanvas-my-box&quot;</span>,
+            <span class="hljs-string">&quot;clickAction&quot;</span>:<span class="hljs-string">&quot;~~~ return `console.log(&#x27;box clicked&#x27;)` &quot;</span>
         },
         <span class="hljs-string">&quot;group&quot;</span>:<span class="hljs-string">&quot;mycanvas_base&quot;</span>,
         <span class="hljs-string">&quot;fillStyle&quot;</span>:<span class="hljs-string">&quot;red&quot;</span>
-    }
-]
-
-<span class="hljs-variable constant_">TEST</span> <span class="hljs-number">2</span>, <span class="hljs-variable constant_">TEST</span> <span class="hljs-number">3</span>
-[
-    <span class="hljs-string">&quot;mycanvas-my-box&quot;</span>,
-    <span class="hljs-string">&quot;Block&quot;</span>,
-    <span class="hljs-string">&quot;entity&quot;</span>,
-    {
-        <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;mycanvas-my-box&quot;</span>,
-        <span class="hljs-string">&quot;dimensions&quot;</span>:[<span class="hljs-number">100</span>,<span class="hljs-number">50</span>],
-        <span class="hljs-string">&quot;start&quot;</span>:[<span class="hljs-number">10</span>,<span class="hljs-number">10</span>],
-        <span class="hljs-string">&quot;handle&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
-        <span class="hljs-string">&quot;offset&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
-        <span class="hljs-string">&quot;delta&quot;</span>:{},
-        <span class="hljs-string">&quot;lockTo&quot;</span>:[<span class="hljs-string">&quot;start&quot;</span>,<span class="hljs-string">&quot;start&quot;</span>],
-        <span class="hljs-string">&quot;visibility&quot;</span>:<span class="hljs-literal">true</span>,
-        <span class="hljs-string">&quot;order&quot;</span>:<span class="hljs-number">0</span>,
-        <span class="hljs-string">&quot;addPivotHandle&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;addPivotOffset&quot;</span>:<span class="hljs-literal">true</span>,
-        <span class="hljs-string">&quot;addPivotRotation&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;pathPosition&quot;</span>:<span class="hljs-number">0</span>,
-        <span class="hljs-string">&quot;addPathHandle&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;addPathOffset&quot;</span>:<span class="hljs-literal">true</span>,
-        <span class="hljs-string">&quot;addPathRotation&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;useMimicDimensions&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;useMimicScale&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;useMimicStart&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;useMimicHandle&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;useMimicOffset&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;useMimicRotation&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;useMimicFlip&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;addOwnDimensionsToMimic&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;addOwnScaleToMimic&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;addOwnStartToMimic&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;addOwnHandleToMimic&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;addOwnOffsetToMimic&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;addOwnRotationToMimic&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;scale&quot;</span>:<span class="hljs-number">1</span>,
-        <span class="hljs-string">&quot;roll&quot;</span>:<span class="hljs-number">0</span>,
-        <span class="hljs-string">&quot;collides&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;sensorSpacing&quot;</span>:<span class="hljs-number">50</span>,
-        <span class="hljs-string">&quot;noUserInteraction&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;noDeltaUpdates&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;noPositionDependencies&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;noCanvasEngineUpdates&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;noFilters&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;noPathUpdates&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;method&quot;</span>:<span class="hljs-string">&quot;fill&quot;</span>,
-        <span class="hljs-string">&quot;winding&quot;</span>:<span class="hljs-string">&quot;nonzero&quot;</span>,
-        <span class="hljs-string">&quot;flipReverse&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;flipUpend&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;scaleOutline&quot;</span>:<span class="hljs-literal">true</span>,
-        <span class="hljs-string">&quot;lockFillStyleToEntity&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;lockStrokeStyleToEntity&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;isStencil&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;filterAlpha&quot;</span>:<span class="hljs-number">1</span>,
-        <span class="hljs-string">&quot;filterComposite&quot;</span>:<span class="hljs-string">&quot;source-over&quot;</span>,
-        <span class="hljs-string">&quot;onEnter&quot;</span>:<span class="hljs-string">&quot;~~~\n\t\tthis.set({\n\t\t\tfillStyle: &#x27;pink&#x27;,\n\t\t});\n\t&quot;</span>,
-        <span class="hljs-string">&quot;onLeave&quot;</span>:<span class="hljs-string">&quot;~~~\n\t\tthis.set({\n\t\t\tfillStyle: &#x27;red&#x27;,\n\t\t});\n\t&quot;</span>,
-        <span class="hljs-string">&quot;onDown&quot;</span>:<span class="hljs-string">&quot;~~~&quot;</span>,
-        <span class="hljs-string">&quot;onUp&quot;</span>:<span class="hljs-string">&quot;~~~&quot;</span>,
-        <span class="hljs-string">&quot;anchor&quot;</span>:{
-            <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;wikipedia-box-link&quot;</span>,
-            <span class="hljs-string">&quot;description&quot;</span>:
-            <span class="hljs-string">&quot;Link to the Wikipedia article on boxes (opens in new tab)&quot;</span>,
-            <span class="hljs-string">&quot;download&quot;</span>:<span class="hljs-string">&quot;&quot;</span>,
-            <span class="hljs-string">&quot;href&quot;</span>:<span class="hljs-string">&quot;https://en.wikipedia.org/wiki/Box&quot;</span>,
-            <span class="hljs-string">&quot;hreflang&quot;</span>:<span class="hljs-string">&quot;&quot;</span>,
-            <span class="hljs-string">&quot;ping&quot;</span>:<span class="hljs-string">&quot;&quot;</span>,
-            <span class="hljs-string">&quot;referrerpolicy&quot;</span>:<span class="hljs-string">&quot;&quot;</span>,
-            <span class="hljs-string">&quot;rel&quot;</span>:<span class="hljs-string">&quot;noreferrer&quot;</span>,
-            <span class="hljs-string">&quot;target&quot;</span>:<span class="hljs-string">&quot;_blank&quot;</span>,
-            <span class="hljs-string">&quot;anchorType&quot;</span>:<span class="hljs-string">&quot;&quot;</span>,
-            <span class="hljs-string">&quot;clickAction&quot;</span>:<span class="hljs-string">&quot;~~~ return `console.log(&#x27;box clicked&#x27;)`&quot;</span>
-        },
-        <span class="hljs-string">&quot;group&quot;</span>:<span class="hljs-string">&quot;mycanvas_base&quot;</span>,
-        <span class="hljs-string">&quot;fillStyle&quot;</span>:<span class="hljs-string">&quot;red&quot;</span>,
-        <span class="hljs-string">&quot;strokeStyle&quot;</span>:<span class="hljs-string">&quot;rgb(0 0 0 / 1)&quot;</span>,
-        <span class="hljs-string">&quot;globalAlpha&quot;</span>:<span class="hljs-number">1</span>,
-        <span class="hljs-string">&quot;globalCompositeOperation&quot;</span>:<span class="hljs-string">&quot;source-over&quot;</span>,
-        <span class="hljs-string">&quot;lineWidth&quot;</span>:<span class="hljs-number">1</span>,
-        <span class="hljs-string">&quot;lineCap&quot;</span>:<span class="hljs-string">&quot;butt&quot;</span>,
-        <span class="hljs-string">&quot;lineJoin&quot;</span>:<span class="hljs-string">&quot;miter&quot;</span>,
-        <span class="hljs-string">&quot;lineDash&quot;</span>:[],
-        <span class="hljs-string">&quot;lineDashOffset&quot;</span>:<span class="hljs-number">0</span>,
-        <span class="hljs-string">&quot;miterLimit&quot;</span>:<span class="hljs-number">10</span>,
-        <span class="hljs-string">&quot;shadowOffsetX&quot;</span>:<span class="hljs-number">0</span>,
-        <span class="hljs-string">&quot;shadowOffsetY&quot;</span>:<span class="hljs-number">0</span>,
-        <span class="hljs-string">&quot;shadowBlur&quot;</span>:<span class="hljs-number">0</span>,
-        <span class="hljs-string">&quot;shadowColor&quot;</span>:<span class="hljs-string">&quot;rgb(0 0 0 / 0)&quot;</span>,
-        <span class="hljs-string">&quot;fontString&quot;</span>:<span class="hljs-string">&quot;12px sans-serif&quot;</span>,
-        <span class="hljs-string">&quot;textAlign&quot;</span>:<span class="hljs-string">&quot;start&quot;</span>,
-        <span class="hljs-string">&quot;textBaseline&quot;</span>:<span class="hljs-string">&quot;alphabetic&quot;</span>
-    }
-]
-
-<span class="hljs-variable constant_">TEST</span> <span class="hljs-number">4</span>
-[
-    <span class="hljs-string">&quot;mycanvas-my-box&quot;</span>,
-    <span class="hljs-string">&quot;Block&quot;</span>,
-    <span class="hljs-string">&quot;entity&quot;</span>,
-    {
-        <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;mycanvas-my-box&quot;</span>,
-        <span class="hljs-string">&quot;dimensions&quot;</span>:[<span class="hljs-number">100</span>,<span class="hljs-number">50</span>],
-        <span class="hljs-string">&quot;start&quot;</span>:[<span class="hljs-number">10</span>,<span class="hljs-number">10</span>],
-        <span class="hljs-string">&quot;handle&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
-        <span class="hljs-string">&quot;delta&quot;</span>:{},
-        <span class="hljs-string">&quot;useMimicScale&quot;</span>:<span class="hljs-literal">false</span>,
-        <span class="hljs-string">&quot;onEnter&quot;</span>:<span class="hljs-string">&quot;~~~\n\t\tthis.set({\n\t\t\tfillStyle: &#x27;pink&#x27;,\n\t\t});\n\t&quot;</span>,
-        <span class="hljs-string">&quot;onLeave&quot;</span>:<span class="hljs-string">&quot;~~~\n\t\tthis.set({\n\t\t\tfillStyle: &#x27;red&#x27;,\n\t\t});\n\t&quot;</span>,
-        <span class="hljs-string">&quot;onUp&quot;</span>:<span class="hljs-string">&quot;~~~&quot;</span>,
-        <span class="hljs-string">&quot;anchor&quot;</span>:{
-            <span class="hljs-string">&quot;name&quot;</span>:<span class="hljs-string">&quot;wikipedia-box-link&quot;</span>,
-            <span class="hljs-string">&quot;description&quot;</span>:<span class="hljs-string">&quot;Link to the Wikipedia article on boxes (opens in new tab)&quot;</span>,
-            <span class="hljs-string">&quot;href&quot;</span>:<span class="hljs-string">&quot;https://en.wikipedia.org/wiki/Box&quot;</span>,
-            <span class="hljs-string">&quot;clickAction&quot;</span>:<span class="hljs-string">&quot;~~~ return `console.log(&#x27;box clicked&#x27;)`&quot;</span>
-        },
-        <span class="hljs-string">&quot;group&quot;</span>:<span class="hljs-string">&quot;mycanvas_base&quot;</span>,
-        <span class="hljs-string">&quot;fillStyle&quot;</span>:<span class="hljs-string">&quot;red&quot;</span>,
-        <span class="hljs-string">&quot;miterLimit&quot;</span>:<span class="hljs-number">10</span>
     }
 ]
 </code></pre>
@@ -1359,6 +1263,179 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
+              <p>TEST 2, TEST 3
+[
+    “mycanvas-my-box”,
+    “Block”,
+    “entity”,
+    {
+        “name”:”mycanvas-my-box”,
+        “dimensions”:[100,50],
+        “start”:[10,10],
+        “handle”:[0,0],
+        “offset”:[0,0],
+        “delta”:{},
+        “deltaConstraints”:{},
+        “lockTo”:[“start”,”start”],
+        “pivot”:””,
+        “mimic”:””,
+        “filters”:[],
+        “visibility”:true,
+        “calculateOrder”:0,
+        “stampOrder”:0,
+        “bringToFrontOnDrag”:true,
+        “ignoreDragForX”:false,
+        “ignoreDragForY”:false,
+        “scale”:1,
+        “roll”:0,
+        “noUserInteraction”:false,
+        “noPositionDependencies”:false,
+        “noCanvasEngineUpdates”:false,
+        “noFilters”:false,
+        “noPathUpdates”:false,
+        “noDeltaUpdates”:false,
+        “checkDeltaConstraints”:false,
+        “performDeltaChecks”:false,
+        “pivotPin”:0,
+        “pivotIndex”:-1,
+        “addPivotHandle”:false,
+        “addPivotOffset”:true,
+        “addPivotRotation”:false,
+        “useMimicDimensions”:false,
+        “useMimicScale”:false,
+        “useMimicStart”:false,
+        “useMimicHandle”:false,
+        “useMimicOffset”:false,
+        “useMimicRotation”:false,
+        “useMimicFlip”:false,
+        “addOwnDimensionsToMimic”:false,
+        “addOwnScaleToMimic”:false,
+        “addOwnStartToMimic”:false,
+        “addOwnHandleToMimic”:false,
+        “addOwnOffsetToMimic”:false,
+        “addOwnRotationToMimic”:false,
+        “path”:””,
+        “pathPosition”:0,
+        “addPathHandle”:false,
+        “addPathOffset”:true,
+        “addPathRotation”:false,
+        “constantSpeedAlongPath”:false,
+        “isStencil”:false,
+        “memoizeFilterOutput”:false,
+        “method”:”fill”,
+        “winding”:”nonzero”,
+        “flipReverse”:false,
+        “flipUpend”:false,
+        “scaleOutline”:true,
+        “scaleShadow”:false,
+        “lockFillStyleToEntity”:false,
+        “lockStrokeStyleToEntity”:false,
+        “onEnter”:”~~~\n/** @ts-expect-error <em>/\n        this.set({\n            fillStyle: ‘pink’,\n        });\n    “,
+        “onLeave”:”~~~\n/</em>* @ts-expect-error */\n        this.set({\n            fillStyle: ‘red’,\n        });\n    “,
+        “onUp”:”~~~ this.clickAnchor() “,
+        “anchor”:{
+            “name”:”wikipedia-box-link”,
+            “description”:”Link to the Wikipedia article on boxes (opens in new tab)”,
+            “disabled”:false,
+            “tabOrder”:0,
+            “download”:””,
+            “href”:”<a href="https://en.wikipedia.org/wiki/Box&quot;">https://en.wikipedia.org/wiki/Box&quot;</a>,
+            “hreflang”:””,
+            “ping”:””,
+            “referrerpolicy”:””,
+            “rel”:”noreferrer”,
+            “target”:”_blank”,
+            “anchorType”:””,
+            “focusAction”:true,
+            “blurAction”:true,
+            “host”:”mycanvas-my-box”,
+            “clickAction”:”~~~ return <code>console.log(&#39;box clicked&#39;)</code> “
+        },
+        “group”:”mycanvas_base”,
+        “fillStyle”:”red”,
+        “strokeStyle”:”rgb(0 0 0 / 1)”,
+        “globalAlpha”:1,
+        “globalCompositeOperation”:”source-over”,
+        “lineWidth”:1,
+        “lineCap”:”butt”,
+        “lineJoin”:”miter”,
+        “lineDashOffset”:0,
+        “miterLimit”:10,
+        “shadowOffsetX”:0,
+        “shadowOffsetY”:0,
+        “shadowBlur”:0,
+        “shadowColor”:”rgb(0 0 0 / 1)”,
+        “font”:”12px sans-serif”,
+        “direction”:”ltr”,
+        “fontKerning”:”normal”,
+        “textRendering”:”auto”,
+        “letterSpacing”:”0px”,
+        “wordSpacing”:”0px”,
+        “fontStretch”:”normal”,
+        “fontVariantCaps”:”normal”,
+        “filter”:”none”,
+        “imageSmoothingEnabled”:true,
+        “imageSmoothingQuality”:”high”,
+        “textAlign”:”left”,
+        “textBaseline”:”top”,
+        “lineDash”:[]
+    }
+]</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>TEST 4
+[
+    “mycanvas-my-box”,
+    “Block”,
+    “entity”,
+    {
+        “name”:”mycanvas-my-box”,
+        “dimensions”:[100,50],
+        “start”:[10,10],
+        “handle”:[0,0],
+        “delta”:{},
+        “filters”:[],
+        “useMimicScale”:false,
+        “onEnter”:”~~~\n/** @ts-expect-error <em>/\n        this.set({\n            fillStyle: ‘pink’,\n        });\n    “,
+        “onLeave”:”~~~\n/</em>* @ts-expect-error */\n        this.set({\n            fillStyle: ‘red’,\n        });\n    “,
+        “onUp”:”~~~ this.clickAnchor() “,
+        “anchor”:{
+            “name”:”wikipedia-box-link”,
+            “description”:”Link to the Wikipedia article on boxes (opens in new tab)”,
+            “href”:”<a href="https://en.wikipedia.org/wiki/Box&quot;">https://en.wikipedia.org/wiki/Box&quot;</a>,
+            “host”:”mycanvas-my-box”,
+            “clickAction”:”~~~ return <code>console.log(&#39;box clicked&#39;)</code> “
+        },
+        “group”:”mycanvas_base”,
+        “fillStyle”:”red”,
+        “miterLimit”:10,
+        “filter”:”none”
+    }
+]</p>
+<pre><code>
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
               <p>Import tests - note that <strong>importPacket() is an asynchronous function that returns a promise</strong></p>
 
             </div>
@@ -1369,11 +1446,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-13">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>Import test 1</strong> - expect the import to fail due to a bad packet (malformed JSON string)</p>
 
@@ -1386,11 +1463,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>Import test 2</strong> - expect the import to succeed</p>
 
@@ -1405,57 +1482,19 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p><strong>Import test 3</strong> - expect the import to fail due to incorrect url (missing .txt)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    canvas.<span class="hljs-title function_">importPacket</span>(<span class="hljs-string">&#x27;./packets/packets-003-block&#x27;</span>)
-    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 3 success -&#x27;</span>, res))
-    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 3 error -&#x27;</span>, err));</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p><strong>Import test 4</strong> - expect the import to succeed</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    canvas.<span class="hljs-title function_">importPacket</span>(<span class="hljs-string">&#x27;./packets/packets-003-block.txt&#x27;</span>)
-    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 4 success -&#x27;</span>, res))
-    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 4 error -&#x27;</span>, err));
-
-    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <p><strong>Import test 5</strong> - expect the import to succeed</p>
+              <p><strong>Import test 3</strong> - expect the import to fail due to incorrect url (missing .txt)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        canvas.<span class="hljs-title function_">importPacket</span>(<span class="hljs-string">&#x27;./packets/packets-003-block-updated.txt&#x27;</span>)
-        .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 5 success -&#x27;</span>, res))
-        .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 5 error -&#x27;</span>, err));
-    }, <span class="hljs-number">5000</span>);
-}, <span class="hljs-number">5000</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    canvas.<span class="hljs-title function_">importPacket</span>(<span class="hljs-string">&#x27;./packets/packets-001-block&#x27;</span>)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 3 success -&#x27;</span>, res))
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 3 error -&#x27;</span>, err));</pre></div></div>
             
         </li>
         
@@ -1465,6 +1504,44 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
               
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p><strong>Import test 4</strong> - expect the import to succeed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    canvas.<span class="hljs-title function_">importPacket</span>(<span class="hljs-string">&#x27;./packets/packets-001-block.txt&#x27;</span>)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 4 success -&#x27;</span>, res))
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 4 error -&#x27;</span>, err));
+
+    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p><strong>Import test 5</strong> - expect the import to succeed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        canvas.<span class="hljs-title function_">importPacket</span>(<span class="hljs-string">&#x27;./packets/packets-001-block-updated.txt&#x27;</span>)
+        .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 5 success -&#x27;</span>, res))
+        .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 5 error -&#x27;</span>, err));
+    }, <span class="hljs-number">5000</span>);
+}, <span class="hljs-number">5000</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Import tests - expected results (result order may vary due to asynchronous fetch/promise resolve)</p>
 <pre><code><span class="hljs-variable constant_">SETUP</span>
@@ -1495,11 +1572,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Create the Display cycle animation</p>

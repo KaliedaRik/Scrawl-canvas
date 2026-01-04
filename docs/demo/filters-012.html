@@ -740,6 +740,31 @@
                 </a>
               
                 
+                <a class="source" href="filters-038.html">
+                  ./demo/filters-038.js
+                </a>
+              
+                
+                <a class="source" href="filters-039.html">
+                  ./demo/filters-039.js
+                </a>
+              
+                
+                <a class="source" href="filters-040.html">
+                  ./demo/filters-040.js
+                </a>
+              
+                
+                <a class="source" href="filters-041.html">
+                  ./demo/filters-041.js
+                </a>
+              
+                
+                <a class="source" href="filters-042.html">
+                  ./demo/filters-042.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1111,8 +1136,10 @@
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;image&#x27;</span>),
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
     <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;95%&#x27;</span>, <span class="hljs-string">&#x27;95%&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
 
     <span class="hljs-attr">filters</span>: [<span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;matrix3&#x27;</span>)],
 });</pre></div></div>
@@ -1207,6 +1234,8 @@
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;includeBlue&#x27;</span>, <span class="hljs-number">1</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;includeGreen&#x27;</span>, <span class="hljs-number">1</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;includeAlpha&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;premultiply&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;useInputAsMask&#x27;</span>, <span class="hljs-number">0</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;memoizeFilterOutput&#x27;</span>, <span class="hljs-number">0</span>],
 ]);
 
@@ -1288,6 +1317,8 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         <span class="hljs-attr">includeGreen</span>: dom.<span class="hljs-property">includeGreen</span>.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;0&#x27;</span> ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>,
         <span class="hljs-attr">includeBlue</span>: dom.<span class="hljs-property">includeBlue</span>.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;0&#x27;</span> ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>,
         <span class="hljs-attr">includeAlpha</span>: dom.<span class="hljs-property">includeAlpha</span>.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;0&#x27;</span> ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">premultiply</span>: dom.<span class="hljs-property">premultiply</span>.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;0&#x27;</span> ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">useInputAsMask</span>: dom.<span class="hljs-property">useInputAsMask</span>.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;0&#x27;</span> ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>,
         <span class="hljs-attr">opacity</span>: <span class="hljs-built_in">parseFloat</span>(dom.<span class="hljs-property">opacity</span>.<span class="hljs-property">value</span>),
     };
 

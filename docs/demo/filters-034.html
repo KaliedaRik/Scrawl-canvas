@@ -740,6 +740,31 @@
                 </a>
               
                 
+                <a class="source" href="filters-038.html">
+                  ./demo/filters-038.js
+                </a>
+              
+                
+                <a class="source" href="filters-039.html">
+                  ./demo/filters-039.js
+                </a>
+              
+                
+                <a class="source" href="filters-040.html">
+                  ./demo/filters-040.js
+                </a>
+              
+                
+                <a class="source" href="filters-041.html">
+                  ./demo/filters-041.js
+                </a>
+              
+                
+                <a class="source" href="filters-042.html">
+                  ./demo/filters-042.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1107,12 +1132,8 @@
 
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;80%&#x27;</span>, <span class="hljs-string">&#x27;80%&#x27;</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;90%&#x27;</span>, <span class="hljs-string">&#x27;90%&#x27;</span>],
     <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-
-    <span class="hljs-attr">delta</span>: {
-        <span class="hljs-attr">roll</span>: <span class="hljs-number">0.4</span>,
-    },
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 
@@ -1137,6 +1158,7 @@
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`
     Radius - Horizontal: <span class="hljs-subst">${dom.radiusHorizontal.value}</span>, Vertical: <span class="hljs-subst">${dom.radiusVertical.value}</span>
+    Angle: <span class="hljs-subst">${dom.angle.value}</span>
     Opacity: <span class="hljs-subst">${dom.opacity.value}</span>`</span>;
 });</pre></div></div>
             
@@ -1178,11 +1200,13 @@
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;radiusHorizontal&#x27;</span>, <span class="hljs-string">&#x27;10&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;radiusVertical&#x27;</span>, <span class="hljs-string">&#x27;10&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;angle&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;includeRed&#x27;</span>, <span class="hljs-number">1</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;includeGreen&#x27;</span>, <span class="hljs-number">1</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;includeBlue&#x27;</span>, <span class="hljs-number">1</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;includeAlpha&#x27;</span>, <span class="hljs-number">1</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;excludeTransparentPixels&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;premultiply&#x27;</span>, <span class="hljs-number">0</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;memoizeFilterOutput&#x27;</span>, <span class="hljs-number">0</span>],
 ]);</pre></div></div>
             
@@ -1213,12 +1237,14 @@
 
         <span class="hljs-attr">radiusHorizontal</span>: [<span class="hljs-string">&#x27;radiusHorizontal&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-attr">radiusVertical</span>: [<span class="hljs-string">&#x27;radiusVertical&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">angle</span>: [<span class="hljs-string">&#x27;angle&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
 
         <span class="hljs-attr">includeRed</span>: [<span class="hljs-string">&#x27;includeRed&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
         <span class="hljs-attr">includeGreen</span>: [<span class="hljs-string">&#x27;includeGreen&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
         <span class="hljs-attr">includeBlue</span>: [<span class="hljs-string">&#x27;includeBlue&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
         <span class="hljs-attr">includeAlpha</span>: [<span class="hljs-string">&#x27;includeAlpha&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
         <span class="hljs-attr">excludeTransparentPixels</span>: [<span class="hljs-string">&#x27;excludeTransparentPixels&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">premultiply</span>: [<span class="hljs-string">&#x27;premultiply&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
 
         <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
     },

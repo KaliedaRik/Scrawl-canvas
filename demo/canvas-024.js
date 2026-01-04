@@ -408,26 +408,23 @@ scrawl.initializeDomInputs([
 
 // #### Development and testing
 // Test packet functionality
-console.log(myLoom.saveAsPacket());
+console.log(JSON.parse(myLoom.saveAsPacket()));
 // ```
 // RESULT:
 // [
-//     "display-loom",
+//     "mycanvas-display-loom",
 //     "Loom",
 //     "entity",
 //     {
-//         "name":"display-loom",
+//         "name":"mycanvas-display-loom",
 //         "showBoundingBox":true,
 //         "boundingBoxColor":"red",
 //         "method":"fillThenDraw",
 //         "onEnter":"~~~ this.set({ lineWidth: 6 }) ",
 //         "onLeave":"~~~ this.set({ lineWidth: 2 }) ",
-//         "onDown":"~~~",
-//         "onUp":"~~~",
-//         "delta":{},
-//         "fromPath":"my-quad",
-//         "toPath":"my-bezier",
-//         "source":"myFlower",
+//         "fromPath":"mycanvas-my-quad",
+//         "toPath":"mycanvas-my-bezier",
+//         "source":"mycanvas-myFlower",
 //         "group":"mycanvas_base",
 //         "strokeStyle":"orange",
 //         "lineWidth":2,

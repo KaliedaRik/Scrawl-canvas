@@ -29,7 +29,8 @@ import buttonMix from '../mixin/button.js';
 import { _atan2, _ceil, _cos, _floor, _hypot, _isArray, _isFinite, _keys, _max, _min, _parse, _piHalf, _sin, BLACK, DESTINATION_OUT, ENTITY, FILL, GOOD_HOST, NAME, SOURCE_OVER, STATE_KEYS, T_GROUP, T_PICTURE, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const T_LOOM = 'Loom';
+const T_LOOM = 'Loom',
+    DELTA = 'delta';
 
 
 // #### Loom constructor
@@ -253,7 +254,20 @@ P.processPacketOut = function (key, value, incs) {
 
     let result = true;
 
-    if(!incs.includes(key) && value === this.defs[key]) result = false;
+    switch (key) {
+
+        case DELTA :
+
+            if (!_keys(value).length) {
+
+                result = (incs.includes(DELTA)) ? true : false;
+            }
+            break;
+
+        default :
+
+            if(!incs.includes(key) && value === this.defs[key]) result = false;
+    }
 
     return result;
 };

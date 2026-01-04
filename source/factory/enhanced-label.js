@@ -24,17 +24,20 @@ import deltaMix from '../mixin/delta.js';
 import filterMix from '../mixin/filter.js';
 import textMix from '../mixin/text.js';
 
-import { doCreate, isa_obj, mergeOver, pushUnique, removeItem, xta, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, removeItem, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 // Shared constants
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, BOTTOM, CENTER, DESTINATION_OVER, END, ENTITY, FILL, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, START, T_CELL, T_ENHANCED_LABEL, T_GROUP, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, AUTO, BOTTOM, CENTER, DESTINATION_OVER, END, ENTITY, FILL, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, START, T_CELL, T_ENHANCED_LABEL, T_GROUP, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const DRAW = 'draw',
     DRAW_AND_FILL = 'drawAndFill',
     FILL_AND_DRAW = 'fillAndDraw',
     FONT_VIEWPORT_LENGTH_REGEX = /[0-9.,]+(svh|lvh|dvh|vh|svw|lvw|dvw|vw|svmax|lvmax|dvmax|vmax|svmin|lvmin|dvmin|vmin|svb|lvb|dvb|vb|svi|lvi|dvi|vi)/i,
+    FORCE = 'force',
+    OFF = 'off',
     ROW = 'row',
+    SOFT = 'soft',
     SPACE_AROUND = 'space-around',
     SPACE_BETWEEN = 'space-between',
     T_ENHANCED_LABEL_LINE = 'EnhancedLabelLine',
@@ -44,7 +47,9 @@ const DRAW = 'draw',
     TEXT_LAYOUT_FLOW_COLUMNS = ['column', 'column-reverse'],
     TEXT_LAYOUT_FLOW_REVERSE = ['row-reverse', 'column-reverse'],
     TEXT_NO_BREAK_REGEX = /[\u2060]/,
-    TEXT_SOFT_HYPHEN_REGEX = /[\u00ad]/;
+    TEXT_SOFT_HYPHEN_REGEX = /[\u00ad]/,
+    WORD = 'word',
+    ZWSP = 'zwsp';
 
 // Excludes \u00A0 (no-break-space) and includes \u200b
 const TEXT_SPACES_REGEX = /[ \f\n\r\t\v\u2028\u2029\u200b]/,
@@ -55,8 +60,96 @@ const TEXT_SPACES_REGEX = /[ \f\n\r\t\v\u2028\u2029\u200b]/,
     TEXT_TYPE_SPACE = 'S',
     TEXT_TYPE_ZERO_SPACE = 'Z',
     TEXT_TYPE_TRUNCATE = 'T',
-    TEXT_ZERO_SPACE_REGEX = /[\u200b]/;
+    TEXT_ZERO_SPACE_REGEX = /[\u200b]/,
+    THAI_REGEX = /[\u0E00-\u0E7F]/,
+    LAO_REGEX     = /[\u0E80-\u0EFF]/,
+    KHMER_REGEX   = /[\u1780-\u17FF\u19E0-\u19FF]/,
+    MYANMAR_REGEX = /[\u1000-\u109F\uAA60-\uAA7F\uA9E0-\uA9FF]/,
+    CJK_CLOSE_RE = /[、。．，：；！？〕〉》」』】］）]/,
+    CJK_OPEN_RE  = /[〔〈《「『【［（]/,
+    WORD_JOINER = '\u2060',
+    LOOKS_CJK_RE = /[\u3000-\u303F\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF]/,
+    TEXT_LOOKS_CJK_REGEX = /[\u3000-\u303F\u3040-\u30FF\u3400-\u9FFF\uF900-\uFAFF\u2E80-\u2EFF]/;
 
+// Decide if a short string looks "word-like" when Segmenter doesn't provide isWordLike
+const IS_WORDLIKE = (s) => /[\p{L}\p{N}]/u.test(s),
+    ISWORDLIKE = 'isWordLike';
+
+// Basic BCP-47-ish sanity check (lightweight; avoids obviously bad tags)
+const LANG_TAG_REGEX = /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/i;
+
+// Horizontal → vertical presentation form map (most common marks)
+const VERTICAL_PUNCT_MAP = new Map([
+    ['，', '\uFE10'],
+    ['、', '\uFE11'],
+    ['。', '\uFE12'],
+    ['：', '\uFE13'],
+    ['；', '\uFE14'],
+    ['！', '\uFE15'],
+    ['？', '\uFE16'],
+    ['…', '\uFE19'],
+    ['—', '\uFE31'],
+    ['（', '\uFE35'],
+    ['）', '\uFE36'],
+    ['｛', '\uFE37'],
+    ['｝', '\uFE38'],
+    ['〔', '\uFE39'],
+    ['〕', '\uFE3A'],
+    ['【', '\uFE3B'],
+    ['】', '\uFE3C'],
+    ['《', '\uFE3D'],
+    ['》', '\uFE3E'],
+    ['〈', '\uFE3F'],
+    ['〉', '\uFE40'],
+    ['「', '\uFE41'],
+    ['」', '\uFE42'],
+    ['『', '\uFE43'],
+    ['』', '\uFE44'],
+    ['［', '\uFE47'],
+    ['］', '\uFE48'],
+]);
+
+const toVerticalCjkForms = (s) => {
+
+    let out = '',
+        i, iz, ch;
+
+    for (i = 0, iz = s.length; i < iz; i++) {
+
+        ch = s[i];
+        out += VERTICAL_PUNCT_MAP.get(ch) || ch;
+    }
+    return out;
+};
+
+const autoBindCjkPunctuation = (text) => {
+
+    const len = text.length;
+
+    let out = '',
+        i, ch, next;
+
+    for (i = 0; i < len; i++) {
+
+        ch = text[i];
+        next = i + 1 < len ? text[i + 1] : '';
+        out += ch;
+
+        // 1) Prevent break AFTER openers: insert joiner after the opener
+        if (CJK_OPEN_RE.test(ch) && next && next !== WORD_JOINER) {
+
+            out += WORD_JOINER;
+            continue;
+        }
+
+        // 2) Prevent break BEFORE closers: insert joiner before the closer
+        if (next && CJK_CLOSE_RE.test(next) && ch !== WORD_JOINER) {
+
+            out += WORD_JOINER;
+        }
+    }
+    return out;
+};
 
 // #### EnhancedLabel constructor
 const EnhancedLabel = function (items = Ωempty) {
@@ -211,6 +304,36 @@ const defaultAttributes = {
 // __textUnitFlow__ - string enum. Allowed values are 'row' (default), 'row-reverse', 'column' (for vertical text), 'column-reverse'
 // + Determines the ordering of text units along the space layout line. Has nothing to do with the `direction` attribute.
     textUnitFlow: ROW,
+
+// __startTextOnLine__ - positive integer number. Default: `0`
+// + Determines on which line the text layout will start.
+    startTextOnLine: 0,
+
+// __autoHyphenate__ – boolean flag to opt in to language-aware word breaking and auto-hyphenation. When true, the text is pre-processed before layout using either the user-defined `lineBreakHook` or the browser’s built-in [Intl.Segmenter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter).
+// + Inserts either `\u200B` (zero-width space) or `\u00AD` (soft hyphen) between word-like segments, depending on the value of `lineBreakInsert`.
+    autoHyphenate: false,
+
+// __language__ – indicates the language of the text displayed by the EnhancedLabel entity. Used to choose appropriate word-break and soft-hyphen behavior.
+// + Accepts a BCP-47 language tag such as `'th'`, `'en'`, `'ja'`, etc.
+// + When set to `'auto'` (default), Scrawl-canvas attempts a simple heuristic detection (for example, Thai script detection via Unicode range).
+    language: AUTO,
+
+// __lineBreakInsert__ – specifies which invisible marker to insert at potential break points. Options are `'zwsp'` (zero-width space) or `'soft'` (soft hyphen). Default: `'zwsp'`.
+    lineBreakInsert: ZWSP,
+
+// __lineBreakHook__ – optional callback function providing custom word-breaking or hyphenation logic. The function signature is `(text, lang) => string | string[]`.
+// + If a string is returned, it is used directly as the processed text.
+// + If an array is returned, its elements are joined with the appropriate break character.
+// + This allows integration with external, professional hyphenation or language analysis tools.
+    lineBreakHook: null,
+
+// __cjkPunctuationBinding__ - keep CJK punctuation tied to the preceding or following character (as appropriate) rather than fall onto the next line (or end the previous line).
+// + `'off'`, `'auto'` (default, detect CJK in text), `'force'` (always)
+    cjkPunctuationBinding: AUTO,
+
+// __verticalCjkPunctuation__ - Use vertical presentation forms for CJK punctuation when text flows in columns.
+// + `'off'`, `'auto'` (default, detect CJK in text), `'force'` (always, in column flow)
+    verticalCjkPunctuation: AUTO,
 
 // __truncateString__ - string.
     truncateString: '…',
@@ -412,6 +535,47 @@ S.breakTextOnSpaces = function (item) {
 S.breakWordsOnHyphens = function (item) {
 
     this.breakWordsOnHyphens = !!item;
+    this.dirtyText = true;
+};
+
+S.autoHyphenate = function (item) {
+
+    this.autoHyphenate = !!item;
+    this.dirtyText = true;
+};
+
+S.language = function (item) {
+
+    // Accept BCP-47 tag or AUTO constant
+    this.language = (item && item.substring) ? item : AUTO;
+    this.dirtyText = true;
+};
+
+S.lineBreakInsert = function (item) {
+
+    // only 'zwsp' or 'soft'
+    this.lineBreakInsert = (item === SOFT) ? SOFT : ZWSP;
+    this.dirtyText = true;
+};
+
+S.lineBreakHook = function (fn) {
+
+    this.lineBreakHook = (isa_fn(fn)) ? fn : null;
+    this.dirtyText = true;
+};
+
+// For the CJK punctuation option if you expose it in UI
+S.verticalCjkPunctuation = function (item) {
+
+    const v = (item === FORCE || item === OFF) ? item : AUTO;
+    this.verticalCjkPunctuation = v;
+    this.dirtyText = true;
+};
+
+S.cjkPunctuationBinding = function (item) {
+
+    const v = (item === FORCE || item === OFF) ? item : AUTO;
+    this.cjkPunctuationBinding = v;
     this.dirtyText = true;
 };
 
@@ -826,6 +990,83 @@ P.calculateLines = function () {
     releaseCoordinate(coord);
 };
 
+P.preprocessTextForLineBreaks = function (src) {
+
+    const { autoHyphenate, language, lineBreakHook, lineBreakInsert, cjkPunctuationBinding } = this;
+
+    if (!src || !src.substring) return src;
+
+    // Always start with the source so later passes (CJK binding) can run
+    let out = src;
+
+    if (autoHyphenate) {
+
+        const insertChar = (lineBreakInsert === SOFT) ? '\u00AD' : '\u200B';
+
+        // 1) Developer hook
+        if (isa_fn(lineBreakHook)) {
+
+            const hookRes = lineBreakHook(src, language);
+
+            if (Array.isArray(hookRes)) out = hookRes.join(insertChar);
+            else if (hookRes && hookRes.substring) out = hookRes;
+        }
+
+        // 2) Built-in Intl.Segmenter fallback
+        else {
+
+            let lang = language || AUTO;
+
+            if (lang === AUTO) {
+
+                if (THAI_REGEX.test(src)) lang = 'th';
+                else if (LAO_REGEX.test(src)) lang = 'lo';
+                else if (KHMER_REGEX.test(src)) lang = 'km';
+                else if (MYANMAR_REGEX.test(src))lang = 'my';
+                else lang = null;
+            }
+
+            const hasSeg = lang && typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function' &&
+                           LANG_TAG_REGEX.test(lang);
+
+            if (hasSeg) {
+
+                const seg = new Intl.Segmenter(lang, { granularity: WORD }),
+                    parts = seg.segment(src);
+
+                let assembled = '',
+                    prevWord = false;
+
+                for (const part of parts) {
+
+                    const segmentText = (part && part.segment && part.segment.substring)
+                        ? part.segment
+                        : ZERO_STR;
+
+                    if (!segmentText) continue;
+
+                    const wordlike = (part && ISWORDLIKE in part)
+                        ? !!part.isWordLike
+                        : IS_WORDLIKE(segmentText);
+
+                    if (assembled && prevWord && wordlike) assembled += insertChar;
+
+                    assembled += segmentText;
+                    prevWord = wordlike;
+                }
+                if (assembled) out = assembled;
+            }
+        }
+    }
+
+    // 3) CJK punctuation binding can (and should) run even when autoHyphenate is false
+    const wantCjkBind = cjkPunctuationBinding === 'force' || (cjkPunctuationBinding !== 'off' && LOOKS_CJK_RE.test(out));
+
+    if (wantCjkBind) out = autoBindCjkPunctuation(out);
+
+    return out;
+};
+
 // `cleanText` - Break the entity's text into smaller TextUnit objects which can be positioned within, or along, the layout entity's shape
 P.cleanText = function () {
 
@@ -842,10 +1083,16 @@ P.cleanText = function () {
             textUnits,
         } = this;
 
-        const textCharacters = [...text];
+        // Language-aware preprocessing (opt-in)
+        const processed = this.preprocessTextForLineBreaks(text);
+
+        const textCharacters = [...processed];
 
         const languageDirectionIsLtr = (defaultTextStyle.direction === LTR);
         const layoutFlowIsColumns = TEXT_LAYOUT_FLOW_COLUMNS.includes(textUnitFlow);
+
+        // Decide whether to use vertical CJK forms for this run
+        const useVerticalCjk = layoutFlowIsColumns && (this.verticalCjkPunctuation === FORCE || (this.verticalCjkPunctuation === AUTO && TEXT_LOOKS_CJK_REGEX.test(text)));
 
         const unit = [];
 
@@ -916,7 +1163,9 @@ P.cleanText = function () {
 
                 // Capturing the last word
                 if (unit.length) textUnits.push(requestUnit({
-                    [UNIT_CHARS]: unit.join(ZERO_STR),
+                    [UNIT_CHARS]: useVerticalCjk
+                        ? toVerticalCjkForms(unit.join(ZERO_STR))
+                        : unit.join(ZERO_STR),
                     [UNIT_TYPE]: TEXT_TYPE_CHARS,
                     index,
                 }));
@@ -945,7 +1194,9 @@ P.cleanText = function () {
 
                 // Capturing the last word
                 if (unit.length) textUnits.push(requestUnit({
-                    [UNIT_CHARS]: unit.join(ZERO_STR),
+                    [UNIT_CHARS]: useVerticalCjk
+                        ? toVerticalCjkForms(unit.join(ZERO_STR))
+                        : unit.join(ZERO_STR),
                     [UNIT_TYPE]: TEXT_TYPE_CHARS,
                     index,
                 }));
@@ -955,7 +1206,7 @@ P.cleanText = function () {
 
             textCharacters.forEach((c, i) => {
 
-                unit.push(c);
+                unit.push(useVerticalCjk ? (VERTICAL_PUNCT_MAP.get(c) || c) : c);
 
                 // Some Chinese/Japanese characters simply have to stick together (but not in columns)!
                 if (!layoutFlowIsColumns) {
@@ -1465,6 +1716,7 @@ P.assignTextUnitsToLines = function () {
         lines,
         textUnitFlow,
         textUnits,
+        startTextOnLine,
     } = this;
 
     const languageDirectionIsLtr = (defaultTextStyle.direction === LTR);
@@ -1484,12 +1736,12 @@ P.assignTextUnitsToLines = function () {
         ++unitCursor;
     };
 
-    lines.forEach(line => {
+    for (let j = startTextOnLine, jz = lines.length; j < jz; j++) {
 
         ({
             length: lineLength,
             unitData,
-        } = line);
+        } = lines[j]);
 
         lengthRemaining = _ceil(lineLength);
 
@@ -1556,7 +1808,7 @@ P.assignTextUnitsToLines = function () {
             // + For the moment, we will not implement this alternative approach. It's up to developers and designers to use words that can fit into the available line space. Overlong words can be hyphenated with soft (&amp;shy;) hyphens, or zero-width spaces, if required.
             else break;
         }
-    });
+    };
 
     // Truncation check
     // + Soft hyphens and truncation marking is deliberately suppressed for RTL fonts
