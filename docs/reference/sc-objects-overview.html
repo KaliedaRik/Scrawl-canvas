@@ -325,24 +325,38 @@ const myRedBlock = scrawl.findEntity(name('red-block'));</code></pre>
 console.log(block.saveAsPacket());
 
 // Results
-["mycanvas-block-fill","Block","entity",{"name":"mycanvas-block-fill","dimensions":[100,10
-0],"start":[25,25],"delta":{},"deltaConstraints":{},"pivot":null,"mimic":null,"filters":[]
-,"visibility":true,"calculateOrder":0,"stampOrder":0,"bringToFrontOnDrag":true,"ignoreDrag
-ForX":false,"ignoreDragForY":false,"scale":1,"roll":0,"noUserInteraction":false,"noPositio
-nDependencies":false,"noCanvasEngineUpdates":false,"noFilters":false,"noPathUpdates":false
-,"noDeltaUpdates":false,"checkDeltaConstraints":false,"performDeltaChecks":false,"pivotPin
-":0,"pivotIndex":-1,"addPivotHandle":false,"addPivotOffset":true,"addPivotRotation":false,
-"useMimicDimensions":false,"useMimicScale":false,"useMimicStart":false,"useMimicHandle":fa
-lse,"useMimicOffset":false,"useMimicRotation":false,"useMimicFlip":false,"addOwnDimensions
-ToMimic":false,"addOwnScaleToMimic":false,"addOwnStartToMimic":false,"addOwnHandleToMimic"
-:false,"addOwnOffsetToMimic":false,"addOwnRotationToMimic":false,"pathPosition":0,"addPath
-Handle":false,"addPathOffset":true,"addPathRotation":false,"constantSpeedAlongPath":false,
-"isStencil":false,"memoizeFilterOutput":false,"method":"fill","winding":"nonzero","flipRev
-erse":false,"flipUpend":false,"scaleOutline":true,"scaleShadow":false,"lockFillStyleToEnti
-ty":false,"lockStrokeStyleToEntity":false,"onEnter":"~~~","onLeave":"~~~","onDown":"~~~","
-onUp":"~~~","onOtherInteraction":"~~~","group":"mycanvas_base","fillStyle":"green","stroke
-Style":"gold","lineWidth":6,"lineJoin":"round","shadowOffsetX":4,"shadowOffsetY":4,"shadow
-Blur":2,"shadowColor":"black"}]</code></pre>
+["mycanvas-block-fill","Block","entity",{"name":"mycanvas-block-fill","dimensions":
+[100,100],"start":[25,25],"group":"mycanvas_base","fillStyle":"green","strokeStyle"
+:"gold","lineWidth":6,"lineJoin":"round","shadowOffsetX":4,"shadowOffsetY":4,"shado
+wBlur":2,"shadowColor":"black"}]
+
+console.log(block.saveAsPacket(true));
+
+// Results
+["mycanvas-block-fill","Block","entity",{"name":"mycanvas-block-fill","dimensions":
+[100,100],"start":[25,25],"handle":[0,0],"offset":[0,0],"delta":{},"deltaConstraint
+s":{},"lockTo":["start","start"],"pivot":"","mimic":"","filters":[],"visibility":tr
+ue,"calculateOrder":0,"stampOrder":0,"bringToFrontOnDrag":true,"ignoreDragForX":fal
+se,"ignoreDragForY":false,"scale":1,"roll":0,"noUserInteraction":false,"noPositionD
+ependencies":false,"noCanvasEngineUpdates":false,"noFilters":false,"noPathUpdates":
+false,"noDeltaUpdates":false,"checkDeltaConstraints":false,"performDeltaChecks":fal
+se,"pivotPin":0,"pivotIndex":-1,"addPivotHandle":false,"addPivotOffset":true,"addPi
+votRotation":false,"useMimicDimensions":false,"useMimicScale":false,"useMimicStart"
+:false,"useMimicHandle":false,"useMimicOffset":false,"useMimicRotation":false,"useM
+imicFlip":false,"addOwnDimensionsToMimic":false,"addOwnScaleToMimic":false,"addOwnS
+tartToMimic":false,"addOwnHandleToMimic":false,"addOwnOffsetToMimic":false,"addOwnR
+otationToMimic":false,"path":"","pathPosition":0,"addPathHandle":false,"addPathOffs
+et":true,"addPathRotation":false,"constantSpeedAlongPath":false,"isStencil":false,"
+memoizeFilterOutput":false,"method":"fill","winding":"nonzero","flipReverse":false,
+"flipUpend":false,"scaleOutline":true,"scaleShadow":false,"lockFillStyleToEntity":f
+alse,"lockStrokeStyleToEntity":false,"group":"mycanvas_base","fillStyle":"green","s
+trokeStyle":"gold","globalAlpha":1,"globalCompositeOperation":"source-over","lineWi
+dth":6,"lineCap":"butt","lineJoin":"round","lineDashOffset":0,"miterLimit":10,"shad
+owOffsetX":4,"shadowOffsetY":4,"shadowBlur":2,"shadowColor":"black","font":"12px sa
+ns-serif","direction":"ltr","fontKerning":"normal","textRendering":"auto","letterSp
+acing":"0px","wordSpacing":"0px","fontStretch":"normal","fontVariantCaps":"normal",
+"filter":"none","imageSmoothingEnabled":true,"imageSmoothingQuality":"high","textAl
+ign":"left","textBaseline":"top","lineDash":[]}]</code></pre>
 <p>Because packet management is central to SC functionality it gets tested in a number of the demos. More dedicated packet management testing happens in demos <a href="../../demo/packets-001.html">Packets-001</a> and <a href="../../demo/packets-002.html">Packets-002</a>.</p>
 <h3 id="clone-functionality">Clone functionality</h3>
 <p>The SC cloning functionality is tied closely to the packet functionality. To create a clone of an object SC will first serialize the object, and then deserialize the resulting string to create a new object, which can in turn action the updates described in the <code>.clone()</code> function's argument object.</p>

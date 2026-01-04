@@ -1228,7 +1228,7 @@ P.<span class="hljs-property">clone</span> = λcloneError;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">removeDomArtefact = <span class="hljs-literal">true</span></span>) {
 
     <span class="hljs-keyword">const</span> name = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>,
         host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>;</pre></div></div>
@@ -1319,7 +1319,7 @@ P.<span class="hljs-property">clone</span> = λcloneError;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">remove</span>();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (removeDomArtefact) <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">remove</span>();
 };</pre></div></div>
             
         </li>

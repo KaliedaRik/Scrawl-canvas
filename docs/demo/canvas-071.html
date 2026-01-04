@@ -740,6 +740,31 @@
                 </a>
               
                 
+                <a class="source" href="filters-038.html">
+                  ./demo/filters-038.js
+                </a>
+              
+                
+                <a class="source" href="filters-039.html">
+                  ./demo/filters-039.js
+                </a>
+              
+                
+                <a class="source" href="filters-040.html">
+                  ./demo/filters-040.js
+                </a>
+              
+                
+                <a class="source" href="filters-041.html">
+                  ./demo/filters-041.js
+                </a>
+              
+                
+                <a class="source" href="filters-042.html">
+                  ./demo/filters-042.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1103,19 +1128,26 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">setTowardsRed</span> = (<span class="hljs-params"></span>) =&gt; {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">clamp</span> = val =&gt; {
+
+    <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (val &gt; <span class="hljs-number">255</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">255</span>;
+    <span class="hljs-keyword">return</span> val;
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">setTowardsRed</span> = (<span class="hljs-params"></span>) =&gt; {
 
     pixelState.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">pixel</span> =&gt;</span> {
 
         <span class="hljs-keyword">let</span> { red, green, blue } = pixel;
 
-        <span class="hljs-keyword">if</span> (red &lt; <span class="hljs-number">255</span>) red++;
-        <span class="hljs-keyword">if</span> (green &gt; <span class="hljs-number">0</span>) green--;
-        <span class="hljs-keyword">if</span> (blue &gt; <span class="hljs-number">0</span>) blue--;
+        red++;
+        green--;
+        blue--;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1126,13 +1158,13 @@
 
         <span class="hljs-keyword">let</span> { red, green, blue } = pixel;
 
-        <span class="hljs-keyword">if</span> (red &gt; <span class="hljs-number">0</span>) red--;
-        <span class="hljs-keyword">if</span> (green &lt; <span class="hljs-number">255</span>) green++;
-        <span class="hljs-keyword">if</span> (blue &gt; <span class="hljs-number">0</span>) blue--;
+        red--;
+        green++;
+        blue--;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1143,13 +1175,13 @@
 
         <span class="hljs-keyword">let</span> { red, green, blue } = pixel;
 
-        <span class="hljs-keyword">if</span> (red &gt; <span class="hljs-number">0</span>) red--;
-        <span class="hljs-keyword">if</span> (green &gt; <span class="hljs-number">0</span>) green--;
-        <span class="hljs-keyword">if</span> (blue &lt; <span class="hljs-number">255</span>) blue++;
+        red--;
+        green--;
+        blue++;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1160,13 +1192,13 @@
 
         <span class="hljs-keyword">let</span> { red, green, blue } = pixel;
 
-        <span class="hljs-keyword">if</span> (red &gt; <span class="hljs-number">0</span>) red--;
-        <span class="hljs-keyword">if</span> (green &gt; <span class="hljs-number">0</span>) green--;
-        <span class="hljs-keyword">if</span> (blue &gt; <span class="hljs-number">0</span>) blue--;
+        red--;
+        green--;
+        blue--;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1177,13 +1209,13 @@
 
         <span class="hljs-keyword">let</span> { red, green, blue } = pixel;
 
-        <span class="hljs-keyword">if</span> (red &lt; <span class="hljs-number">255</span>) red++;
-        <span class="hljs-keyword">if</span> (green &lt; <span class="hljs-number">255</span>) green++;
-        <span class="hljs-keyword">if</span> (blue &lt; <span class="hljs-number">255</span>) blue++;
+        red++;
+        green++;
+        blue++;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1200,17 +1232,17 @@
             blueAmount = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((col / width) * <span class="hljs-number">255</span>);
 
         <span class="hljs-keyword">if</span> (red &gt; redAmount) red--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (red &lt; redAmount) red++;
+        <span class="hljs-keyword">else</span> red++;
 
         <span class="hljs-keyword">if</span> (green &gt; greenAmount) green--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (green &lt; greenAmount) green++;
+        <span class="hljs-keyword">else</span> green++;
 
         <span class="hljs-keyword">if</span> (blue &gt; blueAmount) blue--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (blue &lt; blueAmount) blue++;
+        <span class="hljs-keyword">else</span> blue++;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1227,17 +1259,17 @@
             blueAmount = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((row / height) * <span class="hljs-number">255</span>);
 
         <span class="hljs-keyword">if</span> (red &gt; redAmount) red--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (red &lt; redAmount) red++;
+        <span class="hljs-keyword">else</span> red++;
 
         <span class="hljs-keyword">if</span> (green &gt; greenAmount) green--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (green &lt; greenAmount) green++;
+        <span class="hljs-keyword">else</span> green++;
 
         <span class="hljs-keyword">if</span> (blue &gt; blueAmount) blue--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (blue &lt; blueAmount) blue++;
+        <span class="hljs-keyword">else</span> blue++;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1254,17 +1286,17 @@
             blueAmount = <span class="hljs-number">127</span>;
 
         <span class="hljs-keyword">if</span> (red &gt; redAmount) red--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (red &lt; redAmount) red++;
+        <span class="hljs-keyword">else</span> red++;
 
         <span class="hljs-keyword">if</span> (green &gt; greenAmount) green--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (green &lt; greenAmount) green++;
+        <span class="hljs-keyword">else</span> green++;
 
         <span class="hljs-keyword">if</span> (blue &gt; blueAmount) blue--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (blue &lt; blueAmount) blue++;
+        <span class="hljs-keyword">else</span> blue++;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
   <span class="hljs-title function_">update</span>();
 };
@@ -1281,17 +1313,17 @@
             blueDistance = <span class="hljs-number">400</span>;
 
         <span class="hljs-keyword">if</span> (distance &gt; redDistance) red--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (distance &lt; redDistance) red++;
+        <span class="hljs-keyword">else</span> red++;
 
         <span class="hljs-keyword">if</span> (distance &gt; greenDistance) green--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (distance &lt; greenDistance) green++;
+        <span class="hljs-keyword">else</span> green++;
 
         <span class="hljs-keyword">if</span> (distance &gt; blueDistance) blue--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (distance &lt; blueDistance) blue++;
+        <span class="hljs-keyword">else</span> blue++;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1308,17 +1340,17 @@
             blueDistance = <span class="hljs-number">270</span>;
 
         <span class="hljs-keyword">if</span> (distance &gt; redDistance) red--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (distance &lt; redDistance) red++;
+        <span class="hljs-keyword">else</span> red++;
 
         <span class="hljs-keyword">if</span> (distance &gt; greenDistance) green--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (distance &lt; greenDistance) green++;
+        <span class="hljs-keyword">else</span> green++;
 
         <span class="hljs-keyword">if</span> (distance &gt; blueDistance) blue--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (distance &lt; blueDistance) blue++;
+        <span class="hljs-keyword">else</span> blue++;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1335,17 +1367,17 @@
             blueDistance = <span class="hljs-number">80</span>;
 
         <span class="hljs-keyword">if</span> (distance &gt; redDistance) red--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (distance &lt; redDistance) red++;
+        <span class="hljs-keyword">else</span> red++;
 
         <span class="hljs-keyword">if</span> (distance &gt; greenDistance) green--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (distance &lt; greenDistance) green++;
+        <span class="hljs-keyword">else</span> green++;
 
         <span class="hljs-keyword">if</span> (distance &gt; blueDistance) blue--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (distance &lt; blueDistance) blue++;
+        <span class="hljs-keyword">else</span> blue++;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1361,16 +1393,16 @@
         <span class="hljs-keyword">const</span> stripeVal = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(pixel.<span class="hljs-property">col</span> / stripeWidth) * <span class="hljs-number">50</span>;
 
         <span class="hljs-keyword">if</span> (red &gt; stripeVal) red--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (red &lt; stripeVal) red++;
+        <span class="hljs-keyword">else</span> red++;
 
         <span class="hljs-keyword">if</span> (green &gt; stripeVal) green--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (green &lt; stripeVal) green++;
+        <span class="hljs-keyword">else</span> green++;
 
-        <span class="hljs-keyword">if</span> (blue &gt; <span class="hljs-number">0</span>) blue--;
+        blue--;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1386,16 +1418,16 @@
         <span class="hljs-keyword">const</span> stripeVal = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(pixel.<span class="hljs-property">row</span> / stripeHeight) * <span class="hljs-number">50</span>;
 
         <span class="hljs-keyword">if</span> (green &gt; stripeVal) green--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (green &lt; stripeVal) green++;
+        <span class="hljs-keyword">else</span> green++;
 
         <span class="hljs-keyword">if</span> (blue &gt; stripeVal) blue--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (blue &lt; stripeVal) blue++;
+        <span class="hljs-keyword">else</span> blue++;
 
-        <span class="hljs-keyword">if</span> (red &gt; <span class="hljs-number">0</span>) red--;
+        red--;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1426,9 +1458,9 @@
             blue--;
         }
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1450,9 +1482,9 @@
             blue++;
         }
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1474,9 +1506,9 @@
             blue++;
         }
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1498,9 +1530,9 @@
         <span class="hljs-keyword">if</span> (blue &gt; d) blue--;
         <span class="hljs-keyword">else</span> blue++;
 
-        pixel.<span class="hljs-property">red</span> = red;
-        pixel.<span class="hljs-property">green</span> = green;
-        pixel.<span class="hljs-property">blue</span> = blue;
+        pixel.<span class="hljs-property">red</span> = <span class="hljs-title function_">clamp</span>(red);
+        pixel.<span class="hljs-property">green</span> = <span class="hljs-title function_">clamp</span>(green);
+        pixel.<span class="hljs-property">blue</span> = <span class="hljs-title function_">clamp</span>(blue);
     });
     <span class="hljs-title function_">update</span>();
 };
@@ -1512,9 +1544,18 @@
         <span class="hljs-keyword">let</span> { red, green, blue } = pixel;
         <span class="hljs-keyword">const</span> angle = pixel.<span class="hljs-property">angle</span>;
 
-        <span class="hljs-keyword">if</span> (angle &lt; <span class="hljs-number">0.33</span>) red++;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (angle &lt; <span class="hljs-number">0.67</span>) green++;
-        <span class="hljs-keyword">else</span> blue++;
+        <span class="hljs-keyword">if</span> (angle &lt; <span class="hljs-number">0.33</span>) {
+
+            <span class="hljs-keyword">if</span> (red &lt; <span class="hljs-number">255</span>) red++;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (angle &lt; <span class="hljs-number">0.67</span>) {
+
+            <span class="hljs-keyword">if</span> (green &lt; <span class="hljs-number">255</span>) green++;
+        }
+        <span class="hljs-keyword">else</span> {
+
+            <span class="hljs-keyword">if</span> (blue &lt; <span class="hljs-number">255</span>) blue++;
+        }
 
         pixel.<span class="hljs-property">red</span> = red;
         pixel.<span class="hljs-property">green</span> = green;
@@ -1530,9 +1571,18 @@
         <span class="hljs-keyword">let</span> { red, green, blue } = pixel;
         <span class="hljs-keyword">const</span> angle = pixel.<span class="hljs-property">angle</span>;
 
-        <span class="hljs-keyword">if</span> (angle &lt; <span class="hljs-number">0.33</span>) red--;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (angle &lt; <span class="hljs-number">0.67</span>) green--;
-        <span class="hljs-keyword">else</span> blue--;
+        <span class="hljs-keyword">if</span> (angle &lt; <span class="hljs-number">0.33</span>) {
+
+            <span class="hljs-keyword">if</span> (red &gt; <span class="hljs-number">0</span>) red--;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (angle &lt; <span class="hljs-number">0.67</span>) {
+
+            <span class="hljs-keyword">if</span> (green &gt; <span class="hljs-number">0</span>) green--;
+        }
+        <span class="hljs-keyword">else</span> {
+
+            <span class="hljs-keyword">if</span> (blue &gt; <span class="hljs-number">0</span>) blue--;
+        }
 
         pixel.<span class="hljs-property">red</span> = red;
         pixel.<span class="hljs-property">green</span> = green;

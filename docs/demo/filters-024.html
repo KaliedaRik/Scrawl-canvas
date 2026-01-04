@@ -740,6 +740,31 @@
                 </a>
               
                 
+                <a class="source" href="filters-038.html">
+                  ./demo/filters-038.js
+                </a>
+              
+                
+                <a class="source" href="filters-039.html">
+                  ./demo/filters-039.js
+                </a>
+              
+                
+                <a class="source" href="filters-040.html">
+                  ./demo/filters-040.js
+                </a>
+              
+                
+                <a class="source" href="filters-041.html">
+                  ./demo/filters-041.js
+                </a>
+              
+                
+                <a class="source" href="filters-042.html">
+                  ./demo/filters-042.js
+                </a>
+              
+                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1112,8 +1137,10 @@ weights.<span class="hljs-title function_">fill</span>(<span class="hljs-number"
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">oName</span>(<span class="hljs-string">&#x27;image&#x27;</span>),
     <span class="hljs-attr">group</span>: oCanvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;baseGroup&#x27;</span>),
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
     <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;95%&#x27;</span>, <span class="hljs-string">&#x27;95%&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
 
     <span class="hljs-attr">filters</span>: [<span class="hljs-title function_">oName</span>(<span class="hljs-string">&#x27;weighted&#x27;</span>)],
 });</pre></div></div>
@@ -1256,7 +1283,7 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(
 <span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
                 pin.<span class="hljs-property">isBeingDragged</span> = <span class="hljs-literal">false</span>;
                 pin.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">lockXTo</span>: <span class="hljs-string">&#x27;mouse&#x27;</span>,
+                    <span class="hljs-attr">lockYTo</span>: <span class="hljs-string">&#x27;mouse&#x27;</span>,
                 });
             }
         }
@@ -1273,7 +1300,7 @@ dragGroup.<span class="hljs-title function_">addArtefacts</span>(
 
                 pin.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">start</span>: pin.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>),
-                    <span class="hljs-attr">lockXTo</span>: <span class="hljs-string">&#x27;start&#x27;</span>,
+                    <span class="hljs-attr">lockYTo</span>: <span class="hljs-string">&#x27;start&#x27;</span>,
                 });
             }
         }
