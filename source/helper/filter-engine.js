@@ -24,7 +24,7 @@ import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coord
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, _tan, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DECONVOLUTE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, OK_PERCEPTUAL_CURVES, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, UNSHARP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR, ZOOM_BLUR } from './shared-vars.js';
+import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DECONVOLUTE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, OK_PERCEPTUAL_CURVES, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, UNSHARP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR, ZOOM_BLUR } from './shared-vars.js';
 
 // Local constants
 const _256 = 256,
@@ -405,33 +405,6 @@ const transferDataUnchanged = function (oData, iData, len) {
     else oData.set(iData.subarray(0, len));
 };
 
-// Edge-Aware USM helpers (Float32 single-channel)
-
-// Workspace keyed by dimensions so we can reuse buffers safely.
-const getEausmWorkspace = (width, height) => {
-
-    const key = `ea-usm::ws::${width}x${height}`,
-        N = width * height;
-
-    let ws = getWorkstoreItem(key);
-    if (!ws) ws = {};
-
-    if (!ws.L || ws.L.length !== N) ws.L = new Float32Array(N);
-    if (!ws.A || ws.A.length !== N) ws.A = new Float32Array(N);
-    if (!ws.B || ws.B.length !== N) ws.B = new Float32Array(N);
-
-    if (!ws.Lb || ws.Lb.length !== N) ws.Lb = new Float32Array(N);
-    if (!ws.D || ws.D.length !== N) ws.D = new Float32Array(N);
-    if (!ws.G || ws.G.length !== N) ws.G = new Float32Array(N);
-    if (!ws.M || ws.M.length !== N) ws.M = new Float32Array(N);
-
-    if (!ws.tmpLine || ws.tmpLine.length < Math.max(width, height)) ws.tmpLine = new Float32Array(Math.max(width, height));
-
-    setWorkstoreItem(key, ws);
-    return ws;
-};
-
-// Share the same coeff cache as GAUSSIAN_BLUR so sliders feel identical
 const getGaussianCoeffCache = () => {
 
     const COEFFS_KEY = 'gaussian-blur::coeffs';
@@ -2668,7 +2641,7 @@ P.theBigActionsObject = {
             const key = `ea-rl::ws::${width}x${height}`,
                 N = width * height;
 
-            let ws = getWorkstoreItem(key) || {};
+            const ws = getWorkstoreItem(key) || {};
 
             if (!ws.L || ws.L.length !== N) ws.L = new Float32Array(N);
             if (!ws.A || ws.A.length !== N) ws.A = new Float32Array(N);
@@ -2813,7 +2786,7 @@ P.theBigActionsObject = {
             };
 
             let y, ym1, y0, yp1, x, xm1, x0, xp1,
-                p00, p01, p02, p10, p11, p12, p20, p21, p22,
+                p00, p01, p02, p10, p12, p20, p21, p22,
                 gx, gy;
 
             for (y = 0; y < height; y++) {
@@ -2832,7 +2805,6 @@ P.theBigActionsObject = {
                     p10 = src[clampXY(x0, ym1)];
                     p20 = src[clampXY(xp1, ym1)];
                     p01 = src[clampXY(xm1, y0)];
-                    p11 = src[clampXY(x0, y0)];
                     p21 = src[clampXY(xp1, y0)];
                     p02 = src[clampXY(xm1, yp1)];
                     p12 = src[clampXY(x0, yp1)];
@@ -2870,7 +2842,7 @@ P.theBigActionsObject = {
                 v = arr[j];
                 if (v < 0) v = 0;
                 else if (v > 1) v = 1;
-                
+
                 hist[(v * 255) | 0]++;
             }
             return jz;
@@ -2891,7 +2863,7 @@ P.theBigActionsObject = {
 
             hist.fill(0);
 
-            let total = 0, 
+            let total = 0,
                 j, jz, v;
 
             for (j = 0, jz = arr.length | 0; j < jz; j++) {
@@ -2925,9 +2897,9 @@ P.theBigActionsObject = {
 
         const alphaIsSolid = (Am) => {
 
-            let j,
-                jz = Am.length|0,
-                acc = 0;
+            let j, acc = 0;
+
+            const jz = Am.length|0;
 
             for (j = 0; j < jz; j++) {
 
@@ -3122,7 +3094,7 @@ P.theBigActionsObject = {
                 gaussianBlurL_Float(_M, _M, W, H, 0.7, 0.7, _tmpLine, _tmpImg, null, null);
             }
             else {
-                
+
                 for (i = 0, iz = _L.length | 0; i < iz; i++) {
 
                     _M[i] = 1.0;
@@ -3134,7 +3106,7 @@ P.theBigActionsObject = {
                 _M[i] = _M[i] * strength * _Am[i];
             }
 
-            const total = SOLID_ALPHA 
+            const total = SOLID_ALPHA
                 ? buildHist01Float(_Gb, _hist)
                 : buildMaskedHist01Float(_Gb, _Am, _hist);
 
@@ -3176,7 +3148,7 @@ P.theBigActionsObject = {
                 else alphaAwareBlurFast(_R, _R, _Am, _invAb, W, H, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
 
                 accDelta = 0;
-                
+
                 for (i = 0; i < Npix; i++) {
 
                     d = _R[i] - 1;
@@ -3297,7 +3269,7 @@ P.theBigActionsObject = {
 
                 U = 1 + M[i] * D;
                 U = _min(_max(U, dnF), upF);
-                
+
                 Gs[i] *= U;
             }
             if ((ACCDELTA / Npix) < 0.003) break;
@@ -3313,7 +3285,7 @@ P.theBigActionsObject = {
                 out32[p] = rgba;
                 continue;
             }
-            
+
             rgb = toRGB(Gs[p], A[p], B[p], libs);
 
             out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
@@ -3361,7 +3333,7 @@ P.theBigActionsObject = {
         else if (channelY === BLUE) offsetForChannelY = 2;
 
         let p = 0,
-            y, iy, my, iRowBase, mRowBase, x, ix, mx,
+            y, iy, my, mRowBase, x, ix, mx,
             destPx, destA, mPos, dispX, dispY, dx, dy,
             srcPx, srcA, dIndex, movedZero, destZero, outPx;
 
@@ -3369,7 +3341,6 @@ P.theBigActionsObject = {
 
             iy = y;
             my = y + offsetY;
-            iRowBase = iy * iWidth;
             mRowBase = my * mWidth;
 
             for (x = 0; x < iWidth; x++, p++) {
@@ -4000,15 +3971,15 @@ P.theBigActionsObject = {
                     prev_prev_out_r = prev_out_r;
                     prev_out_r = curr_out_r;
                     prev_src_r = curr_src_r;
-                    
+
                     prev_prev_out_g = prev_out_g;
                     prev_out_g = curr_out_g;
                     prev_src_g = curr_src_g;
-                    
+
                     prev_prev_out_b = prev_out_b;
                     prev_out_b = curr_out_b;
                     prev_src_b = curr_src_b;
-                    
+
                     prev_prev_out_a = prev_out_a;
                     prev_out_a = curr_out_a;
                     prev_src_a = curr_src_a;
@@ -4058,15 +4029,15 @@ P.theBigActionsObject = {
                     prev_prev_out_r = prev_out_r;
                     prev_out_r = curr_out_r;
                     prev_src_r = curr_src_r;
-                    
+
                     prev_prev_out_g = prev_out_g;
                     prev_out_g = curr_out_g;
                     prev_src_g = curr_src_g;
-                    
+
                     prev_prev_out_b = prev_out_b;
                     prev_out_b = curr_out_b;
                     prev_src_b = curr_src_b;
-                    
+
                     prev_prev_out_a = prev_out_a;
                     prev_out_a = curr_out_a;
                     prev_src_a = curr_src_a;
@@ -4236,8 +4207,7 @@ P.theBigActionsObject = {
         const iData  = input.data,
             oData  = output.data,
             iWidth = input.width,
-            iHeight = input.height,
-            len    = iData.length;
+            iHeight = input.height;
 
         const nPix = (iWidth * iHeight) | 0;
 
@@ -4321,7 +4291,7 @@ P.theBigActionsObject = {
             }
         }
 
-        const rowStrideBytes = (iWidth << 2); // width * 4
+        const rowStrideBytes = (iWidth << 2);
         let p = 0;
 
         let y, x, rowStart, rowEnd, baseByte, cursor,
@@ -4347,7 +4317,7 @@ P.theBigActionsObject = {
 
             for (x = 0; x < iWidth; x++, p++) {
 
-                baseByte = rowStart + (x << 2); // byte index for R of this pixel
+                baseByte = rowStart + (x << 2);
 
                 destPx = i32[p];
                 destR =  destPx & 0xFF;
@@ -4891,7 +4861,7 @@ P.theBigActionsObject = {
         else processResults(cache.work, output, opacity);
     },
 
-// __matrix__ - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. 
+// __matrix__ - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation.
 // + The matrix dimensions can be set using the `width` and `height` arguments
 // + Defining the home pixel's position within the matrix can be set using the `offsetX` and `offsetY` arguments.
 // + The weights to be applied need to be supplied in the `weights` argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix.
@@ -4900,7 +4870,7 @@ P.theBigActionsObject = {
 // Note: When using the `premultiply` option, the filter operates in premultiplied-alpha space and normalizes color values by the total alpha contribution of the kernel.
 // + This works best for smoothing or blur kernels (where all weights are positive and sum to 1).
 // + For edge-detection or high-pass kernels (where weights sum near zero or include negatives), `premultiply` can produce unpredictable results and should generally be left false.
-// 
+//
 // The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights.
     [MATRIX]: function (requirements) {
 
@@ -5657,12 +5627,12 @@ P.theBigActionsObject = {
             }
 
             if (useInputAsMask) {
-                
+
                 const pixelCount = src32.length;
                 let p, s;
 
                 for (p = 0; p < pixelCount; p++) {
-                    
+
                     s = src32[p];
                     if ((s >>> 24) === 0) out32[p] = 0;
                 }
@@ -7037,7 +7007,7 @@ P.theBigActionsObject = {
 
                     if (warpR) {
 
-                        let warpTheta = _atan2(warpY, warpX);
+                        warpTheta = _atan2(warpY, warpX);
                         warpTheta += spiralStrength * warpR;
 
                         pHold[0] = _cos(warpTheta) * warpR;
@@ -7482,7 +7452,7 @@ P.theBigActionsObject = {
         const rAvg = includeRed ? new Uint8Array(nTiles) : null,
             gAvg = includeGreen ? new Uint8Array(nTiles) : null,
             bAvg = includeBlue ? new Uint8Array(nTiles) : null,
-            aAvg = new Uint8Array(nTiles); // internal alpha average always computed
+            aAvg = new Uint8Array(nTiles);
 
         for (t = 0; t < nTiles; t++) {
 
@@ -7797,7 +7767,7 @@ P.theBigActionsObject = {
             };
 
             let x, y, ym1, y0, yp1, xm1, x0, xp1, gx, gy,
-                p00, p10, p20, p01, p11, p21, p02, p12, p22;
+                p00, p10, p20, p01, p21, p02, p12, p22;
 
             for (y = 0; y < height; y++) {
 
@@ -7816,7 +7786,6 @@ P.theBigActionsObject = {
                     p20 = src[clampXY(xp1, ym1)];
 
                     p01 = src[clampXY(xm1, y0 )];
-                    p11 = src[clampXY(x0,  y0 )];
                     p21 = src[clampXY(xp1, y0 )];
 
                     p02 = src[clampXY(xm1, yp1)];
@@ -8263,7 +8232,7 @@ P.theBigActionsObject = {
 
             if (useB) {
 
-                bNorm = (B + MAX_A_B) * INV_RANGE_A_B;   // 0..1
+                bNorm = (B + MAX_A_B) * INV_RANGE_A_B;
                 bNorm = _min(_max(bNorm, 0), 1);
 
                 idxB = (bNorm * (AB_SIZE - 1) + 0.5) | 0;
@@ -8329,7 +8298,7 @@ P.theBigActionsObject = {
                 r = (px & 0xFF);
                 g = ((px >>> 8) & 0xFF);
                 b = ((px >>>16) & 0xFF);
-                
+
                 r = _min(255, (r * f + 0.5) | 0);
                 g = _min(255, (g * f + 0.5) | 0);
                 b = _min(255, (b * f + 0.5) | 0);
@@ -8387,7 +8356,7 @@ P.theBigActionsObject = {
         const getWs = (w, h) => {
 
             const key = `zoom-blur::ws::${w}x${h}`;
-            let ws = getWorkstoreItem(key) || {};
+            const ws = getWorkstoreItem(key) || {};
 
             const N = (w * h) | 0;
 
@@ -8404,7 +8373,7 @@ P.theBigActionsObject = {
         const getRand = (w, h, seed) => {
 
             const key = `zoom-blur::rand::${w}x${h}::${seed}`;
-            let r = getWorkstoreItem(key);
+            const r = getWorkstoreItem(key);
             if (r) return r;
 
             const N = (w * h) | 0;
@@ -8455,7 +8424,7 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements;
 
-        let cx = getValuePx(startX, width),
+        const cx = getValuePx(startX, width),
             cy = getValuePx(startY, height);
 
         let rIn = getValuePx(innerRadius, _min(width, height)),
@@ -8643,8 +8612,8 @@ P.theBigActionsObject = {
 
             if (!writePacked) {
 
-                const key = `zoom-blur::planes::${W}x${H}`;
-                let planes = getWorkstoreItem(key) || {};
+                const key = `zoom-blur::planes::${W}x${H}`,
+                    planes = getWorkstoreItem(key) || {};
 
                 const N = (W*H)|0;
 
@@ -8669,7 +8638,7 @@ P.theBigActionsObject = {
                 accR, accG, accB, accA,
                 s, t, inv, sx, sy, row0, row1, wt, jt0, rnd,
                 A_keep, R, G, B, Aout, eps, Ri, Gi, Bi, Ai, scale,
-                theta, ct, st, rx, ry;
+                theta, ct, st, rx, ry, u;
 
             for (y = 0; y < H; y++) {
 
@@ -8708,7 +8677,7 @@ P.theBigActionsObject = {
                             if (r2 <= rIn2) m = 0;
                             else {
 
-                                let u = (r2 - rIn2) * invSpan2;
+                                u = (r2 - rIn2) * invSpan2;
 
                                 m = (u >= 1) ? 1 : (u <= 0 ? 0 : (easeIsLinear ? u : ease(u)));
                             }
@@ -8772,10 +8741,10 @@ P.theBigActionsObject = {
 
                             xf = sx;
                             yf = sy;
-                            
+
                             if (xf < 0) xf = 0;
                             else if (xf > wM1) xf = wM1;
-                            
+
                             if (yf < 0) yf = 0;
                             else if (yf > hM1) yf = hM1;
 
@@ -8795,7 +8764,7 @@ P.theBigActionsObject = {
 
                             row0 = y0 * width;
                             row1 = y1 * width;
-                            
+
                             sp00 = src32[row0 + x0];
                             sp10 = src32[row0 + x1];
                             sp01 = src32[row1 + x0];
@@ -8804,7 +8773,7 @@ P.theBigActionsObject = {
                             wt = weights[s] * norm;
 
                             accR += (
-                                (sp00 & 255) * w00 
+                                (sp00 & 255) * w00
                                 + (sp10 & 255) * w10
                                 + (sp01 & 255) * w01
                                 + (sp11 & 255) * w11
@@ -8834,7 +8803,7 @@ P.theBigActionsObject = {
                     }
                     else {
 
-                        rnd = RND[p],
+                        rnd = RND[p];
                         jt0 = (variation * (rnd - 0.5)) / _max(1, (samples - 1));
 
                         for (s = 0; s < S_eff; s++) {
@@ -8879,15 +8848,15 @@ P.theBigActionsObject = {
 
                             fx = xf - x0;
                             fy = yf - y0;
-                            
+
                             w00 = (1 - fx) * (1 - fy);
                             w10 = fx * (1 - fy);
                             w01 = (1 - fx) * fy;
                             w11 = fx * fy;
 
-                            row0 = y0 * width,
+                            row0 = y0 * width;
                             row1 = y1 * width;
-                            
+
                             sp00 = src32[row0 + x0];
                             sp10 = src32[row0 + x1];
                             sp01 = src32[row1 + x0];
@@ -8915,7 +8884,7 @@ P.theBigActionsObject = {
                                 + ((sp01 >>> 16) & 255) * w01
                                 + ((sp11 >>> 16) & 255) * w11
                                 ) * wt;
-                            
+
                             accA += (
                                 ((sp00 >>> 24) & 255) * w00
                                 + ((sp10 >>> 24) & 255) * w10
@@ -8934,7 +8903,7 @@ P.theBigActionsObject = {
                     if (includeAlpha) Aout = accA;
                     else {
 
-                        eps = 1e-6,
+                        eps = 1e-6;
                         scale = (accA > eps) ? (A_keep / accA) : 0.0;
 
                         R *= scale;
@@ -8978,7 +8947,7 @@ P.theBigActionsObject = {
             const { outR, outG, outB, outA } = planes;
 
             const keyUp = `zoom-blur::upsampled::${width}x${height}`;
-            let up = getWorkstoreItem(keyUp) || {};
+            const up = getWorkstoreItem(keyUp) || {};
 
             if (!up.R || up.R.length !== pixels) {
 
@@ -9029,7 +8998,7 @@ P.theBigActionsObject = {
 
             const allCh = (INC_MASK === 0xFFFFFFFF >>> 0);
 
-            let p, srcPix, A_keep, 
+            let p, srcPix, A_keep,
                 R, G, B, Aout,
                 Ri, Gi, Bi, Ai, packed,
                 eps, scale;
@@ -9037,7 +9006,7 @@ P.theBigActionsObject = {
             for (p = 0; p < pixels; p++){
 
                 srcPix = src32[p];
-                
+
                 A_keep = (srcPix >>> 24) & 255;
 
                 R = up.R[p];
@@ -9048,7 +9017,7 @@ P.theBigActionsObject = {
                 else {
 
                     eps = 1e-6;
-                    scale = (up.A[p] > eps) 
+                    scale = (up.A[p] > eps)
                         ? (A_keep / up.A[p])
                         : 0.0;
 

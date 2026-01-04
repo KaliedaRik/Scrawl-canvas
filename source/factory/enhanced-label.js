@@ -65,7 +65,6 @@ const TEXT_SPACES_REGEX = /[ \f\n\r\t\v\u2028\u2029\u200b]/,
     LAO_REGEX     = /[\u0E80-\u0EFF]/,
     KHMER_REGEX   = /[\u1780-\u17FF\u19E0-\u19FF]/,
     MYANMAR_REGEX = /[\u1000-\u109F\uAA60-\uAA7F\uA9E0-\uA9FF]/,
-    CJK_CHAR_RE = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u,
     CJK_CLOSE_RE = /[、。．，：；！？〕〉》」』】］）]/,
     CJK_OPEN_RE  = /[〔〈《「『【［（]/,
     WORD_JOINER = '\u2060',
@@ -115,7 +114,7 @@ const toVerticalCjkForms = (s) => {
     let out = '',
         i, iz, ch;
 
-    for (let i = 0, iz = s.length; i < iz; i++) {
+    for (i = 0, iz = s.length; i < iz; i++) {
 
         ch = s[i];
         out += VERTICAL_PUNCT_MAP.get(ch) || ch;
@@ -130,7 +129,7 @@ const autoBindCjkPunctuation = (text) => {
     let out = '',
         i, ch, next;
 
-    for (let i = 0; i < len; i++) {
+    for (i = 0; i < len; i++) {
 
         ch = text[i];
         next = i + 1 < len ? text[i + 1] : '';
@@ -1164,7 +1163,7 @@ P.cleanText = function () {
 
                 // Capturing the last word
                 if (unit.length) textUnits.push(requestUnit({
-                    [UNIT_CHARS]: useVerticalCjk 
+                    [UNIT_CHARS]: useVerticalCjk
                         ? toVerticalCjkForms(unit.join(ZERO_STR))
                         : unit.join(ZERO_STR),
                     [UNIT_TYPE]: TEXT_TYPE_CHARS,
@@ -1195,7 +1194,7 @@ P.cleanText = function () {
 
                 // Capturing the last word
                 if (unit.length) textUnits.push(requestUnit({
-                    [UNIT_CHARS]: useVerticalCjk 
+                    [UNIT_CHARS]: useVerticalCjk
                         ? toVerticalCjkForms(unit.join(ZERO_STR))
                         : unit.join(ZERO_STR),
                     [UNIT_TYPE]: TEXT_TYPE_CHARS,

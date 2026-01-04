@@ -81,7 +81,7 @@ console.log('Save test 3 result: ', JSON.parse(boxPacket3));
 console.log('Save test 4 result: ', JSON.parse(boxPacket4));
 // Save tests - expected results
 // ```
-// TEST 1  
+// TEST 1
 // [
 //     "mycanvas-my-box",
 //     "Block",

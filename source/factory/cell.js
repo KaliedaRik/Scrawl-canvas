@@ -1505,14 +1505,13 @@ P.getCellData = function (args = Ωempty) {
 
 P.paintCellData = function (item = Ωempty) {
 
-    const { iData, slider, pixelState, opaque} = item;
+    const { iData, slider, pixelState} = item;
     const { width, height, data} = iData;
     const [w, h] = this.currentDimensions;
 
     if (width && height && data && pixelState && w === width && h === height) {
 
-        let i, iz, p, red, green, blue, alpha,
-            update = false;
+        let i, iz, p, red, green, blue, alpha;
 
         for (i = 0, iz = pixelState.length; i < iz; i++) {
 

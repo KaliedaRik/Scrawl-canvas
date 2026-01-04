@@ -33,19 +33,6 @@ const C_WEIGHTS_SIZE = 201;
 const AB_WEIGHTS_SIZE = 501;
 
 
-// Helper: build identity curve [0,1] at given length
-const makeIdentityCurve = (n) => Array.from({ length: n }, (_, i) => i / (n - 1));
-
-
-// Curves we show in the UI / debug panel (absolute mappings in [0,1])
-let currentCurves = {
-    luminance: makeIdentityCurve(UI_L_SAMPLES),
-    chroma: makeIdentityCurve(UI_C_SAMPLES),
-    aChannel: makeIdentityCurve(UI_AB_SAMPLES),
-    bChannel: makeIdentityCurve(UI_AB_SAMPLES),
-};
-
-
 // OKLab curves
 const myFilter = scrawl.makeFilter({
 
@@ -231,14 +218,14 @@ const sampleBezierToCurve = (curveEntity, sampleCount) => {
     const width = 360;
     const height = 360;
 
-    const STEPS = 1000;  // path sampling resolution
+    const STEPS = 1000;
 
     for (let t = 0; t <= 1; t += 1 / STEPS) {
 
         const pos = curveEntity.getPathPositionData(t);
         if (!pos) continue;
 
-        let { x, y } = pos;
+        const { x, y } = pos;
 
         const xn = x / width;
         const yn = y / height;
@@ -292,11 +279,9 @@ const buildDeltaCurve = (src, targetSize) => {
     const last = n - 1;
     const EPS = 1e-2;
 
-    let hasNonZero = false;
-
     for (let i = 0; i < targetSize; i++) {
 
-        const t = (targetSize === 1) ? 0 : (i / (targetSize - 1)); // 0..1
+        const t = (targetSize === 1) ? 0 : (i / (targetSize - 1));
 
         const idx = t * last;
         const j = idx | 0;
@@ -305,7 +290,7 @@ const buildDeltaCurve = (src, targetSize) => {
         const v0 = src[j];
         const v1 = (j < last) ? src[j + 1] : src[last];
 
-        const val = v0 * (1 - f) + v1 * f;   // absolute curve value at t
+        const val = v0 * (1 - f) + v1 * f;
         const identity = t;
 
         const delta = val - identity;
@@ -330,9 +315,6 @@ const recalculateWeights = function () {
     const chroma = sampleBezierToCurve(chromaCurve, UI_C_SAMPLES);
     const aChannel = sampleBezierToCurve(aCurve, UI_AB_SAMPLES);
     const bChannel = sampleBezierToCurve(bCurve, UI_AB_SAMPLES);
-
-    // Update UI/debug copy
-    currentCurves = { luminance, chroma, aChannel, bChannel };
 
     // Convert to engine delta curves (offsets)
     curvesForFilter = {

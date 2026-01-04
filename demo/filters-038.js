@@ -20,6 +20,10 @@ const name = (n) => `${namespace}-${n}`;
 scrawl.importDomImage('.flowers');
 
 
+// Create the background
+addCheckerboardBackground(scrawl, canvas, namespace);
+
+
 // Create the filter
 // + Legacy filter methods only cover 3x3 or 5x5 matrix kernels
 // + For differently shaped kernels we need to use the modern filter actions approach

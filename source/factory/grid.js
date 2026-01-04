@@ -15,7 +15,7 @@ import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
 // Shared constants
-import { _isArray, _isFinite, _parse, BLACK, COLOR, ENTITY, FILL, SOURCE_IN, SOURCE_OVER, T_GRID, WHITE } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _parse, BLACK, COLOR, ENTITY, FILL, SOURCE_OVER, T_GRID, WHITE } from '../helper/shared-vars.js';
 
 // Local constants
 const _isInteger = Number.isSafeInteger || Number.isInteger,
