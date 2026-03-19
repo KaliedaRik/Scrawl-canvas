@@ -5,7 +5,7 @@
 // #### Imports
 import { artefact, canvas, cell, constructors, group } from '../core/library.js';
 
-import { doCreate, isa_obj, mergeOver, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
+import { doCreate, isa_obj, mergeOver, λnull, λcloneError, Ωempty, generateUniqueString } from '../helper/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -94,16 +94,27 @@ S.source = function (item) {
 
     if (item) {
 
+        // ImageBitmap support (non-DOM path)
+        if (item instanceof ImageBitmap) {
+
+            this.source = item;
+            this.sourceNaturalWidth = item.width;
+            this.sourceNaturalHeight = item.height;
+            this.sourceLoaded = true;
+
+            this.notifySubscribers();
+        }
+
         // For &lt;img> and &lt;picture> elements
-        if (IMAGE_ELEMENTS.includes(item.tagName.toUpperCase())) {
+        else if (item.tagName && IMAGE_ELEMENTS.includes(item.tagName.toUpperCase())) {
 
             this.source = item;
             this.sourceNaturalWidth = item.naturalWidth;
             this.sourceNaturalHeight = item.naturalHeight;
             this.sourceLoaded = item.complete;
-        }
 
-        if (this.sourceLoaded) this.notifySubscribers();
+            if (this.sourceLoaded) this.notifySubscribers();
+        }
     }
 };
 
@@ -121,6 +132,8 @@ S.currentSrc = function (item) {
 P.checkSource = function (width, height) {
 
     const el = this.source;
+
+    if (el instanceof ImageBitmap) return;
 
     let action = ELEMENT;
 
@@ -316,6 +329,48 @@ export const importDomImage = function (query) {
     });
 };
 
+// `importImageBitmap` - import (non-DOM) [ImageBitmap images](https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmap). The `items` suppled as arguments can either be:
+// + An ImageBitmap object (in which case the asset's name will be auto-generated)
+// + A JavaScript Object with two attributes - `{ name: String, src: ImageBitmap }`
+export const importImageBitmap = function (...items) {
+
+    const results = [];
+
+    items.forEach(item => {
+
+        let name, imageBitmap, flag = false;
+
+        if (item instanceof ImageBitmap) {
+
+            name = generateUniqueString();
+            imageBitmap = item;
+            flag = true;
+        }
+        else if (isa_obj(item) && item.src instanceof ImageBitmap) {
+
+            name = item.name || generateUniqueString();
+            imageBitmap = item.src;
+            flag = true;
+        }
+
+        if (flag) {
+
+            const image = makeImageAsset({
+                name,
+                intrinsicDimensions: {},
+            });
+
+            image.set({
+                source: imageBitmap,
+            });
+
+            results.push(name);
+        }
+        else results.push(false);
+    });
+
+    return results;
+};
 // We can get cells, groups and entitys to save their output as imagedata, which we can then use to build an asset which in turn can be used by Picture entitys and pattern styles
 // + If the `stashAsAsset` argument is `true`, the asset will be created using the Cell/Group/entity name with `-image` suffixed to it as its id/name value
 // + If `stashAsAsset` argument is a String, the asset will be created using that String as its id/name attribute

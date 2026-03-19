@@ -90,6 +90,7 @@ export { makeGroup } from './factory/group.js';
 export {
     importImage,
     importDomImage,
+    importImageBitmap,
     createImageFromCell,
     createImageFromGroup,
     createImageFromEntity,

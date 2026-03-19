@@ -2324,7 +2324,7 @@ P.theBigActionsObject = {
 
 // __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values.
 // + The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments.
-// + The operation will set the pixel's channel value to match either the lowest, highest or mean values as dictated by its neighbours - this value is set in the "level" attribute.
+// + The operation will set the pixel's channel value to match either the lowest, highest or mean values as dictated by its neighbours - this value is set in the "operation" attribute.
 // + Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags.
     [CORRODE]: function (requirements) {
 
