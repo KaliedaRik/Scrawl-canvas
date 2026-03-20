@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Canvas 073</title>
+  <title>Demo Canvas 074</title>
   <link rel='icon' type='image/png' href='/favicon.png'>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
@@ -36,23 +36,28 @@
 <body>
   <div id="test-navigation">
     <a href="canvas-072.html">&larr; Previous</a>
-    <a href="canvas-074.html">Next &rarr;</a>
+    <a href="canvas-201.html">Next &rarr;</a>
   </div>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 073</h1>
-  <h2>2D Stable Fluids simulation (Stam 1999)</h2>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 074</h1>
+  <h2>Import and use ImageBitmap objects as assets</h2>
+  <h3>To import more images, drag-and-drop image files over the canvas</h3>
 
   <div class="canvas-progressive-enhancement-wrapper">
     <canvas 
       id="my-canvas" 
-      width="800" 
+      width="600" 
       height="400"
       data-scrawl-canvas
     >
       <div class="placeholder">
         <img
-          src="thumbs/canvas-073.webp"
+          src="thumbs/canvas-074.webp"
           alt="Screen capture image of the demo canvas"
         />    
+      </div>
+      <div class="assets" aria-hidden="true">
+        <img id="iris" src="img/iris.png" class="dom-images" alt="" />    
+        <img id="brick" src="img/brick.png" class="dom-images" alt="" />
       </div>
     </canvas>
   </div>
@@ -62,18 +67,19 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Create an easel Cell and get its cell data and pixel state objects</li>
-      <li>Generate and display a 2D Stable Fluids simulation (Stam 1999) using the easel cell</li>
+      <li>Create a canvas scene where images from HTML &lt;img> elements are transformed into ImageBitmap objects and then imported as an asset into the SC system using scrawl.importImageBitmap().</li>
+      <li>Create and display a Picture entity that uses an ImageBitmap asset.</li>
+      <li>Create and display a Block entity that uses a Pattern style that wraps an ImageBitmap asset.</li>
+      <li>Allow the user to add additional images to the scene by dragging their files onto the canvas, where their data is transformed into ImageBitmap objects, imported into the SC system, and Picture entitys created to display them on the canvas.</li>
+      <li>All entitys displayed on the canvas can be dragged</li>
     </ul>
 
-    <p>Note that it is the nature of these sorts of simulation to reach "stasis" after running for a couple of minutes.</p>
+    <p><b>Touch test:</b> should work as expected - though flicking an entity may lead to it moving beyond the canvas border and out of sight!</p>
 
-    <p><b>Touch test:</b> not required</p>
-
-    <p><a href="../docs/demo/canvas-073.html">Annotated code</a></p>
+    <p><a href="../docs/demo/canvas-074.html">Annotated code</a></p>
   </div>
 
-  <script src="canvas-073.js" type="module"></script>
+  <script src="canvas-074.js" type="module"></script>
 
 </body>
 

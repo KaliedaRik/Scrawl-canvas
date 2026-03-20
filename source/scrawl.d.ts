@@ -3138,6 +3138,7 @@ type AssetImports = string | AssetImportObject | Array<string | AssetImportObjec
 export function importDomImage(query: string): void;
 export function importDomVideo(query: string): void;
 export function importImage(items: AssetImports): void;
+export function importImageBitmap(items: AssetImports | ImageBitmap): void;
 export function importMediaStream(items: CommonObjectInput): Promise<VideoAssetInstance>;
 export function importScreenCapture(items: CommonObjectInput): Promise<VideoAssetInstance>;
 export function importSprite(items: AssetImports): void;
