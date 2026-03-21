@@ -129,41 +129,68 @@ const addImageAsset = (file) => {
 
         console.log(`Received an image file - asset name: ${assetName}`);
 
-        // Every image uploaded has a cost!
-        // + a 4k x 3k (3MB) image file will generate a 48MB ImageBitmap object
-        // + Which impacts page performance if more than a few such images are uploaded
-        // + For this demo, we only need 150px square images
-        // + `createImageBitmap` allows us to resize an image as we create the bitmap from it
-        createImageBitmap(file, {
-            resizeWidth: 150,
-            resizeHeight: 150,
-            resizeQuality: 'high',
-        })
-        .then(bitmap => {
+        // We need to get the image dimensions
+        // + The simplest hack is to load the file into a temporary &lt;img> element
+        const img = new Image();
+        const url = URL.createObjectURL(file);
 
-            const [importedName] = scrawl.importImageBitmap({
-                name: assetName,
-                src: bitmap,
-            });
+        img.onload = () => {
 
-            scrawl.makePicture({
+            const { naturalWidth: w, naturalHeight: h } = img;
 
-                name: name(`picture-for-${assetName}`),
-                asset: importedName,
-                group: myDragGroup,
-                start: [
-                    Math.random() * canvas.get('width'),
-                    Math.random() * canvas.get('height'),
-                ],
-                handle: ['center', 'center'],
-                dimensions: [150, 150],
-                copyDimensions: ['100%', '100%'],
-                strokeStyle: 'yellow',
-                lineWidth: 2,
-                method: 'fillThenDraw',
-            });
-        })
-        .catch(err => console.log(err.message));
+            URL.revokeObjectURL(url);
+
+            // Calculate aspect-ratio-preserving resize
+            let targetW, targetH;
+
+            if (w >= h) {
+                targetW = 150;
+                targetH = Math.round((h / w) * 150);
+            }
+            else {
+                targetH = 150;
+                targetW = Math.round((w / h) * 150);
+            }
+
+            // Every image uploaded has a cost!
+            // + a 4k x 3k (3MB) image file will generate a 48MB ImageBitmap object
+            // + Which impacts page performance if more than a few such images are uploaded
+            // + For this demo, we only need 150px square images
+            // + `createImageBitmap` allows us to resize an image as we create the bitmap from it
+            createImageBitmap(file, {
+                resizeWidth: targetW,
+                resizeHeight: targetH,
+                resizeQuality: 'high',
+            })
+            .then(bitmap => {
+
+                const [importedName] = scrawl.importImageBitmap({
+                    name: assetName,
+                    src: bitmap,
+                });
+
+                scrawl.makePicture({
+
+                    name: name(`picture-for-${assetName}`),
+                    asset: importedName,
+                    group: myDragGroup,
+                    start: [
+                        Math.random() * canvas.get('width'),
+                        Math.random() * canvas.get('height'),
+                    ],
+                    handle: ['center', 'center'],
+                    dimensions: [targetW, targetH],
+                    copyDimensions: ['100%', '100%'],
+                    strokeStyle: 'yellow',
+                    lineWidth: 2,
+                    method: 'fillThenDraw',
+                });
+            })
+            .catch(err => console.log(err.message));
+        }
+
+        // Start the import process
+        img.src = url;
     }
 };
 
