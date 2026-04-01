@@ -49,7 +49,7 @@ const BOTTOMLEFT = 'bottomLeft',
     TOPRIGHT = 'topRight';
 
 // Can be imported into stacks as elements; have hit zones/pivot points - corner elements added
-const PERMITTED_TRACKED_ELEMENTS = ['ARTICLE', 'ASIDE', 'DIV', 'FOOTER', 'HEADER', 'MAIN', 'NAV', 'SECTION', 'ADDRESS', 'BLOCKQUOTE', 'DL', 'FIGURE', 'FORM', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'HGROUP', 'MENU', 'METER', 'OL', 'P', 'PRE', 'PROGRESS', 'SEARCH', 'SELECT', 'TABLE', 'TEXTAREA', 'UL', 'OUTPUT'];
+const PERMITTED_TRACKED_ELEMENTS = ['ARTICLE', 'ASIDE', 'DIV', 'FOOTER', 'HEADER', 'MAIN', 'NAV', 'SECTION', 'ADDRESS', 'BLOCKQUOTE', 'BUTTON', 'DL', 'FIGURE', 'FORM', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'HGROUP', 'MENU', 'METER', 'OL', 'P', 'PRE', 'PROGRESS', 'SEARCH', 'SELECT', 'TABLE', 'TEXTAREA', 'UL', 'OUTPUT'];
 
 // #### Export function
 export default function (P = Ωempty) {
