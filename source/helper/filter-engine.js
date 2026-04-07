@@ -6276,97 +6276,99 @@ P.theBigActionsObject = {
             }
         }
 
-        // 2) commonest first (sort only the seen colors with a minimum count of 2)
-        const filteredSeen = seen.filter(item => metadata.get(item)[0] > 1);
-        filteredSeen.sort((item1, item2) => metadata.get(item2)[0] - metadata.get(item1)[0]);
+        if (seen.length) {
+            // 2) commonest first (sort only the seen colors with a minimum count of 2)
+            const filteredSeen = seen.filter(item => metadata.get(item)[0] > 1);
+            filteredSeen.sort((item1, item2) => metadata.get(item2)[0] - metadata.get(item1)[0]);
 
-        // 3) generate palette, winnowing by minimumColorDistance
-        const mapped = minimumColorDistance * 0.01,
-            minDist2 = mapped * mapped;
+            // 3) generate palette, winnowing by minimumColorDistance
+            const mapped = minimumColorDistance * 0.01,
+                minDist2 = mapped * mapped;
 
-        selectedPalette.push(requestArray(...metadata.get(filteredSeen[0])));
+            selectedPalette.push(requestArray(...metadata.get(filteredSeen[0])));
 
-        for (i = 1, iz = filteredSeen.length; i < iz; i++) {
+            for (i = 1, iz = filteredSeen.length; i < iz; i++) {
 
-            if (selectedPalette.length >= palette) break;
+                if (selectedPalette.length >= palette) break;
 
-            row = metadata.get(filteredSeen[i]);
+                row = metadata.get(filteredSeen[i]);
 
-            best2 = Infinity;
+                best2 = Infinity;
 
-            for (j = 0, jz = selectedPalette.length; j < jz; j++) {
+                for (j = 0, jz = selectedPalette.length; j < jz; j++) {
 
-                p = selectedPalette[j];
-                dL = row[4] - p[4];
-                dA = row[5] - p[5];
-                dB = row[6] - p[6];
-                dsq = (dL * dL) + (dA * dA) + (dB * dB);
+                    p = selectedPalette[j];
+                    dL = row[4] - p[4];
+                    dA = row[5] - p[5];
+                    dB = row[6] - p[6];
+                    dsq = (dL * dL) + (dA * dA) + (dB * dB);
 
-                if (dsq < best2) best2 = dsq;
+                    if (dsq < best2) best2 = dsq;
+                }
+
+                if (best2 > minDist2) selectedPalette.push(requestArray(...row));
             }
 
-            if (best2 > minDist2) selectedPalette.push(requestArray(...row));
-        }
+            if (selectedPalette.length === 1 && filteredSeen.length > 2) selectedPalette.push(requestArray(...metadata.get(filteredSeen[1])));
 
-        if (selectedPalette.length === 1 && filteredSeen.length > 2) selectedPalette.push(requestArray(...metadata.get(filteredSeen[1])));
+            setLastUsedReducePalette(selectedPalette.map(item => `rgb(${item[1]} ${item[2]} ${item[3]})`));
 
-        setLastUsedReducePalette(selectedPalette.map(item => `rgb(${item[1]} ${item[2]} ${item[3]})`));
+            // 4) for each seen color, precompute its two best palette candidates (store totals/propensity)
+            for (i = 0, iz = seen.length; i < iz; i++) {
 
-        // 4) for each seen color, precompute its two best palette candidates (store totals/propensity)
-        for (i = 0, iz = seen.length; i < iz; i++) {
+                idx = seen[i];
+                row = metadata.get(idx);
 
-            idx = seen[i];
-            row = metadata.get(idx);
+                [idx0, idx1, d0, d1] = bestTwoPaletteIndices(row[4], row[5], row[6], selectedPalette);
 
-            [idx0, idx1, d0, d1] = bestTwoPaletteIndices(row[4], row[5], row[6], selectedPalette);
+                total = d0 + d1;
+                propensity = total - d0;
 
-            total = d0 + d1;
-            propensity = total - d0;
-
-            // Mutate the row with malice aforethought
-            row[0] = total;
-            row[1] = propensity;
-            row[2] = selectedPalette[idx0];
-            row[3] = selectedPalette[idx1];
-        }
-
-        // 5) apply
-        for (i = 0; i < len; i += 4) {
-
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
-
-            alpha = iData[a];
-
-            if (alpha) {
-
-                rgbIndex = getRGBIndex(iData[r], iData[g], iData[b]);
-
-                rec = metadata.get(rgbIndex);
-                total = rec[0];
-
-                propensity = rec[1];
-                test = rnd[++rndCursor] * total;
-                chosen = (test < propensity) ? rec[2] : rec[3];
-
-                oData[r] = chosen[1];
-                oData[g] = chosen[2];
-                oData[b] = chosen[3];
-                oData[a] = alpha;
-
-            } else {
-
-                ++rndCursor;
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = 0;
+                // Mutate the row with malice aforethought
+                row[0] = total;
+                row[1] = propensity;
+                row[2] = selectedPalette[idx0];
+                row[3] = selectedPalette[idx1];
             }
-        }
 
-        releaseArray(...selectedPalette);
+            // 5) apply
+            for (i = 0; i < len; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                alpha = iData[a];
+
+                if (alpha) {
+
+                    rgbIndex = getRGBIndex(iData[r], iData[g], iData[b]);
+
+                    rec = metadata.get(rgbIndex);
+                    total = rec[0];
+
+                    propensity = rec[1];
+                    test = rnd[++rndCursor] * total;
+                    chosen = (test < propensity) ? rec[2] : rec[3];
+
+                    oData[r] = chosen[1];
+                    oData[g] = chosen[2];
+                    oData[b] = chosen[3];
+                    oData[a] = alpha;
+
+                } else {
+
+                    ++rndCursor;
+                    oData[r] = iData[r];
+                    oData[g] = iData[g];
+                    oData[b] = iData[b];
+                    oData[a] = 0;
+                }
+            }
+
+            releaseArray(...selectedPalette);
+        }
 
         // Boilerplate post-processing
         if (lineOut) processResults(output, input, 1 - opacity);
