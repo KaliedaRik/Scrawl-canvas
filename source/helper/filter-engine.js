@@ -4798,9 +4798,11 @@ P.theBigActionsObject = {
         const {
             opacity = 1,
             useNaturalGrayscale = false,
-            gradient = false,
             lineOut,
         } = requirements;
+
+        let gradient = requirements.gradient || false;
+        if (gradient.substring) gradient = styles[gradient];
 
         if (!gradient) out32.set(src32);
         else {
