@@ -69,8 +69,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 // + `cyclic`
 
 // #### Packet management
-P.packetObjects = pushUnique(P.packetObjects, ['palette']);
-
+P.packetExclusions = pushUnique(P.packetExclusions, ['palette']);
 
 // #### Clone management
 // No additional clone functionality required
