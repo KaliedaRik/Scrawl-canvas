@@ -624,6 +624,19 @@ P.getStopData = function (gradient, start, end, cycle) {
     return getWorkstoreItem(workstoreName) || BLANK;
 };
 
+// `getColorAtPosition` - a convenience function to retrieve the color at a specified position within the current gradient
+P.getColorAtPosition = function (val) {
+
+    if (
+        Number.isSafeInteger(val) && 
+        val >= 0 && 
+        val <= 999 && 
+        this.stops
+    ) return this.stops[val];
+
+    return null;
+};
+
 // `addStopsToGradient` - complete the construction of the Canvas API CanvasGradient object
 P.addStopsToGradient = function (gradient, start, end, cycle) {
 
