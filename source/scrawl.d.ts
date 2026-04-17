@@ -2453,6 +2453,16 @@ interface RenderFactoryInputs extends BaseMixinInputs, RenderFactoryDeltaInputs 
     onKill?: DefaultInputFunction;
     onRun?: DefaultInputFunction;
     order?: number;
+    /**
+     * One or more render targets.
+     *
+     * Accepts a target name, a Canvas/Stack/Cell instance, or an array mixing
+     * names and instances. In most day-to-day use this will be a Canvas or Stack.
+     *
+     * @remarks
+     * If omitted, the render can still run when `noTarget` is true and the hook
+     * functions are being used for orchestration rather than drawing.
+     */
     target?: string | TargetInstance | Array<string | TargetInstance>;
     observer?: boolean | CommonObjectInput;
     noTarget?: boolean;
@@ -2468,6 +2478,14 @@ interface RenderFactoryFunctions extends BaseMixinFunctions {
     saveAsPacket: (item?: RenderSaveInputs | boolean) => string;
     set: (item?: RenderFactoryInputs) => RenderInstance;
     setDelta: (item?: RenderFactoryDeltaInputs) => RenderInstance;
+    /**
+     * Replace one of the Render cycle hook functions.
+     *
+     * @param hook - The hook name to replace; for example `commence`,
+     * `afterClear`, `afterCompile`, `afterShow`, or `error`.
+     * @param func - The function to assign to that hook. Pass `undefined`
+     * to clear a previously assigned hook.
+     */
     updateHook: (hook: string, func?: DefaultInputFunction) => void;
 }
 

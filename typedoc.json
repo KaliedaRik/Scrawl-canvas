@@ -1,0 +1,12 @@
+{
+  "tsconfig": "tsconfig.typedoc.json",
+  "entryPoints": ["./source/scrawl.d.ts"],
+  "out": "./docs/typedoc",
+  "name": "Scrawl-canvas API",
+  "navigationLinks": {
+    "SC inline documentation": "../../index.html",
+    "SC demo test suite": "../../../demo/index.html",
+    "SC developer runbook": "../../reference/index.html",
+    "GitHub": "https://github.com/KaliedaRik/Scrawl-canvas"
+  }
+}
