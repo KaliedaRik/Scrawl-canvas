@@ -1354,7 +1354,7 @@ Product-devs should note that this filter is computationally heavy and should be
 
 Used by factory function method: `zoomBlur`.
 
-See test demo [Filters-041](../../demo/filters-041.html).
+See test demo [Filters-040](../../demo/filters-040.html).
 ```
 Default object
 {
@@ -1591,41 +1591,6 @@ Default object
 }
 ```
 
-#### Action: `deconvolute`
-Performs an OKLab lightness-only deconvolution using a Richardson–Lucy–style iterative solver, with optional edge masking and multiscale processing for stability.
-+ RGB input is converted to OKLab;
-+ The L channel is iteratively deblurred assuming a Gaussian point-spread function implemented via a recursive IIR Gaussian blur
-+ The A and B channels are preserved so colour remains stable while perceived sharpness increases.
-+ An edge mask can be derived from a blurred Sobel magnitude of the lightness channel, passed through a smoothstep and small Gaussian to produce a soft, edge-focused weighting.
-+ The radius, passes, strength, and clamp parameters control the effective PSF width, number of deconvolution iterations, aggressiveness, and the range of per-iteration corrections, with percentile-based heuristics helping to keep the solver numerically well-behaved.
-+ Multiscale is used to speed calculations
-
-Product-devs should note that this filter is computationally heavy and should be used judiciously.
-
-Used by factory function method: `deconvolute`.
-
-See test demo [Filters-040](../../demo/filters-040.html)
-```
-Default object
-{
-  lineIn: '',
-  lineOut: '',
-  opacity: 1,
-
-  radius: 1.25,
-  passes: 8,
-  strength: 0.85,
-  clamp: 0.08,
-  level: 0.015,
-  smoothing: 0.015,
-
-  multiscale: true,
-  multiscaleFinalPasses: 2,
-
-  deriveMaskFromImage: true,
-}
-```
-
 #### Action: `luminance-to-alpha`
 For each pixel in the input:
 + Calculate OKLAB luminance from RGB colors
@@ -1727,7 +1692,7 @@ Apply a set of ok-channel-based curve weightings to the input image. For each pi
 
 Used by factory function method: `okCurveWeights`.
 
-See test demo [Filters-042](../../demo/filters-042.html)
+See test demo [Filters-041](../../demo/filters-041.html)
 ```
 Default object
 {
@@ -2276,34 +2241,6 @@ Attribute                   Retained?   Default
 lineIn                      yes         ''
 lineOut                     yes         ''
 opacity                     yes         1
-```
-
-### Method: `deconvolute`
-**(OK filter)** Performs an OKLab lightness-only deconvolution using a Richardson–Lucy–style iterative solver, with optional edge masking and multiscale processing for stability.
-
-Product-devs should note that this filter is computationally heavy and should be used judiciously.
-
-Creates an ActionObject for the `deconvolute` primitive function.
-
-See test demo [Filters-040](../../demo/filters-040.html)
-```
-Attribute                   Retained?   Default
---------------------------  ----------  ----------------
-lineIn                      yes         ''
-lineOut                     yes         ''
-opacity                     yes         1
-
-clamp:                      yes         0.08,
-level:                      yes         0.015,
-passes:                     yes         8,
-radius:                     yes         1.25,
-smoothing:                  yes         0.015,
-strength:                   yes         0.85,
-
-multiscale:                 yes         true,
-multiscaleFinalPasses:      yes         2,
-
-deriveMaskFromImage:        yes         true,
 ```
 
 ### Method: `displace`
@@ -2866,7 +2803,7 @@ useInputAsMask              yes         false
 
 Creates an ActionObject for the `ok-perceptual-curves` primitive function.
 
-See test demo [Filters-042](../../demo/filters-042.html).
+See test demo [Filters-041](../../demo/filters-041.html).
 ```
 Attribute                   Retained?   Default
 --------------------------  ----------  ----------------
@@ -3295,7 +3232,7 @@ The include* channel flags, includeAlpha, excludeTransparentPixels, premultiply,
 
 Product-devs should note that this filter is computationally heavy and should be used judiciously.
 
-See test demo [Filters-041](../../demo/filters-041.html).
+See test demo [Filters-040](../../demo/filters-040.html).
 ```
 Attribute                   Retained?   Default
 --------------------------  ----------  ----------------

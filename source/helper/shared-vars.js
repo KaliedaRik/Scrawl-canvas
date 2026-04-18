@@ -89,7 +89,6 @@ export const CORNER_SELECTOR = '[data-scrawl-corner-div="sc"]';
 export const CORRODE = 'corrode';
 export const DATA_SCRAWL_GROUP = 'data-scrawl-group';
 export const DATA_TAB_ORDER = 'data-tab-order';
-export const DECONVOLUTE = 'deconvolute';
 export const DEFAULT_FONT = '12px sans-serif';
 export const DEFAULT_SEED = 'any_random_string_will_do';
 export const DESCRIPTION = 'description';
