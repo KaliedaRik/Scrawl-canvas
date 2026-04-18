@@ -464,163 +464,199 @@ P.getStopData = function (gradient, start, end, cycle) {
     // Option 0: in case of errors, return transparent black
     if (!gradient) return BLANK;
 
-    const { easing, precision } = this;
+    const { easing, precision } = this,
+        colorSpace = this.factory.colorSpace,
+        { stops } = this;
 
-    const colorSpace = this.factory.colorSpace,
-        workstoreName = `${this.name}-data`;
+    if (!xta(start, end)) {
+        start = 0;
+        end = 999;
+    }
 
-    const { stops } = this;
+    const workstoreName = `${this.name}-data-${start}-${end}-${cycle ? 1 : 0}`;
 
     if (this.dirtyPaletteData || !checkForWorkstoreItem(workstoreName)) {
 
         this.dirtyPaletteData = false;
 
-        if (!xta(start, end)) {
-            start = 0;
-            end = 999;
-        }
+        const keys = _keys(this.colors)
+            .map(n => parseInt(n, 10))
+            .filter(n => _isFinite(n))
+            .sort((a, b) => a - b);
 
-        const keys = _keys(this.colors).map(n => parseInt(n, 10)).sort((a, b) => a - b),
-            engine = isa_fn(easing) ? easing : easeEngines[easing],
+        const engine = isa_fn(easing) ? easing : easeEngines[easing],
             precisionTest = (!precision || (easing === LINEAR && colorSpace === RGB)) ? false : true,
-            data = [];
+            data = [],
+            intermediate = [];
 
-        let spread, offset, i, iz, item, n;
+        let spread = 0;
+
+        // Option 1: start == end, cycle irrelevant. Returns solid color at start of gradient
+        if (start === end) return stops[start] || BLANK;
+
+        // Calculate span
+        if (start < end) spread = end - start;
+        else if (cycle) spread = (1000 - start) + end;
+        else spread = start - end;
+
+        const sampleColor = function (t) {
+
+            let u = engine(t),
+                sample;
+
+            if (cycle) {
+
+                if (u > 1) u -= _floor(u);
+                else if (u < 0) u -= _floor(u);
+            }
+            else {
+
+                if (u < 0) u = 0;
+                else if (u > 1) u = 1;
+            }
+
+            // start < end
+            if (start < end) {
+
+                sample = start + (u * spread);
+            }
+
+            // start > end, cycle = true
+            else if (cycle) {
+
+                sample = start + (u * spread);
+
+                while (sample > 999) sample -= 1000;
+                while (sample < 0) sample += 1000;
+            }
+
+            // start > end, cycle = false
+            else {
+
+                sample = start - (u * spread);
+            }
+
+            sample = _floor(sample + 0.5);
+
+            if (cycle) {
+
+                if (sample > 999) sample -= 1000;
+                if (sample < 0) sample += 1000;
+            }
+            else {
+
+                if (sample < 0) sample = 0;
+                else if (sample > 999) sample = 999;
+            }
+
+            return stops[sample] || BLANK;
+        };
+
+        const pushIntermediateStop = function (t) {
+
+            if (t > 0 && t < 1) intermediate.push([t, sampleColor(t)]);
+        };
 
         // Option 2: start < end, cycle irrelevant
         if (start < end) {
 
-            data.push(0, stops[start]);
-
-            spread = end - start;
-
             if (precisionTest) {
 
-                for (i = start + 1; i < end; i += precision) {
+                for (let d = precision; d < spread; d += precision) {
 
-                    offset = (i - start) / spread;
-
-                    if (cycle) {
-
-                        if (offset > 1) offset -= 1;
-                        else if (offset < 0) offset += 1;
-                    }
-
-                    offset = engine(offset);
-
-                    if (offset > 0 && offset < 1) data.push(offset, stops[i]);
+                    pushIntermediateStop(d / spread);
                 }
             }
             else {
 
-                for (i = 0, iz = keys.length; i < iz; i++) {
+                let item, t;
+
+                for (let i = 0, iz = keys.length; i < iz; i++) {
 
                     item = keys[i];
 
                     if (item > start && item < end) {
 
-                        offset = (item - start) / spread;
-
-                        if (cycle) {
-
-                            if (offset > 1) offset -= 1;
-                            else if (offset < 0) offset += 1;
-                        }
-
-                        if (offset > 0 && offset < 1) data.push(offset, stops[item]);
+                        t = (item - start) / spread;
+                        pushIntermediateStop(t);
                     }
                 }
             }
-            data.push(1, stops[end]);
         }
 
-        else {
+        // Option 3: start > end, cycle = true
+        else if (cycle) {
 
-            // Option 3: start > end, cycle = true
-            if (cycle) {
+            if (precisionTest) {
 
-                data.push(0, stops[start]);
+                for (let d = precision; d < spread; d += precision) {
 
-                n = 999 - start;
-                spread = n + end;
-
-                if (precisionTest) {
-
-                    for (i = 0; i < spread; i += precision) {
-
-                        item = i + start;
-
-                        if (item > 999) item -= 1000;
-
-                        offset = engine(i / spread);
-
-                        if (offset > 0 && offset < 1) data.push(offset, stops[item]);
-                    }
+                    pushIntermediateStop(d / spread);
                 }
-                else {
-
-                    for (i = 0, iz = keys.length; i < iz; i++) {
-
-                        item = keys[i];
-
-                        if (item === 999) offset = (item - start - 0.01) / spread;
-                        else if (item > start) offset = (item - start) / spread;
-                        else if (item === 0) offset = (item + n + 0.01) / spread;
-                        else if (item < end) offset = (item + n) / spread;
-                        else continue;
-
-                        if (offset > 1) offset -= 1;
-                        else if (offset < 0) offset += 1;
-
-                        if (offset > 0 && offset < 1) data.push(offset, stops[item]);
-                    }
-                }
-                data.push(1, stops[end]);
             }
-
-            // Option 4: start > end, cycle = false
             else {
 
-                data.push(0, stops[start]);
+                let item, t;
 
-                spread = start - end;
+                for (let i = 0, iz = keys.length; i < iz; i++) {
 
-                if (precisionTest) {
+                    item = keys[i];
 
-                    for (i = end + 1; i < start; i += precision) {
+                    if (item > start) {
 
-                        if (i < start && i > end) {
+                        t = (item - start) / spread;
+                        pushIntermediateStop(t);
+                    }
+                    else if (item < end) {
 
-                            offset = engine(1 - ((i - end) / spread));
-
-                            if (offset > 0 && offset < 1) data.push(offset, stops[i]);
-                        }
+                        t = ((1000 - start) + item) / spread;
+                        pushIntermediateStop(t);
                     }
                 }
-                else {
-
-                    for (i = 0, iz = keys.length; i < iz; i++) {
-
-                        item = keys[i];
-
-                        if (item < start && item > end) {
-
-                            offset = 1 - ((item - end) / spread);
-
-                            if (offset > 0 && offset < 1) data.push(offset, stops[item]);
-                        }
-                    }
-                }
-                data.push(1, stops[end]);
             }
         }
+
+        // Option 4: start > end, cycle = false
+        else {
+
+            if (precisionTest) {
+
+                for (let d = precision; d < spread; d += precision) {
+
+                    pushIntermediateStop(d / spread);
+                }
+            }
+            else {
+
+                let item, t;
+
+                for (let i = 0, iz = keys.length; i < iz; i++) {
+
+                    item = keys[i];
+
+                    if (item < start && item > end) {
+
+                        t = (start - item) / spread;
+                        pushIntermediateStop(t);
+                    }
+                }
+            }
+        }
+
+        intermediate.sort((a, b) => a[0] - b[0]);
+
+        data.push(0, sampleColor(0));
+
+        for (let i = 0, iz = intermediate.length; i < iz; i++) {
+
+            data.push(intermediate[i][0], intermediate[i][1]);
+        }
+
+        data.push(1, sampleColor(1));
+
         setWorkstoreItem(workstoreName, data);
     }
 
-    // Option 1 start == end, cycle irrelevant. Returns solid color at start of gradient
-    if (start === end) return stops[start] || BLANK;
-
-    // check to see if data has already been memoized and is suitable for return
     return getWorkstoreItem(workstoreName) || BLANK;
 };
 
