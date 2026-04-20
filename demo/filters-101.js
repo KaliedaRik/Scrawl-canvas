@@ -104,6 +104,8 @@ const imageFilter = scrawl.makeFilter({
     lineOut: 'flower',
 });
 
+console.log(imageFilter.saveAsPacket());
+
 const composeFilter = scrawl.makeFilter({
 
     name: name('block-filter'),
@@ -114,6 +116,8 @@ const composeFilter = scrawl.makeFilter({
     offsetY: 30,
     compose: 'source-over',
 });
+
+console.log(composeFilter.saveAsPacket());
 
 
 // Display the filter in a Block entity

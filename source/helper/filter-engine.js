@@ -796,14 +796,6 @@ P.theBigActionsObject = {
 
         const [input, output, mix] = getInputAndOutputLines(requirements);
 
-        const iWidth  = input.width | 0,
-            iHeight = input.height | 0,
-            iData = input.data,
-            mWidth = mix.width | 0,
-            mHeight = mix.height | 0,
-            mData = mix.data,
-            oData = output.data;
-
         const {
             opacity = 1,
             blend = ZERO_STR,
@@ -812,12 +804,20 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements || {};
 
-        if (!iWidth || !iHeight) {
+        if (!mix) {
 
             if (lineOut) processResults(output, input, 1 - opacity);
             else processResults(cache.work, output, opacity);
             return;
         }
+
+        const iWidth  = input.width | 0,
+            iHeight = input.height | 0,
+            iData = input.data,
+            mWidth = mix.width | 0,
+            mHeight = mix.height | 0,
+            mData = mix.data,
+            oData = output.data;
 
         oData.set(iData);
 
@@ -2097,15 +2097,6 @@ P.theBigActionsObject = {
 
         const [input, output, mix] = getInputAndOutputLines(requirements);
 
-        const iWidth  = input.width | 0,
-            iHeight = input.height | 0,
-            mWidth  = mix.width | 0,
-            mHeight = mix.height | 0;
-
-        const iData = input.data,
-            mData = mix.data,
-            oData = output.data;
-
         const {
             opacity = 1,
             compose = SOURCE_OVER,
@@ -2114,12 +2105,21 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements || {};
 
-        if (!iWidth || !iHeight) {
+        if (!mix) {
 
             if (lineOut) processResults(output, input, 1 - opacity);
             else processResults(cache.work, output, opacity);
             return;
         }
+
+        const iWidth  = input.width | 0,
+            iHeight = input.height | 0,
+            mWidth  = mix.width | 0,
+            mHeight = mix.height | 0;
+
+        const iData = input.data,
+            mData = mix.data,
+            oData = output.data;
 
         const nPixIn = (iWidth * iHeight) | 0,
             nPixMix = (mWidth * mHeight) | 0;

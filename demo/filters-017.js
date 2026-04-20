@@ -21,7 +21,7 @@ scrawl.importDomImage('.flowers');
 
 
 // Create the filter
-scrawl.makeFilter({
+const noiseFilter = scrawl.makeFilter({
 
     name: name('noise'),
     method: 'image',
@@ -37,6 +37,8 @@ scrawl.makeFilter({
     lineOut: 'map',
 });
 
+console.log(noiseFilter.saveAsPacket());
+
 const myFilter = scrawl.makeFilter({
 
     name: name('displace'),
@@ -50,6 +52,8 @@ const myFilter = scrawl.makeFilter({
     scaleX: 20,
     scaleY: 20,
 });
+
+console.log(myFilter.saveAsPacket());
 
 
 // Create the target entity
