@@ -2642,8 +2642,6 @@ P.theBigActionsObject = {
             return;
         }
 
-        console.log(mix.width, mix.height)
-
         const { width: iWidth, height: iHeight, data: iData } = input;
         const { data: oData } = output;
         const { width: mWidth, height: mHeight, data: mData } = mix;
