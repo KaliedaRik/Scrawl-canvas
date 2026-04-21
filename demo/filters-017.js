@@ -100,6 +100,10 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'opacity', '1'],
     ['select', 'transparent_edges', 0],
     ['select', 'useInputAsMask', 0],
+    ['select', 'lineMix', 0],
+    ['select', 'asset', 0],
+    ['select', 'channelX', 0],
+    ['select', 'channelY', 1],
 ]);
 
 
@@ -116,13 +120,32 @@ scrawl.makeUpdater({
 
     updates: {
 
+        channelX: ['channelX', 'raw'],
+        channelY: ['channelY', 'raw'],
         offset_x: ['offsetX', 'round'],
         offset_y: ['offsetY', 'round'],
         scale_x: ['scaleX', 'float'],
         scale_y: ['scaleY', 'float'],
         transparent_edges: ['transparentEdges', 'boolean'],
         useInputAsMask: ['useInputAsMask', 'boolean'],
+        lineMix: ['lineMix', 'raw'],
         opacity: ['opacity', 'float'],
+    },
+});
+
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.assetControlItem',
+
+    target: noiseFilter,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        asset: ['asset', 'raw'],
     },
 });
 

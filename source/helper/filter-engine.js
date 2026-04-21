@@ -806,8 +806,7 @@ P.theBigActionsObject = {
 
         if (!mix) {
 
-            if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
+            transferDataUnchanged(output.data, input.data, input.data.length);
             return;
         }
 
@@ -2107,8 +2106,7 @@ P.theBigActionsObject = {
 
         if (!mix) {
 
-            if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
+            transferDataUnchanged(output.data, input.data, input.data.length);
             return;
         }
 
@@ -2637,6 +2635,14 @@ P.theBigActionsObject = {
     [DISPLACE]: function (requirements) {
 
         const [input, output, mix] = getInputAndOutputLines(requirements);
+
+        if (!mix) {
+
+            transferDataUnchanged(output.data, input.data, input.data.length);
+            return;
+        }
+
+        console.log(mix.width, mix.height)
 
         const { width: iWidth, height: iHeight, data: iData } = input;
         const { data: oData } = output;

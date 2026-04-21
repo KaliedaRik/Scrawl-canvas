@@ -63,31 +63,69 @@
 
   <div class="controls">
 
-    <div class="yellow label">Scale X</div>
-    <div class="yellow"><input class="controlItem" id="scale_x" type="range" value="20" min="0" max="100" step="0.1" /></div>
+    <div class="blue label">Channel X</div>
+    <div class="blue">
+      <select class="controlItem" id="channelX">
+        <option value="red">red</option>
+        <option value="green">green</option>
+        <option value="blue">blue</option>
+        <option value="alpha">alpha</option>
+      </select>
+    </div>
 
-    <div class="yellow label">Scale Y</div>
-    <div class="yellow"><input class="controlItem" id="scale_y" type="range" value="20" min="0" max="100" step="0.1" /></div>
+    <div class="green label">Channel Y</div>
+    <div class="green">
+      <select class="controlItem" id="channelY">
+        <option value="red">red</option>
+        <option value="green">green</option>
+        <option value="blue">blue</option>
+        <option value="alpha">alpha</option>
+      </select>
+    </div>
 
-    <div class="yellow label">Offset X</div>
-    <div class="yellow"><input class="controlItem" id="offset_x" type="range" value="0" min="-200" max="200" step="1" /></div>
+    <div class="blue label">Scale X</div>
+    <div class="blue"><input class="controlItem" id="scale_x" type="range" value="20" min="0" max="100" step="0.1" /></div>
 
-    <div class="yellow label">Offset Y</div>
-    <div class="yellow"><input class="controlItem" id="offset_y" type="range" value="0" min="-200" max="200" step="1" /></div>
+    <div class="green label">Scale Y</div>
+    <div class="green"><input class="controlItem" id="scale_y" type="range" value="20" min="0" max="100" step="0.1" /></div>
 
-    <div class="yellow label">Transparent edges</div>
-    <div class="yellow">
+    <div class="blue label">Offset X</div>
+    <div class="blue"><input class="controlItem" id="offset_x" type="range" value="0" min="-200" max="200" step="1" /></div>
+
+    <div class="green label">Offset Y</div>
+    <div class="green"><input class="controlItem" id="offset_y" type="range" value="0" min="-200" max="200" step="1" /></div>
+
+    <div class="pink label">Use input as mask</div>
+    <div class="pink">
+      <select class="controlItem" id="useInputAsMask">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="pink label">Transparent edges</div>
+    <div class="pink">
       <select class="controlItem" id="transparent_edges">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
     </div>
 
-    <div class="yellow label">Use input as mask</div>
+    <div class="yellow label">Line mix</div>
     <div class="yellow">
-      <select class="controlItem" id="useInputAsMask">
-        <option value="0">false</option>
-        <option value="1">true</option>
+      <select class="controlItem" id="lineMix">
+        <option value="map">map</option>
+        <option value="broken">broken</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Asset</div>
+    <div class="yellow">
+      <select class="assetControlItem" id="asset">
+        <option value="perlin">perlin</option>
+        <option value="carpet">carpet</option>
+        <option value="iris">iris</option>
+        <option value="broken">broken</option>
       </select>
     </div>
 
@@ -122,6 +160,12 @@
           class="flowers"
           alt="Perlin noise heatmap image"
         />    
+        <img
+          id="carpet"
+          src="img/white-carpet-05.webp"
+          class="flowers"
+          alt="White carpet"
+        />    
       </div>
     </canvas>
   </div>
@@ -137,6 +181,15 @@
       <li>Create a displace filter</li>
       <li>Load another image and create a Picture entity to display this asset; apply the displace filter to it</li>
       <li>Update filter attributes and observe the effect they have on the entity</li>
+    </ul>
+
+    <p><b>Notes:</b></p>
+    <ul>
+      <li>The displace filter needs both an input and mix line.</li>
+      <li>The input line defaults to the previous filter action's output, or the source image.</li>
+      <li>If the mix line data cannot be found ("broken" in the demo), the filter does no work.</li>
+      <li>This demo is using a process-image filter action to supply the mix line. When that action cannot locate its asset's data ("broken" in the demo), it will generate a transparent black ImageData object with the same dimensions as the displace action's source. This can result in some unexpected results, such as output image movement (relating to scale values).</li>
+      <li>The transparentEdges flag only has an effect when the useInputAsMask flag has been set to true.</li>
     </ul>
 
     <p><b>Touch test:</b> not required</p>
