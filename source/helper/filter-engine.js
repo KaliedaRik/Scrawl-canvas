@@ -2655,14 +2655,16 @@ P.theBigActionsObject = {
             opacity = 1,
             channelX = RED,
             channelY = GREEN,
-            scaleX = 1,
-            scaleY = 1,
             offsetX = 0,
             offsetY = 0,
             transparentEdges = false,
             useInputAsMask = false,
             lineOut,
         } = requirements || {};
+
+        // `scaleX` and `scaleY` are deprecated in favour of `strengthX` and `strengthY`
+        const strengthX = requirements.strengthX || requirements.scaleX || 1,
+            strengthY = requirements.strengthY || requirements.scaleY || 1;
 
         let offsetForChannelX = 3;
         if (channelX === RED) offsetForChannelX = 0;
@@ -2706,8 +2708,8 @@ P.theBigActionsObject = {
                 dispX = mData[mPos + offsetForChannelX];
                 dispY = mData[mPos + offsetForChannelY];
 
-                dx = _floor(ix + ((127 - dispX) / 127) * scaleX);
-                dy = _floor(iy + ((127 - dispY) / 127) * scaleY);
+                dx = _floor(ix + ((127 - dispX) / 127) * strengthX);
+                dy = _floor(iy + ((127 - dispY) / 127) * strengthY);
 
                 dIndex = -1;
 
@@ -5120,45 +5122,13 @@ P.theBigActionsObject = {
 
         const item = getWorkstoreItem(identifier);
 
-        // Fall back to host-sized transparent if missing
         const {
             width: hostW,
             height: hostH,
         } = cache.source;
 
-        if (item && item.width === hostW && item.height === hostH) {
-
-            // Use as-is (no clone): downstream filters treat this as read-only input
-            cache[lineOut] = item;
-        }
-        else {
-
-            // Make an empty host-sized image and, if we have something, place what we can
-            const out = new ImageData(hostW, hostH);
-
-            if (item && item.data && item.width && item.height) {
-
-                // Clamp the copy in case sizes differ (shouldn’t happen with the new preprocessor)
-                const w = _min(hostW, item.width) | 0,
-                    h = _min(hostH, item.height) | 0,
-                    src = item.data,
-                    dst = out.data,
-                    srcStride = item.width << 2,
-                    dstStride = hostW << 2,
-                    rowBytes  = w << 2;
-
-                let s0, d0;
-
-                for (let y = 0; y < h; y++) {
-
-                    s0 = (y * srcStride);
-                    d0 = (y * dstStride);
-
-                    dst.set(src.subarray(s0, s0 + rowBytes), d0);
-                }
-            }
-            cache[lineOut] = out;
-        }
+        if (item && item.width === hostW && item.height === hostH) cache[lineOut] = item;
+        else cache[lineOut] = new ImageData(hostW, hostH);
     },
 
 // __random-noise__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels

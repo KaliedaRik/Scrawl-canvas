@@ -12,9 +12,12 @@ import { checkForWorkstoreItem, setWorkstoreItem } from '../helper/workstore.js'
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 // Shared constants
-import { _abs, _floor, _isArray, PROCESS_IMAGE, SOURCE_OVER, T_FILTER, T_IMAGE, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _floor, _isArray, _max, _min, BLANK, NONE, PROCESS_IMAGE, SOURCE_OVER, T_FILTER, T_IMAGE, ZERO_STR } from '../helper/shared-vars.js';
 
-// Local constants (none defined)
+// Local constants
+const CONTAIN = 'contain',
+    COVER = 'cover',
+    STRETCH = 'stretch';
 
 
 // #### Export function
@@ -199,7 +202,9 @@ export default function (P = Ωempty) {
                     if (img) {
 
                         let width, height, snd, cnd,
-                            copyX, copyY, copyWidth, copyHeight;
+                            copyStartX, copyStartY, copyWidth, copyHeight,
+                            fit, scale, smoothing, backgroundColor,
+                            drawWidth, drawHeight, dx, dy;
 
                         if (T_IMAGE !== img.type) {
 
@@ -222,7 +227,6 @@ export default function (P = Ωempty) {
                                     width = width || snd[0];
                                     height = height || snd[1];
                                 }
-
                                 else if (cnd && cnd[0] && cnd[1]) {
 
                                     width = width || cnd[0];
@@ -232,82 +236,108 @@ export default function (P = Ωempty) {
 
                             if (width && height) {
 
-                                copyX = obj.copyX || 0;
-                                copyY = obj.copyY || 0;
-                                copyWidth = obj.copyWidth || 1;
-                                copyHeight = obj.copyHeight || 1;
+                                copyStartX = (obj.copyStartX != null) ? obj.copyStartX : obj.copyX;
+                                copyStartY = (obj.copyStartY != null) ? obj.copyStartY : obj.copyY;
 
-                                if (copyX.substring) copyX = (parseFloat(copyX) / 100) * width;
-                                if (copyY.substring) copyY = (parseFloat(copyY) / 100) * height;
-                                if (copyWidth.substring) copyWidth = (parseFloat(copyWidth) / 100) * width;
-                                if (copyHeight.substring) copyHeight = (parseFloat(copyHeight) / 100) * height;
+                                copyStartX = (copyStartX != null) ? copyStartX : 0;
+                                copyStartY = (copyStartY != null) ? copyStartY : 0;
+                                copyWidth = obj.copyWidth;
+                                copyHeight = obj.copyHeight;
 
+                                if (copyStartX.substring) copyStartX = (parseFloat(copyStartX) / 100) * width;
+                                if (copyStartY.substring) copyStartY = (parseFloat(copyStartY) / 100) * height;
 
-                                copyX = _floor(_abs(copyX));
-                                copyY = _floor(_abs(copyY));
-                                copyWidth = _floor(_abs(copyWidth));
-                                copyHeight = _floor(_abs(copyHeight));
+                                copyStartX = _floor(copyStartX);
+                                copyStartY = _floor(copyStartY);
 
-                                if (copyX >= width) {
+                                if (copyStartX < 0) copyStartX = 0;
+                                else if (copyStartX >= width) copyStartX = width - 1;
 
-                                    copyX = width - 1;
-                                    copyWidth = 1;
+                                if (copyStartY < 0) copyStartY = 0;
+                                else if (copyStartY >= height) copyStartY = height - 1;
+
+                                if (copyWidth == null) copyWidth = width - copyStartX;
+                                else if (copyWidth.substring) copyWidth = (parseFloat(copyWidth) / 100) * width;
+
+                                if (copyHeight == null) copyHeight = height - copyStartY;
+                                else if (copyHeight.substring) copyHeight = (parseFloat(copyHeight) / 100) * height;
+
+                                copyWidth = _floor(copyWidth);
+                                copyHeight = _floor(copyHeight);
+
+                                if (copyWidth < 1) copyWidth = 1;
+                                if (copyHeight < 1) copyHeight = 1;
+
+                                if (copyWidth > width) copyWidth = width;
+                                if (copyHeight > height) copyHeight = height;
+
+                                if (copyStartX + copyWidth > width) copyStartX = width - copyWidth;
+                                if (copyStartY + copyHeight > height) copyStartY = height - copyHeight;
+
+                                fit = (obj.fit != null) ? obj.fit : NONE;
+                                scale = (obj.scale != null) ? obj.scale : 1;
+                                smoothing = (obj.smoothing != null) ? obj.smoothing : false;
+                                backgroundColor = (obj.backgroundColor != null) ? obj.backgroundColor : BLANK;
+
+                                drawWidth = copyWidth;
+                                drawHeight = copyHeight;
+
+                                if (fit === CONTAIN) {
+
+                                    scale = _min(hostWidth / copyWidth, hostHeight / copyHeight);
+                                    drawWidth = copyWidth * scale;
+                                    drawHeight = copyHeight * scale;
+                                }
+                                else if (fit === COVER) {
+
+                                    scale = _max(hostWidth / copyWidth, hostHeight / copyHeight);
+                                    drawWidth = copyWidth * scale;
+                                    drawHeight = copyHeight * scale;
+                                }
+                                else if (fit === STRETCH) {
+
+                                    drawWidth = hostWidth;
+                                    drawHeight = hostHeight;
+                                }
+                                else {
+
+                                    drawWidth = copyWidth * scale;
+                                    drawHeight = copyHeight * scale;
                                 }
 
-                                if (copyWidth > width) {
+                                drawWidth = _max(1, _floor(drawWidth));
+                                drawHeight = _max(1, _floor(drawHeight));
 
-                                    copyWidth = width;
-                                    copyX = 0;
-                                }
-
-                                if (copyX + copyWidth > width) copyX = width - copyWidth;
-
-                                if (copyY >= height) {
-
-                                    copyY = height - 1;
-                                    copyHeight = 1;
-                                }
-
-                                if (copyHeight > height) {
-
-                                    copyHeight = height;
-                                    copyY = 0;
-                                }
-
-                                if (copyY + copyHeight > height) copyY = height - copyHeight;
+                                dx = ((hostWidth - drawWidth) / 2) | 0;
+                                dy = ((hostHeight - drawHeight) / 2) | 0;
 
                                 const mycell = requestCell(),
                                     engine = mycell.engine,
-                                    canvas = mycell.element;
+                                    canvas = mycell.element,
+                                    src = img.source || img.element;
 
-                                // Always render into a host-sized buffer; let canvas clip if the copy rect is larger
-                                canvas.width  = hostWidth;
+                                canvas.width = hostWidth;
                                 canvas.height = hostHeight;
-
-                                // Placement: center if smaller; pin to top/left if larger
-                                let dx = 0, dy = 0;
-
-                                if (copyWidth < hostWidth)  dx = ((hostWidth  - copyWidth)  / 2) | 0;
-
-                                if (copyHeight < hostHeight) dy = ((hostHeight - copyHeight) / 2) | 0;
 
                                 engine.resetTransform();
                                 engine.globalCompositeOperation = SOURCE_OVER;
                                 engine.globalAlpha = 1;
-                                engine.imageSmoothingEnabled = false;
+                                engine.imageSmoothingEnabled = smoothing;
 
-                                const src = img.source || img.element;
-
-                                // No scaling: dest size == copy rect size; canvas clips when larger than host
                                 engine.clearRect(0, 0, hostWidth, hostHeight);
 
+                                if (backgroundColor && backgroundColor !== BLANK) {
+
+                                    engine.fillStyle = backgroundColor;
+                                    engine.fillRect(0, 0, hostWidth, hostHeight);
+                                }
+
                                 engine.drawImage(
-                                  src,
-                                  copyX, copyY, copyWidth, copyHeight,
-                                  dx, dy, copyWidth, copyHeight,
+                                    src,
+                                    copyStartX, copyStartY, copyWidth, copyHeight,
+                                    dx, dy, drawWidth, drawHeight,
                                 );
 
-                                // Store a host-sized ImageData for PROCESS_IMAGE to consume as-is
                                 setWorkstoreItem(obj.identifier, engine.getImageData(0, 0, hostWidth, hostHeight));
 
                                 releaseCell(mycell);
@@ -329,11 +359,10 @@ export default function (P = Ωempty) {
                 const {fillStyle, strokeStyle} = state;
 
                 if (styles[fillStyle] && styles[fillStyle].dirtyFilterIdentifier) this.dirtyFilterIdentifier = true;
-
                 else if (styles[strokeStyle] && styles[strokeStyle].dirtyFilterIdentifier) this.dirtyFilterIdentifier = true;
             }
         }
 
         if (this.dirtyFilterIdentifier || (this.state && this.state.dirtyFilterIdentifier)) this.updateFilterIdentifier(true);
     };
-}
+};

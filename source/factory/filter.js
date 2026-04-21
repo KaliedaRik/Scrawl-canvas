@@ -17,7 +17,7 @@ import { colorEngine } from '../helper/color-engine.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _isArray, _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NORMAL, OK_PERCEPTUAL_CURVES, OFFSET, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILE_MODES, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, UNSHARP, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR, ZOOM_BLUR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLANK, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NONE, NORMAL, OK_PERCEPTUAL_CURVES, OFFSET, PC100, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILE_MODES, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, UNSHARP, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR, ZOOM_BLUR } from '../helper/shared-vars.js';
 
 // Local constants
 const EMBOSS_WORK = 'emboss-work',
@@ -125,6 +125,7 @@ const defaultAttributes = {
     angle: 0,
     areaAlphaLevels: null,
     asset: ZERO_STR,
+    backgroundColor: BLANK,
     blend: NORMAL,
     blue: 0,
     blueInBlue: 0,
@@ -140,8 +141,11 @@ const defaultAttributes = {
     compose: SOURCE_OVER,
     copyHeight: 1,
     copyWidth: 1,
+    // `copyX` and `copyY` are deprecated in favour of `copyStartX` and `copyStartY`
     copyX: 0,
     copyY: 0,
+    copyStartX: 0,
+    copyStartY: 0,
     concurrent: false,
     curves: null,
     deriveMaskFromImage: true,
@@ -155,6 +159,7 @@ const defaultAttributes = {
     featherRed: 0,
     featherGreen: 0,
     featherBlue: 0,
+    fit: NONE,
     gradient: null,
     green: 0,
     greenInBlue: 0,
@@ -237,6 +242,8 @@ const defaultAttributes = {
     redInRed: 0,
     reference: BLACK,
     samples: 14,
+    scale: 1,
+    // `scaleX` and `scaleY` are deprecated in favour of `strengthX` and `strengthY`
     scaleX: 1,
     scaleY: 1,
     seed: DEFAULT_SEED,
@@ -248,6 +255,8 @@ const defaultAttributes = {
     stepHorizontal: 1,
     stepVertical: 1,
     strength: 1,
+    strengthX: 1,
+    strengthY: 1,
     staticSwirls: null,
     tileHeight: 1,
     tileWidth: 1,
@@ -790,6 +799,11 @@ const setActionsArray = {
 
 // __displace__ (new in v8.4.0) - moves pixels around the image, based on the color channel values supplied by a displacement map image
     displace: function (f) {
+
+        // `scaleX` and `scaleY` are deprecated in favour of `strengthX` and `strengthY`
+        const strengthX = f.strengthX || f.scaleX,
+            strengthY = f.strengthY || f.scaleY;
+
         f.actions = [{
             action: DISPLACE,
             lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
@@ -800,8 +814,8 @@ const setActionsArray = {
             channelY: (f.channelY != null) ? f.channelY : GREEN,
             offsetX: (f.offsetX != null) ? f.offsetX : 0,
             offsetY: (f.offsetY != null) ? f.offsetY : 0,
-            scaleX: (f.scaleX != null) ? f.scaleX : 1,
-            scaleY: (f.scaleY != null) ? f.scaleY : 1,
+            strengthX: (strengthX != null) ? strengthX : 1,
+            strengthY: (strengthY != null) ? strengthY : 1,
             transparentEdges: (f.transparentEdges != null) ? f.transparentEdges : false,
             useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
@@ -1012,14 +1026,22 @@ const setActionsArray = {
 // __image__ (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image
     image: function (f) {
 
+        // `copyX` and `copyY` are deprecated in favour of `copyStartX` and `copyStartY`
+        const x = f.copyStartX || f.copyX,
+            y = f.copyStartY || f.copyY;
+
         const o = {
             action: PROCESS_IMAGE,
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             asset: (f.asset != null) ? f.asset : ZERO_STR,
-            copyWidth: (f.copyWidth != null) ? f.copyWidth : 1,
-            copyHeight: (f.copyHeight != null) ? f.copyHeight : 1,
-            copyX: (f.copyX != null) ? f.copyX : 0,
-            copyY: (f.copyY != null) ? f.copyY : 0,
+            copyWidth: (f.copyWidth != null) ? f.copyWidth : PC100,
+            copyHeight: (f.copyHeight != null) ? f.copyHeight : PC100,
+            copyStartX: (x != null) ? x : 0,
+            copyStartY: (y != null) ? y : 0,
+            scale: (f.scale != null) ? f.scale : 1,
+            fit: (f.fit != null) ? f.fit : NONE,
+            backgroundColor: (f.backgroundColor != null) ? f.backgroundColor : BLANK,
+            smoothing: (f.smoothing != null) ? f.smoothing : false,
         };
 
         o.identifier = `user-image-${o.asset}-${generateUuid()}`;

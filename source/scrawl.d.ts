@@ -1428,6 +1428,7 @@ interface CurveWeights {
 
 interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     angle?: number;
+    backgroundColor?: string;
     blueInBlue?: number;
     blueInGreen?: number;
     blueInRed?: number;
@@ -1435,6 +1436,8 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     copyWidth?: StringOrNumberInput;
     copyX?: StringOrNumberInput;
     copyY?: StringOrNumberInput;
+    copyStartX?: StringOrNumberInput;
+    copyStartY?: StringOrNumberInput;
     greenInBlue?: number;
     greenInGreen?: number;
     greenInRed?: number;
@@ -1493,6 +1496,8 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     redInGreen?: number;
     redInRed?: number;
     samples?: number;
+    scale?: number;
+    // `process-image` - `scaleX` and `scaleY` deprecated in favour of `strengthX` and `strengthY`
     scaleX?: number;
     scaleY?: number;
     smoothing?: number;
@@ -1503,6 +1508,8 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     stepHorizontal?: number;
     stepVertical?: number;
     strength?: number;
+    strengthX?: number;
+    strengthY?: number;
     tileHeight?: StringOrNumberInput;
     tileRadius?: number;
     tileWidth?: StringOrNumberInput;

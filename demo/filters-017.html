@@ -83,11 +83,11 @@
       </select>
     </div>
 
-    <div class="blue label">Scale X</div>
-    <div class="blue"><input class="controlItem" id="scale_x" type="range" value="20" min="0" max="100" step="0.1" /></div>
+    <div class="blue label">Strength X</div>
+    <div class="blue"><input class="controlItem" id="strength_x" type="range" value="20" min="0" max="100" step="0.1" /></div>
 
-    <div class="green label">Scale Y</div>
-    <div class="green"><input class="controlItem" id="scale_y" type="range" value="20" min="0" max="100" step="0.1" /></div>
+    <div class="green label">Strength Y</div>
+    <div class="green"><input class="controlItem" id="strength_y" type="range" value="20" min="0" max="100" step="0.1" /></div>
 
     <div class="blue label">Offset X</div>
     <div class="blue"><input class="controlItem" id="offset_x" type="range" value="0" min="-200" max="200" step="1" /></div>
@@ -115,16 +115,6 @@
     <div class="yellow">
       <select class="controlItem" id="lineMix">
         <option value="map">map</option>
-        <option value="broken">broken</option>
-      </select>
-    </div>
-
-    <div class="yellow label">Asset</div>
-    <div class="yellow">
-      <select class="assetControlItem" id="asset">
-        <option value="perlin">perlin</option>
-        <option value="carpet">carpet</option>
-        <option value="iris">iris</option>
         <option value="broken">broken</option>
       </select>
     </div>
@@ -169,6 +159,62 @@
       </div>
     </canvas>
   </div>
+
+  <div class="controls">
+    
+    <div class="yellow label">Asset</div>
+    <div class="yellow">
+      <select class="assetControlItem" id="asset">
+        <option value="perlin">perlin</option>
+        <option value="carpet">carpet</option>
+        <option value="iris">iris</option>
+        <option value="broken">broken</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Line out</div>
+    <div class="yellow">
+      <select class="assetControlItem" id="lineOut">
+        <option value="map">map</option>
+        <option value="broken">broken</option>
+      </select>
+    </div>
+
+    <div class="orange label">Copy start X</div>
+    <div class="orange"><input class="assetControlItem" id="copyStartX" type="range" value="0" min="0" max="99.9" step="0.1" /></div>
+
+    <div class="orange label">Copy start Y</div>
+    <div class="orange"><input class="assetControlItem" id="copyStartY" type="range" value="0" min="0" max="99.9" step="0.1" /></div>
+
+    <div class="orange label">Copy width</div>
+    <div class="orange"><input class="assetControlItem" id="copyWidth" type="range" value="100" min="0.1" max="100" step="0.1" /></div>
+
+    <div class="orange label">Copy height</div>
+    <div class="orange"><input class="assetControlItem" id="copyHeight" type="range" value="100" min="0.1" max="100" step="0.1" /></div>
+
+    <div class="bluegreen label">Fit</div>
+    <div class="bluegreen">
+      <select class="assetControlItem" id="fit">
+        <option value="none">none</option>
+        <option value="cover">cover</option>
+        <option value="contain">contain</option>
+        <option value="stretch">stretch</option>
+      </select>
+    </div>
+
+    <div class="bluegreen label">Scale</div>
+    <div class="bluegreen"><input class="assetControlItem" id="scale" type="range" value="1" min="0.1" max="20" step="0.1" /></div>
+
+    <div class="bluegreen label">Smoothing</div>
+    <div class="bluegreen">
+      <select class="controlItem" id="smoothing">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+  </div>
+
 
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
 
