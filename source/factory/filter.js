@@ -7,7 +7,7 @@
 
 
 // #### Imports
-import { cell, constructors, entity, group, styles } from '../core/library.js';
+import { cell, constructors, asset as libraryAsset, entity, group, styles } from '../core/library.js';
 
 import { addStrings, doCreate, generateUuid, mergeOver, removeItem, Ωempty } from '../helper/utilities.js';
 
@@ -175,6 +175,7 @@ const defaultAttributes = {
     highColor: WHITE,
     highGreen: 255,
     highRed: 255,
+    identifier: ZERO_STR,
     includeAlpha: false,
     includeBlue: true,
     includeGreen: true,
@@ -395,6 +396,20 @@ S.actions = function (item) {
 
     if (item != null) this.actions = item;
 };
+
+const getProcessImageActionIdentifier = function (item) {
+
+    if (item.action === PROCESS_IMAGE) {
+
+        const asset = libraryAsset[item.asset];
+
+        if (!asset || !asset.name) return ZERO_STR;
+
+        return `user-image_${asset.name}_${item.copyStartX}_${item.copyStartY}_${item.copyWidth}_${item.copyHeight}_${item.scale}_${item.fit}_${item.backgroundColor}_${item.smoothing}`
+    }
+    return ZERO_STR;
+};
+
 
 // #### Compatibility with Scrawl-canvas legacy filters functionality
 // The Scrawl-canvas filters code was rewritten from scratch for version 8.4.0. The new functionality introduced the concept of "line processing" - `lineIn`, `lineMix`, `lineOut` (analagous to SVG `in`, `in2` and `result` attributes) - alongside the addition of more sophisticated image processing tools such as blend modes, compositing, more adaptable matrices, image loading, displacement mapping, etc.
@@ -1044,7 +1059,7 @@ const setActionsArray = {
             smoothing: (f.smoothing != null) ? f.smoothing : false,
         };
 
-        o.identifier = `user-image-${o.asset}-${generateUuid()}`;
+        o.identifier = getProcessImageActionIdentifier(o);
 
         f.actions = [o];
     },
