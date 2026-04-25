@@ -442,10 +442,15 @@ export default function (P = Ωempty) {
 //
 // **New in v8.18.0 - `packetSettings`**
 // - We need to start hardening the security issues surrounding the serialisation of functions, and their deserialisation using `new Function()`
-// - To this end, we're including some `packetSettings` extensions, for the moment set to `true`, which allows developers to restrict the creation of functions and DOM elements when processing packets that are not from a source they can fully trust (in other words, anything that they haven't coded themselves)
-// - `reviveFunctions` - prevent deserialization from creating functions using `new Function()` by setting this flag to `false`
-// - `allowDOMElementCreation` - prevent deserialization from creating new DOM elements (including buttons and links associated with a graphical entity) by setting this flag to `false`
+// - To this end, we're including some `packetSettings` extensions, set to `false` by default, which allows developers to restrict the creation of functions and DOM elements when processing packets that are not from a source they can fully trust (in other words, anything that they haven't coded themselves)
+// - `reviveFunctions` - allow deserialization to create functions using `new Function()` by setting this flag to `true`
+// - `allowDOMElementCreation` - allow deserialization to create new DOM elements (including buttons and links associated with a graphical entity) by setting this flag to `true`
 // - `logWarnings` - set to false to suppress console warnings when packet hardening skips or rejects function/DOM revival
+//
+// **Security note:** because deserialization can involve the `new Function()` invocation, developers will need to make sure that the website server for a web page using SC includes an appropriate [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP):
+// - When both `reviveFunctions` and `allowDOMElementCreation` are `false`, packet import operates in a "data-only" mode.
+// - Packet strings are data, but may include serialized function source. Enabling `reviveFunctions` converts that function data into executable code at runtime. **Only enable this for trusted packet sources**.
+// - Sites using a strict CSP should leave `reviveFunctions: false` unless they deliberately allow eval-like script execution (for example via `'unsafe-eval'` in `script-src`).
     P.actionPacket = function (packet, items = Ωempty) {
 
         const packetSettings = {
@@ -634,6 +639,10 @@ export default function (P = Ωempty) {
 //     startY: 60,
 // });
 // ```
+//
+// **Security note:** clone functionality is built on top of packet functionality, which uses `new Function()` invocation
+// - Developers will need to make sure that the website server for a web page using SC includes an appropriate [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP).
+// - When operating under a strict CSP, clone functionality may not be available to client-side SC code.
 
 // `clone`
     P.clone = function (items = Ωempty) {
