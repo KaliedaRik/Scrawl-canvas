@@ -449,9 +449,8 @@ export default function (P = Ωempty) {
     P.actionPacket = function (packet, items = Ωempty) {
 
         const packetSettings = {
-
-            reviveFunctions: true,
-            allowDOMElementCreation: true,
+            reviveFunctions: false,
+            allowDOMElementCreation: false,
             logWarnings: true,
             ...items,
         };
@@ -478,6 +477,19 @@ export default function (P = Ωempty) {
                         if (TYPE_EXCLUSIONS.includes(type)) {
 
                             throw new Error(`Failed to process packet - Stacks, Canvases and visual assets are excluded from the packet system`);
+                        }
+
+                        if (!packetSettings.allowDOMElementCreation) {
+
+                            if ((update.outerHTML || update.host || update.anchor || update.button) && packetSettings.logWarnings) {
+
+                                console.warn(`SC packet import skipped DOM element data for ${name}`);
+                            }
+
+                            delete update.outerHTML;
+                            delete update.host;
+                            delete update.anchor;
+                            delete update.button;
                         }
 
                         let obj = library[lib][name];
@@ -508,13 +520,6 @@ export default function (P = Ωempty) {
                                     }
                                 }
                                 else if (packetSettings.logWarnings) console.warn(`SC packet import rejected missing host element for ${name}`);
-                            }
-                            else {
-
-                                if ((update.outerHTML || update.host) && packetSettings.logWarnings) console.warn(`SC packet import skipped DOM element creation for ${name}`);
-
-                                delete update.outerHTML;
-                                delete update.host;
                             }
 
                             obj = new library.constructors[type](update);
@@ -560,7 +565,11 @@ export default function (P = Ωempty) {
             }
             else throw new Error('Failed to process packet - not a JSON string');
         }
-        catch (e) { console.log(e); return e }
+        catch (e) { 
+
+            if (packetSettings.logWarnings) console.warn(e.message);
+            return e;
+        }
     };
 
 // `actionPacketFunctions` - internal helper function - creates functions from Strings
@@ -668,7 +677,11 @@ export default function (P = Ωempty) {
 
         this.name = myName;
 
-        let clone = this.actionPacket(myPacket);
+        let clone = this.actionPacket(myPacket, {
+            reviveFunctions: true,
+            allowDOMElementCreation: true,
+            logWarnings: true,
+        });
 
         this.packetFunctions.forEach(func => {
 
