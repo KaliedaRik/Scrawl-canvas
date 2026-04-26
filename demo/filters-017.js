@@ -74,9 +74,16 @@ const piccy = scrawl.makePicture({
 const report = reportSpeed('#reportmessage', function () {
 
     return `
+Displace
     Strength - x: ${dom.strength_x.value}, y: ${dom.strength_y.value}
     Offset - x: ${dom.offset_x.value}, y: ${dom.offset_y.value}
-    Opacity: ${dom.opacity.value}`;
+    Opacity: ${dom.opacity.value}
+
+Asset
+    Copy start - x: ${dom.copyStartX.value}%, y: ${dom.copyStartY.value}%
+    Copy dimensions - width: ${dom.copyWidth.value}%, height: ${dom.copyHeight.value}%
+    Paste offset - x: ${dom.image_offset_x.value}%, y: ${dom.image_offset_y.value}%
+    Scale: ${dom.scale.value}`;
 });
 
 
@@ -103,15 +110,19 @@ const dom = scrawl.initializeDomInputs([
     ['select', 'channelX', 0],
     ['select', 'channelY', 1],
 
-    ['input', 'copyStartX', '1'],
-    ['input', 'copyStartY', '1'],
+    ['input', 'copyStartX', '0'],
+    ['input', 'copyStartY', '0'],
     ['input', 'copyWidth', '100'],
     ['input', 'copyHeight', '100'],
     ['input', 'scale', '1'],
 
     ['select', 'asset', 0],
+    ['input', 'image_offset_x', '0'],
+    ['input', 'image_offset_y', '0'],
     ['select', 'fit', 0],
     ['select', 'smoothing', 0],
+    ['select', 'positionX', 1],
+    ['select', 'positionY', 1],
     ['select', 'lineOut', 0],
 ]);
 
@@ -163,6 +174,10 @@ scrawl.makeUpdater({
         scale: ['scale', 'float'],
         fit: ['fit', 'raw'],
         smoothing: ['smoothing', 'boolean'],
+        image_offset_x: ['offsetX', '%'],
+        image_offset_y: ['offsetY', '%'],
+        positionX: ['positionX', 'raw'],
+        positionY: ['positionY', 'raw'],
     },
 });
 

@@ -97,10 +97,10 @@ const imageFilter = scrawl.makeFilter({
     name: name('flower-filter'),
     method: 'image',
     asset: 'iris',
-    copyStartX: '10%',
-    copyStartY: '10%',
-    copyWidth: '80%',
-    copyHeight: '80%',
+    copyStartX: '15%',
+    copyStartY: '5%',
+    copyWidth: '70%',
+    copyHeight: '90%',
     lineOut: 'flower',
 });
 
@@ -112,8 +112,8 @@ const composeFilter = scrawl.makeFilter({
     method: 'compose',
     lineIn: 'star',
     lineMix: 'source',
-    offsetX: 30,
-    offsetY: 30,
+    offsetX: 0,
+    offsetY: 0,
     compose: 'source-over',
 });
 
@@ -158,8 +158,18 @@ scrawl.makeBlock({
 const report = reportSpeed('#reportmessage', function () {
 
     return `
-    Offset - x: ${dom.offset_x.value}, y: ${dom.offset_y.value}
-    Opacity: ${dom.opacity.value}`;
+Line mix
+    Offset - x: ${dom.comp_offset_x.value}, y: ${dom.comp_offset_y.value}
+    Opacity: ${dom.opacity.value}
+
+Flower
+    Copy start x: ${dom.copyStartX.value}%
+    Copy start y: ${dom.copyStartY.value}%
+    Copy width: ${dom.copyWidth.value}%
+    Copy height: ${dom.copyHeight.value}%
+    Scale: ${dom.scale.value}
+    Paste offset x: ${dom.image_offset_x.value}%
+    Paste offset y: ${dom.image_offset_y.value}%`;
 });
 
 
@@ -175,12 +185,24 @@ scrawl.makeRender({
 // #### User interaction
 // Setup form
 const dom = scrawl.initializeDomInputs([
-    ['input', 'offset_x', '30'],
-    ['input', 'offset_y', '30'],
+    ['input', 'comp_offset_x', '0'],
+    ['input', 'comp_offset_y', '0'],
     ['input', 'opacity', '1'],
     ['select', 'source', 2],
     ['select', 'destination', 0],
     ['select', 'composite', 0],
+
+    ['input', 'copyStartX', '15'],
+    ['input', 'copyStartY', '5'],
+    ['input', 'copyWidth', '70'],
+    ['input', 'copyHeight', '90'],
+    ['input', 'scale', '1'],
+    ['input', 'image_offset_x', '0'],
+    ['input', 'image_offset_y', '0'],
+    ['select', 'fit', 0],
+    ['select', 'smoothing', 0],
+    ['select', 'positionX', 1],
+    ['select', 'positionY', 1],
 ]);
 
 
@@ -201,8 +223,34 @@ scrawl.makeUpdater({
         destination: ['lineMix', 'raw'],
         composite: ['compose', 'raw'],
         opacity: ['opacity', 'float'],
-        offset_x: ['offsetX', 'round'],
-        offset_y: ['offsetY', 'round'],
+        comp_offset_x: ['offsetX', 'round'],
+        comp_offset_y: ['offsetY', 'round'],
+    },
+});
+
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.assetControlItem',
+
+    target: imageFilter,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        copyStartX: ['copyStartX', '%'],
+        copyStartY: ['copyStartY', '%'],
+        copyWidth: ['copyWidth', '%'],
+        copyHeight: ['copyHeight', '%'],
+        scale: ['scale', 'float'],
+        fit: ['fit', 'raw'],
+        smoothing: ['smoothing', 'boolean'],
+        image_offset_x: ['offsetX', '%'],
+        image_offset_y: ['offsetY', '%'],
+        positionX: ['positionX', 'raw'],
+        positionY: ['positionY', 'raw'],
     },
 });
 

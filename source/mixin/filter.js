@@ -12,12 +12,14 @@ import { checkForWorkstoreItem, setWorkstoreItem } from '../helper/workstore.js'
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 // Shared constants
-import { _abs, _floor, _isArray, _max, _min, BLANK, NONE, PROCESS_IMAGE, SOURCE_OVER, T_FILTER, T_IMAGE, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _floor, _isArray, _max, _min, BLANK, BOTTOM, CENTER, LEFT, NONE, PROCESS_IMAGE, RIGHT, SOURCE_OVER, T_FILTER, T_IMAGE, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const CONTAIN = 'contain',
     COVER = 'cover',
-    STRETCH = 'stretch';
+    STRETCH = 'stretch',
+    CHECK_POS_X = [LEFT, CENTER, RIGHT],
+    CHECK_POS_Y = [TOP, CENTER, BOTTOM];
 
 
 // #### Export function
@@ -184,7 +186,7 @@ export default function (P = Ωempty) {
         return !!this.filters.length;
     };
 
-// `preprocessFilters` - internal function called as part of the Display cycle. The __process-image__ filter action loads a Scrawl-canvas asset into the SC Workstore, where it can be used as a lineIn or lineMix argument for other filter actions.
+// `preprocessFilters` - internal function called as part of the Display cycle.
     P.preprocessFilters = function (filters, hostWidth, hostHeight) {
 
         for (let i = 0, iz = filters.length, filter; i < iz; i++) {
@@ -195,17 +197,23 @@ export default function (P = Ωempty) {
 
                 obj = filter.actions[j];
 
+                // Currently only the `process-image` filter action requires pre-processing
+                // - This filter action loads a Scrawl-canvas asset into the SC Workstore, where it can be used as a lineIn or lineMix argument for other filter actions.
                 if (obj.action === PROCESS_IMAGE) {
 
                     const img = asset[obj.asset];
 
+                    // Only continue if the image already exists as an asset
                     if (img) {
 
                         let width, height, snd, cnd,
                             copyStartX, copyStartY, copyWidth, copyHeight,
                             fit, scale, smoothing, backgroundColor,
+                            positionX, positionY, offsetX, offsetY,
                             drawWidth, drawHeight, dx, dy;
 
+                        // Any asset can be used as an "image", but given assets can be animated we do a check.
+                        // - Video, Cell etc assets get a unique identifier on each iteration, to break Workstore caching
                         if (T_IMAGE !== img.type) {
 
                             img.checkSource();
@@ -213,13 +221,21 @@ export default function (P = Ωempty) {
                             this.dirtyFilterIdentifier = true;
                         }
 
-                        if (!checkForWorkstoreItem(obj.identifier)) {
+                        const specifiedIdentifier = `${obj.identifier}_${hostWidth}_${hostHeight}`;
+
+                        // We pre-process when the image doesn't already exist in the Workstore. The `identifier` attribute is set by the `process-image` filter action
+                        // - This happens when `process-image` has been set up as a legacy `method` filter, not the modern `actions` filter
+                        // - When using the `actions` approach, the `identifier` attribute needs to be created and updated (to break cache) manually, un user code.
+                        if (!checkForWorkstoreItem(specifiedIdentifier)) {
 
                             width = img.sourceNaturalWidth;
                             height = img.sourceNaturalHeight;
                             snd = img.sourceNaturalDimensions;
                             cnd = img.currentDimensions;
 
+                            // Dimensions values:
+                            // - `hostWidth`, `hostHeight` - received by the function as arguments, representing the area within which the ingested image will sit
+                            // - local `width`, `height` - calculated from image attributes 
                             if (!width || !height) {
 
                                 if (snd && snd[0] && snd[1]) {
@@ -234,113 +250,206 @@ export default function (P = Ωempty) {
                                 }
                             }
 
+                            // Proceed if we have the image dimensions, otherwise do nothing
+                            // - If the image asset creation processes have not yet completed, width and height should be either `0` or undefined.
+                            // - Thus no point writing anything in the Workstore
+                            // - Thus pre-processing will run again in future iterations of the Display cycle, until the asset creation process completes and the functionality below can run
                             if (width && height) {
 
+                                // `copyX` and `copyY` are deprecated names for the `copyStartX` and `copyStartY` attributes. Check for them here
+                                // - This check will be removed in a future release of the SC library
                                 copyStartX = (obj.copyStartX != null) ? obj.copyStartX : obj.copyX;
                                 copyStartY = (obj.copyStartY != null) ? obj.copyStartY : obj.copyY;
 
+                                // Don't assume the copy attributes have been set. Defaults are to use the entire image in the following functionality
                                 copyStartX = (copyStartX != null) ? copyStartX : 0;
                                 copyStartY = (copyStartY != null) ? copyStartY : 0;
-                                copyWidth = obj.copyWidth;
-                                copyHeight = obj.copyHeight;
+                                copyWidth = (obj.copyWidth != null) ? obj.copyWidth : '100%';
+                                copyHeight = (obj.copyHeight != null) ? obj.copyHeight : '100%';
 
+                                // De-stringify start attributes
+                                // - number values represent pixel values
+                                // - string values represent a proportion of the image dimension
                                 if (copyStartX.substring) copyStartX = (parseFloat(copyStartX) / 100) * width;
                                 if (copyStartY.substring) copyStartY = (parseFloat(copyStartY) / 100) * height;
 
+                                // Work with integers
                                 copyStartX = _floor(copyStartX);
                                 copyStartY = _floor(copyStartY);
 
+                                // Correct start positions, which must be within the image dimensions
                                 if (copyStartX < 0) copyStartX = 0;
                                 else if (copyStartX >= width) copyStartX = width - 1;
 
                                 if (copyStartY < 0) copyStartY = 0;
                                 else if (copyStartY >= height) copyStartY = height - 1;
 
-                                if (copyWidth == null) copyWidth = width - copyStartX;
-                                else if (copyWidth.substring) copyWidth = (parseFloat(copyWidth) / 100) * width;
+                                // Correct copy dimensions
+                                if (copyWidth.substring) copyWidth = (parseFloat(copyWidth) / 100) * width;
+                                if (copyHeight.substring) copyHeight = (parseFloat(copyHeight) / 100) * height;
 
-                                if (copyHeight == null) copyHeight = height - copyStartY;
-                                else if (copyHeight.substring) copyHeight = (parseFloat(copyHeight) / 100) * height;
-
+                                // Work with integers
                                 copyWidth = _floor(copyWidth);
                                 copyHeight = _floor(copyHeight);
 
+                                // Correct copy dimensions
+                                // - They must be a minimum of 1px
+                                // - They must be equal to, or less than, the image dimensions
                                 if (copyWidth < 1) copyWidth = 1;
                                 if (copyHeight < 1) copyHeight = 1;
 
                                 if (copyWidth > width) copyWidth = width;
                                 if (copyHeight > height) copyHeight = height;
 
+                                // If start + copy dimension is greater than the image dimension, then we correct the start value (to prevent unexpected stretching of the copy output)
                                 if (copyStartX + copyWidth > width) copyStartX = width - copyWidth;
                                 if (copyStartY + copyHeight > height) copyStartY = height - copyHeight;
 
+                                // Collect the `process-image` filter action's other attributes:
+                                // - `fit`: string - values 'contain', 'cover', 'stretch', 'none'
+                                // - `smoothing`: boolean
                                 fit = (obj.fit != null) ? obj.fit : NONE;
-                                scale = (obj.scale != null) ? obj.scale : 1;
                                 smoothing = (obj.smoothing != null) ? obj.smoothing : false;
+
+                                // When the desired image copy is smaller than the host, we fill in the background with a color
+                                // - Use transparent (`rgb(0 0 0 / 0)`) for images that will be used with the `composite` filter action
+                                // - Use gray (`rgb(127 127 127 / 0.5)`) for images to be used with the `displace` filter action - half-transparent gray values should prevent pixels from moving unexpectedly
+                                // - For images to be used with the `blend` filter action, be aware that the background color can have an effect on the blended results; transparent pixels are ignored but if other filter actions modify the image data prior to it reaching the `blend` action then the color of the pixel may have an effect
                                 backgroundColor = (obj.backgroundColor != null) ? obj.backgroundColor : BLANK;
 
-                                drawWidth = copyWidth;
-                                drawHeight = copyHeight;
+                                // Prep the Cell
+                                // - We don't go ahead unless we have a source for the image
+                                const src = img.source || img.element;
 
-                                if (fit === CONTAIN) {
+                                if (src) {
 
-                                    scale = _min(hostWidth / copyWidth, hostHeight / copyHeight);
-                                    drawWidth = copyWidth * scale;
-                                    drawHeight = copyHeight * scale;
+                                    const mycell = requestCell(),
+                                        engine = mycell.engine,
+                                        canvas = mycell.element;
+
+                                    canvas.width = hostWidth;
+                                    canvas.height = hostHeight;
+
+                                    engine.resetTransform();
+                                    engine.globalCompositeOperation = SOURCE_OVER;
+                                    engine.globalAlpha = 1;
+                                    engine.imageSmoothingEnabled = smoothing;
+
+                                    engine.clearRect(0, 0, hostWidth, hostHeight);
+
+                                    if (backgroundColor && backgroundColor !== BLANK) {
+
+                                        engine.fillStyle = backgroundColor;
+                                        engine.fillRect(0, 0, hostWidth, hostHeight);
+                                    }
+
+                                    // Copy the image into the Cell
+                                    switch (fit) {
+
+                                        case CONTAIN: {
+                                            scale = _min(hostWidth / copyWidth, hostHeight / copyHeight);
+                                            drawWidth = copyWidth * scale;
+                                            drawHeight = copyHeight * scale;
+
+                                            drawWidth = _max(1, _floor(drawWidth));
+                                            drawHeight = _max(1, _floor(drawHeight));
+
+                                            dx = ((hostWidth - drawWidth) / 2) | 0;
+                                            dy = ((hostHeight - drawHeight) / 2) | 0;
+
+                                            engine.drawImage(
+                                                src,
+                                                copyStartX, copyStartY, copyWidth, copyHeight,
+                                                dx, dy, drawWidth, drawHeight,
+                                            );
+                                            break;
+                                        }
+
+                                        case COVER: {
+                                            scale = _max(hostWidth / copyWidth, hostHeight / copyHeight);
+                                            drawWidth = copyWidth * scale;
+                                            drawHeight = copyHeight * scale;
+
+                                            drawWidth = _max(1, _floor(drawWidth));
+                                            drawHeight = _max(1, _floor(drawHeight));
+
+                                            dx = ((hostWidth - drawWidth) / 2) | 0;
+                                            dy = ((hostHeight - drawHeight) / 2) | 0;
+
+                                            engine.drawImage(
+                                                src,
+                                                copyStartX, copyStartY, copyWidth, copyHeight,
+                                                dx, dy, drawWidth, drawHeight,
+                                            );
+                                            break;
+                                        }
+
+                                        case STRETCH: {
+                                            drawWidth = hostWidth;
+                                            drawHeight = hostHeight;
+
+                                            drawWidth = _max(1, _floor(drawWidth));
+                                            drawHeight = _max(1, _floor(drawHeight));
+
+                                            dx = ((hostWidth - drawWidth) / 2) | 0;
+                                            dy = ((hostHeight - drawHeight) / 2) | 0;
+
+                                            engine.drawImage(
+                                                src,
+                                                copyStartX, copyStartY, copyWidth, copyHeight,
+                                                dx, dy, drawWidth, drawHeight,
+                                            );
+                                            break;
+                                        }
+
+                                        default: {
+
+                                            // When the image is not being fitted to the output ('contain', 'cover', 'stretch'), it can be positioned and scaled within the output instead
+                                            //
+                                            // `positionX` can have values 'left', 'center' (default), 'right'
+                                            positionX = (obj.positionX != null) ? obj.positionX : CENTER;
+                                            if (!CHECK_POS_X.includes(positionX)) positionX = CENTER;
+
+                                            // `positionY` can have values 'top', 'center' (default), 'bottom'
+                                            positionY = (obj.positionY != null) ? obj.positionY : CENTER;
+                                            if (!CHECK_POS_Y.includes(positionY)) positionY = CENTER;
+
+                                            // `offsetX`, `offsetY` - either pixel numbers or string % values relative to the host dimensions
+                                            offsetX = (obj.offsetX != null) ? obj.offsetX : 0;
+                                            offsetY = (obj.offsetY != null) ? obj.offsetY : 0;
+
+                                            if (offsetX.substring) offsetX = (parseFloat(offsetX) / 100) * hostWidth;
+                                            if (offsetY.substring) offsetY = (parseFloat(offsetY) / 100) * hostHeight;
+
+                                            // `scale`
+                                            scale = (obj.scale != null) ? obj.scale : 1;
+                                            if (scale < 0.01) scale = 0.01;
+                                            drawWidth = copyWidth * scale;
+                                            drawHeight = copyHeight * scale;
+
+                                            // Calculate the start positions
+                                            if (positionX === LEFT) dx = 0;
+                                            else if (positionX === RIGHT) dx = hostWidth - drawWidth;
+                                            else dx = _floor((hostWidth / 2) - (drawWidth / 2));
+                                            dx += offsetX;
+
+                                            if (positionY === TOP) dy = 0;
+                                            else if (positionY === BOTTOM) dy = hostHeight - drawHeight;
+                                            else dy = _floor((hostHeight / 2) - (drawHeight / 2));
+                                            dy += offsetY;
+
+                                            engine.drawImage(
+                                                src,
+                                                copyStartX, copyStartY, copyWidth, copyHeight,
+                                                dx, dy, drawWidth, drawHeight,
+                                            );
+                                        }
+                                    }
+
+                                    setWorkstoreItem(specifiedIdentifier, engine.getImageData(0, 0, hostWidth, hostHeight));
+
+                                    releaseCell(mycell);
                                 }
-                                else if (fit === COVER) {
-
-                                    scale = _max(hostWidth / copyWidth, hostHeight / copyHeight);
-                                    drawWidth = copyWidth * scale;
-                                    drawHeight = copyHeight * scale;
-                                }
-                                else if (fit === STRETCH) {
-
-                                    drawWidth = hostWidth;
-                                    drawHeight = hostHeight;
-                                }
-                                else {
-
-                                    drawWidth = copyWidth * scale;
-                                    drawHeight = copyHeight * scale;
-                                }
-
-                                drawWidth = _max(1, _floor(drawWidth));
-                                drawHeight = _max(1, _floor(drawHeight));
-
-                                dx = ((hostWidth - drawWidth) / 2) | 0;
-                                dy = ((hostHeight - drawHeight) / 2) | 0;
-
-                                const mycell = requestCell(),
-                                    engine = mycell.engine,
-                                    canvas = mycell.element,
-                                    src = img.source || img.element;
-
-                                canvas.width = hostWidth;
-                                canvas.height = hostHeight;
-
-                                engine.resetTransform();
-                                engine.globalCompositeOperation = SOURCE_OVER;
-                                engine.globalAlpha = 1;
-                                engine.imageSmoothingEnabled = smoothing;
-
-                                engine.clearRect(0, 0, hostWidth, hostHeight);
-
-                                if (backgroundColor && backgroundColor !== BLANK) {
-
-                                    engine.fillStyle = backgroundColor;
-                                    engine.fillRect(0, 0, hostWidth, hostHeight);
-                                }
-
-                                engine.drawImage(
-                                    src,
-                                    copyStartX, copyStartY, copyWidth, copyHeight,
-                                    dx, dy, drawWidth, drawHeight,
-                                );
-
-                                setWorkstoreItem(obj.identifier, engine.getImageData(0, 0, hostWidth, hostHeight));
-
-                                releaseCell(mycell);
                             }
                         }
                     }

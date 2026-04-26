@@ -5120,12 +5120,14 @@ P.theBigActionsObject = {
         const { identifier, lineOut } = requirements;
         if (!(lineOut && lineOut.substring && lineOut.length)) return;
 
-        const item = getWorkstoreItem(identifier);
-
         const {
             width: hostW,
             height: hostH,
         } = cache.source;
+
+        const specifiedIdentifier = `${identifier}_${hostW}_${hostH}`;
+
+        const item = getWorkstoreItem(specifiedIdentifier);
 
         if (item && item.width === hostW && item.height === hostH) cache[lineOut] = item;
         else cache[lineOut] = new ImageData(hostW, hostH);
