@@ -2972,7 +2972,7 @@ P.theBigActionsObject = {
     [GAUSSIAN_BLUR]: function (requirements) {
 
         const WS_KEY = 'gaussian-blur::workspace';
-        const getWorkspace = (pixelCount, maxSide4) => {
+        const getWorkspace = (pixelCount, maxSide4, expandedPixelCount = 0, expandedMaxSide4 = 0) => {
 
             let ws = getWorkstoreItem(WS_KEY);
             if (!ws) ws = {};
@@ -2980,11 +2980,20 @@ P.theBigActionsObject = {
             if (!ws.bufA32 || ws.bufA32.length !== pixelCount) ws.bufA32 = new Uint32Array(pixelCount);
             if (!ws.bufB32 || ws.bufB32.length !== pixelCount) ws.bufB32 = new Uint32Array(pixelCount);
 
-            if (!ws.tmpLineF32 || ws.tmpLineF32.length < maxSide4) ws.tmpLineF32 = new Float32Array(maxSide4);
+            if (expandedPixelCount) {
+
+                if (!ws.expA32 || ws.expA32.length !== expandedPixelCount) ws.expA32 = new Uint32Array(expandedPixelCount);
+                if (!ws.expB32 || ws.expB32.length !== expandedPixelCount) ws.expB32 = new Uint32Array(expandedPixelCount);
+                if (!ws.expOut32 || ws.expOut32.length !== pixelCount) ws.expOut32 = new Uint32Array(pixelCount);
+            }
+
+            const lineLength = _max(maxSide4, expandedMaxSide4);
+
+            if (!ws.tmpLineF32 || ws.tmpLineF32.length < lineLength) ws.tmpLineF32 = new Float32Array(lineLength);
 
             setWorkstoreItem(WS_KEY, ws);
             return ws;
-        }
+        };
 
         const COEFFS_KEY = 'gaussian-blur::coeffs';
         const getCoeffCache = () => {
@@ -3214,6 +3223,80 @@ P.theBigActionsObject = {
             }
         };
 
+        const getExpandedBlurBounds = (width, height, theta, radiusHorizontal, radiusVertical) => {
+
+            const c = _abs(_cos(theta)),
+                s = _abs(_sin(theta));
+
+            const rotatedWidth = Math.ceil(width * c + height * s),
+                rotatedHeight = Math.ceil(width * s + height * c);
+
+            const pad = Math.ceil(_max(radiusHorizontal, radiusVertical) * 3);
+
+            return {
+                width: rotatedWidth + pad * 2,
+                height: rotatedHeight + pad * 2,
+            };
+        };
+
+        const rotateIntoExpandedAngleFrame = (src32, dst32, width, height, expWidth, expHeight, theta) => {
+
+            const c = _cos(theta),
+                s = _sin(theta),
+                cx = (width - 1) * 0.5,
+                cy = (height - 1) * 0.5,
+                ecx = (expWidth - 1) * 0.5,
+                ecy = (expHeight - 1) * 0.5;
+
+            let v, dv, u, du, x, y, r, g, b, a;
+
+            for (v = 0; v < expHeight; v++) {
+
+                dv = v - ecy;
+
+                for (u = 0; u < expWidth; u++) {
+
+                    du = u - ecx;
+
+                    x = du * c - dv * s + cx;
+                    y = du * s + dv * c + cy;
+
+                    [r, g, b, a] = sampleRGBA_bilinear_u32(src32, width, height, x, y);
+
+                    dst32[v * expWidth + u] = pack4(r, g, b, a);
+                }
+            }
+        };
+
+        const rotateBackFromExpandedAngleFrame = (src32, dst32, width, height, expWidth, expHeight, theta) => {
+
+            const c = _cos(theta),
+                s = _sin(theta),
+                cx = (width - 1) * 0.5,
+                cy = (height - 1) * 0.5,
+                ecx = (expWidth - 1) * 0.5,
+                ecy = (expHeight - 1) * 0.5;
+
+            let y, dy, x, dx, u, v, r, g, b, a;
+
+            for (y = 0; y < height; y++) {
+
+                dy = y - cy;
+
+                for (x = 0; x < width; x++) {
+
+                    dx = x - cx;
+
+                    u = dx * c + dy * s + ecx;
+                    v = -dx * s + dy * c + ecy;
+
+                    [r, g, b, a] = sampleRGBA_bilinear_u32(src32, expWidth, expHeight, u, v);
+
+                    dst32[y * width + x] = pack4(r, g, b, a);
+                }
+            }
+        };
+
         const transpose_u32 = (src32, dst32, width, height) => {
 
             let y, baseY, x;
@@ -3251,6 +3334,33 @@ P.theBigActionsObject = {
 
             rotateBackToImageFrame(bufA32, bufB32, width, height, angleR);
             return bufB32;
+        };
+
+
+        const runExpandedRotatedPath = (angleR, expWidth, expHeight) => {
+
+            rotateIntoExpandedAngleFrame(src32, expA32, width, height, expWidth, expHeight, angleR);
+
+            if (doH && doV) {
+
+                convolveRGBA(expA32, expB32, tmpLineF32, hCoeff, expWidth, expHeight);
+                convolveRGBA(expB32, expA32, tmpLineF32, vCoeff, expHeight, expWidth);
+            }
+            else if (doH && !doV) {
+
+                convolveRGBA(expA32, expB32, tmpLineF32, hCoeff, expWidth, expHeight);
+                transpose_u32(expB32, expA32, expWidth, expHeight);
+            }
+            else if (!doH && doV) {
+
+                transpose_u32(expA32, expB32, expWidth, expHeight);
+                convolveRGBA(expB32, expA32, tmpLineF32, vCoeff, expHeight, expWidth);
+            }
+            else expA32.set(expA32);
+
+            rotateBackFromExpandedAngleFrame(expA32, expOut32, width, height, expWidth, expHeight, angleR);
+
+            return expOut32;
         };
 
         const convolveRGBA = (src, out, line, coeff, width, height) => {
@@ -3476,7 +3586,25 @@ P.theBigActionsObject = {
             return;
         }
 
-        const { bufA32, bufB32, tmpLineF32 } = getWorkspace(pixels, maxSide4);
+        const k = _round(angleRad / _piHalf),
+            snapped = k * _piHalf,
+            useExpandedPath = !near(angleRad);
+
+        const expandedBounds = useExpandedPath ?
+            getExpandedBlurBounds(width, height, angleRad, radiusHorizontal, radiusVertical) :
+            null;
+
+        const expandedPixels = expandedBounds ? expandedBounds.width * expandedBounds.height : 0,
+            expandedMaxSide4 = expandedBounds ? _max(expandedBounds.width, expandedBounds.height) * 4 : 0;
+
+        const {
+            bufA32,
+            bufB32,
+            expA32,
+            expB32,
+            expOut32,
+            tmpLineF32,
+        } = getWorkspace(pixels, maxSide4, expandedPixels, expandedMaxSide4);
 
         const doH = radiusHorizontal > 0,
             doV = radiusVertical > 0;
@@ -3488,11 +3616,8 @@ P.theBigActionsObject = {
 
         let blurred32;
 
-        const k = _round(angleRad / _piHalf),
-            snapped = k * _piHalf;
-
-        if (near(angleRad)) blurred32 = runRotatedPath(snapped);
-        else blurred32 = runRotatedPath(angleRad);
+        if (!useExpandedPath) blurred32 = runRotatedPath(snapped);
+        else blurred32 = runExpandedRotatedPath(angleRad, expandedBounds.width, expandedBounds.height);
 
         if (premultiply) unpremultiply_u32(blurred32, pixels);
 
