@@ -1301,7 +1301,7 @@ Covers the input with tiles whose color matches the average channel values for t
 The filter has four modes, set on the `mode` attribute: `'rect'`, `'hex'`, `'random'`, `'points'`. Each mode has its own set of attributes:
 + **rect** - `rectWidth`, `rectHeight`, `originX`, `originY`, `angle`, `spiralStrength`
 + **hex** - `hexRadius`, `originX`, `originY`, `angle`, `spiralStrength`
-+ **random** - `randomCount`, `seed`
++ **random** - `density`, `randomCount` (deprecated), `seed`
 + **points** - `pointsData`
 
 Channels can be included in the calculation by setting the appropriate `include` flags.
@@ -1329,7 +1329,8 @@ Default object
 
   spiralStrength: 0,
 
-  randomCount: 20,
+  density: '0%',
+  randomCount: 20,          // Deprecated
   seed: DEFAULT_SEED,
 
   pointsData: [],
@@ -3095,7 +3096,7 @@ useMixedChannel             yes         true
 The filter has four modes, set on the `mode` attribute: `'rect'`, `'hex'`, `'random'`, `'points'`. Each mode has its own set of attributes:
 + **rect** - `rectWidth`, `rectHeight`, `originX`, `originY`, `angle`, `spiralStrength`
 + **hex** - `hexRadius`, `originX`, `originY`, `angle`, `spiralStrength`
-+ **random** - `randomCount`, `seed`
++ **random** - `density`, `randomCount` (deprecated), `seed`
 + **points** - `pointsData`
 
 Product-devs should be aware that initial calculation of the tile sets is very computationally intensive.
@@ -3125,7 +3126,8 @@ hexRadius                   yes         5
 
 spiralStrength              yes         0
 
-randomCount                 yes         20
+density                     yes         '0%'
+randomCount                 yes         20                   // deprecated
 seed                        yes         DEFAULT_SEED
 
 pointsData                  yes         []

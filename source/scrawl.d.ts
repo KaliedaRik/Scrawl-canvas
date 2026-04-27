@@ -1438,6 +1438,7 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     copyY?: StringOrNumberInput;
     copyStartX?: StringOrNumberInput;
     copyStartY?: StringOrNumberInput;
+    density?: StringOrNumberInput;
     greenInBlue?: number;
     greenInGreen?: number;
     greenInRed?: number;

@@ -17,7 +17,7 @@ import { colorEngine } from '../helper/color-engine.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _isArray, _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLANK, BLEND, BLUENOISE, BLUR, CENTER, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NONE, NORMAL, OK_PERCEPTUAL_CURVES, OFFSET, PC100, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILE_MODES, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, UNSHARP, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR, ZOOM_BLUR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLANK, BLEND, BLUENOISE, BLUR, CENTER, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NONE, NORMAL, OK_PERCEPTUAL_CURVES, OFFSET, PC0, PC100, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILE_MODES, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, UNSHARP, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR, ZOOM_BLUR } from '../helper/shared-vars.js';
 
 // Local constants
 const EMBOSS_WORK = 'emboss-work',
@@ -148,6 +148,7 @@ const defaultAttributes = {
     copyStartY: 0,
     concurrent: false,
     curves: null,
+    density: null,
     deriveMaskFromImage: true,
     easing: LINEAR,
     excludeAlpha: true,
@@ -1556,6 +1557,9 @@ const setActionsArray = {
 
 // __tiles__ - averages the colors in a group of pixels to produce a series of obscuring tiles. This is a more complex version of the `pixelate` filter
     tiles: function (f) {
+
+        if (f.randomCount != null) f.density = f.randomCount;
+
         f.actions = [{
             action: TILES,
             lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
@@ -1569,7 +1573,7 @@ const setActionsArray = {
             rectWidth: (f.rectWidth != null) ? f.rectWidth : 10,
             rectHeight: (f.rectHeight != null) ? f.rectHeight : 10,
             hexRadius: (f.hexRadius != null) ? f.hexRadius : 5,
-            randomCount: (f.randomCount != null) ? f.randomCount : 10,
+            density: (f.density != null) ? f.density : PC0,
             pointsData: (f.pointsData != null && _isArray(f.pointsData)) ? f.pointsData : [],
 
             angle: (f.angle != null) ? f.angle : 0,

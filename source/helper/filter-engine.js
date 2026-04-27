@@ -6242,6 +6242,29 @@ P.theBigActionsObject = {
 // + Four `modes` are supported: 'rect', 'hex', 'random', 'points'
     [TILES]: function (requirements) {
 
+        // Random tiles - `density` and `randomCount` disambiguation
+        const getTileSeedCount = (density, randomCount, width, height) => {
+
+            if (density == null) density = randomCount;
+
+            if (_isFinite(density)) return _max(10, density | 0);
+
+            if (density.substring) {
+
+                const pc = parseFloat(density);
+
+                if (_isFinite(pc)) {
+
+                    const area = width * height,
+                        count = (area * pc / 100) | 0;
+
+                    return _max(10, count);
+                }
+            }
+
+            return _max(10, _isFinite(randomCount) ? randomCount | 0 : 20);
+        };
+
         // Build a compact label map
         const buildGeneralTileLabels = function (requirements, image) {
 
@@ -6261,7 +6284,11 @@ P.theBigActionsObject = {
                 rectWidth = 10,
                 rectHeight = 10,
                 hexRadius = 5,
+                // Note: `randomCount` is deprecated in favour of `density`
+                // - When typeof density === number, use current `randomCount` functionality
+                // - When typeof density === string, calculate required number of points based on dimensions
                 randomCount = 20,
+                density = null,
                 seed = DEFAULT_SEED,
                 pointsData = [],
             } = requirements || {};
@@ -6286,7 +6313,7 @@ P.theBigActionsObject = {
             }
             else if (mode === RANDOM) {
 
-                c = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
+                c = getTileSeedCount(density, randomCount, iWidth, iHeight);
                 sd = seed || DEFAULT_SEED;
                 key += `-rnd-${c}-${sd}`;
             }
@@ -6525,8 +6552,7 @@ P.theBigActionsObject = {
 
             if (mode === RANDOM) {
 
-                let count = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
-                if (count < 10) count = 10;
+                let count = getTileSeedCount(density, randomCount, iWidth, iHeight);
 
                 const rng = seededRandomNumberGenerator(seed);
 
