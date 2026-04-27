@@ -6371,8 +6371,8 @@ P.theBigActionsObject = {
                 if (w < 1) w = 1;
                 if (h < 1) h = 1;
 
-                // Project four corners to grid space to get stable index ranges
-                const corners = [[0,0],[iWidth-1,0],[0,iHeight-1],[iWidth-1,iHeight-1]],
+                const rawI = new Int32Array(nPix),
+                    rawJ = new Int32Array(nPix),
                     pHold = [];
 
                 let iMin =  1e9,
@@ -6380,27 +6380,6 @@ P.theBigActionsObject = {
                     jMin =  1e9,
                     jMax = -1e9,
                     dx, dy, iIdx, jIdx, ii, jj, p, y, x;
-
-                for (let c = 0; c < 4; c++) {
-
-                    dx = corners[c][0] - ox;
-                    dy = corners[c][1] - oy;
-                    pHold[0] = cosNeg * dx - sinNeg * dy;
-                    pHold[1] = sinNeg * dx + cosNeg * dy;
-
-                    applyAngularWarp(pHold);
-
-                    iIdx = _round(pHold[0] / w - 0.5);
-                    jIdx = _round(pHold[1] / h - 0.5);
-
-                    if (iIdx < iMin) iMin = iIdx; if (iIdx > iMax) iMax = iIdx;
-                    if (jIdx < jMin) jMin = jIdx; if (jIdx > jMax) jMax = jIdx;
-                }
-
-                const nI = (iMax - iMin + 1) | 0,
-                    nJ = (jMax - jMin + 1) | 0;
-
-                nTiles = (nI * nJ) | 0;
 
                 p = 0;
 
@@ -6411,6 +6390,7 @@ P.theBigActionsObject = {
                     for (x = 0; x < iWidth; x++, p++) {
 
                         dx = x - ox;
+
                         pHold[0] = cosNeg * dx - sinNeg * dy;
                         pHold[1] = sinNeg * dx + cosNeg * dy;
 
@@ -6418,10 +6398,28 @@ P.theBigActionsObject = {
 
                         iIdx = _round(pHold[0] / w - 0.5);
                         jIdx = _round(pHold[1] / h - 0.5);
-                        ii = (iIdx - iMin) | 0;
-                        jj = (jIdx - jMin) | 0;
-                        labels[p] = (jj * nI + ii) | 0;
+
+                        rawI[p] = iIdx;
+                        rawJ[p] = jIdx;
+
+                        if (iIdx < iMin) iMin = iIdx;
+                        if (iIdx > iMax) iMax = iIdx;
+                        if (jIdx < jMin) jMin = jIdx;
+                        if (jIdx > jMax) jMax = jIdx;
                     }
+                }
+
+                const nI = (iMax - iMin + 1) | 0,
+                    nJ = (jMax - jMin + 1) | 0;
+
+                nTiles = (nI * nJ) | 0;
+
+                for (p = 0; p < nPix; p++) {
+
+                    ii = (rawI[p] - iMin) | 0;
+                    jj = (rawJ[p] - jMin) | 0;
+
+                    labels[p] = (jj * nI + ii) | 0;
                 }
 
                 const res = { labels, nTiles, mode: RECT };
@@ -6437,23 +6435,12 @@ P.theBigActionsObject = {
 
                 const invA = _sqrt(3) / 3,
                     invB = 1 / 3,
-                    invC = 2 / 3;
-
-                // Compute bounds by projecting corners into lattice space and rounding
-                const corners = [
-                    [0, 0],
-                    [iWidth-1, 0],
-                    [0, iHeight-1],
-                    [iWidth-1, iHeight-1]
-                ];
-
-                let qMin = 1e9,
-                    qMax = -1e9,
-                    rMin = 1e9,
-                    rMax = -1e9;
-
-                const roundCubeReturn = [0, 0],
+                    invC = 2 / 3,
+                    rawQ = new Int32Array(nPix),
+                    rawR = new Int32Array(nPix),
+                    roundCubeReturn = [0, 0],
                     pHold = [];
+
                 const roundCube = (x, y, z) => {
 
                     let rx = _round(x),
@@ -6474,43 +6461,11 @@ P.theBigActionsObject = {
                     return roundCubeReturn;
                 };
 
-                let dx, dy, qf, rf, xf, zf, yf, qi, ri, qq, rr, p, y, x;
-
-                for (let c = 0; c < 4; c++) {
-
-                    dx = corners[c][0] - ox;
-                    dy = corners[c][1] - oy;
-
-                    pHold[0] = cosNeg * dx - sinNeg * dy;
-                    pHold[1] = sinNeg * dx + cosNeg * dy;
-
-                    applyAngularWarp(pHold);
-
-                    qf = (invA * pHold[0] - invB * pHold[1]) / s;
-                    rf = (invC * pHold[1]) / s;
-
-                    xf = qf;
-                    zf = rf;
-                    yf = -xf - zf;
-
-                    [qi, ri] = roundCube(xf, yf, zf);
-
-                    if (qi < qMin) qMin = qi;
-                    if (qi > qMax) qMax = qi;
-                    if (ri < rMin) rMin = ri;
-                    if (ri > rMax) rMax = ri;
-                }
-
-                // Add a small guard to ensure full coverage
-                qMin -= 1;
-                rMin -= 1;
-                qMax += 1;
-                rMax += 1;
-
-                const nQ = (qMax - qMin + 1) | 0,
-                    nR = (rMax - rMin + 1) | 0;
-
-                nTiles = (nQ * nR) | 0;
+                let qMin =  1e9,
+                    qMax = -1e9,
+                    rMin =  1e9,
+                    rMax = -1e9,
+                    dx, dy, qf, rf, xf, zf, yf, qi, ri, qq, rr, p, y, x;
 
                 p = 0;
 
@@ -6521,6 +6476,7 @@ P.theBigActionsObject = {
                     for (x = 0; x < iWidth; x++, p++) {
 
                         dx = x - ox;
+
                         pHold[0] = cosNeg * dx - sinNeg * dy;
                         pHold[1] = sinNeg * dx + cosNeg * dy;
 
@@ -6535,11 +6491,27 @@ P.theBigActionsObject = {
 
                         [qi, ri] = roundCube(xf, yf, zf);
 
-                        qq = (qi - qMin) | 0;
-                        rr = (ri - rMin) | 0;
+                        rawQ[p] = qi;
+                        rawR[p] = ri;
 
-                        labels[p] = (rr * nQ + qq) | 0;
+                        if (qi < qMin) qMin = qi;
+                        if (qi > qMax) qMax = qi;
+                        if (ri < rMin) rMin = ri;
+                        if (ri > rMax) rMax = ri;
                     }
+                }
+
+                const nQ = (qMax - qMin + 1) | 0,
+                    nR = (rMax - rMin + 1) | 0;
+
+                nTiles = (nQ * nR) | 0;
+
+                for (p = 0; p < nPix; p++) {
+
+                    qq = (rawQ[p] - qMin) | 0;
+                    rr = (rawR[p] - rMin) | 0;
+
+                    labels[p] = (rr * nQ + qq) | 0;
                 }
 
                 const res = { labels, nTiles, mode: HEX };
