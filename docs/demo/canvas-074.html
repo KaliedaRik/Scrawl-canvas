@@ -1099,6 +1099,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> domImages = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.dom-images&#x27;</span>),
     rawImageBitmapsPromises = [];
 
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
 [...domImages].<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">img</span> =&gt;</span> rawImageBitmapsPromises.<span class="hljs-title function_">push</span>(<span class="hljs-title function_">createImageBitmap</span>(img)));</pre></div></div>
             
         </li>
@@ -1169,7 +1170,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        {
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
+        {
             <span class="hljs-attr">name</span>: domImages[<span class="hljs-number">1</span>].<span class="hljs-property">id</span>,
             <span class="hljs-attr">src</span>: rawImageBitmaps[<span class="hljs-number">1</span>],
         }
@@ -1405,6 +1407,8 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="
             })
             .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">bitmap</span> =&gt;</span> {
 
+
+<span class="hljs-comment">/** <span class="hljs-doctag">@ts</span>-expect-error */</span>
                 <span class="hljs-keyword">const</span> [importedName] = scrawl.<span class="hljs-title function_">importImageBitmap</span>({
                     <span class="hljs-attr">name</span>: assetName,
                     <span class="hljs-attr">src</span>: bitmap,

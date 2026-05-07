@@ -385,6 +385,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-074.html">
+                  ./demo/canvas-074.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -760,11 +765,6 @@
                 </a>
               
                 
-                <a class="source" href="filters-042.html">
-                  ./demo/filters-042.js
-                </a>
-              
-                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1105,21 +1105,22 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> noiseFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;noise&#x27;</span>),
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;image&#x27;</span>,
 
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;perlin&#x27;</span>,
 
-    <span class="hljs-attr">width</span>: <span class="hljs-number">500</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">500</span>,
-
     <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;rgb(127 127 127 / 1)&#x27;</span>,
+
     <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;map&#x27;</span>,
 });
+
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(noiseFilter.<span class="hljs-title function_">saveAsPacket</span>());
 
 <span class="hljs-keyword">const</span> myFilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
 
@@ -1131,9 +1132,11 @@
     <span class="hljs-attr">offsetX</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">offsetY</span>: <span class="hljs-number">0</span>,
 
-    <span class="hljs-attr">scaleX</span>: <span class="hljs-number">20</span>,
-    <span class="hljs-attr">scaleY</span>: <span class="hljs-number">20</span>,
-});</pre></div></div>
+    <span class="hljs-attr">strengthX</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">strengthY</span>: <span class="hljs-number">20</span>,
+});
+
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(myFilter.<span class="hljs-title function_">saveAsPacket</span>());</pre></div></div>
             
         </li>
         
@@ -1177,9 +1180,16 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`
-    Scale - x: <span class="hljs-subst">${dom.scale_x.value}</span>, y: <span class="hljs-subst">${dom.scale_y.value}</span>
+Displace
+    Strength - x: <span class="hljs-subst">${dom.strength_x.value}</span>, y: <span class="hljs-subst">${dom.strength_y.value}</span>
     Offset - x: <span class="hljs-subst">${dom.offset_x.value}</span>, y: <span class="hljs-subst">${dom.offset_y.value}</span>
-    Opacity: <span class="hljs-subst">${dom.opacity.value}</span>`</span>;
+    Opacity: <span class="hljs-subst">${dom.opacity.value}</span>
+
+Asset
+    Copy start - x: <span class="hljs-subst">${dom.copyStartX.value}</span>%, y: <span class="hljs-subst">${dom.copyStartY.value}</span>%
+    Copy dimensions - width: <span class="hljs-subst">${dom.copyWidth.value}</span>%, height: <span class="hljs-subst">${dom.copyHeight.value}</span>%
+    Paste offset - x: <span class="hljs-subst">${dom.image_offset_x.value}</span>%, y: <span class="hljs-subst">${dom.image_offset_y.value}</span>%
+    Scale: <span class="hljs-subst">${dom.scale.value}</span>`</span>;
 });</pre></div></div>
             
         </li>
@@ -1219,11 +1229,29 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> dom = scrawl.<span class="hljs-title function_">initializeDomInputs</span>([
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;offset_x&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;offset_y&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;scale_x&#x27;</span>, <span class="hljs-string">&#x27;20&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;scale_y&#x27;</span>, <span class="hljs-string">&#x27;20&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;strength_x&#x27;</span>, <span class="hljs-string">&#x27;20&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;strength_y&#x27;</span>, <span class="hljs-string">&#x27;20&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;transparent_edges&#x27;</span>, <span class="hljs-number">0</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;useInputAsMask&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;lineMix&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;channelX&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;channelY&#x27;</span>, <span class="hljs-number">1</span>],
+
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;copyStartX&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;copyStartY&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;copyWidth&#x27;</span>, <span class="hljs-string">&#x27;100&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;copyHeight&#x27;</span>, <span class="hljs-string">&#x27;100&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;scale&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
+
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;asset&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;image_offset_x&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;image_offset_y&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;fit&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;smoothing&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;positionX&#x27;</span>, <span class="hljs-number">1</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;positionY&#x27;</span>, <span class="hljs-number">1</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;lineOut&#x27;</span>, <span class="hljs-number">0</span>],
 ]);</pre></div></div>
             
         </li>
@@ -1251,13 +1279,44 @@
 
     <span class="hljs-attr">updates</span>: {
 
+        <span class="hljs-attr">channelX</span>: [<span class="hljs-string">&#x27;channelX&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+        <span class="hljs-attr">channelY</span>: [<span class="hljs-string">&#x27;channelY&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
         <span class="hljs-attr">offset_x</span>: [<span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-attr">offset_y</span>: [<span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">scale_x</span>: [<span class="hljs-string">&#x27;scaleX&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">scale_y</span>: [<span class="hljs-string">&#x27;scaleY&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+        <span class="hljs-attr">strength_x</span>: [<span class="hljs-string">&#x27;strengthX&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+        <span class="hljs-attr">strength_y</span>: [<span class="hljs-string">&#x27;strengthY&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
         <span class="hljs-attr">transparent_edges</span>: [<span class="hljs-string">&#x27;transparentEdges&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
         <span class="hljs-attr">useInputAsMask</span>: [<span class="hljs-string">&#x27;useInputAsMask&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">lineMix</span>: [<span class="hljs-string">&#x27;lineMix&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
         <span class="hljs-attr">opacity</span>: [<span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+    },
+});
+
+scrawl.<span class="hljs-title function_">makeUpdater</span>({
+
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
+    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.assetControlItem&#x27;</span>,
+
+    <span class="hljs-attr">target</span>: noiseFilter,
+
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updates</span>: {
+
+        <span class="hljs-attr">asset</span>: [<span class="hljs-string">&#x27;asset&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+        <span class="hljs-attr">lineOut</span>: [<span class="hljs-string">&#x27;lineOut&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+        <span class="hljs-attr">copyStartX</span>: [<span class="hljs-string">&#x27;copyStartX&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+        <span class="hljs-attr">copyStartY</span>: [<span class="hljs-string">&#x27;copyStartY&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+        <span class="hljs-attr">copyWidth</span>: [<span class="hljs-string">&#x27;copyWidth&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+        <span class="hljs-attr">copyHeight</span>: [<span class="hljs-string">&#x27;copyHeight&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+        <span class="hljs-attr">scale</span>: [<span class="hljs-string">&#x27;scale&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+        <span class="hljs-attr">fit</span>: [<span class="hljs-string">&#x27;fit&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+        <span class="hljs-attr">smoothing</span>: [<span class="hljs-string">&#x27;smoothing&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">image_offset_x</span>: [<span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+        <span class="hljs-attr">image_offset_y</span>: [<span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+        <span class="hljs-attr">positionX</span>: [<span class="hljs-string">&#x27;positionX&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+        <span class="hljs-attr">positionY</span>: [<span class="hljs-string">&#x27;positionY&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
     },
 });</pre></div></div>
             

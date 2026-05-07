@@ -1227,7 +1227,7 @@ box.<span class="hljs-title function_">kill</span>()
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">importPacket</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">importPacket</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, packetSettings = Ωempty</span>) {
 
         <span class="hljs-keyword">const</span> self = <span class="hljs-variable language_">this</span>;
 
@@ -1254,7 +1254,7 @@ box.<span class="hljs-title function_">kill</span>()
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    report = self.<span class="hljs-title function_">actionPacket</span>(url);
+            <div class="content"><div class='highlight'><pre>                    report = self.<span class="hljs-title function_">actionPacket</span>(url, packetSettings);
                     <span class="hljs-keyword">if</span> (report &amp;&amp; report.<span class="hljs-property">lib</span>) <span class="hljs-title function_">resolve</span>(report);
                     <span class="hljs-keyword">else</span> <span class="hljs-title function_">reject</span>(report);
                 }</pre></div></div>
@@ -1312,7 +1312,7 @@ box.<span class="hljs-title function_">kill</span>()
                     })
                     .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">packet</span> =&gt;</span> {
 
-                        report = self.<span class="hljs-title function_">actionPacket</span>(packet);
+                        report = self.<span class="hljs-title function_">actionPacket</span>(packet, packetSettings);
                         <span class="hljs-keyword">if</span> (report &amp;&amp; report.<span class="hljs-property">lib</span>) <span class="hljs-title function_">resolve</span>(report);
                         <span class="hljs-keyword">else</span> <span class="hljs-keyword">throw</span> report;
                     })
@@ -1356,10 +1356,31 @@ box.<span class="hljs-title function_">kill</span>()
 <li>Returns the affected artefact/asset/style/tween/etc on success; false otherwise</li>
 </ol>
 <p>The function can be called directly on any Scrawl-canvas object that uses the base.js mixin - which means that all differing functionality for various types of object have to remain here, in base.js</p>
+<p><strong>New in v8.18.0 - <code>packetSettings</code></strong></p>
+<ul>
+<li>We need to start hardening the security issues surrounding the serialisation of functions, and their deserialisation using <code>new Function()</code></li>
+<li>To this end, we’re including some <code>packetSettings</code> extensions, set to <code>false</code> by default, which allows developers to restrict the creation of functions and DOM elements when processing packets that are not from a source they can fully trust (in other words, anything that they haven’t coded themselves)</li>
+<li><code>reviveFunctions</code> - allow deserialization to create functions using <code>new Function()</code> by setting this flag to <code>true</code></li>
+<li><code>allowDOMElementCreation</code> - allow deserialization to create new DOM elements (including buttons and links associated with a graphical entity) by setting this flag to <code>true</code></li>
+<li><code>logWarnings</code> - set to false to suppress console warnings when packet hardening skips or rejects function/DOM revival</li>
+</ul>
+<p><strong>Security note:</strong> because deserialization can involve the <code>new Function()</code> invocation, developers will need to make sure that the website server for a web page using SC includes an appropriate <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP">Content Security Policy</a>:</p>
+<ul>
+<li>When both <code>reviveFunctions</code> and <code>allowDOMElementCreation</code> are <code>false</code>, packet import operates in a “data-only” mode.</li>
+<li>Packet strings are data, but may include serialized function source. Enabling <code>reviveFunctions</code> converts that function data into executable code at runtime. <strong>Only enable this for trusted packet sources</strong>.</li>
+<li>Sites using a strict CSP should leave <code>reviveFunctions: false</code> unless they deliberately allow eval-like script execution (for example via <code>&#39;unsafe-eval&#39;</code> in <code>script-src</code>).</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">actionPacket</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">packet</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">actionPacket</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">packet, items = Ωempty</span>) {
+
+        <span class="hljs-keyword">const</span> packetSettings = {
+            <span class="hljs-attr">reviveFunctions</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">allowDOMElementCreation</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">logWarnings</span>: <span class="hljs-literal">true</span>,
+            ...items,
+        };
 
         <span class="hljs-keyword">try</span> {
 
@@ -1373,22 +1394,7 @@ box.<span class="hljs-title function_">kill</span>()
 
                         [name, type, lib, update] = <span class="hljs-title function_">_parse</span>(packet);
                     }
-                    <span class="hljs-keyword">catch</span> (e) {
-
-                        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`Failed to process packet due to JSON parsing error - <span class="hljs-subst">${e.message}</span>`</span>);
-                    }
-
-                    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(name, type, lib, update)) {
-
-                        <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">TYPE_EXCLUSIONS</span>.<span class="hljs-title function_">includes</span>(type)) {
-
-                            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`Failed to process packet - Stacks, Canvases and visual assets are excluded from the packet system`</span>);
-                        }
-
-                        <span class="hljs-keyword">let</span> obj = library[lib][name];
-
-                        <span class="hljs-keyword">if</span> (obj) obj.<span class="hljs-title function_">set</span>(update);
-                        <span class="hljs-keyword">else</span> {</pre></div></div>
+                    <span class="hljs-keyword">catch</span> (e) {</pre></div></div>
             
         </li>
         
@@ -1399,13 +1405,54 @@ box.<span class="hljs-title function_">kill</span>()
               <div class="sswrap ">
                 <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
+              <p>eslint-disable-next-line preserve-caught-error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`Failed to process packet due to JSON parsing error - <span class="hljs-subst">${e.message}</span>`</span>);
+                    }
+
+                    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(name, type, lib, update)) {
+
+                        <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">TYPE_EXCLUSIONS</span>.<span class="hljs-title function_">includes</span>(type)) {
+
+                            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`Failed to process packet - Stacks, Canvases and visual assets are excluded from the packet system`</span>);
+                        }
+
+                        <span class="hljs-keyword">if</span> (!packetSettings.<span class="hljs-property">allowDOMElementCreation</span>) {
+
+                            <span class="hljs-keyword">if</span> ((update.<span class="hljs-property">outerHTML</span> || update.<span class="hljs-property">host</span> || update.<span class="hljs-property">anchor</span> || update.<span class="hljs-property">button</span>) &amp;&amp; packetSettings.<span class="hljs-property">logWarnings</span>) {
+
+                                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">`SC packet import skipped DOM element data for <span class="hljs-subst">${name}</span>`</span>);
+                            }
+
+                            <span class="hljs-keyword">delete</span> update.<span class="hljs-property">outerHTML</span>;
+                            <span class="hljs-keyword">delete</span> update.<span class="hljs-property">host</span>;
+                            <span class="hljs-keyword">delete</span> update.<span class="hljs-property">anchor</span>;
+                            <span class="hljs-keyword">delete</span> update.<span class="hljs-property">button</span>;
+                        }
+
+                        <span class="hljs-keyword">let</span> obj = library[lib][name];
+
+                        <span class="hljs-keyword">if</span> (obj) obj.<span class="hljs-title function_">set</span>(update);
+                        <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
               <p>Stack-based artefacts need a DOM element that they can pass into the factory</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                            <span class="hljs-keyword">if</span> (update.<span class="hljs-property">outerHTML</span> &amp;&amp; update.<span class="hljs-property">host</span>) {
+            <div class="content"><div class='highlight'><pre>                            <span class="hljs-keyword">if</span> (packetSettings.<span class="hljs-property">allowDOMElementCreation</span> &amp;&amp; update.<span class="hljs-property">outerHTML</span> &amp;&amp; update.<span class="hljs-property">host</span>) {
 
-                                <span class="hljs-keyword">const</span> myParent = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">`#<span class="hljs-subst">${update.host}</span>`</span>);
+                                <span class="hljs-keyword">const</span> myParent = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(update.<span class="hljs-property">host</span>);
 
                                 <span class="hljs-keyword">if</span> (myParent) {
 
@@ -1424,6 +1471,7 @@ box.<span class="hljs-title function_">kill</span>()
                                         update.<span class="hljs-property">domElement</span> = myEl;
                                     }
                                 }
+                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (packetSettings.<span class="hljs-property">logWarnings</span>) <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">`SC packet import rejected missing host element for <span class="hljs-subst">${name}</span>`</span>);
                             }
 
                             obj = <span class="hljs-keyword">new</span> library.<span class="hljs-property">constructors</span>[type](update);
@@ -1434,34 +1482,17 @@ box.<span class="hljs-title function_">kill</span>()
         </li>
         
         
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
-              </div>
-              <p>For the main object</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                        obj.<span class="hljs-property">packetFunctions</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">actionPacketFunctions</span>(obj, item));</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
-              <p>For artefact anchors - I know that anchors only have the one function to worry about, but doing it this way so I don’t forget how to approach it eg for SC sub-objects that have more than one user-settable function (eg timeline actions)</p>
+              <p>For the main object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">if</span> (update.<span class="hljs-property">anchor</span> &amp;&amp; obj.<span class="hljs-property">anchor</span>) {
-
-                            obj.<span class="hljs-property">anchor</span>.<span class="hljs-property">packetFunctions</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                        obj.<span class="hljs-property">packetFunctions</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">actionPacketFunctions</span>(obj, item, packetSettings));</pre></div></div>
             
         </li>
         
@@ -1472,12 +1503,13 @@ box.<span class="hljs-title function_">kill</span>()
               <div class="sswrap ">
                 <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
-              <p>Anchor.setters.clickAction(arg) explicitly checks that the supplied arg is a function - if it isn’t (like in packet cases) then the attribute doesn’t get updated when we invoke <em>obj.set(update);</em> earlier in this function.</p>
+              <p>For artefact anchors - I know that anchors only have the one function to worry about, but doing it this way so I don’t forget how to approach it eg for SC sub-objects that have more than one user-settable function (eg timeline actions)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                                obj.<span class="hljs-property">anchor</span>[item] = update.<span class="hljs-property">anchor</span>[item];
-                                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">actionPacketFunctions</span>(obj.<span class="hljs-property">anchor</span>, item)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">if</span> (packetSettings.<span class="hljs-property">allowDOMElementCreation</span> &amp;&amp; update.<span class="hljs-property">anchor</span> &amp;&amp; obj.<span class="hljs-property">anchor</span>) {
+
+                            obj.<span class="hljs-property">anchor</span>.<span class="hljs-property">packetFunctions</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -1487,6 +1519,22 @@ box.<span class="hljs-title function_">kill</span>()
               
               <div class="sswrap ">
                 <a class="ss" href="#section-35">&#x00a7;</a>
+              </div>
+              <p>Anchor.setters.clickAction(arg) explicitly checks that the supplied arg is a function - if it isn’t (like in packet cases) then the attribute doesn’t get updated when we invoke <em>obj.set(update);</em> earlier in this function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                obj.<span class="hljs-property">anchor</span>[item] = update.<span class="hljs-property">anchor</span>[item];
+                                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">actionPacketFunctions</span>(obj.<span class="hljs-property">anchor</span>, item, packetSettings)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Anchors are a bit of an exception case because they add a user-interactive and yet otherwise untracked DOM element to the page, which has to be updated in its own sweet, special way…</p>
 
@@ -1499,22 +1547,22 @@ box.<span class="hljs-title function_">kill</span>()
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Same thing as anchors for artefact buttons</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">if</span> (update.<span class="hljs-property">button</span> &amp;&amp; obj.<span class="hljs-property">button</span>) {
+            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">if</span> (packetSettings.<span class="hljs-property">allowDOMElementCreation</span> &amp;&amp; update.<span class="hljs-property">button</span> &amp;&amp; obj.<span class="hljs-property">button</span>) {
 
                             obj.<span class="hljs-property">button</span>.<span class="hljs-property">packetFunctions</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
                                 obj.<span class="hljs-property">button</span>[item] = update.<span class="hljs-property">button</span>[item];
-                                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">actionPacketFunctions</span>(obj.<span class="hljs-property">button</span>, item)
+                                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">actionPacketFunctions</span>(obj.<span class="hljs-property">button</span>, item, packetSettings)
 
                                 obj.<span class="hljs-property">button</span>.<span class="hljs-title function_">build</span>();
                             });
@@ -1529,38 +1577,12 @@ box.<span class="hljs-title function_">kill</span>()
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;Failed to process packet - not a JSON string&#x27;</span>);
         }
-        <span class="hljs-keyword">catch</span> (e) { <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e); <span class="hljs-keyword">return</span> e }
+        <span class="hljs-keyword">catch</span> (e) {
+
+            <span class="hljs-keyword">if</span> (packetSettings.<span class="hljs-property">logWarnings</span>) <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(e.<span class="hljs-property">message</span>);
+            <span class="hljs-keyword">return</span> e;
+        }
     };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
-              </div>
-              <p><code>actionPacketFunctions</code> - internal helper function - creates functions from Strings</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">actionPacketFunctions</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">obj, item</span>) {
-
-        <span class="hljs-keyword">const</span> fItem = obj[item];
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(fItem) &amp;&amp; fItem != <span class="hljs-literal">null</span> &amp;&amp; fItem.<span class="hljs-property">substring</span>) {
-
-            <span class="hljs-keyword">if</span> (fItem === <span class="hljs-variable constant_">PACKET_DIVIDER</span>) obj[item] = λ<span class="hljs-literal">null</span>;
-            <span class="hljs-keyword">else</span> {
-
-                <span class="hljs-keyword">let</span> args, func, f;
-
-<span class="hljs-comment">/* eslint-disable-next-line */</span>
-                [args, func] = fItem.<span class="hljs-title function_">split</span>(<span class="hljs-variable constant_">PACKET_DIVIDER</span>);
-
-                args = args.<span class="hljs-title function_">split</span>(<span class="hljs-variable constant_">ARG_SPLITTER</span>);
-                args = args.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> a.<span class="hljs-title function_">trim</span>());</pre></div></div>
             
         </li>
         
@@ -1570,6 +1592,60 @@ box.<span class="hljs-title function_">kill</span>()
               
               <div class="sswrap ">
                 <a class="ss" href="#section-38">&#x00a7;</a>
+              </div>
+              <p><code>actionPacketFunctions</code> - internal helper function - creates functions from Strings</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">actionPacketFunctions</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">obj, item, packetSettings = Ωempty</span>) {
+
+        <span class="hljs-keyword">const</span> fItem = obj[item];
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(fItem) &amp;&amp; fItem != <span class="hljs-literal">null</span> &amp;&amp; fItem.<span class="hljs-property">substring</span>) {
+
+            <span class="hljs-keyword">if</span> (fItem === <span class="hljs-variable constant_">PACKET_DIVIDER</span>) obj[item] = λ<span class="hljs-literal">null</span>;
+            <span class="hljs-keyword">else</span> {
+
+                <span class="hljs-keyword">if</span> (!packetSettings.<span class="hljs-property">reviveFunctions</span>) {
+
+                    obj[item] = λ<span class="hljs-literal">null</span>;
+
+                    <span class="hljs-keyword">if</span> (packetSettings.<span class="hljs-property">logWarnings</span>) {
+
+                        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">`SC packet import skipped function revival for <span class="hljs-subst">${obj.name || obj.type}</span>.<span class="hljs-subst">${item}</span>`</span>);
+                    }
+                    <span class="hljs-keyword">return</span>;
+                }
+
+                <span class="hljs-keyword">let</span> args, func, f;
+
+                <span class="hljs-keyword">const</span> parts = fItem.<span class="hljs-title function_">split</span>(<span class="hljs-variable constant_">PACKET_DIVIDER</span>);
+
+                <span class="hljs-keyword">if</span> (parts.<span class="hljs-property">length</span> !== <span class="hljs-number">2</span>) {
+
+                    obj[item] = λ<span class="hljs-literal">null</span>;
+
+                    <span class="hljs-keyword">if</span> (packetSettings.<span class="hljs-property">logWarnings</span>) {
+
+                        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">warn</span>(<span class="hljs-string">`SC packet import rejected malformed function packet for <span class="hljs-subst">${obj.name || obj.type}</span>.<span class="hljs-subst">${item}</span>`</span>);
+                    }
+                    <span class="hljs-keyword">return</span>;
+                }
+
+<span class="hljs-comment">/* eslint-disable-next-line */</span>
+                [args, func] = parts;
+
+                args = args.<span class="hljs-title function_">split</span>(<span class="hljs-variable constant_">ARG_SPLITTER</span>);
+                args = args.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> a.<span class="hljs-title function_">trim</span>());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>Native code raises non-terminal errors (because it is native code!) - so we dodge that bullet.</p>
 
@@ -1589,11 +1665,11 @@ box.<span class="hljs-title function_">kill</span>()
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>Most Scrawl-canvas factory objects can be copied using the <strong>clone</strong> function. The result will be an exact copy of the original, additionally set with values supplied in the argument object.</p>
@@ -1602,17 +1678,22 @@ box.<span class="hljs-title function_">kill</span>()
     <span class="hljs-attr">startY</span>: <span class="hljs-number">60</span>,
 });
 </code></pre>
+<p><strong>Security note:</strong> clone functionality is built on top of packet functionality, which uses <code>new Function()</code> invocation</p>
+<ul>
+<li>Developers will need to make sure that the website server for a web page using SC includes an appropriate <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP">Content Security Policy</a>.</li>
+<li>When operating under a strict CSP, clone functionality may not be available to client-side SC code.</li>
+</ul>
 
             </div>
             
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>clone</code></p>
 
@@ -1629,11 +1710,11 @@ box.<span class="hljs-title function_">kill</span>()
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>Tickers are specific to Tween and Action objects</p>
 
@@ -1650,11 +1731,11 @@ box.<span class="hljs-title function_">kill</span>()
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>Everything else</p>
 
@@ -1665,11 +1746,11 @@ box.<span class="hljs-title function_">kill</span>()
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>Anchors and Buttons are SC artefacts in their own right</p>
 
@@ -1695,7 +1776,11 @@ box.<span class="hljs-title function_">kill</span>()
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = myName;
 
-        <span class="hljs-keyword">let</span> clone = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">actionPacket</span>(myPacket);
+        <span class="hljs-keyword">let</span> clone = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">actionPacket</span>(myPacket, {
+            <span class="hljs-attr">reviveFunctions</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">allowDOMElementCreation</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">logWarnings</span>: <span class="hljs-literal">true</span>,
+        });
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">packetFunctions</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">func</span> =&gt;</span> {
 
@@ -1712,11 +1797,11 @@ box.<span class="hljs-title function_">kill</span>()
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>postCloneAction</code> - overwritten by a variety of mixins and factories</p>
 
@@ -1730,11 +1815,11 @@ box.<span class="hljs-title function_">kill</span>()
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -1743,11 +1828,11 @@ box.<span class="hljs-title function_">kill</span>()
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>kill</code> - overwritten by various mixins and factories</p>
 
@@ -1761,11 +1846,11 @@ box.<span class="hljs-title function_">kill</span>()
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p><code>makeName</code> - If the developer doesn’t supply a name value for a factory function, then Scrawl-canvas will generate a random name for the object to use.</p>
@@ -1783,11 +1868,11 @@ box.<span class="hljs-title function_">kill</span>()
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>register</code> - Many (but not all) factory functions will register their result objects in the scrawl lobrary. The section where the object is stored is dependent on the factory function’s type value.</p>
 <ul>
@@ -1824,11 +1909,11 @@ box.<span class="hljs-title function_">kill</span>()
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><code>deregister</code> - Reverse what register() does</p>
 

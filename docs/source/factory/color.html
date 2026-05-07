@@ -1810,11 +1810,14 @@ P.<span class="hljs-property">generateRandomColor</span> = <span class="hljs-key
               <div class="sswrap ">
                 <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
-              <p><code>convertRGBtoHex</code></p>
+              <p><code>extractDatafromColorString</code> - returns the R, G, B (0 to 255) and A (0 to 1) channel values from a valid CSS Colors level 4 string, together with its color space value.</p>
+<ul>
+<li>Returns an Array in the format <code>[colorSpace, red, green, blue, alpha]</code></li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertRGBtoHex</span> = colorEngine.<span class="hljs-property">convertRGBtoHex</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">extractDatafromColorString</span> = colorEngine.<span class="hljs-property">getColorValuesFromString</span></pre></div></div>
             
         </li>
         
@@ -1824,6 +1827,21 @@ P.<span class="hljs-property">generateRandomColor</span> = <span class="hljs-key
               
               <div class="sswrap ">
                 <a class="ss" href="#section-48">&#x00a7;</a>
+              </div>
+              <p><code>convertRGBtoHex</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">convertRGBtoHex</span> = colorEngine.<span class="hljs-property">convertRGBtoHex</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">const</span> mycol = scrawl.<span class="hljs-title function_">makeColor</span>({

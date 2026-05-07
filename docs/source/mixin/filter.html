@@ -618,7 +618,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _abs, _floor, _isArray, <span class="hljs-variable constant_">PROCESS_IMAGE</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">T_FILTER</span>, <span class="hljs-variable constant_">T_IMAGE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _floor, _isArray, _max, _min, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">BOTTOM</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">PROCESS_IMAGE</span>, <span class="hljs-variable constant_">RIGHT</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">T_FILTER</span>, <span class="hljs-variable constant_">T_IMAGE</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -629,9 +629,15 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Local constants (none defined)</p>
+              <p>Local constants</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">CONTAIN</span> = <span class="hljs-string">&#x27;contain&#x27;</span>,
+    <span class="hljs-variable constant_">COVER</span> = <span class="hljs-string">&#x27;cover&#x27;</span>,
+    <span class="hljs-variable constant_">STRETCH</span> = <span class="hljs-string">&#x27;stretch&#x27;</span>,
+    <span class="hljs-variable constant_">CHECK_POS_X</span> = [<span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">RIGHT</span>],
+    <span class="hljs-variable constant_">CHECK_POS_Y</span> = [<span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">BOTTOM</span>];</pre></div></div>
             
         </li>
         
@@ -1005,7 +1011,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <p><code>preprocessFilters</code> - internal function called as part of the Display cycle. The <strong>process-image</strong> filter action loads a Scrawl-canvas asset into the SC Workstore, where it can be used as a lineIn or lineMix argument for other filter actions.</p>
+              <p><code>preprocessFilters</code> - internal function called as part of the Display cycle.</p>
 
             </div>
             
@@ -1017,95 +1023,7 @@
 
             <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>, jz = filter.<span class="hljs-property">actions</span>.<span class="hljs-property">length</span>, obj; j &lt; jz; j++) {
 
-                obj = filter.<span class="hljs-property">actions</span>[j];
-
-                <span class="hljs-keyword">if</span> (obj.<span class="hljs-property">action</span> === <span class="hljs-variable constant_">PROCESS_IMAGE</span>) {
-
-                    <span class="hljs-keyword">const</span> img = asset[obj.<span class="hljs-property">asset</span>];
-
-                    <span class="hljs-keyword">if</span> (img) {
-
-                        <span class="hljs-keyword">let</span> width, height, snd, cnd,
-                            copyX, copyY, copyWidth, copyHeight;
-
-                        <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">T_IMAGE</span> !== img.<span class="hljs-property">type</span>) {
-
-                            img.<span class="hljs-title function_">checkSource</span>();
-                            obj.<span class="hljs-property">identifier</span> = <span class="hljs-string">`user-image-<span class="hljs-subst">${obj.asset}</span>-<span class="hljs-subst">${generateUuid()}</span>`</span>;
-                            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
-                        }
-
-                        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">checkForWorkstoreItem</span>(obj.<span class="hljs-property">identifier</span>)) {
-
-                            width = img.<span class="hljs-property">sourceNaturalWidth</span>;
-                            height = img.<span class="hljs-property">sourceNaturalHeight</span>;
-                            snd = img.<span class="hljs-property">sourceNaturalDimensions</span>;
-                            cnd = img.<span class="hljs-property">currentDimensions</span>;
-
-                            <span class="hljs-keyword">if</span> (!width || !height) {
-
-                                <span class="hljs-keyword">if</span> (snd &amp;&amp; snd[<span class="hljs-number">0</span>] &amp;&amp; snd[<span class="hljs-number">1</span>]) {
-
-                                    width = width || snd[<span class="hljs-number">0</span>];
-                                    height = height || snd[<span class="hljs-number">1</span>];
-                                }
-
-                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cnd &amp;&amp; cnd[<span class="hljs-number">0</span>] &amp;&amp; cnd[<span class="hljs-number">1</span>]) {
-
-                                    width = width || cnd[<span class="hljs-number">0</span>];
-                                    height = height || cnd[<span class="hljs-number">1</span>];
-                                }
-                            }
-
-                            <span class="hljs-keyword">if</span> (width &amp;&amp; height) {
-
-                                copyX = obj.<span class="hljs-property">copyX</span> || <span class="hljs-number">0</span>;
-                                copyY = obj.<span class="hljs-property">copyY</span> || <span class="hljs-number">0</span>;
-                                copyWidth = obj.<span class="hljs-property">copyWidth</span> || <span class="hljs-number">1</span>;
-                                copyHeight = obj.<span class="hljs-property">copyHeight</span> || <span class="hljs-number">1</span>;
-
-                                <span class="hljs-keyword">if</span> (copyX.<span class="hljs-property">substring</span>) copyX = (<span class="hljs-built_in">parseFloat</span>(copyX) / <span class="hljs-number">100</span>) * width;
-                                <span class="hljs-keyword">if</span> (copyY.<span class="hljs-property">substring</span>) copyY = (<span class="hljs-built_in">parseFloat</span>(copyY) / <span class="hljs-number">100</span>) * height;
-                                <span class="hljs-keyword">if</span> (copyWidth.<span class="hljs-property">substring</span>) copyWidth = (<span class="hljs-built_in">parseFloat</span>(copyWidth) / <span class="hljs-number">100</span>) * width;
-                                <span class="hljs-keyword">if</span> (copyHeight.<span class="hljs-property">substring</span>) copyHeight = (<span class="hljs-built_in">parseFloat</span>(copyHeight) / <span class="hljs-number">100</span>) * height;
-
-
-                                copyX = <span class="hljs-title function_">_floor</span>(<span class="hljs-title function_">_abs</span>(copyX));
-                                copyY = <span class="hljs-title function_">_floor</span>(<span class="hljs-title function_">_abs</span>(copyY));
-                                copyWidth = <span class="hljs-title function_">_floor</span>(<span class="hljs-title function_">_abs</span>(copyWidth));
-                                copyHeight = <span class="hljs-title function_">_floor</span>(<span class="hljs-title function_">_abs</span>(copyHeight));
-
-                                <span class="hljs-keyword">if</span> (copyX &gt;= width) {
-
-                                    copyX = width - <span class="hljs-number">1</span>;
-                                    copyWidth = <span class="hljs-number">1</span>;
-                                }
-
-                                <span class="hljs-keyword">if</span> (copyWidth &gt; width) {
-
-                                    copyWidth = width;
-                                    copyX = <span class="hljs-number">0</span>;
-                                }
-
-                                <span class="hljs-keyword">if</span> (copyX + copyWidth &gt; width) copyX = width - copyWidth;
-
-                                <span class="hljs-keyword">if</span> (copyY &gt;= height) {
-
-                                    copyY = height - <span class="hljs-number">1</span>;
-                                    copyHeight = <span class="hljs-number">1</span>;
-                                }
-
-                                <span class="hljs-keyword">if</span> (copyHeight &gt; height) {
-
-                                    copyHeight = height;
-                                    copyY = <span class="hljs-number">0</span>;
-                                }
-
-                                <span class="hljs-keyword">if</span> (copyY + copyHeight &gt; height) copyY = height - copyHeight;
-
-                                <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(),
-                                    engine = mycell.<span class="hljs-property">engine</span>,
-                                    canvas = mycell.<span class="hljs-property">element</span>;</pre></div></div>
+                obj = filter.<span class="hljs-property">actions</span>[j];</pre></div></div>
             
         </li>
         
@@ -1116,80 +1034,14 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p>Always render into a host-sized buffer; let canvas clip if the copy rect is larger</p>
+              <p>Currently only the <code>process-image</code> filter action requires pre-processing</p>
+<ul>
+<li>This filter action loads a Scrawl-canvas asset into the SC Workstore, where it can be used as a lineIn or lineMix argument for other filter actions.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                                canvas.<span class="hljs-property">width</span>  = hostWidth;
-                                canvas.<span class="hljs-property">height</span> = hostHeight;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
-              <p>Placement: center if smaller; pin to top/left if larger</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                                <span class="hljs-keyword">let</span> dx = <span class="hljs-number">0</span>, dy = <span class="hljs-number">0</span>;
-
-                                <span class="hljs-keyword">if</span> (copyWidth &lt; hostWidth)  dx = ((hostWidth  - copyWidth)  / <span class="hljs-number">2</span>) | <span class="hljs-number">0</span>;
-
-                                <span class="hljs-keyword">if</span> (copyHeight &lt; hostHeight) dy = ((hostHeight - copyHeight) / <span class="hljs-number">2</span>) | <span class="hljs-number">0</span>;
-
-                                engine.<span class="hljs-title function_">resetTransform</span>();
-                                engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
-                                engine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
-                                engine.<span class="hljs-property">imageSmoothingEnabled</span> = <span class="hljs-literal">false</span>;
-
-                                <span class="hljs-keyword">const</span> src = img.<span class="hljs-property">source</span> || img.<span class="hljs-property">element</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
-              </div>
-              <p>No scaling: dest size == copy rect size; canvas clips when larger than host</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                                engine.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, hostWidth, hostHeight);
-
-                                engine.<span class="hljs-title function_">drawImage</span>(
-                                  src,
-                                  copyX, copyY, copyWidth, copyHeight,
-                                  dx, dy, copyWidth, copyHeight,
-                                );</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
-              </div>
-              <p>Store a host-sized ImageData for PROCESS_IMAGE to consume as-is</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                                <span class="hljs-title function_">setWorkstoreItem</span>(obj.<span class="hljs-property">identifier</span>, engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, hostWidth, hostHeight));
-
-                                <span class="hljs-title function_">releaseCell</span>(mycell);
-                            }
-                        }
-                    }
-                }
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (obj.<span class="hljs-property">action</span> === <span class="hljs-variable constant_">PROCESS_IMAGE</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preprocessImageFilter</span>(obj, hostWidth, hostHeight)
             }
             <span class="hljs-keyword">if</span> (filter.<span class="hljs-property">dirtyFilterIdentifier</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
         }
@@ -1204,14 +1056,577 @@
                 <span class="hljs-keyword">const</span> {fillStyle, strokeStyle} = state;
 
                 <span class="hljs-keyword">if</span> (styles[fillStyle] &amp;&amp; styles[fillStyle].<span class="hljs-property">dirtyFilterIdentifier</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
-
                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (styles[strokeStyle] &amp;&amp; styles[strokeStyle].<span class="hljs-property">dirtyFilterIdentifier</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
             }
         }
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> || (<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">dirtyFilterIdentifier</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateFilterIdentifier</span>(<span class="hljs-literal">true</span>);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p><code>preprocessImageFilter</code> - pre-process images ready to be used in the filter engine.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">preprocessImageFilter</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">obj, hostWidth, hostHeight</span>) {
+
+        <span class="hljs-keyword">const</span> img = asset[obj.<span class="hljs-property">asset</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <p>Only continue if the image already exists as an asset</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (img) {
+
+            <span class="hljs-keyword">let</span> width, height, snd, cnd,
+                copyStartX, copyStartY, copyWidth, copyHeight,
+                fit, scale, smoothing, backgroundColor,
+                positionX, positionY, offsetX, offsetY,
+                drawWidth, drawHeight, dx, dy;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p>Any asset can be used as an “image”, but given assets can be animated we do a check.</p>
+<ul>
+<li>Video, Cell etc assets get a unique identifier on each iteration, to break Workstore caching</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">T_IMAGE</span> !== img.<span class="hljs-property">type</span>) {
+
+                img.<span class="hljs-title function_">checkSource</span>();
+                obj.<span class="hljs-property">identifier</span> = <span class="hljs-string">`user-image-<span class="hljs-subst">${obj.asset}</span>-<span class="hljs-subst">${generateUuid()}</span>`</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+            }
+
+            <span class="hljs-keyword">const</span> specifiedIdentifier = <span class="hljs-string">`<span class="hljs-subst">${obj.identifier}</span>_<span class="hljs-subst">${hostWidth}</span>_<span class="hljs-subst">${hostHeight}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p>We pre-process when the image doesn’t already exist in the Workstore. The <code>identifier</code> attribute is set by the <code>process-image</code> filter action</p>
+<ul>
+<li>This happens when <code>process-image</code> has been set up as a legacy <code>method</code> filter, not the modern <code>actions</code> filter</li>
+<li>When using the <code>actions</code> approach, the <code>identifier</code> attribute needs to be created and updated (to break cache) manually, un user code.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">checkForWorkstoreItem</span>(specifiedIdentifier)) {
+
+                width = img.<span class="hljs-property">sourceNaturalWidth</span>;
+                height = img.<span class="hljs-property">sourceNaturalHeight</span>;
+                snd = img.<span class="hljs-property">sourceNaturalDimensions</span>;
+                cnd = img.<span class="hljs-property">currentDimensions</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p>Dimensions values:</p>
+<ul>
+<li><code>hostWidth</code>, <code>hostHeight</code> - received by the function as arguments, representing the area within which the ingested image will sit</li>
+<li>local <code>width</code>, <code>height</code> - calculated from image attributes</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (!width || !height) {
+
+                    <span class="hljs-keyword">if</span> (snd &amp;&amp; snd[<span class="hljs-number">0</span>] &amp;&amp; snd[<span class="hljs-number">1</span>]) {
+
+                        width = width || snd[<span class="hljs-number">0</span>];
+                        height = height || snd[<span class="hljs-number">1</span>];
+                    }
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cnd &amp;&amp; cnd[<span class="hljs-number">0</span>] &amp;&amp; cnd[<span class="hljs-number">1</span>]) {
+
+                        width = width || cnd[<span class="hljs-number">0</span>];
+                        height = height || cnd[<span class="hljs-number">1</span>];
+                    }
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <p>Proceed if we have the image dimensions, otherwise do nothing</p>
+<ul>
+<li>If the image asset creation processes have not yet completed, width and height should be either <code>0</code> or undefined.</li>
+<li>Thus no point writing anything in the Workstore</li>
+<li>Thus pre-processing will run again in future iterations of the Display cycle, until the asset creation process completes and the functionality below can run</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (width &amp;&amp; height) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p><code>copyX</code> and <code>copyY</code> are deprecated names for the <code>copyStartX</code> and <code>copyStartY</code> attributes. Check for them here</p>
+<ul>
+<li>This check will be removed in a future release of the SC library</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    copyStartX = (obj.<span class="hljs-property">copyStartX</span> != <span class="hljs-literal">null</span>) ? obj.<span class="hljs-property">copyStartX</span> : obj.<span class="hljs-property">copyX</span>;
+                    copyStartY = (obj.<span class="hljs-property">copyStartY</span> != <span class="hljs-literal">null</span>) ? obj.<span class="hljs-property">copyStartY</span> : obj.<span class="hljs-property">copyY</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
+              <p>Don’t assume the copy attributes have been set. Defaults are to use the entire image in the following functionality</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    copyStartX = (copyStartX != <span class="hljs-literal">null</span>) ? copyStartX : <span class="hljs-number">0</span>;
+                    copyStartY = (copyStartY != <span class="hljs-literal">null</span>) ? copyStartY : <span class="hljs-number">0</span>;
+                    copyWidth = (obj.<span class="hljs-property">copyWidth</span> != <span class="hljs-literal">null</span>) ? obj.<span class="hljs-property">copyWidth</span> : <span class="hljs-string">&#x27;100%&#x27;</span>;
+                    copyHeight = (obj.<span class="hljs-property">copyHeight</span> != <span class="hljs-literal">null</span>) ? obj.<span class="hljs-property">copyHeight</span> : <span class="hljs-string">&#x27;100%&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
+              <p>De-stringify start attributes</p>
+<ul>
+<li>number values represent pixel values</li>
+<li>string values represent a proportion of the image dimension</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (copyStartX.<span class="hljs-property">substring</span>) copyStartX = (<span class="hljs-built_in">parseFloat</span>(copyStartX) / <span class="hljs-number">100</span>) * width;
+                    <span class="hljs-keyword">if</span> (copyStartY.<span class="hljs-property">substring</span>) copyStartY = (<span class="hljs-built_in">parseFloat</span>(copyStartY) / <span class="hljs-number">100</span>) * height;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
+              <p>Work with integers</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    copyStartX = <span class="hljs-title function_">_floor</span>(copyStartX);
+                    copyStartY = <span class="hljs-title function_">_floor</span>(copyStartY);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
+              <p>Correct start positions, which must be within the image dimensions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (copyStartX &lt; <span class="hljs-number">0</span>) copyStartX = <span class="hljs-number">0</span>;
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (copyStartX &gt;= width) copyStartX = width - <span class="hljs-number">1</span>;
+
+                    <span class="hljs-keyword">if</span> (copyStartY &lt; <span class="hljs-number">0</span>) copyStartY = <span class="hljs-number">0</span>;
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (copyStartY &gt;= height) copyStartY = height - <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
+              </div>
+              <p>Correct copy dimensions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (copyWidth.<span class="hljs-property">substring</span>) copyWidth = (<span class="hljs-built_in">parseFloat</span>(copyWidth) / <span class="hljs-number">100</span>) * width;
+                    <span class="hljs-keyword">if</span> (copyHeight.<span class="hljs-property">substring</span>) copyHeight = (<span class="hljs-built_in">parseFloat</span>(copyHeight) / <span class="hljs-number">100</span>) * height;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
+              <p>Work with integers</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    copyWidth = <span class="hljs-title function_">_floor</span>(copyWidth);
+                    copyHeight = <span class="hljs-title function_">_floor</span>(copyHeight);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
+              </div>
+              <p>Correct copy dimensions</p>
+<ul>
+<li>They must be a minimum of 1px</li>
+<li>They must be equal to, or less than, the image dimensions</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (copyWidth &lt; <span class="hljs-number">1</span>) copyWidth = <span class="hljs-number">1</span>;
+                    <span class="hljs-keyword">if</span> (copyHeight &lt; <span class="hljs-number">1</span>) copyHeight = <span class="hljs-number">1</span>;
+
+                    <span class="hljs-keyword">if</span> (copyWidth &gt; width) copyWidth = width;
+                    <span class="hljs-keyword">if</span> (copyHeight &gt; height) copyHeight = height;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
+              </div>
+              <p>If start + copy dimension is greater than the image dimension, then we correct the start value (to prevent unexpected stretching of the copy output)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (copyStartX + copyWidth &gt; width) copyStartX = width - copyWidth;
+                    <span class="hljs-keyword">if</span> (copyStartY + copyHeight &gt; height) copyStartY = height - copyHeight;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
+              <p>Collect the <code>process-image</code> filter action’s other attributes:</p>
+<ul>
+<li><code>fit</code>: string - values ‘contain’, ‘cover’, ‘stretch’, ‘none’</li>
+<li><code>smoothing</code>: boolean</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    fit = (obj.<span class="hljs-property">fit</span> != <span class="hljs-literal">null</span>) ? obj.<span class="hljs-property">fit</span> : <span class="hljs-variable constant_">NONE</span>;
+                    smoothing = (obj.<span class="hljs-property">smoothing</span> != <span class="hljs-literal">null</span>) ? obj.<span class="hljs-property">smoothing</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
+              </div>
+              <p>When the desired image copy is smaller than the host, we fill in the background with a color</p>
+<ul>
+<li>Use transparent (<code>rgb(0 0 0 / 0)</code>) for images that will be used with the <code>composite</code> filter action</li>
+<li>Use gray (<code>rgb(127 127 127 / 0.5)</code>) for images to be used with the <code>displace</code> filter action - half-transparent gray values should prevent pixels from moving unexpectedly</li>
+<li>For images to be used with the <code>blend</code> filter action, be aware that the background color can have an effect on the blended results; transparent pixels are ignored but if other filter actions modify the image data prior to it reaching the <code>blend</code> action then the color of the pixel may have an effect</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    backgroundColor = (obj.<span class="hljs-property">backgroundColor</span> != <span class="hljs-literal">null</span>) ? obj.<span class="hljs-property">backgroundColor</span> : <span class="hljs-variable constant_">BLANK</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
+              </div>
+              <p>Prep the Cell</p>
+<ul>
+<li>We don’t go ahead unless we have a source for the image</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">const</span> src = img.<span class="hljs-property">source</span> || img.<span class="hljs-property">element</span>;
+
+                    <span class="hljs-keyword">if</span> (src) {
+
+                        <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(),
+                            engine = mycell.<span class="hljs-property">engine</span>,
+                            canvas = mycell.<span class="hljs-property">element</span>;
+
+                        canvas.<span class="hljs-property">width</span> = hostWidth;
+                        canvas.<span class="hljs-property">height</span> = hostHeight;
+
+                        engine.<span class="hljs-title function_">resetTransform</span>();
+                        engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
+                        engine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
+                        engine.<span class="hljs-property">imageSmoothingEnabled</span> = smoothing;
+
+                        engine.<span class="hljs-title function_">clearRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, hostWidth, hostHeight);
+
+                        <span class="hljs-keyword">if</span> (backgroundColor &amp;&amp; backgroundColor !== <span class="hljs-variable constant_">BLANK</span>) {
+
+                            engine.<span class="hljs-property">fillStyle</span> = backgroundColor;
+                            engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, hostWidth, hostHeight);
+                        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
+              </div>
+              <p>Copy the image into the Cell</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">switch</span> (fit) {
+
+                            <span class="hljs-keyword">case</span> <span class="hljs-attr">CONTAIN</span>: {
+                                scale = <span class="hljs-title function_">_min</span>(hostWidth / copyWidth, hostHeight / copyHeight);
+                                drawWidth = copyWidth * scale;
+                                drawHeight = copyHeight * scale;
+
+                                drawWidth = <span class="hljs-title function_">_max</span>(<span class="hljs-number">1</span>, <span class="hljs-title function_">_floor</span>(drawWidth));
+                                drawHeight = <span class="hljs-title function_">_max</span>(<span class="hljs-number">1</span>, <span class="hljs-title function_">_floor</span>(drawHeight));
+
+                                dx = ((hostWidth - drawWidth) / <span class="hljs-number">2</span>) | <span class="hljs-number">0</span>;
+                                dy = ((hostHeight - drawHeight) / <span class="hljs-number">2</span>) | <span class="hljs-number">0</span>;
+
+                                engine.<span class="hljs-title function_">drawImage</span>(
+                                    src,
+                                    copyStartX, copyStartY, copyWidth, copyHeight,
+                                    dx, dy, drawWidth, drawHeight,
+                                );
+                                <span class="hljs-keyword">break</span>;
+                            }
+
+                            <span class="hljs-keyword">case</span> <span class="hljs-attr">COVER</span>: {
+                                scale = <span class="hljs-title function_">_max</span>(hostWidth / copyWidth, hostHeight / copyHeight);
+                                drawWidth = copyWidth * scale;
+                                drawHeight = copyHeight * scale;
+
+                                drawWidth = <span class="hljs-title function_">_max</span>(<span class="hljs-number">1</span>, <span class="hljs-title function_">_floor</span>(drawWidth));
+                                drawHeight = <span class="hljs-title function_">_max</span>(<span class="hljs-number">1</span>, <span class="hljs-title function_">_floor</span>(drawHeight));
+
+                                dx = ((hostWidth - drawWidth) / <span class="hljs-number">2</span>) | <span class="hljs-number">0</span>;
+                                dy = ((hostHeight - drawHeight) / <span class="hljs-number">2</span>) | <span class="hljs-number">0</span>;
+
+                                engine.<span class="hljs-title function_">drawImage</span>(
+                                    src,
+                                    copyStartX, copyStartY, copyWidth, copyHeight,
+                                    dx, dy, drawWidth, drawHeight,
+                                );
+                                <span class="hljs-keyword">break</span>;
+                            }
+
+                            <span class="hljs-keyword">case</span> <span class="hljs-attr">STRETCH</span>: {
+                                drawWidth = hostWidth;
+                                drawHeight = hostHeight;
+
+                                drawWidth = <span class="hljs-title function_">_max</span>(<span class="hljs-number">1</span>, <span class="hljs-title function_">_floor</span>(drawWidth));
+                                drawHeight = <span class="hljs-title function_">_max</span>(<span class="hljs-number">1</span>, <span class="hljs-title function_">_floor</span>(drawHeight));
+
+                                dx = ((hostWidth - drawWidth) / <span class="hljs-number">2</span>) | <span class="hljs-number">0</span>;
+                                dy = ((hostHeight - drawHeight) / <span class="hljs-number">2</span>) | <span class="hljs-number">0</span>;
+
+                                engine.<span class="hljs-title function_">drawImage</span>(
+                                    src,
+                                    copyStartX, copyStartY, copyWidth, copyHeight,
+                                    dx, dy, drawWidth, drawHeight,
+                                );
+                                <span class="hljs-keyword">break</span>;
+                            }
+
+                            <span class="hljs-attr">default</span>: {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
+              </div>
+              <p>When the image is not being fitted to the output (‘contain’, ‘cover’, ‘stretch’), it can be positioned and scaled within the output instead</p>
+<p><code>positionX</code> can have values ‘left’, ‘center’ (default), ‘right’</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                positionX = (obj.<span class="hljs-property">positionX</span> != <span class="hljs-literal">null</span>) ? obj.<span class="hljs-property">positionX</span> : <span class="hljs-variable constant_">CENTER</span>;
+                                <span class="hljs-keyword">if</span> (!<span class="hljs-variable constant_">CHECK_POS_X</span>.<span class="hljs-title function_">includes</span>(positionX)) positionX = <span class="hljs-variable constant_">CENTER</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
+              </div>
+              <p><code>positionY</code> can have values ‘top’, ‘center’ (default), ‘bottom’</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                positionY = (obj.<span class="hljs-property">positionY</span> != <span class="hljs-literal">null</span>) ? obj.<span class="hljs-property">positionY</span> : <span class="hljs-variable constant_">CENTER</span>;
+                                <span class="hljs-keyword">if</span> (!<span class="hljs-variable constant_">CHECK_POS_Y</span>.<span class="hljs-title function_">includes</span>(positionY)) positionY = <span class="hljs-variable constant_">CENTER</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-45">&#x00a7;</a>
+              </div>
+              <p><code>offsetX</code>, <code>offsetY</code> - either pixel numbers or string % values relative to the host dimensions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                offsetX = (obj.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? obj.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>;
+                                offsetY = (obj.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? obj.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>;
+
+                                <span class="hljs-keyword">if</span> (offsetX.<span class="hljs-property">substring</span>) offsetX = (<span class="hljs-built_in">parseFloat</span>(offsetX) / <span class="hljs-number">100</span>) * hostWidth;
+                                <span class="hljs-keyword">if</span> (offsetY.<span class="hljs-property">substring</span>) offsetY = (<span class="hljs-built_in">parseFloat</span>(offsetY) / <span class="hljs-number">100</span>) * hostHeight;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-46">&#x00a7;</a>
+              </div>
+              <p><code>scale</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                scale = (obj.<span class="hljs-property">scale</span> != <span class="hljs-literal">null</span>) ? obj.<span class="hljs-property">scale</span> : <span class="hljs-number">1</span>;
+                                <span class="hljs-keyword">if</span> (scale &lt; <span class="hljs-number">0.01</span>) scale = <span class="hljs-number">0.01</span>;
+                                drawWidth = copyWidth * scale;
+                                drawHeight = copyHeight * scale;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
+              </div>
+              <p>Calculate the start positions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                                <span class="hljs-keyword">if</span> (positionX === <span class="hljs-variable constant_">LEFT</span>) dx = <span class="hljs-number">0</span>;
+                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (positionX === <span class="hljs-variable constant_">RIGHT</span>) dx = hostWidth - drawWidth;
+                                <span class="hljs-keyword">else</span> dx = <span class="hljs-title function_">_floor</span>((hostWidth / <span class="hljs-number">2</span>) - (drawWidth / <span class="hljs-number">2</span>));
+                                dx += offsetX;
+
+                                <span class="hljs-keyword">if</span> (positionY === <span class="hljs-variable constant_">TOP</span>) dy = <span class="hljs-number">0</span>;
+                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (positionY === <span class="hljs-variable constant_">BOTTOM</span>) dy = hostHeight - drawHeight;
+                                <span class="hljs-keyword">else</span> dy = <span class="hljs-title function_">_floor</span>((hostHeight / <span class="hljs-number">2</span>) - (drawHeight / <span class="hljs-number">2</span>));
+                                dy += offsetY;
+
+                                engine.<span class="hljs-title function_">drawImage</span>(
+                                    src,
+                                    copyStartX, copyStartY, copyWidth, copyHeight,
+                                    dx, dy, drawWidth, drawHeight,
+                                );
+                            }
+                        }
+
+                        <span class="hljs-title function_">setWorkstoreItem</span>(specifiedIdentifier, engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, hostWidth, hostHeight));
+
+                        <span class="hljs-title function_">releaseCell</span>(mycell);
+                    }
+                }
+            }
+        }
     };
-}</pre></div></div>
+};</pre></div></div>
             
         </li>
         
