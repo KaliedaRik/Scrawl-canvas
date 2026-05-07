@@ -197,25 +197,31 @@
 <li><code>source/</code></li>
 </ul>
 <p>12: Re-run <code>yarn dev</code> and smoke check the entire scrawl-canvas-website site.</p>
+<h4 id="other-sites-to-test">Other sites to test</h4>
+<p>13: The <code>scrawl.js</code> minified file is used in two tools based on the library, and can be tested by copying it acrosds and testing those tools locally:</p>
+<ul>
+<li>The <a href="https://github.com/KaliedaRik/sc-screen-recorder">Scrawl-canvas screen recorder</a> tool</li>
+<li>The <a href="https://github.com/KaliedaRik/sc-filter-builder">Scrawl-canvas filter builder</a> tool</li>
+</ul>
 <h4 id="github-1">GitHub</h4>
-<p>13: Merge the <code>v8-dev</code> PR into <code>v8</code>. If the <code>v8-dev</code> branch gets (accidentally) deleted during the process, repo-devs can recreate it from Local</p>
+<p>14: Merge the <code>v8-dev</code> PR into <code>v8</code>. If the <code>v8-dev</code> branch gets (accidentally) deleted during the process, repo-devs can recreate it from Local</p>
 <h4 id="local-sc-root-1">Local SC root</h4>
-<p>14: Checkout the <code>v8</code> branch and pull from remote</p>
-<p>15: Run <code>npm publish</code> (requires permissions to publish to NPM registry)</p>
-<p>16: Checkout the <code>v8-dev</code> branch and merge <code>v8</code> into it. Push to remote.</p>
+<p>15: Checkout the <code>v8</code> branch and pull from remote</p>
+<p>16: Run <code>npm publish</code> (requires permissions to publish to NPM registry)</p>
+<p>17: Checkout the <code>v8-dev</code> branch and merge <code>v8</code> into it. Push to remote.</p>
 <h4 id="github-2">GitHub</h4>
-<p>17: Create a new release.</p>
+<p>18: Create a new release.</p>
 <h4 id="local-scrawl-canvas-website-1">Local scrawl-canvas-website</h4>
-<p>18: Run:</p>
+<p>19: Run</p>
 <ul>
 <li><code>yarn remove scrawl-canvas</code></li>
 <li><code>yarn add scrawl-canvas</code></li>
 </ul>
-<p>19: Check to make sure the new version was added to the repo – the previous command should report the version of SC that was added.</p>
-<p>20: Run: <code>yarn build</code>. Smoke test the website.</p>
-<p>21: Repo-devs are now in a position to push the updated website to production. Use FTP for this work. All files in the <code>public</code> folder need to be copied to the remote site.</p>
+<p>20: Check to make sure the new version was added to the repo – the previous command should report the version of SC that was added.</p>
+<p>21: Run: <code>yarn build</code>. Smoke test the website.</p>
+<p>22: Repo-devs are now in a position to push the updated website to production. Use FTP for this work. All files in the <code>public</code> folder need to be copied to the remote site.</p>
 <h4 id="codepen">CodePen</h4>
-<p>22: Repo-devs can now update all the <a href="https://codepen.io/collection/RzzMjw">SC Pen demos in CodePen</a>. This is required work because several of these demos are embedded into the website's various "Learn" articles. The change in each Pen is to update the SC import line to the latest version.</p>
+<p>23: Repo-devs can now update all the <a href="https://codepen.io/collection/RzzMjw">SC Pen demos in CodePen</a>. This is required work because several of these demos are embedded into the website's various "Learn" articles. The change in each Pen is to update the SC import line to the latest version.</p>
     </main>
     
     <nav>
