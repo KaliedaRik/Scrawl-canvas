@@ -26,6 +26,7 @@ export default [...compat.extends("eslint:recommended"), {
         "no-inline-comments": "error",
         "no-sequences": "error",
         "no-unused-expressions": "error",
+        "no-useless-assignment": "off",
         "no-useless-call": "error",
         "no-useless-return": "error",
         "no-var": "error",

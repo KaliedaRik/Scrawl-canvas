@@ -1,5 +1,5 @@
 # Welcome to the Scrawl-canvas Library
-Version: `8.17.0 - 3 January 2026` 
+Version: `8.18.0 - 7 May 2026` 
 
 
 #### Key links
@@ -64,7 +64,7 @@ There are three main ways to include Scrawl-canvas in your project:
 2. Unzip the file to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.17.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-17-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-17-0.zip) - that package only includes the minified file.
+Alternatively, a zip package of the v8.18.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-18-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-17-0.zip) - that package only includes the minified file.
 
 ```html
 <!-- Hello world -->
@@ -109,7 +109,7 @@ Alternatively, a zip package of the v8.17.0 files can be downloaded from this li
 This will pull the requested npm package directly into your web page:
 ```html
 <script type="module">
-    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.17.0';
+    import * as scrawl from 'https://unpkg.com/scrawl-canvas@8.18.0';
     [...]
 </script>
 ```
@@ -135,7 +135,9 @@ import * as scrawl from 'scrawl-canvas';
 
 
 ## Local development and testing
-After forking this repo down to your local machine, `cd` into the scrawl-canvas folder, run `yarn install` or `npm install` (for the local build toolchain - the library itself has no external dependencies) and start a local server.
+After forking this repo to your local machine, `cd` into the Scrawl-canvas folder, run `yarn install` or `npm install` (for the local build toolchain - the library itself has no external dependencies), and start a local server.
+
+Note that the SC development/build tooling now expects Node.js 20+.
 
 ```sh
 $> cd ./path/to/Scrawl-canvas/folder
