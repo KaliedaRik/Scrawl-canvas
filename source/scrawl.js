@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.17.0 - 3 January 2026
+// #### Version 8.18.0 - 7 May 2026
 
 
 // ## Initialize Scrawl-canvas
