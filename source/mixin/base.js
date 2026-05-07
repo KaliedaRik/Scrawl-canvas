@@ -474,6 +474,7 @@ export default function (P = Ωempty) {
                     }
                     catch (e) {
 
+// eslint-disable-next-line preserve-caught-error
                         throw new Error(`Failed to process packet due to JSON parsing error - ${e.message}`);
                     }
 
