@@ -11,7 +11,7 @@ import { domShow } from '../core/document.js';
 
 import { rootElementsAdd, rootElementsIncludes, rootElementsRemove } from "../helper/document-root-elements.js";
 
-import { currentCorePosition, uiSubscribedElements } from '../core/user-interaction.js';
+import { uiSubscribedElements } from '../core/user-interaction.js';
 
 import { makeGroup } from './group.js';
 import { makeElement } from './element.js';
@@ -22,7 +22,7 @@ import domMix from '../mixin/dom.js';
 import displayMix from '../mixin/display-shape.js';
 
 // Shared constants
-import { _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DIV, ELEMENT, NAME, PC50, RELATIVE, ROOT, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
+import { _computed, _isArray, _values, ABSOLUTE, BORDER_BOX, DATA_SCRAWL_GROUP, DIV, NAME, PC50, RELATIVE, ROOT, SUBSCRIBE, T_STACK, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const $DATA_SCRAWL_STACK = '[data-scrawl-stack]',

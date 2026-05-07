@@ -9,7 +9,7 @@
 // #### Imports
 import { cell, constructors, asset as libraryAsset, entity, group, styles } from '../core/library.js';
 
-import { addStrings, doCreate, generateUuid, mergeOver, removeItem, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, mergeOver, removeItem, Ωempty } from '../helper/utilities.js';
 
 import { makeGradient } from './gradient.js';
 import { colorEngine } from '../helper/color-engine.js';
