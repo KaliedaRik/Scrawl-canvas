@@ -605,7 +605,7 @@
 
 <span class="hljs-keyword">import</span> { rootElementsAdd, rootElementsIncludes, rootElementsRemove } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../helper/document-root-elements.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { currentCorePosition, uiSubscribedElements } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/user-interaction.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { uiSubscribedElements } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/user-interaction.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./group.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { makeElement } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./element.js&#x27;</span>;
@@ -712,6 +712,9 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampOrder</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">localMouseListener</span> = <span class="hljs-literal">null</span>;
 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentParentDimensions</span> = [];
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentParentStyles</span> = <span class="hljs-literal">null</span>;
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
         <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
@@ -720,7 +723,13 @@
 
             <span class="hljs-keyword">const</span> ds = el.<span class="hljs-property">dataset</span>;
 
-            <span class="hljs-keyword">if</span> (ds.<span class="hljs-property">isResponsive</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">isResponsive</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (ds.<span class="hljs-property">isResponsive</span>) {
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">isResponsive</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">checkForResize</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentParentStyles</span> = <span class="hljs-title function_">_computed</span>(el.<span class="hljs-property">parentElement</span>);
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentParentDimensions</span>.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            }
 
             <span class="hljs-keyword">if</span> (el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-variable constant_">DATA_SCRAWL_GROUP</span>) === <span class="hljs-variable constant_">ROOT</span>) <span class="hljs-title function_">rootElementsAdd</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
         }
@@ -1147,16 +1156,33 @@ P.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
-              <p>TODO - experimental! <code>checkResponsive</code></p>
-<p>Scrawl-canvas Stack artefacts - at the <strong>root</strong> level - cannot have ‘String%’ dimensions, which means they have absolute dimensions - because everything that relies on ‘String%’ dimensions needs an absolute (number) value for their calculations at the root, which is the stack.</p>
-<p>But we still need to make Stacks responsive. We do this by checking if the viewport dimensions have changed (a resize action has taken place) and - if yes - update the stack’s absolute dimensions accordingly … if the <strong>isResponsive</strong> flag has been set to true for the Stack (default is ‘false’ - may change this in due course).</p>
-<p>We call this check in the <strong>clear</strong> function below, because it’s doing nothing else useful at the moment and it makes sense to get updates in place here before everything launches into the compile part of the display cycle</p>
+              <p>Stack elements can be responsive</p>
+<ul>
+<li>We assume that the stack element needs to be 100% the same size as its parent element</li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkResponsive</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isResponsive</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">trackHere</span>) {</pre></div></div>
+    <span class="hljs-keyword">const</span> pDims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentParentDimensions</span>,
+        pStyles = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentParentStyles</span>;
+
+    <span class="hljs-keyword">const</span> [cw, ch] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentParentDimensions</span>;
+
+    <span class="hljs-keyword">const</span> pw = <span class="hljs-built_in">parseFloat</span>(pStyles.<span class="hljs-property">width</span>),
+        ph = <span class="hljs-built_in">parseFloat</span>(pStyles.<span class="hljs-property">height</span>);
+
+    <span class="hljs-keyword">if</span> (cw !== pw || ch !== ph) {
+
+        pDims[<span class="hljs-number">0</span>] = pw;
+        pDims[<span class="hljs-number">1</span>] = ph;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDomDimensions</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDisplayShape</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDisplayArea</span> = <span class="hljs-literal">true</span>;
+    }
+};</pre></div></div>
             
         </li>
         
@@ -1167,12 +1193,9 @@ P.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <p>Start keeping track of the viewport dimensions</p>
+              <h5 id="display-cycle-functions">Display cycle functions</h5>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentVportWidth</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentVportWidth</span> = currentCorePosition.<span class="hljs-property">w</span>;
-        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentVportHeight</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentVportHeight</span> = currentCorePosition.<span class="hljs-property">h</span>;</pre></div></div>
             
         </li>
         
@@ -1183,20 +1206,14 @@ P.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
               <div class="sswrap ">
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <p>If last display cycle responded to dimension changes, need to finalise height now</p>
+              <p><code>clear</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHeight</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">containElementsInHeight</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clear</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHeight</span> = <span class="hljs-literal">false</span>;
-        }
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentVportWidth</span> !== currentCorePosition.<span class="hljs-property">w</span>) {
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentVportWidth</span> = currentCorePosition.<span class="hljs-property">w</span>;
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">containElementsInHeight</span>) {</pre></div></div>
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isResponsive</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkResponsive</span>();
+};</pre></div></div>
             
         </li>
         
@@ -1206,64 +1223,6 @@ P.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
               
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
-              </div>
-              <p>Won’t be updated until the next display cycle, but flag it now for action</p>
-<ul>
-<li>needed because text in elements flow as part of normal DOM operations</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHeight</span> = <span class="hljs-literal">true</span>;
-            }
-        }
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentVportHeight</span> !== currentCorePosition.<span class="hljs-property">h</span>) {
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentVportHeight</span> = currentCorePosition.<span class="hljs-property">h</span>;
-        }
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
-              </div>
-              <h5 id="display-cycle-functions">Display cycle functions</h5>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <p><code>clear</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clear</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkResponsive</span>();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>compile</code></p>
 
@@ -1281,11 +1240,11 @@ P.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-31">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>show</code></p>
 
@@ -1299,11 +1258,11 @@ P.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-32">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>render</code></p>
 
@@ -1319,11 +1278,11 @@ P.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-33">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>addExistingDomElements</code> - argument is a CSS query search String. All elements in the DOM matching the search will be <strong>moved</strong> into the Stack wrapper’s DOM element and given Scrawl-canvas Element wrappers. While Scrawl-canvas will try its best to respect the elements’ CSS attributes, they will be <strong>positioned absolutely</strong> within the Stack and given start, handle and offset values of <code>[0, 0]</code>.</p>
 
@@ -1362,11 +1321,11 @@ P.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-34">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>addNewElement</code> - takes an ‘items’ object as an argument. The only required attribute of the argument is <strong>tag</strong>, which determines the type of element that will be created (for example - setting tag to ‘div’ will create a new &lt;div&gt; element)</p>
 <ul>
@@ -1414,11 +1373,11 @@ P.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-35">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -1435,11 +1394,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-36">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <h4 id="stack-discovery">Stack discovery</h4>
 <p><code>Exported function</code> (to modules). Parse the DOM, looking for all elements that have been given a <strong>data-scrawl-stack</strong> attribute; then create <strong>Stack</strong> artefact wrappers for each of them.</p>
@@ -1455,11 +1414,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-37">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Create a <strong>stack</strong> artefact wrapper for a given stack element.</p>
 
@@ -1501,11 +1460,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-38">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Helper function for addInitialStackElement()</p>
 
@@ -1521,11 +1480,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-39">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Only go down one level of hierarchy here; stacks don’t do hierarchies, only interested in knowing about immediate child elements</p>
 
@@ -1563,11 +1522,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-40">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>No need to worry about processing child stacks - they’ll already be in the list of stacks to be processed</p>
 
@@ -1580,11 +1539,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-41">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). Use <strong>addStack</strong> to add a Scrawl-canvas stack element to a web page, or transform an existing element into a stack element. The items argument can include</p>
 <ul>
@@ -1601,11 +1560,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-42">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>define variables</p>
 
@@ -1617,11 +1576,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-43">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>get, or generate a new, stack-to-be element</p>
 
@@ -1634,11 +1593,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-44">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>get element’s host (parent-to-be) element</p>
 
@@ -1656,11 +1615,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-45">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>if dimensions have been set in the argument, apply them to the stack-to-be element</p>
 
@@ -1672,11 +1631,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-46">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>make sure the stack-to-be element has an id attribute</p>
 
@@ -1689,11 +1648,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-47">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>set the ‘data-scrawl-stack’ attribute on the stack-to-be element</p>
 
@@ -1704,11 +1663,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-48">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>determine whether the parent element is already known to Scrawl-canvas - affects the stack-to-be element’s group</p>
 
@@ -1725,11 +1684,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-49">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p>set the ‘data-scrawl-group’ attribute on the stack-to-be element</p>
 
@@ -1740,11 +1699,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-50">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p>determine what the stack-to-be element’s position style attribute will be</p>
 
@@ -1755,11 +1714,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-51">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>add (or move) the stack-to-be element to/in the DOM</p>
 
@@ -1770,11 +1729,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-52">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p>create the Scrawl-canvas Stack artefact</p>
 
@@ -1794,11 +1753,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-53">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>in case any of the child elements were already a Scrawl-canvas stack, un-root them (if required)</p>
 
@@ -1812,11 +1771,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-54">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>set the new Stack’s remaining attributes, clearing out any attributes already handled</p>
 
@@ -1832,11 +1791,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-55">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p>tidy up and complete</p>
 
@@ -1848,11 +1807,11 @@ constructors.<span class="hljs-property">Stack</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-56">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (to modules and scrawl object). Parse the DOM, looking for a specific element; then create a <strong>Stack</strong> artefact wrapper for it.</p>
 

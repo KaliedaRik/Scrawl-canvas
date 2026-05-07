@@ -871,7 +871,7 @@
             
             <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">if</span> (art.<span class="hljs-property">dirtyDomDimensions</span>) {
 
-                            art.<span class="hljs-property">dirtyDomDimensions</span> = <span class="hljs-literal">false</span>;
+                           art.<span class="hljs-property">dirtyDomDimensions</span> = <span class="hljs-literal">false</span>;
 
                             dims = art.<span class="hljs-property">currentDimensions</span>;
                             w = dims[<span class="hljs-number">0</span>];
@@ -898,6 +898,11 @@
                                 <span class="hljs-keyword">if</span> (art.<span class="hljs-property">renderOnResize</span>) art.<span class="hljs-title function_">render</span>();
                             }
                             <span class="hljs-keyword">else</span> {
+
+                                <span class="hljs-keyword">if</span> (art.<span class="hljs-property">isResponsive</span>) {
+
+                                    [w, h] = art.<span class="hljs-property">currentParentDimensions</span>;
+                                }
 
                                 style.<span class="hljs-property">width</span> = <span class="hljs-string">`<span class="hljs-subst">${w}</span>px`</span>;
                                 style.<span class="hljs-property">height</span> = (h) ? <span class="hljs-string">`<span class="hljs-subst">${h}</span>px`</span> : <span class="hljs-variable constant_">AUTO</span>;

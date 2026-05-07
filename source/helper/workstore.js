@@ -24,7 +24,13 @@ export const setFilterMemoizationChoke = (val) => {
 };
 
 // `checkForWorkstoreItem` - returns a boolean: true if item exists in workstore
-export const checkForWorkstoreItem = (identifier) => !!workstore[identifier];
+export const checkForWorkstoreItem = (identifier) => {
+
+    if (!workstore[identifier]) return false;
+
+        workstoreLastAccessed[identifier] = _now();
+        return true;
+};
 
 // `getWorkstoreItem`, `setWorkstoreItem` - retrieve, or set, the value stored at the identifier key
 export const getWorkstoreItem = (identifier) => {

@@ -1,4 +1,3 @@
 {
-  "entry": ["source/scrawl.js"],
   "project": ["source/**/*.{js,ts}"]
 }

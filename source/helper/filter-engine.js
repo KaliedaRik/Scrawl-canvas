@@ -24,7 +24,7 @@ import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coord
 import { bluenoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DECONVOLUTE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, OK_PERCEPTUAL_CURVES, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, UNSHARP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR, ZOOM_BLUR } from './shared-vars.js';
+import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, CLEAR, COLOR, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DESTINATION_OUT, DESTINATION_OVER, DISPLACE, DOWN, EMBOSS, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LOCK_CHANNELS_TO_LEVELS, LUMINANCE_TO_ALPHA, MAP_TO_GRADIENT, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, MULTIPLY, NEGATIVE, NEWSPRINT, OFFSET, OK_PERCEPTUAL_CURVES, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RED, REDUCE_PALETTE, ROTATE_HUE, ROUND, SET_CHANNEL_TO_LEVEL, SOURCE, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, STEP_CHANNELS, SWIRL, THRESHOLD, TILES, TINT_CHANNELS, UP, UNSHARP, USER_DEFINED_LEGACY, VARY_CHANNELS_BY_WEIGHTS, ZERO_STR, ZOOM_BLUR } from './shared-vars.js';
 
 // Local constants
 const _256 = 256,
@@ -796,14 +796,6 @@ P.theBigActionsObject = {
 
         const [input, output, mix] = getInputAndOutputLines(requirements);
 
-        const iWidth  = input.width | 0,
-            iHeight = input.height | 0,
-            iData = input.data,
-            mWidth = mix.width | 0,
-            mHeight = mix.height | 0,
-            mData = mix.data,
-            oData = output.data;
-
         const {
             opacity = 1,
             blend = ZERO_STR,
@@ -812,12 +804,19 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements || {};
 
-        if (!iWidth || !iHeight) {
+        if (!mix) {
 
-            if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
+            transferDataUnchanged(output.data, input.data, input.data.length);
             return;
         }
+
+        const iWidth  = input.width | 0,
+            iHeight = input.height | 0,
+            iData = input.data,
+            mWidth = mix.width | 0,
+            mHeight = mix.height | 0,
+            mData = mix.data,
+            oData = output.data;
 
         oData.set(iData);
 
@@ -2097,15 +2096,6 @@ P.theBigActionsObject = {
 
         const [input, output, mix] = getInputAndOutputLines(requirements);
 
-        const iWidth  = input.width | 0,
-            iHeight = input.height | 0,
-            mWidth  = mix.width | 0,
-            mHeight = mix.height | 0;
-
-        const iData = input.data,
-            mData = mix.data,
-            oData = output.data;
-
         const {
             opacity = 1,
             compose = SOURCE_OVER,
@@ -2114,12 +2104,20 @@ P.theBigActionsObject = {
             lineOut,
         } = requirements || {};
 
-        if (!iWidth || !iHeight) {
+        if (!mix) {
 
-            if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
+            transferDataUnchanged(output.data, input.data, input.data.length);
             return;
         }
+
+        const iWidth  = input.width | 0,
+            iHeight = input.height | 0,
+            mWidth  = mix.width | 0,
+            mHeight = mix.height | 0;
+
+        const iData = input.data,
+            mData = mix.data,
+            oData = output.data;
 
         const nPixIn = (iWidth * iHeight) | 0,
             nPixMix = (mWidth * mHeight) | 0;
@@ -2324,7 +2322,7 @@ P.theBigActionsObject = {
 
 // __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values.
 // + The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments.
-// + The operation will set the pixel's channel value to match either the lowest, highest or mean values as dictated by its neighbours - this value is set in the "level" attribute.
+// + The operation will set the pixel's channel value to match either the lowest, highest or mean values as dictated by its neighbours - this value is set in the "operation" attribute.
 // + Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags.
     [CORRODE]: function (requirements) {
 
@@ -2633,672 +2631,16 @@ P.theBigActionsObject = {
         else processResults(cache.work, output, opacity);
     },
 
-// __deconvolute__ - OKLab L-only Richardson_Lucy deconvolution with optional edge mask + multiscale
-    [DECONVOLUTE]: function (requirements) {
-
-        const getRlWorkspace = (width, height) => {
-
-            const key = `ea-rl::ws::${width}x${height}`,
-                N = width * height;
-
-            const ws = getWorkstoreItem(key) || {};
-
-            if (!ws.L || ws.L.length !== N) ws.L = new Float32Array(N);
-            if (!ws.A || ws.A.length !== N) ws.A = new Float32Array(N);
-            if (!ws.B || ws.B.length !== N) ws.B = new Float32Array(N);
-            if (!ws.Gs || ws.Gs.length !== N) ws.Gs = new Float32Array(N);
-            if (!ws.Gb || ws.Gb.length !== N) ws.Gb = new Float32Array(N);
-            if (!ws.R || ws.R.length !== N) ws.R = new Float32Array(N);
-            if (!ws.M || ws.M.length !== N) ws.M = new Float32Array(N);
-            if (!ws.Am || ws.Am.length !== N) ws.Am = new Float32Array(N);
-            if (!ws.tmpLine || ws.tmpLine.length < _max(width, height)) ws.tmpLine = new Float32Array(_max(width, height));
-            if (!ws.tmpImg || ws.tmpImg.length !== N) ws.tmpImg = new Float32Array(N);
-            if (!ws.hist || ws.hist.length !== 256) ws.hist = new Uint32Array(256);
-
-            setWorkstoreItem(key, ws);
-            return ws;
-        };
-
-        const ensureAlphaRecipBuffers = (wsLocal, size) => {
-
-            if (!wsLocal.Ab   || wsLocal.Ab.length !== size) wsLocal.Ab = new Float32Array(size);
-            if (!wsLocal.invAb || wsLocal.invAb.length !== size) wsLocal.invAb = new Float32Array(size);
-        };
-
-        const convolve1D_Float = (lineIn, dstLine, length, coeff) => {
-
-            const a0L = coeff[0],
-                a1L = coeff[1],
-                a0R = coeff[2],
-                a1R = coeff[3],
-                b1 = coeff[4],
-                b2 = coeff[5],
-                lc = coeff[6],
-                rc = coeff[7];
-
-            let prev_src = lineIn[0],
-                prev_out = prev_src * lc,
-                prev_prev_out = prev_out,
-                i, x, y;
-
-            dstLine[0] = prev_out;
-
-            for(i = 1; i < length; i++) {
-
-                x = lineIn[i];
-                y = x * a0L + prev_src * a1L + prev_out * b1 + prev_prev_out * b2;
-
-                dstLine[i] = y;
-
-                prev_prev_out = prev_out;
-                prev_out = y;
-                prev_src = x;
-            }
-
-            prev_src = lineIn[length-1];
-            prev_out = prev_src * rc;
-            prev_prev_out = prev_out;
-            dstLine[length - 1] += prev_out;
-
-            for(i = length - 2; i >= 0; i--){
-
-                x = lineIn[i];
-                y = x * a0R + prev_src * a1R + prev_out * b1 + prev_prev_out * b2;
-
-                dstLine[i] += y;
-
-                prev_prev_out = prev_out;
-                prev_out = y;
-                prev_src = x;
-            }
-        };
-
-        const gaussianBlurL_Float = (src, dst, width, height, sigmaH, sigmaV, tmpLine, tmpImgShared, coeffHOpt, coeffVOpt) => {
-
-            const doH = sigmaH > 0,
-                doV = sigmaV > 0;
-
-            if (!doH && !doV) {
-
-                if (dst !== src) dst.set(src);
-                return;
-            }
-
-            const tmpImg = (doH && doV) ? tmpImgShared : dst;
-
-            if (doH) {
-
-                const coeffH = coeffHOpt || getGaussianCoeffsFloat(sigmaH);
-
-                for (let y = 0; y < height; y++) {
-                const off = y*width;
-
-                    for (let x = 0; x < width; x++) {
-
-                        tmpLine[x] = src[off+x];
-                    }
-
-                    convolve1D_Float(tmpLine, tmpLine, width, coeffH);
-
-                    for (let x = 0; x < width; x++) {
-
-                        tmpImg[off+x] = tmpLine[x];
-                    }
-                }
-            }
-            else if (tmpImg !== src) {
-
-                tmpImg.set(src);
-            }
-
-            if (doV) {
-
-                const coeffV = coeffVOpt || getGaussianCoeffsFloat(sigmaV);
-
-                for (let x = 0; x < width; x++) {
-
-                    for (let y = 0; y < height; y++) {
-
-                        tmpLine[y] = tmpImg[y * width + x];
-                    }
-
-                    convolve1D_Float(tmpLine, tmpLine, height, coeffV);
-
-                    for (let y = 0; y < height; y++) {
-
-                        dst[y * width + x] = tmpLine[y];
-                    }
-                }
-            }
-        };
-
-        const sobelMagFloat = (src, dst, width, height) => {
-
-            const clampXY = (x, y) => {
-
-                if (x < 0) x = 0;
-                else if ( x >= width) x = width - 1;
-
-                if (y < 0) y = 0;
-                else if (y >= height) y = height - 1;
-
-                return (y * width + x) | 0;
-            };
-
-            let y, ym1, y0, yp1, x, xm1, x0, xp1,
-                p00, p01, p02, p10, p12, p20, p21, p22,
-                gx, gy;
-
-            for (y = 0; y < height; y++) {
-
-                ym1 = y - 1;
-                y0 = y;
-                yp1 = y + 1;
-
-                for (x = 0; x < width; x++) {
-
-                    xm1 = x - 1;
-                    x0 = x;
-                    xp1 = x + 1;
-
-                    p00 = src[clampXY(xm1, ym1)];
-                    p10 = src[clampXY(x0, ym1)];
-                    p20 = src[clampXY(xp1, ym1)];
-                    p01 = src[clampXY(xm1, y0)];
-                    p21 = src[clampXY(xp1, y0)];
-                    p02 = src[clampXY(xm1, yp1)];
-                    p12 = src[clampXY(x0, yp1)];
-                    p22 = src[clampXY(xp1,yp1)];
-
-                    gx = (-p00 + p20) + (-2 * p01 + 2 * p21) + (-p02 + p22);
-                    gy = (-p00 - 2 * p10 - p20) + (p02 + 2 * p12 + p22);
-
-                    dst[y * width + x] = _abs(gx) + _abs(gy);
-                }
-            }
-        };
-
-        const smoothstepInto = (grad, outMask, t0, t1) => {
-
-            const inv = 1.0 / _max(1e-6, (t1 - t0));
-
-            let j, jz, x;
-
-            for (j = 0, jz = grad.length | 0; j < jz; j++){
-
-                x = (grad[j] - t0) * inv;
-                outMask[j] = x <= 0 ? 0 : (x >= 1 ? 1 : (x * x * (3 - 2 * x)));
-            }
-        };
-
-        const buildHist01Float = (arr, hist) => {
-
-            hist.fill(0);
-
-            let j, jz, v;
-
-            for (j = 0, jz = arr.length | 0; j < jz; j++) {
-
-                v = arr[j];
-                if (v < 0) v = 0;
-                else if (v > 1) v = 1;
-
-                hist[(v * 255) | 0]++;
-            }
-            return jz;
-        };
-
-        const makeAlphaMask01 = (src32, Am) => {
-
-            let j, jz, a;
-
-            for (j = 0, jz = Am.length | 0; j < jz; j++) {
-
-                a = (src32[j] >>> 24) & 0xFF;
-                Am[j] = (a > 0) ? 1.0 : 0.0;
-            }
-        };
-
-        const buildMaskedHist01Float = (arr, Am, hist) => {
-
-            hist.fill(0);
-
-            let total = 0,
-                j, jz, v;
-
-            for (j = 0, jz = arr.length | 0; j < jz; j++) {
-
-                if (Am[j] <= 0) continue;
-
-                v = arr[j];
-                if (v < 0) v = 0;
-                else if (v > 1) v = 1;
-
-                hist[(v * 255) | 0]++;
-                total++;
-            }
-            return total;
-        };
-
-        const percentileFromHist = (hist, totalCount, pct) => {
-
-            const target = (pct / 100) * totalCount;
-
-            let acc = 0;
-
-            for (let b = 0; b < 256; b++) {
-
-                acc += hist[b];
-
-                if (acc >= target) return b / 255;
-            }
-            return 1.0;
-        };
-
-        const alphaIsSolid = (Am) => {
-
-            let j, acc = 0;
-
-            const jz = Am.length|0;
-
-            for (j = 0; j < jz; j++) {
-
-                acc += (Am[j] > 0) ? 1 : 0;
-            }
-            return acc === jz;
-        };
-
-        // Precompute Ab = blur(Am) and invAb = 1/(Ab + eps)
-        const precomputeAlphaReciprocal = (Am, Ab, invAb, width, height, sigma, tmpLine, tmpImg, coeffH, coeffV) => {
-
-            const epsA = 1e-6;
-
-            Ab.set(Am);
-
-            gaussianBlurL_Float(Ab, Ab, width, height, sigma, sigma, tmpLine, tmpImg, coeffH, coeffV);
-
-            for (let j = 0, jz = Ab.length | 0; j < jz; j++) {
-
-                invAb[j] = 1.0 / (Ab[j] + epsA);
-            }
-        };
-
-        // Fast alpha-aware blur using precomputed invAb:
-        const alphaAwareBlurFast = (src, dst, Am, invAb, width, height, sigma, tmpLine, tmpImg, coeffH, coeffV) => {
-
-            let j, jz;
-
-            for (j = 0, jz = src.length | 0; j < jz; j++) {
-
-                dst[j] = src[j] * Am[j];
-            }
-            gaussianBlurL_Float(dst, dst, width, height, sigma, sigma, tmpLine, tmpImg, coeffH, coeffV);
-
-            for (j = 0, jz = dst.length | 0; j < jz; j++) {
-
-                dst[j] *= invAb[j];
-            }
-        };
-
-        const downsample2xFloat = (src, dst, w, h) => {
-
-            const w2 = w >> 1,
-                h2 = h >> 1;
-
-            let y2, y, y1, r0, r1, o, x2, x, x1, p00, p01, p10, p11;
-
-            for (y2 = 0; y2 < h2; y2++) {
-
-                y = y2 << 1;
-                y1 = _min(y + 1, h - 1);
-                r0 = y * w;
-                r1 = y1 * w;
-                o = y2 * w2;
-
-                for (x2 = 0; x2 < w2; x2++) {
-
-                    x = x2 << 1
-                    x1 = _min(x + 1, w - 1);
-
-                    p00 = src[r0 + x];
-                    p01 = src[r0 + x1];
-                    p10 = src[r1 + x];
-                    p11 = src[r1 + x1];
-
-                    dst[o + x2] = 0.25 * (p00 + p01 + p10 + p11);
-                }
-            }
-        };
-
-        const upsample2xBilinear = (src, dst, w2, h2, w, h) => {
-
-            let y, y0, y1, fy, row0, row1, x, x0, x1, fx, a, b, c, d, ab, cd;
-
-            for (y = 0; y < h; y++) {
-
-                y0 = y >> 1;
-                y1 = _min(y0 + 1, h2 - 1);
-                fy = (y & 1) * 0.5;
-
-                row0 = y0 * w2;
-                row1 = y1 * w2;
-
-                for (x = 0; x < w; x++) {
-
-                    x0 = x >> 1;
-                    x1 = _min(x0 + 1, w2 - 1);
-                    fx = (x & 1) * 0.5;
-
-                    a = src[row0 + x0];
-                    b = src[row0 + x1];
-                    c = src[row1 + x0];
-                    d = src[row1 + x1];
-
-                    ab = a + (b - a) * fx;
-                    cd = c + (d - c) * fx;
-
-                    dst[y * w + x] = ab + (cd - ab) * fy;
-                }
-            }
-        };
-
-        const [input, output] = getInputAndOutputLines(requirements),
-            width = input.width,
-            height = input.height,
-            iData = input.data,
-            oData = output.data;
-
-        const src32 = new Uint32Array(iData.buffer, iData.byteOffset, iData.length >>> 2),
-            out32 = new Uint32Array(oData.buffer,  oData.byteOffset,  oData.length >>> 2);
-
-        const {
-            opacity = 1,
-            radius = 1.25,
-            passes = 8,
-            strength = 0.85,
-            clamp = 0.08,
-            deriveMaskFromImage = true,
-            level = 0.015,
-            smoothing = 0.015,
-            lineOut,
-            multiscale = true,
-            multiscaleFinalPasses = 2,
-        } = requirements;
-
-        const libs = colorEngine.getRgbOkCache(),
-            toOK  = colorEngine.getOkValsForRgb,
-            toRGB = colorEngine.getRgbValsForOklab;
-
-        const ws = getRlWorkspace(width, height);
-        const { L, A, B, Gs, Gb, R, M, Am, tmpLine, tmpImg, hist } = ws;
-
-        const _coeffH = (radius > 0) ? getGaussianCoeffsFloat(radius) : null,
-            _coeffV = _coeffH;
-
-        let i, iz, p, pz, rgba, rgb, a, r, g, b, ok;
-
-        for (p = 0, pz = src32.length | 0; p < pz; p++) {
-
-            rgba = src32[p];
-
-            a = (rgba >>> 24) & 0xFF;
-
-            if (a === 0) {
-
-                L[p] = 0;
-                A[p] = 0;
-                B[p] = 0;
-                continue;
-            }
-
-            r = rgba & 0xFF;
-            g = (rgba >>> 8) & 0xFF;
-            b = (rgba >>> 16) & 0xFF;
-
-            ok = toOK(r, g, b, libs);
-
-            L[p] = ok[0];
-            A[p] = ok[1];
-            B[p] = ok[2];
-        }
-
-        makeAlphaMask01(src32, Am);
-
-        const SOLID_ALPHA = alphaIsSolid(Am);
-
-        if (!(radius > 0) || !(passes > 0)) {
-
-            for (p = 0, pz = src32.length | 0; p < pz; p++) {
-
-                out32[p] = src32[p];
-            }
-
-            if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
-            return;
-        }
-
-        const runRL = (W, H, _L, _Am, _Ab, _invAb, _Gs, _Gb, _R, _M, _tmpLine, _tmpImg, _hist, _passes, _coeffH, _coeffV) => {
-
-            _Gs.set(_L);
-
-            if (!SOLID_ALPHA) precomputeAlphaReciprocal(_Am, _Ab, _invAb, W, H, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
-
-            if (SOLID_ALPHA) gaussianBlurL_Float(_Gs, _Gb, W, H, radius, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
-            else alphaAwareBlurFast(_Gs, _Gb, _Am, _invAb, W, H, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
-
-            if (deriveMaskFromImage) {
-
-                sobelMagFloat(_Gb, _M, W, H);
-                smoothstepInto(_M, _M, level, level + _max(1e-6, smoothing));
-                gaussianBlurL_Float(_M, _M, W, H, 0.7, 0.7, _tmpLine, _tmpImg, null, null);
-            }
-            else {
-
-                for (i = 0, iz = _L.length | 0; i < iz; i++) {
-
-                    _M[i] = 1.0;
-                }
-            }
-
-            for (i = 0, iz = _M.length | 0; i < iz; i++) {
-
-                _M[i] = _M[i] * strength * _Am[i];
-            }
-
-            const total = SOLID_ALPHA
-                ? buildHist01Float(_Gb, _hist)
-                : buildMaskedHist01Float(_Gb, _Am, _hist);
-
-            const p1  = percentileFromHist(_hist, total, 1),
-                med = percentileFromHist(_hist, total, 50),
-                epsilon_abs = _max(5e-4, 0.25 * p1),
-                epsilon_rel = (med > 0.2) ? 0.01 : 0.015;
-
-            const onePlus = 1 + epsilon_rel,
-                up = 1 + clamp,
-                dn = 1 - clamp,
-                hard = (radius > 2 || _passes > 8),
-                rLo = hard ? 0.5 : 0.25,
-                rHi = hard ? 2.0 : 4.0;
-
-            const Npix = _L.length | 0;
-
-            let it, den, v, accDelta, d, u;
-
-            for (it = 0; it < _passes; it++) {
-
-                if (it > 0) {
-
-                    if (SOLID_ALPHA) gaussianBlurL_Float(_Gs, _Gb, W, H, radius, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
-                    else alphaAwareBlurFast(_Gs, _Gb, _Am, _invAb, W, H, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
-                }
-
-                for (i = 0; i < Npix; i++) {
-
-                    den = _Gb[i] * onePlus + epsilon_abs;
-
-                    v = _L[i] / den;
-                    v = _min(_max(v, rLo), rHi);
-
-                    _R[i] = v;
-                }
-
-                if (SOLID_ALPHA) gaussianBlurL_Float(_R, _R, W, H, radius, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
-                else alphaAwareBlurFast(_R, _R, _Am, _invAb, W, H, radius, _tmpLine, _tmpImg, _coeffH, _coeffV);
-
-                accDelta = 0;
-
-                for (i = 0; i < Npix; i++) {
-
-                    d = _R[i] - 1;
-                    accDelta += (d >= 0 ? d : -d);
-
-                    u = 1 + _M[i] * d;
-                    u = _min(_max(u, dn), up);
-
-                    _Gs[i] *= u;
-                }
-                if ((accDelta / Npix) < 0.003) break;
-            }
-        };
-
-        const canHalf = (width >= 2 && height >= 2),
-            doMS = multiscale && canHalf && passes > multiscaleFinalPasses;
-
-        if (doMS) {
-
-            const w2 = width >> 1,
-                h2 = height >> 1,
-                wsH = getRlWorkspace(w2, h2);
-
-            const { L: Lh, Gs: Gsh, Gb: Gbh, R: Rh, M: Mh, Am: Amh, tmpLine: tmpLineH, tmpImg: tmpImgH, hist: histH } = wsH;
-
-            downsample2xFloat(L, Lh, width, height);
-            downsample2xFloat(Am, Amh, width, height);
-
-            // run most passes at half-res
-            const halfPasses = passes - multiscaleFinalPasses;
-
-            if (!SOLID_ALPHA) ensureAlphaRecipBuffers(wsH, w2 * h2);
-
-            runRL(w2, h2, Lh, Amh, wsH.Ab, wsH.invAb, Gsh, Gbh, Rh, Mh, tmpLineH, tmpImgH, histH, halfPasses, _coeffH, _coeffV);
-
-            upsample2xBilinear(Gsh, Gs, w2, h2, width, height);
-        }
-        else {
-
-            Gs.set(L);
-        }
-
-        const finalPasses = doMS ? _max(1, multiscaleFinalPasses | 0) : passes | 0;
-
-        if (!SOLID_ALPHA) {
-
-            ensureAlphaRecipBuffers(ws, width * height);
-            precomputeAlphaReciprocal(Am, ws.Ab, ws.invAb, width, height, radius, tmpLine, tmpImg, _coeffH, _coeffV);
-        }
-
-        if (SOLID_ALPHA) gaussianBlurL_Float(Gs, Gb, width, height, radius, radius, tmpLine, tmpImg, _coeffH, _coeffV);
-        else alphaAwareBlurFast(Gs, Gb, Am, ws.invAb, width, height, radius, tmpLine, tmpImg, _coeffH, _coeffV);
-
-        if (deriveMaskFromImage) {
-
-            sobelMagFloat(Gb, M, width, height);
-            smoothstepInto(M, M, level, level + _max(1e-6, smoothing));
-            gaussianBlurL_Float(M, M, width, height, 0.7, 0.7, tmpLine, tmpImg, null, null);
-        }
-        else M.fill(1.0);
-
-        for (i = 0, iz = L.length | 0; i < iz; i++) {
-
-            M[i] = M[i] * strength * Am[i];
-        }
-
-        const totalF = SOLID_ALPHA
-            ? buildHist01Float(Gb, hist)
-            : buildMaskedHist01Float(Gb, Am, hist);
-
-        const p1F  = percentileFromHist(hist, totalF, 1),
-            medF = percentileFromHist(hist, totalF, 50),
-            epsilon_absF = _max(5e-4, 0.25 * p1F),
-            epsilon_relF = (medF > 0.2) ? 0.01 : 0.015;
-
-        const onePlusF = 1 + epsilon_relF,
-            upF = 1 + clamp,
-            dnF = 1 - clamp,
-            hardF = (radius > 2 || finalPasses > 8),
-            rLoF = hardF ? 0.5 : 0.25,
-            rHiF = hardF ? 2.0 : 4.0;
-
-        for (i = 0, iz = M.length | 0; i < iz; i++) {
-
-            M[i] *= strength;
-        }
-
-        const Npix = L.length | 0;
-
-        let iters, DEN, V, ACCDELTA, D, U;
-
-        for (iters = 0; iters < finalPasses; iters++) {
-
-            if (iters > 0) {
-                if (SOLID_ALPHA) gaussianBlurL_Float(Gs, Gb, width, height, radius, radius, tmpLine, tmpImg, _coeffH, _coeffV);
-                else alphaAwareBlurFast(Gs, Gb, Am, ws.invAb, width, height, radius, tmpLine, tmpImg, _coeffH, _coeffV);
-            }
-
-            for (i = 0; i < Npix; i++) {
-
-                DEN = Gb[i] * onePlusF + epsilon_absF;
-
-                V = L[i] / DEN;
-                V = _min(_max(V, rLoF), rHiF);
-
-                R[i] = V;
-            }
-
-            if (SOLID_ALPHA) gaussianBlurL_Float(R, R, width, height, radius, radius, tmpLine, tmpImg, _coeffH, _coeffV);
-            else alphaAwareBlurFast(R, R, Am, ws.invAb, width, height, radius, tmpLine, tmpImg, _coeffH, _coeffV);
-
-            ACCDELTA = 0;
-
-            for (i = 0; i < Npix; i++) {
-
-                D = R[i] - 1;
-                ACCDELTA += (D >= 0 ? D : -D);
-
-                U = 1 + M[i] * D;
-                U = _min(_max(U, dnF), upF);
-
-                Gs[i] *= U;
-            }
-            if ((ACCDELTA / Npix) < 0.003) break;
-        }
-
-        for (p = 0, pz = src32.length | 0; p < pz; p++) {
-
-            rgba = src32[p];
-
-            a = (rgba >>> 24) & 0xFF;
-            if (a === 0) {
-
-                out32[p] = rgba;
-                continue;
-            }
-
-            rgb = toRGB(Gs[p], A[p], B[p], libs);
-
-            out32[p] = ((a << 24) | (rgb[2] << 16) | (rgb[1] << 8) | rgb[0]) >>> 0;
-        }
-
-        if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
-    },
-
 // __displace__ - Shift pixels around the image, based on the values supplied in a displacement image
     [DISPLACE]: function (requirements) {
 
         const [input, output, mix] = getInputAndOutputLines(requirements);
+
+        if (!mix) {
+
+            transferDataUnchanged(output.data, input.data, input.data.length);
+            return;
+        }
 
         const { width: iWidth, height: iHeight, data: iData } = input;
         const { data: oData } = output;
@@ -3313,14 +2655,16 @@ P.theBigActionsObject = {
             opacity = 1,
             channelX = RED,
             channelY = GREEN,
-            scaleX = 1,
-            scaleY = 1,
             offsetX = 0,
             offsetY = 0,
             transparentEdges = false,
             useInputAsMask = false,
             lineOut,
         } = requirements || {};
+
+        // `scaleX` and `scaleY` are deprecated in favour of `strengthX` and `strengthY`
+        const strengthX = requirements.strengthX || requirements.scaleX || 1,
+            strengthY = requirements.strengthY || requirements.scaleY || 1;
 
         let offsetForChannelX = 3;
         if (channelX === RED) offsetForChannelX = 0;
@@ -3364,8 +2708,8 @@ P.theBigActionsObject = {
                 dispX = mData[mPos + offsetForChannelX];
                 dispY = mData[mPos + offsetForChannelY];
 
-                dx = _floor(ix + ((127 - dispX) / 127) * scaleX);
-                dy = _floor(iy + ((127 - dispY) / 127) * scaleY);
+                dx = _floor(ix + ((127 - dispX) / 127) * strengthX);
+                dy = _floor(iy + ((127 - dispY) / 127) * strengthY);
 
                 dIndex = -1;
 
@@ -3628,7 +2972,7 @@ P.theBigActionsObject = {
     [GAUSSIAN_BLUR]: function (requirements) {
 
         const WS_KEY = 'gaussian-blur::workspace';
-        const getWorkspace = (pixelCount, maxSide4) => {
+        const getWorkspace = (pixelCount, maxSide4, expandedPixelCount = 0, expandedMaxSide4 = 0) => {
 
             let ws = getWorkstoreItem(WS_KEY);
             if (!ws) ws = {};
@@ -3636,11 +2980,20 @@ P.theBigActionsObject = {
             if (!ws.bufA32 || ws.bufA32.length !== pixelCount) ws.bufA32 = new Uint32Array(pixelCount);
             if (!ws.bufB32 || ws.bufB32.length !== pixelCount) ws.bufB32 = new Uint32Array(pixelCount);
 
-            if (!ws.tmpLineF32 || ws.tmpLineF32.length < maxSide4) ws.tmpLineF32 = new Float32Array(maxSide4);
+            if (expandedPixelCount) {
+
+                if (!ws.expA32 || ws.expA32.length !== expandedPixelCount) ws.expA32 = new Uint32Array(expandedPixelCount);
+                if (!ws.expB32 || ws.expB32.length !== expandedPixelCount) ws.expB32 = new Uint32Array(expandedPixelCount);
+                if (!ws.expOut32 || ws.expOut32.length !== pixelCount) ws.expOut32 = new Uint32Array(pixelCount);
+            }
+
+            const lineLength = _max(maxSide4, expandedMaxSide4);
+
+            if (!ws.tmpLineF32 || ws.tmpLineF32.length < lineLength) ws.tmpLineF32 = new Float32Array(lineLength);
 
             setWorkstoreItem(WS_KEY, ws);
             return ws;
-        }
+        };
 
         const COEFFS_KEY = 'gaussian-blur::coeffs';
         const getCoeffCache = () => {
@@ -3870,6 +3223,80 @@ P.theBigActionsObject = {
             }
         };
 
+        const getExpandedBlurBounds = (width, height, theta, radiusHorizontal, radiusVertical) => {
+
+            const c = _abs(_cos(theta)),
+                s = _abs(_sin(theta));
+
+            const rotatedWidth = Math.ceil(width * c + height * s),
+                rotatedHeight = Math.ceil(width * s + height * c);
+
+            const pad = Math.ceil(_max(radiusHorizontal, radiusVertical) * 3);
+
+            return {
+                width: rotatedWidth + pad * 2,
+                height: rotatedHeight + pad * 2,
+            };
+        };
+
+        const rotateIntoExpandedAngleFrame = (src32, dst32, width, height, expWidth, expHeight, theta) => {
+
+            const c = _cos(theta),
+                s = _sin(theta),
+                cx = (width - 1) * 0.5,
+                cy = (height - 1) * 0.5,
+                ecx = (expWidth - 1) * 0.5,
+                ecy = (expHeight - 1) * 0.5;
+
+            let v, dv, u, du, x, y, r, g, b, a;
+
+            for (v = 0; v < expHeight; v++) {
+
+                dv = v - ecy;
+
+                for (u = 0; u < expWidth; u++) {
+
+                    du = u - ecx;
+
+                    x = du * c - dv * s + cx;
+                    y = du * s + dv * c + cy;
+
+                    [r, g, b, a] = sampleRGBA_bilinear_u32(src32, width, height, x, y);
+
+                    dst32[v * expWidth + u] = pack4(r, g, b, a);
+                }
+            }
+        };
+
+        const rotateBackFromExpandedAngleFrame = (src32, dst32, width, height, expWidth, expHeight, theta) => {
+
+            const c = _cos(theta),
+                s = _sin(theta),
+                cx = (width - 1) * 0.5,
+                cy = (height - 1) * 0.5,
+                ecx = (expWidth - 1) * 0.5,
+                ecy = (expHeight - 1) * 0.5;
+
+            let y, dy, x, dx, u, v, r, g, b, a;
+
+            for (y = 0; y < height; y++) {
+
+                dy = y - cy;
+
+                for (x = 0; x < width; x++) {
+
+                    dx = x - cx;
+
+                    u = dx * c + dy * s + ecx;
+                    v = -dx * s + dy * c + ecy;
+
+                    [r, g, b, a] = sampleRGBA_bilinear_u32(src32, expWidth, expHeight, u, v);
+
+                    dst32[y * width + x] = pack4(r, g, b, a);
+                }
+            }
+        };
+
         const transpose_u32 = (src32, dst32, width, height) => {
 
             let y, baseY, x;
@@ -3907,6 +3334,33 @@ P.theBigActionsObject = {
 
             rotateBackToImageFrame(bufA32, bufB32, width, height, angleR);
             return bufB32;
+        };
+
+
+        const runExpandedRotatedPath = (angleR, expWidth, expHeight) => {
+
+            rotateIntoExpandedAngleFrame(src32, expA32, width, height, expWidth, expHeight, angleR);
+
+            if (doH && doV) {
+
+                convolveRGBA(expA32, expB32, tmpLineF32, hCoeff, expWidth, expHeight);
+                convolveRGBA(expB32, expA32, tmpLineF32, vCoeff, expHeight, expWidth);
+            }
+            else if (doH && !doV) {
+
+                convolveRGBA(expA32, expB32, tmpLineF32, hCoeff, expWidth, expHeight);
+                transpose_u32(expB32, expA32, expWidth, expHeight);
+            }
+            else if (!doH && doV) {
+
+                transpose_u32(expA32, expB32, expWidth, expHeight);
+                convolveRGBA(expB32, expA32, tmpLineF32, vCoeff, expHeight, expWidth);
+            }
+            else expA32.set(expA32);
+
+            rotateBackFromExpandedAngleFrame(expA32, expOut32, width, height, expWidth, expHeight, angleR);
+
+            return expOut32;
         };
 
         const convolveRGBA = (src, out, line, coeff, width, height) => {
@@ -4132,7 +3586,25 @@ P.theBigActionsObject = {
             return;
         }
 
-        const { bufA32, bufB32, tmpLineF32 } = getWorkspace(pixels, maxSide4);
+        const k = _round(angleRad / _piHalf),
+            snapped = k * _piHalf,
+            useExpandedPath = !near(angleRad);
+
+        const expandedBounds = useExpandedPath ?
+            getExpandedBlurBounds(width, height, angleRad, radiusHorizontal, radiusVertical) :
+            null;
+
+        const expandedPixels = expandedBounds ? expandedBounds.width * expandedBounds.height : 0,
+            expandedMaxSide4 = expandedBounds ? _max(expandedBounds.width, expandedBounds.height) * 4 : 0;
+
+        const {
+            bufA32,
+            bufB32,
+            expA32,
+            expB32,
+            expOut32,
+            tmpLineF32,
+        } = getWorkspace(pixels, maxSide4, expandedPixels, expandedMaxSide4);
 
         const doH = radiusHorizontal > 0,
             doV = radiusVertical > 0;
@@ -4144,11 +3616,8 @@ P.theBigActionsObject = {
 
         let blurred32;
 
-        const k = _round(angleRad / _piHalf),
-            snapped = k * _piHalf;
-
-        if (near(angleRad)) blurred32 = runRotatedPath(snapped);
-        else blurred32 = runRotatedPath(angleRad);
+        if (!useExpandedPath) blurred32 = runRotatedPath(snapped);
+        else blurred32 = runExpandedRotatedPath(angleRad, expandedBounds.width, expandedBounds.height);
 
         if (premultiply) unpremultiply_u32(blurred32, pixels);
 
@@ -4798,9 +4267,11 @@ P.theBigActionsObject = {
         const {
             opacity = 1,
             useNaturalGrayscale = false,
-            gradient = false,
             lineOut,
         } = requirements;
+
+        let gradient = requirements.gradient || false;
+        if (gradient.substring) gradient = styles[gradient];
 
         if (!gradient) out32.set(src32);
         else {
@@ -5774,47 +5245,17 @@ P.theBigActionsObject = {
         const { identifier, lineOut } = requirements;
         if (!(lineOut && lineOut.substring && lineOut.length)) return;
 
-        const item = getWorkstoreItem(identifier);
-
-        // Fall back to host-sized transparent if missing
         const {
             width: hostW,
             height: hostH,
         } = cache.source;
 
-        if (item && item.width === hostW && item.height === hostH) {
+        const specifiedIdentifier = `${identifier}_${hostW}_${hostH}`;
 
-            // Use as-is (no clone): downstream filters treat this as read-only input
-            cache[lineOut] = item;
-        }
-        else {
+        const item = getWorkstoreItem(specifiedIdentifier);
 
-            // Make an empty host-sized image and, if we have something, place what we can
-            const out = new ImageData(hostW, hostH);
-
-            if (item && item.data && item.width && item.height) {
-
-                // Clamp the copy in case sizes differ (shouldn’t happen with the new preprocessor)
-                const w = _min(hostW, item.width) | 0,
-                    h = _min(hostH, item.height) | 0,
-                    src = item.data,
-                    dst = out.data,
-                    srcStride = item.width << 2,
-                    dstStride = hostW << 2,
-                    rowBytes  = w << 2;
-
-                let s0, d0;
-
-                for (let y = 0; y < h; y++) {
-
-                    s0 = (y * srcStride);
-                    d0 = (y * dstStride);
-
-                    dst.set(src.subarray(s0, s0 + rowBytes), d0);
-                }
-            }
-            cache[lineOut] = out;
-        }
+        if (item && item.width === hostW && item.height === hostH) cache[lineOut] = item;
+        else cache[lineOut] = new ImageData(hostW, hostH);
     },
 
 // __random-noise__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
@@ -6276,97 +5717,99 @@ P.theBigActionsObject = {
             }
         }
 
-        // 2) commonest first (sort only the seen colors with a minimum count of 2)
-        const filteredSeen = seen.filter(item => metadata.get(item)[0] > 1);
-        filteredSeen.sort((item1, item2) => metadata.get(item2)[0] - metadata.get(item1)[0]);
+        if (seen.length) {
+            // 2) commonest first (sort only the seen colors with a minimum count of 2)
+            const filteredSeen = seen.filter(item => metadata.get(item)[0] > 1);
+            filteredSeen.sort((item1, item2) => metadata.get(item2)[0] - metadata.get(item1)[0]);
 
-        // 3) generate palette, winnowing by minimumColorDistance
-        const mapped = minimumColorDistance * 0.01,
-            minDist2 = mapped * mapped;
+            // 3) generate palette, winnowing by minimumColorDistance
+            const mapped = minimumColorDistance * 0.01,
+                minDist2 = mapped * mapped;
 
-        selectedPalette.push(requestArray(...metadata.get(filteredSeen[0])));
+            selectedPalette.push(requestArray(...metadata.get(filteredSeen[0])));
 
-        for (i = 1, iz = filteredSeen.length; i < iz; i++) {
+            for (i = 1, iz = filteredSeen.length; i < iz; i++) {
 
-            if (selectedPalette.length >= palette) break;
+                if (selectedPalette.length >= palette) break;
 
-            row = metadata.get(filteredSeen[i]);
+                row = metadata.get(filteredSeen[i]);
 
-            best2 = Infinity;
+                best2 = Infinity;
 
-            for (j = 0, jz = selectedPalette.length; j < jz; j++) {
+                for (j = 0, jz = selectedPalette.length; j < jz; j++) {
 
-                p = selectedPalette[j];
-                dL = row[4] - p[4];
-                dA = row[5] - p[5];
-                dB = row[6] - p[6];
-                dsq = (dL * dL) + (dA * dA) + (dB * dB);
+                    p = selectedPalette[j];
+                    dL = row[4] - p[4];
+                    dA = row[5] - p[5];
+                    dB = row[6] - p[6];
+                    dsq = (dL * dL) + (dA * dA) + (dB * dB);
 
-                if (dsq < best2) best2 = dsq;
+                    if (dsq < best2) best2 = dsq;
+                }
+
+                if (best2 > minDist2) selectedPalette.push(requestArray(...row));
             }
 
-            if (best2 > minDist2) selectedPalette.push(requestArray(...row));
-        }
+            if (selectedPalette.length === 1 && filteredSeen.length > 2) selectedPalette.push(requestArray(...metadata.get(filteredSeen[1])));
 
-        if (selectedPalette.length === 1 && filteredSeen.length > 2) selectedPalette.push(requestArray(...metadata.get(filteredSeen[1])));
+            setLastUsedReducePalette(selectedPalette.map(item => `rgb(${item[1]} ${item[2]} ${item[3]})`));
 
-        setLastUsedReducePalette(selectedPalette.map(item => `rgb(${item[1]} ${item[2]} ${item[3]})`));
+            // 4) for each seen color, precompute its two best palette candidates (store totals/propensity)
+            for (i = 0, iz = seen.length; i < iz; i++) {
 
-        // 4) for each seen color, precompute its two best palette candidates (store totals/propensity)
-        for (i = 0, iz = seen.length; i < iz; i++) {
+                idx = seen[i];
+                row = metadata.get(idx);
 
-            idx = seen[i];
-            row = metadata.get(idx);
+                [idx0, idx1, d0, d1] = bestTwoPaletteIndices(row[4], row[5], row[6], selectedPalette);
 
-            [idx0, idx1, d0, d1] = bestTwoPaletteIndices(row[4], row[5], row[6], selectedPalette);
+                total = d0 + d1;
+                propensity = total - d0;
 
-            total = d0 + d1;
-            propensity = total - d0;
-
-            // Mutate the row with malice aforethought
-            row[0] = total;
-            row[1] = propensity;
-            row[2] = selectedPalette[idx0];
-            row[3] = selectedPalette[idx1];
-        }
-
-        // 5) apply
-        for (i = 0; i < len; i += 4) {
-
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
-
-            alpha = iData[a];
-
-            if (alpha) {
-
-                rgbIndex = getRGBIndex(iData[r], iData[g], iData[b]);
-
-                rec = metadata.get(rgbIndex);
-                total = rec[0];
-
-                propensity = rec[1];
-                test = rnd[++rndCursor] * total;
-                chosen = (test < propensity) ? rec[2] : rec[3];
-
-                oData[r] = chosen[1];
-                oData[g] = chosen[2];
-                oData[b] = chosen[3];
-                oData[a] = alpha;
-
-            } else {
-
-                ++rndCursor;
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = 0;
+                // Mutate the row with malice aforethought
+                row[0] = total;
+                row[1] = propensity;
+                row[2] = selectedPalette[idx0];
+                row[3] = selectedPalette[idx1];
             }
-        }
 
-        releaseArray(...selectedPalette);
+            // 5) apply
+            for (i = 0; i < len; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                alpha = iData[a];
+
+                if (alpha) {
+
+                    rgbIndex = getRGBIndex(iData[r], iData[g], iData[b]);
+
+                    rec = metadata.get(rgbIndex);
+                    total = rec[0];
+
+                    propensity = rec[1];
+                    test = rnd[++rndCursor] * total;
+                    chosen = (test < propensity) ? rec[2] : rec[3];
+
+                    oData[r] = chosen[1];
+                    oData[g] = chosen[2];
+                    oData[b] = chosen[3];
+                    oData[a] = alpha;
+
+                } else {
+
+                    ++rndCursor;
+                    oData[r] = iData[r];
+                    oData[g] = iData[g];
+                    oData[b] = iData[b];
+                    oData[a] = 0;
+                }
+            }
+
+            releaseArray(...selectedPalette);
+        }
 
         // Boilerplate post-processing
         if (lineOut) processResults(output, input, 1 - opacity);
@@ -6924,6 +6367,29 @@ P.theBigActionsObject = {
 // + Four `modes` are supported: 'rect', 'hex', 'random', 'points'
     [TILES]: function (requirements) {
 
+        // Random tiles - `density` and `randomCount` disambiguation
+        const getTileSeedCount = (density, randomCount, width, height) => {
+
+            if (density == null) density = randomCount;
+
+            if (_isFinite(density)) return _max(10, density | 0);
+
+            if (density.substring) {
+
+                const pc = parseFloat(density);
+
+                if (_isFinite(pc)) {
+
+                    const area = width * height,
+                        count = (area * pc / 100) | 0;
+
+                    return _max(10, count);
+                }
+            }
+
+            return _max(10, _isFinite(randomCount) ? randomCount | 0 : 20);
+        };
+
         // Build a compact label map
         const buildGeneralTileLabels = function (requirements, image) {
 
@@ -6943,7 +6409,11 @@ P.theBigActionsObject = {
                 rectWidth = 10,
                 rectHeight = 10,
                 hexRadius = 5,
+                // Note: `randomCount` is deprecated in favour of `density`
+                // - When typeof density === number, use current `randomCount` functionality
+                // - When typeof density === string, calculate required number of points based on dimensions
                 randomCount = 20,
+                density = null,
                 seed = DEFAULT_SEED,
                 pointsData = [],
             } = requirements || {};
@@ -6968,7 +6438,7 @@ P.theBigActionsObject = {
             }
             else if (mode === RANDOM) {
 
-                c = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
+                c = getTileSeedCount(density, randomCount, iWidth, iHeight);
                 sd = seed || DEFAULT_SEED;
                 key += `-rnd-${c}-${sd}`;
             }
@@ -7026,8 +6496,8 @@ P.theBigActionsObject = {
                 if (w < 1) w = 1;
                 if (h < 1) h = 1;
 
-                // Project four corners to grid space to get stable index ranges
-                const corners = [[0,0],[iWidth-1,0],[0,iHeight-1],[iWidth-1,iHeight-1]],
+                const rawI = new Int32Array(nPix),
+                    rawJ = new Int32Array(nPix),
                     pHold = [];
 
                 let iMin =  1e9,
@@ -7035,27 +6505,6 @@ P.theBigActionsObject = {
                     jMin =  1e9,
                     jMax = -1e9,
                     dx, dy, iIdx, jIdx, ii, jj, p, y, x;
-
-                for (let c = 0; c < 4; c++) {
-
-                    dx = corners[c][0] - ox;
-                    dy = corners[c][1] - oy;
-                    pHold[0] = cosNeg * dx - sinNeg * dy;
-                    pHold[1] = sinNeg * dx + cosNeg * dy;
-
-                    applyAngularWarp(pHold);
-
-                    iIdx = _round(pHold[0] / w - 0.5);
-                    jIdx = _round(pHold[1] / h - 0.5);
-
-                    if (iIdx < iMin) iMin = iIdx; if (iIdx > iMax) iMax = iIdx;
-                    if (jIdx < jMin) jMin = jIdx; if (jIdx > jMax) jMax = jIdx;
-                }
-
-                const nI = (iMax - iMin + 1) | 0,
-                    nJ = (jMax - jMin + 1) | 0;
-
-                nTiles = (nI * nJ) | 0;
 
                 p = 0;
 
@@ -7066,6 +6515,7 @@ P.theBigActionsObject = {
                     for (x = 0; x < iWidth; x++, p++) {
 
                         dx = x - ox;
+
                         pHold[0] = cosNeg * dx - sinNeg * dy;
                         pHold[1] = sinNeg * dx + cosNeg * dy;
 
@@ -7073,10 +6523,28 @@ P.theBigActionsObject = {
 
                         iIdx = _round(pHold[0] / w - 0.5);
                         jIdx = _round(pHold[1] / h - 0.5);
-                        ii = (iIdx - iMin) | 0;
-                        jj = (jIdx - jMin) | 0;
-                        labels[p] = (jj * nI + ii) | 0;
+
+                        rawI[p] = iIdx;
+                        rawJ[p] = jIdx;
+
+                        if (iIdx < iMin) iMin = iIdx;
+                        if (iIdx > iMax) iMax = iIdx;
+                        if (jIdx < jMin) jMin = jIdx;
+                        if (jIdx > jMax) jMax = jIdx;
                     }
+                }
+
+                const nI = (iMax - iMin + 1) | 0,
+                    nJ = (jMax - jMin + 1) | 0;
+
+                nTiles = (nI * nJ) | 0;
+
+                for (p = 0; p < nPix; p++) {
+
+                    ii = (rawI[p] - iMin) | 0;
+                    jj = (rawJ[p] - jMin) | 0;
+
+                    labels[p] = (jj * nI + ii) | 0;
                 }
 
                 const res = { labels, nTiles, mode: RECT };
@@ -7092,23 +6560,12 @@ P.theBigActionsObject = {
 
                 const invA = _sqrt(3) / 3,
                     invB = 1 / 3,
-                    invC = 2 / 3;
-
-                // Compute bounds by projecting corners into lattice space and rounding
-                const corners = [
-                    [0, 0],
-                    [iWidth-1, 0],
-                    [0, iHeight-1],
-                    [iWidth-1, iHeight-1]
-                ];
-
-                let qMin = 1e9,
-                    qMax = -1e9,
-                    rMin = 1e9,
-                    rMax = -1e9;
-
-                const roundCubeReturn = [0, 0],
+                    invC = 2 / 3,
+                    rawQ = new Int32Array(nPix),
+                    rawR = new Int32Array(nPix),
+                    roundCubeReturn = [0, 0],
                     pHold = [];
+
                 const roundCube = (x, y, z) => {
 
                     let rx = _round(x),
@@ -7129,43 +6586,11 @@ P.theBigActionsObject = {
                     return roundCubeReturn;
                 };
 
-                let dx, dy, qf, rf, xf, zf, yf, qi, ri, qq, rr, p, y, x;
-
-                for (let c = 0; c < 4; c++) {
-
-                    dx = corners[c][0] - ox;
-                    dy = corners[c][1] - oy;
-
-                    pHold[0] = cosNeg * dx - sinNeg * dy;
-                    pHold[1] = sinNeg * dx + cosNeg * dy;
-
-                    applyAngularWarp(pHold);
-
-                    qf = (invA * pHold[0] - invB * pHold[1]) / s;
-                    rf = (invC * pHold[1]) / s;
-
-                    xf = qf;
-                    zf = rf;
-                    yf = -xf - zf;
-
-                    [qi, ri] = roundCube(xf, yf, zf);
-
-                    if (qi < qMin) qMin = qi;
-                    if (qi > qMax) qMax = qi;
-                    if (ri < rMin) rMin = ri;
-                    if (ri > rMax) rMax = ri;
-                }
-
-                // Add a small guard to ensure full coverage
-                qMin -= 1;
-                rMin -= 1;
-                qMax += 1;
-                rMax += 1;
-
-                const nQ = (qMax - qMin + 1) | 0,
-                    nR = (rMax - rMin + 1) | 0;
-
-                nTiles = (nQ * nR) | 0;
+                let qMin =  1e9,
+                    qMax = -1e9,
+                    rMin =  1e9,
+                    rMax = -1e9,
+                    dx, dy, qf, rf, xf, zf, yf, qi, ri, qq, rr, p, y, x;
 
                 p = 0;
 
@@ -7176,6 +6601,7 @@ P.theBigActionsObject = {
                     for (x = 0; x < iWidth; x++, p++) {
 
                         dx = x - ox;
+
                         pHold[0] = cosNeg * dx - sinNeg * dy;
                         pHold[1] = sinNeg * dx + cosNeg * dy;
 
@@ -7190,11 +6616,27 @@ P.theBigActionsObject = {
 
                         [qi, ri] = roundCube(xf, yf, zf);
 
-                        qq = (qi - qMin) | 0;
-                        rr = (ri - rMin) | 0;
+                        rawQ[p] = qi;
+                        rawR[p] = ri;
 
-                        labels[p] = (rr * nQ + qq) | 0;
+                        if (qi < qMin) qMin = qi;
+                        if (qi > qMax) qMax = qi;
+                        if (ri < rMin) rMin = ri;
+                        if (ri > rMax) rMax = ri;
                     }
+                }
+
+                const nQ = (qMax - qMin + 1) | 0,
+                    nR = (rMax - rMin + 1) | 0;
+
+                nTiles = (nQ * nR) | 0;
+
+                for (p = 0; p < nPix; p++) {
+
+                    qq = (rawQ[p] - qMin) | 0;
+                    rr = (rawR[p] - rMin) | 0;
+
+                    labels[p] = (rr * nQ + qq) | 0;
                 }
 
                 const res = { labels, nTiles, mode: HEX };
@@ -7207,8 +6649,7 @@ P.theBigActionsObject = {
 
             if (mode === RANDOM) {
 
-                let count = _max(10, _isFinite(randomCount) ? randomCount | 0 : 1);
-                if (count < 10) count = 10;
+                const count = getTileSeedCount(density, randomCount, iWidth, iHeight);
 
                 const rng = seededRandomNumberGenerator(seed);
 

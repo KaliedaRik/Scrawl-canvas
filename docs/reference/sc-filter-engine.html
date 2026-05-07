@@ -1134,7 +1134,7 @@ The operation attribute permitted values are:
 <ul>
 <li><strong>rect</strong> - <code>rectWidth</code>, <code>rectHeight</code>, <code>originX</code>, <code>originY</code>, <code>angle</code>, <code>spiralStrength</code></li>
 <li><strong>hex</strong> - <code>hexRadius</code>, <code>originX</code>, <code>originY</code>, <code>angle</code>, <code>spiralStrength</code></li>
-<li><strong>random</strong> - <code>randomCount</code>, <code>seed</code></li>
+<li><strong>random</strong> - <code>density</code>, <code>randomCount</code> (deprecated), <code>seed</code></li>
 <li><strong>points</strong> - <code>pointsData</code></li>
 </ul>
 <p>Channels can be included in the calculation by setting the appropriate <code>include</code> flags.</p>
@@ -1159,7 +1159,8 @@ The operation attribute permitted values are:
 
   spiralStrength: 0,
 
-  randomCount: 20,
+  density: '0%',
+  randomCount: 20,          // Deprecated
   seed: DEFAULT_SEED,
 
   pointsData: [],
@@ -1176,7 +1177,7 @@ The operation attribute permitted values are:
 <p>The include* channel flags, includeAlpha, excludeTransparentPixels, premultiply, and multiscale settings provide additional control over colour and alpha handling and help mitigate artefacts.</p>
 <p>Product-devs should note that this filter is computationally heavy and should be used judiciously.</p>
 <p>Used by factory function method: <code>zoomBlur</code>.</p>
-<p>See test demo <a href="../../demo/filters-041.html">Filters-041</a>.</p>
+<p>See test demo <a href="../../demo/filters-040.html">Filters-040</a>.</p>
 <pre><code>Default object
 {
   lineIn: '',
@@ -1370,37 +1371,6 @@ The noiseType permitted values are:
   lineOut: '',
   opacity: 1,
 }</code></pre>
-<h4 id="action-deconvolute">Action: <code>deconvolute</code></h4>
-<p>Performs an OKLab lightness-only deconvolution using a Richardson–Lucy–style iterative solver, with optional edge masking and multiscale processing for stability.</p>
-<ul>
-<li>RGB input is converted to OKLab;</li>
-<li>The L channel is iteratively deblurred assuming a Gaussian point-spread function implemented via a recursive IIR Gaussian blur</li>
-<li>The A and B channels are preserved so colour remains stable while perceived sharpness increases.</li>
-<li>An edge mask can be derived from a blurred Sobel magnitude of the lightness channel, passed through a smoothstep and small Gaussian to produce a soft, edge-focused weighting.</li>
-<li>The radius, passes, strength, and clamp parameters control the effective PSF width, number of deconvolution iterations, aggressiveness, and the range of per-iteration corrections, with percentile-based heuristics helping to keep the solver numerically well-behaved.</li>
-<li>Multiscale is used to speed calculations</li>
-</ul>
-<p>Product-devs should note that this filter is computationally heavy and should be used judiciously.</p>
-<p>Used by factory function method: <code>deconvolute</code>.</p>
-<p>See test demo <a href="../../demo/filters-040.html">Filters-040</a></p>
-<pre><code>Default object
-{
-  lineIn: '',
-  lineOut: '',
-  opacity: 1,
-
-  radius: 1.25,
-  passes: 8,
-  strength: 0.85,
-  clamp: 0.08,
-  level: 0.015,
-  smoothing: 0.015,
-
-  multiscale: true,
-  multiscaleFinalPasses: 2,
-
-  deriveMaskFromImage: true,
-}</code></pre>
 <h4 id="action-luminance-to-alpha">Action: <code>luminance-to-alpha</code></h4>
 <p>For each pixel in the input:</p>
 <ul>
@@ -1492,7 +1462,7 @@ The noiseType permitted values are:
 <li>Convert results back to RGB</li>
 </ul>
 <p>Used by factory function method: <code>okCurveWeights</code>.</p>
-<p>See test demo <a href="../../demo/filters-042.html">Filters-042</a></p>
+<p>See test demo <a href="../../demo/filters-041.html">Filters-041</a></p>
 <pre><code>Default object
 {
   lineIn: '',
@@ -1923,28 +1893,6 @@ useMixedChannel             yes         true</code></pre>
 lineIn                      yes         ''
 lineOut                     yes         ''
 opacity                     yes         1</code></pre>
-<h3 id="method-deconvolute">Method: <code>deconvolute</code></h3>
-<p><strong>(OK filter)</strong> Performs an OKLab lightness-only deconvolution using a Richardson–Lucy–style iterative solver, with optional edge masking and multiscale processing for stability.</p>
-<p>Product-devs should note that this filter is computationally heavy and should be used judiciously.</p>
-<p>Creates an ActionObject for the <code>deconvolute</code> primitive function.</p>
-<p>See test demo <a href="../../demo/filters-040.html">Filters-040</a></p>
-<pre><code>Attribute                   Retained?   Default
---------------------------  ----------  ----------------
-lineIn                      yes         ''
-lineOut                     yes         ''
-opacity                     yes         1
-
-clamp:                      yes         0.08,
-level:                      yes         0.015,
-passes:                     yes         8,
-radius:                     yes         1.25,
-smoothing:                  yes         0.015,
-strength:                   yes         0.85,
-
-multiscale:                 yes         true,
-multiscaleFinalPasses:      yes         2,
-
-deriveMaskFromImage:        yes         true,</code></pre>
 <h3 id="method-displace">Method: <code>displace</code></h3>
 <p><strong>(Displacement filter)</strong> Moves pixels around the input image, based on the color channel values supplied by a displacement map image. This is the SC filter engine's attempt to reproduce the SVG <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feDisplacementMap"><code>&lt;feDisplacementMap&gt;</code></a> filter primitive.</p>
 <p>Note that the <code>lineMix</code> input – which MUST be specified – can be offset using the <code>offsetX</code> and <code>offsetY</code> attributes. Ideally, the mix image should be the same size as the input image, but it can be larger or smaller – hence the inclusion of these attributes. The displacement transform will only happen when both inputs have pixels at the appropriate coordinate</p>
@@ -2368,7 +2316,7 @@ useInputAsMask              yes         false</code></pre>
 <h3 id="method-okcurveweights">Method: <code>okCurveWeights</code></h3>
 <p><strong>(OK filter)</strong> Apply a set of ok-channel-based curve weightings to the input image.</p>
 <p>Creates an ActionObject for the <code>ok-perceptual-curves</code> primitive function.</p>
-<p>See test demo <a href="../../demo/filters-042.html">Filters-042</a>.</p>
+<p>See test demo <a href="../../demo/filters-041.html">Filters-041</a>.</p>
 <pre><code>Attribute                   Retained?   Default
 --------------------------  ----------  ----------------
 lineIn                      yes         ''
@@ -2604,7 +2552,7 @@ useMixedChannel             yes         true</code></pre>
 <ul>
 <li><strong>rect</strong> - <code>rectWidth</code>, <code>rectHeight</code>, <code>originX</code>, <code>originY</code>, <code>angle</code>, <code>spiralStrength</code></li>
 <li><strong>hex</strong> - <code>hexRadius</code>, <code>originX</code>, <code>originY</code>, <code>angle</code>, <code>spiralStrength</code></li>
-<li><strong>random</strong> - <code>randomCount</code>, <code>seed</code></li>
+<li><strong>random</strong> - <code>density</code>, <code>randomCount</code> (deprecated), <code>seed</code></li>
 <li><strong>points</strong> - <code>pointsData</code></li>
 </ul>
 <p>Product-devs should be aware that initial calculation of the tile sets is very computationally intensive.</p>
@@ -2630,7 +2578,8 @@ hexRadius                   yes         5
 
 spiralStrength              yes         0
 
-randomCount                 yes         20
+density                     yes         '0%'
+randomCount                 yes         20                   // deprecated
 seed                        yes         DEFAULT_SEED
 
 pointsData                  yes         []
@@ -2708,7 +2657,7 @@ opacity                     yes         1</code></pre>
 <p>Parameters such as strength, samples, variation (per-pixel jitter driven by a seed), and angle (for an optional spin component) shape the overall character of the blur.</p>
 <p>The include* channel flags, includeAlpha, excludeTransparentPixels, premultiply, and multiscale settings provide additional control over colour and alpha handling and help mitigate artefacts.</p>
 <p>Product-devs should note that this filter is computationally heavy and should be used judiciously.</p>
-<p>See test demo <a href="../../demo/filters-041.html">Filters-041</a>.</p>
+<p>See test demo <a href="../../demo/filters-040.html">Filters-040</a>.</p>
 <pre><code>Attribute                   Retained?   Default
 --------------------------  ----------  ----------------
 lineIn                      yes         ''

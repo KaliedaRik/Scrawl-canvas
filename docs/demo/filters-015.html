@@ -385,6 +385,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-074.html">
+                  ./demo/canvas-074.js
+                </a>
+              
+                
                 <a class="source" href="canvas-201.html">
                   ./demo/canvas-201.js
                 </a>
@@ -760,11 +765,6 @@
                 </a>
               
                 
-                <a class="source" href="filters-042.html">
-                  ./demo/filters-042.js
-                </a>
-              
-                
                 <a class="source" href="filters-101.html">
                   ./demo/filters-101.js
                 </a>
@@ -1115,7 +1115,7 @@
     <span class="hljs-attr">rectWidth</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">rectHeight</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">hexRadius</span>: <span class="hljs-number">14</span>,
-    <span class="hljs-attr">randomCount</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">density</span>: <span class="hljs-string">&#x27;1%&#x27;</span>,
     <span class="hljs-attr">originX</span>: <span class="hljs-number">200</span>,
     <span class="hljs-attr">originY</span>: <span class="hljs-number">200</span>,
 });</pre></div></div>
@@ -1166,7 +1166,7 @@
     Origin - x: <span class="hljs-subst">${dom.originX.value}</span>px, y: <span class="hljs-subst">${dom.originY.value}</span>px
     Angle: <span class="hljs-subst">${dom.angle.value}</span>
     Spiral strength: <span class="hljs-subst">${dom.spiralStrength.value}</span>
-    Random count: <span class="hljs-subst">${dom.randomCount.value}</span>
+    Density: <span class="hljs-subst">${dom.density.value}</span>%
     Opacity: <span class="hljs-subst">${dom.opacity.value}</span>`</span>;
 });</pre></div></div>
             
@@ -1211,7 +1211,7 @@
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;originY&#x27;</span>, <span class="hljs-string">&#x27;200&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;spiralStrength&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;angle&#x27;</span>, <span class="hljs-string">&#x27;0&#x27;</span>],
-    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;randomCount&#x27;</span>, <span class="hljs-string">&#x27;100&#x27;</span>],
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;density&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;mode&#x27;</span>, <span class="hljs-number">0</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;include_red&#x27;</span>, <span class="hljs-number">1</span>],
@@ -1254,7 +1254,7 @@
         <span class="hljs-attr">originY</span>: [<span class="hljs-string">&#x27;originY&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-attr">angle</span>: [<span class="hljs-string">&#x27;angle&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-attr">spiralStrength</span>: [<span class="hljs-string">&#x27;spiralStrength&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">randomCount</span>: [<span class="hljs-string">&#x27;randomCount&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+        <span class="hljs-attr">density</span>: [<span class="hljs-string">&#x27;density&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
 
         <span class="hljs-attr">include_red</span>: [<span class="hljs-string">&#x27;includeRed&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
         <span class="hljs-attr">include_green</span>: [<span class="hljs-string">&#x27;includeGreen&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],

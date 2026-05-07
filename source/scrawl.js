@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.17.0 - 3 January 2026
+// #### Version 8.18.0 - 7 May 2026
 
 
 // ## Initialize Scrawl-canvas
@@ -53,7 +53,10 @@ export {
     setWorkstoreLifetimeLength,
     setWorkstorePurgeChoke,
 } from './helper/workstore.js';
-export { getLastUsedReducePalette } from './helper/filter-engine.js';
+export {
+    filterEngine,
+    getLastUsedReducePalette
+} from './helper/filter-engine.js';
 export {
     currentCorePosition,
     startCoreListeners,
@@ -90,6 +93,7 @@ export { makeGroup } from './factory/group.js';
 export {
     importImage,
     importDomImage,
+    importImageBitmap,
     createImageFromCell,
     createImageFromGroup,
     createImageFromEntity,

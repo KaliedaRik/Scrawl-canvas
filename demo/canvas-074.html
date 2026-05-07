@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 074</title>
+  <link rel='icon' type='image/png' href='/favicon.png'>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    /* For progressive enhancement */
+    .canvas-progressive-enhancement-wrapper {
+      display: flex;
+      justify-content: center;
+
+      & canvas {
+        box-shadow: 0px 0px 0px 1px black;
+
+        /* In no-JS environments, the image should display in place of the canvas element */
+        & .placeholder {
+          text-align: center;
+          width: 500px;
+          max-width: 100%;
+
+          & img {
+            width: 100%;
+          }
+        }
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test-navigation">
+    <a href="canvas-072.html">&larr; Previous</a>
+    <a href="canvas-201.html">Next &rarr;</a>
+  </div>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 074</h1>
+  <h2>Import and use ImageBitmap objects as assets</h2>
+  <h3>To import more images, drag-and-drop image files over the canvas</h3>
+
+  <div class="canvas-progressive-enhancement-wrapper">
+    <canvas 
+      id="my-canvas" 
+      width="600" 
+      height="400"
+      data-scrawl-canvas
+    >
+      <div class="placeholder">
+        <img
+          src="thumbs/canvas-074.webp"
+          alt="Screen capture image of the demo canvas"
+        />    
+      </div>
+      <div class="assets" aria-hidden="true">
+        <img id="iris" src="img/iris.png" class="dom-images" alt="" />    
+        <img id="brick" src="img/brick.png" class="dom-images" alt="" />
+      </div>
+    </canvas>
+  </div>
+
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Create a canvas scene where images from HTML &lt;img> elements are transformed into ImageBitmap objects and then imported as an asset into the SC system using scrawl.importImageBitmap().</li>
+      <li>Create and display a Picture entity that uses an ImageBitmap asset.</li>
+      <li>Create and display a Block entity that uses a Pattern style that wraps an ImageBitmap asset.</li>
+      <li>Allow the user to add additional images to the scene by dragging their files onto the canvas, where their data is transformed into ImageBitmap objects, imported into the SC system, and Picture entitys created to display them on the canvas.</li>
+      <li>All entitys displayed on the canvas can be dragged</li>
+    </ul>
+
+    <p><b>Touch test:</b> should work as expected - though flicking an entity may lead to it moving beyond the canvas border and out of sight!</p>
+
+    <p><a href="../docs/demo/canvas-074.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-074.js" type="module"></script>
+
+</body>
+
+</html>

@@ -66,7 +66,7 @@ const controls = function () {
 /** @ts-expect-error */
                 b2.disabled = 'disabled';
 
-                newStack.kill();
+                newStack.kill(true);
 
                 break;
 
@@ -99,7 +99,7 @@ const controls = function () {
 /** @ts-expect-error */
                 b4.disabled = 'disabled';
 
-                hostStack.kill();
+                hostStack.kill(true);
 
                 break;
         }

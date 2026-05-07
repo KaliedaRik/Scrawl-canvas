@@ -1549,6 +1549,68 @@ scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function
             <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> + res) / <span class="hljs-number">2</span>;
         }
     },
+
+    <span class="hljs-attr">steppedEasing2</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0.5</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> / <span class="hljs-number">4</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">3</span> / <span class="hljs-number">4</span>;
+    },
+
+    <span class="hljs-attr">steppedEasing3</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / <span class="hljs-number">3</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> / <span class="hljs-number">6</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / <span class="hljs-number">3</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">3</span> / <span class="hljs-number">6</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">5</span> / <span class="hljs-number">6</span>;
+    },
+
+    <span class="hljs-attr">steppedEasing4</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / <span class="hljs-number">4</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> / <span class="hljs-number">8</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / <span class="hljs-number">4</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">3</span> / <span class="hljs-number">8</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">3</span> / <span class="hljs-number">4</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">5</span> / <span class="hljs-number">8</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">7</span> / <span class="hljs-number">8</span>;
+    },
+
+    <span class="hljs-attr">steppedEasing5</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / <span class="hljs-number">5</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> / <span class="hljs-number">10</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / <span class="hljs-number">5</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">3</span> / <span class="hljs-number">10</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">3</span> / <span class="hljs-number">5</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">5</span> / <span class="hljs-number">10</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">4</span> / <span class="hljs-number">5</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">7</span> / <span class="hljs-number">10</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">9</span> / <span class="hljs-number">10</span>;
+    },
+
+    <span class="hljs-attr">steppedEasing6</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / <span class="hljs-number">6</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> / <span class="hljs-number">12</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / <span class="hljs-number">6</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">3</span> / <span class="hljs-number">12</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">3</span> / <span class="hljs-number">6</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">5</span> / <span class="hljs-number">12</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">4</span> / <span class="hljs-number">6</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">7</span> / <span class="hljs-number">12</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">5</span> / <span class="hljs-number">6</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">9</span> / <span class="hljs-number">12</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">11</span> / <span class="hljs-number">12</span>;
+    },
+
+    <span class="hljs-attr">steppedEasing7</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / <span class="hljs-number">7</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> / <span class="hljs-number">14</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / <span class="hljs-number">7</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">3</span> / <span class="hljs-number">14</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">3</span> / <span class="hljs-number">7</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">5</span> / <span class="hljs-number">14</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">4</span> / <span class="hljs-number">7</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">7</span> / <span class="hljs-number">14</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">5</span> / <span class="hljs-number">7</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">9</span> / <span class="hljs-number">14</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">6</span> / <span class="hljs-number">7</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">11</span> / <span class="hljs-number">14</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">13</span> / <span class="hljs-number">14</span>;
+    },
+
+    <span class="hljs-attr">steppedEasing8</span>: <span class="hljs-function">(<span class="hljs-params">t</span>) =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / <span class="hljs-number">8</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> / <span class="hljs-number">16</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / <span class="hljs-number">8</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">3</span> / <span class="hljs-number">16</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">3</span> / <span class="hljs-number">8</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">5</span> / <span class="hljs-number">16</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">4</span> / <span class="hljs-number">8</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">7</span> / <span class="hljs-number">16</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">5</span> / <span class="hljs-number">8</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">9</span> / <span class="hljs-number">16</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">6</span> / <span class="hljs-number">8</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">11</span> / <span class="hljs-number">16</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">7</span> / <span class="hljs-number">8</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">13</span> / <span class="hljs-number">16</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">15</span> / <span class="hljs-number">16</span>;
+    },
 };</pre></div></div>
             
         </li>

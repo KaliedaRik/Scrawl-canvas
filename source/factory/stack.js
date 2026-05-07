@@ -11,7 +11,7 @@ import { domShow } from '../core/document.js';
 
 import { rootElementsAdd, rootElementsIncludes, rootElementsRemove } from "../helper/document-root-elements.js";
 
-import { currentCorePosition, uiSubscribedElements } from '../core/user-interaction.js';
+import { uiSubscribedElements } from '../core/user-interaction.js';
 
 import { makeGroup } from './group.js';
 import { makeElement } from './element.js';
@@ -83,6 +83,9 @@ const Stack = function (items = Ωempty) {
         this.dirtyStampOrder = true;
         this.localMouseListener = null;
 
+        this.currentParentDimensions = [];
+        this.currentParentStyles = null;
+
         this.set(items);
 
         const el = this.domElement;
@@ -91,7 +94,13 @@ const Stack = function (items = Ωempty) {
 
             const ds = el.dataset;
 
-            if (ds.isResponsive) this.isResponsive = true;
+            if (ds.isResponsive) {
+
+                this.isResponsive = true;
+                this.checkForResize = true;
+                this.currentParentStyles = _computed(el.parentElement);
+                this.currentParentDimensions.push(0, 0);
+            }
 
             if (el.getAttribute(DATA_SCRAWL_GROUP) === ROOT) rootElementsAdd(this.name);
         }
@@ -298,43 +307,26 @@ P.cleanPerspective = function () {
 };
 
 
-// TODO - experimental! `checkResponsive`
-//
-// Scrawl-canvas Stack artefacts - at the __root__ level - cannot have 'String%' dimensions, which means they have absolute dimensions - because everything that relies on 'String%' dimensions needs an absolute (number) value for their calculations at the root, which is the stack.
-//
-// But we still need to make Stacks responsive. We do this by checking if the viewport dimensions have changed (a resize action has taken place) and - if yes - update the stack's absolute dimensions accordingly ... if the __isResponsive__ flag has been set to true for the Stack (default is 'false' - may change this in due course).
-//
-// We call this check in the __clear__ function below, because it's doing nothing else useful at the moment and it makes sense to get updates in place here before everything launches into the compile part of the display cycle
+// Stack elements can be responsive
+// - We assume that the stack element needs to be 100% the same size as its parent element
 P.checkResponsive = function () {
 
-    if (this.isResponsive && this.trackHere) {
+    const pDims = this.currentParentDimensions,
+        pStyles = this.currentParentStyles;
 
-        // Start keeping track of the viewport dimensions
-        if (!this.currentVportWidth) this.currentVportWidth = currentCorePosition.w;
-        if (!this.currentVportHeight) this.currentVportHeight = currentCorePosition.h;
+    const [cw, ch] = this.currentParentDimensions;
 
-        // If last display cycle responded to dimension changes, need to finalise height now
-        if (this.dirtyHeight && this.containElementsInHeight) {
+    const pw = parseFloat(pStyles.width),
+        ph = parseFloat(pStyles.height);
 
-            this.dirtyHeight = false;
-        }
+    if (cw !== pw || ch !== ph) {
 
-        if (this.currentVportWidth !== currentCorePosition.w) {
+        pDims[0] = pw;
+        pDims[1] = ph;
 
-            this.currentVportWidth = currentCorePosition.w;
-
-            if (this.containElementsInHeight) {
-
-                // Won't be updated until the next display cycle, but flag it now for action
-                // - needed because text in elements flow as part of normal DOM operations
-                this.dirtyHeight = true;
-            }
-        }
-
-        if (this.currentVportHeight !== currentCorePosition.h) {
-
-            this.currentVportHeight = currentCorePosition.h;
-        }
+        this.dirtyDomDimensions = true;
+        this.dirtyDisplayShape = true;
+        this.dirtyDisplayArea = true;
     }
 };
 
@@ -344,7 +336,7 @@ P.checkResponsive = function () {
 // `clear`
 P.clear = function () {
 
-    this.checkResponsive();
+    if (this.isResponsive) this.checkResponsive();
 };
 
 // `compile`
@@ -642,4 +634,3 @@ export const getStack = function (search) {
     }
     return undefined;
 };
-

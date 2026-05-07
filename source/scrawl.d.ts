@@ -1,4 +1,4 @@
-// Type definitions for Scrawl-canvas 8.17.0
+// Type definitions for Scrawl-canvas 8.18.0
 
 
 
@@ -155,9 +155,9 @@ interface BaseMixinInputs {
 }
 
 interface BaseMixinFunctions {
-    actionPacket: (item: string) => any;
+    actionPacket: (item: string, override?: CommonObjectInput) => any;
     get: (item: string) => any;
-    importPacket: (item: string | string[]) => any;
+    importPacket: (item: string | string[], override?: CommonObjectInput) => any;
     kill: (item?: any) => void;
 }
 
@@ -1428,6 +1428,7 @@ interface CurveWeights {
 
 interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     angle?: number;
+    backgroundColor?: string;
     blueInBlue?: number;
     blueInGreen?: number;
     blueInRed?: number;
@@ -1435,6 +1436,9 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     copyWidth?: StringOrNumberInput;
     copyX?: StringOrNumberInput;
     copyY?: StringOrNumberInput;
+    copyStartX?: StringOrNumberInput;
+    copyStartY?: StringOrNumberInput;
+    density?: StringOrNumberInput;
     greenInBlue?: number;
     greenInGreen?: number;
     greenInRed?: number;
@@ -1493,6 +1497,8 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     redInGreen?: number;
     redInRed?: number;
     samples?: number;
+    scale?: number;
+    // `process-image` - `scaleX` and `scaleY` deprecated in favour of `strengthX` and `strengthY`
     scaleX?: number;
     scaleY?: number;
     smoothing?: number;
@@ -1503,6 +1509,8 @@ interface FilterFactoryDeltaInputs extends BaseMixinDeltaInputs {
     stepHorizontal?: number;
     stepVertical?: number;
     strength?: number;
+    strengthX?: number;
+    strengthY?: number;
     tileHeight?: StringOrNumberInput;
     tileRadius?: number;
     tileWidth?: StringOrNumberInput;
@@ -2453,6 +2461,16 @@ interface RenderFactoryInputs extends BaseMixinInputs, RenderFactoryDeltaInputs 
     onKill?: DefaultInputFunction;
     onRun?: DefaultInputFunction;
     order?: number;
+    /**
+     * One or more render targets.
+     *
+     * Accepts a target name, a Canvas/Stack/Cell instance, or an array mixing
+     * names and instances. In most day-to-day use this will be a Canvas or Stack.
+     *
+     * @remarks
+     * If omitted, the render can still run when `noTarget` is true and the hook
+     * functions are being used for orchestration rather than drawing.
+     */
     target?: string | TargetInstance | Array<string | TargetInstance>;
     observer?: boolean | CommonObjectInput;
     noTarget?: boolean;
@@ -2468,6 +2486,14 @@ interface RenderFactoryFunctions extends BaseMixinFunctions {
     saveAsPacket: (item?: RenderSaveInputs | boolean) => string;
     set: (item?: RenderFactoryInputs) => RenderInstance;
     setDelta: (item?: RenderFactoryDeltaInputs) => RenderInstance;
+    /**
+     * Replace one of the Render cycle hook functions.
+     *
+     * @param hook - The hook name to replace; for example `commence`,
+     * `afterClear`, `afterCompile`, `afterShow`, or `error`.
+     * @param func - The function to assign to that hook. Pass `undefined`
+     * to clear a previously assigned hook.
+     */
     updateHook: (hook: string, func?: DefaultInputFunction) => void;
 }
 
@@ -3138,6 +3164,7 @@ type AssetImports = string | AssetImportObject | Array<string | AssetImportObjec
 export function importDomImage(query: string): void;
 export function importDomVideo(query: string): void;
 export function importImage(items: AssetImports): void;
+export function importImageBitmap(items: AssetImports | ImageBitmap, name?: string): AssetImports | AssetImports[];
 export function importMediaStream(items: CommonObjectInput): Promise<VideoAssetInstance>;
 export function importScreenCapture(items: CommonObjectInput): Promise<VideoAssetInstance>;
 export function importSprite(items: AssetImports): void;

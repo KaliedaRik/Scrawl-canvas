@@ -674,6 +674,10 @@ P.buildColorStringFromData = colorEngine.buildColorStringFromData;
 // `extractRGBfromColorString` - returns the R, G and B channel values (0 to 255) from a valid CSS Colors level 4 string
 P.extractRGBfromColorString = colorEngine.extractRGBfromColorString
 
+// `extractDatafromColorString` - returns the R, G, B (0 to 255) and A (0 to 1) channel values from a valid CSS Colors level 4 string, together with its color space value.
+// + Returns an Array in the format `[colorSpace, red, green, blue, alpha]`
+P.extractDatafromColorString = colorEngine.getColorValuesFromString
+
 // `convertRGBtoHex`
 P.convertRGBtoHex = colorEngine.convertRGBtoHex;
 

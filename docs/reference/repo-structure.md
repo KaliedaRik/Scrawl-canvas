@@ -204,34 +204,40 @@ Version release has not (yet) been automated, which means the following steps ne
 
 12: Re-run `yarn dev` and smoke check the entire scrawl-canvas-website site.
 
+#### Other sites to test
+
+13: The `scrawl.js` minified file is used in two tools based on the library, and can be tested by copying it acrosds and testing those tools locally:
++ The [Scrawl-canvas screen recorder](https://github.com/KaliedaRik/sc-screen-recorder) tool
++ The [Scrawl-canvas filter builder](https://github.com/KaliedaRik/sc-filter-builder) tool
+
 #### GitHub
 
-13: Merge the `v8-dev` PR into `v8`. If the `v8-dev` branch gets (accidentally) deleted during the process, repo-devs can recreate it from Local
+14: Merge the `v8-dev` PR into `v8`. If the `v8-dev` branch gets (accidentally) deleted during the process, repo-devs can recreate it from Local
 
 #### Local SC root
 
-14: Checkout the `v8` branch and pull from remote
+15: Checkout the `v8` branch and pull from remote
 
-15: Run `npm publish` (requires permissions to publish to NPM registry)
+16: Run `npm publish` (requires permissions to publish to NPM registry)
 
-16: Checkout the `v8-dev` branch and merge `v8` into it. Push to remote.
+17: Checkout the `v8-dev` branch and merge `v8` into it. Push to remote.
 
 #### GitHub
 
-17: Create a new release.
+18: Create a new release.
 
 #### Local scrawl-canvas-website
 
-18: Run:
+19: Run
 + `yarn remove scrawl-canvas`
 + `yarn add scrawl-canvas`
 
-19: Check to make sure the new version was added to the repo – the previous command should report the version of SC that was added.
+20: Check to make sure the new version was added to the repo – the previous command should report the version of SC that was added.
 
-20: Run: `yarn build`. Smoke test the website.
+21: Run: `yarn build`. Smoke test the website.
 
-21: Repo-devs are now in a position to push the updated website to production. Use FTP for this work. All files in the `public` folder need to be copied to the remote site.
+22: Repo-devs are now in a position to push the updated website to production. Use FTP for this work. All files in the `public` folder need to be copied to the remote site.
 
 #### CodePen
 
-22: Repo-devs can now update all the [SC Pen demos in CodePen](https://codepen.io/collection/RzzMjw). This is required work because several of these demos are embedded into the website's various "Learn" articles. The change in each Pen is to update the SC import line to the latest version.
+23: Repo-devs can now update all the [SC Pen demos in CodePen](https://codepen.io/collection/RzzMjw). This is required work because several of these demos are embedded into the website's various "Learn" articles. The change in each Pen is to update the SC import line to the latest version.

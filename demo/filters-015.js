@@ -31,7 +31,7 @@ const myFilter = scrawl.makeFilter({
     rectWidth: 20,
     rectHeight: 20,
     hexRadius: 14,
-    randomCount: 100,
+    density: '1%',
     originX: 200,
     originY: 200,
 });
@@ -60,7 +60,7 @@ const report = reportSpeed('#reportmessage', function () {
     Origin - x: ${dom.originX.value}px, y: ${dom.originY.value}px
     Angle: ${dom.angle.value}
     Spiral strength: ${dom.spiralStrength.value}
-    Random count: ${dom.randomCount.value}
+    Density: ${dom.density.value}%
     Opacity: ${dom.opacity.value}`;
 });
 
@@ -83,7 +83,7 @@ const dom = scrawl.initializeDomInputs([
     ['input', 'originY', '200'],
     ['input', 'spiralStrength', '0'],
     ['input', 'angle', '0'],
-    ['input', 'randomCount', '100'],
+    ['input', 'density', '1'],
     ['input', 'opacity', '1'],
     ['select', 'mode', 0],
     ['select', 'include_red', 1],
@@ -115,7 +115,7 @@ scrawl.makeUpdater({
         originY: ['originY', 'round'],
         angle: ['angle', 'round'],
         spiralStrength: ['spiralStrength', 'float'],
-        randomCount: ['randomCount', 'round'],
+        density: ['density', '%'],
 
         include_red: ['includeRed', 'boolean'],
         include_green: ['includeGreen', 'boolean'],

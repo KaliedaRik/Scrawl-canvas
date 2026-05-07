@@ -42,9 +42,24 @@ import baseMix from '../mixin/base.js';
 // Shared constants
 import { _entries, _floor, _isArray, _isFinite, _keys, BLACK, BLANK, LINEAR, RGB, T_PALETTE, WHITE } from '../helper/shared-vars.js';
 
-// Local constants
+// Local constants and hlper functions
 const PALETTE = 'palette',
-    EASE_ENGINE_KEYS = _keys(easeEngines);
+    EASE_ENGINE_KEYS = _keys(easeEngines),
+    STEPPED_EASING = /^steppedEasing(\d+)$/;
+
+const getStepCount = function (easing) {
+
+    if (easing && easing.steps) return easing.steps;
+    if (easing && easing.stepCount) return easing.stepCount;
+
+    if (easing && easing.substring) {
+
+        const match = easing.match(STEPPED_EASING);
+        if (match) return parseInt(match[1], 10);
+    }
+
+    return 0;
+};
 
 
 // #### Palette constructor
@@ -471,6 +486,9 @@ P.getStopData = function (gradient, start, end, cycle) {
 
     const { stops } = this;
 
+    // Option 1 start == end, cycle irrelevant. Returns solid color at start of gradient
+    if (start === end) return stops[start] || BLANK;
+
     if (this.dirtyPaletteData || !checkForWorkstoreItem(workstoreName)) {
 
         this.dirtyPaletteData = false;
@@ -482,44 +500,86 @@ P.getStopData = function (gradient, start, end, cycle) {
 
         const keys = _keys(this.colors).map(n => parseInt(n, 10)).sort((a, b) => a - b),
             engine = isa_fn(easing) ? easing : easeEngines[easing],
+            stepCount = getStepCount(easing),
             precisionTest = (!precision || (easing === LINEAR && colorSpace === RGB)) ? false : true,
             data = [];
 
         let spread, offset, i, iz, item, n;
 
-        // Option 2: start < end, cycle irrelevant
-        if (start < end) {
+        // Special handling for stepped easings
+        if (stepCount > 1) {
 
-            data.push(0, stops[start]);
+            let getStopIndex;
 
-            spread = end - start;
+            if (start < end) {
 
-            if (precisionTest) {
+                spread = end - start;
 
-                for (i = start + 1; i < end; i += precision) {
+                getStopIndex = function (t) {
 
-                    offset = (i - start) / spread;
+                    return _floor(start + (engine(t) * spread) + 0.5);
+                };
+            }
+            else if (cycle) {
 
-                    if (cycle) {
+                n = 999 - start;
+                spread = n + end;
 
-                        if (offset > 1) offset -= 1;
-                        else if (offset < 0) offset += 1;
-                    }
+                getStopIndex = function (t) {
 
-                    offset = engine(offset);
+                    let item = _floor(start + (engine(t) * spread) + 0.5);
 
-                    if (offset > 0 && offset < 1) data.push(offset, stops[i]);
-                }
+                    while (item > 999) item -= 1000;
+                    while (item < 0) item += 1000;
+
+                    return item;
+                };
             }
             else {
 
-                for (i = 0, iz = keys.length; i < iz; i++) {
+                spread = start - end;
 
-                    item = keys[i];
+                getStopIndex = function (t) {
 
-                    if (item > start && item < end) {
+                    return _floor(start - (engine(t) * spread) + 0.5);
+                };
+            }
 
-                        offset = (item - start) / spread;
+            let t, nextT, item, color;
+
+            for (i = 0; i < stepCount; i++) {
+
+                t = i / stepCount;
+                nextT = (i + 1) / stepCount;
+
+                item = getStopIndex(t + ((nextT - t) / 2));
+
+                if (!cycle) {
+
+                    if (item < 0) item = 0;
+                    else if (item > 999) item = 999;
+                }
+
+                color = stops[item] || BLANK;
+
+                data.push(t, color, nextT, color);
+            }
+
+            setWorkstoreItem(workstoreName, data);
+        }
+        else {
+            // Option 2: start < end, cycle irrelevant
+            if (start < end) {
+
+                data.push(0, stops[start]);
+
+                spread = end - start;
+
+                if (precisionTest) {
+
+                    for (i = start + 1; i < end; i += precision) {
+
+                        offset = (i - start) / spread;
 
                         if (cycle) {
 
@@ -527,34 +587,9 @@ P.getStopData = function (gradient, start, end, cycle) {
                             else if (offset < 0) offset += 1;
                         }
 
-                        if (offset > 0 && offset < 1) data.push(offset, stops[item]);
-                    }
-                }
-            }
-            data.push(1, stops[end]);
-        }
+                        offset = engine(offset);
 
-        else {
-
-            // Option 3: start > end, cycle = true
-            if (cycle) {
-
-                data.push(0, stops[start]);
-
-                n = 999 - start;
-                spread = n + end;
-
-                if (precisionTest) {
-
-                    for (i = 0; i < spread; i += precision) {
-
-                        item = i + start;
-
-                        if (item > 999) item -= 1000;
-
-                        offset = engine(i / spread);
-
-                        if (offset > 0 && offset < 1) data.push(offset, stops[item]);
+                        if (offset > 0 && offset < 1) data.push(offset, stops[i]);
                     }
                 }
                 else {
@@ -563,49 +598,15 @@ P.getStopData = function (gradient, start, end, cycle) {
 
                         item = keys[i];
 
-                        if (item === 999) offset = (item - start - 0.01) / spread;
-                        else if (item > start) offset = (item - start) / spread;
-                        else if (item === 0) offset = (item + n + 0.01) / spread;
-                        else if (item < end) offset = (item + n) / spread;
-                        else continue;
+                        if (item > start && item < end) {
 
-                        if (offset > 1) offset -= 1;
-                        else if (offset < 0) offset += 1;
+                            offset = (item - start) / spread;
 
-                        if (offset > 0 && offset < 1) data.push(offset, stops[item]);
-                    }
-                }
-                data.push(1, stops[end]);
-            }
+                            if (cycle) {
 
-            // Option 4: start > end, cycle = false
-            else {
-
-                data.push(0, stops[start]);
-
-                spread = start - end;
-
-                if (precisionTest) {
-
-                    for (i = end + 1; i < start; i += precision) {
-
-                        if (i < start && i > end) {
-
-                            offset = engine(1 - ((i - end) / spread));
-
-                            if (offset > 0 && offset < 1) data.push(offset, stops[i]);
-                        }
-                    }
-                }
-                else {
-
-                    for (i = 0, iz = keys.length; i < iz; i++) {
-
-                        item = keys[i];
-
-                        if (item < start && item > end) {
-
-                            offset = 1 - ((item - end) / spread);
+                                if (offset > 1) offset -= 1;
+                                else if (offset < 0) offset += 1;
+                            }
 
                             if (offset > 0 && offset < 1) data.push(offset, stops[item]);
                         }
@@ -613,12 +614,90 @@ P.getStopData = function (gradient, start, end, cycle) {
                 }
                 data.push(1, stops[end]);
             }
+
+            else {
+
+                // Option 3: start > end, cycle = true
+                if (cycle) {
+
+                    data.push(0, stops[start]);
+
+                    n = 999 - start;
+                    spread = n + end;
+
+                    if (precisionTest) {
+
+                        for (i = 0; i < spread; i += precision) {
+
+                            item = i + start;
+
+                            if (item > 999) item -= 1000;
+
+                            offset = engine(i / spread);
+
+                            if (offset > 0 && offset < 1) data.push(offset, stops[item]);
+                        }
+                    }
+                    else {
+
+                        for (i = 0, iz = keys.length; i < iz; i++) {
+
+                            item = keys[i];
+
+                            if (item === 999) offset = (item - start - 0.01) / spread;
+                            else if (item > start) offset = (item - start) / spread;
+                            else if (item === 0) offset = (item + n + 0.01) / spread;
+                            else if (item < end) offset = (item + n) / spread;
+                            else continue;
+
+                            if (offset > 1) offset -= 1;
+                            else if (offset < 0) offset += 1;
+
+                            if (offset > 0 && offset < 1) data.push(offset, stops[item]);
+                        }
+                    }
+                    data.push(1, stops[end]);
+                }
+
+                // Option 4: start > end, cycle = false
+                else {
+
+                    data.push(0, stops[start]);
+
+                    spread = start - end;
+
+                    if (precisionTest) {
+
+                        for (i = end + 1; i < start; i += precision) {
+
+                            if (i < start && i > end) {
+
+                                offset = engine(1 - ((i - end) / spread));
+
+                                if (offset > 0 && offset < 1) data.push(offset, stops[i]);
+                            }
+                        }
+                    }
+                    else {
+
+                        for (i = 0, iz = keys.length; i < iz; i++) {
+
+                            item = keys[i];
+
+                            if (item < start && item > end) {
+
+                                offset = 1 - ((item - end) / spread);
+
+                                if (offset > 0 && offset < 1) data.push(offset, stops[item]);
+                            }
+                        }
+                    }
+                    data.push(1, stops[end]);
+                }
+            }
         }
         setWorkstoreItem(workstoreName, data);
     }
-
-    // Option 1 start == end, cycle irrelevant. Returns solid color at start of gradient
-    if (start === end) return stops[start] || BLANK;
 
     // check to see if data has already been memoized and is suitable for return
     return getWorkstoreItem(workstoreName) || BLANK;

@@ -599,9 +599,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { cell, constructors, entity, group, styles } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { cell, constructors, asset <span class="hljs-keyword">as</span> libraryAsset, entity, group, styles } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { addStrings, doCreate, generateUuid, mergeOver, removeItem, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { addStrings, doCreate, mergeOver, removeItem, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./gradient.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { colorEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/color-engine.js&#x27;</span>;
@@ -621,7 +621,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _isArray, _isFinite, _keys, _round, _values, <span class="hljs-variable constant_">ALPHA_TO_CHANNELS</span>, <span class="hljs-variable constant_">ALPHA_TO_LUMINANCE</span>, <span class="hljs-variable constant_">AREA_ALPHA</span>, <span class="hljs-variable constant_">ARG_SPLITTER</span>, <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BLACK_WHITE</span>, <span class="hljs-variable constant_">BLEND</span>, <span class="hljs-variable constant_">BLUENOISE</span>, <span class="hljs-variable constant_">BLUR</span>, <span class="hljs-variable constant_">CHANNELS_TO_ALPHA</span>, <span class="hljs-variable constant_">CHROMA</span>, <span class="hljs-variable constant_">CLAMP_CHANNELS</span>, <span class="hljs-variable constant_">CLAMP_VALUES</span>, <span class="hljs-variable constant_">COLORS_TO_ALPHA</span>, <span class="hljs-variable constant_">COMPOSE</span>, <span class="hljs-variable constant_">CORRODE</span>, <span class="hljs-variable constant_">DECONVOLUTE</span>, <span class="hljs-variable constant_">DEFAULT_SEED</span>, <span class="hljs-variable constant_">DISPLACE</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">EMBOSS</span>, <span class="hljs-variable constant_">FILTER</span>, <span class="hljs-variable constant_">FLOOD</span>, <span class="hljs-variable constant_">GAUSSIAN_BLUR</span>, <span class="hljs-variable constant_">GLITCH</span>, <span class="hljs-variable constant_">GRAYSCALE</span>, <span class="hljs-variable constant_">GREEN</span>, <span class="hljs-variable constant_">INVERT_CHANNELS</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">LOCK_CHANNELS_TO_LEVELS</span>, <span class="hljs-variable constant_">MAP_TO_GRADIENT</span>, <span class="hljs-variable constant_">LUMINANCE_TO_ALPHA</span>, <span class="hljs-variable constant_">MATRIX</span>, <span class="hljs-variable constant_">MEAN</span>, <span class="hljs-variable constant_">MODIFY_OK_CHANNELS</span>, <span class="hljs-variable constant_">MODULATE_CHANNELS</span>, <span class="hljs-variable constant_">MODULATE_OK_CHANNELS</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NEGATIVE</span>, <span class="hljs-variable constant_">NEWSPRINT</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-variable constant_">OK_PERCEPTUAL_CURVES</span>, <span class="hljs-variable constant_">OFFSET</span>, <span class="hljs-title class_">PC50</span>, <span class="hljs-variable constant_">PIXELATE</span>, <span class="hljs-variable constant_">PROCESS_IMAGE</span>, <span class="hljs-variable constant_">RANDOM</span>, <span class="hljs-variable constant_">RANDOM_NOISE</span>, <span class="hljs-variable constant_">RECT</span>, <span class="hljs-variable constant_">RED</span>, <span class="hljs-variable constant_">REDUCE_PALETTE</span>, <span class="hljs-variable constant_">ROTATE_HUE</span>, <span class="hljs-variable constant_">SET_CHANNEL_TO_LEVEL</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STEP_CHANNELS</span>, <span class="hljs-variable constant_">SWIRL</span>, <span class="hljs-variable constant_">T_FILTER</span>, <span class="hljs-variable constant_">THRESHOLD</span>, <span class="hljs-variable constant_">TILE_MODES</span>, <span class="hljs-variable constant_">TILES</span>, <span class="hljs-variable constant_">TINT_CHANNELS</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">USER_DEFINED_LEGACY</span>, <span class="hljs-variable constant_">UNSHARP</span>, <span class="hljs-variable constant_">VARY_CHANNELS_BY_WEIGHTS</span>, <span class="hljs-variable constant_">WHITE</span>, <span class="hljs-variable constant_">ZERO_STR</span>, <span class="hljs-variable constant_">ZOOM_BLUR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _isArray, _isFinite, _keys, _round, _values, <span class="hljs-variable constant_">ALPHA_TO_CHANNELS</span>, <span class="hljs-variable constant_">ALPHA_TO_LUMINANCE</span>, <span class="hljs-variable constant_">AREA_ALPHA</span>, <span class="hljs-variable constant_">ARG_SPLITTER</span>, <span class="hljs-variable constant_">AVERAGE_CHANNELS</span>, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BLACK_WHITE</span>, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">BLEND</span>, <span class="hljs-variable constant_">BLUENOISE</span>, <span class="hljs-variable constant_">BLUR</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">CHANNELS_TO_ALPHA</span>, <span class="hljs-variable constant_">CHROMA</span>, <span class="hljs-variable constant_">CLAMP_CHANNELS</span>, <span class="hljs-variable constant_">CLAMP_VALUES</span>, <span class="hljs-variable constant_">COLORS_TO_ALPHA</span>, <span class="hljs-variable constant_">COMPOSE</span>, <span class="hljs-variable constant_">CORRODE</span>, <span class="hljs-variable constant_">DEFAULT_SEED</span>, <span class="hljs-variable constant_">DISPLACE</span>, <span class="hljs-variable constant_">DOWN</span>, <span class="hljs-variable constant_">EMBOSS</span>, <span class="hljs-variable constant_">FILTER</span>, <span class="hljs-variable constant_">FLOOD</span>, <span class="hljs-variable constant_">GAUSSIAN_BLUR</span>, <span class="hljs-variable constant_">GLITCH</span>, <span class="hljs-variable constant_">GRAYSCALE</span>, <span class="hljs-variable constant_">GREEN</span>, <span class="hljs-variable constant_">INVERT_CHANNELS</span>, <span class="hljs-variable constant_">LINEAR</span>, <span class="hljs-variable constant_">LOCK_CHANNELS_TO_LEVELS</span>, <span class="hljs-variable constant_">MAP_TO_GRADIENT</span>, <span class="hljs-variable constant_">LUMINANCE_TO_ALPHA</span>, <span class="hljs-variable constant_">MATRIX</span>, <span class="hljs-variable constant_">MEAN</span>, <span class="hljs-variable constant_">MODIFY_OK_CHANNELS</span>, <span class="hljs-variable constant_">MODULATE_CHANNELS</span>, <span class="hljs-variable constant_">MODULATE_OK_CHANNELS</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">NEGATIVE</span>, <span class="hljs-variable constant_">NEWSPRINT</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-variable constant_">OK_PERCEPTUAL_CURVES</span>, <span class="hljs-variable constant_">OFFSET</span>, <span class="hljs-title class_">PC0</span>, <span class="hljs-title class_">PC100</span>, <span class="hljs-title class_">PC50</span>, <span class="hljs-variable constant_">PIXELATE</span>, <span class="hljs-variable constant_">PROCESS_IMAGE</span>, <span class="hljs-variable constant_">RANDOM</span>, <span class="hljs-variable constant_">RANDOM_NOISE</span>, <span class="hljs-variable constant_">RECT</span>, <span class="hljs-variable constant_">RED</span>, <span class="hljs-variable constant_">REDUCE_PALETTE</span>, <span class="hljs-variable constant_">ROTATE_HUE</span>, <span class="hljs-variable constant_">SET_CHANNEL_TO_LEVEL</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STEP_CHANNELS</span>, <span class="hljs-variable constant_">SWIRL</span>, <span class="hljs-variable constant_">T_FILTER</span>, <span class="hljs-variable constant_">THRESHOLD</span>, <span class="hljs-variable constant_">TILE_MODES</span>, <span class="hljs-variable constant_">TILES</span>, <span class="hljs-variable constant_">TINT_CHANNELS</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">USER_DEFINED_LEGACY</span>, <span class="hljs-variable constant_">UNSHARP</span>, <span class="hljs-variable constant_">VARY_CHANNELS_BY_WEIGHTS</span>, <span class="hljs-variable constant_">WHITE</span>, <span class="hljs-variable constant_">ZERO_STR</span>, <span class="hljs-variable constant_">ZOOM_BLUR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -745,7 +745,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 <ul>
 <li>Filter factory invocations which include the <code>method</code> attribute in their argument object do not need to include an <code>actions</code> attribute; the factory will build the action objects for us.</li>
 <li>When using the <code>method</code> attribute, other attributes can be included alongside it. The filter factory will automatically transpose these attributes to the action object.</li>
-<li>The following Strings are valid methods: <code>&#39;alphaToChannels&#39;, &#39;areaAlpha&#39;, &#39;blend&#39;, &#39;blue&#39;, &#39;blur&#39;, &#39;brightness&#39;, &#39;channelLevels&#39;, &#39;channels&#39;, &#39;channelstep&#39;, &#39;channelsToAlpha&#39;, &#39;chroma&#39;, &#39;chromakey&#39;, &#39;clampChannels&#39;, &#39;compose&#39;, &#39;corrode&#39;, &#39;curveWeights&#39;, &#39;cyan&#39;, &#39;deconvolute&#39;, &#39;displace&#39;, &#39;edgeDetect&#39;,  &#39;emboss&#39;, &#39;flood&#39;, &#39;gaussianBlur&#39;, &#39;gray&#39;, &#39;grayscale&#39;, &#39;green&#39;, &#39;image&#39;, &#39;invert&#39;, &#39;magenta&#39;, &#39;mapToGradient&#39;, &#39;matrix&#39;, &#39;matrix5&#39;, &#39;modifyOk&#39;, &#39;modulateOk&#39;, &#39;negative&#39;, &#39;notblue&#39;, &#39;notgreen&#39;, &#39;notred&#39;, &#39;offset&#39;, &#39;offsetChannels&#39;, &#39;pixelate&#39;, &#39;randomNoise&#39;, &#39;red&#39;, &#39;reducePalette&#39;, &#39;rotateHue&#39;, &#39;saturation&#39;, &#39;sepia&#39;, &#39;sharpen&#39;, &#39;swirl&#39;, &#39;threshold&#39;, &#39;tint&#39;, &#39;unsharp&#39;, &#39;userDefined&#39;, &#39;yellow&#39;</code>.</li>
+<li>The following Strings are valid methods: <code>&#39;alphaToChannels&#39;, &#39;areaAlpha&#39;, &#39;blend&#39;, &#39;blue&#39;, &#39;blur&#39;, &#39;brightness&#39;, &#39;channelLevels&#39;, &#39;channels&#39;, &#39;channelstep&#39;, &#39;channelsToAlpha&#39;, &#39;chroma&#39;, &#39;chromakey&#39;, &#39;clampChannels&#39;, &#39;compose&#39;, &#39;corrode&#39;, &#39;curveWeights&#39;, &#39;cyan&#39;, &#39;displace&#39;, &#39;edgeDetect&#39;,  &#39;emboss&#39;, &#39;flood&#39;, &#39;gaussianBlur&#39;, &#39;gray&#39;, &#39;grayscale&#39;, &#39;green&#39;, &#39;image&#39;, &#39;invert&#39;, &#39;magenta&#39;, &#39;mapToGradient&#39;, &#39;matrix&#39;, &#39;matrix5&#39;, &#39;modifyOk&#39;, &#39;modulateOk&#39;, &#39;negative&#39;, &#39;notblue&#39;, &#39;notgreen&#39;, &#39;notred&#39;, &#39;offset&#39;, &#39;offsetChannels&#39;, &#39;pixelate&#39;, &#39;randomNoise&#39;, &#39;red&#39;, &#39;reducePalette&#39;, &#39;rotateHue&#39;, &#39;saturation&#39;, &#39;sepia&#39;, &#39;sharpen&#39;, &#39;swirl&#39;, &#39;threshold&#39;, &#39;tint&#39;, &#39;unsharp&#39;, &#39;userDefined&#39;, &#39;yellow&#39;</code>.</li>
 </ul>
 
             </div>
@@ -854,6 +854,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">angle</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">areaAlphaLevels</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-variable constant_">BLANK</span>,
     <span class="hljs-attr">blend</span>: <span class="hljs-variable constant_">NORMAL</span>,
     <span class="hljs-attr">blue</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">blueInBlue</span>: <span class="hljs-number">0</span>,
@@ -868,11 +869,28 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">clamp</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">compose</span>: <span class="hljs-variable constant_">SOURCE_OVER</span>,
     <span class="hljs-attr">copyHeight</span>: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">copyWidth</span>: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">copyX</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">copyWidth</span>: <span class="hljs-number">1</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p><code>copyX</code> and <code>copyY</code> are deprecated in favour of <code>copyStartX</code> and <code>copyStartY</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">copyX</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">copyY</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">copyStartX</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">copyStartY</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">concurrent</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">curves</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">density</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">deriveMaskFromImage</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">easing</span>: <span class="hljs-variable constant_">LINEAR</span>,
     <span class="hljs-attr">excludeAlpha</span>: <span class="hljs-literal">true</span>,
@@ -884,6 +902,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">featherRed</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">featherGreen</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">featherBlue</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">fit</span>: <span class="hljs-variable constant_">NONE</span>,
     <span class="hljs-attr">gradient</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">green</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">greenInBlue</span>: <span class="hljs-number">0</span>,
@@ -899,6 +918,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">highColor</span>: <span class="hljs-variable constant_">WHITE</span>,
     <span class="hljs-attr">highGreen</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">highRed</span>: <span class="hljs-number">255</span>,
+    <span class="hljs-attr">identifier</span>: <span class="hljs-variable constant_">ZERO_STR</span>,
     <span class="hljs-attr">includeAlpha</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">includeBlue</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">true</span>,
@@ -948,6 +968,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">passesVertical</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">points</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">pointsData</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">positionX</span>: <span class="hljs-variable constant_">CENTER</span>,
+    <span class="hljs-attr">positionY</span>: <span class="hljs-variable constant_">CENTER</span>,
     <span class="hljs-attr">postProcessResults</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">premultiply</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">processHorizontal</span>: <span class="hljs-literal">true</span>,
@@ -966,7 +988,22 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">redInRed</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">reference</span>: <span class="hljs-variable constant_">BLACK</span>,
     <span class="hljs-attr">samples</span>: <span class="hljs-number">14</span>,
-    <span class="hljs-attr">scaleX</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p><code>scaleX</code> and <code>scaleY</code> are deprecated in favour of <code>strengthX</code> and <code>strengthY</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">scaleX</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">scaleY</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">seed</span>: <span class="hljs-variable constant_">DEFAULT_SEED</span>,
     <span class="hljs-attr">smoothing</span>: <span class="hljs-number">0</span>,
@@ -977,6 +1014,8 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">stepHorizontal</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">stepVertical</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">strength</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">strengthX</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">strengthY</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">staticSwirls</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">tileHeight</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">1</span>,
@@ -999,11 +1038,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-14">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p>No additional packet functionality required</p>
@@ -1013,11 +1052,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -1027,11 +1066,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>Overwrites ./mixin/base.js</p>
@@ -1046,11 +1085,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Remove filter from all entity filters attribute</p>
 
@@ -1065,11 +1104,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Remove filter from all group filters attribute</p>
 
@@ -1084,11 +1123,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Remove filter from all cell filters attribute</p>
 
@@ -1103,11 +1142,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Remove filter from the Scrawl-canvas library</p>
 
@@ -1121,11 +1160,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1204,16 +1243,29 @@ P.<span class="hljs-property">setDelta</span> = <span class="hljs-keyword">funct
 S.<span class="hljs-property">actions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">actions</span> = item;
+};
+
+<span class="hljs-keyword">const</span> getProcessImageActionIdentifier = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">action</span> === <span class="hljs-variable constant_">PROCESS_IMAGE</span>) {
+
+        <span class="hljs-keyword">const</span> asset = libraryAsset[item.<span class="hljs-property">asset</span>];
+
+        <span class="hljs-keyword">if</span> (!asset || !asset.<span class="hljs-property">name</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">ZERO_STR</span>;
+
+        <span class="hljs-keyword">return</span> <span class="hljs-string">`user-image_<span class="hljs-subst">${asset.name}</span>_<span class="hljs-subst">${item.copyStartX}</span>_<span class="hljs-subst">${item.copyStartY}</span>_<span class="hljs-subst">${item.copyWidth}</span>_<span class="hljs-subst">${item.copyHeight}</span>_<span class="hljs-subst">${item.scale}</span>_<span class="hljs-subst">${item.fit}</span>_<span class="hljs-subst">${item.backgroundColor}</span>_<span class="hljs-subst">${item.smoothing}</span>_<span class="hljs-subst">${item.positionX}</span>_<span class="hljs-subst">${item.positionY}</span>_<span class="hljs-subst">${item.offsetX}</span>_<span class="hljs-subst">${item.offsetY}</span>`</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">ZERO_STR</span>;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="compatibility-with-scrawl-canvas-legacy-filters-functionality">Compatibility with Scrawl-canvas legacy filters functionality</h4>
 <p>The Scrawl-canvas filters code was rewritten from scratch for version 8.4.0. The new functionality introduced the concept of “line processing” - <code>lineIn</code>, <code>lineMix</code>, <code>lineOut</code> (analagous to SVG <code>in</code>, <code>in2</code> and <code>result</code> attributes) - alongside the addition of more sophisticated image processing tools such as blend modes, compositing, more adaptable matrices, image loading, displacement mapping, etc.</p>
@@ -1244,11 +1296,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>setActionsArray</code> - an object containing a large number of functions which will convert legacy factory function invocations (using <code>method</code> strings) into modern Filter objects (using <code>actions</code> arrays):</p>
 
@@ -1259,11 +1311,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><strong>alphaToChannels</strong> (new in v8.4.0) - copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel’s value unchanged. Setting the appropriate <code>includeChannel</code> flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate <code>excludeChannel</code> flag will set that channel’s value to zero.</p>
 
@@ -1287,11 +1339,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><strong>alphaToLuminance</strong> - (new in v8.15.0) - sets the OKLAB luminance channel to the value of the alpha channel, then sets the alpha channel to opaque and the A and B channels to 0 (gray)</p>
 
@@ -1309,11 +1361,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><strong>areaAlpha</strong> (new in v8.4.0) - places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.</p>
 
@@ -1338,11 +1390,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><strong>blend</strong> (new in v8.4.0) - perform a blend operation on two images; available blend options include: <code>&#39;color-burn&#39;, &#39;color-dodge&#39;, &#39;darken&#39;, &#39;difference&#39;, &#39;exclusion&#39;, &#39;hard-light&#39;, &#39;lighten&#39;, &#39;lighter&#39;, &#39;multiply&#39;, &#39;overlay&#39;, &#39;screen&#39;, &#39;soft-light&#39;, &#39;color&#39;, &#39;hue&#39;, &#39;luminosity&#39;, and &#39;saturation&#39;</code> - see <a href="https://www.w3.org/TR/compositing-1/#blending">W3C Compositing and Blending recommendations</a></p>
 
@@ -1364,11 +1416,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><strong>blue</strong> - removes red and green channel color from the image</p>
 
@@ -1388,11 +1440,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><strong>blur</strong> - blurs the image
 A bespoke blur function. Creates visual artefacts with various settings that might be useful. Strongly advise to memoize the results from this filter as it is resource-intensive.</p>
@@ -1446,11 +1498,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><strong>brightness</strong> - adjusts the brightness of the image</p>
 
@@ -1473,11 +1525,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><strong>channelLevels</strong> (new in v8.4.0) - produces a posterize effect. Takes in four arguments - <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel’s channel value and determines which of the corresponding Array’s Number values it is closest to; it then sets the channel value to that Number value</p>
 <ul>
@@ -1502,11 +1554,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><strong>channels</strong> - adjust the value of each channel by a specified multiplier</p>
 
@@ -1528,11 +1580,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><strong>channelstep</strong> - restrict the number of color values that each channel can set by imposing regular bands on each channel</p>
 
@@ -1559,11 +1611,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><strong>channelsToAlpha</strong> (new in v8.4.0) - calculates an average value from each pixel’s included channels and applies that value to the alpha channel.</p>
 
@@ -1584,11 +1636,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><strong>chroma</strong> - using an array of <code>range</code> arrays, determine whether a pixel’s values lie entirely within a range’s values and, if true, sets that pixel’s alpha channel value to zero. Each range array comprises six Numbers representing <code>[minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue]</code> values.</p>
 <ul>
@@ -1639,11 +1691,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-36">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><strong>chromakey</strong> (new in v8.4.0) - determine the alpha channel value for each pixel depending on the closeness to that pixel’s color channel values to a reference color supplied in the <code>red</code>, <code>green</code> and <code>blue</code> arguments. The sensitivity of the effect can be manipulated using the <code>transparentAt</code> and <code>opaqueAt</code> values, both of which lie in the range 0-1.</p>
 <ul>
@@ -1685,11 +1737,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-37">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><strong>clampChannels</strong> (new in v8.4.0) - clamp each color channel to a range set by <code>lowColor</code> and <code>highColor</code> values</p>
 <ul>
@@ -1746,11 +1798,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-38">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><strong>compose</strong> (new in v8.4.0) - perform a composite operation on two images; available <code>compose</code> options include: <code>&#39;destination-only&#39;, &#39;destination-over&#39;, &#39;destination-in&#39;, &#39;destination-out&#39;, &#39;destination-atop&#39;, &#39;source-only&#39;, &#39;source-over&#39; (default), &#39;source-in&#39;, &#39;source-out&#39;, &#39;source-atop&#39;, &#39;clear&#39;, and &#39;xor&#39;</code> - see <a href="https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators">W3C Compositing and Blending recommendations</a></p>
 
@@ -1772,11 +1824,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-39">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><strong>corrode</strong> (new in v8.5.2) - performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values.</p>
 <ul>
@@ -1809,11 +1861,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-40">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><strong>curveWeights</strong> (new in v8.6.1) - curves filter (for image processing tonality). The weights array must by 1024 elements long, with each element defaulting to a value of 1.0</p>
 
@@ -1833,11 +1885,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-41">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><strong>cyan</strong> - removes red channel color from the image, and averages the remaining channel colors</p>
 
@@ -1858,48 +1910,34 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-42">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
-              </div>
-              <p><strong>deconvolute</strong> (new in v8.17.0) - OKLab L-only Richardson_Lucy deconvolution with optional edge mask</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">deconvolute</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
-        f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">DECONVOLUTE</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
-            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">strength</span>: (f.<span class="hljs-property">strength</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">strength</span> : <span class="hljs-number">0.85</span>,
-            <span class="hljs-attr">radius</span>: (f.<span class="hljs-property">radius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">radius</span> : <span class="hljs-number">1.25</span>,
-            <span class="hljs-attr">level</span>: (f.<span class="hljs-property">level</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">level</span> : <span class="hljs-number">0.015</span>,
-            <span class="hljs-attr">smoothing</span>: (f.<span class="hljs-property">smoothing</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">smoothing</span> : <span class="hljs-number">0.015</span>,
-            <span class="hljs-attr">clamp</span>: (f.<span class="hljs-property">clamp</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">clamp</span> : <span class="hljs-number">0.08</span>,
-            <span class="hljs-attr">passes</span>: (f.<span class="hljs-property">passes</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">passes</span> : <span class="hljs-number">8</span>,
-            <span class="hljs-attr">deriveMaskFromImage</span>: (f.<span class="hljs-property">deriveMaskFromImage</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">deriveMaskFromImage</span> : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">multiscale</span>: (f.<span class="hljs-property">multiscale</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">multiscale</span> : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">multiscaleFinalPasses</span>: (f.<span class="hljs-property">multiscaleFinalPasses</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">multiscaleFinalPasses</span> : <span class="hljs-number">2</span>,
-        }];
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><strong>displace</strong> (new in v8.4.0) - moves pixels around the image, based on the color channel values supplied by a displacement map image</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">displace</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">displace</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-45">&#x00a7;</a>
+              </div>
+              <p><code>scaleX</code> and <code>scaleY</code> are deprecated in favour of <code>strengthX</code> and <code>strengthY</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> strengthX = f.<span class="hljs-property">strengthX</span> || f.<span class="hljs-property">scaleX</span>,
+            strengthY = f.<span class="hljs-property">strengthY</span> || f.<span class="hljs-property">scaleY</span>;
+
         f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">DISPLACE</span>,
             <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
@@ -1910,8 +1948,8 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             <span class="hljs-attr">channelY</span>: (f.<span class="hljs-property">channelY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">channelY</span> : <span class="hljs-variable constant_">GREEN</span>,
             <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
             <span class="hljs-attr">offsetY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">scaleX</span>: (f.<span class="hljs-property">scaleX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">scaleX</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">scaleY</span>: (f.<span class="hljs-property">scaleY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">scaleY</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">strengthX</span>: (strengthX != <span class="hljs-literal">null</span>) ? strengthX : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">strengthY</span>: (strengthY != <span class="hljs-literal">null</span>) ? strengthY : <span class="hljs-number">1</span>,
             <span class="hljs-attr">transparentEdges</span>: (f.<span class="hljs-property">transparentEdges</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">transparentEdges</span> : <span class="hljs-literal">false</span>,
             <span class="hljs-attr">useInputAsMask</span>: (f.<span class="hljs-property">useInputAsMask</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useInputAsMask</span> : <span class="hljs-literal">false</span>,
         }];
@@ -1920,11 +1958,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-44">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><strong>edgeDetect</strong> (new in v8.4.0) - applies a preset 3x3 edge-detect matrix to the image</p>
 
@@ -1951,11 +1989,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-45">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><strong>emboss</strong> (new in v8.4.0) - outputs a black-gray-red emboss effect</p>
 
@@ -2018,11 +2056,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-46">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><strong>flood</strong> (new in v8.4.0) - creates a uniform sheet of the required color, which can then be used by other filter actions</p>
 <ul>
@@ -2071,11 +2109,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-47">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>gaussianBlur</strong> -  NOTE: Known issue / potential feature - when <code>includeAlpha === true</code> and <code>excludeTransparentPixels === false</code>, the rotated blur path uses clamped-edge sampling. This may produce visible “edge rays” or streaks at certain angles. These are harmless and can (possibly) be used as a stylized bloom/glare effect. orkarounds:</p>
 <ul>
@@ -2113,11 +2151,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-48">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><strong>glitch</strong> - semi-randomly shift rows left/right</p>
 
@@ -2151,11 +2189,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-49">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><strong>gray</strong> (new in v8.4.0) - averages the three color channel colors</p>
 
@@ -2176,11 +2214,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-50">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><strong>grayscale</strong> - produces a more realistic black-and-white photograph effect</p>
 
@@ -2198,11 +2236,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-51">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><strong>green</strong> - removes red and blue channel color from the image</p>
 
@@ -2222,29 +2260,53 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-52">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><strong>image</strong> (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">image</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">image</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-55">&#x00a7;</a>
+              </div>
+              <p><code>copyX</code> and <code>copyY</code> are deprecated in favour of <code>copyStartX</code> and <code>copyStartY</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> x = f.<span class="hljs-property">copyStartX</span> || f.<span class="hljs-property">copyX</span>,
+            y = f.<span class="hljs-property">copyStartY</span> || f.<span class="hljs-property">copyY</span>;
 
         <span class="hljs-keyword">const</span> o = {
             <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">PROCESS_IMAGE</span>,
             <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
             <span class="hljs-attr">asset</span>: (f.<span class="hljs-property">asset</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">asset</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
-            <span class="hljs-attr">copyWidth</span>: (f.<span class="hljs-property">copyWidth</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyWidth</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">copyHeight</span>: (f.<span class="hljs-property">copyHeight</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyHeight</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">copyX</span>: (f.<span class="hljs-property">copyX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyX</span> : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">copyY</span>: (f.<span class="hljs-property">copyY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyY</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">copyWidth</span>: (f.<span class="hljs-property">copyWidth</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyWidth</span> : <span class="hljs-title class_">PC100</span>,
+            <span class="hljs-attr">copyHeight</span>: (f.<span class="hljs-property">copyHeight</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyHeight</span> : <span class="hljs-title class_">PC100</span>,
+            <span class="hljs-attr">copyStartX</span>: (x != <span class="hljs-literal">null</span>) ? x : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">copyStartY</span>: (y != <span class="hljs-literal">null</span>) ? y : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">scale</span>: (f.<span class="hljs-property">scale</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">scale</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">fit</span>: (f.<span class="hljs-property">fit</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">fit</span> : <span class="hljs-variable constant_">NONE</span>,
+            <span class="hljs-attr">backgroundColor</span>: (f.<span class="hljs-property">backgroundColor</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">backgroundColor</span> : <span class="hljs-variable constant_">BLANK</span>,
+            <span class="hljs-attr">smoothing</span>: (f.<span class="hljs-property">smoothing</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">smoothing</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">positionX</span>: (f.<span class="hljs-property">positionX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">positionX</span> : <span class="hljs-variable constant_">CENTER</span>,
+            <span class="hljs-attr">positionY</span>: (f.<span class="hljs-property">positionY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">positionY</span> : <span class="hljs-variable constant_">CENTER</span>,
+            <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
         };
 
-        o.<span class="hljs-property">identifier</span> = <span class="hljs-string">`user-image-<span class="hljs-subst">${o.asset}</span>-<span class="hljs-subst">${generateUuid()}</span>`</span>;
+        o.<span class="hljs-property">identifier</span> = <span class="hljs-title function_">getProcessImageActionIdentifier</span>(o);
 
         f.<span class="hljs-property">actions</span> = [o];
     },</pre></div></div>
@@ -2252,11 +2314,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-53">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><strong>invert</strong> - inverts the colors in the image, producing an effect similar to a photograph negative</p>
 
@@ -2277,11 +2339,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-54">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><strong>luminanceToAlpha</strong> - (new in v8.15.0) - sets the OKLAB alpha channel to the value of the luminance channel, then sets the luminance, A and B channels to 0 (black).</p>
 
@@ -2299,11 +2361,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-55">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><strong>magenta</strong> - removes green channel color from the image, and averages the remaining channel colors</p>
 
@@ -2324,11 +2386,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-56">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><strong>mapToGradient</strong> - applies a gradient to a grayscaled input</p>
 
@@ -2351,11 +2413,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-57">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><strong>matrix</strong> - applies a 3x3 convolution matrix, kernel or mask operation to the image</p>
 
@@ -2384,11 +2446,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-58">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><strong>matrix5</strong> - applies a 5x5 convolution matrix, kernel or mask operation to the image</p>
 
@@ -2417,11 +2479,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-59">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><strong>modifyOk</strong> - (new in v8.14.0) - for each pixel: convert to OKLAB; add a value to each of the OKLAB channels; convert back to RGB</p>
 
@@ -2442,11 +2504,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-60">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><strong>modulateOk</strong> - (new in v8.14.0) - for each pixel: convert to OKLAB; multiply each of the OKLAB channels by a given value; convert back to RGB</p>
 
@@ -2467,11 +2529,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-61">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><strong>negative</strong> - (new in v8.14.0) - for each pixel: convert to OKLCH; rotate hue value 180deg; subtract luminance from 1; convert back to RGB</p>
 
@@ -2489,11 +2551,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-62">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><strong>newsprint</strong> - Attempts to simulate a black-white dither effect similar to newsprint</p>
 
@@ -2512,11 +2574,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-63">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><strong>notblue</strong> - zeroes the blue channel values (not the same effect as the yellow filter)</p>
 
@@ -2536,11 +2598,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-64">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><strong>notgreen</strong> - zeroes the green channel values (not the same effect as the magenta filter)</p>
 
@@ -2560,11 +2622,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-65">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><strong>notred</strong> - zeroes the red channel values (not the same effect as the cyan filter)</p>
 
@@ -2584,11 +2646,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-66">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><strong>offset</strong> (new in v8.4.0) - moves the image in its entirety by the given offset</p>
 
@@ -2615,11 +2677,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-67">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><strong>offsetChannels</strong> (new in v8.4.0) - moves each channel  by an offset set for that channel. Can create a crude stereoscopic output</p>
 
@@ -2646,11 +2708,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-68">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><strong>okCurveWeights</strong> (new in v8.17.0) - TODO: one sentence summary</p>
 
@@ -2684,11 +2746,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-69">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><strong>pixelate</strong> - averages the colors in a block to produce a series of obscuring tiles. This is a simplified version of the <code>tiles</code> filter</p>
 
@@ -2714,11 +2776,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-70">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><strong>randomNoise</strong> (new in v8.6.0) - creates a stippling effect across the image</p>
 
@@ -2750,11 +2812,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-71">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><strong>red</strong> - removes blue and green channel color from the image</p>
 
@@ -2774,11 +2836,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-72">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><strong>reducePalette</strong> - reduce the number of colors in its palette</p>
 
@@ -2802,11 +2864,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-73">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><code>useBluenoise</code> is deprecated</p>
 <ul>
@@ -2833,11 +2895,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-74">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><strong>rotateHue</strong> - (new in v8.14.0) - for each pixel: convert to OKLCH; rotate hue value by given angle; convert back to RGB</p>
 
@@ -2856,11 +2918,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-75">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><strong>saturation</strong> - alters the saturation level of the image</p>
 
@@ -2884,11 +2946,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-76">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><strong>sepia</strong> - recalculates the values of each color channel (a tint action) to create a more ‘antique’ version of the image</p>
 
@@ -2915,11 +2977,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-77">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p><strong>sharpen</strong> (new in v8.4.0) - applies a preset 3x3 sharpen matrix to the image</p>
 
@@ -2946,11 +3008,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-78">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p><strong>swirl</strong> - for each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.</p>
 <ul>
@@ -2985,11 +3047,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-79">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p><strong>threshold</strong> - creates a duotone effect - grayscales the input then, for each pixel, checks the color channel values against a “level” argument: pixels with channel values above the level value are assigned to the ‘high’ color; otherwise they are updated to the ‘low’ color.</p>
 <ul>
@@ -3066,17 +3128,20 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-80">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p><strong>tiles</strong> - averages the colors in a group of pixels to produce a series of obscuring tiles. This is a more complex version of the <code>pixelate</code> filter</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">tiles</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">randomCount</span> != <span class="hljs-literal">null</span>) f.<span class="hljs-property">density</span> = f.<span class="hljs-property">randomCount</span>;
+
         f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-variable constant_">TILES</span>,
             <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-variable constant_">ZERO_STR</span>,
@@ -3090,7 +3155,7 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
             <span class="hljs-attr">rectWidth</span>: (f.<span class="hljs-property">rectWidth</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">rectWidth</span> : <span class="hljs-number">10</span>,
             <span class="hljs-attr">rectHeight</span>: (f.<span class="hljs-property">rectHeight</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">rectHeight</span> : <span class="hljs-number">10</span>,
             <span class="hljs-attr">hexRadius</span>: (f.<span class="hljs-property">hexRadius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">hexRadius</span> : <span class="hljs-number">5</span>,
-            <span class="hljs-attr">randomCount</span>: (f.<span class="hljs-property">randomCount</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">randomCount</span> : <span class="hljs-number">10</span>,
+            <span class="hljs-attr">density</span>: (f.<span class="hljs-property">density</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">density</span> : <span class="hljs-title class_">PC0</span>,
             <span class="hljs-attr">pointsData</span>: (f.<span class="hljs-property">pointsData</span> != <span class="hljs-literal">null</span> &amp;&amp; <span class="hljs-title function_">_isArray</span>(f.<span class="hljs-property">pointsData</span>)) ? f.<span class="hljs-property">pointsData</span> : [],
 
             <span class="hljs-attr">angle</span>: (f.<span class="hljs-property">angle</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">angle</span> : <span class="hljs-number">0</span>,
@@ -3109,11 +3174,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-81">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <p><strong>tint</strong> - has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels.</p>
 
@@ -3196,11 +3261,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-82">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <p><strong>unsharp</strong> (new in v8.17.0) - OKLab L-only sharpen with Sobel edge mask</p>
 
@@ -3224,11 +3289,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-83">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <p><strong>userDefined</strong> - DEPRECATED - this filter method no longer has any effect, returning an unchanged image</p>
 
@@ -3246,11 +3311,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-84">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-84">&#x00a7;</a>
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
               <p><strong>yellow</strong> - removes blue channel color from the image, and averages the remaining channel colors</p>
 
@@ -3271,11 +3336,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-85">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-85">&#x00a7;</a>
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
               <p><strong>yellow</strong> - removes blue channel color from the image, and averages the remaining channel colors</p>
 
@@ -3312,11 +3377,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-86">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-86">&#x00a7;</a>
+                <a class="ss" href="#section-89">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>No additional prototype functions defined</p>
@@ -3326,11 +3391,11 @@ A bespoke blur function. Creates visual artefacts with various settings that mig
         </li>
         
         
-        <li id="section-87">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-87">&#x00a7;</a>
+                <a class="ss" href="#section-90">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 

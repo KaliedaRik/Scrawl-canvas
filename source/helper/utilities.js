@@ -521,6 +521,68 @@ export const easeEngines = {
             return (1 + res) / 2;
         }
     },
+
+    steppedEasing2: (t) => {
+
+        if (t < 0.5) return 1 / 4;
+        return 3 / 4;
+    },
+
+    steppedEasing3: (t) => {
+        if (t < 1 / 3) return 1 / 6;
+        if (t < 2 / 3) return 3 / 6;
+        return 5 / 6;
+    },
+
+    steppedEasing4: (t) => {
+
+        if (t < 1 / 4) return 1 / 8;
+        if (t < 2 / 4) return 3 / 8;
+        if (t < 3 / 4) return 5 / 8;
+        return 7 / 8;
+    },
+
+    steppedEasing5: (t) => {
+
+        if (t < 1 / 5) return 1 / 10;
+        if (t < 2 / 5) return 3 / 10;
+        if (t < 3 / 5) return 5 / 10;
+        if (t < 4 / 5) return 7 / 10;
+        return 9 / 10;
+    },
+
+    steppedEasing6: (t) => {
+
+        if (t < 1 / 6) return 1 / 12;
+        if (t < 2 / 6) return 3 / 12;
+        if (t < 3 / 6) return 5 / 12;
+        if (t < 4 / 6) return 7 / 12;
+        if (t < 5 / 6) return 9 / 12;
+        return 11 / 12;
+    },
+
+    steppedEasing7: (t) => {
+
+        if (t < 1 / 7) return 1 / 14;
+        if (t < 2 / 7) return 3 / 14;
+        if (t < 3 / 7) return 5 / 14;
+        if (t < 4 / 7) return 7 / 14;
+        if (t < 5 / 7) return 9 / 14;
+        if (t < 6 / 7) return 11 / 14;
+        return 13 / 14;
+    },
+
+    steppedEasing8: (t) => {
+
+        if (t < 1 / 8) return 1 / 16;
+        if (t < 2 / 8) return 3 / 16;
+        if (t < 3 / 8) return 5 / 16;
+        if (t < 4 / 8) return 7 / 16;
+        if (t < 5 / 8) return 9 / 16;
+        if (t < 6 / 8) return 11 / 16;
+        if (t < 7 / 8) return 13 / 16;
+        return 15 / 16;
+    },
 };
 
 

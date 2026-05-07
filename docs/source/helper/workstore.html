@@ -667,7 +667,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">checkForWorkstoreItem</span> = (<span class="hljs-params">identifier</span>) =&gt; !!workstore[identifier];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> <span class="hljs-title function_">checkForWorkstoreItem</span> = (<span class="hljs-params">identifier</span>) =&gt; {
+
+    <span class="hljs-keyword">if</span> (!workstore[identifier]) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+        workstoreLastAccessed[identifier] = <span class="hljs-title function_">_now</span>();
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+};</pre></div></div>
             
         </li>
         

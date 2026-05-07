@@ -1306,13 +1306,23 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
-              <p><code>colorSpace</code>, <code>returnColorAs</code> - Pass through a color space String to the Palette object</p>
+              <p><code>colorSpace</code>, <code>returnColorAs</code> - Pass through and retrieve a color space String to/from the Palette object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">colorSpace</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">colorSpace</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;colorSpace&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+    };
+    S.<span class="hljs-property">colorSpace</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">colorSpace</span>: item });
+    };
+    G.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;returnColorAs&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
     };
     S.<span class="hljs-property">returnColorAs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
@@ -1328,6 +1338,25 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
+              <p><code>getColorAtPosition</code> - a convenience function to retrieve the color at a specified position within the current gradient</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getColorAtPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">getColorAtPosition</span>(val);
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
               <p><code>precision</code> - Pass through a positive integer Number value between 0 and 50 to the Palette object. If value is <code>0</code> (default) no easing will be applied to the gradient; values above 0 apply the easing to the gradient; higher values will give a quicker, but less precise, mapping.</p>
 
             </div>
@@ -1340,11 +1369,11 @@
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><code>delta</code> - Gradient-type styles objects support the delta attribute, and can be delta-animated using its attributes</p>
 
@@ -1358,11 +1387,11 @@
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1371,11 +1400,11 @@
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><code>get</code> - Overwrites function defined in mixin/base.js - takes into account Palette object attributes</p>
 
@@ -1415,11 +1444,11 @@
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><code>set</code> - Overwrites function defined in mixin/base.js - takes into account Palette object attributes</p>
 
@@ -1475,11 +1504,11 @@
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>setDelta</code> - Overwrites function defined in mixin/base.js - takes into account Palette object attributes</p>
 
@@ -1535,11 +1564,11 @@
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>setCoordinateHelper</code> - internal helper function</p>
 
@@ -1564,11 +1593,11 @@
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>setDeltaCoordinateHelper</code> - internal helper function</p>
 
@@ -1595,11 +1624,11 @@
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>updateByDelta</code> - manually force the gradient-type styles object to update its attributes by the values supplied in its delta attribute</p>
 
@@ -1615,11 +1644,11 @@
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>stylesInit</code> - common functionality invoked by gradient-type factory constructors</p>
 
@@ -1652,11 +1681,11 @@
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>getData</code> - Every styles object (Gradient, RadialGradient, ConicGradient, Pattern, Color, Cell) needs to include a <strong>getData</strong> function. This is invoked by Cell objects during the Display cycle <code>compile</code> step, when it takes an entity State object and updates its &lt;canvas&gt; element’s context engine to bring it into alignment with requirements.</p>
 
@@ -1667,11 +1696,11 @@
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>Step 1: recalculate current start and end points</p>
 
@@ -1682,11 +1711,11 @@
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>Step 2: finalize the coordinates to use for creating the gradient in relation to the current entity’s position and requirements on the canvas</p>
 
@@ -1697,11 +1726,11 @@
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p>Step 3: create, populate and return gradient/pattern object</p>
 
@@ -1713,11 +1742,11 @@
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>cleanStyle</code> - internal function invoked as part of the gradient-type object’s <code>getData</code> function. The style has to be cleaned every time it is applied to a Cell’s engine because it can never know which Cell is invoking it, or for which entity it is to be used.</p>
 
@@ -1750,11 +1779,11 @@
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>cleanPosition</code> - internal function invoked as part of the gradient-type object’s <code>cleanStyle</code> function.</p>
 
@@ -1781,11 +1810,11 @@
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>finalizeCoordinates</code> - internal function invoked as part of the gradient-type object’s <code>getData</code> function.</p>
 
@@ -1815,11 +1844,11 @@
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><code>cleanRadius</code> - overwritten by the RadialGradient factory</p>
 
@@ -1830,11 +1859,11 @@
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><code>buildStyle</code> - Just in case something went wrong with loading other styles Factory modules, which must overwrite this function, we can return transparent color here</p>
 
@@ -1848,11 +1877,11 @@
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>addStopsToGradient</code> - internal function, called by the <code>buildStyle</code> function (which is overwritten by the various gradient factories)</p>
 
@@ -1867,11 +1896,11 @@
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <h4 id="gradients-and-color-stops">Gradients and color stops</h4>
 <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a> uses a rather convoluted way to add color data to a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient">CanvasGradient</a> interface object:</p>
@@ -1918,11 +1947,11 @@
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>updateColor</code> - add or update a gradient-type style’s Palette object with a color.</p>
 <ul>
@@ -1946,11 +1975,11 @@
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>removeColor</code> - remove a gradient-type style’s Palette object color from a specified index</p>
 <ul>

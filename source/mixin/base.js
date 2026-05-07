@@ -368,7 +368,7 @@ export default function (P = Ωempty) {
 // `importPacket` - Import and unpack a string representation of a factory object serialized using the __saveAsPacket__ function.
 // + Uses __fetch__, thus is an asynchronous process and returns a promise
 // + Once we have the packet, we can further action it using actionPacket()
-    P.importPacket = function (items) {
+    P.importPacket = function (items, packetSettings = Ωempty) {
 
         const self = this;
 
@@ -383,7 +383,7 @@ export default function (P = Ωempty) {
                 if (url[0] === HAS_PACKET_CHECK) {
 
                     // Looks like we already have a packet for processing
-                    report = self.actionPacket(url);
+                    report = self.actionPacket(url, packetSettings);
                     if (report && report.lib) resolve(report);
                     else reject(report);
                 }
@@ -404,7 +404,7 @@ export default function (P = Ωempty) {
                     })
                     .then(packet => {
 
-                        report = self.actionPacket(packet);
+                        report = self.actionPacket(packet, packetSettings);
                         if (report && report.lib) resolve(report);
                         else throw report;
                     })
@@ -439,7 +439,26 @@ export default function (P = Ωempty) {
 // 5. Returns the affected artefact/asset/style/tween/etc on success; false otherwise
 //
 // The function can be called directly on any Scrawl-canvas object that uses the base.js mixin - which means that all differing functionality for various types of object have to remain here, in base.js
-    P.actionPacket = function (packet) {
+//
+// **New in v8.18.0 - `packetSettings`**
+// - We need to start hardening the security issues surrounding the serialisation of functions, and their deserialisation using `new Function()`
+// - To this end, we're including some `packetSettings` extensions, set to `false` by default, which allows developers to restrict the creation of functions and DOM elements when processing packets that are not from a source they can fully trust (in other words, anything that they haven't coded themselves)
+// - `reviveFunctions` - allow deserialization to create functions using `new Function()` by setting this flag to `true`
+// - `allowDOMElementCreation` - allow deserialization to create new DOM elements (including buttons and links associated with a graphical entity) by setting this flag to `true`
+// - `logWarnings` - set to false to suppress console warnings when packet hardening skips or rejects function/DOM revival
+//
+// **Security note:** because deserialization can involve the `new Function()` invocation, developers will need to make sure that the website server for a web page using SC includes an appropriate [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP):
+// - When both `reviveFunctions` and `allowDOMElementCreation` are `false`, packet import operates in a "data-only" mode.
+// - Packet strings are data, but may include serialized function source. Enabling `reviveFunctions` converts that function data into executable code at runtime. **Only enable this for trusted packet sources**.
+// - Sites using a strict CSP should leave `reviveFunctions: false` unless they deliberately allow eval-like script execution (for example via `'unsafe-eval'` in `script-src`).
+    P.actionPacket = function (packet, items = Ωempty) {
+
+        const packetSettings = {
+            reviveFunctions: false,
+            allowDOMElementCreation: false,
+            logWarnings: true,
+            ...items,
+        };
 
         try {
 
@@ -455,6 +474,7 @@ export default function (P = Ωempty) {
                     }
                     catch (e) {
 
+// eslint-disable-next-line preserve-caught-error
                         throw new Error(`Failed to process packet due to JSON parsing error - ${e.message}`);
                     }
 
@@ -465,15 +485,28 @@ export default function (P = Ωempty) {
                             throw new Error(`Failed to process packet - Stacks, Canvases and visual assets are excluded from the packet system`);
                         }
 
+                        if (!packetSettings.allowDOMElementCreation) {
+
+                            if ((update.outerHTML || update.host || update.anchor || update.button) && packetSettings.logWarnings) {
+
+                                console.warn(`SC packet import skipped DOM element data for ${name}`);
+                            }
+
+                            delete update.outerHTML;
+                            delete update.host;
+                            delete update.anchor;
+                            delete update.button;
+                        }
+
                         let obj = library[lib][name];
 
                         if (obj) obj.set(update);
                         else {
 
                             // Stack-based artefacts need a DOM element that they can pass into the factory
-                            if (update.outerHTML && update.host) {
+                            if (packetSettings.allowDOMElementCreation && update.outerHTML && update.host) {
 
-                                const myParent = document.querySelector(`#${update.host}`);
+                                const myParent = document.getElementById(update.host);
 
                                 if (myParent) {
 
@@ -492,6 +525,7 @@ export default function (P = Ωempty) {
                                         update.domElement = myEl;
                                     }
                                 }
+                                else if (packetSettings.logWarnings) console.warn(`SC packet import rejected missing host element for ${name}`);
                             }
 
                             obj = new library.constructors[type](update);
@@ -500,16 +534,16 @@ export default function (P = Ωempty) {
                         }
 
                         // For the main object
-                        obj.packetFunctions.forEach(item => this.actionPacketFunctions(obj, item));
+                        obj.packetFunctions.forEach(item => this.actionPacketFunctions(obj, item, packetSettings));
 
                         // For artefact anchors - I know that anchors only have the one function to worry about, but doing it this way so I don't forget how to approach it eg for SC sub-objects that have more than one user-settable function (eg timeline actions)
-                        if (update.anchor && obj.anchor) {
+                        if (packetSettings.allowDOMElementCreation && update.anchor && obj.anchor) {
 
                             obj.anchor.packetFunctions.forEach(item => {
 
                                 // Anchor.setters.clickAction(arg) explicitly checks that the supplied arg is a function - if it isn't (like in packet cases) then the attribute doesn't get updated when we invoke _obj.set(update);_ earlier in this function.
                                 obj.anchor[item] = update.anchor[item];
-                                this.actionPacketFunctions(obj.anchor, item)
+                                this.actionPacketFunctions(obj.anchor, item, packetSettings)
 
                                 // Anchors are a bit of an exception case because they add a user-interactive and yet otherwise untracked DOM element to the page, which has to be updated in its own sweet, special way...
                                 obj.anchor.build();
@@ -517,12 +551,12 @@ export default function (P = Ωempty) {
                         }
 
                         // Same thing as anchors for artefact buttons
-                        if (update.button && obj.button) {
+                        if (packetSettings.allowDOMElementCreation && update.button && obj.button) {
 
                             obj.button.packetFunctions.forEach(item => {
 
                                 obj.button[item] = update.button[item];
-                                this.actionPacketFunctions(obj.button, item)
+                                this.actionPacketFunctions(obj.button, item, packetSettings)
 
                                 obj.button.build();
                             });
@@ -537,11 +571,15 @@ export default function (P = Ωempty) {
             }
             else throw new Error('Failed to process packet - not a JSON string');
         }
-        catch (e) { console.log(e); return e }
+        catch (e) {
+
+            if (packetSettings.logWarnings) console.warn(e.message);
+            return e;
+        }
     };
 
 // `actionPacketFunctions` - internal helper function - creates functions from Strings
-    P.actionPacketFunctions = function(obj, item) {
+    P.actionPacketFunctions = function(obj, item, packetSettings = Ωempty) {
 
         const fItem = obj[item];
 
@@ -550,10 +588,34 @@ export default function (P = Ωempty) {
             if (fItem === PACKET_DIVIDER) obj[item] = λnull;
             else {
 
+                if (!packetSettings.reviveFunctions) {
+
+                    obj[item] = λnull;
+
+                    if (packetSettings.logWarnings) {
+
+                        console.warn(`SC packet import skipped function revival for ${obj.name || obj.type}.${item}`);
+                    }
+                    return;
+                }
+
                 let args, func, f;
 
+                const parts = fItem.split(PACKET_DIVIDER);
+
+                if (parts.length !== 2) {
+
+                    obj[item] = λnull;
+
+                    if (packetSettings.logWarnings) {
+
+                        console.warn(`SC packet import rejected malformed function packet for ${obj.name || obj.type}.${item}`);
+                    }
+                    return;
+                }
+
 /* eslint-disable-next-line */
-                [args, func] = fItem.split(PACKET_DIVIDER);
+                [args, func] = parts;
 
                 args = args.split(ARG_SPLITTER);
                 args = args.map(a => a.trim());
@@ -578,6 +640,10 @@ export default function (P = Ωempty) {
 //     startY: 60,
 // });
 // ```
+//
+// **Security note:** clone functionality is built on top of packet functionality, which uses `new Function()` invocation
+// - Developers will need to make sure that the website server for a web page using SC includes an appropriate [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP).
+// - When operating under a strict CSP, clone functionality may not be available to client-side SC code.
 
 // `clone`
     P.clone = function (items = Ωempty) {
@@ -621,7 +687,11 @@ export default function (P = Ωempty) {
 
         this.name = myName;
 
-        let clone = this.actionPacket(myPacket);
+        let clone = this.actionPacket(myPacket, {
+            reviveFunctions: true,
+            allowDOMElementCreation: true,
+            logWarnings: true,
+        });
 
         this.packetFunctions.forEach(func => {
 

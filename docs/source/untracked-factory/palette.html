@@ -652,12 +652,27 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Local constants</p>
+              <p>Local constants and hlper functions</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">PALETTE</span> = <span class="hljs-string">&#x27;palette&#x27;</span>,
-    <span class="hljs-variable constant_">EASE_ENGINE_KEYS</span> = <span class="hljs-title function_">_keys</span>(easeEngines);</pre></div></div>
+    <span class="hljs-variable constant_">EASE_ENGINE_KEYS</span> = <span class="hljs-title function_">_keys</span>(easeEngines),
+    <span class="hljs-variable constant_">STEPPED_EASING</span> = <span class="hljs-regexp">/^steppedEasing(\d+)$/</span>;
+
+<span class="hljs-keyword">const</span> getStepCount = <span class="hljs-keyword">function</span> (<span class="hljs-params">easing</span>) {
+
+    <span class="hljs-keyword">if</span> (easing &amp;&amp; easing.<span class="hljs-property">steps</span>) <span class="hljs-keyword">return</span> easing.<span class="hljs-property">steps</span>;
+    <span class="hljs-keyword">if</span> (easing &amp;&amp; easing.<span class="hljs-property">stepCount</span>) <span class="hljs-keyword">return</span> easing.<span class="hljs-property">stepCount</span>;
+
+    <span class="hljs-keyword">if</span> (easing &amp;&amp; easing.<span class="hljs-property">substring</span>) {
+
+        <span class="hljs-keyword">const</span> match = easing.<span class="hljs-title function_">match</span>(<span class="hljs-variable constant_">STEPPED_EASING</span>);
+        <span class="hljs-keyword">if</span> (match) <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseInt</span>(match[<span class="hljs-number">1</span>], <span class="hljs-number">10</span>);
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+};</pre></div></div>
             
         </li>
         
@@ -1430,7 +1445,22 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
     <span class="hljs-keyword">const</span> colorSpace = <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>.<span class="hljs-property">colorSpace</span>,
         workstoreName = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-data`</span>;
 
-    <span class="hljs-keyword">const</span> { stops } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">const</span> { stops } = <span class="hljs-variable language_">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
+              <p>Option 1 start == end, cycle irrelevant. Returns solid color at start of gradient</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (start === end) <span class="hljs-keyword">return</span> stops[start] || <span class="hljs-variable constant_">BLANK</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPaletteData</span> || !<span class="hljs-title function_">checkForWorkstoreItem</span>(workstoreName)) {
 
@@ -1443,71 +1473,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
 
         <span class="hljs-keyword">const</span> keys = <span class="hljs-title function_">_keys</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>).<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-built_in">parseInt</span>(n, <span class="hljs-number">10</span>)).<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a - b),
             engine = <span class="hljs-title function_">isa_fn</span>(easing) ? easing : easeEngines[easing],
+            stepCount = <span class="hljs-title function_">getStepCount</span>(easing),
             precisionTest = (!precision || (easing === <span class="hljs-variable constant_">LINEAR</span> &amp;&amp; colorSpace === <span class="hljs-variable constant_">RGB</span>)) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>,
             data = [];
 
         <span class="hljs-keyword">let</span> spread, offset, i, iz, item, n;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
-              </div>
-              <p>Option 2: start &lt; end, cycle irrelevant</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (start &lt; end) {
-
-            data.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>, stops[start]);
-
-            spread = end - start;
-
-            <span class="hljs-keyword">if</span> (precisionTest) {
-
-                <span class="hljs-keyword">for</span> (i = start + <span class="hljs-number">1</span>; i &lt; end; i += precision) {
-
-                    offset = (i - start) / spread;
-
-                    <span class="hljs-keyword">if</span> (cycle) {
-
-                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">1</span>) offset -= <span class="hljs-number">1</span>;
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (offset &lt; <span class="hljs-number">0</span>) offset += <span class="hljs-number">1</span>;
-                    }
-
-                    offset = <span class="hljs-title function_">engine</span>(offset);
-
-                    <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) data.<span class="hljs-title function_">push</span>(offset, stops[i]);
-                }
-            }
-            <span class="hljs-keyword">else</span> {
-
-                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-
-                    item = keys[i];
-
-                    <span class="hljs-keyword">if</span> (item &gt; start &amp;&amp; item &lt; end) {
-
-                        offset = (item - start) / spread;
-
-                        <span class="hljs-keyword">if</span> (cycle) {
-
-                            <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">1</span>) offset -= <span class="hljs-number">1</span>;
-                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (offset &lt; <span class="hljs-number">0</span>) offset += <span class="hljs-number">1</span>;
-                        }
-
-                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) data.<span class="hljs-title function_">push</span>(offset, stops[item]);
-                    }
-                }
-            }
-            data.<span class="hljs-title function_">push</span>(<span class="hljs-number">1</span>, stops[end]);
-        }
-
-        <span class="hljs-keyword">else</span> {</pre></div></div>
             
         </li>
         
@@ -1518,50 +1488,71 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
-              <p>Option 3: start &gt; end, cycle = true</p>
+              <p>Special handling for stepped easings</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (cycle) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (stepCount &gt; <span class="hljs-number">1</span>) {
 
-                data.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>, stops[start]);
+            <span class="hljs-keyword">let</span> getStopIndex;
+
+            <span class="hljs-keyword">if</span> (start &lt; end) {
+
+                spread = end - start;
+
+                getStopIndex = <span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) {
+
+                    <span class="hljs-keyword">return</span> <span class="hljs-title function_">_floor</span>(start + (<span class="hljs-title function_">engine</span>(t) * spread) + <span class="hljs-number">0.5</span>);
+                };
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cycle) {
 
                 n = <span class="hljs-number">999</span> - start;
                 spread = n + end;
 
-                <span class="hljs-keyword">if</span> (precisionTest) {
+                getStopIndex = <span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) {
 
-                    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; spread; i += precision) {
+                    <span class="hljs-keyword">let</span> item = <span class="hljs-title function_">_floor</span>(start + (<span class="hljs-title function_">engine</span>(t) * spread) + <span class="hljs-number">0.5</span>);
 
-                        item = i + start;
+                    <span class="hljs-keyword">while</span> (item &gt; <span class="hljs-number">999</span>) item -= <span class="hljs-number">1000</span>;
+                    <span class="hljs-keyword">while</span> (item &lt; <span class="hljs-number">0</span>) item += <span class="hljs-number">1000</span>;
 
-                        <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">999</span>) item -= <span class="hljs-number">1000</span>;
+                    <span class="hljs-keyword">return</span> item;
+                };
+            }
+            <span class="hljs-keyword">else</span> {
 
-                        offset = <span class="hljs-title function_">engine</span>(i / spread);
+                spread = start - end;
 
-                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) data.<span class="hljs-title function_">push</span>(offset, stops[item]);
-                    }
+                getStopIndex = <span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) {
+
+                    <span class="hljs-keyword">return</span> <span class="hljs-title function_">_floor</span>(start - (<span class="hljs-title function_">engine</span>(t) * spread) + <span class="hljs-number">0.5</span>);
+                };
+            }
+
+            <span class="hljs-keyword">let</span> t, nextT, item, color;
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; stepCount; i++) {
+
+                t = i / stepCount;
+                nextT = (i + <span class="hljs-number">1</span>) / stepCount;
+
+                item = <span class="hljs-title function_">getStopIndex</span>(t + ((nextT - t) / <span class="hljs-number">2</span>));
+
+                <span class="hljs-keyword">if</span> (!cycle) {
+
+                    <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) item = <span class="hljs-number">0</span>;
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">999</span>) item = <span class="hljs-number">999</span>;
                 }
-                <span class="hljs-keyword">else</span> {
 
-                    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+                color = stops[item] || <span class="hljs-variable constant_">BLANK</span>;
 
-                        item = keys[i];
+                data.<span class="hljs-title function_">push</span>(t, color, nextT, color);
+            }
 
-                        <span class="hljs-keyword">if</span> (item === <span class="hljs-number">999</span>) offset = (item - start - <span class="hljs-number">0.01</span>) / spread;
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &gt; start) offset = (item - start) / spread;
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item === <span class="hljs-number">0</span>) offset = (item + n + <span class="hljs-number">0.01</span>) / spread;
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &lt; end) offset = (item + n) / spread;
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">continue</span>;
-
-                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">1</span>) offset -= <span class="hljs-number">1</span>;
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (offset &lt; <span class="hljs-number">0</span>) offset += <span class="hljs-number">1</span>;
-
-                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) data.<span class="hljs-title function_">push</span>(offset, stops[item]);
-                    }
-                }
-                data.<span class="hljs-title function_">push</span>(<span class="hljs-number">1</span>, stops[end]);
-            }</pre></div></div>
+            <span class="hljs-title function_">setWorkstoreItem</span>(workstoreName, data);
+        }
+        <span class="hljs-keyword">else</span> {</pre></div></div>
             
         </li>
         
@@ -1572,26 +1563,31 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
-              <p>Option 4: start &gt; end, cycle = false</p>
+              <p>Option 2: start &lt; end, cycle irrelevant</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> {
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (start &lt; end) {
 
                 data.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>, stops[start]);
 
-                spread = start - end;
+                spread = end - start;
 
                 <span class="hljs-keyword">if</span> (precisionTest) {
 
-                    <span class="hljs-keyword">for</span> (i = end + <span class="hljs-number">1</span>; i &lt; start; i += precision) {
+                    <span class="hljs-keyword">for</span> (i = start + <span class="hljs-number">1</span>; i &lt; end; i += precision) {
 
-                        <span class="hljs-keyword">if</span> (i &lt; start &amp;&amp; i &gt; end) {
+                        offset = (i - start) / spread;
 
-                            offset = <span class="hljs-title function_">engine</span>(<span class="hljs-number">1</span> - ((i - end) / spread));
+                        <span class="hljs-keyword">if</span> (cycle) {
 
-                            <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) data.<span class="hljs-title function_">push</span>(offset, stops[i]);
+                            <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">1</span>) offset -= <span class="hljs-number">1</span>;
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (offset &lt; <span class="hljs-number">0</span>) offset += <span class="hljs-number">1</span>;
                         }
+
+                        offset = <span class="hljs-title function_">engine</span>(offset);
+
+                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) data.<span class="hljs-title function_">push</span>(offset, stops[i]);
                     }
                 }
                 <span class="hljs-keyword">else</span> {
@@ -1600,9 +1596,15 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
 
                         item = keys[i];
 
-                        <span class="hljs-keyword">if</span> (item &lt; start &amp;&amp; item &gt; end) {
+                        <span class="hljs-keyword">if</span> (item &gt; start &amp;&amp; item &lt; end) {
 
-                            offset = <span class="hljs-number">1</span> - ((item - end) / spread);
+                            offset = (item - start) / spread;
+
+                            <span class="hljs-keyword">if</span> (cycle) {
+
+                                <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">1</span>) offset -= <span class="hljs-number">1</span>;
+                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (offset &lt; <span class="hljs-number">0</span>) offset += <span class="hljs-number">1</span>;
+                            }
 
                             <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) data.<span class="hljs-title function_">push</span>(offset, stops[item]);
                         }
@@ -1610,9 +1612,8 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
                 }
                 data.<span class="hljs-title function_">push</span>(<span class="hljs-number">1</span>, stops[end]);
             }
-        }
-        <span class="hljs-title function_">setWorkstoreItem</span>(workstoreName, data);
-    }</pre></div></div>
+
+            <span class="hljs-keyword">else</span> {</pre></div></div>
             
         </li>
         
@@ -1623,11 +1624,50 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
-              <p>Option 1 start == end, cycle irrelevant. Returns solid color at start of gradient</p>
+              <p>Option 3: start &gt; end, cycle = true</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (start === end) <span class="hljs-keyword">return</span> stops[start] || <span class="hljs-variable constant_">BLANK</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (cycle) {
+
+                    data.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>, stops[start]);
+
+                    n = <span class="hljs-number">999</span> - start;
+                    spread = n + end;
+
+                    <span class="hljs-keyword">if</span> (precisionTest) {
+
+                        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; spread; i += precision) {
+
+                            item = i + start;
+
+                            <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">999</span>) item -= <span class="hljs-number">1000</span>;
+
+                            offset = <span class="hljs-title function_">engine</span>(i / spread);
+
+                            <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) data.<span class="hljs-title function_">push</span>(offset, stops[item]);
+                        }
+                    }
+                    <span class="hljs-keyword">else</span> {
+
+                        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+                            item = keys[i];
+
+                            <span class="hljs-keyword">if</span> (item === <span class="hljs-number">999</span>) offset = (item - start - <span class="hljs-number">0.01</span>) / spread;
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &gt; start) offset = (item - start) / spread;
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item === <span class="hljs-number">0</span>) offset = (item + n + <span class="hljs-number">0.01</span>) / spread;
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &lt; end) offset = (item + n) / spread;
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">continue</span>;
+
+                            <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">1</span>) offset -= <span class="hljs-number">1</span>;
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (offset &lt; <span class="hljs-number">0</span>) offset += <span class="hljs-number">1</span>;
+
+                            <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) data.<span class="hljs-title function_">push</span>(offset, stops[item]);
+                        }
+                    }
+                    data.<span class="hljs-title function_">push</span>(<span class="hljs-number">1</span>, stops[end]);
+                }</pre></div></div>
             
         </li>
         
@@ -1637,6 +1677,58 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
               
               <div class="sswrap ">
                 <a class="ss" href="#section-38">&#x00a7;</a>
+              </div>
+              <p>Option 4: start &gt; end, cycle = false</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> {
+
+                    data.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>, stops[start]);
+
+                    spread = start - end;
+
+                    <span class="hljs-keyword">if</span> (precisionTest) {
+
+                        <span class="hljs-keyword">for</span> (i = end + <span class="hljs-number">1</span>; i &lt; start; i += precision) {
+
+                            <span class="hljs-keyword">if</span> (i &lt; start &amp;&amp; i &gt; end) {
+
+                                offset = <span class="hljs-title function_">engine</span>(<span class="hljs-number">1</span> - ((i - end) / spread));
+
+                                <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) data.<span class="hljs-title function_">push</span>(offset, stops[i]);
+                            }
+                        }
+                    }
+                    <span class="hljs-keyword">else</span> {
+
+                        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+                            item = keys[i];
+
+                            <span class="hljs-keyword">if</span> (item &lt; start &amp;&amp; item &gt; end) {
+
+                                offset = <span class="hljs-number">1</span> - ((item - end) / spread);
+
+                                <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) data.<span class="hljs-title function_">push</span>(offset, stops[item]);
+                            }
+                        }
+                    }
+                    data.<span class="hljs-title function_">push</span>(<span class="hljs-number">1</span>, stops[end]);
+                }
+            }
+        }
+        <span class="hljs-title function_">setWorkstoreItem</span>(workstoreName, data);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>check to see if data has already been memoized and is suitable for return</p>
 
@@ -1648,11 +1740,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>addStopsToGradient</code> - complete the construction of the Canvas API CanvasGradient object</p>
 
@@ -1677,11 +1769,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>updateData</code> - used by code elsewhere to tell the palette to update its stop data</p>
 
@@ -1695,11 +1787,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
