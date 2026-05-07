@@ -157,7 +157,7 @@ const controls = function () {
 /** @ts-expect-error */
                 b2.disabled = 'disabled';
 
-                if (stackCanvas) stackCanvas.kill();
+                if (stackCanvas) stackCanvas.kill(true);
 
                 break;
 
@@ -170,7 +170,7 @@ const controls = function () {
 /** @ts-expect-error */
                 b3.disabled = 'disabled';
 
-                mystack.kill();
+                mystack.kill(true);
                 mystack = false;
 
                 break;

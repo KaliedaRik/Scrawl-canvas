@@ -21,21 +21,22 @@ scrawl.importDomImage('.flowers');
 
 
 // Create the filter
-scrawl.makeFilter({
+const noiseFilter = scrawl.makeFilter({
 
     name: name('noise'),
     method: 'image',
 
     asset: 'perlin',
 
-    width: 500,
-    height: 500,
-
     copyWidth: '100%',
     copyHeight: '100%',
 
+    backgroundColor: 'rgb(127 127 127 / 1)',
+
     lineOut: 'map',
 });
+
+console.log(noiseFilter.saveAsPacket());
 
 const myFilter = scrawl.makeFilter({
 
@@ -47,9 +48,11 @@ const myFilter = scrawl.makeFilter({
     offsetX: 0,
     offsetY: 0,
 
-    scaleX: 20,
-    scaleY: 20,
+    strengthX: 20,
+    strengthY: 20,
 });
+
+console.log(myFilter.saveAsPacket());
 
 
 // Create the target entity
@@ -71,9 +74,16 @@ const piccy = scrawl.makePicture({
 const report = reportSpeed('#reportmessage', function () {
 
     return `
-    Scale - x: ${dom.scale_x.value}, y: ${dom.scale_y.value}
+Displace
+    Strength - x: ${dom.strength_x.value}, y: ${dom.strength_y.value}
     Offset - x: ${dom.offset_x.value}, y: ${dom.offset_y.value}
-    Opacity: ${dom.opacity.value}`;
+    Opacity: ${dom.opacity.value}
+
+Asset
+    Copy start - x: ${dom.copyStartX.value}%, y: ${dom.copyStartY.value}%
+    Copy dimensions - width: ${dom.copyWidth.value}%, height: ${dom.copyHeight.value}%
+    Paste offset - x: ${dom.image_offset_x.value}%, y: ${dom.image_offset_y.value}%
+    Scale: ${dom.scale.value}`;
 });
 
 
@@ -91,11 +101,29 @@ scrawl.makeRender({
 const dom = scrawl.initializeDomInputs([
     ['input', 'offset_x', '0'],
     ['input', 'offset_y', '0'],
-    ['input', 'scale_x', '20'],
-    ['input', 'scale_y', '20'],
+    ['input', 'strength_x', '20'],
+    ['input', 'strength_y', '20'],
     ['input', 'opacity', '1'],
     ['select', 'transparent_edges', 0],
     ['select', 'useInputAsMask', 0],
+    ['select', 'lineMix', 0],
+    ['select', 'channelX', 0],
+    ['select', 'channelY', 1],
+
+    ['input', 'copyStartX', '0'],
+    ['input', 'copyStartY', '0'],
+    ['input', 'copyWidth', '100'],
+    ['input', 'copyHeight', '100'],
+    ['input', 'scale', '1'],
+
+    ['select', 'asset', 0],
+    ['input', 'image_offset_x', '0'],
+    ['input', 'image_offset_y', '0'],
+    ['select', 'fit', 0],
+    ['select', 'smoothing', 0],
+    ['select', 'positionX', 1],
+    ['select', 'positionY', 1],
+    ['select', 'lineOut', 0],
 ]);
 
 
@@ -112,13 +140,44 @@ scrawl.makeUpdater({
 
     updates: {
 
+        channelX: ['channelX', 'raw'],
+        channelY: ['channelY', 'raw'],
         offset_x: ['offsetX', 'round'],
         offset_y: ['offsetY', 'round'],
-        scale_x: ['scaleX', 'float'],
-        scale_y: ['scaleY', 'float'],
+        strength_x: ['strengthX', 'float'],
+        strength_y: ['strengthY', 'float'],
         transparent_edges: ['transparentEdges', 'boolean'],
         useInputAsMask: ['useInputAsMask', 'boolean'],
+        lineMix: ['lineMix', 'raw'],
         opacity: ['opacity', 'float'],
+    },
+});
+
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.assetControlItem',
+
+    target: noiseFilter,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        asset: ['asset', 'raw'],
+        lineOut: ['lineOut', 'raw'],
+        copyStartX: ['copyStartX', '%'],
+        copyStartY: ['copyStartY', '%'],
+        copyWidth: ['copyWidth', '%'],
+        copyHeight: ['copyHeight', '%'],
+        scale: ['scale', 'float'],
+        fit: ['fit', 'raw'],
+        smoothing: ['smoothing', 'boolean'],
+        image_offset_x: ['offsetX', '%'],
+        image_offset_y: ['offsetY', '%'],
+        positionX: ['positionX', 'raw'],
+        positionY: ['positionY', 'raw'],
     },
 });
 

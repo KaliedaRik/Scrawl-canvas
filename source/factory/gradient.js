@@ -43,7 +43,7 @@ stylesMix(P);
 // No additional attributes are defined in this file.
 
 // #### Packet management
-P.packetObjects = pushUnique(P.packetObjects, ['palette']);
+P.packetExclusions = pushUnique(P.packetExclusions, ['palette']);
 
 
 // #### Clone management

@@ -364,14 +364,31 @@ export default function (P = Ωempty) {
     };
     S.easingFunction = S.easing;
 
-// `colorSpace`, `returnColorAs` - Pass through a color space String to the Palette object
+// `colorSpace`, `returnColorAs` - Pass through and retrieve a color space String to/from the Palette object
+    G.colorSpace = function () {
+
+        if (this.palette) return this.palette.get('colorSpace');
+        return null;
+    };
     S.colorSpace = function (item) {
 
         if (this.palette) this.palette.set({ colorSpace: item });
     };
+    G.returnColorAs = function () {
+
+        if (this.palette) return this.palette.get('returnColorAs');
+        return null;
+    };
     S.returnColorAs = function (item) {
 
         if (this.palette) this.palette.set({ returnColorAs: item });
+    };
+
+// `getColorAtPosition` - a convenience function to retrieve the color at a specified position within the current gradient
+    P.getColorAtPosition = function (val) {
+
+        if (this.palette) return this.palette.getColorAtPosition(val);
+        return null;
     };
 
 // `precision` - Pass through a positive integer Number value between 0 and 50 to the Palette object. If value is `0` (default) no easing will be applied to the gradient; values above 0 apply the easing to the gradient; higher values will give a quicker, but less precise, mapping.

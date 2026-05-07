@@ -14,7 +14,6 @@
     .canvas-progressive-enhancement-wrapper {
       display: flex;
       justify-content: center;
-      margin: 1em 0;
 
       & canvas {
         box-shadow: 0px 0px 0px 1px black;
@@ -23,26 +22,71 @@
         & .placeholder {
 
           text-align: center;
-          width: 400px;
           max-width: 100%;
 
           & img {
             width: 100%;
           }
         }
+      }
+
+      & #output-canvas {
+
+        & .placeholder {
+          width: 400px;
+        }
+
         & .assets {
           width: 0;
           height: 0;
           overflow: hidden;
         }
       }
+
+      & #channel-weights-canvas {
+        margin-bottom: 1em;
+
+        & .placeholder {
+          width: 360px;
+        }
+      }
     }
 
     .controls {
-      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 2fr;
+
+      @media (min-width: 600px) {
+        grid-template-columns: 1fr 2fr 1fr 2fr;
+      }
 
       @media (scripting: none) {
         display: none;
+      }
+    }
+
+    .grid {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+      grid-column-gap: 2px;
+
+      grid-template-rows: auto;
+      grid-row-gap: 2px;
+
+      font-size:  12px;
+
+      margin: 1em;
+    }
+
+    .channel-buttons {
+      text-align: center;
+
+      & button {
+        background-color: lightblue;
+      }
+
+      & button.selected {
+        background-color: yellow;
       }
     }
   </style>
@@ -51,176 +95,89 @@
 <body>
   <div id="test-navigation">
     <a href="filters-040.html">&larr; Previous</a>
-    <a href="filters-042.html">Next &rarr;</a>
+    <a href="filters-101.html">Next &rarr;</a>
   </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 041</h1>
-  <h2>Parameters for: Zoom blur filter</h2>
+  <h2>Parameters for: okCurveWeights filter</h2>
   <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls">
+
+    <div class="yellow label">Opacity</div>
+    <div class="yellow"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+
+  </div>
+
+  <div class="grid">
     
-    <div class="orange label">Starts ('n%')</div>
-    <div class="orange">X: <input class="controlItem" id="start_xPercent" type="range" value="50" min="-20" max="120" step="1" /></div>
-    <div class="orange">Y: <input class="controlItem" id="start_yPercent" type="range" value="50" min="-20" max="120" step="1" /></div>
-
-    <div class="orange label">Starts (n)</div>
-    <div class="orange">X: <input class="controlItem" id="start_xAbsolute" type="range" value="200" min="-20" max="420" step="1" /></div>
-    <div class="orange">Y: <input class="controlItem" id="start_yAbsolute" type="range" value="200" min="-20" max="420" step="1" /></div>
-
-    <div class="orange label">Inner radius</div>
-    <div class="orange">'n%': <input class="controlItem" id="innerRadius_percent" type="range" value="0" min="0" max="60" step="1" /></div>
-    <div class="orange">n: <input class="controlItem" id="innerRadius_absolute" type="range" value="0" min="0" max="240" step="1" /></div>
-
-    <div class="orange label">Outer radius</div>
-    <div class="orange">'n%': <input class="controlItem" id="outerRadius_percent" type="range" value="30" min="0" max="60" step="1" /></div>
-    <div class="orange">n: <input class="controlItem" id="outerRadius_absolute" type="range" value="120" min="0" max="240" step="1" /></div>
-
-    <div class="pink label">Include red</div>
-    <div class="pink">
-      <select class="controlItem filter-control" id="includeRed">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-    <div class="pink">&nbsp;</div>
-
-    <div class="green label">Include green</div>
-    <div class="green">
-      <select class="controlItem filter-control" id="includeGreen">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-    <div class="green">&nbsp;</div>
-
-    <div class="blue label">Include blue</div>
-    <div class="blue">
-      <select class="controlItem filter-control" id="includeBlue">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-    <div class="blue">&nbsp;</div>
-
-    <div class="bluegreen label">Include alpha</div>
-    <div class="bluegreen">
-      <select class="controlItem filter-control" id="includeAlpha">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-    <div class="bluegreen">&nbsp;</div>
-
-    <div class="yellow label">Exclude transparent pixels</div>
-    <div class="yellow">
-      <select class="controlItem filter-control" id="excludeTransparentPixels">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Multiscale</div>
-    <div class="yellow">
-      <select class="controlItem filter-control" id="multiscale">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Premultiply</div>
-    <div class="yellow">
-      <select class="controlItem filter-control" id="premultiply">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Easing</div>
-    <div class="yellow">
-      <select class="controlItem" id="easing">
-        <option value="linear">linear</option>
-        <option value="easeOut">easeOut</option>
-        <option value="easeOutIn">easeOutIn</option>
-        <option value="easeInOut">easeInOut</option>
-        <option value="easeIn">easeIn</option>
-        <option value="user-steps">steps (user-defined)</option>
-        <option value="user-zigzag">zigzag (user-defined)</option>
-      </select>
-    </div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Strength</div>
-    <div class="yellow"><input class="controlItem" id="strength" type="range" value="0.35" min="0" max="1" step="0.01" /></div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Samples</div>
-    <div class="yellow"><input class="controlItem" id="samples" type="range" value="14" min="0" max="32" step="1" /></div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Variation</div>
-    <div class="yellow"><input class="controlItem" id="variation" type="range" value="0" min="0" max="1" step="0.01" /></div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="yellow label">Angle</div>
-    <div class="yellow"><input class="controlItem" id="angle" type="range" value="0" min="-15" max="15" step="0.1" /></div>
-    <div class="yellow">&nbsp;</div>
-
-    <div class="lavender label">Opacity</div>
-    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
-    <div class="lavender">&nbsp;</div>
-
-    <div class="lavender label">Memoize filter</div>
-    <div class="lavender">
-      <select class="controlItem" id="memoizeFilterOutput">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-    <div class="lavender">&nbsp;</div>
-
-  </div>
-
-  <div class="canvas-progressive-enhancement-wrapper">
-    <canvas 
-      id="mycanvas" 
-      width="400" 
-      height="400"
-      data-scrawl-canvas
-    >
-      <div class="placeholder">
-        <img
-          src="thumbs/filters-041.webp"
-          alt="Screen capture image of the demo canvas"
-        />    
-      </div>
+    <div class="canvas-progressive-enhancement-wrapper">
+      <canvas 
+        id="output-canvas" 
+        width="400" 
+        height="400"
+        data-scrawl-canvas
+      >
+        <div class="placeholder">
+          <img
+            src="thumbs/filters-041-01.webp"
+            alt="Screen capture image of the demo output canvas"
+          />    
+        </div>
       <div class="assets" aria-hidden="true">
-        <img
-          id="iris"
-          src="img/iris.png"
-          class="flowers"
-          alt="A purple-mauve iris flower"
-        />    
+          <img
+            id="iris"
+            src="img/iris.png"
+            class="flowers"
+            alt="A purple-mauve iris flower"
+          />    
+        </div>
+      </canvas>
+    </div>
+
+    <div>
+      <div class="canvas-progressive-enhancement-wrapper">
+        <canvas 
+          id="channel-weights-canvas" 
+          width="360" 
+          height="360"
+          data-base-background-color="beige"
+          data-scrawl-canvas
+        >
+          <div class="placeholder">
+            <img
+              src="thumbs/filters-041-02.webp"
+              alt="Screen capture image of the demo controls canvas"
+            />    
+          </div>
+        </canvas>
       </div>
-    </canvas>
+
+      <div class="channel-buttons">
+        <button id="black" class="channel-selector selected">Luminance<br />&nbsp;</button>
+        <button id="red" class="channel-selector">Chroma<br />&nbsp;</button>
+        <button id="green" class="channel-selector">A channel<br />(red-green)</button>
+        <button id="blue" class="channel-selector">B channel<br />(blue-yellow)</button>
+      </div>
+    </div>
   </div>
 
-  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas elements are ignored; instead placeholder images display where the canvases would have appeared.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
 
     <ul>
       <li>Create a test Picture entity</li>
-      <li>Create a zoom-blur filter and apply it to the test entity</li>
-      <li>Update filter attributes and observe the effect they have on the entity</li>
+      <li>Create an okWeight filter and apply it to the test entity</li>
+      <li>Update the weights array using a second canvas displaying a set of curve controls</li>
     </ul>
 
-    <p>To note: this filter is computationally heavy - slower frame rates are expected</p>
+    <p>It is usually best to create the weights array with the help of some sort of tool where the user can shape and manipulate the curve - and also curves for each individual channel - to get the output they require for a given image.</p>
 
-    <p><b>Touch test:</b> not required</p>
+    <p><b>Touch test:</b> should work as expected. Known issue: the pins are currently too small for effective UX on touch devices.</p>
 
     <p><a href="../docs/demo/filters-041.html">Annotated code</a></p>
   </div>

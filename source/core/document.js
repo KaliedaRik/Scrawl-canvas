@@ -127,7 +127,7 @@ export const domShow = function (singleArtefact = ZERO_STR) {
                         // update dimensions
                         if (art.dirtyDomDimensions) {
 
-                            art.dirtyDomDimensions = false;
+                           art.dirtyDomDimensions = false;
 
                             dims = art.currentDimensions;
                             w = dims[0];
@@ -154,6 +154,11 @@ export const domShow = function (singleArtefact = ZERO_STR) {
                                 if (art.renderOnResize) art.render();
                             }
                             else {
+
+                                if (art.isResponsive) {
+
+                                    [w, h] = art.currentParentDimensions;
+                                }
 
                                 style.width = `${w}px`;
                                 style.height = (h) ? `${h}px` : AUTO;

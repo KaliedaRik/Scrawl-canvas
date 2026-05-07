@@ -6,12 +6,13 @@
   "type": "module",
   "types": "./source/scrawl.d.ts",
   "scripts": {
-    "build": "yarn build-min && yarn build-docco && yarn build-showdown",
+    "build": "yarn build-min && yarn build-docco && yarn build-showdown && yarn build-typedoc",
     "build-docco": "docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
     "build-min": "rollup -c",
     "build-showdown": "node ./scripts/build-reference-docs.mjs",
+    "build-typedoc": "typedoc",
     "dev": "browser-sync -w",
-    "lint": "npx eslint source/**/*.js demo/*.js demo/modules/*.js demo/snippets/*.js",
+    "lint": "eslint source/**/*.js demo/*.js demo/modules/*.js demo/snippets/*.js",
     "knip": "knip",
     "test": "tsc"
   },
@@ -59,6 +60,7 @@
     "knip": "^5.66.1",
     "rollup": "^4.52.5",
     "showdown": "^2.1.0",
+    "typedoc": "^0.28.19",
     "typescript": "^5.9.3"
   },
   "packageManager": "yarn@4.0.1"

@@ -97,10 +97,10 @@ const imageFilter = scrawl.makeFilter({
     name: name('flower-filter'),
     method: 'image',
     asset: 'iris',
-    copyX: '10%',
-    copyY: '10%',
-    copyWidth: '80%',
-    copyHeight: '80%',
+    copyStartX: '15%',
+    copyStartY: '5%',
+    copyWidth: '70%',
+    copyHeight: '90%',
     lineOut: 'flower',
 });
 
@@ -154,8 +154,18 @@ scrawl.makeBlock({
 const report = reportSpeed('#reportmessage', function () {
 
     return `
+Line mix
     Offset - x: ${dom.offset_x.value}, y: ${dom.offset_y.value}
-    Opacity: ${dom.opacity.value}`;
+    Opacity: ${dom.opacity.value}
+
+Flower
+    Copy start x: ${dom.copyStartX.value}%
+    Copy start y: ${dom.copyStartY.value}%
+    Copy width: ${dom.copyWidth.value}%
+    Copy height: ${dom.copyHeight.value}%
+    Scale: ${dom.scale.value}
+    Paste offset x: ${dom.image_offset_x.value}%
+    Paste offset y: ${dom.image_offset_y.value}%`;
 });
 
 
@@ -177,6 +187,18 @@ const dom = scrawl.initializeDomInputs([
     ['select', 'source', 3],
     ['select', 'destination', 4],
     ['select', 'blend', 1],
+
+    ['input', 'copyStartX', '15'],
+    ['input', 'copyStartY', '5'],
+    ['input', 'copyWidth', '70'],
+    ['input', 'copyHeight', '90'],
+    ['input', 'scale', '1'],
+    ['input', 'image_offset_x', '0'],
+    ['input', 'image_offset_y', '0'],
+    ['select', 'fit', 0],
+    ['select', 'smoothing', 0],
+    ['select', 'positionX', 1],
+    ['select', 'positionY', 1],
 ]);
 
 
@@ -199,6 +221,32 @@ scrawl.makeUpdater({
         opacity: ['opacity', 'float'],
         offset_x: ['offsetX', 'round'],
         offset_y: ['offsetY', 'round'],
+    },
+});
+
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.assetControlItem',
+
+    target: imageFilter,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        copyStartX: ['copyStartX', '%'],
+        copyStartY: ['copyStartY', '%'],
+        copyWidth: ['copyWidth', '%'],
+        copyHeight: ['copyHeight', '%'],
+        scale: ['scale', 'float'],
+        fit: ['fit', 'raw'],
+        smoothing: ['smoothing', 'boolean'],
+        image_offset_x: ['offsetX', '%'],
+        image_offset_y: ['offsetY', '%'],
+        positionX: ['positionX', 'raw'],
+        positionY: ['positionY', 'raw'],
     },
 });
 

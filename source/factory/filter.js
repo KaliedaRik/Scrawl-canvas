@@ -7,7 +7,7 @@
 
 
 // #### Imports
-import { cell, constructors, entity, group, styles } from '../core/library.js';
+import { cell, constructors, asset as libraryAsset, entity, group, styles } from '../core/library.js';
 
 import { addStrings, doCreate, generateUuid, mergeOver, removeItem, Ωempty } from '../helper/utilities.js';
 
@@ -17,7 +17,7 @@ import { colorEngine } from '../helper/color-engine.js';
 import baseMix from '../mixin/base.js';
 
 // Shared constants
-import { _isArray, _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLEND, BLUENOISE, BLUR, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DECONVOLUTE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NORMAL, OK_PERCEPTUAL_CURVES, OFFSET, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILE_MODES, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, UNSHARP, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR, ZOOM_BLUR } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _keys, _round, _values, ALPHA_TO_CHANNELS, ALPHA_TO_LUMINANCE, AREA_ALPHA, ARG_SPLITTER, AVERAGE_CHANNELS, BLACK, BLACK_WHITE, BLANK, BLEND, BLUENOISE, BLUR, CENTER, CHANNELS_TO_ALPHA, CHROMA, CLAMP_CHANNELS, CLAMP_VALUES, COLORS_TO_ALPHA, COMPOSE, CORRODE, DEFAULT_SEED, DISPLACE, DOWN, EMBOSS, FILTER, FLOOD, GAUSSIAN_BLUR, GLITCH, GRAYSCALE, GREEN, INVERT_CHANNELS, LINEAR, LOCK_CHANNELS_TO_LEVELS, MAP_TO_GRADIENT, LUMINANCE_TO_ALPHA, MATRIX, MEAN, MODIFY_OK_CHANNELS, MODULATE_CHANNELS, MODULATE_OK_CHANNELS, NAME, NEGATIVE, NEWSPRINT, NONE, NORMAL, OK_PERCEPTUAL_CURVES, OFFSET, PC0, PC100, PC50, PIXELATE, PROCESS_IMAGE, RANDOM, RANDOM_NOISE, RECT, RED, REDUCE_PALETTE, ROTATE_HUE, SET_CHANNEL_TO_LEVEL, SOURCE_OVER, STEP_CHANNELS, SWIRL, T_FILTER, THRESHOLD, TILE_MODES, TILES, TINT_CHANNELS, UNDEF, USER_DEFINED_LEGACY, UNSHARP, VARY_CHANNELS_BY_WEIGHTS, WHITE, ZERO_STR, ZOOM_BLUR } from '../helper/shared-vars.js';
 
 // Local constants
 const EMBOSS_WORK = 'emboss-work',
@@ -61,7 +61,7 @@ const defaultAttributes = {
     // The __method__ attribute is a String which, in legacy filters, determines the actions which that filter will take on the image. An entity, Group or Cell can include more than one filter object in its `filters` Array.
     // + Filter factory invocations which include the `method` attribute in their argument object do not need to include an `actions` attribute; the factory will build the action objects for us.
     // + When using the `method` attribute, other attributes can be included alongside it. The filter factory will automatically transpose these attributes to the action object.
-    // + The following Strings are valid methods: `'alphaToChannels', 'areaAlpha', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'corrode', 'curveWeights', 'cyan', 'deconvolute', 'displace', 'edgeDetect',  'emboss', 'flood', 'gaussianBlur', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'mapToGradient', 'matrix', 'matrix5', 'modifyOk', 'modulateOk', 'negative', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'randomNoise', 'red', 'reducePalette', 'rotateHue', 'saturation', 'sepia', 'sharpen', 'swirl', 'threshold', 'tint', 'unsharp', 'userDefined', 'yellow'`.
+    // + The following Strings are valid methods: `'alphaToChannels', 'areaAlpha', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'corrode', 'curveWeights', 'cyan', 'displace', 'edgeDetect',  'emboss', 'flood', 'gaussianBlur', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'mapToGradient', 'matrix', 'matrix5', 'modifyOk', 'modulateOk', 'negative', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'randomNoise', 'red', 'reducePalette', 'rotateHue', 'saturation', 'sepia', 'sharpen', 'swirl', 'threshold', 'tint', 'unsharp', 'userDefined', 'yellow'`.
     method: ZERO_STR,
 
     // ##### How filters process data
@@ -125,6 +125,7 @@ const defaultAttributes = {
     angle: 0,
     areaAlphaLevels: null,
     asset: ZERO_STR,
+    backgroundColor: BLANK,
     blend: NORMAL,
     blue: 0,
     blueInBlue: 0,
@@ -140,10 +141,14 @@ const defaultAttributes = {
     compose: SOURCE_OVER,
     copyHeight: 1,
     copyWidth: 1,
+    // `copyX` and `copyY` are deprecated in favour of `copyStartX` and `copyStartY`
     copyX: 0,
     copyY: 0,
+    copyStartX: 0,
+    copyStartY: 0,
     concurrent: false,
     curves: null,
+    density: null,
     deriveMaskFromImage: true,
     easing: LINEAR,
     excludeAlpha: true,
@@ -155,6 +160,7 @@ const defaultAttributes = {
     featherRed: 0,
     featherGreen: 0,
     featherBlue: 0,
+    fit: NONE,
     gradient: null,
     green: 0,
     greenInBlue: 0,
@@ -170,6 +176,7 @@ const defaultAttributes = {
     highColor: WHITE,
     highGreen: 255,
     highRed: 255,
+    identifier: ZERO_STR,
     includeAlpha: false,
     includeBlue: true,
     includeGreen: true,
@@ -219,6 +226,8 @@ const defaultAttributes = {
     passesVertical: 1,
     points: null,
     pointsData: null,
+    positionX: CENTER,
+    positionY: CENTER,
     postProcessResults: true,
     premultiply: false,
     processHorizontal: true,
@@ -237,6 +246,8 @@ const defaultAttributes = {
     redInRed: 0,
     reference: BLACK,
     samples: 14,
+    scale: 1,
+    // `scaleX` and `scaleY` are deprecated in favour of `strengthX` and `strengthY`
     scaleX: 1,
     scaleY: 1,
     seed: DEFAULT_SEED,
@@ -248,6 +259,8 @@ const defaultAttributes = {
     stepHorizontal: 1,
     stepVertical: 1,
     strength: 1,
+    strengthX: 1,
+    strengthY: 1,
     staticSwirls: null,
     tileHeight: 1,
     tileWidth: 1,
@@ -386,6 +399,20 @@ S.actions = function (item) {
 
     if (item != null) this.actions = item;
 };
+
+const getProcessImageActionIdentifier = function (item) {
+
+    if (item.action === PROCESS_IMAGE) {
+
+        const asset = libraryAsset[item.asset];
+
+        if (!asset || !asset.name) return ZERO_STR;
+
+        return `user-image_${asset.name}_${item.copyStartX}_${item.copyStartY}_${item.copyWidth}_${item.copyHeight}_${item.scale}_${item.fit}_${item.backgroundColor}_${item.smoothing}_${item.positionX}_${item.positionY}_${item.offsetX}_${item.offsetY}`;
+    }
+    return ZERO_STR;
+};
+
 
 // #### Compatibility with Scrawl-canvas legacy filters functionality
 // The Scrawl-canvas filters code was rewritten from scratch for version 8.4.0. The new functionality introduced the concept of "line processing" - `lineIn`, `lineMix`, `lineOut` (analagous to SVG `in`, `in2` and `result` attributes) - alongside the addition of more sophisticated image processing tools such as blend modes, compositing, more adaptable matrices, image loading, displacement mapping, etc.
@@ -788,27 +815,13 @@ const setActionsArray = {
         }];
     },
 
-// __deconvolute__ (new in v8.17.0) - OKLab L-only Richardson_Lucy deconvolution with optional edge mask
-    deconvolute: function (f) {
-        f.actions = [{
-            action: DECONVOLUTE,
-            lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
-            lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            strength: (f.strength != null) ? f.strength : 0.85,
-            radius: (f.radius != null) ? f.radius : 1.25,
-            level: (f.level != null) ? f.level : 0.015,
-            smoothing: (f.smoothing != null) ? f.smoothing : 0.015,
-            clamp: (f.clamp != null) ? f.clamp : 0.08,
-            passes: (f.passes != null) ? f.passes : 8,
-            deriveMaskFromImage: (f.deriveMaskFromImage != null) ? f.deriveMaskFromImage : true,
-            multiscale: (f.multiscale != null) ? f.multiscale : true,
-            multiscaleFinalPasses: (f.multiscaleFinalPasses != null) ? f.multiscaleFinalPasses : 2,
-        }];
-    },
-
 // __displace__ (new in v8.4.0) - moves pixels around the image, based on the color channel values supplied by a displacement map image
     displace: function (f) {
+
+        // `scaleX` and `scaleY` are deprecated in favour of `strengthX` and `strengthY`
+        const strengthX = f.strengthX || f.scaleX,
+            strengthY = f.strengthY || f.scaleY;
+
         f.actions = [{
             action: DISPLACE,
             lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
@@ -819,8 +832,8 @@ const setActionsArray = {
             channelY: (f.channelY != null) ? f.channelY : GREEN,
             offsetX: (f.offsetX != null) ? f.offsetX : 0,
             offsetY: (f.offsetY != null) ? f.offsetY : 0,
-            scaleX: (f.scaleX != null) ? f.scaleX : 1,
-            scaleY: (f.scaleY != null) ? f.scaleY : 1,
+            strengthX: (strengthX != null) ? strengthX : 1,
+            strengthY: (strengthY != null) ? strengthY : 1,
             transparentEdges: (f.transparentEdges != null) ? f.transparentEdges : false,
             useInputAsMask: (f.useInputAsMask != null) ? f.useInputAsMask : false,
         }];
@@ -1031,17 +1044,29 @@ const setActionsArray = {
 // __image__ (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image
     image: function (f) {
 
+        // `copyX` and `copyY` are deprecated in favour of `copyStartX` and `copyStartY`
+        const x = f.copyStartX || f.copyX,
+            y = f.copyStartY || f.copyY;
+
         const o = {
             action: PROCESS_IMAGE,
             lineOut: (f.lineOut != null) ? f.lineOut : ZERO_STR,
             asset: (f.asset != null) ? f.asset : ZERO_STR,
-            copyWidth: (f.copyWidth != null) ? f.copyWidth : 1,
-            copyHeight: (f.copyHeight != null) ? f.copyHeight : 1,
-            copyX: (f.copyX != null) ? f.copyX : 0,
-            copyY: (f.copyY != null) ? f.copyY : 0,
+            copyWidth: (f.copyWidth != null) ? f.copyWidth : PC100,
+            copyHeight: (f.copyHeight != null) ? f.copyHeight : PC100,
+            copyStartX: (x != null) ? x : 0,
+            copyStartY: (y != null) ? y : 0,
+            scale: (f.scale != null) ? f.scale : 1,
+            fit: (f.fit != null) ? f.fit : NONE,
+            backgroundColor: (f.backgroundColor != null) ? f.backgroundColor : BLANK,
+            smoothing: (f.smoothing != null) ? f.smoothing : false,
+            positionX: (f.positionX != null) ? f.positionX : CENTER,
+            positionY: (f.positionY != null) ? f.positionY : CENTER,
+            offsetX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetY: (f.offsetY != null) ? f.offsetY : 0,
         };
 
-        o.identifier = `user-image-${o.asset}-${generateUuid()}`;
+        o.identifier = getProcessImageActionIdentifier(o);
 
         f.actions = [o];
     },
@@ -1532,6 +1557,9 @@ const setActionsArray = {
 
 // __tiles__ - averages the colors in a group of pixels to produce a series of obscuring tiles. This is a more complex version of the `pixelate` filter
     tiles: function (f) {
+
+        if (f.randomCount != null) f.density = f.randomCount;
+
         f.actions = [{
             action: TILES,
             lineIn: (f.lineIn != null) ? f.lineIn : ZERO_STR,
@@ -1545,7 +1573,7 @@ const setActionsArray = {
             rectWidth: (f.rectWidth != null) ? f.rectWidth : 10,
             rectHeight: (f.rectHeight != null) ? f.rectHeight : 10,
             hexRadius: (f.hexRadius != null) ? f.hexRadius : 5,
-            randomCount: (f.randomCount != null) ? f.randomCount : 10,
+            density: (f.density != null) ? f.density : PC0,
             pointsData: (f.pointsData != null && _isArray(f.pointsData)) ? f.pointsData : [],
 
             angle: (f.angle != null) ? f.angle : 0,
