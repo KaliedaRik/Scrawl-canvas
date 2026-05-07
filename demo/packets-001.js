@@ -21,7 +21,7 @@ scrawl.addListener('move', () => canvas.cascadeEventAction('move'), canvas.domEl
 scrawl.addListener('up', () => canvas.cascadeEventAction('up'), canvas.domElement);
 
 // Testing Block entity
-let box = scrawl.makeBlock({
+const box = scrawl.makeBlock({
 
     name: name('my-box'),
 
@@ -90,7 +90,7 @@ console.log('Save test 4 result: ', boxPacket4);
 box.kill();
 console.log('Import test setup - check to see if entity has been deleted', Object.keys(scrawl.library.entity));
 // Kill test expected result:
-// - Import test setup - check to see if entity has been deleted 
+// - Import test setup - check to see if entity has been deleted
 // - Array []
 
 const importTester = (time = 0, action = false, url = '', label = 'no test name', override) => {
@@ -142,6 +142,7 @@ const noDomOverride = {
     [6000, false, './packets/packets-001-block.txt', 'Import test 6'],
     [7000, false, './packets/packets-001-block.txt', 'Import test 7', fullOverride],
     [8000, false, './packets/packets-001-block-updated.txt', 'Import test 8', fullOverride]
+/** @ts-expect-error */
 ].forEach(item => importTester(...item));
 
 // actionPacket and importPacket Expected results:
@@ -157,17 +158,17 @@ const noDomOverride = {
 // SC packet import skipped function revival for mycanvas-my-box.onEnter base.js:585:33
 // SC packet import skipped function revival for mycanvas-my-box.onLeave base.js:585:33
 // SC packet import skipped function revival for mycanvas-my-box.onUp base.js:585:33
-// SUCCESS Import test 2 
+// SUCCESS Import test 2
 // Object { … }
 // packets-001.js:106:25
-// SUCCESS Import test 3 
+// SUCCESS Import test 3
 // Object { … }
 // packets-001.js:106:25
 // XHR
 // GET
 // http://localhost:3000/demo/packets/packets-001-block
 // [HTTP/1.1 404 Not Found 1ms]
-// 
+//
 // ERROR Import test 4 Error: Packet import from server failed - 404: Not Found - http://localhost:3000/demo/packets/packets-001-block
 //     getPacket http://localhost:3000/source/mixin/base.js:402
 //     promise callback*default/P.importPacket/getPacket/< http://localhost:3000/source/mixin/base.js:400
@@ -180,13 +181,13 @@ const noDomOverride = {
 // packets-001.js:123:25
 // SC packet import skipped function revival for mycanvas-my-box.onEnter base.js:585:33
 // SC packet import skipped function revival for mycanvas-my-box.onLeave base.js:585:33
-// SUCCESS Import test 5 
+// SUCCESS Import test 5
 // Object { … }
 // packets-001.js:119:25
-// SUCCESS Import test 6 
+// SUCCESS Import test 6
 // Object { … }
 // packets-001.js:119:25
-// SUCCESS Import test 7 
+// SUCCESS Import test 7
 // Object { … }
 // packets-001.js:119:25
 // ```

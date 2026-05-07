@@ -24,6 +24,7 @@ const name = (n) => `${namespace}-${n}`;
 const domImages = document.querySelectorAll('.dom-images'),
     rawImageBitmapsPromises = [];
 
+/** @ts-expect-error */
 [...domImages].forEach(img => rawImageBitmapsPromises.push(createImageBitmap(img)));
 
 
@@ -37,10 +38,11 @@ Promise.all(rawImageBitmapsPromises)
 
         // This should be an image of an iris (flower)
         // + But we don't know that, and we take a risk by importing the ImageBitmap directly
-        rawImageBitmaps[0], 
+        rawImageBitmaps[0],
 
         // The better approach is to wrap the ImageBitmap in a JS object, assigning it to a `src` attribute
         // + This then allows us to give the resulting asset a known name, which we can (in this instance) define from the DOM element's `id` value
+/** @ts-expect-error */
         {
             name: domImages[1].id,
             src: rawImageBitmaps[1],
@@ -164,6 +166,8 @@ const addImageAsset = (file) => {
             })
             .then(bitmap => {
 
+
+/** @ts-expect-error */
                 const [importedName] = scrawl.importImageBitmap({
                     name: assetName,
                     src: bitmap,

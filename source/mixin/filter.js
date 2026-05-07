@@ -12,7 +12,7 @@ import { checkForWorkstoreItem, setWorkstoreItem } from '../helper/workstore.js'
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 // Shared constants
-import { _abs, _floor, _isArray, _max, _min, BLANK, BOTTOM, CENTER, LEFT, NONE, PROCESS_IMAGE, RIGHT, SOURCE_OVER, T_FILTER, T_IMAGE, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _floor, _isArray, _max, _min, BLANK, BOTTOM, CENTER, LEFT, NONE, PROCESS_IMAGE, RIGHT, SOURCE_OVER, T_FILTER, T_IMAGE, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const CONTAIN = 'contain',
@@ -258,7 +258,7 @@ export default function (P = Ωempty) {
 
                 // Dimensions values:
                 // - `hostWidth`, `hostHeight` - received by the function as arguments, representing the area within which the ingested image will sit
-                // - local `width`, `height` - calculated from image attributes 
+                // - local `width`, `height` - calculated from image attributes
                 if (!width || !height) {
 
                     if (snd && snd[0] && snd[1]) {

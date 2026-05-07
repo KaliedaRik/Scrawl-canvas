@@ -6649,7 +6649,7 @@ P.theBigActionsObject = {
 
             if (mode === RANDOM) {
 
-                let count = getTileSeedCount(density, randomCount, iWidth, iHeight);
+                const count = getTileSeedCount(density, randomCount, iWidth, iHeight);
 
                 const rng = seededRandomNumberGenerator(seed);
 

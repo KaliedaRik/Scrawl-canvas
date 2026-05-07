@@ -155,9 +155,9 @@ interface BaseMixinInputs {
 }
 
 interface BaseMixinFunctions {
-    actionPacket: (item: string) => any;
+    actionPacket: (item: string, override?: CommonObjectInput) => any;
     get: (item: string) => any;
-    importPacket: (item: string | string[]) => any;
+    importPacket: (item: string | string[], override?: CommonObjectInput) => any;
     kill: (item?: any) => void;
 }
 
@@ -3164,7 +3164,7 @@ type AssetImports = string | AssetImportObject | Array<string | AssetImportObjec
 export function importDomImage(query: string): void;
 export function importDomVideo(query: string): void;
 export function importImage(items: AssetImports): void;
-export function importImageBitmap(items: AssetImports | ImageBitmap): void;
+export function importImageBitmap(items: AssetImports | ImageBitmap, name?: string): AssetImports | AssetImports[];
 export function importMediaStream(items: CommonObjectInput): Promise<VideoAssetInstance>;
 export function importScreenCapture(items: CommonObjectInput): Promise<VideoAssetInstance>;
 export function importSprite(items: AssetImports): void;
