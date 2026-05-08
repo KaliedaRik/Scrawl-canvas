@@ -105,8 +105,15 @@
       </select>
     </div>
 
-    <div class="pink label">&nbsp;</div>
-    <div class="pink label">&nbsp;</div>
+    <div class="pink label">Spread</div>
+    <div class="pink">
+        <select class="controlItem" id="spread">
+          <option value="pad">pad</option>
+          <option value="repeat">repeat</option>
+          <option value="reflect">reflect</option>
+          <option value="transparent">transparent</option>
+      </select>
+    </div>
 
     <div class="pink label">Int. color space</div>
     <div class="pink">
@@ -209,6 +216,8 @@
     </canvas>
   </div>
 
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
+
   <p>CSS-equivalent gradients</p>
 
   <div class="css-gradients-container">
@@ -220,8 +229,6 @@
     <div class="css-gradients" id="oklab">OKLAB</div>
     <div class="css-gradients" id="oklch">OKLCH</div>
   </div>
-
-  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

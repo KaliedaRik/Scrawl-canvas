@@ -57,6 +57,7 @@ P.defs = {
 // + COLORNAME String
 // + GRADIENTNAME String
 // + RADIALGRADIENTNAME String
+// + CONICGRADIENTNAME String
 // + PATTERNNAME String
     fillStyle: BLACK,
     strokeStyle: BLACK,

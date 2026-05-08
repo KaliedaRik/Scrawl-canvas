@@ -134,6 +134,7 @@ export default function (P = Ωempty) {
 // + COLORNAME String
 // + GRADIENTNAME String
 // + RADIALGRADIENTNAME String
+// + CONICGRADIENTNAME String
 // + PATTERNNAME String
 //
 // __globalAlpha__ - entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque
@@ -243,8 +244,29 @@ export default function (P = Ωempty) {
 // __lockStylesToEntity__ - a pseudo-attribute which will set the `lockFillStyleToEntity` and `lockStrokeStyleToEntity` flags to the same Boolean value
     S.lockStylesToEntity = function (item) {
 
+        item = !!item;
+
         this.lockFillStyleToEntity = item;
         this.lockStrokeStyleToEntity = item;
+        this.dirtyGradientCache = true;
+    };
+
+// __lockFillStyleToEntity__
+    S.lockFillStyleToEntity = function (item) {
+
+        item = !!item;
+
+        this.lockFillStyleToEntity = item;
+        this.dirtyGradientCache = true;
+    };
+
+// __lockStrokeStyleToEntity__
+    S.lockStrokeStyleToEntity = function (item) {
+
+        item = !!item;
+
+        this.lockStrokeStyleToEntity = item;
+        this.dirtyGradientCache = true;
     };
 
 // Entity `get`, `set` and `deltaSet` functions need to take into account the entity State object, whose attributes can be retrieved/amended directly on the entity object
@@ -388,6 +410,10 @@ export default function (P = Ωempty) {
         this.stashedImageData = null;
         this.stashedImage = null;
 
+        this.dirtyGradientCache = false;
+        this.useGradientCache = false;
+        this.stashedGradientData = null;
+
         this.set(this.defs);
 
         if (!items.group) items.group = currentGroup;
@@ -436,7 +462,14 @@ export default function (P = Ωempty) {
         }
 
 // A number of updates (__scale__, __dimensions__, __start__, __offset__, __handle__) require the entity to recalculate its Path2D object - if any of them are set, then the entity sets its own `dirtyPathObject` flag as a result.
-        if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
+        if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) {
+
+            this.dirtyPathObject = true;
+            this.dirtyGradientCache = true;
+        }
+
+        // Bespoke gradients also need to take into account rotation
+        if (this.dirtyRotation) this.dirtyGradientCache = true;
 
 // `dirtyScale` - triggers __cleanScale__ function - which in turn sets the `dirtyDimensions`, `dirtyHandle` and (if required) `dirtyPositionSubscribers`, `dirtyMimicScale` flags on the entity.
         if (this.dirtyScale) this.cleanScale();
@@ -466,6 +499,9 @@ export default function (P = Ωempty) {
             this.dirtyStampHandlePositions = true;
         }
 
+// Bespoke gradients also need to take into account positional changes
+        if (this.dirtyStampPositions || this.dirtyStampHandlePositions) this.dirtyGradientCache = true;
+
 // Invoke the __cleanStampPositions__ and __cleanStampHandlePositions__ functions, if needed, to update current positional data prior to the stamping operation. Both functions will set the `dirtyPositionSubscribers` flag if changes to positional values result from the calculations.
         if (this.dirtyStampPositions) this.cleanStampPositions();
         if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
@@ -480,7 +516,7 @@ export default function (P = Ωempty) {
         this.prepareStampTabsHelper();
     };
 
-// The `dirtyFilters` flag is checked and handled by the __filteredStamp__ function.
+// The `dirtyFilters` and `dirtyGradientCache` flags are checked and handled by the __filteredStamp__ function.
 
 // `cleanPathObject` - ___this function will be overwritten by every entity Factory___, to meet their individual requirements.
 // + The function needs to build a Canvas API [Path2D](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) object and store it in the __pathObject__ attribute. The Path2D object is used for both entity stamping (see below) and entity collision detection work.
@@ -507,7 +543,7 @@ export default function (P = Ωempty) {
         else if (this.visibility) {
 
             // To note: `checkHitIgnoreTransparency` is specific to Picture entity
-            if (this.checkHitIgnoreTransparency || this.stashOutput || filterTest) return this.filteredStamp(filterTest);
+            if (this.checkHitIgnoreTransparency || this.stashOutput || this.useGradientCache || filterTest) return this.filteredStamp(filterTest);
             else return this.regularStamp();
         }
     };

@@ -160,6 +160,7 @@ export const NONE = 'none';
 export const NORMAL = 'normal';
 export const OK_PERCEPTUAL_CURVES = 'ok-perceptual-curves';
 export const OFFSET = 'offset';
+export const PAD = 'pad';
 export const PARTICLE = 'particle';
 export const PATH = 'path';
 export const PC = '%';

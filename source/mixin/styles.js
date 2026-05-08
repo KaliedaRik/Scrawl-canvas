@@ -24,11 +24,12 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 import { makePalette } from '../untracked-factory/palette.js';
 
 // Shared constants
-import { _floor, _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, END, LEFT, LINEAR, NAME, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, END, LEFT, LINEAR, NAME, PAD, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../helper/shared-vars.js';
 
 // Local constants
 const COLORS = 'colors',
-    PALETTE_KEYS = ['colors', 'stops'];
+    PALETTE_KEYS = ['colors', 'stops'],
+    SPREAD_VALUES = [PAD, 'repeat', 'reflect', 'transparent'];
 
 
 // Create an animation to handle automated delta gradient animation
@@ -82,6 +83,9 @@ export default function (P = Ωempty) {
 
 // The __animateByDelta__ attribute, when true, will delta animate the gradient at the start of each Display cycle. When the gradient is used in the `mapToGradient`` filter, setting this attribute to `false` (default) should speed up the filter
         animateByDelta: false,
+
+// __spread__ - determines how the gradient behaves beyond the border its other attributes set for it. Default is `pad`, which is the only option available to gradients supplied by the Canvas API.
+        spread: PAD,
 
 // The __delta__ object is not stored in the defs object; it acts in a similar way to the artefact delta object - though it is restricted to adding delta values to Number and 'String%' attributes.
 // + Unlike artefacts, where delta animation will be applied to artefacts by default as part of each Display cycle, gradient delta animations need to be explicitly invoked: `my_gradient.updateByDelta();`
@@ -403,6 +407,14 @@ export default function (P = Ωempty) {
         if (items) this.delta = mergeDiscard(this.delta, items);
     };
 
+// `spread` - Gradient-type styles objects support the delta attribute, and can be delta-animated using its attributes.
+// - Permitted values: 'pad', 'repeat', 'reflect', 'transparent'
+    S.spread = function (item) {
+
+        if (SPREAD_VALUES.includes(item)) this.spread = item;
+        else this.spread = PAD;
+    };
+
 
 // #### Prototype functions
 
@@ -615,7 +627,7 @@ export default function (P = Ωempty) {
         this.finalizeCoordinates(entity);
 
         // Step 3: create, populate and return gradient/pattern object
-        return this.buildStyle(cell);
+        return this.buildStyle(cell, entity);
     };
 
 // `cleanStyle` - internal function invoked as part of the gradient-type object's `getData` function. The style has to be cleaned every time it is applied to a Cell's engine because it can never know which Cell is invoking it, or for which entity it is to be used.

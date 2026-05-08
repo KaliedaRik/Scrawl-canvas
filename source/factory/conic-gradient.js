@@ -86,6 +86,7 @@ P.packetExclusions = pushUnique(P.packetExclusions, ['palette']);
 // #### Prototype functions
 
 // `buildStyle` - internal function: creates the radial gradient on the Cell's CanvasRenderingContext2D engine, and then adds the color stops to it.
+// - Note that unlike linear and radial gradients, the conic gradient will ignore the `spread` attribute as it has no effective border
 P.buildStyle = function (cell) {
 
     if (cell) {
