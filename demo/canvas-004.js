@@ -110,6 +110,8 @@ scrawl.makeUpdater({
 
         colorSpace: ['colorSpace', 'raw'],
         returnColorAs: ['returnColorAs', 'raw'],
+
+        spread: ['spread', 'raw'],
     },
 });
 
@@ -176,6 +178,7 @@ const dom = scrawl.initializeDomInputs([
     ['select', 'easing', 0],
     ['select', 'red', 0],
     ['select', 'returnColorAs', 0],
+    ['select', 'spread', 0],
 ]);
 
 

@@ -11,10 +11,10 @@ import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
 // Shared constants
-import { BLACK, BLANK, BOTTOM, CENTER, LEFT, RIGHT, STYLES, TOP } from '../helper/shared-vars.js';
+import { BLACK, BLANK, BOTTOM, CENTER, LEFT, PAD, RIGHT, STYLES, T_RADIAL_GRADIENT, TOP } from '../helper/shared-vars.js';
 
 // Local constants
-const T_RADIAL_GRADIENT = 'RadialGradient';
+// + None defined
 
 
 // #### RadialGradient constructor
@@ -162,29 +162,20 @@ P.cleanRadius = function (width) {
 };
 
 // `buildStyle` - internal function: creates the radial gradient on the Cell's CanvasRenderingContext2D engine, and then adds the color stops to it.
-P.buildStyle = function (cell) {
+P.buildStyle = function (cell, entity) {
 
     if (cell) {
 
-        // Classic Canvas API padded gradient
-        if (this.spread === PAD) {
+        entity.useGradientCache = false;
 
-            const engine = cell.engine;
+        const engine = cell.engine;
 
-            if (engine) {
+        if (engine) {
 
-                const gradient = engine.createRadialGradient(...this.gradientArgs);
+            const gradient = engine.createRadialGradient(...this.gradientArgs);
 
-                return this.addStopsToGradient(gradient, this.paletteStart, this.paletteEnd, this.cyclePalette);
-            }
+            return this.addStopsToGradient(gradient, this.paletteStart, this.paletteEnd, this.cyclePalette);
         }
-        // For non-Classic gradients, the entity will call on its filteredStamp functionality
-        // - As part of that function, the entity will stamp itself onto a Cell
-        // - Non-Classic gradients need to know the shape they are being asked to fill
-        // - They will care about the alpha channel
-        // - For this reason, we can return opaque black as the 'gradient'
-        //   - The plan is to invoke the gradient engine inside the filteredStamp function
-        else return BLACK;
     }
     return BLANK;
 };

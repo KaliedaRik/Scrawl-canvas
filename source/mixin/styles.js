@@ -16,7 +16,7 @@
 // #### Imports
 import { entity, styles, stylesnames } from '../core/library.js';
 
-import { addStrings, isa_obj, mergeDiscard, mergeOver, xt, λnull, Ωempty } from '../helper/utilities.js';
+import { addStrings, isa_obj, mergeDiscard, mergeOver, pushUnique, removeItem, xt, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeAnimation } from '../factory/animation.js';
 import { makeCoordinate } from '../untracked-factory/coordinate.js';
@@ -24,12 +24,12 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 import { makePalette } from '../untracked-factory/palette.js';
 
 // Shared constants
-import { _floor, _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, END, LEFT, LINEAR, NAME, PAD, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, END, LEFT, LINEAR, NAME, PAD, REFLECT, REPEAT, RGB, RIGHT, START, T_PALETTE, TOP, TRANSPARENT, UNDEF, WHITE } from '../helper/shared-vars.js';
 
 // Local constants
 const COLORS = 'colors',
     PALETTE_KEYS = ['colors', 'stops'],
-    SPREAD_VALUES = [PAD, 'repeat', 'reflect', 'transparent'];
+    SPREAD_VALUES = [PAD, REPEAT, REFLECT, TRANSPARENT];
 
 
 // Create an animation to handle automated delta gradient animation
@@ -108,6 +108,7 @@ export default function (P = Ωempty) {
 
 
 // #### Packet management
+    P.packetExclusions = pushUnique(P.packetExclusions, ['fillSubscribers', 'drawSubscribers']);
     P.finalizePacketOut = function (copy, items) {
 
         if (items.colors) copy.colors = items.colors;
@@ -187,7 +188,7 @@ export default function (P = Ωempty) {
         if (coord != null) {
 
             this.start[0] = coord;
-            this.dirtyStart = true;
+            this.updateSubscribers();
         }
     };
     S.startY = function (coord) {
@@ -195,30 +196,30 @@ export default function (P = Ωempty) {
         if (coord != null) {
 
             this.start[1] = coord;
-            this.dirtyStart = true;
+            this.updateSubscribers();
         }
     };
     S.start = function (x, y) {
 
         this.setCoordinateHelper(START, x, y);
-        this.dirtyStart = true;
+        this.updateSubscribers();
     };
     D.startX = function (coord) {
 
         const c = this.start;
         c[0] = addStrings(c[0], coord);
-        this.dirtyStart = true;
+        this.updateSubscribers();
     };
     D.startY = function (coord) {
 
         const c = this.start;
         c[1] = addStrings(c[1], coord);
-        this.dirtyStart = true;
+        this.updateSubscribers();
     };
     D.start = function (x, y) {
 
         this.setDeltaCoordinateHelper(START, x, y);
-        this.dirtyStart = true;
+        this.updateSubscribers();
     };
 
 // `end`, `endX`, `endY`
@@ -235,7 +236,7 @@ export default function (P = Ωempty) {
         if (coord != null) {
 
             this.end[0] = coord;
-            this.dirtyEnd = true;
+            this.updateSubscribers();
         }
     };
     S.endY = function (coord) {
@@ -243,30 +244,30 @@ export default function (P = Ωempty) {
         if (coord != null) {
 
             this.end[1] = coord;
-            this.dirtyEnd = true;
+            this.updateSubscribers();
         }
     };
     S.end = function (x, y) {
 
         this.setCoordinateHelper(END, x, y);
-        this.dirtyEnd = true;
+        this.updateSubscribers();
     };
     D.endX = function (coord) {
 
         const c = this.end;
         c[0] = addStrings(c[0], coord);
-        this.dirtyEnd = true;
+        this.updateSubscribers();
     };
     D.endY = function (coord) {
 
         const c = this.end;
         c[1] = addStrings(c[1], coord);
-        this.dirtyEnd = true;
+        this.updateSubscribers();
     };
     D.end = function (x, y) {
 
         this.setDeltaCoordinateHelper(END, x, y);
-        this.dirtyEnd = true;
+        this.updateSubscribers();
     };
 
 // `palette` - argument has to be a Palette object
@@ -276,6 +277,7 @@ export default function (P = Ωempty) {
 
             item.dirtyPalette = true;
             this.palette = item;
+            this.updateSubscribers();
         }
     };
 
@@ -290,6 +292,7 @@ export default function (P = Ωempty) {
             this.paletteStart = p;
 
             this.palette.updateData();
+            this.updateSubscribers();
         }
     };
     D.paletteStart = function (item) {
@@ -305,6 +308,7 @@ export default function (P = Ωempty) {
             }
             this.paletteStart = p;
             this.palette.updateData();
+            this.updateSubscribers();
         }
     };
 
@@ -320,6 +324,7 @@ export default function (P = Ωempty) {
             this.paletteEnd = p;
 
             this.palette.updateData();
+            this.updateSubscribers();
         }
     };
 
@@ -336,6 +341,7 @@ export default function (P = Ωempty) {
             }
             this.paletteEnd = p;
             this.palette.updateData();
+            this.updateSubscribers();
         }
     };
 
@@ -345,6 +351,7 @@ export default function (P = Ωempty) {
 
             this.cyclePalette = !!item;
             this.palette.updateData();
+            this.updateSubscribers();
         }
     };
 
@@ -353,7 +360,11 @@ export default function (P = Ωempty) {
 // + String is any legitimate CSS color string value
     S.colors = function (item) {
 
-        if (_isArray(item) && this.palette) this.palette.set({ colors: item });
+        if (_isArray(item) && this.palette) {
+
+            this.palette.set({ colors: item });
+            this.updateSubscribers();
+        }
     };
 
 // `easing`, `easingFunction` - the easing to be applied to the gradient
@@ -364,6 +375,7 @@ export default function (P = Ωempty) {
         if (this.palette) {
 
             this.palette.set({ easing: item });
+            this.updateSubscribers();
         }
     };
     S.easingFunction = S.easing;
@@ -376,7 +388,11 @@ export default function (P = Ωempty) {
     };
     S.colorSpace = function (item) {
 
-        if (this.palette) this.palette.set({ colorSpace: item });
+        if (this.palette) {
+
+            this.palette.set({ colorSpace: item });
+            this.updateSubscribers();
+        }
     };
     G.returnColorAs = function () {
 
@@ -385,7 +401,11 @@ export default function (P = Ωempty) {
     };
     S.returnColorAs = function (item) {
 
-        if (this.palette) this.palette.set({ returnColorAs: item });
+        if (this.palette) {
+
+            this.palette.set({ returnColorAs: item });
+            this.updateSubscribers();
+        }
     };
 
 // `getColorAtPosition` - a convenience function to retrieve the color at a specified position within the current gradient
@@ -398,7 +418,11 @@ export default function (P = Ωempty) {
 // `precision` - Pass through a positive integer Number value between 0 and 50 to the Palette object. If value is `0` (default) no easing will be applied to the gradient; values above 0 apply the easing to the gradient; higher values will give a quicker, but less precise, mapping.
     S.precision = function (item) {
 
-        if (this.palette) this.palette.set({ precision: item });
+        if (this.palette) {
+
+            this.palette.set({ precision: item });
+            this.updateSubscribers();
+        }
     };
 
 // `delta` - Gradient-type styles objects support the delta attribute, and can be delta-animated using its attributes
@@ -413,6 +437,7 @@ export default function (P = Ωempty) {
 
         if (SPREAD_VALUES.includes(item)) this.spread = item;
         else this.spread = PAD;
+        this.updateSubscribers();
     };
 
 
@@ -611,6 +636,9 @@ export default function (P = Ωempty) {
 
         this.delta = {};
 
+        this.fillSubscribers = [];
+        this.drawSubscribers = [];
+
         this.set(this.defs);
 
         this.set(items);
@@ -766,6 +794,7 @@ export default function (P = Ωempty) {
 
             this.dirtyFilterIdentifier = true;
             this.palette.updateColor(index, color);
+            this.updateSubscribers();
         }
 
         return this;
@@ -779,8 +808,56 @@ export default function (P = Ωempty) {
 
             this.dirtyFilterIdentifier = true;
             this.palette.removeColor(index);
+            this.updateSubscribers();
         }
 
         return this;
+    };
+
+// `fillSubscribe`, `fillUnsubscribe`, `drawSubscribe`, `drawUnsubscribe` - we only keep the names of subscribing entitys in these arrays
+    P.fillSubscribe = function (name) {
+
+        if (name.substring) pushUnique(this.fillSubscribers, name);
+    };
+    P.fillUnsubscribe = function (name) {
+
+        if (name.substring) removeItem(this.fillSubscribers, name);
+    };
+    P.drawSubscribe = function (name) {
+
+        if (name.substring) pushUnique(this.drawSubscribers, name);
+    };
+    P.drawUnsubscribe = function (name) {
+
+        if (name.substring) removeItem(this.drawSubscribers, name);
+    };
+
+// `updateSubscribers`, `updateFillSubscribers`, `updateDrawSubscribers` - signal to subscribers that something about the gradient has changed
+    P.updateSubscribers = function () {
+
+        this.updateFillSubscribers();
+        this.updateDrawSubscribers();
+    };
+    P.updateFillSubscribers = function () {
+
+        let ent;
+
+        this.fillSubscribers.forEach(sub => {
+
+            ent = entity[sub];
+
+            if (ent) ent.dirtyFillGradient = true;
+        });
+    };
+    P.updateDrawSubscribers = function () {
+
+        let ent;
+
+        this.drawSubscribers.forEach(sub => {
+
+            ent = entity[sub];
+
+            if (ent) ent.dirtyDrawGradient = true;
+        });
     };
 }
