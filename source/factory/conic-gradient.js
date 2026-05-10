@@ -7,6 +7,8 @@ import { constructors } from '../core/library.js';
 
 import { doCreate, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
+import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
+
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
@@ -109,11 +111,11 @@ P.buildStyle = function (cell) {
 P.updateGradientArgs = function (x, y, roll) {
 
     const gradientArgs = this.gradientArgs,
-        currentStart = this.currentStart,
-        angle = this.angle * _radian;
+        currentStart = this.currentStart;
 
-    const sx = currentStart[0] + x,
-        sy = currentStart[1] + y;
+    let sx = currentStart[0] + x,
+        sy = currentStart[1] + y,
+        angle = this.angle * _radian;
 
     if (roll) {
 
@@ -122,6 +124,8 @@ P.updateGradientArgs = function (x, y, roll) {
         [sx, sy] = coord.setFromArray([sx, sy]).rotate(roll);
 
         releaseCoordinate(coord);
+
+        angle += roll * _radian;
     }
 
     gradientArgs.length = 0;

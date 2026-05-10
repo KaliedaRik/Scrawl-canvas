@@ -19,7 +19,7 @@ const name = (n) => `${namespace}-${n}`;
 // Create the radial gradient
 const graddy = scrawl.makeConicGradient({
 
-    name: name('mygradient'),
+    name: 'my-gradient',
     startX: '50%',
     startY: '50%',
     angle: 0,
@@ -44,17 +44,18 @@ const bespokeEasings = {
 
 
 // Create a block entity which will use the gradient
-scrawl.makeBlock({
+const blocky = scrawl.makeBlock({
 
     name: name('myblock'),
     width: '90%',
     height: '90%',
-    startX: '5%',
-    startY: '5%',
-
+    startX: '35%',
+    startY: '35%',
+    handleX: '35%',
+    handleY: '35%',
     fillStyle: graddy,
-    strokeStyle: 'coral',
-    lineWidth: 2,
+    strokeStyle: 'slategray',
+    lineWidth: 40,
     method: 'fillAndDraw',
 });
 
@@ -85,7 +86,7 @@ scrawl.makeRender({
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
-    origin: '.controlItem',
+    origin: '.gradientControl',
 
     target: graddy,
 
@@ -108,6 +109,32 @@ scrawl.makeUpdater({
 
         colorSpace: ['colorSpace', 'raw'],
         returnColorAs: ['returnColorAs', 'raw'],
+    },
+});
+
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.blockControl',
+
+    target: blocky,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
+
+        flipUpend: ['flipUpend', 'boolean'],
+        flipReverse: ['flipReverse', 'boolean'],
+
+        fillStyle: ['fillStyle', 'raw'],
+        strokeStyle: ['strokeStyle', 'raw'],
+
+        lockFillStyleToEntity: ['lockFillStyleToEntity', 'boolean'],
+        lockStrokeStyleToEntity: ['lockStrokeStyleToEntity', 'boolean'],
     },
 });
 
@@ -172,6 +199,15 @@ const dom = scrawl.initializeDomInputs([
     ['select', 'easing', 0],
     ['select', 'red', 0],
     ['select', 'returnColorAs', 0],
+
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['select', 'flipReverse', 0],
+    ['select', 'flipUpend', 0],
+    ['select', 'lockFillStyleToEntity', 0],
+    ['select', 'lockStrokeStyleToEntity', 0],
+    ['select', 'fillStyle', 1],
+    ['select', 'strokeStyle', 0],
 ]);
 
 
