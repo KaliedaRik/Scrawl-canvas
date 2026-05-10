@@ -58,14 +58,14 @@
   <div class="controls">
 
     <div class="pink label">paletteStart</div>
-    <div class="pink"><input class="controlItem" id="paletteStart" type="range" value="0" min="0" max="999" step="1" /></div>
+    <div class="pink"><input class="controlItem gradientControl" id="paletteStart" type="range" value="0" min="0" max="999" step="1" /></div>
 
     <div class="pink label">paletteEnd</div>
-    <div class="pink"><input class="controlItem" id="paletteEnd" type="range" value="0" min="0" max="999" step="1" /></div>
+    <div class="pink"><input class="controlItem gradientControl" id="paletteEnd" type="range" value="0" min="0" max="999" step="1" /></div>
 
     <div class="pink label">Cycle palette</div>
     <div class="pink">
-        <select class="controlItem" id="cyclePalette">
+        <select class="controlItem gradientControl" id="cyclePalette">
           <option value="0">false</option>
           <option value="1">true</option>
       </select>
@@ -73,7 +73,7 @@
 
     <div class="pink label">Spread</div>
     <div class="pink">
-        <select class="controlItem" id="spread">
+        <select class="controlItem gradientControl" id="spread">
           <option value="pad">pad</option>
           <option value="repeat">repeat</option>
           <option value="reflect">reflect</option>
@@ -83,7 +83,7 @@
 
     <div class="pink label">Int. color space</div>
     <div class="pink">
-        <select class="controlItem" id="colorSpace">
+        <select class="controlItem gradientControl" id="colorSpace">
           <option value="RGB">RGB</option>
           <option value="HSL">HSL</option>
           <option value="HWB">HWB</option>
@@ -97,7 +97,7 @@
 
     <div class="pink label">Ret. color space</div>
     <div class="pink">
-        <select class="controlItem" id="returnColorAs">
+        <select class="controlItem gradientControl" id="returnColorAs">
           <option value="RGB">RGB</option>
           <option value="HSL">HSL</option>
           <option value="HWB">HWB</option>
@@ -109,22 +109,22 @@
     </div>
 
     <div class="green label">startX</div>
-    <div class="green"><input class="controlItem" id="startX" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="green"><input class="controlItem gradientControl" id="startX" type="range" value="50" min="0" max="100" step="0.1" /></div>
 
     <div class="blue label">endX</div>
-    <div class="blue"><input class="controlItem" id="endX" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="blue"><input class="controlItem gradientControl" id="endX" type="range" value="50" min="0" max="100" step="0.1" /></div>
 
     <div class="green label">startY</div>
-    <div class="green"><input class="controlItem" id="startY" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="green"><input class="controlItem gradientControl" id="startY" type="range" value="50" min="0" max="100" step="0.1" /></div>
 
     <div class="blue label">endY</div>
-    <div class="blue"><input class="controlItem" id="endY" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="blue"><input class="controlItem gradientControl" id="endY" type="range" value="50" min="0" max="100" step="0.1" /></div>
 
     <div class="green label">startRadius</div>
-    <div class="green"><input class="controlItem" id="startRadius" type="range" value="0" min="0" max="700" step="1" /></div>
+    <div class="green"><input class="controlItem gradientControl" id="startRadius" type="range" value="0" min="0" max="700" step="1" /></div>
 
     <div class="blue label">endRadius</div>
-    <div class="blue"><input class="controlItem" id="endRadius" type="range" value="500" min="0" max="700" step="1" /></div>
+    <div class="blue"><input class="controlItem gradientControl" id="endRadius" type="range" value="500" min="0" max="700" step="1" /></div>
 
     <div class="yellow label">Include red</div>
     <div class="yellow">
@@ -144,7 +144,7 @@
 
     <div class="lavender label">Easing</div>
     <div class="lavender">
-      <select class="controlItem" id="easing">
+      <select class="controlItem gradientControl" id="easing">
         <option value="linear">linear</option>
         <option value="out">out</option>
         <option value="in">in</option>
@@ -167,7 +167,7 @@
     </div>
 
     <div class="lavender label">Precision</div>
-    <div class="lavender"><input class="controlItem" id="precision" type="range" value="1" min="0" max="20" step="1" /></div>
+    <div class="lavender"><input class="controlItem gradientControl" id="precision" type="range" value="1" min="0" max="20" step="1" /></div>
 
   </div>
 
@@ -188,6 +188,64 @@
         />    
       </div>
     </canvas>
+  </div>
+
+  <div class="controls">
+    
+    <div class="orange label">Roll</div>
+    <div class="orange"><input class="controlItem blockControl" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+
+    <div class="orange label">Scale</div>
+    <div class="orange"><input class="controlItem blockControl" id="scale" type="range" value="1" min="0.5" max="1.5" step="0.01" /></div>
+
+    <div class="orange label">Flip reverse</div>
+    <div class="orange">
+        <select class="controlItem blockControl" id="flipReverse">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="orange label">Flip upend</div>
+    <div class="orange">
+        <select class="controlItem blockControl" id="flipUpend">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="orange label">Fill style</div>
+    <div class="orange">
+        <select class="controlItem blockControl" id="fillStyle">
+          <option value="slategray">color</option>
+          <option value="my-gradient">gradient</option>
+      </select>
+    </div>
+
+    <div class="orange label">Stroke style</div>
+    <div class="orange">
+        <select class="controlItem blockControl" id="strokeStyle">
+          <option value="slategray">color</option>
+          <option value="my-gradient">gradient</option>
+      </select>
+    </div>
+
+    <div class="orange label">Lock fillStyle to entity</div>
+    <div class="orange">
+        <select class="controlItem blockControl" id="lockFillStyleToEntity">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="orange label">Lock strokeStyle to entity</div>
+    <div class="orange">
+        <select class="controlItem blockControl" id="lockStrokeStyleToEntity">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
+
   </div>
 
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>

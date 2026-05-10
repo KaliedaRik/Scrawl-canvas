@@ -37,7 +37,7 @@ P.type = T_GRADIENT_ENGINE;
 
 P.action = function (packet) {
 
-    const { imageData, gradient, entity, styleType } = packet;
+    const { imageData, fixedGradientData: gradient, entity, styleType } = packet;
 
     // Conic gradients are classic-only and should never be pushed to the gradient engine
     if (gradient.type === T_CONIC_GRADIENT) return false;
@@ -64,9 +64,9 @@ P.action = function (packet) {
 
         if (gradient.type === T_RADIAL_GRADIENT) {
 
-            if (gradient.spread === REFLECT) result = this.reflectRadialGradient(gradient, workData);
-            if (gradient.spread === REPEAT) result = this.repeatRadialGradient(gradient, workData);
-            if (gradient.spread === TRANSPARENT) result = this.transparentRadialGradient(gradient, workData);
+            if (gradient.spread === REFLECT) result = this.applyRadialGradient(gradient, workData, REFLECT, entity, styleType);
+            if (gradient.spread === REPEAT) result = this.applyRadialGradient(gradient, workData, REPEAT, entity, styleType);
+            if (gradient.spread === TRANSPARENT) result = this.applyRadialGradient(gradient, workData, TRANSPARENT, entity, styleType);
         }
 
         if (result) {
@@ -118,33 +118,17 @@ P.getPaletteIndex = function (gradient, t) {
 
 
 // ### Actions
-P.applyLinearGradient = function (gradient, workData, spread, entity, styleType) {
+P.applyLinearGradient = function (gradient, workData, spread) {
 
-    const palette = gradient.palette;
-    if (!palette) return workData;
+    const stopsData = gradient.stopsData,
+        args = gradient.coordinates;
 
-    const stopsData = palette.getStopsData(),
-        args = gradient.gradientArgs;
+    if (!stopsData || !args) return workData;
 
     let x0 = args[0],
         y0 = args[1],
         x1 = args[2],
         y1 = args[3];
-
-    const lockToEntity = entity && (
-        (styleType === FILL && entity.lockFillStyleToEntity) ||
-        (styleType === DRAW && entity.lockStrokeStyleToEntity)
-    );
-
-    if (lockToEntity) {
-
-        const [x, y] = entity.currentStampPosition;
-
-        x0 += x;
-        y0 += y;
-        x1 += x;
-        y1 += y;
-    }
 
     const dx = x1 - x0,
         dy = y1 - y0,
@@ -156,7 +140,7 @@ P.applyLinearGradient = function (gradient, workData, spread, entity, styleType)
         width = workData.width,
         height = workData.height;
 
-    const easing = palette.easing,
+    const easing = gradient.easing,
         engine = isa_fn(easing) ? easing : easeEngines[easing];
 
     let x, y, i, a, t, index, stop;
@@ -212,78 +196,138 @@ P.applyLinearGradient = function (gradient, workData, spread, entity, styleType)
     return workData;
 };
 
-P.reflectRadialGradient = function (gradient, workData) {
 
-    // Temporary manipulation for development - turn alpha cyan
+P.applyRadialGradient = function (gradient, workData, spread) {
+
+    const stopsData = gradient.stopsData,
+        args = gradient.coordinates;
+
+    if (!stopsData || !args) return workData;
+
+    let x0 = args[0],
+        y0 = args[1],
+        r0 = args[2],
+        x1 = args[3],
+        y1 = args[4],
+        r1 = args[5];
+
+    const cx = x1 - x0,
+        cy = y1 - y0,
+        cr = r1 - r0,
+        qa = (cx * cx) + (cy * cy) - (cr * cr);
+
     const d = workData.data,
-        src32 = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2);
+        width = workData.width,
+        height = workData.height;
 
-    const r = 0,
-        g = 255,
-        b = 255;
+    const easing = gradient.easing,
+        engine = isa_fn(easing) ? easing : easeEngines[easing];
 
-    let rgba, a;
+    let x, y, i, alpha,
+        px, py,
+        qb, qc, disc, root,
+        t, t1, t2,
+        rad1, rad2,
+        index, stop;
 
-    for (let p = 0, pz = src32.length | 0; p < pz; p++) {
+    for (y = 0; y < height; y++) {
 
-        rgba = src32[p];
+        for (x = 0; x < width; x++) {
 
-        a = (rgba >>> 24) & 0xff;
+            i = ((y * width) + x) * 4;
+            alpha = d[i + 3];
 
-        if (a) src32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
+            if (!alpha) continue;
+
+            px = x - x0;
+            py = y - y0;
+
+            qb = -2 * ((px * cx) + (py * cy) + (r0 * cr));
+            qc = (px * px) + (py * py) - (r0 * r0);
+
+            if (_abs(qa) < 0.000001) {
+
+                if (_abs(qb) < 0.000001) {
+
+                    d[i + 3] = 0;
+                    continue;
+                }
+
+                t = -qc / qb;
+
+                if ((r0 + (t * cr)) < 0) {
+
+                    d[i + 3] = 0;
+                    continue;
+                }
+            }
+            else {
+
+                disc = (qb * qb) - (4 * qa * qc);
+
+                if (disc < 0) {
+
+                    d[i + 3] = 0;
+                    continue;
+                }
+
+                root = _sqrt(disc);
+
+                t1 = (-qb - root) / (2 * qa);
+                t2 = (-qb + root) / (2 * qa);
+
+                rad1 = r0 + (t1 * cr);
+                rad2 = r0 + (t2 * cr);
+
+                if (rad1 >= 0 && rad2 >= 0) t = (t1 < t2) ? t1 : t2;
+                else if (rad1 >= 0) t = t1;
+                else if (rad2 >= 0) t = t2;
+                else {
+
+                    d[i + 3] = 0;
+                    continue;
+                }
+            }
+
+            if (spread === TRANSPARENT) {
+
+                if (t < 0 || t > 1) {
+
+                    d[i + 3] = 0;
+                    continue;
+                }
+            }
+            else if (spread === REPEAT) {
+
+                t = t - _floor(t);
+            }
+            else if (spread === REFLECT) {
+
+                t = t % 2;
+                if (t < 0) t += 2;
+                if (t > 1) t = 2 - t;
+            }
+
+            if (t < 0) t = 0;
+            else if (t > 1) t = 1;
+
+            if (engine) t = engine(t);
+
+            if (t < 0) t = 0;
+            else if (t > 1) t = 1;
+
+            index = this.getPaletteIndex(gradient, t);
+            stop = index * 4;
+
+            d[i] = stopsData[stop];
+            d[i + 1] = stopsData[stop + 1];
+            d[i + 2] = stopsData[stop + 2];
+            d[i + 3] = _floor((alpha * stopsData[stop + 3]) / 255);
+        }
     }
 
     return workData;
 };
-
-P.repeatRadialGradient = function (gradient, workData) {
-
-    // Temporary manipulation for development - turn alpha magenta
-    const d = workData.data,
-        src32 = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2);
-
-    const r = 255,
-        g = 0,
-        b = 255;
-
-    let rgba, a;
-
-    for (let p = 0, pz = src32.length | 0; p < pz; p++) {
-
-        rgba = src32[p];
-
-        a = (rgba >>> 24) & 0xff;
-
-        if (a) src32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
-    }
-
-    return workData;
-};
-
-P.transparentRadialGradient = function (gradient, workData) {
-
-    // Temporary manipulation for development - turn alpha yellow
-    const d = workData.data,
-        src32 = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2);
-
-    const r = 255,
-        g = 255,
-        b = 0;
-
-    let rgba, a;
-
-    for (let p = 0, pz = src32.length | 0; p < pz; p++) {
-
-        rgba = src32[p];
-
-        a = (rgba >>> 24) & 0xff;
-
-        if (a) src32[p] = ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
-    }
-
-    return workData;
-};
-
 
 // #### Factory
 constructors.GradientEngine = GradientEngine;

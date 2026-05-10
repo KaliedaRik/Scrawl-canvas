@@ -21,7 +21,7 @@ const name = (n) => `${namespace}-${n}`;
 // + Needs to be a let, not a const, because we're going to kill/resurrect this gradient
 let graddy = scrawl.makeGradient({
 
-    name: name('mygradient'),
+    name: 'my-gradient',
     endX: '100%',
     easing: 'linear',
     precision: 1,
@@ -42,18 +42,18 @@ const bespokeEasings = {
 };
 
 // Create a block entity which will use the gradient
-scrawl.makeBlock({
+const blocky = scrawl.makeBlock({
 
     name: name('myblock'),
     width: '90%',
     height: '90%',
-    startX: '5%',
-    startY: '5%',
-
+    startX: '35%',
+    startY: '35%',
+    handleX: '35%',
+    handleY: '35%',
     fillStyle: graddy,
-    lockFillStyleToEntity: true,
-    strokeStyle: 'coral',
-    lineWidth: 2,
+    strokeStyle: 'slategray',
+    lineWidth: 40,
     method: 'fillAndDraw',
 });
 
@@ -85,7 +85,7 @@ const makeObserver = () => {
     return scrawl.makeUpdater({
 
         event: ['input', 'change'],
-        origin: '.controlItem',
+        origin: '.gradientControl',
 
         target: graddy,
 
@@ -113,7 +113,34 @@ const makeObserver = () => {
             spread: ['spread', 'raw'],
         },
     });
-}
+};
+
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.blockControl',
+
+    target: blocky,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
+
+        flipUpend: ['flipUpend', 'boolean'],
+        flipReverse: ['flipReverse', 'boolean'],
+
+        fillStyle: ['fillStyle', 'raw'],
+        strokeStyle: ['strokeStyle', 'raw'],
+
+        lockFillStyleToEntity: ['lockFillStyleToEntity', 'boolean'],
+        lockStrokeStyleToEntity: ['lockStrokeStyleToEntity', 'boolean'],
+    },
+});
+
 
 // ... Create the form observer
 let myobserver = makeObserver();
@@ -181,6 +208,15 @@ const dom = scrawl.initializeDomInputs([
     ['select', 'red', 0],
     ['select', 'returnColorAs', 0],
     ['select', 'spread', 0],
+
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['select', 'flipReverse', 0],
+    ['select', 'flipUpend', 0],
+    ['select', 'lockFillStyleToEntity', 0],
+    ['select', 'lockStrokeStyleToEntity', 0],
+    ['select', 'fillStyle', 1],
+    ['select', 'strokeStyle', 0],
 ]);
 
 
@@ -189,15 +225,15 @@ console.log(scrawl.library);
 
 console.log('Performing tests ...');
 
-killStyle(scrawl, canvas, name('mygradient'), 3000, () => {
+killStyle(scrawl, canvas, 'my-gradient', 3000, () => {
 
     // Repopulate the graddy variable
 /** @ts-expect-error */
-    graddy = scrawl.findStyles(name('mygradient'));
+    graddy = scrawl.findStyles('my-gradient');
 
     // Reset the block fillStyle to the gradient
     scrawl.findEntity(name('myblock')).set({
-        fillStyle: name('mygradient'),
+        fillStyle: 'my-gradient',
     });
 
     // Kill the form observer

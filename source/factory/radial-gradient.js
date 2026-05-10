@@ -7,6 +7,8 @@ import { constructors } from '../core/library.js';
 
 import { addStrings, doCreate, isa_number, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
+import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
+
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
@@ -104,22 +106,22 @@ G.endRadius = function () {
 S.startRadius = function (item) {
 
     this.startRadius = item;
-    this.dirtyStyle = true;
+    this.updateSubscribers();
 };
 S.endRadius = function (item) {
 
     this.endRadius = item;
-    this.dirtyStyle = true;
+    this.updateSubscribers();
 };
 D.startRadius = function (item) {
 
     this.startRadius = addStrings(this.startRadius, item);
-    this.dirtyStyle = true;
+    this.updateSubscribers();
 };
 D.endRadius = function (item) {
 
     this.endRadius = addStrings(this.endRadius, item);
-    this.dirtyStyle = true;
+    this.updateSubscribers();
 };
 
 
@@ -181,22 +183,37 @@ P.buildStyle = function (cell, entity) {
 };
 
 // `updateGradientArgs` - internal function
-P.updateGradientArgs = function (x, y) {
+P.updateGradientArgs = function (x, y, roll, scale) {
 
     const gradientArgs = this.gradientArgs,
         currentStart = this.currentStart,
-        currentEnd = this.currentEnd,
-        sr = this.currentStartRadius;
+        currentEnd = this.currentEnd;
 
-    let er = this.currentEndRadius;
-
-    const sx = currentStart[0] + x,
+    let sx = currentStart[0] + x,
         sy = currentStart[1] + y,
         ex = currentEnd[0] + x,
-        ey = currentEnd[1] + y;
+        ey = currentEnd[1] + y,
+        sr = this.currentStartRadius,
+        er = this.currentEndRadius;
 
     // check to correct situation where coordinates represent a '0 x 0' box - which will cause errors in some browsers
     if (sx === ex && sy === ey && sr === er) er++;
+
+    if (roll) {
+
+        const coord = requestCoordinate();
+
+        [sx, sy] = coord.setFromArray([sx, sy]).rotate(roll);
+        [ex, ey] = coord.setFromArray([ex, ey]).rotate(roll);
+
+        releaseCoordinate(coord);
+    }
+
+    if (scale !== 1) {
+
+        sr *= scale;
+        er *= scale;
+    }
 
     gradientArgs.length = 0;
     gradientArgs.push(sx, sy, sr, ex, ey, er);

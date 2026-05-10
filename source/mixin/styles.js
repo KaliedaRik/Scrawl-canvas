@@ -24,7 +24,7 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 import { makePalette } from '../untracked-factory/palette.js';
 
 // Shared constants
-import { _floor, _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, END, LEFT, LINEAR, NAME, PAD, REFLECT, REPEAT, RGB, RIGHT, START, T_PALETTE, TOP, TRANSPARENT, UNDEF, WHITE } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, DRAW, END, FILL, LEFT, LINEAR, NAME, PAD, REFLECT, REPEAT, RGB, RIGHT, START, T_PALETTE, TOP, TRANSPARENT, UNDEF, WHITE } from '../helper/shared-vars.js';
 
 // Local constants
 const COLORS = 'colors',
@@ -646,24 +646,27 @@ export default function (P = Ωempty) {
 
 
 // `getData` - Every styles object (Gradient, RadialGradient, ConicGradient, Pattern, Color, Cell) needs to include a __getData__ function. This is invoked by Cell objects during the Display cycle `compile` step, when it takes an entity State object and updates its &lt;canvas> element's context engine to bring it into alignment with requirements.
-    P.getData = function (entity, cell) {
+    P.getData = function (entity, cell, area) {
 
         // Step 1: recalculate current start and end points
-        this.cleanStyle(entity, cell);
+        this.cleanStyle(entity, cell, area);
 
         // Step 2: finalize the coordinates to use for creating the gradient in relation to the current entity's position and requirements on the canvas
-        this.finalizeCoordinates(entity);
+        this.finalizeCoordinates(entity, area);
 
         // Step 3: create, populate and return gradient/pattern object
         return this.buildStyle(cell, entity);
     };
 
 // `cleanStyle` - internal function invoked as part of the gradient-type object's `getData` function. The style has to be cleaned every time it is applied to a Cell's engine because it can never know which Cell is invoking it, or for which entity it is to be used.
-    P.cleanStyle = function (entity = Ωempty, cell = Ωempty) {
+    P.cleanStyle = function (entity = Ωempty, cell = Ωempty, area) {
 
         let dims, w, h, scale;
 
-        if (entity.lockFillStyleToEntity || entity.lockStrokeStyleToEntity) {
+        if (
+            (area === FILL && entity.lockFillStyleToEntity) ||
+            (area === DRAW && entity.lockStrokeStyleToEntity)
+        ) {
 
             dims = entity.currentDimensions;
             scale = entity.currentScale;
@@ -703,25 +706,32 @@ export default function (P = Ωempty) {
     };
 
 // `finalizeCoordinates` - internal function invoked as part of the gradient-type object's `getData` function.
-    P.finalizeCoordinates = function (entity = Ωempty) {
+    P.finalizeCoordinates = function (entity = Ωempty, area) {
 
         const entityStampPosition = entity.currentStampPosition,
             entityStampHandlePosition = entity.currentStampHandlePosition,
             entityScale = entity.currentScale;
 
-        let correctX, correctY;
+        let correctX, correctY, roll;
 
-        if (entity.lockFillStyleToEntity || entity.lockStrokeStyleToEntity) {
+        if (
+            (area === FILL && entity.lockFillStyleToEntity) ||
+            (area === DRAW && entity.lockStrokeStyleToEntity)
+        ) {
 
             correctX = -(entityStampHandlePosition[0] * entityScale) || 0;
             correctY = -(entityStampHandlePosition[1] * entityScale) || 0;
+
+            this.updateGradientArgs(correctX, correctY, 0, entityScale);
         }
         else {
 
             correctX = -entityStampPosition[0] || 0;
             correctY = -entityStampPosition[1] || 0;
+            roll = -entity.currentRotation;
+
+            this.updateGradientArgs(correctX, correctY, -entity.currentRotation, 1);
         }
-        this.updateGradientArgs(correctX, correctY);
     };
 
 

@@ -106,7 +106,7 @@ P.buildStyle = function (cell) {
 };
 
 // `updateGradientArgs` - internal function
-P.updateGradientArgs = function (x, y) {
+P.updateGradientArgs = function (x, y, roll) {
 
     const gradientArgs = this.gradientArgs,
         currentStart = this.currentStart,
@@ -114,6 +114,15 @@ P.updateGradientArgs = function (x, y) {
 
     const sx = currentStart[0] + x,
         sy = currentStart[1] + y;
+
+    if (roll) {
+
+        const coord = requestCoordinate();
+
+        [sx, sy] = coord.setFromArray([sx, sy]).rotate(roll);
+
+        releaseCoordinate(coord);
+    }
 
     gradientArgs.length = 0;
     gradientArgs.push(angle, sx, sy);

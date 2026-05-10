@@ -36,7 +36,7 @@ import buttonMix from './button.js';
 import filterMix from './filter.js';
 
 // Shared constants
-import { _floor, _keys, _parse, BLANK, DESTINATION_OUT, DRAW, FILL, GOOD_HOST, IMG, MOUSE, NAME, PAD, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS, STYLES_ARR, T_GRADIENT, T_RADIAL_GRADIENT, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _floor, _keys, _parse, BLACK, BLANK, DESTINATION_OUT, DRAW, FILL, GOOD_HOST, GRADIENTS_ARR, IMG, MOUSE, NAME, PAD, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS, T_GRADIENT, T_RADIAL_GRADIENT, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const NONZERO = 'nonzero',
@@ -558,8 +558,8 @@ export default function (P = Ωempty) {
 
             const { fillStyle, strokeStyle } = this.state;
 
-            this.useFillGradientCache = (fillStyle && !fillStyle.substring && STYLES_ARR.includes(fillStyle.type) && fillStyle.spread !== PAD) ? true : false;
-            this.useDrawGradientCache = (strokeStyle && !strokeStyle.substring && STYLES_ARR.includes(strokeStyle.type) && strokeStyle.spread !== PAD) ? true : false;
+            this.useFillGradientCache = (fillStyle && !fillStyle.substring && GRADIENTS_ARR.includes(fillStyle.type) && fillStyle.spread !== PAD) ? true : false;
+            this.useDrawGradientCache = (strokeStyle && !strokeStyle.substring && GRADIENTS_ARR.includes(strokeStyle.type) && strokeStyle.spread !== PAD) ? true : false;
         }
         else {
 
@@ -677,14 +677,16 @@ export default function (P = Ωempty) {
 
         if (dest) {
 
-            // Do gradient updates, if required, first
-            if (this.useDrawGradientCache || this.useFillGradientCache) this.updateGradientsBeforeStamp(dest);
-
             const engine = dest.engine;
             const [x, y] = this.currentStampPosition;
 
             // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
             dest.rotateDestination(engine, x, y, this);
+
+            if (this.useDrawGradientCache || this.useFillGradientCache) {
+
+                this.updateGradientsBeforeStamp(dest);
+            }
 
             // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
             if (!this.noCanvasEngineUpdates) dest.setEngine(this);
@@ -696,12 +698,58 @@ export default function (P = Ωempty) {
 
     P.updateGradientsBeforeStamp = function (refCell) {
 
+        const getId = () => `${this.name}_${generateUniqueString()}`;
+
+        const getCoords = (grad, drawId, fillId) => {
+
+            const coords = [...grad.gradientArgs];
+            let p0, p1;
+
+            if (drawId || fillId) {
+
+                if (
+                    (fillId && this.lockFillStyleToEntity) ||
+                    (drawId && this.lockStrokeStyleToEntity)
+                ) {
+
+                    if (grad.type === T_RADIAL_GRADIENT) {
+
+                        const scale = this.currentScale;
+
+                        p0 = matrix.transformPoint(new DOMPoint(coords[0], coords[1]));
+                        p1 = matrix.transformPoint(new DOMPoint(coords[3], coords[4]));
+
+                        coords[0] = p0.x;
+                        coords[1] = p0.y;
+                        coords[3] = p1.x;
+                        coords[4] = p1.y;
+
+                        coords[2] *= scale;
+                        coords[5] *= scale;
+                    }
+                    else if (grad.type === T_GRADIENT) {
+
+                        p0 = matrix.transformPoint(new DOMPoint(coords[0], coords[1]));
+                        p1 = matrix.transformPoint(new DOMPoint(coords[2], coords[3]));
+
+                        coords[0] = p0.x;
+                        coords[1] = p0.y;
+                        coords[2] = p1.x;
+                        coords[3] = p1.y;
+
+                    }
+                }
+            }
+            return coords;
+        };
+
         const myCell = requestCell(),
             element = myCell.element,
             engine = myCell.engine;
 
         const [width, height] = refCell.get('dimensions');
         const [x, y] = this.currentStampPosition;
+        const matrix = refCell.engine.getTransform();
 
         const state = this.state,
             pathObject = this.pathObject;
@@ -712,6 +760,9 @@ export default function (P = Ωempty) {
         myCell.rotateDestination(engine, x, y, this);
         myCell.setEngine(this);
 
+        let drawId = this.identifierDrawGradientCache,
+            fillId = this.identifierFillGradientCache;
+
         if (this.useDrawGradientCache) {
 
             const grad = (state.strokeStyle.substring)
@@ -720,25 +771,42 @@ export default function (P = Ωempty) {
 
             if (ENHANCED_GRADIENTS.includes(grad.type)) {
 
-                if (this.dirtyDrawGradient || this.dirtyDrawGradientCache || this.identifierDrawGradientCache === ZERO_STR) this.identifierDrawGradientCache = generateUniqueString();
+                if (this.dirtyDrawGradient ||
+                    this.dirtyDrawGradientCache ||
+                    drawId === ZERO_STR
+                ) drawId = getId();
 
-                if (grad.spread === PAD) this.identifierDrawGradientCache = ZERO_STR;
+                if (grad.spread === PAD) drawId = ZERO_STR;
 
-                if (this.identifierDrawGradientCache) {
+                if (drawId) {
 
-                    const cacheExists = checkForWorkstoreItem(this.identifierDrawGradientCache);
+                    const cacheExists = checkForWorkstoreItem(drawId);
 
                     if (!cacheExists) {
 
+                        grad.getData(this, refCell, DRAW);
+
+                        engine.strokeStyle = BLACK;
                         engine.stroke(pathObject);
 
                         const data = engine.getImageData(0, 0, width, height);
 
+                        this.identifierDrawGradientCache = drawId;
+
                         gradientEngine.action({
                             imageData: data,
-                            gradient: grad,
+                            fixedGradientData: {
+                                type: grad.type,
+                                spread: grad.spread,
+                                coordinates: getCoords(grad, drawId, fillId),
+                                paletteStart: grad.paletteStart,
+                                paletteEnd: grad.paletteEnd,
+                                cyclePalette: grad.cyclePalette,
+                                easing: grad.palette.easing,
+                                stopsData: grad.palette.getStopsData().slice(),
+                            },
                             entity: this,
-                            identifier: this.identifierDrawGradientCache,
+                            identifier: drawId,
                             styleType: DRAW,
                         });
                     }
@@ -758,25 +826,43 @@ export default function (P = Ωempty) {
 
             if (ENHANCED_GRADIENTS.includes(grad.type)) {
 
-                if (this.dirtyFillGradient || this.dirtyFillGradientCache || this.identifierFillGradientCache === ZERO_STR) this.identifierFillGradientCache = generateUniqueString();
+                if (
+                    this.dirtyFillGradient ||
+                    this.dirtyFillGradientCache ||
+                    fillId === ZERO_STR
+                ) fillId = getId();
 
-                if (grad.spread === PAD) this.identifierFillGradientCache = ZERO_STR;
+                if (grad.spread === PAD) fillId = ZERO_STR;
 
-                if (this.identifierFillGradientCache) {
+                if (fillId) {
 
-                    const cacheExists = checkForWorkstoreItem(this.identifierFillGradientCache);
+                    const cacheExists = checkForWorkstoreItem(fillId);
 
                     if (!cacheExists) {
 
+                        grad.getData(this, refCell, FILL);
+
+                        engine.fillStyle = BLACK;
                         engine.fill(pathObject, this.winding);
 
                         const data = engine.getImageData(0, 0, width, height);
 
+                        this.identifierFillGradientCache = fillId;
+
                         gradientEngine.action({
                             imageData: data,
-                            gradient: grad,
+                            fixedGradientData: {
+                                type: grad.type,
+                                spread: grad.spread,
+                                coordinates: getCoords(grad, drawId, fillId),
+                                paletteStart: grad.paletteStart,
+                                paletteEnd: grad.paletteEnd,
+                                cyclePalette: grad.cyclePalette,
+                                easing: grad.palette.easing,
+                                stopsData: grad.palette.getStopsData().slice(),
+                            },
                             entity: this,
-                            identifier: this.identifierFillGradientCache,
+                            identifier: fillId,
                             styleType: FILL,
                         });
                     }
@@ -948,7 +1034,7 @@ export default function (P = Ωempty) {
         }
     };
 
-// `getCellCoverage` - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the `scrawl.createImageFromEntity` function is invoked.
+// `getCellCoverage` - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host for building an image when the `scrawl.createImageFromEntity` function is invoked.
     P.getCellCoverage = function (img) {
 
         const { width, height, data } = img;

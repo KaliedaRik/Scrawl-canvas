@@ -10,7 +10,7 @@ import { cell, cellnames, styles, stylesnames } from '../core/library.js';
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 // Shared constants
-import { _cos, _entries, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, STYLES_ARR, TOP } from '../helper/shared-vars.js';
+import { _cos, _entries, _isArray, _keys, _radian, _sin, BLANK, DRAW, FILL, LEFT, LINE_DASH, STATE_ALL_KEYS, TOP } from '../helper/shared-vars.js';
 
 // Local constants
 // - None defined
@@ -96,7 +96,7 @@ export default function (P = Ωempty) {
 
                 for (const item in changes) {
 
-                    action[item](changes[item], engine, STYLES_ARR, entity, this);
+                    action[item](changes[item], engine, entity, this);
                     state[item] = changes[item];
                 }
             }
@@ -107,7 +107,7 @@ export default function (P = Ωempty) {
     // __setEngineActions__ - an Object containing functions for updating the engine's attributes; used by `setEngine`
     P.setEngineActions = {
 
-        fillStyle: function (item, engine, STYLES_ARR, entity, layer) {
+        fillStyle: function (item, engine, entity, layer) {
 
             if (item.substring) {
 
@@ -119,11 +119,11 @@ export default function (P = Ωempty) {
                 if (brokenStyle) {
 
                     entity.state.fillStyle = brokenStyle;
-                    engine.fillStyle = brokenStyle.getData(entity, layer);
+                    engine.fillStyle = brokenStyle.getData(entity, layer, FILL);
                 }
                 else engine.fillStyle = item;
             }
-            else engine.fillStyle = item.getData(entity, layer);
+            else engine.fillStyle = item.getData(entity, layer, FILL);
         },
 
         filter: function (item, engine) {
@@ -191,7 +191,7 @@ export default function (P = Ωempty) {
             engine.shadowOffsetY = item;
         },
 
-        strokeStyle: function (item, engine, STYLES_ARR, entity, layer) {
+        strokeStyle: function (item, engine, entity, layer) {
 
             if (item.substring) {
 
@@ -203,11 +203,11 @@ export default function (P = Ωempty) {
                 if (brokenStyle) {
 
                     entity.state.strokeStyle = brokenStyle;
-                    engine.strokeStyle = brokenStyle.getData(entity, layer);
+                    engine.strokeStyle = brokenStyle.getData(entity, layer, DRAW);
                 }
                 else engine.strokeStyle = item;
             }
-            else engine.strokeStyle = item.getData(entity, layer);
+            else engine.strokeStyle = item.getData(entity, layer, DRAW);
         },
 
         direction: function (item, engine) {
