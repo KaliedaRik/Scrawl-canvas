@@ -297,6 +297,8 @@ export default function (P = Ωempty) {
                 if (!gradientCandidate) {
 
                     state.fillStyle = item;
+
+                    this.setGradientCacheFlags();
                     return;
                 }
             }
@@ -308,6 +310,8 @@ export default function (P = Ωempty) {
                     state.fillStyle = gradientCandidate.name;
                 }
                 else state.fillStyle = gradientCandidate.name || BLANK;
+
+                this.setGradientCacheFlags();
                 return;
             }
         }
@@ -334,6 +338,8 @@ export default function (P = Ωempty) {
                 if (!gradientCandidate) {
 
                     state.strokeStyle = item;
+
+                    this.setGradientCacheFlags();
                     return;
                 }
             }
@@ -345,6 +351,8 @@ export default function (P = Ωempty) {
                     state.strokeStyle = gradientCandidate.name;
                 }
                 else state.strokeStyle = gradientCandidate.name || BLANK;
+
+                this.setGradientCacheFlags();
                 return;
             }
         }
@@ -549,9 +557,6 @@ export default function (P = Ωempty) {
             this.dirtyDimensions = true;
         }
 
-// We need to do work for gradients up-front
-        this.setGradientCacheFlags();
-
 // A number of updates (__scale__, __dimensions__, __start__, __offset__, __handle__) require the entity to recalculate its Path2D object - if any of them are set, then the entity sets its own `dirtyPathObject` flag as a result.
         if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) {
 
@@ -560,7 +565,7 @@ export default function (P = Ωempty) {
             if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
         }
 
-        // Bespoke gradients also need to take into account rotation
+        // Non-classic gradients need to take into account rotation
         if (this.dirtyRotation) {
 
             if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
@@ -595,7 +600,7 @@ export default function (P = Ωempty) {
             this.dirtyStampHandlePositions = true;
         }
 
-// Bespoke gradients also need to take into account positional changes
+// Non-classic gradients also need to take into account positional changes
         if (this.dirtyStampPositions || this.dirtyStampHandlePositions) {
 
             if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
@@ -616,16 +621,17 @@ export default function (P = Ωempty) {
         this.prepareStampTabsHelper();
     };
 
-// The `dirtyFilters` and `dirtyGradientCache` flags are checked and handled by the __filteredStamp__ function.
-
+// The `dirtyFilters` flags are checked and handled by the __filteredStamp__ function.
+//
+// The `dirtyGradientCache` flags are checked and handled by the __updateGradientsBeforeStamp__ function.
+//
 // `cleanPathObject` - ___this function will be overwritten by every entity Factory___, to meet their individual requirements.
 // + The function needs to build a Canvas API [Path2D](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) object and store it in the __pathObject__ attribute. The Path2D object is used for both entity stamping (see below) and entity collision detection work.
     P.cleanPathObject = λnull;
 
-// We need to do work for gradients up-front
-// + If fillStyle or strokeStyle are set to a gradient, then we need to determine if the gradient is classic or not.
-// + The state object does everything it can to make sure fillStyle and strokeStyle attributes are set to the gradient (and color) objects, not a string reference to those objects
-// + It's more wasteful to perform these checks on every Display cycle for every entity; the alternative is to check whenever fillStyle and strokeStyle get changed, but during development we'll pay the cost and work on an alternative approach in due course
+// We need to do work for gradients up-front - if fillStyle or strokeStyle are set to a gradient, then we need to determine if the gradient is "classic" or not.
+// + Classic gradients are rendered through the Canvas API
+// + Non-classic gradients (any gradient that reflects, repeats, or sets areas outside its boundaries to transparent) are not supported by the Canvas API and need to be rendered by SC instead
     P.setGradientCacheFlags = function () {
 
         let fillCache = false,
@@ -857,9 +863,7 @@ export default function (P = Ωempty) {
                     gradientEngine.action({
                         imageData: data,
                         fixedGradientData: getFixedGradientData(grad, drawId, fillId),
-                        // entity: this,
                         identifier: drawId,
-                        // styleType: DRAW,
                     });
                 }
                 this.dirtyDrawGradient = false;
@@ -899,9 +903,7 @@ export default function (P = Ωempty) {
                     gradientEngine.action({
                         imageData: data,
                         fixedGradientData: getFixedGradientData(grad, drawId, fillId),
-                        // entity: this,
                         identifier: fillId,
-                        // styleType: FILL,
                     });
                 }
                 this.dirtyFillGradient = false;
