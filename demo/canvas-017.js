@@ -68,6 +68,34 @@ scrawl.makeGradient({
       [0, 'hwb(120 10% 10%)'],
       [999, 'hwb(20 10% 10%)'],
     ],
+
+}).clone({
+
+    name: name('monochrome-repeat'),
+    colors: [
+      [0, 'black'],
+      [999, 'white'],
+    ],
+    endX: '25%',
+    spread: 'repeat',
+
+}).clone({
+
+    name: name('red-blue-reflect'),
+    colors: [
+      [0, 'rgb(255 0 0)'],
+      [999, 'rgb(0 0 255)'],
+    ],
+    spread: 'reflect',
+
+}).clone({
+
+    name: name('red-gradient-transparent'),
+    colors: [
+      [0, 'hsl(0 100% 40%)'],
+      [999, 'hsl(0 100% 100%)'],
+    ],
+    spread: 'transparent',
 });
 
 const grads = [

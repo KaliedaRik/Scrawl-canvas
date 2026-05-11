@@ -1,4 +1,20 @@
 // # Scrawl-canvas gradient engine
+//
+// **Important notice:** this engine extends the capability of classic Canvas API gradients, but does not replace them. 
+// + Classic (pad) gradients - Gradient, RadialGradient, ConicGradient - are built into the browser and thus efficient and highly performative.
+// + The software-extended gradients defined in this engine are significantly more expensive to render (~5-10% the performance of classic gradients in stress tests). Thus they should be used sparingly in performance-sensitive scenes.
+//
+// Classic gradients use `pad` spreading - the remaining space beyond a gradients borders are filled with the first and last colors of the gradient. These software-extended gradients introduce three new spreading strategies:
+// + `repeat` - the gradient will repeat beyond its borders
+// + `reflect` - the gradient will apply a reversed version of itself immediately beyond its borders, repeating as necessary across the page
+// + `transparent` - the gradient will make all areas beyond its borders transparent
+//
+// The conic gradient also includes the following changes:
+// + Introduces a new `angleRange` attribute. When set to less than 360 (degrees) the area beyond that angle is treated as spreading area to be filled with either pad, repeat, reflect or transparent color
+// + Adds new `swirlDistance` and `swirlClockwise` attributes which will deform the gradient into a swirl pattern as it is applied.
+
+
+// #### Imports
 import { constructors } from '../core/library.js';
 
 import { doCreate, isa_fn } from '../helper/utilities.js';
