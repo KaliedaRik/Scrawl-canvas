@@ -74,7 +74,7 @@ const Palette = function (items = Ωempty) {
 
     this.colors = {};
     this.stops = Array(1000).fill(BLANK);
-    this.stopsData = new Uint8ClampedArray(4000);
+    this.stopsData = new Uint32Array(1000);
 
     if (items.colors == null) items.colors = [[0, BLACK], [999, WHITE]];
 
@@ -389,8 +389,6 @@ P.getStopsData = function () {
     return this.stopsData;
 };
 
-// `recalculateStopColors` - populate the stops Array with CSS color Strings, as determined by colors stored in the `colors` object
-// + Be aware that if color stops have not been set at index 0, or index 999, the indices between 0 to start, and between end to 999, will remain transparent black.
 P.recalculateStopColors = function () {
 
     if (!this.dirtyPalette) return;
@@ -401,6 +399,7 @@ P.recalculateStopColors = function () {
     const { colors, stops, stopsData, factory } = this;
 
     stops.fill(BLANK);
+    stopsData.fill(0);
 
     const keys = _keys(colors)
         .map(n => parseInt(n, 10))
@@ -414,9 +413,23 @@ P.recalculateStopColors = function () {
         return;
     }
 
-    let a, b, span, A, J, B, returnData;
+    const setStop = function (index, colorString) {
 
-    for (let i = 0; i < keys.length - 1; i++) {
+        const data = factory.extractDatafromColorString(colorString);
+
+        stops[index] = colorString;
+
+        stopsData[index] = (
+            ((_floor(data[4] * 255) << 24) |
+            (data[3] << 16) |
+            (data[2] << 8) |
+            data[1])
+        ) >>> 0;
+    };
+
+    let a, b, span, color;
+
+    for (let i = 0, iz = keys.length - 1; i < iz; i++) {
 
         a = keys[i];
         b = keys[i + 1];
@@ -427,38 +440,15 @@ P.recalculateStopColors = function () {
             maximumColor: factory.buildColorStringFromData(colors[b]),
         });
 
-        if (i === 0) {
-
-            stops[a] = factory.getRangeColor(0);
-
-            returnData = factory.extractDatafromColorString(stops[a]);
-            A = a * 4;
-            stopsData[A] = returnData[1];
-            stopsData[++A] = returnData[2];
-            stopsData[++A] = returnData[3];
-            stopsData[++A] = _floor(returnData[4] * 256);
-        }
+        if (i === 0) setStop(a, factory.getRangeColor(0));
 
         for (let j = a + 1; j < b; j++) {
 
-            stops[j] = factory.getRangeColor((j - a) / span);
-
-            returnData = factory.extractDatafromColorString(stops[j]);
-            J = j * 4;
-            stopsData[J] = returnData[1];
-            stopsData[++J] = returnData[2];
-            stopsData[++J] = returnData[3];
-            stopsData[++J] = _floor(returnData[4] * 256);
+            color = factory.getRangeColor((j - a) / span);
+            setStop(j, color);
         }
 
-        stops[b] = factory.getRangeColor(1);
-
-        returnData = factory.extractDatafromColorString(stops[b]);
-        B = b * 4;
-        stopsData[B] = returnData[1];
-        stopsData[++B] = returnData[2];
-        stopsData[++B] = returnData[3];
-        stopsData[++B] = _floor(returnData[4] * 256);
+        setStop(b, factory.getRangeColor(1));
     }
 };
 

@@ -1,5 +1,5 @@
 // # ConicGradient factory
-// Scrawl-canvas ConicGradient objects implement the Canvas API's [createConicGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createConicGradient) method. The resulting [CanvasGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) object can be used by any Scrawl-canvas entity as its `fillStyle` or `strokeStyle`.
+// Scrawl-canvas ConicGradient objects implement and extend the Canvas API's [createConicGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createConicGradient) method. The resulting [CanvasGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient) object can be used by any Scrawl-canvas entity as its `fillStyle` or `strokeStyle`.
 
 
 // #### Imports
@@ -13,7 +13,7 @@ import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
 // Shared constants
-import { _radian, BLANK, STYLES, T_CONIC_GRADIENT } from '../helper/shared-vars.js';
+import { _radian, BLANK, DRAW, FILL, STYLES, T_CONIC_GRADIENT } from '../helper/shared-vars.js';
 
 // Local constants
 // + None defined
@@ -46,29 +46,27 @@ const defaultAttributes = {
 // ConicGradients calculate their gradients as a sweep of color around the `start` (`startX` and `startY`) coordinate. The __startAngle__ attribute - measured in degrees, not radians - represents the angle at which the color stop 0 occurs.
 // + The sweep of colors is, by default, clockwise around the start coordinate; to reverse this, swap the gradient's `paletteStart` and `paletteEnd` attributes.
     angle: 0,
+
+// The following attributes may trigger a software rendering of the ConicGradient
+// 
+// `spread` - value from 'pad' (default), 'repeat', 'reflect', 'transparent'
+//
+// `angleRange` - by default the Conic gradient will sweep a complete turn around the start point. We can limit it to just a part of the circle by setting this attribute to a value greater than 0 and less than 360 (degrees). The spread attribute then determines how the gradient should complete the circle:
+// + 'pad', 'reflect', 'repeat', 'transparent'
+//
+// `angleRange` - number between 1 and 360 (default) - the distance around the origin which the gratient will wrap
+// + For `pad` spread, the remainder of the distance will be filled equally by the gradient's first and last color points 
+// + For other spreads, the remaining space will be filled with repeats/reflections of the gradient, or will be transparent
+    angleRange: 360,
+
+// `swirlDistance` - if set above 0, represents the distance from the origin for a complete turn of the gradient to take place; smaller distances give tighter swirls
+    swirlDistance: 0,
+
+// `swirlClockwise` - boolean. Determines the direction of the swirl - clockwise by default
+    swirlClockwise: true,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
-// In addition to the attributes defined in the __base__ and __styles__ mixins, Gradients also pass through Palette attributes to their Palette object.
-//
-// Attributes from __base__ mixin:
-// + `name`
-//
-// Attributes from __styles__ mixin:
-// + `start`
-// + `startX`
-// + `startY`
-// + `end`
-// + `endX`
-// + `endY`
-// + `palette`
-// + `paletteStart`
-// + `paletteEnd`
-// + `cyclePalette`
-//
-// Attributes from the __palette__ factory:
-// + `colors`
-// + `cyclic`
 
 // #### Packet management
 P.packetExclusions = pushUnique(P.packetExclusions, ['palette']);
@@ -82,8 +80,47 @@ P.packetExclusions = pushUnique(P.packetExclusions, ['palette']);
 
 
 // #### Get, Set, deltaSet
-// No additional getter/setter functionality required
+const S = P.setters,
+    D = P.deltaSetters;
 
+S.angle = function (item) {
+
+    this.angle = item;
+    this.updateSubscribers();
+};
+D.angle = function (item) {
+
+    this.angle = addStrings(this.angle, item);
+    this.updateSubscribers();
+};
+
+S.angleRange = function (item) {
+
+    this.angleRange = item;
+    this.updateSubscribers();
+};
+D.angleRange = function (item) {
+
+    this.angleRange = addStrings(this.angleRange, item);
+    this.updateSubscribers();
+};
+
+S.swirlDistance = function (item) {
+
+    this.swirlDistance = item;
+    this.updateSubscribers();
+};
+D.swirlDistance = function (item) {
+
+    this.swirlDistance = addStrings(this.swirlDistance, item);
+    this.updateSubscribers();
+};
+
+S.swirlClockwise = function (item) {
+
+    this.swirlClockwise = !!item;
+    this.updateSubscribers();
+};
 
 // #### Prototype functions
 
@@ -125,7 +162,7 @@ P.updateGradientArgs = function (x, y, roll) {
 
         releaseCoordinate(coord);
 
-        angle += roll * _radian;
+        angle += (roll * _radian);
     }
 
     gradientArgs.length = 0;
@@ -135,28 +172,22 @@ P.updateGradientArgs = function (x, y, roll) {
 
 // #### Factory
 // ```
-// let graddy = scrawl.makeConicGradient({
-//
-//     name: 'mygradient',
-//
+// const graddy = scrawl.makeConicGradient({
+//     name: 'my-gradient',
 //     startX: '50%',
 //     startY: '50%',
 //     angle: 90,
 // });
 //
 // scrawl.makeBlock({
-//
-//     name: 'myblock',
-//
+//     name: 'my-block',
 //     width: '90%',
 //     height: '90%',
 //     startX: '5%',
 //     startY: '5%',
-//
 //     fillStyle: graddy,
 //     strokeStyle: 'coral',
 //     lineWidth: 2,
-//
 //     method: 'fillAndDraw',
 // });
 // ```

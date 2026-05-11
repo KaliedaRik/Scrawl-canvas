@@ -36,11 +36,10 @@ import buttonMix from './button.js';
 import filterMix from './filter.js';
 
 // Shared constants
-import { _floor, _keys, _parse, BLACK, BLANK, DESTINATION_OUT, DRAW, FILL, GOOD_HOST, GRADIENTS_ARR, IMG, MOUSE, NAME, PAD, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS, T_GRADIENT, T_RADIAL_GRADIENT, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _floor, _keys, _parse, _radian, BLACK, BLANK, DESTINATION_OUT, DRAW, FILL, GOOD_HOST, GRADIENTS_ARR, IMG, MOUSE, NAME, PAD, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS, T_CONIC_GRADIENT, T_GRADIENT, T_RADIAL_GRADIENT, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const NONZERO = 'nonzero',
-    ENHANCED_GRADIENTS = [T_GRADIENT, T_RADIAL_GRADIENT];
+const NONZERO = 'nonzero';
 
 
 // #### Export function
@@ -287,7 +286,7 @@ export default function (P = Ωempty) {
 
         if (currentFill.substring) currentFill = styles[currentFill];
 
-        if (isa_obj(currentFill) && ENHANCED_GRADIENTS.includes(currentFill.type)) currentFill.fillUnsubscribe(this.name);
+        if (isa_obj(currentFill) && GRADIENTS_ARR.includes(currentFill.type)) currentFill.fillUnsubscribe(this.name);
 
         if (item && this.state) {
 
@@ -303,7 +302,7 @@ export default function (P = Ωempty) {
             }
             if (isa_obj(gradientCandidate)) {
 
-                if (ENHANCED_GRADIENTS.includes(gradientCandidate.type)) {
+                if (GRADIENTS_ARR.includes(gradientCandidate.type)) {
 
                     gradientCandidate.fillSubscribe(this.name);
                     state.fillStyle = gradientCandidate.name;
@@ -324,7 +323,7 @@ export default function (P = Ωempty) {
 
         if (currentDraw.substring) currentDraw = styles[currentDraw];
 
-        if (isa_obj(currentDraw) && ENHANCED_GRADIENTS.includes(currentDraw.type)) currentDraw.drawUnsubscribe(this.name);
+        if (isa_obj(currentDraw) && GRADIENTS_ARR.includes(currentDraw.type)) currentDraw.drawUnsubscribe(this.name);
 
         if (item && this.state) {
 
@@ -340,7 +339,7 @@ export default function (P = Ωempty) {
             }
             if (isa_obj(gradientCandidate)) {
 
-                if (ENHANCED_GRADIENTS.includes(gradientCandidate.type)) {
+                if (GRADIENTS_ARR.includes(gradientCandidate.type)) {
 
                     gradientCandidate.drawSubscribe(this.name);
                     state.strokeStyle = gradientCandidate.name;
@@ -551,21 +550,7 @@ export default function (P = Ωempty) {
         }
 
 // We need to do work for gradients up-front
-// + If fillStyle or strokeStyle are set to a gradient, then we need to determine if the gradient is classic or not.
-// + The state object does everything it can to make sure fillStyle and strokeStyle attributes are set to the gradient (and color) objects, not a string reference to those objects
-// + It's more wasteful to perform these checks on every Display cycle for every entity; the alternative is to check whenever fillStyle and strokeStyle get changed, but during development we'll pay the cost and work on an alternative approach in due course
-        if (this.state) {
-
-            const { fillStyle, strokeStyle } = this.state;
-
-            this.useFillGradientCache = (fillStyle && !fillStyle.substring && GRADIENTS_ARR.includes(fillStyle.type) && fillStyle.spread !== PAD) ? true : false;
-            this.useDrawGradientCache = (strokeStyle && !strokeStyle.substring && GRADIENTS_ARR.includes(strokeStyle.type) && strokeStyle.spread !== PAD) ? true : false;
-        }
-        else {
-
-            this.useFillGradientCache = false;
-            this.useDrawGradientCache = false;
-        }
+        this.setGradientCacheFlags();
 
 // A number of updates (__scale__, __dimensions__, __start__, __offset__, __handle__) require the entity to recalculate its Path2D object - if any of them are set, then the entity sets its own `dirtyPathObject` flag as a result.
         if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) {
@@ -637,6 +622,48 @@ export default function (P = Ωempty) {
 // + The function needs to build a Canvas API [Path2D](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) object and store it in the __pathObject__ attribute. The Path2D object is used for both entity stamping (see below) and entity collision detection work.
     P.cleanPathObject = λnull;
 
+// We need to do work for gradients up-front
+// + If fillStyle or strokeStyle are set to a gradient, then we need to determine if the gradient is classic or not.
+// + The state object does everything it can to make sure fillStyle and strokeStyle attributes are set to the gradient (and color) objects, not a string reference to those objects
+// + It's more wasteful to perform these checks on every Display cycle for every entity; the alternative is to check whenever fillStyle and strokeStyle get changed, but during development we'll pay the cost and work on an alternative approach in due course
+    P.setGradientCacheFlags = function () {
+
+        let fillCache = false,
+            drawCache = false,
+            fillGradient, drawGradient;
+
+        if (this.state) {
+
+            const { fillStyle, strokeStyle } = this.state;
+
+            if (fillStyle.substring) fillGradient = styles[fillStyle];
+            else fillGradient = fillStyle;
+
+            if (fillGradient && fillGradient.type) {
+
+                if (GRADIENTS_ARR.includes(fillGradient.type)) {
+
+                    if (T_CONIC_GRADIENT === fillGradient.type && (fillGradient.angleRange < 360 || fillGradient.swirlDistance)) fillCache = true;
+                    else if (fillGradient.spread !== PAD) fillCache = true;
+                }
+            }
+
+            if (strokeStyle.substring) drawGradient = styles[strokeStyle];
+            else drawGradient = strokeStyle;
+
+            if (drawGradient && drawGradient.type) {
+
+                if (GRADIENTS_ARR.includes(drawGradient.type)) {
+
+                    if (T_CONIC_GRADIENT === drawGradient.type && (drawGradient.angleRange < 360 || drawGradient.swirlDistance)) drawCache = true;
+                    else if (drawGradient.spread !== PAD) drawCache = true;
+                }
+            }
+        }
+        this.useFillGradientCache = fillCache;
+        this.useDrawGradientCache = drawCache;
+    };
+
 // ##### Step 2: invoke the entity's stamp action
 // `stamp` - this is the function invoked by Group objects as they cascade the Display cycle __compile__ step through to their member artefacts.
     P.stamp = function (force = false, host, changes) {
@@ -707,40 +734,78 @@ export default function (P = Ωempty) {
 
             if (drawId || fillId) {
 
-                if (
-                    (fillId && this.lockFillStyleToEntity) ||
-                    (drawId && this.lockStrokeStyleToEntity)
-                ) {
+                if (grad.type === T_RADIAL_GRADIENT) {
 
-                    if (grad.type === T_RADIAL_GRADIENT) {
+                    p0 = matrix.transformPoint(new DOMPoint(coords[0], coords[1]));
+                    p1 = matrix.transformPoint(new DOMPoint(coords[3], coords[4]));
 
-                        const scale = this.currentScale;
+                    coords[0] = p0.x;
+                    coords[1] = p0.y;
+                    coords[3] = p1.x;
+                    coords[4] = p1.y;
+                }
+                else if (grad.type === T_GRADIENT) {
 
-                        p0 = matrix.transformPoint(new DOMPoint(coords[0], coords[1]));
-                        p1 = matrix.transformPoint(new DOMPoint(coords[3], coords[4]));
+                    p0 = matrix.transformPoint(new DOMPoint(coords[0], coords[1]));
+                    p1 = matrix.transformPoint(new DOMPoint(coords[2], coords[3]));
 
-                        coords[0] = p0.x;
-                        coords[1] = p0.y;
-                        coords[3] = p1.x;
-                        coords[4] = p1.y;
+                    coords[0] = p0.x;
+                    coords[1] = p0.y;
+                    coords[2] = p1.x;
+                    coords[3] = p1.y;
+                }
+                else if (grad.type === T_CONIC_GRADIENT) {
 
-                        coords[2] *= scale;
-                        coords[5] *= scale;
+                    if (
+                        (fillId && this.lockFillStyleToEntity) ||
+                        (drawId && this.lockStrokeStyleToEntity)
+                    ) {
+
+                        p0 = matrix.transformPoint(new DOMPoint(coords[1], coords[2]));
+
+                        p1 = matrix.transformPoint(new DOMPoint(
+                            coords[1] + Math.cos(coords[0]),
+                            coords[2] + Math.sin(coords[0])
+                        ));
+
+                        coords[0] = Math.atan2(p1.y - p0.y, p1.x - p0.x);
+                        coords[1] = p0.x;
+                        coords[2] = p0.y;
                     }
-                    else if (grad.type === T_GRADIENT) {
+                    else {
 
-                        p0 = matrix.transformPoint(new DOMPoint(coords[0], coords[1]));
-                        p1 = matrix.transformPoint(new DOMPoint(coords[2], coords[3]));
+                        p0 = matrix.transformPoint(new DOMPoint(coords[1], coords[2]));
 
-                        coords[0] = p0.x;
-                        coords[1] = p0.y;
-                        coords[2] = p1.x;
-                        coords[3] = p1.y;
-
+                        coords[0] = grad.angle * _radian;
+                        coords[1] = p0.x;
+                        coords[2] = p0.y;
                     }
                 }
             }
             return coords;
+        };
+
+        const getFixedGradientData = (grad, drawId, fillId) => {
+
+            const fixedGradientData = {
+                type: grad.type,
+                spread: grad.spread,
+                coordinates: getCoords(grad, drawId, fillId),
+                paletteStart: grad.paletteStart,
+                paletteEnd: grad.paletteEnd,
+                cyclePalette: grad.cyclePalette,
+                easing: grad.palette.easing,
+                stopsData: grad.palette.getStopsData().slice(),
+            };
+
+            if (grad.type === T_CONIC_GRADIENT) {
+
+                fixedGradientData.angleRange = grad.angleRange;
+                fixedGradientData.swirlDistance = grad.swirlDistance;
+                fixedGradientData.swirlClockwise = grad.swirlClockwise;
+            }
+
+            return fixedGradientData;
         };
 
         const myCell = requestCell(),
@@ -769,50 +834,36 @@ export default function (P = Ωempty) {
                 ? styles[state.strokeStyle]
                 : state.strokeStyle;
 
-            if (ENHANCED_GRADIENTS.includes(grad.type)) {
+            if (this.dirtyDrawGradient ||
+                this.dirtyDrawGradientCache ||
+                drawId === ZERO_STR
+            ) drawId = getId();
 
-                if (this.dirtyDrawGradient ||
-                    this.dirtyDrawGradientCache ||
-                    drawId === ZERO_STR
-                ) drawId = getId();
+            if (drawId) {
 
-                if (grad.spread === PAD) drawId = ZERO_STR;
+                const cacheExists = checkForWorkstoreItem(drawId);
 
-                if (drawId) {
+                if (!cacheExists) {
 
-                    const cacheExists = checkForWorkstoreItem(drawId);
+                    grad.getData(this, refCell, DRAW);
 
-                    if (!cacheExists) {
+                    engine.strokeStyle = BLACK;
+                    engine.stroke(pathObject);
 
-                        grad.getData(this, refCell, DRAW);
+                    const data = engine.getImageData(0, 0, width, height);
 
-                        engine.strokeStyle = BLACK;
-                        engine.stroke(pathObject);
+                    this.identifierDrawGradientCache = drawId;
 
-                        const data = engine.getImageData(0, 0, width, height);
-
-                        this.identifierDrawGradientCache = drawId;
-
-                        gradientEngine.action({
-                            imageData: data,
-                            fixedGradientData: {
-                                type: grad.type,
-                                spread: grad.spread,
-                                coordinates: getCoords(grad, drawId, fillId),
-                                paletteStart: grad.paletteStart,
-                                paletteEnd: grad.paletteEnd,
-                                cyclePalette: grad.cyclePalette,
-                                easing: grad.palette.easing,
-                                stopsData: grad.palette.getStopsData().slice(),
-                            },
-                            entity: this,
-                            identifier: drawId,
-                            styleType: DRAW,
-                        });
-                    }
-                    this.dirtyDrawGradient = false;
-                    this.dirtyDrawGradientCache = false;
+                    gradientEngine.action({
+                        imageData: data,
+                        fixedGradientData: getFixedGradientData(grad, drawId, fillId),
+                        // entity: this,
+                        identifier: drawId,
+                        // styleType: DRAW,
+                    });
                 }
+                this.dirtyDrawGradient = false;
+                this.dirtyDrawGradientCache = false;
             }
         }
 
@@ -824,51 +875,37 @@ export default function (P = Ωempty) {
                 ? styles[state.fillStyle]
                 : state.fillStyle;
 
-            if (ENHANCED_GRADIENTS.includes(grad.type)) {
+            if (
+                this.dirtyFillGradient ||
+                this.dirtyFillGradientCache ||
+                fillId === ZERO_STR
+            ) fillId = getId();
 
-                if (
-                    this.dirtyFillGradient ||
-                    this.dirtyFillGradientCache ||
-                    fillId === ZERO_STR
-                ) fillId = getId();
+            if (fillId) {
 
-                if (grad.spread === PAD) fillId = ZERO_STR;
+                const cacheExists = checkForWorkstoreItem(fillId);
 
-                if (fillId) {
+                if (!cacheExists) {
 
-                    const cacheExists = checkForWorkstoreItem(fillId);
+                    grad.getData(this, refCell, FILL);
 
-                    if (!cacheExists) {
+                    engine.fillStyle = BLACK;
+                    engine.fill(pathObject, this.winding);
 
-                        grad.getData(this, refCell, FILL);
+                    const data = engine.getImageData(0, 0, width, height);
 
-                        engine.fillStyle = BLACK;
-                        engine.fill(pathObject, this.winding);
+                    this.identifierFillGradientCache = fillId;
 
-                        const data = engine.getImageData(0, 0, width, height);
-
-                        this.identifierFillGradientCache = fillId;
-
-                        gradientEngine.action({
-                            imageData: data,
-                            fixedGradientData: {
-                                type: grad.type,
-                                spread: grad.spread,
-                                coordinates: getCoords(grad, drawId, fillId),
-                                paletteStart: grad.paletteStart,
-                                paletteEnd: grad.paletteEnd,
-                                cyclePalette: grad.cyclePalette,
-                                easing: grad.palette.easing,
-                                stopsData: grad.palette.getStopsData().slice(),
-                            },
-                            entity: this,
-                            identifier: fillId,
-                            styleType: FILL,
-                        });
-                    }
-                    this.dirtyFillGradient = false;
-                    this.dirtyFillGradientCache = false;
+                    gradientEngine.action({
+                        imageData: data,
+                        fixedGradientData: getFixedGradientData(grad, drawId, fillId),
+                        // entity: this,
+                        identifier: fillId,
+                        // styleType: FILL,
+                    });
                 }
+                this.dirtyFillGradient = false;
+                this.dirtyFillGradientCache = false;
             }
         }
         releaseCell(myCell);

@@ -712,7 +712,7 @@ export default function (P = Ωempty) {
             entityStampHandlePosition = entity.currentStampHandlePosition,
             entityScale = entity.currentScale;
 
-        let correctX, correctY, roll;
+        let correctX, correctY;
 
         if (
             (area === FILL && entity.lockFillStyleToEntity) ||
@@ -728,8 +728,7 @@ export default function (P = Ωempty) {
 
             correctX = -entityStampPosition[0] || 0;
             correctY = -entityStampPosition[1] || 0;
-            roll = -entity.currentRotation;
-
+ 
             this.updateGradientArgs(correctX, correctY, -entity.currentRotation, 1);
         }
     };

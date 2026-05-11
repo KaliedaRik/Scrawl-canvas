@@ -67,8 +67,10 @@ const report = reportSpeed('#reportmessage', function () {
     return `
     Palette - start: ${dom.paletteStart.value}; end: ${dom.paletteEnd.value}
     Start - x: ${dom.startX.value}%; y: ${dom.startY.value}%
+    Precision: ${dom.precision.value}
     Angle: ${dom.angle.value}°
-    Precision: ${dom.precision.value}`;
+    Angle range: ${dom.angleRange.value}°
+    Swirl distance: ${dom.swirlDistance.value}px`;
 });
 
 
@@ -104,11 +106,16 @@ scrawl.makeUpdater({
         angle: ['angle', 'float'],
 
         precision: ['precision', 'int'],
+        swirlDistance: ['swirlDistance', 'int'],
+        angleRange: ['angleRange', 'int'],
 
         cyclePalette: ['cyclePalette', 'boolean'],
+        swirlClockwise: ['swirlClockwise', 'boolean'],
 
         colorSpace: ['colorSpace', 'raw'],
         returnColorAs: ['returnColorAs', 'raw'],
+
+        spread: ['spread', 'raw'],
     },
 });
 
@@ -188,17 +195,21 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 // Set the DOM input values
 const dom = scrawl.initializeDomInputs([
     ['input', 'angle', '0'],
+    ['input', 'angleRange', '360'],
     ['input', 'paletteEnd', '999'],
     ['input', 'paletteStart', '0'],
     ['input', 'precision', '1'],
     ['input', 'startX', '50'],
     ['input', 'startY', '50'],
+    ['input', 'swirlDistance', '0'],
     ['select', 'blue', 0],
     ['select', 'colorSpace', 0],
     ['select', 'cyclePalette', 0],
     ['select', 'easing', 0],
     ['select', 'red', 0],
     ['select', 'returnColorAs', 0],
+    ['select', 'spread', 0],
+    ['select', 'swirlClockwise', 1],
 
     ['input', 'roll', '0'],
     ['input', 'scale', '1'],

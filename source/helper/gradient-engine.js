@@ -1,7 +1,5 @@
 // # Scrawl-canvas gradient engine
-import { constructors, styles, stylesnames } from '../core/library.js';
-
-import { seededRandomNumberGenerator } from './random-seed.js';
+import { constructors } from '../core/library.js';
 
 import { doCreate, isa_fn } from '../helper/utilities.js';
 
@@ -9,38 +7,26 @@ import { easeEngines } from './utilities.js';
 
 import { checkForWorkstoreItem, setWorkstoreItem } from './workstore.js';
 
-import { colorEngine } from './color-engine.js';
-
-import { releaseArray, requestArray } from './array-pool.js';
-
-import { bluenoise } from './filter-engine-bluenoise-data.js';
-
 // Shared constants
-import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, DRAW, FILL, REFLECT, REPEAT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TRANSPARENT } from './shared-vars.js';
+import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, REFLECT, REPEAT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TRANSPARENT } from './shared-vars.js';
 
 // Local constants
 const T_GRADIENT_ENGINE = 'GradientEngine';
 
-let cache = null;
-
 
 // #### GradientEngine constructor
-const GradientEngine = function () {
-
-    return this;
-};
+const GradientEngine = function () { return this };
 
 
 // #### GradientEngine prototype
 const P = GradientEngine.prototype = doCreate();
 P.type = T_GRADIENT_ENGINE;
 
+
+// #### The main entry into the engine
 P.action = function (packet) {
 
-    const { imageData, fixedGradientData: gradient, entity, styleType } = packet;
-
-    // Conic gradients are classic-only and should never be pushed to the gradient engine
-    if (gradient.type === T_CONIC_GRADIENT) return false;
+    const { imageData, fixedGradientData: gradient } = packet;
 
     const identifier = packet.identifier;
 
@@ -55,19 +41,9 @@ P.action = function (packet) {
 
         let result;
 
-        if (gradient.type === T_GRADIENT) {
-
-            if (gradient.spread === REFLECT) result = this.applyLinearGradient(gradient, workData, REFLECT, entity, styleType);
-            if (gradient.spread === REPEAT) result = this.applyLinearGradient(gradient, workData, REPEAT, entity, styleType);
-            if (gradient.spread === TRANSPARENT) result = this.applyLinearGradient(gradient, workData, TRANSPARENT, entity, styleType);
-        }
-
-        if (gradient.type === T_RADIAL_GRADIENT) {
-
-            if (gradient.spread === REFLECT) result = this.applyRadialGradient(gradient, workData, REFLECT, entity, styleType);
-            if (gradient.spread === REPEAT) result = this.applyRadialGradient(gradient, workData, REPEAT, entity, styleType);
-            if (gradient.spread === TRANSPARENT) result = this.applyRadialGradient(gradient, workData, TRANSPARENT, entity, styleType);
-        }
+        if (gradient.type === T_GRADIENT) result = this.applyLinearGradient(gradient, workData);
+        if (gradient.type === T_RADIAL_GRADIENT) result = this.applyRadialGradient(gradient, workData);
+        if (gradient.type === T_CONIC_GRADIENT) result = this.applyConicGradient(gradient, workData);
 
         if (result) {
 
@@ -75,11 +51,12 @@ P.action = function (packet) {
             return true;
         }
     }
-    
     // We should never reach this return
     return false;
 };
 
+
+// Helper function
 P.getPaletteIndex = function (gradient, t) {
 
     const start = gradient.paletteStart,
@@ -117,15 +94,16 @@ P.getPaletteIndex = function (gradient, t) {
 };
 
 
-// ### Actions
-P.applyLinearGradient = function (gradient, workData, spread) {
+// ### Gradient actions
+P.applyLinearGradient = function (gradient, workData) {
 
     const stopsData = gradient.stopsData,
-        args = gradient.coordinates;
+        args = gradient.coordinates,
+        spread = gradient.spread;
 
     if (!stopsData || !args) return workData;
 
-    let x0 = args[0],
+    const x0 = args[0],
         y0 = args[1],
         x1 = args[2],
         y1 = args[3];
@@ -138,73 +116,93 @@ P.applyLinearGradient = function (gradient, workData, spread) {
 
     const d = workData.data,
         width = workData.width,
-        height = workData.height;
+        pixels = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2),
+        pz = pixels.length;
 
     const easing = gradient.easing,
         engine = isa_fn(easing) ? easing : easeEngines[easing];
 
-    let x, y, i, a, t, index, stop;
+    const xStep = dx / len2,
+        yStep = dy / len2,
+        rowReset = yStep - (width * xStep);
 
-    for (y = 0; y < height; y++) {
+    let p = 0,
+        rowEnd = width,
+        t = ((-x0 * dx) + (-y0 * dy)) / len2,
+        v, rgba, alpha,
+        index, color, outAlpha;
 
-        for (x = 0; x < width; x++) {
+    for (; p < pz; p++) {
 
-            i = ((y * width) + x) * 4;
-            a = d[i + 3];
+        rgba = pixels[p];
+        alpha = rgba >>> 24;
 
-            if (!a) continue;
+        if (alpha) {
 
-            t = (((x - x0) * dx) + ((y - y0) * dy)) / len2;
+            v = t;
 
             if (spread === TRANSPARENT) {
 
-                if (t < 0 || t > 1) {
+                if (v < 0 || v > 1) {
 
-                    d[i + 3] = 0;
+                    pixels[p] = rgba & 0x00ffffff;
+                    t += xStep;
+
+                    if (p + 1 === rowEnd) {
+
+                        t += rowReset;
+                        rowEnd += width;
+                    }
                     continue;
                 }
             }
             else if (spread === REPEAT) {
 
-                t = t - _floor(t);
+                v -= _floor(v);
             }
             else if (spread === REFLECT) {
 
-                t = t % 2;
-                if (t < 0) t += 2;
-                if (t > 1) t = 2 - t;
+                v %= 2;
+                if (v < 0) v += 2;
+                if (v > 1) v = 2 - v;
             }
 
-            if (t < 0) t = 0;
-            else if (t > 1) t = 1;
+            if (v < 0) v = 0;
+            else if (v > 1) v = 1;
 
-            if (engine) t = engine(t);
+            if (engine) v = engine(v);
 
-            if (t < 0) t = 0;
-            else if (t > 1) t = 1;
+            if (v < 0) v = 0;
+            else if (v > 1) v = 1;
 
-            index = this.getPaletteIndex(gradient, t);
-            stop = index * 4;
+            index = this.getPaletteIndex(gradient, v);
+            color = stopsData[index];
 
-            d[i] = stopsData[stop];
-            d[i + 1] = stopsData[stop + 1];
-            d[i + 2] = stopsData[stop + 2];
-            d[i + 3] = _floor((a * stopsData[stop + 3]) / 255);
+            outAlpha = ((alpha * (color >>> 24)) / 255) | 0;
+
+            pixels[p] = ((outAlpha << 24) | (color & 0x00ffffff)) >>> 0;
+        }
+
+        t += xStep;
+
+        if (p + 1 === rowEnd) {
+
+            t += rowReset;
+            rowEnd += width;
         }
     }
-
     return workData;
 };
 
-
-P.applyRadialGradient = function (gradient, workData, spread) {
+P.applyRadialGradient = function (gradient, workData) {
 
     const stopsData = gradient.stopsData,
-        args = gradient.coordinates;
+        args = gradient.coordinates,
+        spread = gradient.spread;
 
     if (!stopsData || !args) return workData;
 
-    let x0 = args[0],
+    const x0 = args[0],
         y0 = args[1],
         r0 = args[2],
         x1 = args[3],
@@ -214,30 +212,34 @@ P.applyRadialGradient = function (gradient, workData, spread) {
     const cx = x1 - x0,
         cy = y1 - y0,
         cr = r1 - r0,
-        qa = (cx * cx) + (cy * cy) - (cr * cr);
+        qa = (cx * cx) + (cy * cy) - (cr * cr),
+        nearZeroQa = _abs(qa) < 0.000001,
+        twoQa = 2 * qa;
 
     const d = workData.data,
         width = workData.width,
-        height = workData.height;
+        pixels = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2),
+        pz = pixels.length;
 
     const easing = gradient.easing,
         engine = isa_fn(easing) ? easing : easeEngines[easing];
 
-    let x, y, i, alpha,
+    let p = 0,
+        x = 0,
+        y = 0,
+        rgba, alpha,
         px, py,
         qb, qc, disc, root,
         t, t1, t2,
         rad1, rad2,
-        index, stop;
+        index, color, outAlpha;
 
-    for (y = 0; y < height; y++) {
+    for (; p < pz; p++) {
 
-        for (x = 0; x < width; x++) {
+        rgba = pixels[p];
+        alpha = rgba >>> 24;
 
-            i = ((y * width) + x) * 4;
-            alpha = d[i + 3];
-
-            if (!alpha) continue;
+        if (alpha) {
 
             px = x - x0;
             py = y - y0;
@@ -245,11 +247,13 @@ P.applyRadialGradient = function (gradient, workData, spread) {
             qb = -2 * ((px * cx) + (py * cy) + (r0 * cr));
             qc = (px * px) + (py * py) - (r0 * r0);
 
-            if (_abs(qa) < 0.000001) {
+            if (nearZeroQa) {
 
                 if (_abs(qb) < 0.000001) {
 
-                    d[i + 3] = 0;
+                    pixels[p] = rgba & 0x00ffffff;
+                    x++;
+                    if (x === width) { x = 0; y++; }
                     continue;
                 }
 
@@ -257,7 +261,9 @@ P.applyRadialGradient = function (gradient, workData, spread) {
 
                 if ((r0 + (t * cr)) < 0) {
 
-                    d[i + 3] = 0;
+                    pixels[p] = rgba & 0x00ffffff;
+                    x++;
+                    if (x === width) { x = 0; y++; }
                     continue;
                 }
             }
@@ -267,14 +273,16 @@ P.applyRadialGradient = function (gradient, workData, spread) {
 
                 if (disc < 0) {
 
-                    d[i + 3] = 0;
+                    pixels[p] = rgba & 0x00ffffff;
+                    x++;
+                    if (x === width) { x = 0; y++; }
                     continue;
                 }
 
                 root = _sqrt(disc);
 
-                t1 = (-qb - root) / (2 * qa);
-                t2 = (-qb + root) / (2 * qa);
+                t1 = (-qb - root) / twoQa;
+                t2 = (-qb + root) / twoQa;
 
                 rad1 = r0 + (t1 * cr);
                 rad2 = r0 + (t2 * cr);
@@ -284,7 +292,9 @@ P.applyRadialGradient = function (gradient, workData, spread) {
                 else if (rad2 >= 0) t = t2;
                 else {
 
-                    d[i + 3] = 0;
+                    pixels[p] = rgba & 0x00ffffff;
+                    x++;
+                    if (x === width) { x = 0; y++; }
                     continue;
                 }
             }
@@ -293,17 +303,16 @@ P.applyRadialGradient = function (gradient, workData, spread) {
 
                 if (t < 0 || t > 1) {
 
-                    d[i + 3] = 0;
+                    pixels[p] = rgba & 0x00ffffff;
+                    x++;
+                    if (x === width) { x = 0; y++; }
                     continue;
                 }
             }
-            else if (spread === REPEAT) {
-
-                t = t - _floor(t);
-            }
+            else if (spread === REPEAT) t -= _floor(t);
             else if (spread === REFLECT) {
 
-                t = t % 2;
+                t %= 2;
                 if (t < 0) t += 2;
                 if (t > 1) t = 2 - t;
             }
@@ -317,17 +326,148 @@ P.applyRadialGradient = function (gradient, workData, spread) {
             else if (t > 1) t = 1;
 
             index = this.getPaletteIndex(gradient, t);
-            stop = index * 4;
+            color = stopsData[index];
 
-            d[i] = stopsData[stop];
-            d[i + 1] = stopsData[stop + 1];
-            d[i + 2] = stopsData[stop + 2];
-            d[i + 3] = _floor((alpha * stopsData[stop + 3]) / 255);
+            outAlpha = ((alpha * (color >>> 24)) / 255) | 0;
+
+            pixels[p] = ((outAlpha << 24) | (color & 0x00ffffff)) >>> 0;
+        }
+
+        x++;
+        if (x === width) {
+
+            x = 0;
+            y++;
         }
     }
-
     return workData;
 };
+
+P.applyConicGradient = function (gradient, workData) {
+
+    const stopsData = gradient.stopsData,
+        args = gradient.coordinates,
+        spread = gradient.spread;
+
+    if (!stopsData || !args) return workData;
+
+    const startAngle = args[0],
+        cx = args[1],
+        cy = args[2];
+
+    let angleRange = parseFloat(gradient.angleRange);
+
+    if (!_isFinite(angleRange) || angleRange <= 0) angleRange = 360;
+    else if (angleRange > 360) angleRange = 360;
+
+    const range = angleRange * _radian,
+        fullCircle = angleRange >= 360;
+
+    let swirlDistance = parseFloat(gradient.swirlDistance);
+
+    if (!_isFinite(swirlDistance) || swirlDistance <= 0) swirlDistance = 0;
+
+    const swirlClockwise = gradient.swirlClockwise !== false,
+        swirlDirection = swirlClockwise ? 1 : -1;
+
+    const d = workData.data,
+        width = workData.width,
+        pixels = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2),
+        pz = pixels.length;
+
+    const easing = gradient.easing,
+        engine = isa_fn(easing) ? easing : easeEngines[easing];
+
+    const tau = Math.PI * 2,
+        spare = tau - range,
+        halfSpare = spare / 2,
+        swirlFactor = swirlDistance ? (swirlDirection * tau / swirlDistance) : 0;
+
+    let p = 0,
+        x = 0,
+        y = 0,
+        rgba, alpha,
+        dx, dy, angle, diff,
+        t, index, color, outAlpha;
+
+    for (; p < pz; p++) {
+
+        rgba = pixels[p];
+        alpha = rgba >>> 24;
+
+        if (alpha) {
+
+            dx = x - cx;
+            dy = y - cy;
+
+            angle = _atan2(dy, dx);
+
+            if (swirlFactor) angle += _sqrt((dx * dx) + (dy * dy)) * swirlFactor;
+
+            diff = (angle - startAngle) % tau;
+            if (diff < 0) diff += tau;
+
+            t = diff / range;
+
+            if (spread === TRANSPARENT) {
+
+                if (!fullCircle && (t < 0 || t > 1)) {
+
+                    pixels[p] = rgba & 0x00ffffff;
+                    x++;
+                    if (x === width) { x = 0; y++; }
+                    continue;
+                }
+
+                if (fullCircle) t -= _floor(t);
+            }
+            else if (spread === REPEAT) {
+
+                t -= _floor(t);
+            }
+            else if (spread === REFLECT) {
+
+                t %= 2;
+                if (t < 0) t += 2;
+                if (t > 1) t = 2 - t;
+            }
+            else {
+
+                // PAD
+                if (!fullCircle && t > 1) t = ((diff - range) <= halfSpare) ? 1 : 0;
+                else {
+
+                    if (t < 0) t = 0;
+                    else if (t > 1) t = 1;
+                }
+            }
+
+            if (t < 0) t = 0;
+            else if (t > 1) t = 1;
+
+            if (engine) t = engine(t);
+
+            if (t < 0) t = 0;
+            else if (t > 1) t = 1;
+
+            index = this.getPaletteIndex(gradient, t);
+            color = stopsData[index];
+
+            outAlpha = ((alpha * (color >>> 24)) / 255) | 0;
+
+            pixels[p] = ((outAlpha << 24) | (color & 0x00ffffff)) >>> 0;
+        }
+
+        x++;
+        if (x === width) {
+
+            x = 0;
+            y++;
+        }
+    }
+    return workData;
+};
+
 
 // #### Factory
 constructors.GradientEngine = GradientEngine;

@@ -136,26 +136,11 @@ P.cleanRadius = function (width) {
 
         else {
 
-            switch(val){
+            val = parseFloat(val);
 
-                case TOP :
-                case LEFT :
-                    return 0;
+            if (!isa_number(val)) return 0;
 
-                case BOTTOM :
-                case RIGHT :
-                    return len;
-
-                case CENTER :
-                    return len / 2;
-
-                default :
-                    val = parseFloat(val);
-
-                    if (!isa_number(val)) return 0;
-
-                    return ( val / 100) * len;
-            }
+            return ( val / 100) * len;
         }
     };
 
@@ -208,7 +193,6 @@ P.updateGradientArgs = function (x, y, roll, scale) {
 
         releaseCoordinate(coord);
     }
-
     if (scale !== 1) {
 
         sr *= scale;
