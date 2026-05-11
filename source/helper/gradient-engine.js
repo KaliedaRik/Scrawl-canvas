@@ -17,14 +17,18 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, isa_fn } from '../helper/utilities.js';
+import { doCreate, isa_fn, λfirstArg, λnull } from '../helper/utilities.js';
 
 import { easeEngines } from './utilities.js';
 
-import { checkForWorkstoreItem, setWorkstoreItem } from './workstore.js';
+import { checkForWorkstoreItem, getWorkstoreItem, setWorkstoreItem } from './workstore.js';
+
+import { seededRandomNumberGenerator } from './random-seed.js';
+
+import { bluenoise, orderedNoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, REFLECT, REPEAT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TRANSPARENT } from './shared-vars.js';
+import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_NOISE, AFTER_PALETTE_EASE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, DEFAULT_SEED, ON_ALPHA, ON_COORDINATES, ORDERED, RANDOM, REFLECT, REPEAT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TRANSPARENT } from './shared-vars.js';
 
 // Local constants
 const T_GRADIENT_ENGINE = 'GradientEngine';
@@ -55,6 +59,8 @@ P.action = function (packet) {
 
         const workData = new ImageData(new Uint8ClampedArray(data), width, height);
 
+        updateOperationsCache(gradient.operations);
+
         let result;
 
         if (gradient.type === T_GRADIENT) result = this.applyLinearGradient(gradient, workData);
@@ -69,6 +75,78 @@ P.action = function (packet) {
     }
     // We should never reach this return
     return false;
+};
+
+
+// For now, we'll assign a maximum of one operation to each possible stage
+const operationsCache = {
+    [BEFORE_SPREAD]: null,
+    [AFTER_SPREAD]: null,
+    [AFTER_PALETTE_EASE]: null,
+    [ON_ALPHA]: null,
+    [ON_COORDINATES]: null,
+};
+
+const cleanOperationsCache = () => {
+
+    operationsCache[BEFORE_SPREAD] = null;
+    operationsCache[AFTER_SPREAD] = null;
+    operationsCache[AFTER_PALETTE_EASE] = null;
+    operationsCache[ON_ALPHA] = null;
+    operationsCache[ON_COORDINATES] = null;
+}
+
+const updateOperationsCache = (operations = []) => {
+
+    cleanOperationsCache();
+
+    if (operations.length) {
+
+        operationsCache[BEFORE_SPREAD] = operations.find(op => op.stage === BEFORE_SPREAD) || null;
+        operationsCache[AFTER_SPREAD] = operations.find(op => op.stage === AFTER_SPREAD) || null;
+        operationsCache[AFTER_PALETTE_EASE] = operations.find(op => op.stage === AFTER_PALETTE_EASE) || null;
+        operationsCache[ON_ALPHA] = operations.find(op => op.stage === ON_ALPHA) || null;
+        operationsCache[ON_COORDINATES] = operations.find(op => op.stage === ON_COORDINATES) || null;
+    }
+};
+
+P.getAfterSpreadOperation = function (workData) {
+
+    const op = operationsCache[AFTER_SPREAD];
+
+    if (op) {
+
+        let eng;
+
+        switch (op.operation) {
+
+            case ADD_NOISE: {
+
+                const params = op.parameters || {},
+                    noise = params.noise,
+                    fn = this.operationFunctions[`${noise}_${AFTER_SPREAD}`];
+
+                if (isa_fn(fn)) {
+
+                    eng = fn({
+                        seed: params.seed,
+                        strength: params.strength,
+                        length: workData.data.length,
+                        imgWidth: workData.width,
+                    });
+
+                    return eng;
+                }
+                else return this.operationFunctions.noop;
+            }
+
+            default:
+
+                return this.operationFunctions.noop;
+        }
+    }
+    else return this.operationFunctions.noop;
+
 };
 
 
@@ -135,6 +213,8 @@ P.applyLinearGradient = function (gradient, workData) {
         pixels = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2),
         pz = pixels.length;
 
+    const afterSpreadEngine = this.getAfterSpreadOperation(workData);
+
     const easing = gradient.easing,
         engine = isa_fn(easing) ? easing : easeEngines[easing];
 
@@ -186,6 +266,8 @@ P.applyLinearGradient = function (gradient, workData) {
             if (v < 0) v = 0;
             else if (v > 1) v = 1;
 
+            v = afterSpreadEngine(v);
+
             if (engine) v = engine(v);
 
             if (v < 0) v = 0;
@@ -236,6 +318,8 @@ P.applyRadialGradient = function (gradient, workData) {
         width = workData.width,
         pixels = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2),
         pz = pixels.length;
+
+    const afterSpreadEngine = this.getAfterSpreadOperation(workData);
 
     const easing = gradient.easing,
         engine = isa_fn(easing) ? easing : easeEngines[easing];
@@ -336,6 +420,8 @@ P.applyRadialGradient = function (gradient, workData) {
             if (t < 0) t = 0;
             else if (t > 1) t = 1;
 
+            t = afterSpreadEngine(t);
+
             if (engine) t = engine(t);
 
             if (t < 0) t = 0;
@@ -390,6 +476,8 @@ P.applyConicGradient = function (gradient, workData) {
         width = workData.width,
         pixels = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2),
         pz = pixels.length;
+
+    const afterSpreadEngine = this.getAfterSpreadOperation(workData);
 
     const easing = gradient.easing,
         engine = isa_fn(easing) ? easing : easeEngines[easing];
@@ -461,6 +549,8 @@ P.applyConicGradient = function (gradient, workData) {
             if (t < 0) t = 0;
             else if (t > 1) t = 1;
 
+            t = afterSpreadEngine(t);
+
             if (engine) t = engine(t);
 
             if (t < 0) t = 0;
@@ -482,6 +572,140 @@ P.applyConicGradient = function (gradient, workData) {
         }
     }
     return workData;
+};
+
+
+P.operationFunctions = {
+
+    noop: λfirstArg,
+
+    [`${BLUENOISE}_${BEFORE_SPREAD}`]: λfirstArg,
+
+    [`${BLUENOISE}_${AFTER_SPREAD}`]: function (params = {}) {
+
+        const strength = _isFinite(params.strength) ? params.strength : 0.05;
+
+        const rnd = getRandomNumbers({
+            seed: params.seed,
+            length: params.length,
+            imgWidth: params.imgWidth,
+            type: BLUENOISE,
+        });
+
+        let rndCursor = -1;
+
+        return function (val) {
+
+            return val + ((rnd[++rndCursor] - 0.5) * strength);
+        };
+    },
+
+    [`${BLUENOISE}_${AFTER_PALETTE_EASE}`]: λfirstArg,
+    [`${BLUENOISE}_${ON_ALPHA}`]: λfirstArg,
+    [`${BLUENOISE}_${ON_COORDINATES}`]: λfirstArg,
+
+
+    [`${ORDERED}_${BEFORE_SPREAD}`]: λfirstArg,
+
+    [`${ORDERED}_${AFTER_SPREAD}`]: function (params = {}) {
+
+        const strength = _isFinite(params.strength) ? params.strength : 0.05;
+
+        const rnd = getRandomNumbers({
+            seed: params.seed,
+            length: params.length,
+            imgWidth: params.imgWidth,
+            type: ORDERED,
+        });
+
+        let rndCursor = -1;
+
+        return function (val) {
+
+            return val + ((rnd[++rndCursor] - 0.5) * strength);
+        };
+    },
+
+    [`${ORDERED}_${AFTER_PALETTE_EASE}`]: λfirstArg,
+    [`${ORDERED}_${ON_ALPHA}`]: λfirstArg,
+    [`${ORDERED}_${ON_COORDINATES}`]: λfirstArg,
+
+
+    [`${RANDOM}_${BEFORE_SPREAD}`]: λfirstArg,
+
+    [`${RANDOM}_${AFTER_SPREAD}`]: function (params = {}) {
+
+        const strength = _isFinite(params.strength) ? params.strength : 0.05;
+
+        const rnd = getRandomNumbers({
+            seed: params.seed,
+            length: params.length,
+            type: RANDOM,
+        });
+
+        let rndCursor = -1;
+
+        return function (val) {
+
+            return val + ((rnd[++rndCursor] - 0.5) * strength);
+        };
+    },
+
+    [`${RANDOM}_${AFTER_PALETTE_EASE}`]: λfirstArg,
+    [`${RANDOM}_${ON_ALPHA}`]: λfirstArg,
+    [`${RANDOM}_${ON_COORDINATES}`]: λfirstArg,
+};
+
+const getRandomNumbers = function (items = {}) {
+
+    const {
+        seed = DEFAULT_SEED,
+        length = 0,
+        imgWidth = 0,
+        type = RANDOM,
+    } = items;
+
+    const name = `random-${seed}-${length}-${type}`,
+        itemInWorkstore = getWorkstoreItem(name);
+
+    if (itemInWorkstore) return itemInWorkstore;
+
+    if ((type === BLUENOISE || type === ORDERED) && imgWidth) {
+
+        const base = (type === BLUENOISE) ? bluenoise : orderedNoise,
+            dim = (_sqrt(base.length) | 0),
+            imgH = ((length / imgWidth) | 0),
+            out = new Float32Array(length);
+
+        let p = 0,
+            y, y0, x;
+
+        for (y = 0; y < imgH && p < length; y++) {
+
+            y0 = (y % dim) * dim;
+
+            for (x = 0; x < imgWidth && p < length; x++) {
+
+                out[p++] = base[y0 + (x % dim)];
+            }
+        }
+        setWorkstoreItem(name, out);
+
+        return out;
+    }
+    else {
+
+        const engine = seededRandomNumberGenerator(seed),
+            out = new Float32Array(length);
+
+        for (let i = 0; i < length; i++) {
+
+            out[i] = engine.random();
+        }
+        setWorkstoreItem(name, out);
+
+        return out;
+    }
 };
 
 

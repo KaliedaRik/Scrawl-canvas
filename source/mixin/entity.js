@@ -652,7 +652,8 @@ export default function (P = Ωempty) {
 
                 if (GRADIENTS_ARR.includes(fillGradient.type)) {
 
-                    if (T_CONIC_GRADIENT === fillGradient.type && (fillGradient.angleRange < 360 || fillGradient.swirlDistance)) fillCache = true;
+                    if (fillGradient.operations && fillGradient.operations.length) fillCache = true;
+                    else if (T_CONIC_GRADIENT === fillGradient.type && (fillGradient.angleRange < 360 || fillGradient.swirlDistance)) fillCache = true;
                     else if (fillGradient.spread !== PAD) fillCache = true;
                 }
             }
@@ -664,7 +665,8 @@ export default function (P = Ωempty) {
 
                 if (GRADIENTS_ARR.includes(drawGradient.type)) {
 
-                    if (T_CONIC_GRADIENT === drawGradient.type && (drawGradient.angleRange < 360 || drawGradient.swirlDistance)) drawCache = true;
+                    if (drawGradient.operations && drawGradient.operations.length) drawCache = true;
+                    else if (T_CONIC_GRADIENT === drawGradient.type && (drawGradient.angleRange < 360 || drawGradient.swirlDistance)) drawCache = true;
                     else if (drawGradient.spread !== PAD) drawCache = true;
                 }
             }
@@ -805,6 +807,7 @@ export default function (P = Ωempty) {
                 cyclePalette: grad.cyclePalette,
                 easing: grad.palette.easing,
                 stopsData: grad.palette.getStopsData().slice(),
+                operations: grad.operations,
             };
 
             if (grad.type === T_CONIC_GRADIENT) {
@@ -869,6 +872,9 @@ export default function (P = Ωempty) {
                         identifier: drawId,
                     });
                 }
+
+                if (this.dirtyDrawGradient || this.dirtyDrawGradientCache) this.dirtyFilterIdentifier = true;
+
                 this.dirtyDrawGradient = false;
                 this.dirtyDrawGradientCache = false;
             }
@@ -909,6 +915,8 @@ export default function (P = Ωempty) {
                         identifier: fillId,
                     });
                 }
+                if (this.dirtyFillGradient || this.dirtyFillGradientCache) this.dirtyFilterIdentifier = true;
+
                 this.dirtyFillGradient = false;
                 this.dirtyFillGradientCache = false;
             }

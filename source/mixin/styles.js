@@ -16,7 +16,7 @@
 // #### Imports
 import { entity, styles, stylesnames } from '../core/library.js';
 
-import { addStrings, isa_obj, mergeDiscard, mergeOver, pushUnique, removeItem, xt, λnull, Ωempty } from '../helper/utilities.js';
+import { addStrings, isa_boolean, isa_obj, mergeDiscard, mergeOver, pushUnique, removeItem, xt, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeAnimation } from '../factory/animation.js';
 import { makeCoordinate } from '../untracked-factory/coordinate.js';
@@ -24,7 +24,31 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 import { makePalette } from '../untracked-factory/palette.js';
 
 // Shared constants
-import { _floor, _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, DRAW, END, FILL, LEFT, LINEAR, NAME, PAD, REFLECT, REPEAT, RGB, RIGHT, START, T_PALETTE, TOP, TRANSPARENT, UNDEF, WHITE } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, _keys, _values, ADD_NOISE, AFTER_PALETTE_EASE, AFTER_SPREAD, BEFORE_SPREAD, BLACK, BLANK, BLUENOISE, BOTTOM, CENTER, DRAW, END, FILL, LEFT, LINEAR, NAME, ON_ALPHA, ON_COORDINATES, ORDERED, PAD, RANDOM, REFLECT, REPEAT, RGB, RIGHT, START, T_PALETTE, TOP, TRANSPARENT, UNDEF, WHITE } from '../helper/shared-vars.js';
+
+// ```
+// Available gradient operation shapes
+// {
+//      operation: string - one from: 'add-noise'.
+//      stage: string - one from: 'before-spread', 'after-spread', after-palette-ease, on-alpha, 'on-coordinates'.
+//.     parameters: object containing attributes relevant to the given operation
+// }
+// 
+// Thus:
+// 
+// {
+//      operation: 'add-noise',
+//      stage: 'after-spread',
+//      parameters: {
+//          noise: 'bluenoise',
+//          strength: 0.05,
+//          seed: '',
+//      }
+// }
+// ```
+const PERMITTED_OPERATIONS = [ADD_NOISE],
+    PERMITTED_NOISE = [RANDOM, BLUENOISE, ORDERED],
+    PERMITTED_STAGES = [BEFORE_SPREAD, AFTER_SPREAD, AFTER_PALETTE_EASE, ON_ALPHA, ON_COORDINATES];
 
 // Local constants
 const COLORS = 'colors',
@@ -55,7 +79,6 @@ export default function (P = Ωempty) {
 // #### Shared attributes
     const defaultAttributes = {
 
-
 // __start__, __end__ - Gradient-type styles use Coordinate factory Arrays to hold details of their start and end coordinates. The following _pseudo-attributes_ can also be used to reference these values:
 // + for the start coordinate, __startX__ and __startY__
 // + for the end coordinate, __endX__ and __endY__
@@ -84,8 +107,11 @@ export default function (P = Ωempty) {
 // The __animateByDelta__ attribute, when true, will delta animate the gradient at the start of each Display cycle. When the gradient is used in the `mapToGradient`` filter, setting this attribute to `false` (default) should speed up the filter
         animateByDelta: false,
 
-// __spread__ - determines how the gradient behaves beyond the border its other attributes set for it. Default is `pad`, which is the only option available to gradients supplied by the Canvas API.
+// __spread__ - determines how the gradient behaves beyond the border its other attributes set for it. Default is `pad`, which is the only option available to gradients supplied by the Canvas API. Additional spreads include: `repeat`, `reflect`, `transparent`
         spread: PAD,
+
+// __operations__ - an array of operation objects. Operation objects define additional parameters that can act on gradient generation and painting
+        operations: null,
 
 // The __delta__ object is not stored in the defs object; it acts in a similar way to the artefact delta object - though it is restricted to adding delta values to Number and 'String%' attributes.
 // + Unlike artefacts, where delta animation will be applied to artefacts by default as part of each Display cycle, gradient delta animations need to be explicitly invoked: `my_gradient.updateByDelta();`
@@ -431,13 +457,99 @@ export default function (P = Ωempty) {
         if (items) this.delta = mergeDiscard(this.delta, items);
     };
 
-// `spread` - Gradient-type styles objects support the delta attribute, and can be delta-animated using its attributes.
+// `spread` - The spread option for the gradient
 // - Permitted values: 'pad', 'repeat', 'reflect', 'transparent'
     S.spread = function (item) {
 
         if (SPREAD_VALUES.includes(item)) this.spread = item;
         else this.spread = PAD;
         this.updateSubscribers();
+    };
+
+// `operations` - an array of gradient operation objects
+    S.operations = function (item) {
+
+        if (_isArray(item)) this.replaceGradientOperations(item);
+        else if (isa_obj(item)) this.replaceGradientOperations([item]);
+        else if (isa_boolean(item) && !item) {
+
+            this.operations.length = 0;
+            this.updateSubscribers();
+        }
+    };
+
+    P.checkGradientOperation = function (item) {
+
+        if (isa_obj(item)) {
+
+            if (!item.stage || !item.operation || !item.parameters) return false;
+            if (!isa_obj(item.parameters)) return false;
+            if (!PERMITTED_STAGES.includes(item.stage)) return false;
+            if (!PERMITTED_OPERATIONS.includes(item.operation)) return false;
+
+            if (item.operation === ADD_NOISE) {
+
+                if (!PERMITTED_NOISE.includes(item.parameters.noise)) return false;
+            }
+            return true;
+        }
+        return false;
+    }
+    P.addGradientOperation = function (item) {
+
+        if (this.checkGradientOperation(item)) {
+
+            this.operations.push(item);
+        }
+        this.updateSubscribers();
+    };
+    P.replaceGradientOperations = function (item) {
+
+        if (_isArray(item)) {
+
+            this.operations.length = 0;
+
+            item.forEach(action => {
+
+                if (this.checkGradientOperation(action)) this.operations.push(action);
+            });
+
+            this.updateSubscribers();
+        }
+    };
+    P.removeGradientOperationByIndex = function (index) {
+
+        index = _floor(index);
+
+        if (_isFinite(index) && index >= 0 && index < this.operations.length) {
+
+            this.operations.splice(index, 1);
+            this.updateSubscribers();
+        }
+    };
+    P.removeGradientOperationsFromStage = function (stage) {
+
+        if (PERMITTED_STAGES.includes(stage)) {
+
+            const len = this.operations.length;
+
+            this.operations = this.operations.filter(op => op.stage !== stage);
+
+            if (this.operations.length !== len) this.updateSubscribers();
+        }
+    };
+    P.removeGradientOperationByValues = function (pos) {
+
+        console.log('removeGradientOperationByValues', pos)
+        this.updateSubscribers();
+    };
+    P.clearGradientOperations = function () {
+
+        if (this.operations.length) {
+
+            this.operations.length = 0;
+            this.updateSubscribers();
+        }
     };
 
 
@@ -635,9 +747,9 @@ export default function (P = Ωempty) {
         });
 
         this.delta = {};
-
         this.fillSubscribers = [];
         this.drawSubscribers = [];
+        this.operations = [];
 
         this.set(this.defs);
 

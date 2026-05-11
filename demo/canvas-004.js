@@ -113,6 +113,8 @@ scrawl.makeUpdater({
         returnColorAs: ['returnColorAs', 'raw'],
 
         spread: ['spread', 'raw'],
+
+        operations: ['operations', 'parse'],
     },
 });
 
@@ -206,6 +208,7 @@ const dom = scrawl.initializeDomInputs([
     ['select', 'red', 0],
     ['select', 'returnColorAs', 0],
     ['select', 'spread', 0],
+    ['select', 'operations', 0],
 
     ['input', 'roll', '0'],
     ['input', 'scale', '1'],
