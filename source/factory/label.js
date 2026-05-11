@@ -322,6 +322,9 @@ P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
 
+// Temporary fix to make sure the gradient cache flags are appropriately set before running through the remainder of this function
+    this.setGradientCacheFlags();
+
     if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
 
     if (this.dirtyScale) this.cleanScale();

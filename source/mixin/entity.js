@@ -298,7 +298,7 @@ export default function (P = Ωempty) {
 
                     state.fillStyle = item;
 
-                    this.setGradientCacheFlags();
+                    // this.setGradientCacheFlags();
                     return;
                 }
             }
@@ -311,7 +311,7 @@ export default function (P = Ωempty) {
                 }
                 else state.fillStyle = gradientCandidate.name || BLANK;
 
-                this.setGradientCacheFlags();
+                // this.setGradientCacheFlags();
                 return;
             }
         }
@@ -339,7 +339,7 @@ export default function (P = Ωempty) {
 
                     state.strokeStyle = item;
 
-                    this.setGradientCacheFlags();
+                    // this.setGradientCacheFlags();
                     return;
                 }
             }
@@ -352,7 +352,7 @@ export default function (P = Ωempty) {
                 }
                 else state.strokeStyle = gradientCandidate.name || BLANK;
 
-                this.setGradientCacheFlags();
+                // this.setGradientCacheFlags();
                 return;
             }
         }
@@ -556,6 +556,9 @@ export default function (P = Ωempty) {
             this.dirtyHost = false;
             this.dirtyDimensions = true;
         }
+
+// Temporary fix to make sure the gradient cache flags are appropriately set before running through the remainder of this function
+        this.setGradientCacheFlags();
 
 // A number of updates (__scale__, __dimensions__, __start__, __offset__, __handle__) require the entity to recalculate its Path2D object - if any of them are set, then the entity sets its own `dirtyPathObject` flag as a result.
         if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) {
