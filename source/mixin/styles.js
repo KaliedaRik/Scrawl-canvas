@@ -24,7 +24,7 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 import { makePalette } from '../untracked-factory/palette.js';
 
 // Shared constants
-import { _floor, _isArray, _isFinite, _keys, _values, ADD_EASE, ADD_NOISE, AFTER_SPREAD, BEFORE_SPREAD, BLACK, BLANK, BLUENOISE, BOTTOM, CENTER, DRAW, END, FILL, LEFT, LINEAR, NAME, ON_ALPHA, ON_COORDINATES, ORDERED, PAD, RANDOM, REFLECT, REPEAT, RGB, RIGHT, START, T_PALETTE, TOP, TRANSPARENT, UNDEF, WHITE } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, _keys, _values, ADD_EASE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLACK, BLANK, BOTTOM, CENTER, DRAW, END, FILL, LEFT, LINEAR, NAME, ON_COORDINATES, PAD, PERMITTED_NOISE, REFLECT, REPEAT, RGB, RIGHT, START, T_PALETTE, TOP, TRANSPARENT, UNDEF, WHITE } from '../helper/shared-vars.js';
 
 // ```
 // Available gradient operation shapes
@@ -38,25 +38,47 @@ import { _floor, _isArray, _isFinite, _keys, _values, ADD_EASE, ADD_NOISE, AFTER
 // 
 // {
 //      operation: 'add-noise',
-//      stage: 'after-spread',
+//      stage: 'after-spread', - before-spread, after-spread
 //      parameters: {
-//          noise: 'bluenoise',
-//          strength: 0.05,
-//          seed: '',
+//          noise: 'bluenoise', - random, ordered, bluenoise
+//          strength: 0.05, - 0.01 to 0.1 for reasonable effect
+//          seed: '', - any string value
 //      }
 // }
 // 
 // {
 //      operation: 'add-ease',
-//      stage: 'after-spread',
+//      stage: 'after-spread', - before-spread, after-spread
 //      parameters: {
-//          ease: 'easeOutIn',
+//          ease: 'easeOutIn', - any supported SC easing, or bespoke easing function
 //      }
 // }
+//
+// {
+//     operation: 'add-wave',
+//     stage: 'on-coordinates', - on-coordinates only
+//     parameters: {
+//         axis: 'x', - x, y, both
+//         amplitude: 12,
+//         frequency: 0.05,
+//         phase: 0,
+//     }
+// }
+//
+// {
+//     operation: 'add-ripple',
+//     stage: 'on-coordinates', - on-coordinates only
+//     parameters: {
+//         amplitude: 12,
+//         frequency: 0.05,
+//         phase: 0,
+//         originX: '50%',
+//         originY: '50%',
+//     }
+// }
 // ```
-const PERMITTED_OPERATIONS = [ADD_EASE, ADD_NOISE],
-    PERMITTED_NOISE = [RANDOM, BLUENOISE, ORDERED],
-    PERMITTED_STAGES = [BEFORE_SPREAD, AFTER_SPREAD, ON_ALPHA, ON_COORDINATES];
+const PERMITTED_OPERATIONS = [ADD_EASE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE],
+    PERMITTED_STAGES = [BEFORE_SPREAD, AFTER_SPREAD, ON_COORDINATES];
 
 // Local constants
 const COLORS = 'colors',

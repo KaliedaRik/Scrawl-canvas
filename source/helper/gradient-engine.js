@@ -22,16 +22,18 @@ import { doCreate, isa_fn, λfirstArg, λnull } from '../helper/utilities.js';
 import { easeEngines } from './utilities.js';
 
 import { checkForWorkstoreItem, getWorkstoreItem, setWorkstoreItem } from './workstore.js';
-
+import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 import { seededRandomNumberGenerator } from './random-seed.js';
-
 import { bluenoise, orderedNoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_EASE, ADD_NOISE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, DEFAULT_SEED, ON_ALPHA, ON_COORDINATES, ORDERED, RANDOM, REFLECT, REPEAT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TRANSPARENT } from './shared-vars.js';
+import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_EASE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, DEFAULT_SEED, ON_COORDINATES, ORDERED, PERMITTED_NOISE, RANDOM, REFLECT, REPEAT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TRANSPARENT } from './shared-vars.js';
 
 // Local constants
-const T_GRADIENT_ENGINE = 'GradientEngine';
+const T_GRADIENT_ENGINE = 'GradientEngine',
+    X = 'x',
+    Y = 'y',
+    BOTH = 'both';
 
 
 // #### GradientEngine constructor
@@ -46,7 +48,7 @@ P.type = T_GRADIENT_ENGINE;
 // #### The main entry into the engine
 P.action = function (packet) {
 
-    const { imageData, fixedGradientData: gradient } = packet;
+    const { imageData, fixedGradientData: gradient, entity } = packet;
 
     const identifier = packet.identifier;
 
@@ -63,9 +65,9 @@ P.action = function (packet) {
 
         let result;
 
-        if (gradient.type === T_GRADIENT) result = this.applyLinearGradient(gradient, workData);
-        if (gradient.type === T_RADIAL_GRADIENT) result = this.applyRadialGradient(gradient, workData);
-        if (gradient.type === T_CONIC_GRADIENT) result = this.applyConicGradient(gradient, workData);
+        if (gradient.type === T_GRADIENT) result = applyLinearGradient(gradient, workData, entity);
+        if (gradient.type === T_RADIAL_GRADIENT) result = applyRadialGradient(gradient, workData, entity);
+        if (gradient.type === T_CONIC_GRADIENT) result = applyConicGradient(gradient, workData, entity);
 
         if (result) {
 
@@ -79,11 +81,12 @@ P.action = function (packet) {
 
 
 // ### Gradient actions
-P.applyLinearGradient = function (gradient, workData) {
+const applyLinearGradient = function (gradient, workData, entity) {
 
     const stopsData = gradient.stopsData,
         args = gradient.coordinates,
-        spread = gradient.spread;
+        spread = gradient.spread,
+        lock = gradient.lockedToEntity;
 
     if (!stopsData || !args) return workData;
 
@@ -103,8 +106,9 @@ P.applyLinearGradient = function (gradient, workData) {
         pixels = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2),
         pz = pixels.length;
 
-    const beforeSpreadEngine = this.getBeforeSpreadOperation(workData);
-    const afterSpreadEngine = this.getAfterSpreadOperation(workData);
+    const beforeSpreadEngine = getBeforeSpreadOperation(workData),
+        afterSpreadEngine = getAfterSpreadOperation(workData),
+        onCoordinatesEngine = getOnCoordinatesOperation(workData, entity, lock);
 
     const easing = gradient.easing,
         engine = isa_fn(easing) ? easing : easeEngines[easing];
@@ -113,83 +117,162 @@ P.applyLinearGradient = function (gradient, workData) {
         yStep = dy / len2,
         rowReset = yStep - (width * xStep);
 
-    let p = 0,
-        rowEnd = width,
-        t = ((-x0 * dx) + (-y0 * dy)) / len2,
-        v, rgba, alpha,
-        index, color, outAlpha;
+    if (onCoordinatesEngine === λfirstArg) {
 
-    for (; p < pz; p++) {
+        let p = 0,
+            rowEnd = width,
+            t = ((-x0 * dx) + (-y0 * dy)) / len2,
+            v, rgba, alpha,
+            index, color, outAlpha;
 
-        rgba = pixels[p];
-        alpha = rgba >>> 24;
+        for (; p < pz; p++) {
 
-        if (alpha) {
+            rgba = pixels[p];
+            alpha = rgba >>> 24;
 
-            v = t;
+            if (alpha) {
 
-            v = beforeSpreadEngine(v);
+                v = t;
 
-            if (spread === TRANSPARENT) {
+                v = beforeSpreadEngine(v);
 
-                if (v < 0 || v > 1) {
+                if (spread === TRANSPARENT) {
 
-                    pixels[p] = rgba & 0x00ffffff;
-                    t += xStep;
+                    if (v < 0 || v > 1) {
 
-                    if (p + 1 === rowEnd) {
+                        pixels[p] = rgba & 0x00ffffff;
+                        t += xStep;
 
-                        t += rowReset;
-                        rowEnd += width;
+                        if (p + 1 === rowEnd) {
+
+                            t += rowReset;
+                            rowEnd += width;
+                        }
+                        continue;
                     }
-                    continue;
                 }
+                else if (spread === REPEAT) {
+
+                    v -= _floor(v);
+                }
+                else if (spread === REFLECT) {
+
+                    v %= 2;
+                    if (v < 0) v += 2;
+                    if (v > 1) v = 2 - v;
+                }
+
+                if (v < 0) v = 0;
+                else if (v > 1) v = 1;
+
+                v = afterSpreadEngine(v);
+
+                if (engine) v = engine(v);
+
+                if (v < 0) v = 0;
+                else if (v > 1) v = 1;
+
+                index = getPaletteIndex(gradient, v);
+                color = stopsData[index];
+
+                outAlpha = ((alpha * (color >>> 24)) / 255) | 0;
+
+                pixels[p] = ((outAlpha << 24) | (color & 0x00ffffff)) >>> 0;
             }
-            else if (spread === REPEAT) {
 
-                v -= _floor(v);
+            t += xStep;
+
+            if (p + 1 === rowEnd) {
+
+                t += rowReset;
+                rowEnd += width;
             }
-            else if (spread === REFLECT) {
-
-                v %= 2;
-                if (v < 0) v += 2;
-                if (v > 1) v = 2 - v;
-            }
-
-            if (v < 0) v = 0;
-            else if (v > 1) v = 1;
-
-            v = afterSpreadEngine(v);
-
-            if (engine) v = engine(v);
-
-            if (v < 0) v = 0;
-            else if (v > 1) v = 1;
-
-            index = this.getPaletteIndex(gradient, v);
-            color = stopsData[index];
-
-            outAlpha = ((alpha * (color >>> 24)) / 255) | 0;
-
-            pixels[p] = ((outAlpha << 24) | (color & 0x00ffffff)) >>> 0;
         }
+    }
+    else {
 
-        t += xStep;
+        const coord = [0, 0];
 
-        if (p + 1 === rowEnd) {
+        let p = 0,
+            x = 0,
+            y = 0,
+            sampleX, sampleY,
+            v, rgba, alpha,
+            index, color, outAlpha;
 
-            t += rowReset;
-            rowEnd += width;
+        for (; p < pz; p++) {
+
+            rgba = pixels[p];
+            alpha = rgba >>> 24;
+
+            if (alpha) {
+
+                coord[0] = x;
+                coord[1] = y;
+
+                onCoordinatesEngine(coord, p, width, workData.height);
+
+                sampleX = coord[0];
+                sampleY = coord[1];
+
+                v = (((sampleX - x0) * dx) + ((sampleY - y0) * dy)) / len2;
+
+                v = beforeSpreadEngine(v);
+
+                if (spread === TRANSPARENT) {
+
+                    if (v < 0 || v > 1) {
+
+                        pixels[p] = rgba & 0x00ffffff;
+                        continue;
+                    }
+                }
+                else if (spread === REPEAT) {
+
+                    v -= _floor(v);
+                }
+                else if (spread === REFLECT) {
+
+                    v %= 2;
+                    if (v < 0) v += 2;
+                    if (v > 1) v = 2 - v;
+                }
+
+                if (v < 0) v = 0;
+                else if (v > 1) v = 1;
+
+                v = afterSpreadEngine(v);
+
+                if (engine) v = engine(v);
+
+                if (v < 0) v = 0;
+                else if (v > 1) v = 1;
+
+                index = getPaletteIndex(gradient, v);
+                color = stopsData[index];
+
+                outAlpha = ((alpha * (color >>> 24)) / 255) | 0;
+
+                pixels[p] = ((outAlpha << 24) | (color & 0x00ffffff)) >>> 0;
+            }
+
+            x++;
+            if (x >= width) {
+
+                x = 0;
+                y++;
+            }
         }
     }
     return workData;
 };
 
-P.applyRadialGradient = function (gradient, workData) {
+const applyRadialGradient = function (gradient, workData, entity) {
 
     const stopsData = gradient.stopsData,
         args = gradient.coordinates,
-        spread = gradient.spread;
+        spread = gradient.spread,
+        lock = gradient.lockedToEntity;
 
     if (!stopsData || !args) return workData;
 
@@ -209,19 +292,24 @@ P.applyRadialGradient = function (gradient, workData) {
 
     const d = workData.data,
         width = workData.width,
+        height = workData.height,
         pixels = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2),
         pz = pixels.length;
 
-    const beforeSpreadEngine = this.getBeforeSpreadOperation(workData);
-    const afterSpreadEngine = this.getAfterSpreadOperation(workData);
+    const beforeSpreadEngine = getBeforeSpreadOperation(workData),
+        afterSpreadEngine = getAfterSpreadOperation(workData),
+        onCoordinatesEngine = getOnCoordinatesOperation(workData, entity, lock);
 
     const easing = gradient.easing,
         engine = isa_fn(easing) ? easing : easeEngines[easing];
+
+    const coord = [0, 0];
 
     let p = 0,
         x = 0,
         y = 0,
         rgba, alpha,
+        sampleX, sampleY,
         px, py,
         qb, qc, disc, root,
         t, t1, t2,
@@ -235,8 +323,24 @@ P.applyRadialGradient = function (gradient, workData) {
 
         if (alpha) {
 
-            px = x - x0;
-            py = y - y0;
+            if (onCoordinatesEngine === λfirstArg) {
+
+                sampleX = x;
+                sampleY = y;
+            }
+            else {
+
+                coord[0] = x;
+                coord[1] = y;
+
+                onCoordinatesEngine(coord, p, width, height);
+
+                sampleX = coord[0];
+                sampleY = coord[1];
+            }
+
+            px = sampleX - x0;
+            py = sampleY - y0;
 
             qb = -2 * ((px * cx) + (py * cy) + (r0 * cr));
             qc = (px * px) + (py * py) - (r0 * r0);
@@ -323,7 +427,7 @@ P.applyRadialGradient = function (gradient, workData) {
             if (t < 0) t = 0;
             else if (t > 1) t = 1;
 
-            index = this.getPaletteIndex(gradient, t);
+            index = getPaletteIndex(gradient, t);
             color = stopsData[index];
 
             outAlpha = ((alpha * (color >>> 24)) / 255) | 0;
@@ -341,11 +445,12 @@ P.applyRadialGradient = function (gradient, workData) {
     return workData;
 };
 
-P.applyConicGradient = function (gradient, workData) {
+const applyConicGradient = function (gradient, workData, entity) {
 
     const stopsData = gradient.stopsData,
         args = gradient.coordinates,
-        spread = gradient.spread;
+        spread = gradient.spread,
+        lock = gradient.lockedToEntity;
 
     if (!stopsData || !args) return workData;
 
@@ -370,11 +475,13 @@ P.applyConicGradient = function (gradient, workData) {
 
     const d = workData.data,
         width = workData.width,
+        height = workData.height,
         pixels = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2),
         pz = pixels.length;
 
-    const beforeSpreadEngine = this.getBeforeSpreadOperation(workData);
-    const afterSpreadEngine = this.getAfterSpreadOperation(workData);
+    const beforeSpreadEngine = getBeforeSpreadOperation(workData),
+        afterSpreadEngine = getAfterSpreadOperation(workData),
+        onCoordinatesEngine = getOnCoordinatesOperation(workData, entity, lock);
 
     const easing = gradient.easing,
         engine = isa_fn(easing) ? easing : easeEngines[easing];
@@ -384,10 +491,13 @@ P.applyConicGradient = function (gradient, workData) {
         halfSpare = spare / 2,
         swirlFactor = swirlDistance ? (swirlDirection * tau / swirlDistance) : 0;
 
+    const coord = [0, 0];
+
     let p = 0,
         x = 0,
         y = 0,
         rgba, alpha,
+        sampleX, sampleY,
         dx, dy, angle, diff,
         t, index, color, outAlpha;
 
@@ -398,8 +508,24 @@ P.applyConicGradient = function (gradient, workData) {
 
         if (alpha) {
 
-            dx = x - cx;
-            dy = y - cy;
+            if (onCoordinatesEngine === λfirstArg) {
+
+                sampleX = x;
+                sampleY = y;
+            }
+            else {
+
+                coord[0] = x;
+                coord[1] = y;
+
+                onCoordinatesEngine(coord, p, width, height);
+
+                sampleX = coord[0];
+                sampleY = coord[1];
+            }
+
+            dx = sampleX - cx;
+            dy = sampleY - cy;
 
             angle = _atan2(dy, dx);
 
@@ -455,7 +581,7 @@ P.applyConicGradient = function (gradient, workData) {
             if (t < 0) t = 0;
             else if (t > 1) t = 1;
 
-            index = this.getPaletteIndex(gradient, t);
+            index = getPaletteIndex(gradient, t);
             color = stopsData[index];
 
             outAlpha = ((alpha * (color >>> 24)) / 255) | 0;
@@ -474,7 +600,7 @@ P.applyConicGradient = function (gradient, workData) {
 };
 
 // Helper function
-P.getPaletteIndex = function (gradient, t) {
+const getPaletteIndex = function (gradient, t) {
 
     const start = gradient.paletteStart,
         end = gradient.paletteEnd,
@@ -512,23 +638,18 @@ P.getPaletteIndex = function (gradient, t) {
 
 
 // ### Gradient operation functionality
-// TODO: explain
-//
-// #### The operations cache
 // Currently we only allow one operation at each stage
 const operationsCache = {
-    [BEFORE_SPREAD]: null,
-    [AFTER_SPREAD]: null,
-    [ON_ALPHA]: null,
-    [ON_COORDINATES]: null,
+    [BEFORE_SPREAD]: [],
+    [AFTER_SPREAD]: [],
+    [ON_COORDINATES]: [],
 };
 
 const cleanOperationsCache = () => {
 
-    operationsCache[BEFORE_SPREAD] = null;
-    operationsCache[AFTER_SPREAD] = null;
-    operationsCache[ON_ALPHA] = null;
-    operationsCache[ON_COORDINATES] = null;
+    operationsCache[BEFORE_SPREAD].length = 0;
+    operationsCache[AFTER_SPREAD].length = 0;
+    operationsCache[ON_COORDINATES].length = 0;
 }
 
 const updateOperationsCache = (operations = []) => {
@@ -537,169 +658,134 @@ const updateOperationsCache = (operations = []) => {
 
     if (operations.length) {
 
-        operationsCache[BEFORE_SPREAD] = operations.find(op => op.stage === BEFORE_SPREAD) || null;
-        operationsCache[AFTER_SPREAD] = operations.find(op => op.stage === AFTER_SPREAD) || null;
-        operationsCache[ON_ALPHA] = operations.find(op => op.stage === ON_ALPHA) || null;
-        operationsCache[ON_COORDINATES] = operations.find(op => op.stage === ON_COORDINATES) || null;
+        operationsCache[BEFORE_SPREAD].push(...operations.filter(op => op.stage === BEFORE_SPREAD));
+        operationsCache[AFTER_SPREAD].push(...operations.filter(op => op.stage === AFTER_SPREAD));
+        operationsCache[ON_COORDINATES].push(...operations.filter(op => op.stage === ON_COORDINATES));
+    }
+};
+
+const buildOperationChain = function (engines) {
+
+    if (!engines.length) return λfirstArg;
+
+    if (engines.length === 1) return engines[0];
+
+    return function (val, p, width, height) {
+
+        for (let i = 0, iz = engines.length; i < iz; i++) {
+
+            val = engines[i](val, p, width, height);
+        }
+        return val;
+    };
+};
+
+const buildCoordinateOperationChain = function (engines) {
+
+    if (!engines.length) return λfirstArg;
+
+    if (engines.length === 1) return engines[0];
+
+    return function (coord, p, width, height) {
+
+        for (let i = 0, iz = engines.length; i < iz; i++) {
+
+            engines[i](coord, p, width, height);
+        }
+        return coord;
+    };
+};
+
+const compileOperation = function (op, workData, entity, lock) {
+
+    switch (op.operation) {
+
+        case ADD_NOISE :
+            return getNoiseOperation(op, workData);
+
+        case ADD_EASE :
+            return getEasingOperation(op);
+
+        case ADD_RIPPLE :
+            return getRippleOperation(op, workData, entity, lock);
+
+        case ADD_WAVE :
+            return getWaveOperation(op);
+
+        default :
+            return λfirstArg;
     }
 };
 
 // Determine which operation, if any, should be applied at each stage
-P.getBeforeSpreadOperation = function (workData) {
+const getBeforeSpreadOperation = function (workData) {
 
-    const op = operationsCache[BEFORE_SPREAD];
+    const ops = operationsCache[BEFORE_SPREAD],
+        engines = [];
 
-    if (op) {
+    ops.forEach(op => {
 
-        switch (op.operation) {
+        const engine = compileOperation(op, workData);
 
-            case ADD_NOISE :
-                return this.getNoiseOperation(op, workData);
+        if (engine !== λfirstArg) engines.push(engine);
+    });
 
-            case ADD_EASE :
-                return this.getEasingOperation(op);
-
-            default:
-                return this.operationFunctions.noop;
-        }
-    }
-    else return this.operationFunctions.noop;
+    return buildOperationChain(engines);
 };
 
-P.getAfterSpreadOperation = function (workData) {
+const getAfterSpreadOperation = function (workData) {
 
-    const op = operationsCache[AFTER_SPREAD];
+    const ops = operationsCache[AFTER_SPREAD],
+        engines = [];
 
-    if (op) {
+    ops.forEach(op => {
 
-        switch (op.operation) {
+        const engine = compileOperation(op, workData);
 
-            case ADD_NOISE :
-                return this.getNoiseOperation(op, workData);
+        if (engine !== λfirstArg) engines.push(engine);
+    });
 
-            case ADD_EASE :
-                return this.getEasingOperation(op);
-
-            default :
-                return this.operationFunctions.noop;
-        }
-    }
-    else return this.operationFunctions.noop;
+    return buildOperationChain(engines);
 };
 
-P.getOnAlphaOperation = function (workData) {
+const getOnCoordinatesOperation = function (workData, entity, lock) {
 
-    const op = operationsCache[ON_ALPHA];
+    const ops = operationsCache[ON_COORDINATES],
+        engines = [];
 
-    if (op) {
+    ops.forEach(op => {
 
-        switch (op.operation) {
+        const engine = compileOperation(op, workData, entity, lock);
 
-            default:
+        if (engine !== λfirstArg) engines.push(engine);
+    });
 
-                return this.operationFunctions.noop;
-        }
-    }
-    else return this.operationFunctions.noop;
+    return buildCoordinateOperationChain(engines);
 };
 
-P.getOnCoordinatesOperation = function (workData) {
-
-    const op = operationsCache[ON_COORDINATES];
-
-    if (op) {
-
-        switch (op.operation) {
-
-            default:
-
-                return this.operationFunctions.noop;
-        }
-    }
-    else return this.operationFunctions.noop;
-};
-
-
-// #### Operations cache
-P.operationFunctions = {
-
-    noop: λfirstArg,
-
-    [BLUENOISE]: function (params = {}) {
-
-        const strength = _isFinite(params.strength) ? params.strength : 0.05;
-
-        const rnd = getRandomNumbers({
-            seed: params.seed,
-            length: params.length,
-            imgWidth: params.imgWidth,
-            type: BLUENOISE,
-        });
-
-        let rndCursor = -1;
-
-        return function (val) {
-
-            return val + ((rnd[++rndCursor] - 0.5) * strength);
-        };
-    },
-
-    [ORDERED]: function (params = {}) {
-
-        const strength = _isFinite(params.strength) ? params.strength : 0.05;
-
-        const rnd = getRandomNumbers({
-            seed: params.seed,
-            length: params.length,
-            imgWidth: params.imgWidth,
-            type: ORDERED,
-        });
-
-        let rndCursor = -1;
-
-        return function (val) {
-
-            return val + ((rnd[++rndCursor] - 0.5) * strength);
-        };
-    },
-
-    [RANDOM]: function (params = {}) {
-
-        const strength = _isFinite(params.strength) ? params.strength : 0.05;
-
-        const rnd = getRandomNumbers({
-            seed: params.seed,
-            length: params.length,
-            type: RANDOM,
-        });
-
-        let rndCursor = -1;
-
-        return function (val) {
-
-            return val + ((rnd[++rndCursor] - 0.5) * strength);
-        };
-    },
-};
-
-
-// Noise operation function helpers
-P.getNoiseOperation = function (op, workData) {
+// Noise operations
+const getNoiseOperation = function (op, workData) {
 
     const params = op.parameters || {},
-        noise = params.noise,
-        fn = this.operationFunctions[noise];
+        noise = params.noise;
 
-    if (isa_fn(fn)) {
+    if (!PERMITTED_NOISE.includes(noise)) return λfirstArg;
 
-        return fn({
-            seed: params.seed,
-            strength: params.strength,
-            length: workData.data.length >>> 2,
-            imgWidth: workData.width,
-        });
-    }
-    return this.operationFunctions.noop;
+    const strength = _isFinite(params.strength) ? params.strength : 0.05;
+
+    const rnd = getRandomNumbers({
+        seed: params.seed,
+        length: workData.data.length >>> 2,
+        imgWidth: workData.width,
+        type: noise,
+    });
+
+    let rndCursor = -1;
+
+    return function (val) {
+
+        return val + ((rnd[++rndCursor] - 0.5) * strength);
+    };
 };
 
 const getRandomNumbers = function (items = {}) {
@@ -711,7 +797,7 @@ const getRandomNumbers = function (items = {}) {
         type = RANDOM,
     } = items;
 
-    const name = `random-${seed}-${length}-${type}`,
+    const name = `random-${seed}-${length}-${imgWidth}-${type}`,
         itemInWorkstore = getWorkstoreItem(name);
 
     if (itemInWorkstore) return itemInWorkstore;
@@ -720,7 +806,7 @@ const getRandomNumbers = function (items = {}) {
 
         const base = (type === BLUENOISE) ? bluenoise : orderedNoise,
             dim = (_sqrt(base.length) | 0),
-            imgH = ((length / imgWidth) | 0),
+            imgH = _ceil(length / imgWidth),
             out = new Float32Array(length);
 
         let p = 0,
@@ -754,8 +840,9 @@ const getRandomNumbers = function (items = {}) {
     }
 };
 
-// Easing operation function helpers
-P.getEasingOperation = function (op) {
+
+// Easing operations
+const getEasingOperation = function (op) {
 
     const params = op.parameters || {},
         easing = params.easing,
@@ -763,7 +850,97 @@ P.getEasingOperation = function (op) {
 
     if (isa_fn(engine)) return engine;
 
-    return this.operationFunctions.noop;
+    return λfirstArg;
+};
+
+
+// Coordinate operations
+// + These operations have a known issue with entity-locked gradients, particularly when filipped or rotated. This is due to the discrepency between "global" cell coordinate space and "local" entity coordinate space. This also affects flipped cell-locked gradients.
+const getCoordinateValue = function (coord, dimension) {
+
+    if (coord.substring) {
+
+        const val = parseFloat(coord);
+
+        if (_isFinite(val)) return (val / 100) * dimension;
+
+        return 0.5 * dimension;
+    }
+
+    return _isFinite(coord) ? coord : 0.5 * dimension;
+};
+
+const getWaveOperation = function (op) {
+
+    const params = op.parameters || {};
+
+    const axis = (params.axis === Y || params.axis === BOTH) ? params.axis : X,
+        amplitude = _isFinite(params.amplitude) ? params.amplitude : 10,
+        frequency = _isFinite(params.frequency) ? params.frequency : 0.05,
+        phase = _isFinite(params.phase) ? params.phase : 0;
+
+    return function (coord) {
+
+        const x = coord[0],
+            y = coord[1];
+
+        if (axis === X) coord[0] = x + (_sin((y * frequency) + phase) * amplitude);
+
+        else if (axis === Y) coord[1] = y + (_sin((x * frequency) + phase) * amplitude);
+
+        else {
+
+            coord[0] = x + (_sin((y * frequency) + phase) * amplitude);
+            coord[1] = y + (_sin((x * frequency) + phase) * amplitude);
+        }
+
+        return coord;
+    };
+};
+
+const getRippleOperation = function (op, workData, entity, lock) {
+
+    const params = op.parameters || {};
+
+    let width = workData.width,
+        height = workData.height;
+
+    if (lock && entity) {
+
+        const [w, h] = entity.get('dimensions');
+
+        width = w,
+        height = h;
+    }
+
+    const amplitude = _isFinite(params.amplitude) ? params.amplitude : 10,
+        frequency = _isFinite(params.frequency) ? params.frequency : 0.05,
+        phase = _isFinite(params.phase) ? params.phase : 0;
+    
+    let originX = getCoordinateValue(params.originX, width),
+        originY = getCoordinateValue(params.originY, height);
+
+    return function (coord) {
+
+        const x = coord[0],
+            y = coord[1],
+
+            dx = x - originX,
+            dy = y - originY,
+
+            dist = _sqrt((dx * dx) + (dy * dy));
+
+        if (dist) {
+
+            const offset = _sin((dist * frequency) + phase) * amplitude,
+                ratio = offset / dist;
+
+            coord[0] = x + (dx * ratio);
+            coord[1] = y + (dy * ratio);
+        }
+
+        return coord;
+    };
 };
 
 

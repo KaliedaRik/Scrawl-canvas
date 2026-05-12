@@ -275,6 +275,26 @@ export default function (P = Ωempty) {
         this.dirtyDrawGradientCache = true;
     };
 
+// __flipReverse__, __flipUpend__
+    S.flipReverse = function (item) {
+
+        item = !!item;
+
+        this.flipReverse = item;
+        this.dirtyFillGradientCache = true;
+        this.dirtyDrawGradientCache = true;
+    };
+
+// __lockStrokeStyleToEntity__
+    S.flipUpend = function (item) {
+
+        item = !!item;
+
+        this.flipUpend = item;
+        this.dirtyFillGradientCache = true;
+        this.dirtyDrawGradientCache = true;
+    };
+
 // __fillStyle__, __strokeStyle__ - these attributes belong in the state object
 // + We hijack the normal setting processes for the state object because we want to subscribe to filters
     S.fillStyle = function (item) {
@@ -808,6 +828,7 @@ export default function (P = Ωempty) {
                 easing: grad.palette.easing,
                 stopsData: grad.palette.getStopsData().slice(),
                 operations: grad.operations,
+                lockedToEntity: false,
             };
 
             if (grad.type === T_CONIC_GRADIENT) {
@@ -816,6 +837,11 @@ export default function (P = Ωempty) {
                 fixedGradientData.swirlDistance = grad.swirlDistance;
                 fixedGradientData.swirlClockwise = grad.swirlClockwise;
             }
+
+            if (
+                (fillId && this.lockFillStyleToEntity) ||
+                (drawId && this.lockStrokeStyleToEntity)
+            ) fixedGradientData.lockedToEntity = true;
 
             return fixedGradientData;
         };
@@ -868,8 +894,9 @@ export default function (P = Ωempty) {
 
                     gradientEngine.action({
                         imageData: data,
-                        fixedGradientData: getFixedGradientData(grad, drawId, fillId),
+                        fixedGradientData: getFixedGradientData(grad, drawId, fillId, DRAW),
                         identifier: drawId,
+                        entity: this,
                     });
                 }
 
@@ -913,6 +940,7 @@ export default function (P = Ωempty) {
                         imageData: data,
                         fixedGradientData: getFixedGradientData(grad, drawId, fillId),
                         identifier: fillId,
+                        entity: this,
                     });
                 }
                 if (this.dirtyFillGradient || this.dirtyFillGradientCache) this.dirtyFilterIdentifier = true;
