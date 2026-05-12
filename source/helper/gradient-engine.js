@@ -28,7 +28,7 @@ import { seededRandomNumberGenerator } from './random-seed.js';
 import { bluenoise, orderedNoise } from './filter-engine-bluenoise-data.js';
 
 // Shared constants
-import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_NOISE, AFTER_PALETTE_EASE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, DEFAULT_SEED, ON_ALPHA, ON_COORDINATES, ORDERED, RANDOM, REFLECT, REPEAT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TRANSPARENT } from './shared-vars.js';
+import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_EASE, ADD_NOISE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, DEFAULT_SEED, ON_ALPHA, ON_COORDINATES, ORDERED, RANDOM, REFLECT, REPEAT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TRANSPARENT } from './shared-vars.js';
 
 // Local constants
 const T_GRADIENT_ENGINE = 'GradientEngine';
@@ -78,116 +78,6 @@ P.action = function (packet) {
 };
 
 
-// For now, we'll assign a maximum of one operation to each possible stage
-const operationsCache = {
-    [BEFORE_SPREAD]: null,
-    [AFTER_SPREAD]: null,
-    [AFTER_PALETTE_EASE]: null,
-    [ON_ALPHA]: null,
-    [ON_COORDINATES]: null,
-};
-
-const cleanOperationsCache = () => {
-
-    operationsCache[BEFORE_SPREAD] = null;
-    operationsCache[AFTER_SPREAD] = null;
-    operationsCache[AFTER_PALETTE_EASE] = null;
-    operationsCache[ON_ALPHA] = null;
-    operationsCache[ON_COORDINATES] = null;
-}
-
-const updateOperationsCache = (operations = []) => {
-
-    cleanOperationsCache();
-
-    if (operations.length) {
-
-        operationsCache[BEFORE_SPREAD] = operations.find(op => op.stage === BEFORE_SPREAD) || null;
-        operationsCache[AFTER_SPREAD] = operations.find(op => op.stage === AFTER_SPREAD) || null;
-        operationsCache[AFTER_PALETTE_EASE] = operations.find(op => op.stage === AFTER_PALETTE_EASE) || null;
-        operationsCache[ON_ALPHA] = operations.find(op => op.stage === ON_ALPHA) || null;
-        operationsCache[ON_COORDINATES] = operations.find(op => op.stage === ON_COORDINATES) || null;
-    }
-};
-
-P.getAfterSpreadOperation = function (workData) {
-
-    const op = operationsCache[AFTER_SPREAD];
-
-    if (op) {
-
-        let eng;
-
-        switch (op.operation) {
-
-            case ADD_NOISE: {
-
-                const params = op.parameters || {},
-                    noise = params.noise,
-                    fn = this.operationFunctions[`${noise}_${AFTER_SPREAD}`];
-
-                if (isa_fn(fn)) {
-
-                    eng = fn({
-                        seed: params.seed,
-                        strength: params.strength,
-                        length: workData.data.length,
-                        imgWidth: workData.width,
-                    });
-
-                    return eng;
-                }
-                else return this.operationFunctions.noop;
-            }
-
-            default:
-
-                return this.operationFunctions.noop;
-        }
-    }
-    else return this.operationFunctions.noop;
-
-};
-
-
-// Helper function
-P.getPaletteIndex = function (gradient, t) {
-
-    const start = gradient.paletteStart,
-        end = gradient.paletteEnd,
-        cycle = gradient.cyclePalette;
-
-    let index, span;
-
-    if (start === end) return start;
-
-    if (start < end) {
-
-        span = end - start;
-        index = start + (t * span);
-    }
-    else if (cycle) {
-
-        span = (1000 - start) + end;
-        index = start + (t * span);
-
-        if (index > 999) index -= 1000;
-    }
-    else {
-
-        span = start - end;
-        index = start - (t * span);
-    }
-
-    index = _floor(index);
-
-    if (index < 0) index = 0;
-    else if (index > 999) index = 999;
-
-    return index;
-};
-
-
 // ### Gradient actions
 P.applyLinearGradient = function (gradient, workData) {
 
@@ -213,6 +103,7 @@ P.applyLinearGradient = function (gradient, workData) {
         pixels = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2),
         pz = pixels.length;
 
+    const beforeSpreadEngine = this.getBeforeSpreadOperation(workData);
     const afterSpreadEngine = this.getAfterSpreadOperation(workData);
 
     const easing = gradient.easing,
@@ -236,6 +127,8 @@ P.applyLinearGradient = function (gradient, workData) {
         if (alpha) {
 
             v = t;
+
+            v = beforeSpreadEngine(v);
 
             if (spread === TRANSPARENT) {
 
@@ -319,6 +212,7 @@ P.applyRadialGradient = function (gradient, workData) {
         pixels = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2),
         pz = pixels.length;
 
+    const beforeSpreadEngine = this.getBeforeSpreadOperation(workData);
     const afterSpreadEngine = this.getAfterSpreadOperation(workData);
 
     const easing = gradient.easing,
@@ -399,6 +293,8 @@ P.applyRadialGradient = function (gradient, workData) {
                 }
             }
 
+            t = beforeSpreadEngine(t);
+
             if (spread === TRANSPARENT) {
 
                 if (t < 0 || t > 1) {
@@ -477,6 +373,7 @@ P.applyConicGradient = function (gradient, workData) {
         pixels = new Uint32Array(d.buffer, d.byteOffset, d.byteLength >>> 2),
         pz = pixels.length;
 
+    const beforeSpreadEngine = this.getBeforeSpreadOperation(workData);
     const afterSpreadEngine = this.getAfterSpreadOperation(workData);
 
     const easing = gradient.easing,
@@ -512,6 +409,8 @@ P.applyConicGradient = function (gradient, workData) {
             if (diff < 0) diff += tau;
 
             t = diff / range;
+
+            t = beforeSpreadEngine(t);
 
             if (spread === TRANSPARENT) {
 
@@ -574,14 +473,159 @@ P.applyConicGradient = function (gradient, workData) {
     return workData;
 };
 
+// Helper function
+P.getPaletteIndex = function (gradient, t) {
 
+    const start = gradient.paletteStart,
+        end = gradient.paletteEnd,
+        cycle = gradient.cyclePalette;
+
+    let index, span;
+
+    if (start === end) return start;
+
+    if (start < end) {
+
+        span = end - start;
+        index = start + (t * span);
+    }
+    else if (cycle) {
+
+        span = (1000 - start) + end;
+        index = start + (t * span);
+
+        if (index > 999) index -= 1000;
+    }
+    else {
+
+        span = start - end;
+        index = start - (t * span);
+    }
+
+    index = _floor(index);
+
+    if (index < 0) index = 0;
+    else if (index > 999) index = 999;
+
+    return index;
+};
+
+
+// ### Gradient operation functionality
+// TODO: explain
+//
+// #### The operations cache
+// Currently we only allow one operation at each stage
+const operationsCache = {
+    [BEFORE_SPREAD]: null,
+    [AFTER_SPREAD]: null,
+    [ON_ALPHA]: null,
+    [ON_COORDINATES]: null,
+};
+
+const cleanOperationsCache = () => {
+
+    operationsCache[BEFORE_SPREAD] = null;
+    operationsCache[AFTER_SPREAD] = null;
+    operationsCache[ON_ALPHA] = null;
+    operationsCache[ON_COORDINATES] = null;
+}
+
+const updateOperationsCache = (operations = []) => {
+
+    cleanOperationsCache();
+
+    if (operations.length) {
+
+        operationsCache[BEFORE_SPREAD] = operations.find(op => op.stage === BEFORE_SPREAD) || null;
+        operationsCache[AFTER_SPREAD] = operations.find(op => op.stage === AFTER_SPREAD) || null;
+        operationsCache[ON_ALPHA] = operations.find(op => op.stage === ON_ALPHA) || null;
+        operationsCache[ON_COORDINATES] = operations.find(op => op.stage === ON_COORDINATES) || null;
+    }
+};
+
+// Determine which operation, if any, should be applied at each stage
+P.getBeforeSpreadOperation = function (workData) {
+
+    const op = operationsCache[BEFORE_SPREAD];
+
+    if (op) {
+
+        switch (op.operation) {
+
+            case ADD_NOISE :
+                return this.getNoiseOperation(op, workData);
+
+            case ADD_EASE :
+                return this.getEasingOperation(op);
+
+            default:
+                return this.operationFunctions.noop;
+        }
+    }
+    else return this.operationFunctions.noop;
+};
+
+P.getAfterSpreadOperation = function (workData) {
+
+    const op = operationsCache[AFTER_SPREAD];
+
+    if (op) {
+
+        switch (op.operation) {
+
+            case ADD_NOISE :
+                return this.getNoiseOperation(op, workData);
+
+            case ADD_EASE :
+                return this.getEasingOperation(op);
+
+            default :
+                return this.operationFunctions.noop;
+        }
+    }
+    else return this.operationFunctions.noop;
+};
+
+P.getOnAlphaOperation = function (workData) {
+
+    const op = operationsCache[ON_ALPHA];
+
+    if (op) {
+
+        switch (op.operation) {
+
+            default:
+
+                return this.operationFunctions.noop;
+        }
+    }
+    else return this.operationFunctions.noop;
+};
+
+P.getOnCoordinatesOperation = function (workData) {
+
+    const op = operationsCache[ON_COORDINATES];
+
+    if (op) {
+
+        switch (op.operation) {
+
+            default:
+
+                return this.operationFunctions.noop;
+        }
+    }
+    else return this.operationFunctions.noop;
+};
+
+
+// #### Operations cache
 P.operationFunctions = {
 
     noop: λfirstArg,
 
-    [`${BLUENOISE}_${BEFORE_SPREAD}`]: λfirstArg,
-
-    [`${BLUENOISE}_${AFTER_SPREAD}`]: function (params = {}) {
+    [BLUENOISE]: function (params = {}) {
 
         const strength = _isFinite(params.strength) ? params.strength : 0.05;
 
@@ -600,14 +644,7 @@ P.operationFunctions = {
         };
     },
 
-    [`${BLUENOISE}_${AFTER_PALETTE_EASE}`]: λfirstArg,
-    [`${BLUENOISE}_${ON_ALPHA}`]: λfirstArg,
-    [`${BLUENOISE}_${ON_COORDINATES}`]: λfirstArg,
-
-
-    [`${ORDERED}_${BEFORE_SPREAD}`]: λfirstArg,
-
-    [`${ORDERED}_${AFTER_SPREAD}`]: function (params = {}) {
+    [ORDERED]: function (params = {}) {
 
         const strength = _isFinite(params.strength) ? params.strength : 0.05;
 
@@ -626,14 +663,7 @@ P.operationFunctions = {
         };
     },
 
-    [`${ORDERED}_${AFTER_PALETTE_EASE}`]: λfirstArg,
-    [`${ORDERED}_${ON_ALPHA}`]: λfirstArg,
-    [`${ORDERED}_${ON_COORDINATES}`]: λfirstArg,
-
-
-    [`${RANDOM}_${BEFORE_SPREAD}`]: λfirstArg,
-
-    [`${RANDOM}_${AFTER_SPREAD}`]: function (params = {}) {
+    [RANDOM]: function (params = {}) {
 
         const strength = _isFinite(params.strength) ? params.strength : 0.05;
 
@@ -650,10 +680,26 @@ P.operationFunctions = {
             return val + ((rnd[++rndCursor] - 0.5) * strength);
         };
     },
+};
 
-    [`${RANDOM}_${AFTER_PALETTE_EASE}`]: λfirstArg,
-    [`${RANDOM}_${ON_ALPHA}`]: λfirstArg,
-    [`${RANDOM}_${ON_COORDINATES}`]: λfirstArg,
+
+// Noise operation function helpers
+P.getNoiseOperation = function (op, workData) {
+
+    const params = op.parameters || {},
+        noise = params.noise,
+        fn = this.operationFunctions[noise];
+
+    if (isa_fn(fn)) {
+
+        return fn({
+            seed: params.seed,
+            strength: params.strength,
+            length: workData.data.length >>> 2,
+            imgWidth: workData.width,
+        });
+    }
+    return this.operationFunctions.noop;
 };
 
 const getRandomNumbers = function (items = {}) {
@@ -706,6 +752,18 @@ const getRandomNumbers = function (items = {}) {
 
         return out;
     }
+};
+
+// Easing operation function helpers
+P.getEasingOperation = function (op) {
+
+    const params = op.parameters || {},
+        easing = params.easing,
+        engine = isa_fn(easing) ? easing : easeEngines[easing];
+
+    if (isa_fn(engine)) return engine;
+
+    return this.operationFunctions.noop;
 };
 
 

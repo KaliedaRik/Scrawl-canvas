@@ -24,13 +24,13 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 import { makePalette } from '../untracked-factory/palette.js';
 
 // Shared constants
-import { _floor, _isArray, _isFinite, _keys, _values, ADD_NOISE, AFTER_PALETTE_EASE, AFTER_SPREAD, BEFORE_SPREAD, BLACK, BLANK, BLUENOISE, BOTTOM, CENTER, DRAW, END, FILL, LEFT, LINEAR, NAME, ON_ALPHA, ON_COORDINATES, ORDERED, PAD, RANDOM, REFLECT, REPEAT, RGB, RIGHT, START, T_PALETTE, TOP, TRANSPARENT, UNDEF, WHITE } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, _keys, _values, ADD_EASE, ADD_NOISE, AFTER_SPREAD, BEFORE_SPREAD, BLACK, BLANK, BLUENOISE, BOTTOM, CENTER, DRAW, END, FILL, LEFT, LINEAR, NAME, ON_ALPHA, ON_COORDINATES, ORDERED, PAD, RANDOM, REFLECT, REPEAT, RGB, RIGHT, START, T_PALETTE, TOP, TRANSPARENT, UNDEF, WHITE } from '../helper/shared-vars.js';
 
 // ```
 // Available gradient operation shapes
 // {
 //      operation: string - one from: 'add-noise'.
-//      stage: string - one from: 'before-spread', 'after-spread', after-palette-ease, on-alpha, 'on-coordinates'.
+//      stage: string - one from: 'before-spread', 'after-spread', on-alpha, 'on-coordinates'.
 //.     parameters: object containing attributes relevant to the given operation
 // }
 // 
@@ -45,10 +45,18 @@ import { _floor, _isArray, _isFinite, _keys, _values, ADD_NOISE, AFTER_PALETTE_E
 //          seed: '',
 //      }
 // }
+// 
+// {
+//      operation: 'add-ease',
+//      stage: 'after-spread',
+//      parameters: {
+//          ease: 'easeOutIn',
+//      }
+// }
 // ```
-const PERMITTED_OPERATIONS = [ADD_NOISE],
+const PERMITTED_OPERATIONS = [ADD_EASE, ADD_NOISE],
     PERMITTED_NOISE = [RANDOM, BLUENOISE, ORDERED],
-    PERMITTED_STAGES = [BEFORE_SPREAD, AFTER_SPREAD, AFTER_PALETTE_EASE, ON_ALPHA, ON_COORDINATES];
+    PERMITTED_STAGES = [BEFORE_SPREAD, AFTER_SPREAD, ON_ALPHA, ON_COORDINATES];
 
 // Local constants
 const COLORS = 'colors',

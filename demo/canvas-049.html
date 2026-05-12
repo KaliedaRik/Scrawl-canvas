@@ -153,12 +153,30 @@
     <div class="lavender">
       <select class="controlItem gradientControl" id="operations">
         <option value='[]'>None</option>
+
+        <option value="" disabled>---</option>
+        <option value='[{"operation":"add-noise","stage":"before-spread","parameters":{"noise":"random","strength":0.02,"seed":"linear-gradient-test"}}]'>Weak random noise before spread</option>
+        <option value='[{"operation":"add-noise","stage":"before-spread","parameters":{"noise":"random","strength":0.08,"seed":"linear-gradient-test"}}]'>Strong random noise before spread</option>
+        <option value='[{"operation":"add-noise","stage":"before-spread","parameters":{"noise":"ordered","strength":0.02,"seed":"linear-gradient-test"}}]'>Weak ordered noise before spread</option>
+        <option value='[{"operation":"add-noise","stage":"before-spread","parameters":{"noise":"ordered","strength":0.08,"seed":"linear-gradient-test"}}]'>Strong ordered noise before spread</option>
+        <option value='[{"operation":"add-noise","stage":"before-spread","parameters":{"noise":"bluenoise","strength":0.02,"seed":"linear-gradient-test"}}]'>Weak bluenoise before spread</option>
+        <option value='[{"operation":"add-noise","stage":"before-spread","parameters":{"noise":"bluenoise","strength":0.08,"seed":"linear-gradient-test"}}]'>Strong bluenoise before spread</option>
+
+        <option value="" disabled>---</option>
         <option value='[{"operation":"add-noise","stage":"after-spread","parameters":{"noise":"random","strength":0.02,"seed":"linear-gradient-test"}}]'>Weak random noise after spread</option>
         <option value='[{"operation":"add-noise","stage":"after-spread","parameters":{"noise":"random","strength":0.08,"seed":"linear-gradient-test"}}]'>Strong random noise after spread</option>
         <option value='[{"operation":"add-noise","stage":"after-spread","parameters":{"noise":"ordered","strength":0.02,"seed":"linear-gradient-test"}}]'>Weak ordered noise after spread</option>
         <option value='[{"operation":"add-noise","stage":"after-spread","parameters":{"noise":"ordered","strength":0.08,"seed":"linear-gradient-test"}}]'>Strong ordered noise after spread</option>
         <option value='[{"operation":"add-noise","stage":"after-spread","parameters":{"noise":"bluenoise","strength":0.02,"seed":"linear-gradient-test"}}]'>Weak bluenoise after spread</option>
         <option value='[{"operation":"add-noise","stage":"after-spread","parameters":{"noise":"bluenoise","strength":0.08,"seed":"linear-gradient-test"}}]'>Strong bluenoise after spread</option>
+
+        <option value="" disabled>---</option>
+        <option value='[{"operation":"add-ease","stage":"before-spread","parameters":{"easing":"easeOut3"}}]'>Ease out before spread</option>
+        <option value='[{"operation":"add-ease","stage":"before-spread","parameters":{"easing":"easeOutIn3"}}]'>Ease out-in before spread</option>
+        <option value='[{"operation":"add-ease","stage":"before-spread","parameters":{"easing":"steppedEasing4"}}]'>Stepped ease before spread</option>
+        <option value='[{"operation":"add-ease","stage":"after-spread","parameters":{"easing":"easeOut3"}}]'>Ease out after spread</option>
+        <option value='[{"operation":"add-ease","stage":"after-spread","parameters":{"easing":"easeOutIn3"}}]'>Ease out-in after spread</option>
+        <option value='[{"operation":"add-ease","stage":"after-spread","parameters":{"easing":"steppedEasing4"}}]'>Stepped ease after spread</option>
       </select>
     </div>
 
