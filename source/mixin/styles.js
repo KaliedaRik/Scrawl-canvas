@@ -24,7 +24,7 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 import { makePalette } from '../untracked-factory/palette.js';
 
 // Shared constants
-import { _floor, _isArray, _isFinite, _keys, _values, ADD_EASE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLACK, BLANK, BOTTOM, CENTER, DRAW, END, FILL, LEFT, LINEAR, NAME, ON_COORDINATES, PAD, PERMITTED_NOISE, REFLECT, REPEAT, RGB, RIGHT, START, T_CONIC_GRADIENT, T_GRADIENT, T_PALETTE, T_RADIAL_GRADIENT, TOP, TRANSPARENT, UNDEF, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, _keys, _values, ADD_EASE, ADD_MAP_DISPLACE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLACK, BLANK, BOTTOM, CENTER, DRAW, END, FILL, LEFT, LINEAR, NAME, ON_COORDINATES, PAD, PERMITTED_NOISE, REFLECT, REPEAT, RGB, RIGHT, START, T_CONIC_GRADIENT, T_GRADIENT, T_PALETTE, T_RADIAL_GRADIENT, TOP, TRANSPARENT, UNDEF, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 // ```
 // Available gradient operation shapes
@@ -76,13 +76,29 @@ import { _floor, _isArray, _isFinite, _keys, _values, ADD_EASE, ADD_NOISE, ADD_R
 //         originY: '50%',
 //     }
 // }
+//
+// {
+//     operation: 'add-map-displace',
+//     stage: 'on-coordinates',
+//     parameters: {
+//         axis: 'both',          - x, y, both
+//         strength: 20,          - pixels
+//         offset: 0.5,           - map centre point
+//         linked: false,         - true = use same map for x/y
+//         map: {
+//             noiseEngine: 'simplex',  - 'perlin', 'improved-perlin', 'simplex', 'value', 'worley-euclidean', 'worley-manhattan'
+//             scale: 50,               - positive integer number
+//             octaves: 3,              - positive integer number
+//         }
+//     }
+// }
 // ```
 
 // Local constants
 const COLORS = 'colors',
     PALETTE_KEYS = ['colors', 'stops'],
     SPREAD_VALUES = [PAD, REPEAT, REFLECT, TRANSPARENT],
-    PERMITTED_OPERATIONS = [ADD_EASE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE],
+    PERMITTED_OPERATIONS = [ADD_EASE, ADD_MAP_DISPLACE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE],
     PERMITTED_STAGES = [BEFORE_SPREAD, AFTER_SPREAD, ON_COORDINATES],
     IDENTIFIED_STYLES = [T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT];
 

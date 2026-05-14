@@ -44,6 +44,7 @@ export const ABSOLUTE = 'absolute';
 export const ACCEPTED_WRAPPERS = ['Canvas', 'Stack'];
 export const ADD_EVENT_LISTENER = 'addEventListener';
 export const ADD_EASE = 'add-ease';
+export const ADD_MAP_DISPLACE = 'add-map-displace';
 export const ADD_NOISE = 'add-noise';
 export const ADD_RIPPLE = 'add-ripple';
 export const ADD_WAVE = 'add-wave';

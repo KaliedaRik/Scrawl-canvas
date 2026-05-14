@@ -10,7 +10,7 @@ import { bluenoise, orderedNoise } from './filter-engine-bluenoise-data.js';
 import { makeNoiseAsset } from '../asset-management/noise-asset.js';
 
 // Shared constants
-import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_EASE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, BOTTOM, CENTER, DEFAULT_SEED, LEFT, ON_COORDINATES, ORDERED, PERMITTED_NOISE, RANDOM, REFLECT, REPEAT, RIGHT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TOP, TRANSPARENT } from './shared-vars.js';
+import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_EASE, ADD_MAP_DISPLACE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, BOTTOM, CENTER, DEFAULT_SEED, LEFT, ON_COORDINATES, ORDERED, PERMITTED_NOISE, RANDOM, REFLECT, REPEAT, RIGHT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TOP, TRANSPARENT } from './shared-vars.js';
 
 // Local constants
 const T_GRADIENT_ENGINE = 'GradientEngine',
@@ -23,7 +23,7 @@ const noiseAsset = makeNoiseAsset({
     name: 'SC-gradient-engine-noise-asset',
 });
 
- (noiseAsset);
+console.log(noiseAsset);
 
 const {
     element: noiseElement,
@@ -31,8 +31,6 @@ const {
     stateAttributeDefaults: noiseDefs,  
     currentAttributeValues: noiseVals,
 } = noiseAsset;
-
-const buildNoiseId = () =>  `gradient_operation_noise-${noiseVals.height}-${noiseVals.lacunarity}-${noiseVals.noiseEngine}-${noiseVals.octaveFunction}-${noiseVals.octaves}-${noiseVals.persistence}-${noiseVals.scale}-${noiseVals.seed}-${noiseVals.sineFrequencyCoeff}-${noiseVals.size}-${noiseVals.smoothing}-${noiseVals.sumAmplitude}-${noiseVals.sumFunction}-${noiseVals.width}-${noiseVals.worleyDepth}-${noiseVals.worleyOutput}`;
 
 
 // #### GradientEngine constructor
@@ -858,6 +856,9 @@ const compileOperation = function (op, workData, entity, lock) {
         case ADD_WAVE :
             return getWaveOperation(op);
 
+        case ADD_MAP_DISPLACE :
+            return getMapDisplaceOperation(op, workData);
+
         default :
             return λfirstArg;
     }
@@ -1087,6 +1088,128 @@ const getRippleOperation = function (op, workData, entity, lock) {
 
         return coord;
     };
+};
+
+const getMapDisplaceOperation = function (op, workData) {
+
+    const params = op.parameters || {},
+        mapParams = params.noise || {},
+
+        width = workData.width,
+        height = workData.height,
+
+        axis = (params.axis === Y || params.axis === BOTH) ? params.axis : X,
+
+        strength = _isFinite(params.strength) ? params.strength : 20,
+        offset = _isFinite(params.offset) ? params.offset : 0.5,
+        linked = params.linked === true;
+
+    if (!strength) return λfirstArg;
+
+    if (axis === X) {
+
+        const map = getNoiseMap(mapParams, width, height);
+
+        return function (coord, p) {
+
+            coord[0] += (map[p] - offset) * strength;
+            return coord;
+        };
+    }
+
+    if (axis === Y) {
+
+        const map = getNoiseMap(mapParams, width, height);
+
+        return function (coord, p) {
+
+            coord[1] += (map[p] - offset) * strength;
+            return coord;
+        };
+    }
+
+    const xMap = getNoiseMap(linked ? mapParams : {
+            ...mapParams,
+            seed: `${mapParams.seed || DEFAULT_SEED}-x`,
+        }, width, height),
+
+        yMap = getNoiseMap(linked ? mapParams : {
+            ...mapParams,
+            seed: `${mapParams.seed || DEFAULT_SEED}-y`,
+        }, width, height);
+
+    return function (coord, p) {
+
+        coord[0] += (xMap[p] - offset) * strength;
+        coord[1] += (yMap[p] - offset) * strength;
+
+        return coord;
+    };
+};
+
+const getNoiseMap = function (noiseParams, width, height) {
+
+    const params = {
+        ...noiseDefs,
+        width,
+        height,
+        ...noiseParams,
+    };
+
+    const name = buildNoiseMapId(params),
+        cached = getWorkstoreItem(name);
+
+    if (cached) return cached;
+
+    noiseAsset.set(noiseDefs);
+    noiseAsset.set({
+        width,
+        height,
+    });
+    noiseAsset.set(noiseParams);
+
+    noiseAsset.cleanOutput();
+
+    const rows = noiseAsset.noiseValues,
+        out = new Float32Array(width * height);
+
+    let p = 0;
+
+    for (let y = 0; y < height; y++) {
+
+        const row = rows[y];
+
+        for (let x = 0; x < width; x++) {
+
+            out[p++] = row[x];
+        }
+    }
+
+    setWorkstoreItem(name, out);
+    return out;
+};
+
+const buildNoiseMapId = function (p) {
+
+    return [
+        'gradient-engine-noise-map',
+        p.width,
+        p.height,
+        p.seed,
+        p.noiseEngine,
+        p.size,
+        p.scale,
+        p.octaves,
+        p.octaveFunction,
+        p.persistence,
+        p.lacunarity,
+        p.smoothing,
+        p.sumFunction,
+        p.sineFrequencyCoeff,
+        p.sumAmplitude,
+        p.worleyOutput,
+        p.worleyDepth,
+    ].join('-');
 };
 
 
