@@ -10,11 +10,9 @@
 // + Value
 //
 // Additional engines include:
-// + Stripes
-// + Smoothed stripes
 // + Worley - both euclidean and manhattan versions
 //
-// These engines are supported by a number of settable (and thus animatable) attributes, including special functions for smoothing the engine output. Demo [Canvas-060](../../demo/canvas-060.html) has been set up to allow for experimenting with these attributes
+// These engines are supported by a number of settable (and thus animatable) attributes, including special functions for smoothing the engine output. Demo [Canvas-052](../../demo/canvas-052.html) has been set up to allow for experimenting with these attributes
 
 
 // #### Imports
@@ -35,15 +33,13 @@ import { _abs, _floor, _max, _min, _pow, _random, _sin, _sqrt, ASSET, DEFAULT_SE
 
 // Local constants
 const $X = 'X',
-    BESPOKE_NOISE_ENGINES = ['stripes', 'smoothed-stripes', 'worley-euclidean', 'worley-manhattan'],
+    BESPOKE_NOISE_ENGINES = ['worley-euclidean', 'worley-manhattan'],
     EUCLIDEAN_DISTANCE = 'euclidian-distance',
     IMPROVED_PERLIN = 'improved-perlin',
     MANHATTAN_DISTANCE = 'manhattan-distance',
     PERLIN = 'perlin',
     QUINTIC = 'quintic',
     SIMPLEX = 'simplex',
-    SMOOTHED_STRIPES = 'smoothed-stripes',
-    STRIPES = 'stripes',
     T_NOISE_ASSET = 'NoiseAsset',
     WORLEY_EUCLIDEAN = 'worley-euclidean',
     WORLEY_MANHATTAN = 'worley-manhattan',
@@ -66,6 +62,8 @@ const NoiseAsset = function (items = Ωempty) {
     this.noiseValues = [];
 
     this.subscribers = [];
+
+    this.currentAttributeValues = { ...this.stateAttributeDefaults };
 
     this.set(this.defs);
     this.set(items);
@@ -100,7 +98,7 @@ const defaultAttributes = {
     width: 300,
     height: 150,
 
-    // __noiseEngine__ - String - the currently supported noise engines String values are: `perlin`, `improved-perlin`, `simplex`, `value`, `stripes`, `smoothed-stripes`, `worley-euclidean`, `worley-manhattan`
+    // __noiseEngine__ - String - the currently supported noise engines String values are: `perlin`, `improved-perlin`, `simplex`, `value`, `worley-euclidean`, `worley-manhattan`
     noiseEngine: SIMPLEX,
 
     // When a noise engine initializes it will create several Arrays of pseudo-random values. The __seed__ attribute is a String used to initialize the pseudo-random number generator, while the __size__ attribute is a Number (often a power of 2 value) which determines the lengths of the Arrays
@@ -144,6 +142,25 @@ const defaultAttributes = {
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
+P.stateAttributeDefaults = {
+    height: 150,
+    lacunarity: 2,
+    noiseEngine: SIMPLEX,
+    octaveFunction: NONE,
+    octaves: 1,
+    persistence: 0.5,
+    scale: 50,
+    seed: DEFAULT_SEED,
+    sineFrequencyCoeff: 1,
+    size: 256,
+    smoothing: QUINTIC,
+    sumAmplitude: 5,
+    sumFunction: NONE,
+    width: 300,
+    worleyDepth: 0,
+    worleyOutput: $X,
+};
+
 delete P.defs.source;
 delete P.defs.sourceLoaded;
 
@@ -180,6 +197,8 @@ S.octaveFunction = function (item) {
     this.octaveFunction = (null != this.octaveFunctions[item]) ? this.octaveFunctions[item] : λfirstArg;
     this.dirtyNoise = true;
     this.dirtyOutput = true;
+
+    this.currentAttributeValues.octaveFunction = item;
 };
 
 S.sumFunction = function (item) {
@@ -187,6 +206,8 @@ S.sumFunction = function (item) {
     this.sumFunction = (null != this.sumFunctions[item]) ? this.sumFunctions[item] : λfirstArg;
     this.dirtyNoise = true;
     this.dirtyOutput = true;
+
+    this.currentAttributeValues.sumFunction = item;
 };
 
 S.smoothing = function (item) {
@@ -194,6 +215,8 @@ S.smoothing = function (item) {
     this.smoothing = (null != easeEngines[item]) ? easeEngines[item] : λfirstArg;
     this.dirtyNoise = true;
     this.dirtyOutput = true;
+
+    this.currentAttributeValues.smoothing = item;
 };
 
 S.noiseEngine = function (item) {
@@ -201,6 +224,8 @@ S.noiseEngine = function (item) {
     this.noiseEngine = (null != this.noiseEngines[item]) ? this.noiseEngines[item] : this.noiseEngines[SIMPLEX];
     this.dirtyNoise = true;
     this.dirtyOutput = true;
+
+    this.currentAttributeValues.noiseEngine = item;
 };
 
 S.octaves = function (item) {
@@ -210,6 +235,8 @@ S.octaves = function (item) {
         this.octaves = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.octaves = item;
     }
 };
 
@@ -220,6 +247,8 @@ S.seed = function (item) {
         this.seed = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.seed = item;
     }
 };
 
@@ -230,6 +259,8 @@ S.scale = function (item) {
         this.scale = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.scale = item;
     }
 };
 
@@ -240,6 +271,8 @@ S.size = function (item) {
         this.size = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.size = item;
     }
 };
 
@@ -250,6 +283,8 @@ S.persistence = function (item) {
         this.persistence = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.persistence = item;
     }
 };
 
@@ -260,6 +295,8 @@ S.lacunarity = function (item) {
         this.lacunarity = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.lacunarity = item;
     }
 };
 
@@ -270,6 +307,8 @@ S.sineFrequencyCoeff = function (item) {
         this.sineFrequencyCoeff = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.sineFrequencyCoeff = item;
     }
 };
 
@@ -281,6 +320,8 @@ S.modularAmplitude = function (item) {
         this.sumAmplitude = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.sumAmplitude = item;
     }
 };
 S.sumAmplitude = function (item) {
@@ -290,6 +331,8 @@ S.sumAmplitude = function (item) {
         this.sumAmplitude = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.sumAmplitude = item;
     }
 };
 
@@ -301,6 +344,8 @@ S.width = function (item) {
         this.sourceNaturalWidth = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.width = item;
     }
 };
 
@@ -312,6 +357,8 @@ S.height = function (item) {
         this.sourceNaturalHeight = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.height = item;
     }
 };
 
@@ -322,6 +369,8 @@ S.worleyDepth = function (item) {
         this.worleyDepth = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.worleyDepth = item;
     }
 };
 
@@ -332,6 +381,8 @@ S.worleyOutput = function (item) {
         this.worleyOutput = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.worleyOutput = item;
     }
 };
 
@@ -723,38 +774,6 @@ P.noiseEngines = {
         },
     },
 
-    // For generating repeated stripe gradients, set the sum function to `modular` and vary the canvas width/height attributes to set the stripe direction; stripe spacing can be varied using the modular amplitude value. Other sum function values can also produce interesting effects
-    [STRIPES]: {
-
-        name: STRIPES,
-
-        init: λnull,
-
-        getNoiseValue: function (x, y) {
-
-            return (x / 5) + (y / 5);
-        }
-    },
-
-    // As for stripes, but can apply smoothing function to the output
-    // + interesting things start to happen when scale is set to on/around 100 and canvas dimensions are roughly equal, alongside a higher value for sumAmplitude. Best viewed with a modular sum function
-    [SMOOTHED_STRIPES]: {
-
-        name: SMOOTHED_STRIPES,
-
-        init: λnull,
-
-        getNoiseValue: function (x, y) {
-
-            const {smoothing} = this;
-
-            const sx = smoothing(x),
-                sy = smoothing(y);
-
-            return (sx / 5) + (sy / 5);
-        }
-    },
-
     // Worley functionality found in the [jackunion/tooloud GitHub repository](https://github.com/jackunion/tooloud/blob/master/src/Worley.js)
     [WORLEY_EUCLIDEAN]: {
 
@@ -776,7 +795,6 @@ P.noiseEngines = {
         }
     },
 
-    // For generating repeated stripe gradients, set the sum function to `modular` and vary the canvas width/height attributes to set the stripe direction; stripe spacing can be varied using the modular amplitude value. Other sum function values can also produce interesting effects
     [WORLEY_MANHATTAN]: {
 
         name: WORLEY_MANHATTAN,

@@ -5,7 +5,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
+import { doCreate, generateUniqueString, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
 import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
@@ -13,7 +13,7 @@ import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
 // Shared constants
-import { _radian, BLANK, DRAW, FILL, STYLES, T_CONIC_GRADIENT } from '../helper/shared-vars.js';
+import { _radian, BLANK, PAD, STYLES, T_CONIC_GRADIENT, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 // + None defined
@@ -168,6 +168,13 @@ P.updateGradientArgs = function (x, y, roll) {
     gradientArgs.push(angle, sx, sy);
 };
 
+
+// Overwrite styles.updateIdentifier function
+P.updateIdentifier = function () {
+
+    if (this.spread !== PAD || this.swirlDistance || this.angleRange !== 360) this.identifier = `${this.type}_${this.name}_${generateUniqueString()}`;
+    else this.identifier = ZERO_STR;
+};
 
 // #### Factory
 // ```

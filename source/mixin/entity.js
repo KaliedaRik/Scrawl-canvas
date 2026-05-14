@@ -12,7 +12,7 @@
 // #### Imports
 import { styles } from '../core/library.js';
 
-import { addStrings, generateUniqueString, isa_obj, mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';
+import { addStrings, generateIdForArtefact, isa_obj, mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeState } from '../untracked-factory/state.js';
 
@@ -318,7 +318,7 @@ export default function (P = Ωempty) {
 
                     state.fillStyle = item;
 
-                    // this.setGradientCacheFlags();
+                    this.dirtyFillGradientCache = true;
                     return;
                 }
             }
@@ -331,7 +331,7 @@ export default function (P = Ωempty) {
                 }
                 else state.fillStyle = gradientCandidate.name || BLANK;
 
-                // this.setGradientCacheFlags();
+                this.dirtyFillGradientCache = true;
                 return;
             }
         }
@@ -359,7 +359,7 @@ export default function (P = Ωempty) {
 
                     state.strokeStyle = item;
 
-                    // this.setGradientCacheFlags();
+                    this.dirtyDrawGradientCache = true;
                     return;
                 }
             }
@@ -372,7 +372,7 @@ export default function (P = Ωempty) {
                 }
                 else state.strokeStyle = gradientCandidate.name || BLANK;
 
-                // this.setGradientCacheFlags();
+                this.dirtyDrawGradientCache = true;
                 return;
             }
         }
@@ -655,44 +655,34 @@ export default function (P = Ωempty) {
 // We need to do work for gradients up-front - if fillStyle or strokeStyle are set to a gradient, then we need to determine if the gradient is "classic" or not.
 // + Classic gradients are rendered through the Canvas API
 // + Non-classic gradients (any gradient that reflects, repeats, or sets areas outside its boundaries to transparent) are not supported by the Canvas API and need to be rendered by SC instead
+    const requiresGradientCache = function (grad) {
+
+        if (!grad || !GRADIENTS_ARR.includes(grad.type)) return false;
+
+        if (grad.operations && grad.operations.length) return true;
+
+        if (
+            grad.type === T_CONIC_GRADIENT &&
+            (grad.angleRange < 360 || grad.swirlDistance)
+        ) return true;
+
+        return grad.spread !== PAD;
+    };
+
     P.setGradientCacheFlags = function () {
 
-        let fillCache = false,
-            drawCache = false,
-            fillGradient, drawGradient;
+        let fillGradient, drawGradient;
 
         if (this.state) {
 
             const { fillStyle, strokeStyle } = this.state;
 
-            if (fillStyle.substring) fillGradient = styles[fillStyle];
-            else fillGradient = fillStyle;
-
-            if (fillGradient && fillGradient.type) {
-
-                if (GRADIENTS_ARR.includes(fillGradient.type)) {
-
-                    if (fillGradient.operations && fillGradient.operations.length) fillCache = true;
-                    else if (T_CONIC_GRADIENT === fillGradient.type && (fillGradient.angleRange < 360 || fillGradient.swirlDistance)) fillCache = true;
-                    else if (fillGradient.spread !== PAD) fillCache = true;
-                }
-            }
-
-            if (strokeStyle.substring) drawGradient = styles[strokeStyle];
-            else drawGradient = strokeStyle;
-
-            if (drawGradient && drawGradient.type) {
-
-                if (GRADIENTS_ARR.includes(drawGradient.type)) {
-
-                    if (drawGradient.operations && drawGradient.operations.length) drawCache = true;
-                    else if (T_CONIC_GRADIENT === drawGradient.type && (drawGradient.angleRange < 360 || drawGradient.swirlDistance)) drawCache = true;
-                    else if (drawGradient.spread !== PAD) drawCache = true;
-                }
-            }
+            fillGradient = fillStyle.substring ? styles[fillStyle] : fillStyle;
+            drawGradient = strokeStyle.substring ? styles[strokeStyle] : strokeStyle;
         }
-        this.useFillGradientCache = fillCache;
-        this.useDrawGradientCache = drawCache;
+
+        this.useFillGradientCache = requiresGradientCache(fillGradient);
+        this.useDrawGradientCache = requiresGradientCache(drawGradient);
     };
 
 // ##### Step 2: invoke the entity's stamp action
@@ -756,72 +746,13 @@ export default function (P = Ωempty) {
 
     P.updateGradientsBeforeStamp = function (refCell) {
 
-        const getId = () => `${this.name}_${generateUniqueString()}`;
-
-        const getCoords = (grad, drawId, fillId) => {
-
-            const coords = [...grad.gradientArgs];
-            let p0, p1;
-
-            if (drawId || fillId) {
-
-                if (grad.type === T_RADIAL_GRADIENT) {
-
-                    p0 = matrix.transformPoint(new DOMPoint(coords[0], coords[1]));
-                    p1 = matrix.transformPoint(new DOMPoint(coords[3], coords[4]));
-
-                    coords[0] = p0.x;
-                    coords[1] = p0.y;
-                    coords[3] = p1.x;
-                    coords[4] = p1.y;
-                }
-                else if (grad.type === T_GRADIENT) {
-
-                    p0 = matrix.transformPoint(new DOMPoint(coords[0], coords[1]));
-                    p1 = matrix.transformPoint(new DOMPoint(coords[2], coords[3]));
-
-                    coords[0] = p0.x;
-                    coords[1] = p0.y;
-                    coords[2] = p1.x;
-                    coords[3] = p1.y;
-                }
-                else if (grad.type === T_CONIC_GRADIENT) {
-
-                    if (
-                        (fillId && this.lockFillStyleToEntity) ||
-                        (drawId && this.lockStrokeStyleToEntity)
-                    ) {
-
-                        p0 = matrix.transformPoint(new DOMPoint(coords[1], coords[2]));
-
-                        p1 = matrix.transformPoint(new DOMPoint(
-                            coords[1] + Math.cos(coords[0]),
-                            coords[2] + Math.sin(coords[0])
-                        ));
-
-                        coords[0] = Math.atan2(p1.y - p0.y, p1.x - p0.x);
-                        coords[1] = p0.x;
-                        coords[2] = p0.y;
-                    }
-                    else {
-
-                        p0 = matrix.transformPoint(new DOMPoint(coords[1], coords[2]));
-
-                        coords[0] = grad.angle * _radian;
-                        coords[1] = p0.x;
-                        coords[2] = p0.y;
-                    }
-                }
-            }
-            return coords;
-        };
-
-        const getFixedGradientData = (grad, drawId, fillId) => {
+        const getFixedGradientData = (grad, styleType) => {
 
             const fixedGradientData = {
                 type: grad.type,
+                identifier: grad.identifier,
                 spread: grad.spread,
-                coordinates: getCoords(grad, drawId, fillId),
+                start: [...grad.start],
                 paletteStart: grad.paletteStart,
                 paletteEnd: grad.paletteEnd,
                 cyclePalette: grad.cyclePalette,
@@ -831,16 +762,29 @@ export default function (P = Ωempty) {
                 lockedToEntity: false,
             };
 
-            if (grad.type === T_CONIC_GRADIENT) {
+            if (grad.type === T_GRADIENT) {
 
+                fixedGradientData.end = [...grad.end];
+            }
+
+            else if (grad.type === T_RADIAL_GRADIENT) {
+
+                fixedGradientData.end = [...grad.end];
+                fixedGradientData.startRadius = grad.startRadius;
+                fixedGradientData.endRadius = grad.endRadius;
+            }
+
+            else if (grad.type === T_CONIC_GRADIENT) {
+
+                fixedGradientData.angle = grad.angle;
                 fixedGradientData.angleRange = grad.angleRange;
                 fixedGradientData.swirlDistance = grad.swirlDistance;
                 fixedGradientData.swirlClockwise = grad.swirlClockwise;
             }
 
             if (
-                (fillId && this.lockFillStyleToEntity) ||
-                (drawId && this.lockStrokeStyleToEntity)
+                (styleType === FILL && this.lockFillStyleToEntity) ||
+                (styleType === DRAW && this.lockStrokeStyleToEntity)
             ) fixedGradientData.lockedToEntity = true;
 
             return fixedGradientData;
@@ -875,7 +819,7 @@ export default function (P = Ωempty) {
             if (this.dirtyDrawGradient ||
                 this.dirtyDrawGradientCache ||
                 drawId === ZERO_STR
-            ) drawId = getId();
+            ) drawId = generateIdForArtefact(this);
 
             if (drawId) {
 
@@ -893,10 +837,11 @@ export default function (P = Ωempty) {
                     this.identifierDrawGradientCache = drawId;
 
                     gradientEngine.action({
-                        imageData: data,
-                        fixedGradientData: getFixedGradientData(grad, drawId, fillId, DRAW),
+                        fixedGradientData: getFixedGradientData(grad, DRAW),
                         identifier: drawId,
+                        imageData: data,
                         entity: this,
+                        matrix,
                     });
                 }
 
@@ -919,7 +864,7 @@ export default function (P = Ωempty) {
                 this.dirtyFillGradient ||
                 this.dirtyFillGradientCache ||
                 fillId === ZERO_STR
-            ) fillId = getId();
+            ) fillId = generateIdForArtefact(this);
 
             if (fillId) {
 
@@ -937,10 +882,11 @@ export default function (P = Ωempty) {
                     this.identifierFillGradientCache = fillId;
 
                     gradientEngine.action({
-                        imageData: data,
-                        fixedGradientData: getFixedGradientData(grad, drawId, fillId),
+                        fixedGradientData: getFixedGradientData(grad, FILL),
                         identifier: fillId,
+                        imageData: data,
                         entity: this,
+                        matrix,
                     });
                 }
                 if (this.dirtyFillGradient || this.dirtyFillGradientCache) this.dirtyFilterIdentifier = true;
@@ -1166,23 +1112,22 @@ export default function (P = Ωempty) {
 
         const data = getWorkstoreItem(identifier);
 
-        if (data) {
+        if (data && data.w && data.h && data.imageData) {
+
+            const {x, y, w, h, imageData} = data;
 
             const myCell = requestCell();
 
             const { element, engine } = myCell;
 
-            const width = hostEngine.canvas.width,
-                height = hostEngine.canvas.height;
+            element.width = w;
+            element.height = h;
 
-            element.width = width;
-            element.height = height;
-
-            engine.putImageData(data, 0, 0);
+            engine.putImageData(imageData, 0, 0);
 
             hostEngine.save();
             hostEngine.resetTransform();
-            hostEngine.drawImage(element, 0, 0);
+            hostEngine.drawImage(element, x, y);
             hostEngine.restore();
 
             releaseCell(myCell);
@@ -1210,7 +1155,7 @@ export default function (P = Ωempty) {
 
         const p = this.pathObject,
             winding = this.winding,
-            apply = this.applyFromWorkstore,
+            apply = this.applyFromWorkstore.bind(this),
             drawUse = this.useDrawGradientCache,
             drawId = this.identifierDrawGradientCache,
             fillUse = this.useFillGradientCache,
@@ -1228,7 +1173,7 @@ export default function (P = Ωempty) {
 
         const p = this.pathObject,
             winding = this.winding,
-            apply = this.applyFromWorkstore,
+            apply = this.applyFromWorkstore.bind(this),
             drawUse = this.useDrawGradientCache,
             drawId = this.identifierDrawGradientCache,
             fillUse = this.useFillGradientCache,
@@ -1245,7 +1190,7 @@ export default function (P = Ωempty) {
     P.drawThenFill = function (engine) {
 
         const p = this.pathObject,
-            apply = this.applyFromWorkstore;
+            apply = this.applyFromWorkstore.bind(this);
 
         this.useDrawGradientCache 
             ? apply(engine, this.identifierDrawGradientCache)
@@ -1259,7 +1204,7 @@ export default function (P = Ωempty) {
     P.fillThenDraw = function (engine) {
 
         const p = this.pathObject,
-            apply = this.applyFromWorkstore;
+            apply = this.applyFromWorkstore.bind(this);
 
         this.useFillGradientCache 
             ? apply(engine, this.identifierFillGradientCache)
@@ -1287,5 +1232,5 @@ export default function (P = Ωempty) {
     };
 
 // `none` - perform all the calculations required, but don't perform the final stamping
-    P.none = function () {}
+    P.none = λnull;
 }

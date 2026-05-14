@@ -174,6 +174,8 @@ export const generateUniqueString = () => {
     return performance.now().toString(36) + _random().toString(36).substr(2);
 };
 
+export const generateIdForArtefact = (art) => `${art.type}_${art.name}_${generateUniqueString()}`;
+
 // __interpolate__ clamp a value between a maximum and minimum value
 export const interpolate = function (val, min, max) {
 

@@ -16,7 +16,7 @@
 // #### Imports
 import { entity, styles, stylesnames } from '../core/library.js';
 
-import { addStrings, isa_boolean, isa_obj, mergeDiscard, mergeOver, pushUnique, removeItem, xt, λnull, Ωempty } from '../helper/utilities.js';
+import { addStrings, isa_boolean, generateIdForArtefact, isa_obj, mergeDiscard, mergeOver, pushUnique, removeItem, xt, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeAnimation } from '../factory/animation.js';
 import { makeCoordinate } from '../untracked-factory/coordinate.js';
@@ -24,7 +24,7 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 import { makePalette } from '../untracked-factory/palette.js';
 
 // Shared constants
-import { _floor, _isArray, _isFinite, _keys, _values, ADD_EASE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLACK, BLANK, BOTTOM, CENTER, DRAW, END, FILL, LEFT, LINEAR, NAME, ON_COORDINATES, PAD, PERMITTED_NOISE, REFLECT, REPEAT, RGB, RIGHT, START, T_PALETTE, TOP, TRANSPARENT, UNDEF, WHITE } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, _keys, _values, ADD_EASE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLACK, BLANK, BOTTOM, CENTER, DRAW, END, FILL, LEFT, LINEAR, NAME, ON_COORDINATES, PAD, PERMITTED_NOISE, REFLECT, REPEAT, RGB, RIGHT, START, T_CONIC_GRADIENT, T_GRADIENT, T_PALETTE, T_RADIAL_GRADIENT, TOP, TRANSPARENT, UNDEF, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 // ```
 // Available gradient operation shapes
@@ -77,13 +77,14 @@ import { _floor, _isArray, _isFinite, _keys, _values, ADD_EASE, ADD_NOISE, ADD_R
 //     }
 // }
 // ```
-const PERMITTED_OPERATIONS = [ADD_EASE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE],
-    PERMITTED_STAGES = [BEFORE_SPREAD, AFTER_SPREAD, ON_COORDINATES];
 
 // Local constants
 const COLORS = 'colors',
     PALETTE_KEYS = ['colors', 'stops'],
-    SPREAD_VALUES = [PAD, REPEAT, REFLECT, TRANSPARENT];
+    SPREAD_VALUES = [PAD, REPEAT, REFLECT, TRANSPARENT],
+    PERMITTED_OPERATIONS = [ADD_EASE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE],
+    PERMITTED_STAGES = [BEFORE_SPREAD, AFTER_SPREAD, ON_COORDINATES],
+    IDENTIFIED_STYLES = [T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT];
 
 
 // Create an animation to handle automated delta gradient animation
@@ -484,7 +485,11 @@ export default function (P = Ωempty) {
 // `delta` - Gradient-type styles objects support the delta attribute, and can be delta-animated using its attributes
     S.delta = function (items = Ωempty) {
 
-        if (items) this.delta = mergeDiscard(this.delta, items);
+        if (items) {
+
+            this.delta = mergeDiscard(this.delta, items);
+            this.updateSubscribers();
+        }
     };
 
 // `spread` - The spread option for the gradient
@@ -784,6 +789,8 @@ export default function (P = Ωempty) {
         this.set(this.defs);
 
         this.set(items);
+
+        this.identifier = ZERO_STR;
     };
 
 
@@ -988,6 +995,11 @@ export default function (P = Ωempty) {
 
         this.updateFillSubscribers();
         this.updateDrawSubscribers();
+
+        // We only update subscribers when something has changed
+        // + So we might as well update the identifier here as well
+        this.updateIdentifier()
+
     };
     P.updateFillSubscribers = function () {
 
@@ -1010,5 +1022,14 @@ export default function (P = Ωempty) {
 
             if (ent) ent.dirtyDrawGradient = true;
         });
+    };
+    P.updateIdentifier = function () {
+
+        if (IDENTIFIED_STYLES.includes(this.type)) {
+
+            if (this.spread === PAD && !this.operations.length) this.identifier = ZERO_STR;
+            else this.identifier = generateIdForArtefact(this);
+        }
+        else this.identifier = ZERO_STR;
     };
 }

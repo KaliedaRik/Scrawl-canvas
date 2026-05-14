@@ -211,7 +211,7 @@ const dom = scrawl.initializeDomInputs([
     ['select', 'noiseEngine', 1],
     ['select', 'octaveFunction', 0],
     ['select', 'returnColorAs', 0],
-    ['select', 'smoothing', 23],
+    ['select', 'smoothing', 0],
     ['select', 'sumFunction', 0],
     ['select', 'worleyOutput', 0],
 ]);
