@@ -10,7 +10,7 @@ import { bluenoise, orderedNoise } from './filter-engine-bluenoise-data.js';
 import { makeNoiseAsset } from '../asset-management/noise-asset.js';
 
 // Shared constants
-import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_EASE, ADD_MAP_DISPLACE, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, BOTTOM, CENTER, DEFAULT_SEED, LEFT, ON_COORDINATES, ORDERED, PERMITTED_NOISE, RANDOM, REFLECT, REPEAT, RIGHT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TOP, TRANSPARENT } from './shared-vars.js';
+import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_EASE, ADD_MAP_CONTOUR, ADD_MAP_DISPLACE, ADD_MAP_EASE, ADD_MAP_FLOW, ADD_MAP_ROTATE, ADD_MAP_THRESHOLD, ADD_MAP_WARP, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, BOTTOM, CENTER, DEFAULT_SEED, LEFT, ON_COORDINATES, ORDERED, PERMITTED_NOISE, RANDOM, REFLECT, REPEAT, RIGHT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TOP, TRANSPARENT } from './shared-vars.js';
 
 // Local constants
 const T_GRADIENT_ENGINE = 'GradientEngine',
@@ -216,7 +216,8 @@ const applyLinearGradient = function (gradient, coords, width, height) {
 
         for (; p < pz; p++) {
 
-            color = getGradientColor(gradient, t, engines);
+            color = getGradientColor(gradient, t, engines, p, width, height);
+
             if (color) pixels[p] = color;
 
             t += xStep;
@@ -249,7 +250,7 @@ const applyLinearGradient = function (gradient, coords, width, height) {
 
             t = (((sampleX - x0) * dx) + ((sampleY - y0) * dy)) / len2;
 
-            color = getGradientColor(gradient, t, engines);
+            color = getGradientColor(gradient, t, engines, p, width, height);
             if (color) pixels[p] = color;
 
             x++;
@@ -348,7 +349,7 @@ const applyRadialGradient = function (gradient, coords, width, height) {
 
         if (t != null) {
 
-            color = getGradientColor(gradient, t, engines);
+            color = getGradientColor(gradient, t, engines, p, width, height);
             if (color) pixels[p] = color;
         }
 
@@ -431,7 +432,7 @@ const applyConicGradient = function (gradient, coords, width, height) {
 
         t = diff / range;
 
-        color = getGradientColor(gradient, t, engines, {
+        color = getGradientColor(gradient, t, engines, p, width, height, {
             fullCircle,
             diff,
             range,
@@ -458,7 +459,7 @@ const clampUnit = function (v) {
     return v;
 };
 
-const getGradientColor = function (gradient, t, engines, conicData = null) {
+const getGradientColor = function (gradient, t, engines, p, width, height, conicData = null) {
 
     const {
         beforeSpreadEngine,
@@ -469,7 +470,7 @@ const getGradientColor = function (gradient, t, engines, conicData = null) {
     const spread = gradient.spread,
         stopsData = gradient.stopsData;
 
-    t = beforeSpreadEngine(t);
+    t = beforeSpreadEngine(t, p, width, height);
 
     if (spread === TRANSPARENT) {
 
@@ -501,7 +502,7 @@ const getGradientColor = function (gradient, t, engines, conicData = null) {
 
     t = clampUnit(t);
 
-    t = afterSpreadEngine(t);
+    t = afterSpreadEngine(t, p, width, height);
 
     if (easingEngine) t = easingEngine(t);
 
@@ -844,20 +845,38 @@ const compileOperation = function (op, workData, entity, lock) {
 
     switch (op.operation) {
 
-        case ADD_NOISE :
-            return getNoiseOperation(op, workData);
-
         case ADD_EASE :
             return getEasingOperation(op);
+
+        case ADD_MAP_CONTOUR :
+            return getMapContourOperation(op, workData);
+
+        case ADD_MAP_DISPLACE :
+            return getMapDisplaceOperation(op, workData);
+
+        case ADD_MAP_EASE :
+            return getMapEaseOperation(op, workData);
+
+        case ADD_MAP_FLOW :
+            return getMapFlowOperation(op, workData);
+
+        case ADD_MAP_ROTATE :
+            return getMapRotateOperation(op, workData);
+
+        case ADD_MAP_THRESHOLD :
+            return getMapThresholdOperation(op, workData);
+
+        case ADD_MAP_WARP :
+            return getMapWarpOperation(op, workData);
+
+        case ADD_NOISE :
+            return getNoiseOperation(op, workData);
 
         case ADD_RIPPLE :
             return getRippleOperation(op, workData, entity, lock);
 
         case ADD_WAVE :
             return getWaveOperation(op);
-
-        case ADD_MAP_DISPLACE :
-            return getMapDisplaceOperation(op, workData);
 
         default :
             return λfirstArg;
@@ -927,11 +946,9 @@ const getNoiseOperation = function (op, workData) {
         type: noise,
     });
 
-    let rndCursor = -1;
+    return function (val, p) {
 
-    return function (val) {
-
-        return val + ((rnd[++rndCursor] - 0.5) * strength);
+        return val + ((rnd[p] - 0.5) * strength);
     };
 };
 
@@ -1147,6 +1164,240 @@ const getMapDisplaceOperation = function (op, workData) {
     };
 };
 
+const getMapRotateOperation = function (op, workData) {
+
+    const params = op.parameters || {},
+        mapParams = params.map || {},
+
+        width = workData.width,
+        height = workData.height,
+
+        strength = _isFinite(params.strength) ? params.strength : 45,
+        offset = _isFinite(params.offset) ? params.offset : 0.5,
+
+        originX = getCoordinateValue(params.originX, width),
+        originY = getCoordinateValue(params.originY, height);
+
+    if (!strength) return λfirstArg;
+
+    const map = getNoiseMap(mapParams, width, height),
+        angleMultiplier = strength * _radian;
+
+    return function (coord, p) {
+
+        const angle = (map[p] - offset) * angleMultiplier,
+            cos = _cos(angle),
+            sin = _sin(angle),
+
+            x = coord[0] - originX,
+            y = coord[1] - originY;
+
+        coord[0] = originX + ((x * cos) - (y * sin));
+        coord[1] = originY + ((x * sin) + (y * cos));
+
+        return coord;
+    };
+};
+
+const getMapFlowOperation = function (op, workData) {
+
+    const params = op.parameters || {},
+        mapParams = params.map || {},
+
+        width = workData.width,
+        height = workData.height,
+
+        strength = _isFinite(params.strength) ? params.strength : 20,
+        offset = _isFinite(params.offset) ? params.offset : 0.5,
+        linked = params.linked === true,
+        normalize = params.normalize !== false;
+
+    if (!strength) return λfirstArg;
+
+    const xMap = getNoiseMap(linked ? mapParams : {
+            ...mapParams,
+            seed: `${mapParams.seed || DEFAULT_SEED}-x`,
+        }, width, height),
+
+        yMap = getNoiseMap(linked ? mapParams : {
+            ...mapParams,
+            seed: `${mapParams.seed || DEFAULT_SEED}-y`,
+        }, width, height);
+
+    return function (coord, p) {
+
+        let dx = xMap[p] - offset,
+            dy = yMap[p] - offset;
+
+        if (normalize) {
+
+            const mag = _sqrt((dx * dx) + (dy * dy));
+
+            if (mag) {
+
+                dx /= mag;
+                dy /= mag;
+            }
+        }
+
+        coord[0] += dx * strength;
+        coord[1] += dy * strength;
+
+        return coord;
+    };
+};
+
+const getMapThresholdOperation = function (op, workData) {
+
+    const params = op.parameters || {},
+        mapParams = params.map || {},
+
+        width = workData.width,
+        height = workData.height,
+
+        threshold = _isFinite(params.threshold) ? params.threshold : 0.5,
+        low = _isFinite(params.low) ? params.low : 0,
+        high = _isFinite(params.high) ? params.high : 1,
+
+        bandModulate = params.bandModulate === true,
+        bands = _isFinite(params.bands) ? _max(2, _floor(params.bands)) : 8,
+        influence = _isFinite(params.influence) ? params.influence : 0.25;
+
+    const map = getNoiseMap(mapParams, width, height);
+
+    if (bandModulate) {
+
+        return function (val, p) {
+
+            return _floor(
+                (val + ((map[p] - threshold) * influence)) * bands
+            ) / bands;
+        };
+    }
+
+    return function (val, p) {
+
+        return (map[p] >= threshold) ? high : low;
+    };
+};
+
+const getMapContourOperation = function (op, workData) {
+
+    const params = op.parameters || {},
+        mapParams = params.map || {},
+
+        width = workData.width,
+        height = workData.height,
+
+        influence = _isFinite(params.influence) ? params.influence : 0.5,
+        bands = _isFinite(params.bands) ? _max(2, _floor(params.bands)) : 8;
+
+    const map = getNoiseMap(mapParams, width, height);
+
+    return function (val, p) {
+
+        const target = _floor(map[p] * bands) / bands;
+
+        return val + ((target - val) * influence);
+    };
+};
+
+const getMapEaseOperation = function (op, workData) {
+
+    const params = op.parameters || {},
+        mapParams = params.map || {},
+
+        width = workData.width,
+        height = workData.height,
+
+        strength = _isFinite(params.strength) ? params.strength : 0.25,
+        offset = _isFinite(params.offset) ? params.offset : 0.5;
+
+    if (!strength) return λfirstArg;
+
+    const map = getNoiseMap(mapParams, width, height);
+
+    return function (val, p) {
+
+        return val + ((map[p] - offset) * strength);
+    };
+};
+
+const getMapWarpOperation = function (op, workData) {
+
+    const params = op.parameters || {},
+        mapParams = params.map || {},
+
+        width = workData.width,
+        height = workData.height,
+
+        strength = _isFinite(params.strength) ? params.strength : 12,
+        offset = _isFinite(params.offset) ? params.offset : 0.5,
+        iterations = _isFinite(params.iterations) ? _max(1, _floor(params.iterations)) : 3,
+        linked = params.linked === true,
+        normalize = params.normalize === true;
+
+    if (!strength) return λfirstArg;
+
+    const xMap = getNoiseMap(linked ? mapParams : {
+            ...mapParams,
+            seed: `${mapParams.seed || DEFAULT_SEED}-x`,
+        }, width, height),
+
+        yMap = getNoiseMap(linked ? mapParams : {
+            ...mapParams,
+            seed: `${mapParams.seed || DEFAULT_SEED}-y`,
+        }, width, height),
+
+        sampleMap = function (map, x, y) {
+
+            x = _floor(x);
+            y = _floor(y);
+
+            if (x < 0) x = 0;
+            else if (x >= width) x = width - 1;
+
+            if (y < 0) y = 0;
+            else if (y >= height) y = height - 1;
+
+            return map[(y * width) + x];
+        },
+
+        step = strength / iterations;
+
+    return function (coord) {
+
+        let x = coord[0],
+            y = coord[1],
+            dx, dy, mag;
+
+        for (let i = 0; i < iterations; i++) {
+
+            dx = sampleMap(xMap, x, y) - offset;
+            dy = sampleMap(yMap, x, y) - offset;
+
+            if (normalize) {
+
+                mag = _sqrt((dx * dx) + (dy * dy));
+
+                if (mag) {
+
+                    dx /= mag;
+                    dy /= mag;
+                }
+            }
+
+            x += dx * step;
+            y += dy * step;
+        }
+
+        coord[0] = x;
+        coord[1] = y;
+
+        return coord;
+    };
+};
+
 const getNoiseMap = function (noiseParams, width, height) {
 
     const params = {
@@ -1170,20 +1421,11 @@ const getNoiseMap = function (noiseParams, width, height) {
 
     noiseAsset.cleanOutput();
 
-    const rows = noiseAsset.noiseValues,
-        out = new Float32Array(width * height);
+    const source = noiseAsset.noiseValues;
 
-    let p = 0;
+    if (!source || source.length !== width * height) return new Float32Array(width * height);
 
-    for (let y = 0; y < height; y++) {
-
-        const row = rows[y];
-
-        for (let x = 0; x < width; x++) {
-
-            out[p++] = row[x];
-        }
-    }
+    const out = new Float32Array(source);
 
     setWorkstoreItem(name, out);
     return out;

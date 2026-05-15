@@ -172,7 +172,7 @@ P.updateGradientArgs = function (x, y, roll) {
 // Overwrite styles.updateIdentifier function
 P.updateIdentifier = function () {
 
-    if (this.spread !== PAD || this.swirlDistance || this.angleRange !== 360) this.identifier = `${this.type}_${this.name}_${generateUniqueString()}`;
+    if (this.spread !== PAD || this.swirlDistance || this.angleRange !== 360 || this.operations.length) this.identifier = `${this.type}_${this.name}_${generateUniqueString()}`;
     else this.identifier = ZERO_STR;
 };
 

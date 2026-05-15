@@ -235,7 +235,36 @@
 
         <option value="" disabled>---</option>
         <option value='[{"operation":"add-map-displace","stage":"on-coordinates","parameters":{"axis":"both","strength":20,"offset":0.5,"linked":false,"map":{"noiseEngine":"simplex","scale":50,"octaves":3}}}]'>Add map - displace (simplex)</option>
-        <option value='[{"operation":"add-map-displace","stage":"on-coordinates","parameters":{"axis":"both","strength":20,"offset":0.5,"linked":false,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":60}}}]'>Add map - displace (worley-euc)</option>
+        <option value='[{"operation":"add-map-displace","stage":"on-coordinates","parameters":{"axis":"both","strength":40,"offset":0.5,"linked":false,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":60}}}]'>Add map - displace (worley-euc)</option>
+        <option value='[{"operation":"add-map-ease","stage":"before-spread","parameters":{"strength":0.25,"offset":0.5,"map":{"noiseEngine":"simplex","scale":50,"octaves":3}}}]'>Add map - ease (simplex)</option>
+        <option value='[{"operation":"add-map-ease","stage":"before-spread","parameters":{"strength":0.35,"offset":0.5,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":60}}}]'>Add map - ease (worley-euc)</option>
+        <option value='[{"operation":"add-map-rotate","stage":"on-coordinates","parameters":{"strength":60,"offset":0.5,"originX":"50%","originY":"50%","map":{"noiseEngine":"simplex","scale":50,"octaves":3}}}]'>Add map - rotate (simplex)</option>
+        <option value='[{"operation":"add-map-rotate","stage":"on-coordinates","parameters":{"strength":90,"offset":0.5,"originX":"50%","originY":"50%","map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":60}}}]'>Add map - rotate (worley-euc)</option>
+        <option value='[{"operation":"add-map-flow","stage":"on-coordinates","parameters":{"strength":25,"angle":360,"offset":0.5,"map":{"noiseEngine":"simplex","scale":40,"octaves":4}}}]'>Add map - flow (simplex)</option>
+        <option value='[{"operation":"add-map-flow","stage":"on-coordinates","parameters":{"strength":35,"angle":360,"offset":0.5,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":60}}}]'>Add map - flow (worley-euc)</option>
+        <option value='[{"operation":"add-map-flow","stage":"on-coordinates","parameters":{"strength":20,"offset":0.5,"linked":false,"normalize":true,"map":{"noiseEngine":"simplex","scale":45,"octaves":3}}}]'>Add map - flow vector (simplex)</option>
+
+        <option value="" disabled>---</option>
+        <option value='[{"operation":"add-map-threshold","stage":"after-spread","parameters":{"threshold":0.5,"low":0,"high":1,"map":{"noiseEngine":"simplex","scale":40,"octaves":4}}}]'>Add map - threshold mask (simplex)</option>
+        <option value='[{"operation":"add-map-threshold","stage":"after-spread","parameters":{"threshold":0.55,"low":0,"high":1,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":60}}}]'>Add map - threshold cells (worley-euc)</option>
+        <option value='[{"operation":"add-map-threshold","stage":"after-spread","parameters":{"bandModulate":true,"bands":6,"influence":0.2,"threshold":0.5,"map":{"noiseEngine":"simplex","scale":35,"octaves":3}}}]'>Add map - contour bands (simplex)</option>
+        <option value='[{"operation":"add-map-threshold","stage":"after-spread","parameters":{"bandModulate":true,"bands":12,"influence":0.35,"threshold":0.5,"map":{"noiseEngine":"simplex","octaveFunction":"terrace-heavy","scale":45,"octaves":5}}}]'>Add map - terraced strata (simplex)</option>
+        <option value='[{"operation":"add-map-threshold","stage":"after-spread","parameters":{"bandModulate":true,"bands":8,"influence":0.45,"threshold":0.45,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"XmultiplyYminusZ","scale":55}}}]'>Add map - crystal segmentation (worley-euc)</option>
+        <option value='[{"operation":"add-map-threshold","stage":"after-spread","parameters":{"bandModulate":true,"bands":20,"influence":0.1,"threshold":0.5,"map":{"noiseEngine":"value","scale":25,"octaves":2}}}]'>Add map - fine topography (value)</option>
+
+        <option value="" disabled>---</option>
+        <option value='[{"operation":"add-map-contour","stage":"after-spread","parameters":{"influence":0.45,"bands":8,"map":{"noiseEngine":"simplex","scale":40,"octaves":4}}}]'>Add map - contour drift (simplex)</option>
+        <option value='[{"operation":"add-map-contour","stage":"after-spread","parameters":{"influence":0.7,"bands":12,"map":{"noiseEngine":"simplex","octaveFunction":"terrace-light","scale":45,"octaves":5}}}]'>Add map - contour terrace (simplex)</option>
+        <option value='[{"operation":"add-map-contour","stage":"after-spread","parameters":{"influence":0.6,"bands":10,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"XminusY","scale":60}}}]'>Add map - cellular contour (worley-euc)</option>
+        <option value='[{"operation":"add-map-contour","stage":"after-spread","parameters":{"influence":0.75,"bands":16,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":70}}}]'>Add map - cracked contour (worley-euc)</option>
+        <option value='[{"operation":"add-map-contour","stage":"after-spread","parameters":{"influence":0.5,"bands":20,"map":{"noiseEngine":"value","scale":30,"octaves":3,"smoothing":"easeOutIn3"}}}]'>Add map - soft topographic contour (value)</option>
+        <option value='[{"operation":"add-map-contour","stage":"after-spread","parameters":{"influence":0.85,"bands":6,"map":{"noiseEngine":"worley-manhattan","worleyOutput":"XmultiplyYminusZ","scale":55}}}]'>Add map - blocky mineral contour (worley-man)</option>
+
+        <option value="" disabled>---</option>
+        <option value='[{"operation":"add-map-warp","stage":"on-coordinates","parameters":{"strength":24,"iterations":3,"offset":0.5,"linked":false,"map":{"noiseEngine":"simplex","scale":45,"octaves":4}}}]'>Add map - warp (simplex)</option>
+        <option value='[{"operation":"add-map-warp","stage":"on-coordinates","parameters":{"strength":36,"iterations":5,"offset":0.5,"linked":false,"normalize":true,"map":{"noiseEngine":"simplex","scale":55,"octaves":5}}}]'>Add map - warp flow (simplex)</option>
+        <option value='[{"operation":"add-map-warp","stage":"on-coordinates","parameters":{"strength":28,"iterations":4,"offset":0.5,"linked":false,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":65}}}]'>Add map - warp cells (worley-euc)</option>
+        <option value='[{"operation":"add-map-warp","stage":"on-coordinates","parameters":{"strength":42,"iterations":5,"offset":0.5,"linked":false,"normalize":true,"map":{"noiseEngine":"worley-manhattan","worleyOutput":"XmultiplyYminusZ","scale":55}}}]'>Add map - warp mineral (worley-man)</option>
       </select>
     </div>
 
