@@ -103,7 +103,7 @@ const defaultAttributes = {
     width: 300,
     height: 150,
 
-    // __noiseEngine__ - String - the currently supported noise engines String values are: `perlin`, `improved-perlin`, `simplex`, `value`, `worley-euclidean`, `worley-manhattan`
+    // __noiseEngine__ - String - the currently supported noise engines String values are: `perlin`, `improved-perlin`, `simplex`, `value`, `worley-chebyshev`, `worley-euclidean`, `worley-manhattan`
     noiseEngine: SIMPLEX,
 
     // When a noise engine initializes it will create several Arrays of pseudo-random values. The __seed__ attribute is a String used to initialize the pseudo-random number generator, while the __size__ attribute is a Number (often a power of 2 value) which determines the lengths of the Arrays
