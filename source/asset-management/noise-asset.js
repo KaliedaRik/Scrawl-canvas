@@ -32,7 +32,8 @@ import { _abs, _floor, _max, _min, _pow, _random, _sin, _sqrt, ASSET, DEFAULT_SE
 
 // Local constants
 const $X = 'X',
-    BESPOKE_NOISE_ENGINES = ['worley-euclidean', 'worley-manhattan'],
+    BESPOKE_NOISE_ENGINES = ['worley-euclidean', 'worley-manhattan', 'worley-chebyshev'],
+    CHEBYSHEV_DISTANCE = 'chebyshev-distance',
     EUCLIDEAN_DISTANCE = 'euclidian-distance',
     IMPROVED_PERLIN = 'improved-perlin',
     MANHATTAN_DISTANCE = 'manhattan-distance',
@@ -40,6 +41,7 @@ const $X = 'X',
     QUINTIC = 'quintic',
     SIMPLEX = 'simplex',
     T_NOISE_ASSET = 'NoiseAsset',
+    WORLEY_CHEBYSHEV = 'worley-chebyshev',
     WORLEY_EUCLIDEAN = 'worley-euclidean',
     WORLEY_MANHATTAN = 'worley-manhattan',
     WORLEY_OUTPUTS = ['X', 'Y', 'Z', 'XminusY', 'XminusZ', 'YminusX', 'YminusZ', 'ZminusX', 'ZminusY', 'XaddY', 'XaddZ', 'YaddZ', 'XaddYminusZ', 'XaddZminusY', 'YaddZminusX', 'XmultiplyY', 'XmultiplyZ', 'YmultiplyZ', 'XmultiplyYaddZ', 'XmultiplyZaddY', 'YmultiplyZaddX', 'XmultiplyYminusZ', 'XmultiplyZminusY', 'YmultiplyZminusX', 'sum'];
@@ -832,6 +834,24 @@ P.noiseEngines = {
             return this.worleyNoise(x, y, worleyDepth, MANHATTAN_DISTANCE, outputFunc);
         }
     },
+
+    [WORLEY_CHEBYSHEV]: {
+
+        name: WORLEY_CHEBYSHEV,
+
+        init: function () {
+
+            this.worleySeed = _floor(this.rndEngine.random() * 1000000);
+        },
+
+        getNoiseValue: function (x, y) {
+
+            const {worleyDepth, worleyOutputFunctions, worleyOutput} = this,
+                outputFunc = worleyOutputFunctions[worleyOutput];
+
+            return this.worleyNoise(x, y, worleyDepth, CHEBYSHEV_DISTANCE, outputFunc);
+        }
+    },
 };
 
 // `generatePermutationTable` - internal function called by the `cleanNoise` function
@@ -883,11 +903,44 @@ P.generatePermutationTable = function () {
 };
 
 // `octaveFunctions` - a {key:functions} object holding functions used to modify octave loop results
-// + calling signature: `octaveFunction(octave, scaledX, scaledY, o + 1)`
+// + calling signature: `octaveFunction(octave, scaledX, scaledY, octaveLevel)`
 P.octaveFunctions = {
 
     none: λfirstArg,
-    absolute: function (octave) { return _abs((octave * 2) - 1) },
+
+    absolute: function (octave) {
+        return _abs((octave * 2) - 1);
+    },
+
+    ridged: function (octave) {
+        octave = 1 - _abs((octave * 2) - 1);
+        return octave * octave;
+    },
+
+    billow: function (octave) {
+        octave = _abs((octave * 2) - 1);
+        return 1 - (octave * octave);
+    },
+
+    signed: function (octave) {
+        return ((octave * 2) - 1) * _abs((octave * 2) - 1);
+    },
+
+    square: function (octave) {
+        return octave * octave;
+    },
+
+    sqrt: function (octave) {
+        return _sqrt(octave);
+    },
+
+    'terrace-light': function (octave) {
+        return _floor(octave * 4) / 4;
+    },
+
+    'terrace-heavy': function (octave) {
+        return _floor(octave * 8) / 8;
+    },
 };
 
 // `sumFunctions` - a {key:functions} object holding functions used to modify noise values after their calculation has completed (post-processing)
@@ -896,21 +949,96 @@ P.sumFunctions = {
 
     none: λfirstArg,
 
+    invert: function (v) {
+        return 1 - v;
+    },
+
+    threshold: function (v) {
+        return (v >= 0.5) ? 1 : 0;
+    },
+
+    posterize: function (v) {
+
+        const a = _max(2, _floor(this.sumAmplitude));
+        return _floor(v * a) / (a - 1);
+    },
+
+    terrace: function (v) {
+
+        const a = _max(2, _floor(this.sumAmplitude)),
+            g = _floor(v * a) / a,
+            r = (v * a) - _floor(v * a);
+
+        return g + ((r * r) / a);
+    },
+
+    contrast: function (v) {
+
+        const a = this.sumAmplitude;
+
+        v = (v - 0.5) * a + 0.5;
+
+        if (v > 1) v = 1;
+        else if (v < 0) v = 0;
+
+        return v;
+    },
+
+    bias: function (v) {
+
+        const a = this.sumAmplitude;
+
+        if (a <= 0) return v;
+
+        v = v / ((((1 / a) - 2) * (1 - v)) + 1);
+
+        if (v > 1) v = 1;
+        else if (v < 0) v = 0;
+
+        return v;
+    },
+
+    gain: function (v) {
+
+        const a = this.sumAmplitude;
+
+        if (a <= 0) return v;
+
+        if (v < 0.5) v = (v / ((((1 / a) - 2) * (1 - (2 * v))) + 1)) / 2;
+        else v = 1 - (((1 - v) / ((((1 / a) - 2) * (1 - (2 * (1 - v)))) + 1)) / 2);
+
+        if (v > 1) v = 1;
+        else if (v < 0) v = 0;
+
+        return v;
+    },
+
     // These functions modify the final output using a sine frequency calculation based on the pixel position within the canvas
-    'sine-x': function (v, sx) { return 0.5 + (_sin((sx * this.sineFrequencyCoeff) + v) / 2) },
-    'sine-y': function (v, sx, sy) { return 0.5 + (_sin((sy * this.sineFrequencyCoeff) + v) / 2) },
-    sine: function (v, sx, sy) { return 0.5 + (_sin((sx * this.sineFrequencyCoeff) + v) / 4) + (_sin((sy * this.sineFrequencyCoeff) + v) / 4) },
+    'sine-x': function (v, sx) {
+        return 0.5 + (_sin((sx * this.sineFrequencyCoeff) + v) / 2);
+    },
+
+    'sine-y': function (v, sx, sy) {
+        return 0.5 + (_sin((sy * this.sineFrequencyCoeff) + v) / 2);
+    },
+
+    sine: function (v, sx, sy) {
+        return 0.5 + (_sin((sx * this.sineFrequencyCoeff) + v) / 4) + (_sin((sy * this.sineFrequencyCoeff) + v) / 4);
+    },
 
     // This function creates repeating bands, the frequency of which depends on the sumAmplitude attribute
     modular: function(v) {
+
         const g = v * this.sumAmplitude;
         return g - _floor(g);
     },
 
     // This function adds random interference to the final output, the strength of which depends on the sumAmplitude attribute (lower values create a stronger effect)
     random: function(v) {
+
         const a = this.sumAmplitude;
         const r = (_random() / a) - (0.5 / a);
+
         let g = v + r;
 
         if (g > 1) g = 1;
@@ -1122,6 +1250,13 @@ P.worleyNoise = function (inputX, inputY, inputZ, distanceType, outputFunc) {
                             dz = inputZ - featureZ;
 
                         distance = (dx * dx) + (dy * dy) + (dz * dz);
+                    }
+                    else if (distanceType === CHEBYSHEV_DISTANCE) {
+
+                        distance = _max(
+                            _abs(inputX - featureX),
+                            _max(_abs(inputY - featureY), _abs(inputZ - featureZ))
+                        );
                     }
                     else {
 

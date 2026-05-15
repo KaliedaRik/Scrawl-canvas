@@ -47,6 +47,7 @@
         <option value="value">Value</option>
         <option value="worley-euclidean">Worley (euclidean)</option>
         <option value="worley-manhattan">Worley (manhattan)</option>
+        <option value="worley-chebyshev">Worley (chebyshev)</option>
       </select>
     </div>
 
@@ -61,6 +62,13 @@
       <select class="controlItem" id="octaveFunction">
         <option value="none">none</option>
         <option value="absolute">absolute</option>
+        <option value="ridged">ridged</option>
+        <option value="billow">billow</option>
+        <option value="signed">signed</option>
+        <option value="square">square</option>
+        <option value="sqrt">sqrt</option>
+        <option value="terrace-light">terrace-light</option>
+        <option value="terrace-heavy">terrace-heavy</option>
       </select>
     </div>
 
@@ -97,9 +105,18 @@
     <div class="orange">
       <select class="controlItem" id="sumFunction">
         <option value="none">none</option>
+        <option value="" disabled>---</option>
         <option value="sine">sine</option>
         <option value="sine-x">sine-x</option>
         <option value="sine-y">sine-y</option>
+        <option value="" disabled>---</option>
+        <option value="invert">invert</option>
+        <option value="threshold">threshold</option>
+        <option value="posterize">posterize</option>
+        <option value="terrace">terrace</option>
+        <option value="contrast">contrast</option>
+        <option value="bias">bias</option>
+        <option value="gain">gain</option>
         <option value="modular">modular</option>
         <option value="random">random</option>
       </select>
