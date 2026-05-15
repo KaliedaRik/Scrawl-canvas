@@ -234,7 +234,8 @@
         <option value='[{"operation":"add-ripple","stage":"on-coordinates","parameters":{"amplitude":20,"frequency":0.1,"phase":0,"originX":"50%","originY":"50%"}}]'>Deep ripple</option>
 
         <option value="" disabled>---</option>
-        <option value='[{"operation":"add-map-displace","stage":"on-coordinates","parameters":{"axis":"both","strength":20,"offset":0.5,"linked":false,"map":{"noiseEngine":"simplex","scale":50,"octaves":3}}}]'>Add map - displace</option>
+        <option value='[{"operation":"add-map-displace","stage":"on-coordinates","parameters":{"axis":"both","strength":20,"offset":0.5,"linked":false,"map":{"noiseEngine":"simplex","scale":50,"octaves":3}}}]'>Add map - displace (simplex)</option>
+        <option value='[{"operation":"add-map-displace","stage":"on-coordinates","parameters":{"axis":"both","strength":20,"offset":0.5,"linked":false,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":60}}}]'>Add map - displace (worley-euc)</option>
       </select>
     </div>
 

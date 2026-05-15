@@ -1093,7 +1093,7 @@ const getRippleOperation = function (op, workData, entity, lock) {
 const getMapDisplaceOperation = function (op, workData) {
 
     const params = op.parameters || {},
-        mapParams = params.noise || {},
+        mapParams = params.map || {},
 
         width = workData.width,
         height = workData.height,
