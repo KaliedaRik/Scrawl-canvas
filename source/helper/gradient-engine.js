@@ -10,7 +10,7 @@ import { bluenoise, orderedNoise } from './filter-engine-bluenoise-data.js';
 import { makeNoiseAsset } from '../asset-management/noise-asset.js';
 
 // Shared constants
-import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_EASE, ADD_MAP_CONTOUR, ADD_MAP_DISPLACE, ADD_MAP_EASE, ADD_MAP_FLOW, ADD_MAP_ROTATE, ADD_MAP_THRESHOLD, ADD_MAP_WARP, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, BOTTOM, CENTER, DEFAULT_SEED, LEFT, ON_COORDINATES, ORDERED, PERMITTED_NOISE, RANDOM, REFLECT, REPEAT, RIGHT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TOP, TRANSPARENT } from './shared-vars.js';
+import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_EASE, ADD_MAP_CONTOUR, ADD_MAP_DISPLACE, ADD_MAP_EASE, ADD_MAP_FLOW, ADD_MAP_ROTATE, ADD_MAP_THRESHOLD, ADD_MAP_WARP, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, BOTTOM, CENTER, DEFAULT_SEED, LEFT, ON_COORDINATES, ORDERED, PATH_ENTITY, PERMITTED_NOISE, RANDOM, REFLECT, REPEAT, RIGHT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TOP, TRANSPARENT } from './shared-vars.js';
 
 // Local constants
 const T_GRADIENT_ENGINE = 'GradientEngine',
@@ -102,7 +102,7 @@ P.action = function (packet) {
     }
 
     // If we failed to generate an image for the gradient, return false
-    // + Any false return means the entity will be stamped elsewhere as if no gradient had been applied to it (usulally it will be stamped using opaque black fill and stroke values)
+    // + The fillStyle or strokeStyle of the affected entity will display as transparent, or black
     return false;
 };
 
@@ -568,28 +568,88 @@ const getPaletteIndex = function (gradient, t) {
     return index;
 };
 
-
 // ### Apply gradient data to entitys
 const applyEntityLockedGradient = function (result, imageData, workData, gradientData, gradientId, width, height, entity, matrix) {
 
-    const entityScale = entity.currentScale || 1,
+    const pathBased = PATH_ENTITY.includes(entity.type),
+
+        entityScale = entity.currentScale || 1,
         entityScalesLine = entity.scaleOutline,
 
-        [entityWidth, entityHeight] = entity.get('dimensions'),
+        [entityWidth, entityHeight] = pathBased ? entity.currentDimensions : entity.get('dimensions'),
         [handleX, handleY] = entity.get('handle'),
 
         entityLineWidth = entity.get('lineWidth') || 0,
         entityScaledLine = entityScalesLine ? entityLineWidth * entityScale : entityLineWidth,
-
         lineOffset = entityScaledLine / 2,
 
         localHandleX = getCoordinateValue(handleX, entityWidth) * entityScale,
         localHandleY = getCoordinateValue(handleY, entityHeight) * entityScale,
 
-        localWidth = _ceil((entityWidth * entityScale) + entityScaledLine),
-        localHeight = _ceil((entityHeight * entityScale) + entityScaledLine);
+        inverseMatrix = matrix.inverse(),
+        { a: mxA, b: mxB, c: mxC, d: mxD, e: mxE, f: mxF } = inverseMatrix,
 
-    const localGradientId = `${gradientId}-for-${localWidth}-${localHeight}`;
+        iData = imageData.data,
+        iPix = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
+        iLen = iPix.length,
+
+        wData = workData.data,
+        wPix = new Uint32Array(wData.buffer, wData.byteOffset, wData.byteLength >>> 2);
+
+    const coordScale = pathBased ? entityScale : 1;
+
+    let localMinX = -lineOffset,
+        localMinY = -lineOffset,
+        localMaxX = (entityWidth * entityScale) + lineOffset,
+        localMaxY = (entityHeight * entityScale) + lineOffset;
+
+    if (pathBased) {
+
+        let x = 0,
+            y = 0,
+            cursor = 0,
+            iChannels, alpha,
+            sx, sy;
+
+        for (; cursor < iLen; cursor++) {
+
+            iChannels = iPix[cursor];
+            alpha = (iChannels >>> 24) & 0xFF;
+
+            if (alpha) {
+
+                sx = (((mxA * x) + (mxC * y) + mxE) * coordScale) + localHandleX;
+                sy = (((mxB * x) + (mxD * y) + mxF) * coordScale) + localHandleY;
+
+                if (sx < localMinX) localMinX = sx;
+                if (sx > localMaxX) localMaxX = sx;
+                if (sy < localMinY) localMinY = sy;
+                if (sy > localMaxY) localMaxY = sy;
+            }
+
+            x++;
+
+            if (x === width) {
+
+                x = 0;
+                y++;
+            }
+        }
+
+        localMinX = _floor(localMinX) - 1;
+        localMinY = _floor(localMinY) - 1;
+        localMaxX = _ceil(localMaxX) + 1;
+        localMaxY = _ceil(localMaxY) + 1;
+    }
+
+    const localWidth = pathBased ? localMaxX - localMinX + 1 : _ceil((entityWidth * entityScale) + entityScaledLine),
+        localHeight = pathBased ? localMaxY - localMinY + 1 : _ceil((entityHeight * entityScale) + entityScaledLine),
+
+        localOverscale = pathBased && entityScale < 1 ? _min(4, 1 / entityScale) : 1,
+        rasterWidth = _ceil(localWidth * localOverscale),
+        rasterHeight = _ceil(localHeight * localOverscale),
+
+        localGradientId = `${gradientId}-for-${localWidth}-${localHeight}-at-${localMinX}-${localMinY}-os-${localOverscale}`;
 
     let localGradientData = getWorkstoreItem(localGradientId);
 
@@ -605,28 +665,19 @@ const applyEntityLockedGradient = function (result, imageData, workData, gradien
         tmpSrcEl.height = height;
         tmpSrcEng.putImageData(gradientData, 0, 0);
 
-        tmpDestEl.width = localWidth;
-        tmpDestEl.height = localHeight;
-        tmpDestEng.drawImage(tmpSrcEl, 0, 0, width, height, 0, 0, localWidth, localHeight);
+        tmpDestEl.width = rasterWidth;
+        tmpDestEl.height = rasterHeight;
+        tmpDestEng.drawImage(tmpSrcEl, 0, 0, width, height, 0, 0, rasterWidth, rasterHeight);
 
-        localGradientData = tmpDestEng.getImageData(0, 0, localWidth, localHeight);
+        localGradientData = tmpDestEng.getImageData(0, 0, rasterWidth, rasterHeight);
 
         releaseCell(tmpSrc, tmpDest);
 
         setWorkstoreItem(localGradientId, localGradientData);
     }
 
-    const inverseMatrix = matrix.inverse();
-
-    const iData = imageData.data,
-        iPix = new Uint32Array(iData.buffer, iData.byteOffset, iData.byteLength >>> 2),
-        iLen = iPix.length,
-
-        gData = localGradientData.data,
-        gPix = new Uint32Array(gData.buffer, gData.byteOffset, gData.byteLength >>> 2),
-
-        wData = workData.data,
-        wPix = new Uint32Array(wData.buffer, wData.byteOffset, wData.byteLength >>> 2);
+    const gData = localGradientData.data,
+        gPix = new Uint32Array(gData.buffer, gData.byteOffset, gData.byteLength >>> 2);
 
     let minX = width,
         minY = height,
@@ -636,7 +687,7 @@ const applyEntityLockedGradient = function (result, imageData, workData, gradien
         y = 0,
         cursor = 0,
         iChannels, alpha,
-        localPoint, localX, localY, localCursor,
+        localX, localY, localCursor,
         gChannels, gAlpha, outAlpha;
 
     for (; cursor < iLen; cursor++) {
@@ -646,23 +697,18 @@ const applyEntityLockedGradient = function (result, imageData, workData, gradien
 
         if (alpha) {
 
-            localPoint = inverseMatrix.transformPoint(new DOMPoint(x, y));
+            localX = _floor((((((mxA * x) + (mxC * y) + mxE) * coordScale) + localHandleX) - localMinX) * localOverscale);
+            localY = _floor((((((mxB * x) + (mxD * y) + mxF) * coordScale) + localHandleY) - localMinY) * localOverscale);
 
-            localX = _floor(localPoint.x + localHandleX + lineOffset);
-            localY = _floor(localPoint.y + localHandleY + lineOffset);
+            if (localX >= 0 && localX < rasterWidth && localY >= 0 && localY < rasterHeight) {
 
-            if (localX >= 0 && localX < localWidth && localY >= 0 && localY < localHeight) {
-
-                localCursor = (localY * localWidth) + localX;
+                localCursor = (localY * rasterWidth) + localX;
 
                 gChannels = gPix[localCursor];
                 gAlpha = gChannels >>> 24;
                 outAlpha = ((alpha * gAlpha) / 255) | 0;
 
-                if (outAlpha) {
-
-                    wPix[cursor] = ((outAlpha << 24) | (gChannels & 0x00ffffff)) >>> 0;
-                }
+                if (outAlpha) wPix[cursor] = ((outAlpha << 24) | (gChannels & 0x00ffffff)) >>> 0;
             }
 
             if (x < minX) minX = x;
@@ -689,13 +735,12 @@ const applyEntityLockedGradient = function (result, imageData, workData, gradien
         tPix = new Uint32Array(tData.buffer, tData.byteOffset, tData.byteLength >>> 2);
 
     let rows = 0,
-        index, slice;
+        index;
 
     for (; rows < resHeight; rows++) {
 
         index = ((minY + rows) * width) + minX;
-        slice = wPix.slice(index, index + resWidth);
-        tPix.set(slice, rows * resWidth);
+        tPix.set(wPix.subarray(index, index + resWidth), rows * resWidth);
     }
 
     result.x = minX;

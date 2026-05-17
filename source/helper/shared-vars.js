@@ -180,6 +180,7 @@ export const ORDERED = 'ordered';
 export const PAD = 'pad';
 export const PARTICLE = 'particle';
 export const PATH = 'path';
+export const PATH_ENTITY = ['Bezier', 'Cog', 'Line', 'LineSpiral', 'Oval', 'Polygon', 'Polyline', 'Quadratic', 'Rectangle', 'Shape', 'Spiral', 'Star', 'Tetragon'];
 export const PC = '%';
 export const PC0 = '0%';
 export const PC100 = '100%';

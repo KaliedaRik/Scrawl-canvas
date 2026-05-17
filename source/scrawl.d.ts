@@ -591,6 +591,15 @@ interface ShapeCurveMixinFunctions extends ShapeBasicMixinFunctions {}
 // Styles mixin
 // -------------------------------------
 type StyleColorsArray = [number, string]
+type StylePermittedSpread = 'pad' | 'repeat' | 'reflect' | 'transparent';
+type StyleOperationPermittedOperations = 'add-ease' | 'add-map-contour' | 'add-map-displace' | 'add-map-ease' | 'add-map-flow' | 'add-map-rotate' | 'add-map-threshold' | 'add-map-warp' | 'add-noise' | 'add-ripple' | 'add-wave';
+type StyleOperationPermittedStages = 'before-spread' | 'after-spread' | 'on-coordinates';
+
+interface StyleOperationObject {
+    operation: StyleOperationPermittedOperations;
+    stage: StyleOperationPermittedStages;
+    parameters?: CommonObjectInput;
+}
 
 interface StylesMixinDeltaInputs {
     end?: CommonTwoElementArrayInput;
@@ -613,6 +622,8 @@ interface StylesMixinInputs {
     palette?: CommonObjectInput;
     precision?: number;
     returnColorAs?: ReturnColorValues;
+    spread?: StylePermittedSpread;
+    operations?: StyleOperationObject[];
 }
 
 interface StylesMixinFunctions {

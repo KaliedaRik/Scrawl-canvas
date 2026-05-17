@@ -14,6 +14,11 @@
     canvas {
       margin: 1em auto;
       box-shadow: 0px 0px 0px 1px black;
+
+      & .assets {
+        height: 0;
+        overflow: hidden;
+      }
     }
     .controls {
       grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
@@ -67,7 +72,12 @@
     width="400" 
     height="400"
     data-scrawl-canvas
-  ></canvas>
+  >
+    <div class="assets" aria-hidden="true">
+      <img src="img/brick.png" id="brick" class="mypatterns" />
+      <img src="img/leaves.png" id="leaves" class="mypatterns" />
+    </div>
+  </canvas>
 
   <div class="controls">
     <div class="blue label">Starts ('n%')</div>
@@ -143,6 +153,38 @@
     <div class="yellow label">Line width</div>
     <div class="yellow"><input class="controlItem" id="lineWidth" type="range" value="4" min="0" max="40" step="1" /></div>
     <div class="yellow">&nbsp;</div>
+
+    <div class="orange label">Fill style</div>
+    <div class="orange">Fill: 
+      <select class="controlItem" id="fillStyle">
+        <option value="orange">color</option>
+        <option value="mycanvas-fill-gradient">gradient</option>
+        <option value="mycanvas-fill-pattern">pattern</option>
+      </select>
+    </div>
+
+    <div class="orange">Lock:
+      <select class="controlItem" id="lockFillStyleToEntity">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="orange label">Draw style</div>
+    <div class="orange">Stroke:
+      <select class="controlItem" id="strokeStyle">
+        <option value="darkslategray">color</option>
+        <option value="mycanvas-stroke-gradient">gradient</option>
+        <option value="mycanvas-stroke-pattern">pattern</option>
+      </select>
+    </div>
+
+    <div class="orange">Lock:
+      <select class="controlItem" id="lockStrokeStyleToEntity">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
 
     <div class="yellow label">Method</div>
     <div class="yellow">

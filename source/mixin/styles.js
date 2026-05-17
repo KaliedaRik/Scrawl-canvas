@@ -210,7 +210,7 @@ export default function (P = Ωempty) {
 
 
 // #### Clone management
-// No additional clone functionality defined here
+// No additional actions for cloning
 
 
 // #### Kill management
@@ -807,6 +807,7 @@ export default function (P = Ωempty) {
         this.set(items);
 
         this.identifier = ZERO_STR;
+        this.updateIdentifier();
     };
 
 

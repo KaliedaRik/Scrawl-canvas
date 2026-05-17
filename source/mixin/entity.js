@@ -36,10 +36,12 @@ import buttonMix from './button.js';
 import filterMix from './filter.js';
 
 // Shared constants
-import { _floor, _keys, _parse, _radian, BLACK, BLANK, DESTINATION_OUT, DRAW, FILL, GOOD_HOST, GRADIENTS_ARR, IMG, MOUSE, NAME, PAD, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS, T_CONIC_GRADIENT, T_GRADIENT, T_RADIAL_GRADIENT, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, _keys, _parse, _radian, BLACK, BLANK, DESTINATION_OUT, DRAW, FILL, GOOD_HOST, GRADIENTS_ARR, IMG, MOUSE, NAME, PAD, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS, T_CONIC_GRADIENT, T_GRADIENT, T_RADIAL_GRADIENT, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const NONZERO = 'nonzero';
+const NONZERO = 'nonzero',
+    STATE_OVERRIDE_DELTA_KEYS = ['lineDashOffset', 'lineWidth', 'miterLimit'],
+    STATE_OVERRIDE_KEYS = [...STATE_OVERRIDE_DELTA_KEYS, 'fillStyle', 'lineCap', 'lineDash', 'lineJoin', 'strokeStyle'];
 
 
 // #### Export function
@@ -238,7 +240,8 @@ export default function (P = Ωempty) {
 
 // #### Get, Set, deltaSet
     const G = P.getters,
-        S = P.setters;
+        S = P.setters,
+        D = P.deltaSetters;
 
 // __group__ - returns the entity's latest Group's String name, not the Group object itself
     G.group = function () {
@@ -379,6 +382,118 @@ export default function (P = Ωempty) {
         state.strokeStyle = BLANK;
     };
 
+    S.lineDashOffset = function (item) {
+
+        const state = this.state;
+
+        if (_isFinite(item) && state) {
+
+            state.lineDashOffset = item;
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+    D.lineDashOffset = function (item) {
+
+        const state = this.state;
+
+        if (_isFinite(item) && state) {
+
+            state.lineDashOffset = addStrings(state.lineDashOffset, item);
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+
+    S.lineWidth = function (item) {
+
+        const state = this.state;
+
+        if (_isFinite(item) && state) {
+
+            state.lineWidth = item;
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+    D.lineWidth = function (item) {
+
+        const state = this.state;
+
+        if (_isFinite(item) && state) {
+
+            state.lineWidth = addStrings(state.lineWidth, item);
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+
+    S.miterLimit = function (item) {
+
+        const state = this.state;
+
+        if (_isFinite(item) && state) {
+
+            state.miterLimit = item;
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+    D.miterLimit = function (item) {
+
+        const state = this.state;
+
+        if (_isFinite(item) && state) {
+
+            state.miterLimit = addStrings(state.miterLimit, item);
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+
+    S.lineCap = function (item) {
+
+        const state = this.state;
+
+        if (state && item.substring) {
+
+            state.lineCap = item;
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+
+    S.lineDash = function (item) {
+
+        const state = this.state;
+
+        if (state && _isArray(item)) {
+
+            state.lineDash = item;
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+
+    S.lineJoin = function (item) {
+
+        const state = this.state;
+
+        if (state && item.substring) {
+
+            state.lineJoin = item;
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+
+    S.scaleOutline = function (item) {
+
+        this.scaleOutline = !!item;
+        this.dirtyDrawGradientCache = true;
+        this.dirtyfillGradientCache = true;
+    };
+
 // Entity `get`, `set` and `deltaSet` functions need to take into account the entity State object, whose attributes can be retrieved/amended directly on the entity object
     P.get = function (item) {
 
@@ -433,7 +548,7 @@ export default function (P = Ωempty) {
                 if (key && key !== NAME && val != null) {
 
                     // Special circumstances for fillStyle and strokeStyle
-                    if (!STATE_KEYS.includes(key) || key === 'fillStyle' || key === 'strokeStyle') {
+                    if (!STATE_KEYS.includes(key) || STATE_OVERRIDE_KEYS.includes(key)) {
 
                         fn = setters[key];
 
@@ -476,7 +591,7 @@ export default function (P = Ωempty) {
 
                 if (key && key !== NAME && val != null) {
 
-                    if (!STATE_KEYS.includes(key)) {
+                    if (!STATE_KEYS.includes(key) || STATE_OVERRIDE_DELTA_KEYS.includes(key)) {
 
                         fn = setters[key];
 
@@ -790,27 +905,27 @@ export default function (P = Ωempty) {
             return fixedGradientData;
         };
 
-        const myCell = requestCell(),
-            element = myCell.element,
-            engine = myCell.engine;
-
-        const [width, height] = refCell.get('dimensions');
-        const [x, y] = this.currentStampPosition;
-        const matrix = refCell.engine.getTransform();
-
-        const state = this.state,
-            pathObject = this.pathObject;
-
-        element.width = width;
-        element.height = height;
-
-        myCell.rotateDestination(engine, x, y, this);
-        myCell.setEngine(this);
-
         let drawId = this.identifierDrawGradientCache,
             fillId = this.identifierFillGradientCache;
 
         if (this.useDrawGradientCache) {
+
+            const myCell = requestCell(),
+                element = myCell.element,
+                engine = myCell.engine;
+
+            const [width, height] = refCell.get('dimensions');
+            const [x, y] = this.currentStampPosition;
+            const matrix = refCell.engine.getTransform();
+
+            const state = this.state,
+                pathObject = this.pathObject;
+
+            element.width = width;
+            element.height = height;
+
+            myCell.rotateDestination(engine, x, y, this);
+            myCell.setEngine(this);
 
             const grad = (state.strokeStyle.substring)
                 ? styles[state.strokeStyle]
@@ -829,32 +944,53 @@ export default function (P = Ωempty) {
 
                     grad.getData(this, refCell, DRAW);
 
+                    engine.shadowOffsetY = 0;
+                    engine.shadowOffsetX = 0;
+                    engine.shadowBlur = 0;
                     engine.strokeStyle = BLACK;
                     engine.stroke(pathObject);
 
                     const data = engine.getImageData(0, 0, width, height);
 
-                    this.identifierDrawGradientCache = drawId;
-
-                    gradientEngine.action({
+                    const success = gradientEngine.action({
                         fixedGradientData: getFixedGradientData(grad, DRAW),
                         identifier: drawId,
                         imageData: data,
                         entity: this,
                         matrix,
                     });
+                    if (success) {
+
+                        this.identifierDrawGradientCache = drawId;
+                        this.dirtyDrawGradient = false;
+                        this.dirtyDrawGradientCache = false;
+                        this.dirtyFilterIdentifier = true;
+                    }
+                    else this.dirtyDrawGradientCache = true;
                 }
-
-                if (this.dirtyDrawGradient || this.dirtyDrawGradientCache) this.dirtyFilterIdentifier = true;
-
-                this.dirtyDrawGradient = false;
-                this.dirtyDrawGradientCache = false;
             }
+            releaseCell(myCell);
         }
 
         if (this.useFillGradientCache) {
 
-            if (this.useDrawGradientCache) engine.clearRect(0, 0, width, height);
+            const myCell = requestCell(),
+                element = myCell.element,
+                engine = myCell.engine;
+
+            const [width, height] = refCell.get('dimensions');
+            const [x, y] = this.currentStampPosition;
+            const matrix = refCell.engine.getTransform();
+
+            const state = this.state,
+                pathObject = this.pathObject;
+
+            element.width = width;
+            element.height = height;
+
+            myCell.rotateDestination(engine, x, y, this);
+            myCell.setEngine(this);
+
 
             const grad = (state.fillStyle.substring)
                 ? styles[state.fillStyle]
@@ -874,28 +1010,34 @@ export default function (P = Ωempty) {
 
                     grad.getData(this, refCell, FILL);
 
+                    engine.shadowOffsetY = 0;
+                    engine.shadowOffsetX = 0;
+                    engine.shadowBlur = 0;
                     engine.fillStyle = BLACK;
                     engine.fill(pathObject, this.winding);
 
                     const data = engine.getImageData(0, 0, width, height);
 
-                    this.identifierFillGradientCache = fillId;
-
-                    gradientEngine.action({
+                    const success = gradientEngine.action({
                         fixedGradientData: getFixedGradientData(grad, FILL),
                         identifier: fillId,
                         imageData: data,
                         entity: this,
                         matrix,
                     });
-                }
-                if (this.dirtyFillGradient || this.dirtyFillGradientCache) this.dirtyFilterIdentifier = true;
 
-                this.dirtyFillGradient = false;
-                this.dirtyFillGradientCache = false;
+                    if (success) {
+
+                        this.identifierFillGradientCache = fillId;
+                        this.dirtyFillGradient = false;
+                        this.dirtyFillGradientCache = false;
+                        this.dirtyFilterIdentifier = true;
+                    }
+                    else this.dirtyFillGradientCache = true;
+                }
             }
+            releaseCell(myCell);
         }
-        releaseCell(myCell);
     };
 
 // `filteredStamp` - handles stamping functionality for all __entitys that have filter functions__ associated with them.
