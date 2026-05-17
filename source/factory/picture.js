@@ -510,7 +510,18 @@ P.prepareStamp = function() {
     //  See the [entity mixin function](http://localhost:8080/docs/source/mixin/entity.html#section-31) for details on the following checks and actions
     if (this.dirtyDimensions || this.dirtyHandle || this.dirtyScale) this.dirtyPaste = true;
 
-    if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
+    if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) {
+
+        this.dirtyPathObject = true;
+        if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+        if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+    }
+
+    if (this.dirtyRotation) {
+
+        if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+        if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+    }
 
     if (this.dirtyScale) this.cleanScale();
     if (this.dirtyDimensions) this.cleanDimensions();
@@ -524,6 +535,13 @@ P.prepareStamp = function() {
 
         this.dirtyStampPositions = true;
         this.dirtyStampHandlePositions = true;
+    }
+
+// Non-classic gradients also need to take into account positional changes
+    if (this.dirtyStampPositions || this.dirtyStampHandlePositions) {
+
+        if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+        if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
     }
 
     if (this.dirtyStampPositions) this.cleanStampPositions();
@@ -595,7 +613,12 @@ P.cleanPathObject = function () {
 // `draw`
 P.draw = function (engine) {
 
-    engine.stroke(this.pathObject);
+    const p = this.pathObject,
+        apply = this.applyFromWorkstore.bind(this),
+        drawUse = this.useDrawGradientCache,
+        drawId = this.identifierDrawGradientCache;
+
+    drawUse ? apply(engine, drawId) : engine.stroke(p);
 };
 
 // `fill`
@@ -609,16 +632,21 @@ P.fill = function (engine) {
 P.drawAndFill = function (engine) {
 
     const [x, y, w, h] = this.copyArray;
-    const [_x, _y, _w, _h] = this.pasteArray;
 
     if (this.source && w && h) {
 
-        engine.stroke(this.pathObject);
+        const [_x, _y, _w, _h] = this.pasteArray;
+        const p = this.pathObject,
+            apply = this.applyFromWorkstore.bind(this),
+            drawUse = this.useDrawGradientCache,
+            drawId = this.identifierDrawGradientCache;
+
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
         engine.drawImage(this.source, x, y, w, h, _x, _y, _w, _h);
 
         this.currentHost.clearShadow();
 
-        engine.stroke(this.pathObject);
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
         engine.drawImage(this.source, x, y, w, h, _x, _y, _w, _h);
     }
 };
@@ -627,17 +655,22 @@ P.drawAndFill = function (engine) {
 P.fillAndDraw = function (engine) {
 
     const [x, y, w, h] = this.copyArray;
-    const [_x, _y, _w, _h] = this.pasteArray;
 
     if (this.source && w && h) {
 
+        const [_x, _y, _w, _h] = this.pasteArray;
+        const p = this.pathObject,
+            apply = this.applyFromWorkstore.bind(this),
+            drawUse = this.useDrawGradientCache,
+            drawId = this.identifierDrawGradientCache;
+
         engine.drawImage(this.source, x, y, w, h, _x, _y, _w, _h);
-        engine.stroke(this.pathObject);
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
 
         this.currentHost.clearShadow();
 
         engine.drawImage(this.source, x, y, w, h, _x, _y, _w, _h);
-        engine.stroke(this.pathObject);
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
     }
 
     engine.stroke(this.pathObject);
@@ -647,9 +680,15 @@ P.fillAndDraw = function (engine) {
 P.drawThenFill = function (engine) {
 
     const [x, y, w, h] = this.copyArray;
+
     if (this.source && w && h) {
 
-        engine.stroke(this.pathObject);
+        const p = this.pathObject,
+            apply = this.applyFromWorkstore.bind(this),
+            drawUse = this.useDrawGradientCache,
+            drawId = this.identifierDrawGradientCache;
+
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
         engine.drawImage(this.source, x, y, w, h, ...this.pasteArray);
     }
 };
@@ -658,10 +697,16 @@ P.drawThenFill = function (engine) {
 P.fillThenDraw = function (engine) {
 
     const [x, y, w, h] = this.copyArray;
+
     if (this.source && w && h) {
 
+        const p = this.pathObject,
+            apply = this.applyFromWorkstore.bind(this),
+            drawUse = this.useDrawGradientCache,
+            drawId = this.identifierDrawGradientCache;
+
         engine.drawImage(this.source, x, y, w, h, ...this.pasteArray);
-        engine.stroke(this.pathObject);
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
     }
 };
 

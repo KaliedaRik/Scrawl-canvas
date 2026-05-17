@@ -770,7 +770,7 @@ export default function (P = Ωempty) {
 // We need to do work for gradients up-front - if fillStyle or strokeStyle are set to a gradient, then we need to determine if the gradient is "classic" or not.
 // + Classic gradients are rendered through the Canvas API
 // + Non-classic gradients (any gradient that reflects, repeats, or sets areas outside its boundaries to transparent) are not supported by the Canvas API and need to be rendered by SC instead
-    const requiresGradientCache = function (grad) {
+    P.requiresGradientCache = function (grad) {
 
         if (!grad || !GRADIENTS_ARR.includes(grad.type)) return false;
 
@@ -788,6 +788,8 @@ export default function (P = Ωempty) {
 
         let fillGradient, drawGradient;
 
+        const required = this.requiresGradientCache;
+
         if (this.state) {
 
             const { fillStyle, strokeStyle } = this.state;
@@ -796,8 +798,8 @@ export default function (P = Ωempty) {
             drawGradient = strokeStyle.substring ? styles[strokeStyle] : strokeStyle;
         }
 
-        this.useFillGradientCache = requiresGradientCache(fillGradient);
-        this.useDrawGradientCache = requiresGradientCache(drawGradient);
+        this.useFillGradientCache = required(fillGradient);
+        this.useDrawGradientCache = required(drawGradient);
     };
 
 // ##### Step 2: invoke the entity's stamp action
@@ -859,51 +861,57 @@ export default function (P = Ωempty) {
         }
     };
 
+    P.getFixedGradientData = function (grad, styleType, lockedToEntityOverride = null) {
+
+        const fixedGradientData = {
+            type: grad.type,
+            identifier: grad.identifier,
+            spread: grad.spread,
+            start: [...grad.start],
+            paletteStart: grad.paletteStart,
+            paletteEnd: grad.paletteEnd,
+            cyclePalette: grad.cyclePalette,
+            easing: grad.palette.easing,
+            stopsData: grad.palette.getStopsData().slice(),
+            operations: grad.operations,
+            lockedToEntity: false,
+        };
+
+        if (grad.type === T_GRADIENT) {
+
+            fixedGradientData.end = [...grad.end];
+        }
+
+        else if (grad.type === T_RADIAL_GRADIENT) {
+
+            fixedGradientData.end = [...grad.end];
+            fixedGradientData.startRadius = grad.startRadius;
+            fixedGradientData.endRadius = grad.endRadius;
+        }
+
+        else if (grad.type === T_CONIC_GRADIENT) {
+
+            fixedGradientData.angle = grad.angle;
+            fixedGradientData.angleRange = grad.angleRange;
+            fixedGradientData.swirlDistance = grad.swirlDistance;
+            fixedGradientData.swirlClockwise = grad.swirlClockwise;
+        }
+
+        if (lockedToEntityOverride != null) {
+
+            fixedGradientData.lockedToEntity = lockedToEntityOverride;
+        }
+        else if (
+            (styleType === FILL && this.lockFillStyleToEntity) ||
+            (styleType === DRAW && this.lockStrokeStyleToEntity)
+        ) fixedGradientData.lockedToEntity = true;
+
+        return fixedGradientData;
+    };
+
     P.updateGradientsBeforeStamp = function (refCell) {
 
-        const getFixedGradientData = (grad, styleType) => {
-
-            const fixedGradientData = {
-                type: grad.type,
-                identifier: grad.identifier,
-                spread: grad.spread,
-                start: [...grad.start],
-                paletteStart: grad.paletteStart,
-                paletteEnd: grad.paletteEnd,
-                cyclePalette: grad.cyclePalette,
-                easing: grad.palette.easing,
-                stopsData: grad.palette.getStopsData().slice(),
-                operations: grad.operations,
-                lockedToEntity: false,
-            };
-
-            if (grad.type === T_GRADIENT) {
-
-                fixedGradientData.end = [...grad.end];
-            }
-
-            else if (grad.type === T_RADIAL_GRADIENT) {
-
-                fixedGradientData.end = [...grad.end];
-                fixedGradientData.startRadius = grad.startRadius;
-                fixedGradientData.endRadius = grad.endRadius;
-            }
-
-            else if (grad.type === T_CONIC_GRADIENT) {
-
-                fixedGradientData.angle = grad.angle;
-                fixedGradientData.angleRange = grad.angleRange;
-                fixedGradientData.swirlDistance = grad.swirlDistance;
-                fixedGradientData.swirlClockwise = grad.swirlClockwise;
-            }
-
-            if (
-                (styleType === FILL && this.lockFillStyleToEntity) ||
-                (styleType === DRAW && this.lockStrokeStyleToEntity)
-            ) fixedGradientData.lockedToEntity = true;
-
-            return fixedGradientData;
-        };
+        const getFixedGradientData = this.getFixedGradientData.bind(this);
 
         let drawId = this.identifierDrawGradientCache,
             fillId = this.identifierFillGradientCache;

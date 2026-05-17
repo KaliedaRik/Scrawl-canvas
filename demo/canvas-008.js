@@ -21,6 +21,27 @@ const name = (n) => `${namespace}-${n}`;
 scrawl.importDomImage('.flowers');
 
 
+scrawl.makeGradient({
+
+    name: name('stroke-gradient'),
+    endX: '33%',
+    spread: 'reflect',
+    operations: [{
+        operation: 'add-noise',
+        stage: 'after-spread',
+        parameters: {
+            noise: 'bluenoise',
+            strength: 0.08,
+        },
+    }],
+});
+
+scrawl.makePattern({
+
+    name: name('stroke-pattern'),
+    asset: 'brick',
+});
+
 const piccy = scrawl.makePicture({
 
     name: name('myFlower'),
@@ -154,6 +175,16 @@ scrawl.makeUpdater({
 
         upend: ['flipUpend', 'boolean'],
         reverse: ['flipReverse', 'boolean'],
+
+        scaleOutline: ['scaleOutline', 'boolean'],
+        scaleShadow: ['scaleShadow', 'boolean'],
+        shadowBlur: ['shadowBlur', 'round'],
+        shadowOffsetX: ['shadowOffsetX', 'round'],
+        shadowOffsetY: ['shadowOffsetY', 'round'],
+        lineWidth: ['lineWidth', 'round'],
+        method: ['method', 'raw'],
+        strokeStyle: ['strokeStyle', 'raw'],
+        lockStrokeStyleToEntity: ['lockStrokeStyleToEntity', 'boolean'],
     },
 });
 
@@ -167,6 +198,7 @@ scrawl.initializeDomInputs([
     ['input', 'copy_start_xPercent', '25'],
     ['input', 'copy_start_yAbsolute', '100'],
     ['input', 'copy_start_yPercent', '25'],
+    ['input', 'lineWidth', '10'],
     ['input', 'paste_dims_heightAbsolute', '200'],
     ['input', 'paste_dims_heightPercent', '50'],
     ['input', 'paste_dims_widthAbsolute', '200'],
@@ -181,11 +213,19 @@ scrawl.initializeDomInputs([
     ['input', 'paste_start_yPercent', '50'],
     ['input', 'roll', '0'],
     ['input', 'scale', '1'],
+    ['input', 'shadowBlur', '0'],
+    ['input', 'shadowOffsetX', '0'],
+    ['input', 'shadowOffsetY', '0'],
+    ['select', 'lockStrokeStyleToEntity', 0],
+    ['select', 'method', 3],
     ['select', 'paste_handle_xString', 1],
     ['select', 'paste_handle_yString', 1],
     ['select', 'paste_start_xString', 1],
     ['select', 'paste_start_yString', 1],
     ['select', 'reverse', 0],
+    ['select', 'scaleOutline', 1],
+    ['select', 'scaleShadow', 0],
+    ['select', 'strokeStyle', 0],
     ['select', 'upend', 0],
 ]);
 

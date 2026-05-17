@@ -5,17 +5,18 @@
 // #### Imports
 import { constructors, entity } from '../core/library.js';
 
-import { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, generateIdForArtefact, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
-
 import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
+import { checkForWorkstoreItem } from '../helper/workstore.js';
+import { gradientEngine } from '../helper/gradient-engine.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
 // Shared constants
-import { _isArray, _isFinite, _parse, BLACK, COLOR, ENTITY, FILL, SOURCE_OVER, T_GRID, WHITE } from '../helper/shared-vars.js';
+import { _isArray, _isFinite, _parse, BLACK, COLOR, DRAW, ENTITY, FILL, SOURCE_OVER, T_GRID, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const _isInteger = Number.isSafeInteger || Number.isInteger,
@@ -664,13 +665,279 @@ P.getTilePivotCoordsAt = function (index) {
 
 // `performFill` - internal stamp method helper function
 // + If you are not a fan of long, complex functions ... look away now!
+// P.performFill = function (engine) {
+
+//     const currentScale = this.currentScale || 0;
+
+//     if (currentScale > 0) {
+
+//         // Grab the current engine values for various things
+//         engine.save();
+
+//         const composer = requestCell(),
+//             compEngine = composer.engine,
+//             compCanvas = composer.element;
+
+//         const tileSources = this.tileSources,
+//             tileFill = this.tileFill,
+//             tilePaths = this.tilePaths,
+//             tileRealCoords = this.tileRealCoordinates,
+//             tileVirtualCoords = this.tileVirtualCoordinates,
+//             winding = this.winding,
+//             tileWidth = this.currentTileWidth,
+//             tileHeight = this.currentTileHeight;
+
+//         const dims = this.currentDimensions;
+
+//         let currentPicture;
+
+//         // Iterate through the grid's tileSources
+//         tileSources.forEach((obj, index) => {
+
+//             // Set up the engine fillStyle value (where required)
+//             if (obj && obj.type) {
+
+//                 switch (obj.type) {
+
+//                     case COLOR :
+
+//                         engine.fillStyle = obj.source;
+//                         break;
+
+//                     case CELL_GRADIENT :
+
+//                         this.lockFillStyleToEntity = false;
+//                         engine.fillStyle = obj.source.getData(this, this.currentHost);
+//                         break;
+
+//                     case GRID_GRADIENT :
+
+//                         this.lockFillStyleToEntity = true;
+//                         engine.fillStyle = obj.source.getData(this, this.currentHost);
+//                         break;
+//                 }
+//             }
+
+//             // Get an map of tiles using this source
+//             const validTiles = tileFill.map(item => item === index ? true : false);
+
+//             if (validTiles.length) {
+
+//                 switch (obj.type) {
+
+//                     // Use pool canvases to compose the output
+//                     case GRID_PICTURE : {
+
+//                         currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
+
+//                         if (currentPicture.simpleStamp) {
+
+//                             const W = dims[0] * currentScale,
+//                                 H = dims[1] * currentScale;
+
+//                             compCanvas.width = W;
+//                             compCanvas.height = H;
+//                             compEngine.globalCompositeOperation = SOURCE_OVER;
+
+//                             currentPicture.simpleStamp(composer, {
+//                             startX: 0,
+//                                 startY: 0,
+//                                 width: W,
+//                                 height: H,
+//                                 method: FILL,
+//                             });
+
+//                             const masker = requestCell(),
+//                                 mEngine = masker.engine,
+//                                 mCanvas = masker.element;
+
+//                             mCanvas.width = W;
+//                             mCanvas.height = H;
+
+//                             mEngine.fillStyle = WHITE;
+
+//                             let use, ux, uy;
+
+//                             for (let i = 0, iz = validTiles.length; i < iz; i++) {
+
+//                                 use = validTiles[i];
+
+//                                 if (use) {
+
+//                                     [ux, uy] = tileVirtualCoords[i];
+
+//                                     mEngine.fillRect(ux, uy, tileWidth, tileHeight);
+//                                 }
+//                             }
+
+//                             compEngine.globalCompositeOperation = DESTINATION_IN;
+//                             compEngine.drawImage(mCanvas, 0, 0);
+
+//                             engine.drawImage(compCanvas, ~~tileRealCoords[0][0], ~~tileRealCoords[0][1]);
+
+//                             releaseCell(masker);
+//                         }
+//                         break;
+//                     }
+
+//                     case TILE_PICTURE :
+
+//                         currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
+
+//                         if (currentPicture.simpleStamp) {
+
+//                             compCanvas.width = tileWidth;
+//                             compCanvas.height = tileHeight;
+//                             compEngine.globalCompositeOperation = SOURCE_OVER;
+
+//                             currentPicture.simpleStamp(composer, {
+//                                 startX: 0,
+//                                 startY: 0,
+//                                 width: tileWidth,
+//                                 height: tileHeight,
+//                                 method: FILL,
+//                             });
+
+//                             validTiles.forEach((tile, pos) => tile && engine.drawImage(compCanvas, ~~tileRealCoords[pos][0], ~~tileRealCoords[pos][1]));
+//                         }
+//                         break;
+
+//                     default :
+
+//                         validTiles.forEach((tile, pos) => tile && engine.fill(tilePaths[pos], winding));
+//                 }
+//             }
+//         });
+
+//         const gColor = this.gutterColor,
+//             gRow = this.rowGutterWidth,
+//             gCol = this.columnGutterWidth;
+
+//         let gObject;
+
+//         if(xt(gColor)) {
+
+//             // Assign (or construct) the appropriate object to gObject
+//             if (gColor.substring) {
+
+//                 gObject = {
+//                     type: COLOR,
+//                     source: this.gutterColor
+//                 };
+//             }
+//             else if (isa_obj(gColor)) gObject = gColor;
+//             else if (isa_number(gColor) && isa_obj(tileSources[gColor])) gObject = tileSources[gColor];
+
+//             // Set the engine's strokeStyle to the appropriate value (if needed)
+//             switch (gObject.type) {
+
+//                 case CELL_GRADIENT :
+
+//                     this.lockFillStyleToEntity = false;
+//                     engine.strokeStyle = gObject.source.getData(this, this.currentHost);
+//                     break;
+
+//                 case GRID_GRADIENT :
+
+//                     this.lockFillStyleToEntity = true;
+//                     engine.strokeStyle = gObject.source.getData(this, this.currentHost);
+//                     break;
+
+//                 case COLOR :
+
+//                     engine.strokeStyle = gObject.source;
+//                     break;
+//             }
+
+//             switch (gObject.type) {
+
+//                 // Use pool canvas to compose the output
+//                 // + gridPicture and tilePicture both treated the same
+//                 case GRID_PICTURE :
+//                 case TILE_PICTURE : {
+
+//                     if (gRow || gCol) {
+
+//                         currentPicture = (gObject.source.substring) ? entity[gObject.source] : gObject.source;
+
+//                         if (currentPicture.simpleStamp) {
+
+//                             const handle = this.currentStampHandlePosition,
+//                                 x = handle[0] * currentScale,
+//                                 y = handle[1] * currentScale,
+//                                 W = dims[0] * currentScale,
+//                                 H = dims[1] * currentScale;
+
+//                             compCanvas.width = W;
+//                             compCanvas.height = H;
+//                             compEngine.globalCompositeOperation = SOURCE_OVER;
+
+//                             currentPicture.simpleStamp(composer, {
+//                                 startX: 0,
+//                                 startY: 0,
+//                                 width: W,
+//                                 height: H,
+//                                 method: FILL,
+//                             });
+
+//                             const masker = requestCell(),
+//                                 mEngine = masker.engine,
+//                                 mCanvas = masker.element;
+
+//                             mCanvas.width = W;
+//                             mCanvas.height = H;
+
+//                             mEngine.translate(x, y);
+//                             mEngine.strokeStyle = WHITE;
+
+//                             if (gRow) {
+
+//                                 mEngine.lineWidth = gRow;
+//                                 mEngine.stroke(this.rowLines);
+//                             }
+//                             if (gCol) {
+
+//                                 mEngine.lineWidth = gCol;
+//                                 mEngine.stroke(this.columnLines);
+//                             }
+
+//                             compEngine.globalCompositeOperation = DESTINATION_IN;
+//                             compEngine.drawImage(mCanvas, 0, 0);
+
+//                             engine.drawImage(compCanvas, ~~tileRealCoords[0][0], ~~tileRealCoords[0][1]);
+
+//                             releaseCell(masker);
+//                         }
+//                     }
+//                     break;
+//                 }
+//                 // We have a color/gradient all set up - stroke the lines directly onto grid
+//                 default :
+
+//                     if (gRow) {
+
+//                         engine.lineWidth = gRow;
+//                         engine.stroke(this.rowLines);
+//                     }
+
+//                     if (gCol) {
+
+//                         engine.lineWidth = gCol;
+//                         engine.stroke(this.columnLines);
+//                     }
+//             }
+//         }
+//         releaseCell(composer);
+
+//         engine.restore();
+//     }
+// };
 P.performFill = function (engine) {
 
     const currentScale = this.currentScale || 0;
 
     if (currentScale > 0) {
 
-        // Grab the current engine values for various things
         engine.save();
 
         const composer = requestCell(),
@@ -684,127 +951,192 @@ P.performFill = function (engine) {
             tileVirtualCoords = this.tileVirtualCoordinates,
             winding = this.winding,
             tileWidth = this.currentTileWidth,
-            tileHeight = this.currentTileHeight;
+            tileHeight = this.currentTileHeight,
+            dims = this.currentDimensions,
+            requiresGradientCache = this.requiresGradientCache,
+            applyGridGradient = this.applyGridGradient.bind(this);
 
-        const dims = this.currentDimensions;
+        const getGradientObject = function (source) {
+
+            return source && source.substring ? styles[source] : source;
+        };
+
+        const buildTileGradientIdentifier = (grad, index, lockedToEntity) => {
+
+            return [
+                this.name,
+                'grid-tile-gradient',
+                index,
+                lockedToEntity ? GRID_GRADIENT : CELL_GRADIENT,
+                grad.identifier,
+                this.currentScale,
+                this.currentRotation,
+                this.currentStampPosition.join(':'),
+                this.currentDimensions.join(':'),
+                this.columns,
+                this.rows,
+                tileFill.join(':'),
+            ].join('-');
+        };
+
+        const buildGutterGradientIdentifier = (grad, lockedToEntity) => {
+
+            return [
+                this.name,
+                'grid-gutter-gradient',
+                lockedToEntity ? GRID_GRADIENT : CELL_GRADIENT,
+                grad.identifier,
+                this.currentScale,
+                this.currentRotation,
+                this.currentStampPosition.join(':'),
+                this.currentDimensions.join(':'),
+                this.columns,
+                this.rows,
+                this.rowGutterWidth,
+                this.columnGutterWidth,
+            ].join('-');
+        };
+
+        const setClassicFillGradient = (grad, lockedToEntity) => {
+
+            const currentLock = this.lockFillStyleToEntity;
+
+            this.lockFillStyleToEntity = lockedToEntity;
+            engine.fillStyle = grad.getData(this, this.currentHost, FILL);
+            this.lockFillStyleToEntity = currentLock;
+        };
+
+        const setClassicStrokeGradient = (grad, lockedToEntity) => {
+
+            const currentLock = this.lockStrokeStyleToEntity;
+
+            this.lockStrokeStyleToEntity = lockedToEntity;
+            engine.strokeStyle = grad.getData(this, this.currentHost, DRAW);
+            this.lockStrokeStyleToEntity = currentLock;
+        };
 
         let currentPicture;
 
-        // Iterate through the grid's tileSources
         tileSources.forEach((obj, index) => {
 
-            // Set up the engine fillStyle value (where required)
-            if (obj && obj.type) {
+            if (!obj || !obj.type) return;
 
-                switch (obj.type) {
-
-                    case COLOR :
-
-                        engine.fillStyle = obj.source;
-                        break;
-
-                    case CELL_GRADIENT :
-
-                        this.lockFillStyleToEntity = false;
-                        engine.fillStyle = obj.source.getData(this, this.currentHost);
-                        break;
-
-                    case GRID_GRADIENT :
-
-                        this.lockFillStyleToEntity = true;
-                        engine.fillStyle = obj.source.getData(this, this.currentHost);
-                        break;
-                }
-            }
-
-            // Get an map of tiles using this source
             const validTiles = tileFill.map(item => item === index ? true : false);
 
-            if (validTiles.length) {
+            if (!validTiles.length) return;
 
-                switch (obj.type) {
+            switch (obj.type) {
 
-                    // Use pool canvases to compose the output
-                    case GRID_PICTURE : {
+                case COLOR :
 
-                        currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
+                    engine.fillStyle = obj.source;
+                    validTiles.forEach((tile, pos) => tile && engine.fill(tilePaths[pos], winding));
+                    break;
 
-                        if (currentPicture.simpleStamp) {
+                case CELL_GRADIENT :
+                case GRID_GRADIENT : {
 
-                            const W = dims[0] * currentScale,
-                                H = dims[1] * currentScale;
+                    const grad = getGradientObject(obj.source),
+                        lockedToEntity = obj.type === GRID_GRADIENT;
 
-                            compCanvas.width = W;
-                            compCanvas.height = H;
-                            compEngine.globalCompositeOperation = SOURCE_OVER;
+                    if (!grad) break;
 
-                            currentPicture.simpleStamp(composer, {
-                            startX: 0,
-                                startY: 0,
-                                width: W,
-                                height: H,
-                                method: FILL,
+                    if (requiresGradientCache(grad)) {
+
+                        const identifier = buildTileGradientIdentifier(grad, index, lockedToEntity);
+
+                        applyGridGradient(engine, grad, function (maskEngine) {
+
+                            validTiles.forEach((tile, pos) => {
+
+                                if (tile) maskEngine.fill(tilePaths[pos], winding);
                             });
 
-                            const masker = requestCell(),
-                                mEngine = masker.engine,
-                                mCanvas = masker.element;
-
-                            mCanvas.width = W;
-                            mCanvas.height = H;
-
-                            mEngine.fillStyle = WHITE;
-
-                            let use, ux, uy;
-
-                            for (let i = 0, iz = validTiles.length; i < iz; i++) {
-
-                                use = validTiles[i];
-
-                                if (use) {
-
-                                    [ux, uy] = tileVirtualCoords[i];
-
-                                    mEngine.fillRect(ux, uy, tileWidth, tileHeight);
-                                }
-                            }
-
-                            compEngine.globalCompositeOperation = DESTINATION_IN;
-                            compEngine.drawImage(mCanvas, 0, 0);
-
-                            engine.drawImage(compCanvas, ~~tileRealCoords[0][0], ~~tileRealCoords[0][1]);
-
-                            releaseCell(masker);
-                        }
-                        break;
+                        }, lockedToEntity, identifier);
                     }
+                    else {
 
-                    case TILE_PICTURE :
-
-                        currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
-
-                        if (currentPicture.simpleStamp) {
-
-                            compCanvas.width = tileWidth;
-                            compCanvas.height = tileHeight;
-                            compEngine.globalCompositeOperation = SOURCE_OVER;
-
-                            currentPicture.simpleStamp(composer, {
-                                startX: 0,
-                                startY: 0,
-                                width: tileWidth,
-                                height: tileHeight,
-                                method: FILL,
-                            });
-
-                            validTiles.forEach((tile, pos) => tile && engine.drawImage(compCanvas, ~~tileRealCoords[pos][0], ~~tileRealCoords[pos][1]));
-                        }
-                        break;
-
-                    default :
-
+                        setClassicFillGradient(grad, lockedToEntity);
                         validTiles.forEach((tile, pos) => tile && engine.fill(tilePaths[pos], winding));
+                    }
+                    break;
                 }
+
+                case GRID_PICTURE : {
+
+                    currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
+
+                    if (currentPicture.simpleStamp) {
+
+                        const W = dims[0] * currentScale,
+                            H = dims[1] * currentScale;
+
+                        compCanvas.width = W;
+                        compCanvas.height = H;
+                        compEngine.globalCompositeOperation = SOURCE_OVER;
+
+                        currentPicture.simpleStamp(composer, {
+                            startX: 0,
+                            startY: 0,
+                            width: W,
+                            height: H,
+                            method: FILL,
+                        });
+
+                        const masker = requestCell(),
+                            mEngine = masker.engine,
+                            mCanvas = masker.element;
+
+                        mCanvas.width = W;
+                        mCanvas.height = H;
+
+                        mEngine.fillStyle = WHITE;
+
+                        let use, ux, uy;
+
+                        for (let i = 0, iz = validTiles.length; i < iz; i++) {
+
+                            use = validTiles[i];
+
+                            if (use) {
+
+                                [ux, uy] = tileVirtualCoords[i];
+
+                                mEngine.fillRect(ux, uy, tileWidth, tileHeight);
+                            }
+                        }
+
+                        compEngine.globalCompositeOperation = DESTINATION_IN;
+                        compEngine.drawImage(mCanvas, 0, 0);
+
+                        engine.drawImage(compCanvas, ~~tileRealCoords[0][0], ~~tileRealCoords[0][1]);
+
+                        releaseCell(masker);
+                    }
+                    break;
+                }
+
+                case TILE_PICTURE :
+
+                    currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
+
+                    if (currentPicture.simpleStamp) {
+
+                        compCanvas.width = tileWidth;
+                        compCanvas.height = tileHeight;
+                        compEngine.globalCompositeOperation = SOURCE_OVER;
+
+                        currentPicture.simpleStamp(composer, {
+                            startX: 0,
+                            startY: 0,
+                            width: tileWidth,
+                            height: tileHeight,
+                            method: FILL,
+                        });
+
+                        validTiles.forEach((tile, pos) => tile && engine.drawImage(compCanvas, ~~tileRealCoords[pos][0], ~~tileRealCoords[pos][1]));
+                    }
+                    break;
             }
         });
 
@@ -814,9 +1146,8 @@ P.performFill = function (engine) {
 
         let gObject;
 
-        if(xt(gColor)) {
+        if (xt(gColor)) {
 
-            // Assign (or construct) the appropriate object to gObject
             if (gColor.substring) {
 
                 gObject = {
@@ -827,109 +1158,197 @@ P.performFill = function (engine) {
             else if (isa_obj(gColor)) gObject = gColor;
             else if (isa_number(gColor) && isa_obj(tileSources[gColor])) gObject = tileSources[gColor];
 
-            // Set the engine's strokeStyle to the appropriate value (if needed)
-            switch (gObject.type) {
+            if (gObject && gObject.type) {
 
-                case CELL_GRADIENT :
+                switch (gObject.type) {
 
-                    this.lockFillStyleToEntity = false;
-                    engine.strokeStyle = gObject.source.getData(this, this.currentHost);
-                    break;
+                    case COLOR :
 
-                case GRID_GRADIENT :
+                        engine.strokeStyle = gObject.source;
 
-                    this.lockFillStyleToEntity = true;
-                    engine.strokeStyle = gObject.source.getData(this, this.currentHost);
-                    break;
+                        if (gRow) {
 
-                case COLOR :
+                            engine.lineWidth = gRow;
+                            engine.stroke(this.rowLines);
+                        }
 
-                    engine.strokeStyle = gObject.source;
-                    break;
-            }
+                        if (gCol) {
 
-            switch (gObject.type) {
+                            engine.lineWidth = gCol;
+                            engine.stroke(this.columnLines);
+                        }
+                        break;
 
-                // Use pool canvas to compose the output
-                // + gridPicture and tilePicture both treated the same
-                case GRID_PICTURE :
-                case TILE_PICTURE : {
+                    case CELL_GRADIENT :
+                    case GRID_GRADIENT : {
 
-                    if (gRow || gCol) {
+                        const grad = getGradientObject(gObject.source),
+                            lockedToEntity = gObject.type === GRID_GRADIENT;
 
-                        currentPicture = (gObject.source.substring) ? entity[gObject.source] : gObject.source;
+                        if (!grad) break;
 
-                        if (currentPicture.simpleStamp) {
+                        if (requiresGradientCache(grad)) {
 
-                            const handle = this.currentStampHandlePosition,
-                                x = handle[0] * currentScale,
-                                y = handle[1] * currentScale,
-                                W = dims[0] * currentScale,
-                                H = dims[1] * currentScale;
+                            const identifier = buildGutterGradientIdentifier(grad, lockedToEntity);
 
-                            compCanvas.width = W;
-                            compCanvas.height = H;
-                            compEngine.globalCompositeOperation = SOURCE_OVER;
+                            applyGridGradient(engine, grad, function (maskEngine) {
 
-                            currentPicture.simpleStamp(composer, {
-                                startX: 0,
-                                startY: 0,
-                                width: W,
-                                height: H,
-                                method: FILL,
-                            });
+                                if (gRow) {
 
-                            const masker = requestCell(),
-                                mEngine = masker.engine,
-                                mCanvas = masker.element;
+                                    maskEngine.lineWidth = gRow;
+                                    maskEngine.stroke(this.rowLines);
+                                }
 
-                            mCanvas.width = W;
-                            mCanvas.height = H;
+                                if (gCol) {
 
-                            mEngine.translate(x, y);
-                            mEngine.strokeStyle = WHITE;
+                                    maskEngine.lineWidth = gCol;
+                                    maskEngine.stroke(this.columnLines);
+                                }
+
+                            }.bind(this), lockedToEntity, identifier);
+                        }
+                        else {
+
+                            setClassicStrokeGradient(grad, lockedToEntity);
 
                             if (gRow) {
 
-                                mEngine.lineWidth = gRow;
-                                mEngine.stroke(this.rowLines);
+                                engine.lineWidth = gRow;
+                                engine.stroke(this.rowLines);
                             }
+
                             if (gCol) {
 
-                                mEngine.lineWidth = gCol;
-                                mEngine.stroke(this.columnLines);
+                                engine.lineWidth = gCol;
+                                engine.stroke(this.columnLines);
                             }
-
-                            compEngine.globalCompositeOperation = DESTINATION_IN;
-                            compEngine.drawImage(mCanvas, 0, 0);
-
-                            engine.drawImage(compCanvas, ~~tileRealCoords[0][0], ~~tileRealCoords[0][1]);
-
-                            releaseCell(masker);
                         }
+                        break;
                     }
-                    break;
+
+                    case GRID_PICTURE :
+                    case TILE_PICTURE : {
+
+                        if (gRow || gCol) {
+
+                            currentPicture = (gObject.source.substring) ? entity[gObject.source] : gObject.source;
+
+                            if (currentPicture.simpleStamp) {
+
+                                const handle = this.currentStampHandlePosition,
+                                    x = handle[0] * currentScale,
+                                    y = handle[1] * currentScale,
+                                    W = dims[0] * currentScale,
+                                    H = dims[1] * currentScale;
+
+                                compCanvas.width = W;
+                                compCanvas.height = H;
+                                compEngine.globalCompositeOperation = SOURCE_OVER;
+
+                                currentPicture.simpleStamp(composer, {
+                                    startX: 0,
+                                    startY: 0,
+                                    width: W,
+                                    height: H,
+                                    method: FILL,
+                                });
+
+                                const masker = requestCell(),
+                                    mEngine = masker.engine,
+                                    mCanvas = masker.element;
+
+                                mCanvas.width = W;
+                                mCanvas.height = H;
+
+                                mEngine.translate(x, y);
+                                mEngine.strokeStyle = WHITE;
+
+                                if (gRow) {
+
+                                    mEngine.lineWidth = gRow;
+                                    mEngine.stroke(this.rowLines);
+                                }
+
+                                if (gCol) {
+
+                                    mEngine.lineWidth = gCol;
+                                    mEngine.stroke(this.columnLines);
+                                }
+
+                                compEngine.globalCompositeOperation = DESTINATION_IN;
+                                compEngine.drawImage(mCanvas, 0, 0);
+
+                                engine.drawImage(compCanvas, ~~tileRealCoords[0][0], ~~tileRealCoords[0][1]);
+
+                                releaseCell(masker);
+                            }
+                        }
+                        break;
+                    }
                 }
-                // We have a color/gradient all set up - stroke the lines directly onto grid
-                default :
-
-                    if (gRow) {
-
-                        engine.lineWidth = gRow;
-                        engine.stroke(this.rowLines);
-                    }
-
-                    if (gCol) {
-
-                        engine.lineWidth = gCol;
-                        engine.stroke(this.columnLines);
-                    }
             }
         }
+
         releaseCell(composer);
 
         engine.restore();
     }
+};
+
+P.applyGridGradient = function (engine, grad, maskStamp, lockedToEntity = false, identifier = ZERO_STR) {
+
+    if (!grad || !maskStamp) return false;
+
+    const refCell = this.currentHost;
+
+    if (!refCell) return false;
+
+    if (!identifier || identifier === ZERO_STR) identifier = generateIdForArtefact(this);
+
+    if (!checkForWorkstoreItem(identifier)) {
+
+        const myCell = requestCell(),
+            element = myCell.element,
+            maskEngine = myCell.engine;
+
+        const [width, height] = refCell.get('dimensions'),
+            [x, y] = this.currentStampPosition,
+            matrix = refCell.engine.getTransform();
+
+        element.width = width;
+        element.height = height;
+
+        myCell.rotateDestination(maskEngine, x, y, this);
+        myCell.setEngine(this);
+
+        maskEngine.shadowOffsetY = 0;
+        maskEngine.shadowOffsetX = 0;
+        maskEngine.shadowBlur = 0;
+
+        maskEngine.fillStyle = BLACK;
+        maskEngine.strokeStyle = BLACK;
+
+        maskStamp(maskEngine);
+
+        const data = maskEngine.getImageData(0, 0, width, height);
+
+        const success = gradientEngine.action({
+
+            fixedGradientData: this.getFixedGradientData(grad, FILL, lockedToEntity),
+            identifier,
+            imageData: data,
+            entity: this,
+            matrix,
+        });
+
+        releaseCell(myCell);
+
+        if (!success) return false;
+    }
+
+    this.applyFromWorkstore(engine, identifier);
+
+    return identifier;
 };
 
 // `fill`
