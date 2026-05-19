@@ -16,7 +16,7 @@
       box-shadow: 0px 0px 0px 1px black;
     }
     .controls {
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     }
 
     @font-face {
@@ -53,19 +53,105 @@
 
   <div class="controls">
 
-    <div class="green label">Style</div>
-    <div class="green">
+    <div class="pink label">Text fill style</div>
+    <div class="pink">
       <select class="controlItem" id="fillStyle">
-        <option value="">default</option>
-        <option value="red">red</option>
-        <option value="mycanvas-linear-gradient">gradient</option>
-        <option value="mycanvas-water-pattern">pattern</option>
+        <option value="">Default (black)</option>
+        <option value="red">Red</option>
+        <option value="mycanvas-linear-gradient">Classic gradient</option>
+        <option value="mycanvas-reflected-gradient">Software gradient</option>
+        <option value="mycanvas-water-pattern">Pattern</option>
       </select>
     </div>
 
-    <div class="green label">Lock style to entity</div>
-    <div class="green">
+    <div class="pink label">Lock style to entity</div>
+    <div class="pink">
       <select class="controlItem" id="lockFillStyleToEntity">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="pink label">&nbsp;</div>
+    <div class="pink">&nbsp;</div>
+
+    <div class="blue label">Text stroke style</div>
+    <div class="blue">
+      <select class="controlItem" id="strokeStyle">
+        <option value="">default (black)</option>
+        <option value="red">red</option>
+        <option value="mycanvas-linear-gradient">gradient (display: black)</option>
+        <option value="mycanvas-water-pattern">pattern (display: black)</option>
+      </select>
+    </div>
+
+    <div class="green label">Bounding box style</div>
+    <div class="green">
+      <select class="controlItem" id="boundingBoxStyle">
+        <option value="">default (black)</option>
+        <option value="red">red</option>
+        <option value="mycanvas-linear-gradient">gradient (display: black)</option>
+        <option value="mycanvas-water-pattern">pattern (display: black)</option>
+      </select>
+    </div>
+
+    <div class="orange label">Underline style</div>
+    <div class="orange">
+      <select class="controlItem" id="underlineStyle">
+        <option value="">default (black)</option>
+        <option value="red">red</option>
+        <option value="mycanvas-linear-gradient">gradient (display: black)</option>
+        <option value="mycanvas-water-pattern">pattern (display: black)</option>
+      </select>
+    </div>
+
+    <div class="blue label">Method</div>
+    <div class="blue">
+      <select class="controlItem" id="method">
+        <option value="fill">Fill</option>
+        <option value="draw">Draw</option>
+        <option value="fillThenDraw">Fill then draw</option>
+        <option value="drawThenFill">Draw then fill</option>
+        <option value="fillAndDraw">Fill and draw</option>
+        <option value="drawAndFill">Draw and fill</option>
+      </select>
+    </div>
+
+    <div class="green label">Include bounding box</div>
+    <div class="green">
+      <select class="controlItem" id="showBoundingBox">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="orange label">Include underline</div>
+    <div class="orange">
+      <select class="controlItem" id="includeUnderline">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="blue label">Use style for outline</div>
+    <div class="blue">
+      <select class="controlItem" id="useTextStyleForOutline">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="green label">Use style for bounding box</div>
+    <div class="green">
+      <select class="controlItem" id="useTextStyleForBoundingBox">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="orange label">Use style for underline</div>
+    <div class="orange">
+      <select class="controlItem" id="useTextStyleForUnderline">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
@@ -81,6 +167,14 @@
       <input class="controlItem" id="wordSpacing" type="range" value="0" min="-20" max="50" step="1" />
     </div>
 
+    <div class="bluegreen label">Flip-upend</div>
+    <div class="bluegreen">
+      <select class="controlItem" id="upend">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
     <div class="yellow label">Scale</div>
     <div class="yellow">
       <input class="controlItem" id="scale" type="range" value="1" min="0.5" max="2.5" step="0.01" />
@@ -91,16 +185,8 @@
       <input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" />
     </div>
 
-    <div class="yellow label">Flip-upend</div>
-    <div class="yellow">
-      <select class="controlItem" id="upend">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-
-    <div class="yellow label">Flip-reverse</div>
-    <div class="yellow">
+    <div class="bluegreen label">Flip-reverse</div>
+    <div class="bluegreen">
       <select class="controlItem" id="reverse">
         <option value="0">false</option>
         <option value="1">true</option>

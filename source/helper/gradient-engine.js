@@ -10,7 +10,7 @@ import { bluenoise, orderedNoise } from './filter-engine-bluenoise-data.js';
 import { makeNoiseAsset } from '../asset-management/noise-asset.js';
 
 // Shared constants
-import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_EASE, ADD_MAP_CONTOUR, ADD_MAP_DISPLACE, ADD_MAP_EASE, ADD_MAP_FLOW, ADD_MAP_ROTATE, ADD_MAP_THRESHOLD, ADD_MAP_WARP, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, BOTTOM, CENTER, DEFAULT_SEED, LEFT, ON_COORDINATES, ORDERED, PATH_ENTITY, PERMITTED_NOISE, RANDOM, REFLECT, REPEAT, RIGHT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TOP, TRANSPARENT } from './shared-vars.js';
+import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_EASE, ADD_MAP_CONTOUR, ADD_MAP_DISPLACE, ADD_MAP_EASE, ADD_MAP_FLOW, ADD_MAP_ROTATE, ADD_MAP_THRESHOLD, ADD_MAP_WARP, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, BOTTOM, CENTER, DEFAULT_SEED, LEFT, ON_COORDINATES, ORDERED, PATH_ENTITY, PERMITTED_NOISE, RANDOM, REFLECT, REPEAT, RIGHT, T_GRADIENT, T_LABEL, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TOP, TRANSPARENT } from './shared-vars.js';
 
 // Local constants
 const T_GRADIENT_ENGINE = 'GradientEngine',
@@ -53,12 +53,18 @@ P.action = function (packet) {
         const itemInWorkstore = checkForWorkstoreItem(identifier);
         if (itemInWorkstore) return true;
 
-        // See if we have a stashed gradient
-        if (!gradient.identifier) return false;
+        // Special circumstances apply to the Label entity, which requires classic gradients to be processed as software gradients
+        const entityIsLabel = entity.type === T_LABEL;
 
+        if (!entityIsLabel && !gradient.identifier) return false;
+
+        // See if we have a stashed gradient
         const { width, height, data } = imageData;
 
-        const gradientId = `${gradient.identifier}-${width}-${height}`;
+        let gradientId;
+
+        if (entityIsLabel && gradient.identifier) gradientId = `${entity.name}-label-gradient}-${width}-${height}`;
+        else gradientId = `${gradient.identifier}-${width}-${height}`;
 
         let gradientData = getWorkstoreItem(gradientId);
 

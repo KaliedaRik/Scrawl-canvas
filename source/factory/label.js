@@ -3,13 +3,16 @@
 
 
 // #### Imports
-import { constructors } from '../core/library.js';
+import { constructors, styles, stylesnames } from '../core/library.js';
 
-import { doCreate, mergeOver, λnull, Ωempty } from '../helper/utilities.js';
+import { doCreate, generateIdForArtefact, mergeOver, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeState } from '../untracked-factory/state.js';
 import { makeTextStyle } from '../untracked-factory/text-style.js';
 import { currentGroup } from '../factory/canvas.js';
+
+import { checkForWorkstoreItem, getWorkstoreItem } from '../helper/workstore.js';
+import { gradientEngine } from '../helper/gradient-engine.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
@@ -18,9 +21,12 @@ import entityMix from '../mixin/entity.js';
 import textMix from '../mixin/text.js';
 
 // Shared constants
-import { _abs, _ceil, _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, SOURCE_OVER, START, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _ceil, _isArray, _isFinite, ALPHABETIC, BLACK, BOTTOM, CENTER, DESTINATION_OUT, END, ENTITY, FILL, GRADIENTS_ARR, HANGING, IDEOGRAPHIC, LEFT, LTR, MIDDLE, MOUSE, PARTICLE, RIGHT, ROUND, SOURCE_OUT, SOURCE_OVER, START, T_COLOR, T_LABEL, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
-// Local constants (none defined)
+// Local constants
+const METHODS_USING_DRAW_FIRST = ['drawAndFill', 'drawThenFill'],
+    METHODS_USING_DRAW_LAST = ['draw', 'fillAndDraw', 'fillThenDraw'],
+    DRAW = 'draw';
 
 
 // #### Label constructor
@@ -56,6 +62,10 @@ const defaultAttributes = {
     boundingBoxLineWidth: 1,
     boundingBoxLineDash: null,
     boundingBoxLineDashOffset: 0,
+
+    useTextStyleForUnderline: false,
+    useTextStyleForBoundingBox: false,
+    useTextStyleForOutline: false,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -98,6 +108,87 @@ G.dimensions = function () {
 };
 S.dimensions = λnull;
 D.dimensions = λnull;
+
+S.showBoundingBox = function (item) {
+
+    this.showBoundingBox = !!item;
+    this.dirtyLabelGradientCache();
+};
+
+S.boundingBoxStyle = function (item) {
+
+    this.boundingBoxStyle = item;
+    this.dirtyLabelGradientCache();
+};
+
+S.boundingBoxLineWidth = function (item) {
+
+    if (_isFinite(item)) {
+
+        this.boundingBoxLineWidth = item;
+        this.dirtyLabelGradientCache();
+    }
+};
+
+D.boundingBoxLineWidth = function (item) {
+
+    if (_isFinite(item)) {
+
+        this.boundingBoxLineWidth += item;
+        this.dirtyLabelGradientCache();
+    }
+};
+
+S.boundingBoxLineDash = function (item) {
+
+    if (_isArray(item)) {
+
+        this.boundingBoxLineDash = item;
+        this.dirtyLabelGradientCache();
+    }
+};
+
+S.boundingBoxLineDashOffset = function (item) {
+
+    if (_isFinite(item)) {
+
+        this.boundingBoxLineDashOffset = item;
+        this.dirtyLabelGradientCache();
+    }
+};
+
+D.boundingBoxLineDashOffset = function (item) {
+
+    if (_isFinite(item)) {
+
+        this.boundingBoxLineDashOffset += item;
+        this.dirtyLabelGradientCache();
+    }
+};
+
+S.useTextStyleForUnderline = function (item) {
+
+    this.useTextStyleForUnderline = !!item;
+    this.dirtyFillGradientCache = true;
+};
+
+S.useTextStyleForBoundingBox = function (item) {
+
+    this.useTextStyleForBoundingBox = !!item;
+    this.dirtyFillGradientCache = true;
+};
+
+S.useTextStyleForOutline = function (item) {
+
+    this.useTextStyleForOutline = !!item;
+    this.dirtyFillGradientCache = true;
+};
+
+P.dirtyLabelGradientCache = function () {
+
+    this.dirtyFillGradientCache = true;
+    this.dirtyDrawGradientCache = true;
+};
 
 
 // #### Prototype functions
@@ -233,6 +324,9 @@ P.measureFont = function () {
 
     this.dirtyPathObject = true;
     this.dirtyDimensions = true;
+
+    // Tacky fix for making the dimensions update
+    this.set({ letterSpacing: defaultTextStyle.letterSpacing });
 };
 
 
@@ -315,6 +409,25 @@ P.cleanHandle = function () {
     if (mimicked && mimicked.length) this.dirtyMimicHandle = true;
 };
 
+P.requiresGradientCache = function (grad) {
+
+    return !!(grad && GRADIENTS_ARR.includes(grad.type));
+};
+
+P.setGradientCacheFlags = function () {
+
+    let fillGradient;
+
+    if (this.state) {
+
+        const { fillStyle } = this.state;
+
+        fillGradient = fillStyle.substring ? styles[fillStyle] : fillStyle;
+    }
+
+    this.useFillGradientCache = this.requiresGradientCache(fillGradient);
+    this.useDrawGradientCache = false;
+};
 
 // #### Display cycle functions
 
@@ -322,10 +435,21 @@ P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
 
-// Temporary fix to make sure the gradient cache flags are appropriately set before running through the remainder of this function
     this.setGradientCacheFlags();
 
-    if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
+    if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) {
+
+        this.dirtyPathObject = true;
+
+        if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+        if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+    }
+
+    if (this.dirtyRotation) {
+
+        if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+        if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+    }
 
     if (this.dirtyScale) this.cleanScale();
     if (this.dirtyText) this.updateAccessibleTextHold();
@@ -343,6 +467,12 @@ P.prepareStamp = function() {
         this.dirtyStampHandlePositions = true;
     }
 
+    if (this.dirtyStampPositions || this.dirtyStampHandlePositions) {
+
+        if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+        if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+    }
+
     if (this.dirtyStampPositions) this.cleanStampPositions();
     if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
     if (this.dirtyPathObject) this.cleanPathObject();
@@ -354,32 +484,280 @@ P.prepareStamp = function() {
 
 // ##### Stamp methods
 // `regularStamp` - overwrites mixin/entity.js function.
-// + If decide to pass host instead of host.engine to method functions for all entitys, then this may be a temporary fix
 P.regularStamp = function () {
 
     const dest = this.currentHost,
         textStyle = this.defaultTextStyle;
 
-    if (dest && textStyle) {
+    if (dest && textStyle && this.currentFontIsLoaded) {
 
         const engine = dest.engine;
         const [x, y] = this.currentStampPosition;
 
-        // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
         dest.rotateDestination(engine, x, y, this);
 
-        // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
         if (!this.noCanvasEngineUpdates) {
 
-            this.state.set(this.defaultTextStyle);
+            this.state.set(textStyle);
             dest.setEngine(this);
         }
 
-        this.setImageSmoothing(dest.engine);
+        if (this.useFillGradientCache) this.updateGradientsBeforeStamp(dest);
 
-        // Invoke the appropriate __stamping method__ (below)
-        this[textStyle.method](dest);
+        this.setImageSmoothing(engine);
+
+        const pos = this.stampPositioningHelper();
+
+        if (this.useFillGradientCache) this.stampLabelGradientFill(dest);
+        else this.stampLabelDirect(engine, pos);
+
+        this.postProcessLabelDecorations(dest, pos);
     }
+};
+
+P.updateGradientsBeforeStamp = function (refCell) {
+
+    if (!this.useFillGradientCache) return;
+
+    const getFixedGradientData = this.getFixedGradientData.bind(this);
+
+    const state = this.state;
+
+    const grad = (state.fillStyle.substring)
+        ? styles[state.fillStyle]
+        : state.fillStyle;
+
+    if (!grad || !GRADIENTS_ARR.includes(grad.type)) return;
+
+    let fillId = this.identifierFillGradientCache;
+
+    if (this.dirtyFillGradient || this.dirtyFillGradientCache || fillId === ZERO_STR) fillId = generateIdForArtefact(this);
+
+    if (!fillId) return;
+
+    if (checkForWorkstoreItem(fillId)) return;
+
+    const myCell = requestCell(),
+        element = myCell.element,
+        engine = myCell.engine;
+
+    const [width, height] = refCell.get('dimensions');
+    const [x, y] = this.currentStampPosition;
+    const matrix = refCell.engine.getTransform();
+
+    element.width = width;
+    element.height = height;
+
+    myCell.rotateDestination(engine, x, y, this);
+    myCell.setEngine(this);
+    this.setLabelTextEngine(engine);
+
+    // Gradients don't understand the quirks of Label entity scaling
+    const tempScale = this.currentScale;
+    this.currentScale = 1;
+    grad.getData(this, refCell, FILL);
+    this.currentScale = tempScale;
+
+    this.setImageSmoothing(engine);
+
+    const pos = this.stampPositioningHelper();
+
+    engine.fillText(...pos);
+
+    if (this.useTextStyleForOutline) engine.strokeText(...pos);
+
+    if (this.defaultTextStyle && this.defaultTextStyle.includeUnderline && this.useTextStyleForUnderline) {
+
+        this.addUnderlineToGradientMask(myCell, pos, matrix);
+    }
+
+    if (this.showBoundingBox && this.useTextStyleForBoundingBox && this.pathObject) {
+
+        engine.save();
+        engine.lineWidth = this.boundingBoxLineWidth;
+        engine.setLineDash(this.boundingBoxLineDash || []);
+        engine.lineDashOffset = this.boundingBoxLineDashOffset || 0;
+        engine.stroke(this.pathObject);
+        engine.restore();
+    }
+
+    const data = engine.getImageData(0, 0, width, height);
+
+    // Sadly, the gradient engine doesn't understand the quirks of Label entity scaling either
+    this.currentScale = 1;
+
+    const success = gradientEngine.action({
+        fixedGradientData: getFixedGradientData(grad, FILL),
+        identifier: fillId,
+        imageData: data,
+        entity: this,
+        matrix,
+    });
+    this.currentScale = tempScale;
+
+    if (success) {
+
+        this.identifierFillGradientCache = fillId;
+        this.dirtyFillGradient = false;
+        this.dirtyFillGradientCache = false;
+        this.dirtyFilterIdentifier = true;
+    }
+    else this.dirtyFillGradientCache = true;
+
+    releaseCell(myCell);
+};
+
+P.setLabelTextEngine = function (engine) {
+
+    const textStyle = this.defaultTextStyle;
+
+    engine.font = textStyle.canvasFont;
+    engine.fontKerning = textStyle.fontKerning;
+    engine.fontStretch = textStyle.fontStretch;
+    engine.fontVariantCaps = textStyle.fontVariantCaps;
+    engine.textRendering = textStyle.textRendering;
+    engine.letterSpacing = textStyle.letterSpacing;
+    engine.wordSpacing = textStyle.wordSpacing;
+    engine.direction = textStyle.direction;
+    engine.textAlign = LEFT;
+    engine.textBaseline = TOP;
+
+    engine.shadowOffsetX = 0;
+    engine.shadowOffsetY = 0;
+    engine.shadowBlur = 0;
+    engine.fillStyle = BLACK;
+    engine.strokeStyle = BLACK;
+};
+
+P.stampLabelDirect = function (engine, pos) {
+
+    const method = this.defaultTextStyle.method,
+        complexFill = this.useFillGradientCache,
+        textFillColor = this.getLabelTextFillColor();
+
+    if (
+        (!complexFill || !this.useTextStyleForOutline) &&
+        this.methodDrawsOutlineBeforeFill(method)
+    ) {
+        this.drawLabelOutline(
+            engine,
+            pos,
+            this.useTextStyleForOutline ? textFillColor : null
+        );
+    }
+
+    if (method !== DRAW) {
+
+        engine.fillStyle = textFillColor;
+        engine.fillText(...pos);
+    }
+};
+
+P.stampLabelGradientFill = function (host) {
+
+    const identifier = this.identifierFillGradientCache;
+
+    if (!identifier) return;
+
+    const data = getWorkstoreItem(identifier);
+
+    if (data && data.w && data.h && data.imageData) {
+
+        const { x, y, w, h, imageData } = data;
+
+        const myCell = requestCell();
+
+        const {
+            element,
+            engine,
+        } = myCell;
+
+        element.width = w;
+        element.height = h;
+
+        engine.putImageData(imageData, 0, 0);
+
+        const hostEngine = host.engine;
+
+        hostEngine.save();
+        hostEngine.resetTransform();
+        hostEngine.drawImage(element, x, y);
+        hostEngine.restore();
+
+        releaseCell(myCell);
+    }
+};
+
+P.addUnderlineToGradientMask = function (targetCell, pos) {
+
+    const {
+        currentDimensions,
+        currentScale,
+        currentStampPosition,
+        defaultTextStyle,
+        fontVerticalOffset,
+    } = this;
+
+    const {
+        underlineGap,
+        underlineOffset,
+        underlineWidth,
+    } = defaultTextStyle;
+
+    const [, x, y] = pos;
+    const [localWidth, localHeight] = currentDimensions;
+
+    const underlineStartY = y + (underlineOffset * localHeight) - fontVerticalOffset * currentScale;
+    const underlineDepth = underlineWidth * currentScale;
+
+    const {
+        element: targetElement,
+        engine: targetEngine,
+    } = targetCell;
+
+    const mycell = requestCell(targetElement.width, targetElement.height);
+
+    const {
+        element,
+        engine,
+    } = mycell;
+
+    element.width = targetElement.width;
+    element.height = targetElement.height;
+
+    mycell.rotateDestination(engine, ...currentStampPosition, this);
+
+    engine.fillStyle = BLACK;
+    engine.strokeStyle = BLACK;
+    engine.font = defaultTextStyle.canvasFont;
+    engine.fontKerning = defaultTextStyle.fontKerning;
+    engine.fontStretch = defaultTextStyle.fontStretch;
+    engine.fontVariantCaps = defaultTextStyle.fontVariantCaps;
+    engine.textRendering = defaultTextStyle.textRendering;
+    engine.letterSpacing = defaultTextStyle.letterSpacing;
+    engine.lineCap = ROUND;
+    engine.lineJoin = ROUND;
+    engine.wordSpacing = defaultTextStyle.wordSpacing;
+    engine.direction = defaultTextStyle.direction;
+    engine.textAlign = LEFT;
+    engine.textBaseline = TOP;
+    engine.lineWidth = (underlineGap * 2) * currentScale;
+
+    this.setImageSmoothing(engine);
+
+    engine.strokeText(...pos);
+    engine.fillText(...pos);
+
+    engine.globalCompositeOperation = SOURCE_OUT;
+    engine.fillRect(x, underlineStartY, localWidth, underlineDepth);
+
+    targetEngine.save();
+    targetEngine.resetTransform();
+    targetEngine.globalCompositeOperation = SOURCE_OVER;
+    targetEngine.drawImage(element, 0, 0);
+    targetEngine.restore();
+
+    releaseCell(mycell);
 };
 
 // `stampPositioningHelper` - internal helper function
@@ -392,220 +770,22 @@ P.stampPositioningHelper = function () {
     return [text, x, y];
 }
 
-// `underlineEngine` - internal helper function
-P.underlineEngine = function (host, pos) {
-
-    // Setup constants
-    const {
-        currentDimensions,
-        currentScale,
-        currentStampPosition,
-        defaultTextStyle,
-        fontVerticalOffset,
-    } = this;
-
-    const {
-        underlineGap,
-        underlineOffset,
-        underlineStyle,
-        underlineWidth,
-    } = defaultTextStyle;
-
-    const [, x, y] = pos;
-    const [localWidth, localHeight] = currentDimensions;
-
-    const underlineStartY = y + (underlineOffset * localHeight) - fontVerticalOffset * currentScale;
-    const underlineDepth = underlineWidth * currentScale;
-
-    // Setup the cell parts
-    const { element, engine } = host;
-
-    const mycell = requestCell(element.width, element.height);
-
-    const {
-        element: underlineElement,
-        engine: underlineEngine,
-    } = mycell;
-
-    mycell.rotateDestination(underlineEngine, ...currentStampPosition, this);
-
-    // Setup the underline context
-    underlineEngine.fillStyle = BLACK;
-    underlineEngine.strokeStyle = BLACK;
-    underlineEngine.font = defaultTextStyle.canvasFont;
-    underlineEngine.fontKerning = defaultTextStyle.fontKerning;
-    underlineEngine.fontStretch = defaultTextStyle.fontStretch;
-    underlineEngine.fontVariantCaps = defaultTextStyle.fontVariantCaps;
-    underlineEngine.textRendering = defaultTextStyle.textRendering;
-    underlineEngine.letterSpacing = defaultTextStyle.letterSpacing;
-    underlineEngine.lineCap = ROUND;
-    underlineEngine.lineJoin = ROUND;
-    underlineEngine.wordSpacing = defaultTextStyle.wordSpacing;
-    underlineEngine.direction = defaultTextStyle.direction;
-    underlineEngine.textAlign = LEFT;
-    underlineEngine.textBaseline = TOP;
-    underlineEngine.lineWidth = (underlineGap * 2) * currentScale;
-
-    this.setImageSmoothing(underlineEngine);
-
-    // Underlines can take their own styling, or use the fillStyle set on the Label entity
-    const uStyle = this.getStyle(underlineStyle, 'fillStyle', mycell);
-
-    // Generate the underline
-    underlineEngine.strokeText(...pos);
-    underlineEngine.fillText(...pos);
-
-    underlineEngine.globalCompositeOperation = 'source-out';
-    underlineEngine.fillStyle = uStyle;
-
-    underlineEngine.fillRect(x, underlineStartY, localWidth, underlineDepth);
-
-    // Copy the underline over to the real cell
-    engine.save();
-    engine.resetTransform();
-
-    this.setImageSmoothing(engine);
-
-    engine.drawImage(underlineElement, 0, 0);
-    engine.restore();
-
-    // Release the temporary cell
-    releaseCell(mycell);
-};
-
-// `drawBoundingBox` - internal helper function called by `method` functions
-P.drawBoundingBox = function (host) {
-
-    if (this.pathObject) {
-
-        const uStroke = this.getStyle(this.boundingBoxStyle, 'fillStyle', host);
-        const engine = host.engine;
-
-        engine.save();
-        engine.strokeStyle = uStroke;
-        engine.lineWidth = this.boundingBoxLineWidth;
-        engine.setLineDash(this.boundingBoxLineDash || []);
-        engine.lineDashOffset = this.boundingBoxLineDashOffset || 0;
-        engine.globalCompositeOperation = SOURCE_OVER;
-        engine.globalAlpha = 1;
-        engine.shadowOffsetX = 0;
-        engine.shadowOffsetY = 0;
-        engine.shadowBlur = 0;
-
-        this.setImageSmoothing(engine);
-
-        engine.stroke(this.pathObject);
-        engine.restore();
-    }
-};
-
-
-// `draw` - stroke the entity outline with the entity's `strokeStyle` color, gradient or pattern - including shadow
+// Overwrite stamp functions from mixin/entity.js
 P.draw = function (host) {
 
-    if (this.currentFontIsLoaded) {
-
-        const engine = host.engine;
-
-        const pos = this.stampPositioningHelper();
-
-        if (this.defaultTextStyle && this.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
-
-        engine.strokeText(...pos);
-
-        if (this.showBoundingBox) this.drawBoundingBox(host);
-    }
+    const pos = this.stampPositioningHelper();
+    this.postProcessLabelDecorations(host, pos);
 };
 
-// `fill` - fill the entity with the entity's `fillStyle` color, gradient or pattern - including shadow
 P.fill = function (host) {
 
-    if (this.currentFontIsLoaded) {
-
-        const engine = host.engine;
-        const pos = this.stampPositioningHelper();
-
-        if (this.defaultTextStyle && this.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
-
-        engine.fillText(...pos);
-
-        if (this.showBoundingBox) this.drawBoundingBox(host);
-    }
+    this.stampLabelDirect(host.engine, this.stampPositioningHelper());
 };
 
-// `drawAndFill` - stamp the entity stroke, then fill, then remove shadow and repeat
-P.drawAndFill = function (host) {
-
-    if (this.currentFontIsLoaded) {
-
-        const engine = host.engine;
-        const pos = this.stampPositioningHelper();
-
-        if (this.defaultTextStyle && this.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
-
-        engine.strokeText(...pos);
-        engine.fillText(...pos);
-        this.currentHost.clearShadow();
-        engine.strokeText(...pos);
-        engine.fillText(...pos);
-
-        if (this.showBoundingBox) this.drawBoundingBox(host);
-    }
-};
-
-// `drawAndFill` - stamp the entity fill, then stroke, then remove shadow and repeat
-P.fillAndDraw = function (host) {
-
-    if (this.currentFontIsLoaded) {
-
-        const engine = host.engine;
-        const pos = this.stampPositioningHelper();
-
-        if (this.defaultTextStyle && this.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
-
-        engine.fillText(...pos);
-        engine.strokeText(...pos);
-        this.currentHost.clearShadow();
-        engine.fillText(...pos);
-        engine.strokeText(...pos);
-
-        if (this.showBoundingBox) this.drawBoundingBox(host);
-    }
-};
-
-// `drawThenFill` - stroke the entity's outline, then fill it (shadow applied twice)
-P.drawThenFill = function (host) {
-
-    if (this.currentFontIsLoaded) {
-
-        const engine = host.engine;
-        const pos = this.stampPositioningHelper();
-
-        if (this.defaultTextStyle && this.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
-
-        engine.strokeText(...pos);
-        engine.fillText(...pos);
-
-        if (this.showBoundingBox) this.drawBoundingBox(host);
-    }
-};
-
-// `fillThenDraw` - fill the entity's outline, then stroke it (shadow applied twice)
-P.fillThenDraw = function (host) {
-
-    if (this.currentFontIsLoaded) {
-
-        const engine = host.engine;
-        const pos = this.stampPositioningHelper();
-
-        if (this.defaultTextStyle && this.defaultTextStyle.includeUnderline) this.underlineEngine(host, pos);
-
-        engine.fillText(...pos);
-        engine.strokeText(...pos);
-
-        if (this.showBoundingBox) this.drawBoundingBox(host);
-    }
-};
+P.drawAndFill = P.fill;
+P.fillAndDraw = P.fill;
+P.drawThenFill = P.fill;
+P.fillThenDraw = P.fill;
 
 // `clip` - restrict drawing activities to the entity's enclosed area
 P.clip = function (host) {
@@ -633,6 +813,207 @@ P.clear = function (host) {
 
 // `none` - perform all the calculations required, but don't perform the final stamping
 P.none = λnull;
+
+P.postProcessLabelDecorations = function (host, pos) {
+
+    if (!this.currentFontIsLoaded) return;
+
+    const engine = host.engine,
+        textStyle = this.defaultTextStyle,
+        complexFill = this.useFillGradientCache,
+        textFillColor = this.getLabelTextFillColor();
+
+    if (!engine || !textStyle) return;
+
+    if (
+        (!complexFill || !this.useTextStyleForOutline) &&
+        this.methodDrawsOutlineAfterFill(textStyle.method)
+    ) {
+        this.drawLabelOutline(
+            engine,
+            pos,
+            this.useTextStyleForOutline ? textFillColor : null
+        );
+    }
+
+    if (
+        textStyle.includeUnderline &&
+        (!complexFill || !this.useTextStyleForUnderline)
+    ) {
+        this.underlineEngine(
+            host,
+            pos,
+            this.useTextStyleForUnderline ? textFillColor : null
+        );
+    }
+
+    if (
+        this.showBoundingBox &&
+        (!complexFill || !this.useTextStyleForBoundingBox)
+    ) {
+        this.drawBoundingBox(
+            host,
+            this.useTextStyleForBoundingBox ? textFillColor : null
+        );
+    }
+};
+
+P.getLabelTextFillColor = function () {
+
+    return this.getLabelColorOnlyStyle(this.state.fillStyle);
+};
+
+P.methodDrawsOutlineBeforeFill = function (method) {
+
+    return METHODS_USING_DRAW_FIRST.includes(method);
+};
+
+P.methodDrawsOutlineAfterFill = function (method) {
+
+    return METHODS_USING_DRAW_LAST.includes(method);
+};
+
+P.drawLabelOutline = function (engine, pos, style = null) {
+
+    if (this.state) {
+
+        engine.save();
+
+        engine.strokeStyle = style || this.getLabelColorOnlyStyle(this.state.strokeStyle);
+        engine.fillStyle = this.getLabelTextFillColor();
+
+        engine.shadowOffsetX = 0;
+        engine.shadowOffsetY = 0;
+        engine.shadowBlur = 0;
+
+        this.setImageSmoothing(engine);
+
+        engine.strokeText(...pos);
+        engine.restore();
+    }
+};
+
+P.getLabelColorOnlyStyle = function (item, fallback = BLACK) {
+
+    if (!item) return fallback;
+
+    if (item.substring) {
+
+        if (stylesnames.includes(item)) {
+
+            const obj = styles[item];
+
+            if (obj && obj.type === T_COLOR) return obj.get('color');
+
+            return fallback;
+        }
+        return item;
+    }
+
+    if (item.name && item.type && item.type === T_COLOR) return item.get();
+
+    return fallback;
+};
+
+// `underlineEngine` - internal helper function
+P.underlineEngine = function (host, pos, style = null) {
+
+    const {
+        currentDimensions,
+        currentScale,
+        currentStampPosition,
+        defaultTextStyle,
+        fontVerticalOffset,
+    } = this;
+
+    const {
+        underlineGap,
+        underlineOffset,
+        underlineStyle,
+        underlineWidth,
+    } = defaultTextStyle;
+
+    const [, x, y] = pos;
+    const [localWidth, localHeight] = currentDimensions;
+
+    const underlineStartY = y + (underlineOffset * localHeight) - fontVerticalOffset * currentScale;
+    const underlineDepth = underlineWidth * currentScale;
+
+    const { element, engine } = host;
+
+    const mycell = requestCell(element.width, element.height);
+
+    const {
+        element: underlineElement,
+        engine: underlineEngine,
+    } = mycell;
+
+    mycell.rotateDestination(underlineEngine, ...currentStampPosition, this);
+
+    underlineEngine.fillStyle = BLACK;
+    underlineEngine.strokeStyle = BLACK;
+    underlineEngine.font = defaultTextStyle.canvasFont;
+    underlineEngine.fontKerning = defaultTextStyle.fontKerning;
+    underlineEngine.fontStretch = defaultTextStyle.fontStretch;
+    underlineEngine.fontVariantCaps = defaultTextStyle.fontVariantCaps;
+    underlineEngine.textRendering = defaultTextStyle.textRendering;
+    underlineEngine.letterSpacing = defaultTextStyle.letterSpacing;
+    underlineEngine.lineCap = ROUND;
+    underlineEngine.lineJoin = ROUND;
+    underlineEngine.wordSpacing = defaultTextStyle.wordSpacing;
+    underlineEngine.direction = defaultTextStyle.direction;
+    underlineEngine.textAlign = LEFT;
+    underlineEngine.textBaseline = TOP;
+    underlineEngine.lineWidth = (underlineGap * 2) * currentScale;
+
+    this.setImageSmoothing(underlineEngine);
+
+    const uStyle = style || this.getLabelColorOnlyStyle(underlineStyle);
+
+    underlineEngine.strokeText(...pos);
+    underlineEngine.fillText(...pos);
+
+    underlineEngine.globalCompositeOperation = 'source-out';
+    underlineEngine.fillStyle = uStyle;
+
+    underlineEngine.fillRect(x, underlineStartY, localWidth, underlineDepth);
+
+    engine.save();
+    engine.resetTransform();
+
+    this.setImageSmoothing(engine);
+
+    engine.drawImage(underlineElement, 0, 0);
+    engine.restore();
+
+    releaseCell(mycell);
+};
+
+// `drawBoundingBox` - internal helper function called by `method` functions
+P.drawBoundingBox = function (host, style = null) {
+
+    if (this.pathObject) {
+
+        const uStroke = style || this.getLabelColorOnlyStyle(this.boundingBoxStyle);
+        const engine = host.engine;
+
+        engine.save();
+        engine.strokeStyle = uStroke;
+        engine.lineWidth = this.boundingBoxLineWidth;
+        engine.setLineDash(this.boundingBoxLineDash || []);
+        engine.lineDashOffset = this.boundingBoxLineDashOffset || 0;
+        engine.globalCompositeOperation = SOURCE_OVER;
+        engine.globalAlpha = 1;
+        engine.shadowOffsetX = 0;
+        engine.shadowOffsetY = 0;
+        engine.shadowBlur = 0;
+
+        this.setImageSmoothing(engine);
+
+        engine.stroke(this.pathObject);
+        engine.restore();
+    }
+};
 
 
 // #### Factory
