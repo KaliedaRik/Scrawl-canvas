@@ -5,7 +5,7 @@
 
 
 // #### Imports
-import { artefact, asset, constructors, group, tween } from '../core/library.js';
+import { artefact, asset, constructors, group, tween, stylesnames, cellnames } from '../core/library.js';
 
 import { makeState } from '../untracked-factory/state.js';
 import { makeTextStyle } from '../untracked-factory/text-style.js';
@@ -27,7 +27,7 @@ import textMix from '../mixin/text.js';
 import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, removeItem, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 // Shared constants
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, AUTO, BOTTOM, CENTER, DESTINATION_OVER, END, ENTITY, FILL, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, START, T_CELL, T_ENHANCED_LABEL, T_GROUP, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, AUTO, BLACK, BOTTOM, CENTER, DESTINATION_OVER, END, ENTITY, FILL, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, START, T_CELL, T_COLOR, T_ENHANCED_LABEL, T_GROUP, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const DRAW = 'draw',
@@ -678,6 +678,35 @@ P.getTester = function () {
     return null;
 };
 
+P.getStyle = function (val, stateAlternative) {
+
+    if (!val && stateAlternative) val = this.state[stateAlternative];
+
+    if (val == null || val === ZERO_STR) return BLACK;
+
+    // String handling
+    if (val.substring) {
+
+        // Reject all SC registered styles and cells
+        if (stylesnames.includes(val)) return BLACK;
+        if (cellnames.includes(val)) return BLACK;
+
+        // Assume remaining strings are CSS colours
+        return val;
+    }
+
+    // SC objects
+    if (val && val.type) {
+
+        // Reject everything except Color objects
+        if (val.get && val.type === T_COLOR) return val.get();
+
+        return BLACK;
+    }
+
+    return BLACK;
+};
+
 // `makeWorkingTextStyle` - Clone a TextStyle object
 P.makeWorkingTextStyle = function (template) {
 
@@ -693,6 +722,13 @@ P.makeWorkingTextStyle = function (template) {
 P.setEngineFromWorkingTextStyle = function (worker, style, state, cell) {
 
     this.updateWorkingTextStyle(worker, style);
+
+    worker.fillStyle = this.getStyle(worker.fillStyle, 'fillStyle', cell);
+    worker.strokeStyle = this.getStyle(worker.strokeStyle, 'strokeStyle', cell);
+    worker.underlineStyle = this.getStyle(worker.underlineStyle, 'fillStyle', cell);
+    worker.overlineStyle = this.getStyle(worker.overlineStyle, 'fillStyle', cell);
+    worker.highlightStyle = this.getStyle(worker.highlightStyle, 'fillStyle', cell);
+
     state.set(worker);
     cell.setEngine(this);
 };
@@ -2852,9 +2888,6 @@ P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
 
-// Temporary fix to make sure the gradient cache flags are appropriately set before running through the remainder of this function
-    this.setGradientCacheFlags();
-
     const layoutTemplate = this.layoutTemplate;
 
     this.currentDimensions = layoutTemplate.currentDimensions;
@@ -3267,8 +3300,9 @@ P.createTextCellsForPath = function (host) {
 
                         method = localStyle.method || currentTextStyle.method;
 
-                        if (localStyle.fillStyle) mEngine.fillStyle = localStyle.fillStyle;
-                        if (localStyle.strokeStyle) mEngine.strokeStyle = localStyle.strokeStyle;
+                        if (localStyle.fillStyle) mEngine.fillStyle = this.getStyle(localStyle.fillStyle, 'fillStyle', mCell);
+
+                        if (localStyle.strokeStyle) mEngine.strokeStyle = this.getStyle(localStyle.strokeStyle, 'strokeStyle', mCell);
 
                         switch (method) {
 
@@ -3412,8 +3446,9 @@ P.createTextCellsForSpace = function (host) {
 
                         method = localStyle.method || currentTextStyle.method;
 
-                        if (localStyle.fillStyle) mEngine.fillStyle = localStyle.fillStyle;
-                        if (localStyle.strokeStyle) mEngine.strokeStyle = localStyle.strokeStyle;
+                    if (localStyle.fillStyle) mEngine.fillStyle = this.getStyle(localStyle.fillStyle, 'fillStyle', mCell);
+
+                    if (localStyle.strokeStyle) mEngine.strokeStyle = this.getStyle(localStyle.strokeStyle, 'strokeStyle', mCell);
 
                         switch (method) {
 
