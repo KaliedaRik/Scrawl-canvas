@@ -64,11 +64,16 @@ const blocky = scrawl.makeBlock({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
+/** @ts-expect-error */
+    const isClassic = graddy.isClassic;
+
     return `
     Palette - start: ${dom['paletteStart'].value}; end: ${dom['paletteEnd'].value}
     Start - x: ${dom['startX'].value}%; y: ${dom['startY'].value}%; radius: ${dom['startRadius'].value}
     End - x: ${dom['endX'].value}%; y: ${dom['endY'].value}%; radius: ${dom['endRadius'].value}
-    Precision: ${dom['precision'].value}`;
+    Precision: ${dom['precision'].value}
+
+    isClassic: ${isClassic}`;
 });
 
 // Create the Display cycle animation

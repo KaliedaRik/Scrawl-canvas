@@ -5,7 +5,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, generateUniqueString, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
+import { doCreate, generateIdForArtefact, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
 import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
@@ -168,13 +168,14 @@ P.updateGradientArgs = function (x, y, roll) {
     gradientArgs.push(angle, sx, sy);
 };
 
-
 // Overwrite styles.updateIdentifier function
 P.updateIdentifier = function () {
 
-    if (this.spread !== PAD || this.swirlDistance || this.angleRange !== 360 || this.operations.length) this.identifier = `${this.type}_${this.name}_${generateUniqueString()}`;
-    else this.identifier = ZERO_STR;
+    this.identifier = generateIdForArtefact(this);
+
+    this.isClassic = !(this.spread !== PAD || this.swirlDistance || this.angleRange !== 360 || this.operations.length);
 };
+
 
 // #### Factory
 // ```

@@ -64,13 +64,18 @@ const blocky = scrawl.makeBlock({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
+/** @ts-expect-error */
+    const isClassic = graddy.isClassic;
+
     return `
     Palette - start: ${dom.paletteStart.value}; end: ${dom.paletteEnd.value}
     Start - x: ${dom.startX.value}%; y: ${dom.startY.value}%
     Precision: ${dom.precision.value}
     Angle: ${dom.angle.value}°
     Angle range: ${dom.angleRange.value}°
-    Swirl distance: ${dom.swirlDistance.value}px`;
+    Swirl distance: ${dom.swirlDistance.value}px
+
+    isClassic: ${isClassic}`;
 });
 
 

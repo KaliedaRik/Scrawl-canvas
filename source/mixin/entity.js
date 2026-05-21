@@ -692,7 +692,6 @@ export default function (P = Ωempty) {
             this.dirtyDimensions = true;
         }
 
-// Temporary fix to make sure the gradient cache flags are appropriately set before running through the remainder of this function
         this.setGradientCacheFlags();
 
 // A number of updates (__scale__, __dimensions__, __start__, __offset__, __handle__) require the entity to recalculate its Path2D object - if any of them are set, then the entity sets its own `dirtyPathObject` flag as a result.
@@ -770,25 +769,9 @@ export default function (P = Ωempty) {
 // We need to do work for gradients up-front - if fillStyle or strokeStyle are set to a gradient, then we need to determine if the gradient is "classic" or not.
 // + Classic gradients are rendered through the Canvas API
 // + Non-classic gradients (any gradient that reflects, repeats, or sets areas outside its boundaries to transparent) are not supported by the Canvas API and need to be rendered by SC instead
-    P.requiresGradientCache = function (grad) {
-
-        if (!grad || !GRADIENTS_ARR.includes(grad.type)) return false;
-
-        if (grad.operations && grad.operations.length) return true;
-
-        if (
-            grad.type === T_CONIC_GRADIENT &&
-            (grad.angleRange < 360 || grad.swirlDistance)
-        ) return true;
-
-        return grad.spread !== PAD;
-    };
-
     P.setGradientCacheFlags = function () {
 
         let fillGradient, drawGradient;
-
-        const required = this.requiresGradientCache;
 
         if (this.state) {
 
@@ -798,9 +781,10 @@ export default function (P = Ωempty) {
             drawGradient = strokeStyle.substring ? styles[strokeStyle] : strokeStyle;
         }
 
-        this.useFillGradientCache = required(fillGradient);
-        this.useDrawGradientCache = required(drawGradient);
+        this.useFillGradientCache = (fillGradient) ? !fillGradient.isClassic : false;
+        this.useDrawGradientCache = (drawGradient) ? !drawGradient.isClassic : false;
     };
+
 
 // ##### Step 2: invoke the entity's stamp action
 // `stamp` - this is the function invoked by Group objects as they cascade the Display cycle __compile__ step through to their member artefacts.

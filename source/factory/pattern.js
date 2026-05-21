@@ -39,6 +39,8 @@ const Pattern = function (items = Ωempty) {
     this.dirtyImageSubscribers = true;
     this.patternMatrix = null;
 
+    this.isClassic = true;
+
     this.set(items);
 
     return this;

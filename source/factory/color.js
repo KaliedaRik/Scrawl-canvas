@@ -71,6 +71,8 @@ const Color = function (items = Ωempty) {
     this.currentMinimumColorReturnData = [];
     this.currentMinimumColorString = '';
 
+    this.isClassic = true;
+
     this.set(this.defs);
 
     this.easing = LINEAR;

@@ -802,6 +802,8 @@ export default function (P = Ωempty) {
         this.drawSubscribers = [];
         this.operations = [];
 
+        this.isClassic = true;
+
         this.set(this.defs);
 
         this.set(items);
@@ -1040,13 +1042,21 @@ export default function (P = Ωempty) {
             if (ent) ent.dirtyDrawGradient = true;
         });
     };
+    // P.updateIdentifier = function () {
+
+    //     if (IDENTIFIED_STYLES.includes(this.type)) {
+
+    //         if (this.spread === PAD && !this.operations.length) this.identifier = ZERO_STR;
+    //         else this.identifier = generateIdForArtefact(this);
+    //     }
+    //     else this.identifier = ZERO_STR;
+    // };
+
     P.updateIdentifier = function () {
 
-        if (IDENTIFIED_STYLES.includes(this.type)) {
+        this.identifier = generateIdForArtefact(this);
 
-            if (this.spread === PAD && !this.operations.length) this.identifier = ZERO_STR;
-            else this.identifier = generateIdForArtefact(this);
-        }
-        else this.identifier = ZERO_STR;
+        if (IDENTIFIED_STYLES.includes(this.type)) this.isClassic = (this.spread === PAD && !this.operations.length);
+        else this.isClassic = true;
     };
 }

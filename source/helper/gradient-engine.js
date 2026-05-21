@@ -53,18 +53,12 @@ P.action = function (packet) {
         const itemInWorkstore = checkForWorkstoreItem(identifier);
         if (itemInWorkstore) return true;
 
-        // Special circumstances apply to the Label entity, which requires classic gradients to be processed as software gradients
-        const entityIsLabel = entity.type === T_LABEL;
-
-        if (!entityIsLabel && !gradient.identifier) return false;
+        if (!gradient.identifier) return false;
 
         // See if we have a stashed gradient
         const { width, height, data } = imageData;
 
-        let gradientId;
-
-        if (entityIsLabel && gradient.identifier) gradientId = `${entity.name}-label-gradient}-${width}-${height}`;
-        else gradientId = `${gradient.identifier}-${width}-${height}`;
+        const gradientId = `${gradient.identifier}-${width}-${height}`;
 
         let gradientData = getWorkstoreItem(gradientId);
 

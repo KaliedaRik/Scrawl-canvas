@@ -342,7 +342,6 @@ P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
 
-// Temporary fix to make sure the gradient cache flags are appropriately set before running through the remainder of this function
     this.setGradientCacheFlags();
 
     if (this.useParticlesAsPins) this.dirtyPins = true;

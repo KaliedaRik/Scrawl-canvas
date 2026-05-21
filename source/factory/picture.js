@@ -504,7 +504,6 @@ P.prepareStamp = function() {
         }
     }
 
-// Temporary fix to make sure the gradient cache flags are appropriately set before running through the remainder of this function
     this.setGradientCacheFlags();
 
     //  See the [entity mixin function](http://localhost:8080/docs/source/mixin/entity.html#section-31) for details on the following checks and actions

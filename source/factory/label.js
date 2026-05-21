@@ -409,25 +409,22 @@ P.cleanHandle = function () {
     if (mimicked && mimicked.length) this.dirtyMimicHandle = true;
 };
 
-P.requiresGradientCache = function (grad) {
-
-    return !!(grad && GRADIENTS_ARR.includes(grad.type));
-};
-
+// Overwrites the function in mixin/entity.js
 P.setGradientCacheFlags = function () {
 
     let fillGradient;
 
     if (this.state) {
 
-        const { fillStyle } = this.state;
+        const fillStyle = this.state.fillStyle;
 
         fillGradient = fillStyle.substring ? styles[fillStyle] : fillStyle;
     }
 
-    this.useFillGradientCache = this.requiresGradientCache(fillGradient);
+    this.useFillGradientCache = (fillGradient) ? !fillGradient.isClassic : false;
     this.useDrawGradientCache = false;
 };
+
 
 // #### Display cycle functions
 
