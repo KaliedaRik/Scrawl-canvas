@@ -1,0 +1,105 @@
+name: Bug report
+description: Report a Scrawl-canvas bug or unexpected behaviour
+title: "[Bug]: "
+labels:
+  - bug
+
+body:
+
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue.
+
+        Scrawl-canvas reports work best when they are concise and grounded in observable behaviour.
+
+        AI-assisted reports are welcome.
+
+        Please prioritise:
+        - what happened
+        - how to reproduce it
+        - what you expected
+
+        Please avoid:
+        - speculative analysis of internal behaviour
+        - assumptions about Scrawl-canvas architecture
+        - lengthy AI-generated explanations
+        - proposed fixes unless they have been tested
+
+        A short, reproducible report is usually more useful than a detailed diagnosis.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the observed behaviour.
+      placeholder: |
+        Example:
+        Label text using a software gradient appears vertically offset when outline also uses the text gradient.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: |
+        Smallest demo, code sample or sequence of steps that reproduces the issue.
+      placeholder: |
+        1. Create a Label entity
+        2. Apply software gradient fill
+        3. Set useTextStyleForOutline = true
+        4. Observe positioning
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      placeholder: |
+        Describe what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or demo link (optional)
+      description: |
+        Images or live demos are often helpful.
+
+  - type: input
+    id: version
+    attributes:
+      label: Scrawl-canvas version
+      placeholder: |
+        Example: 8.18.0
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Other
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: |
+        Example: macOS / Windows / Linux
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Before submitting
+      options:
+        - label: I have supplied a minimal reproduction or clear reproduction steps
+          required: true
+        - label: I have focused on describing the issue rather than speculating about internals
+          required: false
