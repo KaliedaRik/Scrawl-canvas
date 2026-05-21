@@ -391,7 +391,7 @@ export default function (P = Ωempty) {
             if (this.dirtyScale || this.dirtySpecies)  this.pathCalculatedOnce = false;
        }
 
-        if (this.dirtyRotation) {
+        if (this.dirtyRotation || this.dirtySpecies || this.dirtyPathObject) {
 
             if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
             if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;

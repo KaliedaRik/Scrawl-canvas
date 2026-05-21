@@ -367,6 +367,12 @@ P.factoryKill = function () {
 
         this.setGradientCacheFlags();
 
+        if (this.dirtyRotation || this.dirtySpecies || this.dirtyPathObject || this.dirtyPins.length || this.dirtyLock || this.dirtyStartControlLock || this.dirtyEndControlLock || this.dirtyControlLock || this.dirtyEndLock) {
+
+            if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+            if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+        }
+
         // `preparePinsForStamp` function defined in line, quadratic and bezier modules
         if (this.dirtyPins.length) {
 
