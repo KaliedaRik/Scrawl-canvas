@@ -69,7 +69,6 @@ canvas.buildCell({
     width: 50,
     height: 50,
     backgroundColor: 'lightblue',
-    compileOrder: 0,
     shown: false,
 });
 
@@ -105,7 +104,6 @@ canvas.buildCell({
     name: name('cat-pattern'),
     width: 150,
     height: 75,
-    compileOrder: 1,
     shown: false,
 });
 
@@ -122,9 +120,6 @@ scrawl.makePicture({
     spriteFrameDuration: 100,
 
 }).playSprite();
-
-
-canvas.setBase({ compileOrder: 2 });
 
 
 // We'll display the patterns in a Block entity which users can update and interact with, for testing

@@ -69,7 +69,7 @@ export default function (P = Ωempty) {
     };
 
 // `buildStyle` - internal function: creates the pattern on the Cell's CanvasRenderingContext2D engine.
-    P.buildStyle = function (mycell, entity, area) {
+    P.buildStyle = function (mycell, myentity, area) {
 
         if (mycell) {
 
@@ -112,11 +112,11 @@ export default function (P = Ωempty) {
                     matrix.f = patternShiftY;
 
                     if (
-                        (area === FILL && entity.lockFillStyleToEntity) ||
-                        (area === DRAW && entity.lockStrokeStyleToEntity)
+                        (area === FILL && myentity.lockFillStyleToEntity) ||
+                        (area === DRAW && myentity.lockStrokeStyleToEntity)
                     ) {
 
-                        const scale = entity.currentScale || 1;
+                        const scale = myentity.currentScale || 1;
 
                         // Entity scale is not part of the canvas transform.
                         // + Add it only when the pattern is entity-locked.

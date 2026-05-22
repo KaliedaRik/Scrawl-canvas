@@ -164,11 +164,11 @@ export default function (P = Ωempty) {
 
     // `getData` function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.
     // + This is the point when we clean Scrawl-canvas assets which have told their subscribers that asset data/attributes have updated
-    P.getData = function (entity, cell) {
+    P.getData = function (myentity, mycell, area) {
 
         this.notifySubscribers();
 
-        return this.buildStyle(cell);
+        return this.buildStyle(mycell, myentity, area);
     };
 
     // `notifySubscribers` - If the gradient is to be animated, then we need to update the asset at some point (generally the start) of each Display cycle by invoking this function

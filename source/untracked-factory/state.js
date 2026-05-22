@@ -283,8 +283,6 @@ P.getChanges = function (ent, engineState) {
 
             if (desired !== current) result[k] = desired;
         }
-
-        // if (current !== desired) result[k] = desired;
     }
 
     // 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit'

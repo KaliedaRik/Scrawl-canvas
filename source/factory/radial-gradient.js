@@ -149,11 +149,11 @@ P.cleanRadius = function (width) {
 };
 
 // `buildStyle` - internal function: creates the radial gradient on the Cell's CanvasRenderingContext2D engine, and then adds the color stops to it.
-P.buildStyle = function (cell, entity) {
+P.buildStyle = function (cell, myentity) {
 
     if (cell) {
 
-        entity.useGradientCache = false;
+        myentity.useGradientCache = false;
 
         const engine = cell.engine;
 

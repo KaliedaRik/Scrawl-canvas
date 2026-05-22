@@ -769,6 +769,7 @@ export default function (P = Ωempty) {
 // We need to do work for gradients up-front - if fillStyle or strokeStyle are set to a gradient, then we need to determine if the gradient is "classic" or not.
 // + Classic gradients are rendered through the Canvas API
 // + Non-classic gradients (any gradient that reflects, repeats, or sets areas outside its boundaries to transparent) are not supported by the Canvas API and need to be rendered by SC instead
+// + Additional checks to prevent Pattern/Color object styles being marked as cache-able
     P.setGradientCacheFlags = function () {
 
         let fillGradient, drawGradient;
@@ -781,8 +782,13 @@ export default function (P = Ωempty) {
             drawGradient = strokeStyle.substring ? styles[strokeStyle] : strokeStyle;
         }
 
-        this.useFillGradientCache = (fillGradient) ? !fillGradient.isClassic : false;
-        this.useDrawGradientCache = (drawGradient) ? !drawGradient.isClassic : false;
+        this.useFillGradientCache = (fillGradient && GRADIENTS_ARR.includes(fillGradient.type)) ?
+            !fillGradient.isClassic :
+            false;
+
+        this.useDrawGradientCache = (drawGradient && GRADIENTS_ARR.includes(drawGradient.type)) ?
+            !drawGradient.isClassic :
+            false;
     };
 
 

@@ -547,11 +547,11 @@ P.checkSource = function (width, height) {
 };
 
 // `getData` - internal function, invoked when a Cell wrapper is used as an entity's pattern style
-P.getData = function (entity, mycell, area) {
+P.getData = function (myentity, mycell, area) {
 
-    this.checkSource(this.sourceNaturalDimensions[0], this.sourceNaturalDimensions[1]);
+    this.checkSource(...this.sourceNaturalDimensions);
 
-    return this.buildStyle(mycell, entity, area);
+    return this.buildStyle(mycell, myentity, area);
 };
 
 // `updateArtefacts` - passes the __items__ argument object through to each of the Cell's Groups for forwarding to their artefacts' `setDelta` function
