@@ -428,6 +428,12 @@ P.factoryKill = function () {
         if (this.dirtyOffset) this.cleanOffset();
         if (this.dirtyRotation) this.cleanRotation();
 
+        if (this.dirtyStampPositions || this.dirtyStampHandlePositions) {
+
+            if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+            if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+        }
+
         if (this.dirtyStampPositions) this.cleanStampPositions();
 
 // `cleanSpecies` - creates the SVG path String which will be used by `cleanPathObject` - each species creates the local path in its own way

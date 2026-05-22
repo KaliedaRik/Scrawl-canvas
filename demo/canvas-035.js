@@ -69,6 +69,7 @@ canvas.buildCell({
     width: 50,
     height: 50,
     backgroundColor: 'lightblue',
+    compileOrder: 0,
     shown: false,
 });
 
@@ -104,6 +105,7 @@ canvas.buildCell({
     name: name('cat-pattern'),
     width: 150,
     height: 75,
+    compileOrder: 1,
     shown: false,
 });
 
@@ -122,6 +124,9 @@ scrawl.makePicture({
 }).playSprite();
 
 
+canvas.setBase({ compileOrder: 2 });
+
+
 // We'll display the patterns in a Block entity which users can update and interact with, for testing
 const myBlock = scrawl.makeBlock({
 
@@ -132,6 +137,7 @@ const myBlock = scrawl.makeBlock({
     dimensions: [300, 200],
 
     fillStyle: name('bunny-pattern'),
+    lockFillStyleToEntity: true,
 
     lineWidth: 6,
     strokeStyle: 'black',
@@ -144,13 +150,10 @@ const myBlock = scrawl.makeBlock({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
-    const bunny = scrawl.findPattern(name('bunny-pattern'));
-
     return `
-    Matrix: [${bunny.get('matrixA')}, ${bunny.get('matrixB')}, ${bunny.get('matrixC')}, ${bunny.get('matrixD')}, ${bunny.get('matrixE')}, ${bunny.get('matrixF')}]
-    stretchX: ${bunny.get('stretchX')}, stretchY: ${bunny.get('stretchY')}
-    skewX: ${bunny.get('skewX')}, skewY: ${bunny.get('skewY')}
-    shiftX: ${bunny.get('shiftX')}, shiftY: ${bunny.get('shiftY')}`;
+    stretchX: ${dom['patternStretchX'].value}, stretchY: ${dom['patternStretchY'].value}
+    skewX: ${dom['patternSkewX'].value}, skewY: ${dom['patternSkewY'].value}
+    shiftX: ${dom['patternShiftX'].value}, shiftY: ${dom['patternShiftY'].value}`;
 });
 
 
@@ -209,6 +212,8 @@ scrawl.makeUpdater({
 
         upend: ['flipUpend', 'boolean'],
         reverse: ['flipReverse', 'boolean'],
+
+        lockFillStyleToEntity: ['lockFillStyleToEntity', 'boolean'],
     },
 });
 
@@ -258,7 +263,15 @@ scrawl.addNativeListener(['input', 'change'], updateMatrix, '.matrix');
 
 
 // Setup form
-scrawl.initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
+    ['input', 'patternStretchX', '1'],
+    ['input', 'patternSkewX', '0'],
+    ['input', 'patternShiftX', '0'],
+    ['input', 'patternStretchY', '1'],
+    ['input', 'patternSkewY', '0'],
+    ['input', 'patternShiftY', '0'],
+    ['select', 'lockFillStyleToEntity', 1],
+
     ['input', 'absoluteHeight', '200'],
     ['input', 'absoluteWidth', '300'],
     ['input', 'handle_xAbsolute', '150'],

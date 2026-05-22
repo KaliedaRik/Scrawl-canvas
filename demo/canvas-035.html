@@ -59,31 +59,37 @@
 
     <div class="blue label">Matrix</div>
 
-    <div class="blue">Stretch X: <input class="controlItem matrix" id="matrixA" type="range" value="1" min="-2" max="2" step="0.01" /></div>
+    <div class="blue">Stretch X: <input class="controlItem matrix" id="patternStretchX" type="range" value="1" min="-2" max="2" step="0.01" /></div>
 
-    <div class="blue">Skew X: <input class="controlItem matrix" id="matrixC" type="range" value="0" min="-2" max="2" step="0.01" /></div>
+    <div class="blue">Skew X: <input class="controlItem matrix" id="patternSkewX" type="range" value="0" min="-2" max="2" step="0.01" /></div>
 
 
     <div class="blue label">&nbsp;</div>
 
-    <div class="blue">Shift X: <input class="controlItem matrix" id="matrixE" type="range" value="0" min="-100" max="100" step="1" /></div>
+    <div class="blue">Shift X: <input class="controlItem matrix" id="patternShiftX" type="range" value="0" min="-100" max="100" step="1" /></div>
 
     <div class="blue">&nbsp;</div>
 
+    <div class="blue label">&nbsp;</div>
+
+    <div class="blue">Stretch Y: <input class="controlItem matrix" id="patternStretchY" type="range" value="1" min="-2" max="2" step="0.01" /></div>
+
+    <div class="blue">Skew Y: <input class="controlItem matrix" id="patternSkewY" type="range" value="0" min="-2" max="2" step="0.01" /></div>
+
 
     <div class="blue label">&nbsp;</div>
 
-    <div class="blue">Stretch Y: <input class="controlItem matrix" id="matrixD" type="range" value="1" min="-2" max="2" step="0.01" /></div>
-
-    <div class="blue">Skew Y: <input class="controlItem matrix" id="matrixB" type="range" value="0" min="-2" max="2" step="0.01" /></div>
-
-
-    <div class="blue label">&nbsp;</div>
-
-    <div class="blue">Shift Y: <input class="controlItem matrix" id="matrixF" type="range" value="0" min="-100" max="100" step="1" /></div>
+    <div class="blue">Shift Y: <input class="controlItem matrix" id="patternShiftY" type="range" value="0" min="-100" max="100" step="1" /></div>
 
     <div class="blue">&nbsp;</div>
 
+    <div class="orange label">Lock fill style to entity</div>
+    <div class="orange">
+      <select class="controlItem" id="lockFillStyleToEntity">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
   </div>
 
   <canvas 

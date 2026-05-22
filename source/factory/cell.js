@@ -63,6 +63,7 @@ const Cell = function (items = Ωempty) {
 
     this.initializePositions();
     this.initializeCascade();
+    this.initializePattern();
 
     this.modifyConstructorInputForAnchorButton(items);
 
@@ -92,7 +93,6 @@ const Cell = function (items = Ωempty) {
     this.stashedImageData = null;
     this.stashedImage = null;
     this.paste = null;
-    this.patternMatrix = null;
     this.pivot = null;
 
     this.set(items);
@@ -547,11 +547,11 @@ P.checkSource = function (width, height) {
 };
 
 // `getData` - internal function, invoked when a Cell wrapper is used as an entity's pattern style
-P.getData = function (entity, mycell) {
+P.getData = function (entity, mycell, area) {
 
     this.checkSource(this.sourceNaturalDimensions[0], this.sourceNaturalDimensions[1]);
 
-    return this.buildStyle(mycell);
+    return this.buildStyle(mycell, entity, area);
 };
 
 // `updateArtefacts` - passes the __items__ argument object through to each of the Cell's Groups for forwarding to their artefacts' `setDelta` function

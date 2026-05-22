@@ -902,133 +902,141 @@ export default function (P = Ωempty) {
 
         if (this.useDrawGradientCache) {
 
-            const myCell = requestCell(),
-                element = myCell.element,
-                engine = myCell.engine;
-
-            const [width, height] = refCell.get('dimensions');
-            const [x, y] = this.currentStampPosition;
-            const matrix = refCell.engine.getTransform();
-
             const state = this.state,
                 pathObject = this.pathObject;
-
-            element.width = width;
-            element.height = height;
-
-            myCell.rotateDestination(engine, x, y, this);
-            myCell.setEngine(this);
 
             const grad = (state.strokeStyle.substring)
                 ? styles[state.strokeStyle]
                 : state.strokeStyle;
 
-            if (this.dirtyDrawGradient ||
-                this.dirtyDrawGradientCache ||
-                drawId === ZERO_STR
-            ) drawId = generateIdForArtefact(this);
+            // We only process gradients, not patterns or color objects
+            if (GRADIENTS_ARR.includes(grad.type)) {
 
-            if (drawId) {
+                const myCell = requestCell(),
+                    element = myCell.element,
+                    engine = myCell.engine;
 
-                const cacheExists = checkForWorkstoreItem(drawId);
+                const [width, height] = refCell.get('dimensions');
+                const [x, y] = this.currentStampPosition;
+                const matrix = refCell.engine.getTransform();
 
-                if (!cacheExists) {
+                element.width = width;
+                element.height = height;
 
-                    grad.getData(this, refCell, DRAW);
+                myCell.rotateDestination(engine, x, y, this);
+                myCell.setEngine(this);
 
-                    engine.shadowOffsetY = 0;
-                    engine.shadowOffsetX = 0;
-                    engine.shadowBlur = 0;
-                    engine.strokeStyle = BLACK;
-                    engine.stroke(pathObject);
+                if (this.dirtyDrawGradient ||
+                    this.dirtyDrawGradientCache ||
+                    drawId === ZERO_STR
+                ) drawId = generateIdForArtefact(this);
 
-                    const data = engine.getImageData(0, 0, width, height);
+                if (drawId) {
 
-                    const success = gradientEngine.action({
-                        fixedGradientData: getFixedGradientData(grad, DRAW),
-                        identifier: drawId,
-                        imageData: data,
-                        entity: this,
-                        matrix,
-                    });
-                    if (success) {
+                    const cacheExists = checkForWorkstoreItem(drawId);
 
-                        this.identifierDrawGradientCache = drawId;
-                        this.dirtyDrawGradient = false;
-                        this.dirtyDrawGradientCache = false;
-                        this.dirtyFilterIdentifier = true;
+                    if (!cacheExists) {
+
+                        grad.getData(this, refCell, DRAW);
+
+                        engine.shadowOffsetY = 0;
+                        engine.shadowOffsetX = 0;
+                        engine.shadowBlur = 0;
+                        engine.strokeStyle = BLACK;
+                        engine.stroke(pathObject);
+
+                        const data = engine.getImageData(0, 0, width, height);
+
+                        const success = gradientEngine.action({
+                            fixedGradientData: getFixedGradientData(grad, DRAW),
+                            identifier: drawId,
+                            imageData: data,
+                            entity: this,
+                            matrix,
+                        });
+                        if (success) {
+
+                            this.identifierDrawGradientCache = drawId;
+                            this.dirtyDrawGradient = false;
+                            this.dirtyDrawGradientCache = false;
+                            this.dirtyFilterIdentifier = true;
+                        }
+                        else this.dirtyDrawGradientCache = true;
                     }
-                    else this.dirtyDrawGradientCache = true;
                 }
+                releaseCell(myCell);
             }
-            releaseCell(myCell);
         }
 
         if (this.useFillGradientCache) {
 
-            const myCell = requestCell(),
-                element = myCell.element,
-                engine = myCell.engine;
-
-            const [width, height] = refCell.get('dimensions');
-            const [x, y] = this.currentStampPosition;
-            const matrix = refCell.engine.getTransform();
-
             const state = this.state,
                 pathObject = this.pathObject;
-
-            element.width = width;
-            element.height = height;
-
-            myCell.rotateDestination(engine, x, y, this);
-            myCell.setEngine(this);
-
 
             const grad = (state.fillStyle.substring)
                 ? styles[state.fillStyle]
                 : state.fillStyle;
 
-            if (
-                this.dirtyFillGradient ||
-                this.dirtyFillGradientCache ||
-                fillId === ZERO_STR
-            ) fillId = generateIdForArtefact(this);
+            // We only process gradients, not patterns or color objects
+            if (GRADIENTS_ARR.includes(grad.type)) {
 
-            if (fillId) {
+                const myCell = requestCell(),
+                    element = myCell.element,
+                    engine = myCell.engine;
 
-                const cacheExists = checkForWorkstoreItem(fillId);
+                const [width, height] = refCell.get('dimensions');
+                const [x, y] = this.currentStampPosition;
+                const matrix = refCell.engine.getTransform();
 
-                if (!cacheExists) {
+                element.width = width;
+                element.height = height;
 
-                    grad.getData(this, refCell, FILL);
+                myCell.rotateDestination(engine, x, y, this);
+                myCell.setEngine(this);
 
-                    engine.shadowOffsetY = 0;
-                    engine.shadowOffsetX = 0;
-                    engine.shadowBlur = 0;
-                    engine.fillStyle = BLACK;
-                    engine.fill(pathObject, this.winding);
 
-                    const data = engine.getImageData(0, 0, width, height);
+                if (
+                    this.dirtyFillGradient ||
+                    this.dirtyFillGradientCache ||
+                    fillId === ZERO_STR
+                ) fillId = generateIdForArtefact(this);
 
-                    const success = gradientEngine.action({
-                        fixedGradientData: getFixedGradientData(grad, FILL),
-                        identifier: fillId,
-                        imageData: data,
-                        entity: this,
-                        matrix,
-                    });
+                if (fillId) {
 
-                    if (success) {
+                    const cacheExists = checkForWorkstoreItem(fillId);
 
-                        this.identifierFillGradientCache = fillId;
-                        this.dirtyFillGradient = false;
-                        this.dirtyFillGradientCache = false;
-                        this.dirtyFilterIdentifier = true;
+                    if (!cacheExists) {
+
+                        grad.getData(this, refCell, FILL);
+
+                        engine.shadowOffsetY = 0;
+                        engine.shadowOffsetX = 0;
+                        engine.shadowBlur = 0;
+                        engine.fillStyle = BLACK;
+                        engine.fill(pathObject, this.winding);
+
+                        const data = engine.getImageData(0, 0, width, height);
+
+                        const success = gradientEngine.action({
+                            fixedGradientData: getFixedGradientData(grad, FILL),
+                            identifier: fillId,
+                            imageData: data,
+                            entity: this,
+                            matrix,
+                        });
+
+                        if (success) {
+
+                            this.identifierFillGradientCache = fillId;
+                            this.dirtyFillGradient = false;
+                            this.dirtyFillGradientCache = false;
+                            this.dirtyFilterIdentifier = true;
+                        }
+                        else this.dirtyFillGradientCache = true;
                     }
-                    else this.dirtyFillGradientCache = true;
                 }
+                releaseCell(myCell);
             }
-            releaseCell(myCell);
         }
     };
 

@@ -357,12 +357,24 @@ P.prepareStamp = function() {
 
     if (this.isBeingDragged || this.lockTo.includes(MOUSE) || this.lockTo.includes(PARTICLE)) this.dirtyStampPositions = true;
 
+    if (this.dirtyRotation || this.dirtyPathObject) {
+
+        if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+        if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+    }
+
     if (this.dirtyScale) this.cleanScale();
 
     if (this.dirtyStart) this.cleanStart();
 
     if (this.dirtyOffset) this.cleanOffset();
     if (this.dirtyRotation) this.cleanRotation();
+
+    if (this.dirtyStampPositions || this.dirtyStampHandlePositions) {
+
+        if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+        if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+    }
 
     if (this.dirtyStampPositions) this.cleanStampPositions();
 
