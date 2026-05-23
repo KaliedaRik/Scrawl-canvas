@@ -517,9 +517,6 @@ P.prepareStamp = function() {
     this.badNet = true;
     this.dirtyParticles = false;
 
-// Temporary fix to make sure the gradient cache flags are appropriately set before running through the remainder of this function
-    this.setGradientCacheFlags();
-
     if (!this.particlePositions) this.particlePositions = [];
 
     const {net, particlePositions} = this;

@@ -420,33 +420,19 @@ interface PathMixinFunctions {}
 
 // Pattern mixin
 // -------------------------------------
-interface PatternMatrix {
-    a?: number;
-    b?: number;
-    c?: number;
-    d?: number;
-    e?: number;
-    f?: number;
-}
+type PatternRepeatValues = 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat';
 
 interface PatternMixinDeltaInputs {
-    matrixA?: number; 
-    matrixB?: number; 
-    matrixC?: number; 
-    matrixD?: number; 
-    matrixE?: number; 
-    matrixF?: number; 
-    stretchX?: number; 
-    skewY?: number; 
-    skewX?: number; 
-    stretchY?: number; 
-    shiftX?: number; 
-    shiftY?: number; 
+    patternStretchX?: number; 
+    patternSkewX?: number; 
+    patternShiftX?: number; 
+    patternStretchY?: number; 
+    patternSkewY?: number; 
+    patternShiftY?: number; 
 }
 
 interface PatternMixinInputs {
-    repeat?: string;
-    patternMatrix?: PatternMatrix;
+    repeat?: PatternRepeatValues;
 }
 
 interface PatternMixinFunctions {}

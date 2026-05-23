@@ -26,8 +26,8 @@ scrawl.makePattern({
 
     name: name('weave-pattern'),
     asset: 'weave',
-    stretchX: 0.37 / 2.5,
-    stretchY: 0.37 / 2.5,
+    patternStretchX: 0.37 / 2.5,
+    patternStretchY: 0.37 / 2.5,
 });
 
 
@@ -59,6 +59,7 @@ scrawl.makeBlock({
     name: name('cloth'),
     dimensions: ['100%', '100%'],
     fillStyle: name('weave-pattern'),
+    lockFillStyleToEntity: false,
 });
 
 scrawl.makePicture({

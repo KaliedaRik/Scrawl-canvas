@@ -686,7 +686,6 @@ P.performFill = function (engine) {
             tileWidth = this.currentTileWidth,
             tileHeight = this.currentTileHeight,
             dims = this.currentDimensions,
-            requiresGradientCache = this.requiresGradientCache,
             applyGridGradient = this.applyGridGradient.bind(this);
 
         const getGradientObject = function (source) {
@@ -774,7 +773,7 @@ P.performFill = function (engine) {
 
                     if (!grad) break;
 
-                    if (requiresGradientCache(grad)) {
+                    if (!grad.isClassic) {
 
                         const identifier = buildTileGradientIdentifier(grad, index, lockedToEntity);
 
@@ -920,7 +919,7 @@ P.performFill = function (engine) {
 
                         if (!grad) break;
 
-                        if (requiresGradientCache(grad)) {
+                        if (!grad.isClassic) {
 
                             const identifier = buildGutterGradientIdentifier(grad, lockedToEntity);
 
