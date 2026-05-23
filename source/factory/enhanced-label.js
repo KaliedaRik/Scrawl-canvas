@@ -852,8 +852,6 @@ P.handleDirtyCache = function () {
 
     if (this.cache) {
 
-console.log('handleDirtyCache', this.name)
-
         releaseCell(this.cache);
         this.cache = null;
     }
