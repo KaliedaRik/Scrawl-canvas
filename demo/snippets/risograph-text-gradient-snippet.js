@@ -149,70 +149,83 @@ export default function (scrawl, el) {
             };
 
             // Build the risograph effect
-            scrawl.makeGradient({
+            const risoGradient = scrawl.makeGradient({
+
                 name: name('riso-gradient'),
+
+                startY: 0,
+                endY: Math.round(parseFloat(compStyles.lineHeight)),
+
+                spread: 'repeat',
+
                 colors: [
-                    [0, 'white'],
-                    [999, 'black'],
+                    [0, userData.bottomColor],
+                    [499, userData.bottomColor],
+                    [500, userData.topColor],
+                    [999, userData.topColor],
                 ],
-                endY: '100%',
-            });
 
-            scrawl.makeFilter({
-                name: name('random-filter'),
-                method: 'randomNoise',
-                height: Math.round(parseFloat(compStyles.lineHeight) * parseFloat(userData.randomRadius)),
-                noWrap: true,
-                level: parseFloat(userData.randomLevel),
-            });
-
-            const thresholdFilter = scrawl.makeFilter({
-                name: name('threshold-filter'),
-                method: 'threshold',
-                level: 127,
-                lowColor: userData.bottomColor,
-                highColor: userData.topColor,
-            });
-
-            const cell = canvas.buildCell({
-                name: name('riso-cell'),
-                width: 128,
-                height: parseFloat(compStyles.lineHeight),
-                cleared: false,
-                compiled: false,
-                shown: false,
-            });
-
-            scrawl.makeBlock({
-                name: name('riso-block'),
-                group: name('riso-cell'),
-                dimensions: ['100%', '100%'],
-                fillStyle: name('riso-gradient'),
-                filters: [name('random-filter'), name('threshold-filter')],
-                memoizeFilterOutput: true,
-            });
-
-            cell.compile();
-
-            const pattern = scrawl.makePattern({
-                name: name('riso-pattern'),
-                asset: name('riso-cell'),
+                operations: [{
+                    operation: 'add-noise',
+                    stage: 'after-spread',
+                    parameters: {
+                        noise: 'random',
+                        strength: parseFloat(userData.randomRadius),
+                        seed: name('riso-noise'),
+                    },
+                }],
             });
 
             const template = scrawl.makeBlock({
                 name: name('template'),
+                calculateOrder: 0,
+                stampOrder: 4,
                 dimensions: ['100%', '100%'],
                 visibility: false,
+
+                // globalCompositeOperation: 'source-over',
+                // globalCompositeOperation: 'source-in',
+                // globalCompositeOperation: 'source-out',
+                // globalCompositeOperation: 'source-atop',
+                // globalCompositeOperation: 'source-only',
+                globalCompositeOperation: 'destination-over',
+                // globalCompositeOperation: 'destination-in',
+                // globalCompositeOperation: 'destination-out',
+                // globalCompositeOperation: 'destination-atop',
+                // globalCompositeOperation: 'destination-only',
             });
 
-            const label = scrawl.makeEnhancedLabel({
+            const effect = scrawl.makeBlock({
+                name: name('riso-effect'),
+                dimensions: ['100%', '100%'],
+                fillStyle: name('riso-gradient'),
+
+                order: 2,
+                visibility: false,
+
+                // globalCompositeOperation: 'source-over',
+                globalCompositeOperation: 'source-in',
+                // globalCompositeOperation: 'source-out',
+                // globalCompositeOperation: 'source-atop',
+                // globalCompositeOperation: 'source-only',
+                // globalCompositeOperation: 'destination-over',
+                // globalCompositeOperation: 'destination-in',
+                // globalCompositeOperation: 'destination-out',
+                // globalCompositeOperation: 'destination-atop',
+                // globalCompositeOperation: 'destination-only',
+            });
+
+            const textFill = scrawl.makeEnhancedLabel({
                 name: name('content'),
                 layoutTemplate: name('template'),
+                order: 1,
 
                 text: processText(el.innerHTML),
                 fontString: compStyles.font,
 
-                method: 'drawAndFill',
+                fillStyle: 'black',
+                globalAlpha: 1,
+                method: 'fill',
                 textHandleY: 'alphabetic',
                 visibility: false,
 
@@ -224,11 +237,58 @@ export default function (scrawl, el) {
                 lineSpacing: getLineSpacing(),
                 justifyLine: userData.justifyLine,
 
-                fillStyle: name('riso-pattern'),
-                strokeStyle: userData.outlineColor,
-                lineWidth: parseFloat(compStyles.lineHeight) * parseFloat(userData.outlineWidth),
+                globalCompositeOperation: 'source-over',
+                // globalCompositeOperation: 'source-in',
+                // globalCompositeOperation: 'source-out',
+                // globalCompositeOperation: 'source-atop',
+                // globalCompositeOperation: 'source-only',
+                // globalCompositeOperation: 'destination-over',
+                // globalCompositeOperation: 'destination-in',
+                // globalCompositeOperation: 'destination-out',
+                // globalCompositeOperation: 'destination-atop',
+                // globalCompositeOperation: 'destination-only',
             });
 
+            const textOutline = scrawl.makeEnhancedLabel({
+                name: name('outline'),
+                layoutTemplate: name('template'),
+                order: 3,
+
+                text: processText(el.innerHTML),
+                fontString: compStyles.font,
+
+                fillStyle: 'black',
+
+                method: 'draw',
+                textHandleY: 'alphabetic',
+                visibility: false,
+
+                direction: userData.direction,
+                fontStretch: userData.fontStretch,
+                letterSpacing: userData.letterSpacing,
+                wordSpacing: userData.wordSpacing,
+                fontVariantCaps: userData.fontVariantCaps,
+                lineSpacing: getLineSpacing(),
+                justifyLine: userData.justifyLine,
+
+                strokeStyle: userData.outlineColor,
+                lineWidth: parseFloat(compStyles.lineHeight) * parseFloat(userData.outlineWidth),
+
+                // globalCompositeOperation: 'source-over',
+                // globalCompositeOperation: 'source-in',
+                // globalCompositeOperation: 'source-out',
+                // globalCompositeOperation: 'source-atop',
+                // globalCompositeOperation: 'source-only',
+                globalCompositeOperation: 'destination-over',
+                // globalCompositeOperation: 'destination-in',
+                // globalCompositeOperation: 'destination-out',
+                // globalCompositeOperation: 'destination-atop',
+                // globalCompositeOperation: 'destination-only',
+            });
+
+            const texts = scrawl.makeGroup({
+                name: name('text-group'),
+            }).addArtefacts(textFill, textOutline);
 
             // Boilerplate - font adjustments
             let meta;
@@ -254,10 +314,6 @@ export default function (scrawl, el) {
 
                     const displacement = getLineAdjustment();
 
-                    pattern.set({
-                        shiftY: -displacement,
-                    });
-
                     template.set({
                         startY: displacement,
                         handleY: displacement,
@@ -265,14 +321,13 @@ export default function (scrawl, el) {
                         visibility: true,
                     });
 
-                    cell.set({
-                        cleared: true,
-                        compiled: true,
-                    });
-
-                    label.set({
+                    texts.setArtefacts({
                         visibility: true,
                     });
+
+                    effect.set({
+                        visibility: true,
+                    })
 
                     animation.updateHook('commence');
                 }
@@ -311,11 +366,7 @@ export default function (scrawl, el) {
 
                     resizeFlag = false;
 
-                    cell.set({ height: parseFloat(compStyles.lineHeight) });
-                    cell.clear();
-                    cell.compile();
-
-                    label.set({
+                    texts.setArtefacts({
                         fontString: compStyles.font,
                         lineWidth: parseFloat(compStyles.lineHeight) * parseFloat(userData.outlineWidth),
                     });
@@ -324,18 +375,18 @@ export default function (scrawl, el) {
 
                         const displacement = getLineAdjustment();
 
-                        pattern.set({
-                            shiftY: -displacement,
-                        });
-
                         template.set({
                             startY: displacement,
                             handleY: displacement,
                         });
 
-                        label.set({
+                        texts.setArtefacts({
                             letterSpacing: compStyles.letterSpacing,
                             wordSpacing: compStyles.wordSpacing,
+                        });
+
+                        risoGradient.set({
+                            endY: Math.round(parseFloat(compStyles.lineHeight)),
                         });
                     }
                 }
@@ -352,7 +403,9 @@ export default function (scrawl, el) {
             if (el.getAttribute('contenteditable')) {
 
                 const updateText = () => {
-                    label.set({ text: processText(el.innerHTML) });
+                    texts.setArtefacts({
+                        text: processText(el.innerHTML),
+                    });
                 }
                 const focusText = () => {
                     el.style.color = 'rgb(0 0 0 / 0.4)';
@@ -376,30 +429,30 @@ export default function (scrawl, el) {
             // Accessibility
             const colorSchemeLightAction = () => {
 
-                thresholdFilter.set({
-                    lowColor: userData.bottomColor,
-                    highColor: userData.topColor,
+                risoGradient.set({
+                    colors: [
+                        [0, userData.bottomColor],
+                        [999, userData.topColor],
+                    ],
                 });
 
-                cell.clear();
-                cell.compile();
-
-                label.set({
+                texts.setArtefacts({
                     strokeStyle: userData.outlineColor,
                 });
             };
 
             const colorSchemeDarkAction = () => {
 
-                thresholdFilter.set({
-                    lowColor: userData.darkBottomColor,
-                    highColor: userData.darkTopColor,
+                risoGradient.set({
+                    colors: [
+                        [0, userData.darkBottomColor],
+                        [499, userData.darkBottomColor],
+                        [500, userData.darkTopColor],
+                        [999, userData.darkTopColor],
+                    ],
                 });
 
-                cell.clear();
-                cell.compile();
-
-                label.set({
+                texts.setArtefacts({
                     strokeStyle: userData.darkOutlineColor,
                 });
             };
@@ -410,10 +463,19 @@ export default function (scrawl, el) {
                     userData.darkContrastColor :
                     userData.contrastColor;
 
-                label.set({
-                    strokeStyle: 'transparent',
-                    fillStyle: color,
+                template.set({
+                    visibility: false,
                 });
+
+                texts.setArtefacts({
+                    visibility: false,
+                });
+
+                effect.set({
+                    visibility: false,
+                });
+
+                el.style.color = color;
             };
 
             const otherContrastAction = () => {
@@ -423,20 +485,31 @@ export default function (scrawl, el) {
                 const lowColor = (isDark) ? userData.darkBottomColor : userData.bottomColor;
                 const highColor = (isDark) ? userData.darkTopColor : userData.topColor;
 
-                thresholdFilter.set({
-                    lowColor,
-                    highColor,
-                });
-
-                cell.clear();
-                cell.compile();
-
                 const strokeStyle = (isDark) ? userData.darkOutlineColor : userData.outlineColor;
 
-                label.set({
-                    strokeStyle,
-                    fillStyle: name('riso-pattern'),
+                risoGradient.set({
+                    colors: [
+                        [0, lowColor],
+                        [499, lowColor],
+                        [500, highColor],
+                        [999, highColor],
+                    ],
                 });
+
+                template.set({
+                    visibility: true,
+                });
+
+                texts.setArtefacts({
+                    visibility: true,
+                    strokeStyle,
+                });
+
+                effect.set({
+                    visibility: true,
+                });
+
+                el.style.color = 'transparent';
             };
 
             canvas.set({

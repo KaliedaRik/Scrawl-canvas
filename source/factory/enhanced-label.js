@@ -620,12 +620,26 @@ S.textHandle = function (item) {
 S.guidelineDash = function (item) {
 
     if (_isArray(item)) this.guidelineDash = item;
+    this.handleDirtyCache();
+};
+
+S.guidelineWidth = function (item) {
+
+    if (_isFinite(item)) this.guidelineWidth = item;
+    this.handleDirtyCache();
+};
+
+S.showGuidelines = function (item) {
+
+    this.showGuidelines = !!item;
+    this.handleDirtyCache();
 };
 
 S.guidelineStyle = function (item) {
 
     if (!item) this.guidelineStyle = this.defs.guidelineStyle;
     else if (item.substring) this.guidelineStyle = item;
+    this.handleDirtyCache();
 };
 
 S.pathPosition = function (item) {
@@ -665,6 +679,39 @@ G.textLines = function () {
     return this.lines;
 };
 
+S.order = function (val) {
+
+    this.calculateOrder = val;
+    this.stampOrder = val;
+
+    const g = this.group;
+    if (g && g.type === T_GROUP) g.batchResort = true;
+};
+S.calculateOrder = function (val) {
+
+    this.calculateOrder = val;
+
+    const g = this.group;
+    if (g && g.type === T_GROUP) g.batchResort = true;
+};
+S.stampOrder = function (val) {
+
+    this.stampOrder = val;
+
+    const g = this.group;
+    if (g && g.type === T_GROUP) g.batchResort = true;
+};
+
+S.startTextOnLine = function (val) {
+
+    if (_isFinite(val)) {
+
+        this.startTextOnLine = _floor(val);
+        this.dirtyTextLayout = true;
+        this.handleDirtyCache();
+
+    }
+};
 
 
 // #### Prototype functions
@@ -801,10 +848,15 @@ P.getTextOffset = function (val, dim) {
     return (parseFloat(val) / 100) * dim;
 };
 
-P.dirtyCache = function () {
+P.handleDirtyCache = function () {
 
-    releaseCell(this.cache);
-    this.cache = null;
+    if (this.cache) {
+
+console.log('handleDirtyCache', this.name)
+
+        releaseCell(this.cache);
+        this.cache = null;
+    }
 
     this.textUnitHitZones.length = 0;
 
@@ -832,7 +884,8 @@ P.cleanLayout = function () {
 
     if (this.currentFontIsLoaded) {
 
-        this.dirtyCache();
+        this.handleDirtyCache();
+
         this.dirtyLayout = false;
 
         if (!this.useLayoutTemplateAsPath) this.calculateLines();
@@ -1109,6 +1162,7 @@ P.cleanText = function () {
     if (this.currentFontIsLoaded) {
 
         this.dirtyText = false;
+        this.handleDirtyCache();
 
         const {
             breakTextOnSpaces,
@@ -1708,6 +1762,7 @@ P.layoutText = function () {
             if (layoutTemplate && layoutTemplate.useAsPath) {
 
                 this.dirtyTextLayout = false;
+                this.handleDirtyCache();
 
                 releaseLine(...lines);
                 lines.length = 0;
@@ -1723,6 +1778,7 @@ P.layoutText = function () {
             if (lines.length && textUnits.length) {
 
                 this.dirtyTextLayout = false;
+                this.handleDirtyCache();
 
                 lines.forEach(line => {
 
@@ -2897,7 +2953,7 @@ P.prepareStamp = function() {
 
     if (this.dirtyScale) {
 
-        this.dirtyCache();
+        this.handleDirtyCache();
 
         this.dirtyScale = false;
 
@@ -2908,7 +2964,7 @@ P.prepareStamp = function() {
 
     if (this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation || this.dirtyFilters) {
 
-        this.dirtyCache();
+        this.handleDirtyCache();
 
         this.dirtyDimensions = false;
         this.dirtyStart = false;
@@ -3103,9 +3159,13 @@ P.regularStamp = function (host) {
 
                 const filterTest = (!this.noFilters && this.filters && this.filters.length) ? true : false;
 
-                if (filterTest) {
+                if (!filterTest) this.dirtyFilters = false;
+                else {
 
-                    if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
+                    if (this.dirtyFilters || !this.currentFilters) {
+
+                        this.cleanFilters();
+                    }
 
                     const filters = this.currentFilters;
 
@@ -3975,8 +4035,9 @@ P.setTextUnit = function (index, items) {
             if (UNIT_SETTABLE_KEYS.includes(key)) unit.set({ [key]: val });
         }
     }
+
     this.dirtyLayout = true;
-    this.dirtyCache();
+    this.handleDirtyCache();
 };
 
 P.setAllTextUnits = function (items) {
@@ -3991,14 +4052,15 @@ P.setAllTextUnits = function (items) {
             }
         }
     });
+
     this.dirtyLayout = true;
-    this.dirtyCache();
+    this.handleDirtyCache();
 };
 
 P.applyTextUnitUpdates = function () {
 
     this.dirtyLayout = true;
-    this.dirtyCache();
+    this.handleDirtyCache();
 };
 
 

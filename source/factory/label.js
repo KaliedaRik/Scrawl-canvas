@@ -112,13 +112,13 @@ D.dimensions = λnull;
 S.showBoundingBox = function (item) {
 
     this.showBoundingBox = !!item;
-    this.dirtyLabelGradientCache();
+    this.dirtyFillGradientCache = true;
 };
 
 S.boundingBoxStyle = function (item) {
 
     this.boundingBoxStyle = item;
-    this.dirtyLabelGradientCache();
+    this.dirtyFillGradientCache = true;
 };
 
 S.boundingBoxLineWidth = function (item) {
@@ -126,7 +126,7 @@ S.boundingBoxLineWidth = function (item) {
     if (_isFinite(item)) {
 
         this.boundingBoxLineWidth = item;
-        this.dirtyLabelGradientCache();
+        this.dirtyFillGradientCache = true;
     }
 };
 
@@ -135,7 +135,7 @@ D.boundingBoxLineWidth = function (item) {
     if (_isFinite(item)) {
 
         this.boundingBoxLineWidth += item;
-        this.dirtyLabelGradientCache();
+        this.dirtyFillGradientCache = true;
     }
 };
 
@@ -144,7 +144,7 @@ S.boundingBoxLineDash = function (item) {
     if (_isArray(item)) {
 
         this.boundingBoxLineDash = item;
-        this.dirtyLabelGradientCache();
+        this.dirtyFillGradientCache = true;
     }
 };
 
@@ -153,7 +153,7 @@ S.boundingBoxLineDashOffset = function (item) {
     if (_isFinite(item)) {
 
         this.boundingBoxLineDashOffset = item;
-        this.dirtyLabelGradientCache();
+        this.dirtyFillGradientCache = true;
     }
 };
 
@@ -162,7 +162,7 @@ D.boundingBoxLineDashOffset = function (item) {
     if (_isFinite(item)) {
 
         this.boundingBoxLineDashOffset += item;
-        this.dirtyLabelGradientCache();
+        this.dirtyFillGradientCache = true;
     }
 };
 
@@ -182,12 +182,6 @@ S.useTextStyleForOutline = function (item) {
 
     this.useTextStyleForOutline = !!item;
     this.dirtyFillGradientCache = true;
-};
-
-P.dirtyLabelGradientCache = function () {
-
-    this.dirtyFillGradientCache = true;
-    this.dirtyDrawGradientCache = true;
 };
 
 
@@ -412,7 +406,7 @@ P.cleanHandle = function () {
 // Overwrites the function in mixin/entity.js
 P.setGradientCacheFlags = function () {
 
-    let fillGradient;
+    let fillGradient, drawGradient;
 
     if (this.state) {
 
@@ -421,13 +415,13 @@ P.setGradientCacheFlags = function () {
         fillGradient = fillStyle.substring ? styles[fillStyle] : fillStyle;
     }
 
-    this.useFillGradientCache = (fillGradient) ? !fillGradient.isClassic : false;
+    this.useFillGradientCache = (fillGradient && GRADIENTS_ARR.includes(fillGradient.type));
+
     this.useDrawGradientCache = false;
 };
 
 
 // #### Display cycle functions
-
 P.prepareStamp = function() {
 
     if (this.dirtyHost) this.dirtyHost = false;
@@ -439,13 +433,11 @@ P.prepareStamp = function() {
         this.dirtyPathObject = true;
 
         if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
-        if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
     }
 
     if (this.dirtyRotation) {
 
         if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
-        if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
     }
 
     if (this.dirtyScale) this.cleanScale();
@@ -467,7 +459,6 @@ P.prepareStamp = function() {
     if (this.dirtyStampPositions || this.dirtyStampHandlePositions) {
 
         if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
-        if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
     }
 
     if (this.dirtyStampPositions) this.cleanStampPositions();

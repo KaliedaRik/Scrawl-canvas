@@ -184,7 +184,7 @@ const impressionistAsset = scrawl.makeRawAsset({
                     x = Math.floor(Math.random() * width);
                     y = Math.floor(Math.random() * height);
 
-                    len = (noiseValues[y][x] * lineLengthMultiplier) + lineLengthStart;
+                    len = (noiseValues[(y * width) + x] * lineLengthMultiplier) + lineLengthStart;
 
                     pos = ((y * width) + x) * 4;
 
@@ -205,7 +205,7 @@ const impressionistAsset = scrawl.makeRawAsset({
                         ry = (ry < 0) ? ry + height : ry - height;
                     }
 
-                    roll = (noiseValues[ry][rx] * rotationMultiplier) + rotationStart;
+                    roll = (noiseValues[(ry * width) + rx] * rotationMultiplier) + rotationStart;
 
                     coord.set(len, 0).rotate(roll);
                     [dx, dy] = coord;
