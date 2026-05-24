@@ -365,12 +365,7 @@
 
     .worley-v1 {
       --data-highlight-color: red;
-      --data-shadow-color: slategray;
       --data-dark-highlight-color: red;
-      --data-dark-shadow-color: lightslategray;
-      --data-shadow-offset-x: 2;
-      --data-shadow-offset-y: 2;
-      --data-shadow-blur: 1;
       --data-noise-scale: 40;
       --data-noise-sum-function: none;
     }
@@ -702,13 +697,9 @@
     <ul>
       <li><kbd>--data-base-color</kbd> - any CSS color string (default: <kbd>black</kbd>)</li>
       <li><kbd>--data-highlight-color</kbd> - any CSS color string (default: <kbd>orange</kbd>)</li>
-      <li><kbd>--data-noise-sum-function</kbd> - permitted values include: <kbd>'none'</kbd>, <kbd>'sine-x'</kbd>, <kbd>'sine-y'</kbd>, <kbd>'sine'</kbd>, <kbd>'modular'</kbd>, <kbd>'random'</kbd></kbd> (default: <kbd>random</kbd>)</li>
+      <li><kbd>--data-noise-sum-function</kbd> - permitted values include: <kbd>'none'</kbd>, <kbd>'sine'</kbd>, <kbd>'modular'</kbd>, <kbd>'random'</kbd></kbd> etc (default: <kbd>random</kbd>)</li>
       <li><kbd>--data-noise-scale</kbd> - (+number) a form of zoom level (default: <kbd>50</kbd>)</li>
       <li><kbd>--data-noise-output</kbd> - permitted values include: <kbd>'X'</kbd>, <kbd>'YminusX'</kbd>, <kbd>'ZminusX'</kbd> etc (default: <kbd>X</kbd>)</li>
-      <li><kbd>--data-shadow-color</kbd> - any CSS color string, for the text shadow (default: <kbd>black</kbd>)</li>
-      <li><kbd>--data-shadow-offset-x</kbd> - (number px) percentage of the font size to offset the text shadow horizontally (default: <kbd>0</kbd>)</li>
-      <li><kbd>--data-shadow-offset-y</kbd> - (number px) percentage of the font size to offset the text shadow vertically (default: <kbd>0</kbd>)</li>
-      <li><kbd>--data-shadow-blur</kbd> - (number px) percentage of the font size to blur the shadow (default: <kbd>0</kbd>)</li>
     </ul>
 
     <p>... And for <kbd>prefers-color-scheme: dark</kbd> users:</p>
@@ -716,7 +707,6 @@
     <ul>
       <li><kbd>data-dark-base-color</kbd> - any CSS color string (default: <kbd>white</kbd>)</li>
       <li><kbd>data-dark-highlight-color</kbd> - any CSS color string (default: <kbd>orange</kbd>)</li>
-      <li><kbd>data-dark-shadow-color</kbd> - any CSS color string, for the text shadow (default: <kbd>white</kbd>)</li>
     </ul>
 
     <p>This snippet reacts to the user preference <kbd>prefers-contrast: more</kbd> with the following properties:</p>
@@ -787,12 +777,7 @@
   }
   .worley-v1 {
     --data-highlight-color: red;
-    --data-shadow-color: slategray;
     --data-dark-highlight-color: red;
-    --data-dark-shadow-color: lightslategray;
-    --data-shadow-offset-x: 2;
-    --data-shadow-offset-y: 2;
-    --data-shadow-blur: 1;
     --data-noise-scale: 40;
     --data-noise-sum-function: none;
   }
