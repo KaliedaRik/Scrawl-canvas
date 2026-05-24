@@ -140,10 +140,6 @@ export default function (scrawl, el) {
                 darkMainColor: compStyles.getPropertyValue('--data-dark-main-color') || 'yellow',
                 stripeColor: compStyles.getPropertyValue('--data-stripe-color') || 'red',
                 darkStripeColor: compStyles.getPropertyValue('--data-dark-stripe-color') || 'red',
-                patternSkewX: compStyles.getPropertyValue('--data-pattern-skew-x') || '-1',
-                patternSkewY: compStyles.getPropertyValue('--data-pattern-skew-y') || '0.5',
-                patternStretchX: compStyles.getPropertyValue('--data-pattern-stretch-x') || '1',
-                patternStretchY: compStyles.getPropertyValue('--data-pattern-stretch-y') || '1',
                 stripeRatio: compStyles.getPropertyValue('--data-stripe-ratio') || '0.5',
                 swirlAngle: compStyles.getPropertyValue('--data-swirl-angle') || '90',
             };
