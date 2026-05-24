@@ -48,12 +48,6 @@
 // __Effects on the element:__
 // + Imports the element's background color, and sets the element background to `transparent`
 // + Imports the element's text node text, and sets the text color to `transparent`
-
-
-
-
-
-
 export default function (scrawl, el) {
 
 // Boilerplate - namespacing

@@ -50,33 +50,33 @@
 // + Imports the element's text node text, and sets the text color to `transparent`
 export default function (scrawl, el) {
 
-    // Boilerplate - namespacing
+// Boilerplate - namespacing
     const namespace = el.id;
     const name = (val) => `${namespace}-${val}`;
 
 
-    // Only progress if the supplied element has an `id` attribute
+// Only progress if the supplied element has an `id` attribute
     if (namespace) {
 
 
-        // Create the snippet for this DOM element
+// Create the snippet for this DOM element
         const snippet = scrawl.makeSnippet({
             domElement: el,
         });
 
 
-        // Only proceed if the snippet is successfully generated
+// Only proceed if the snippet is successfully generated
         if (snippet) {
 
 
-            // Unpack the snippet into the parts we'll be using
+// Unpack the snippet into the parts we'll be using
             const canvas = snippet.canvas,
                 animation = snippet.animation,
                 demolishAction = snippet.demolish,
                 compStyles = snippet.element.elementComputedStyles;
 
 
-            // Boilerplate - text processing
+// Boilerplate - text processing
             const addTextNode = () => {
                 const shy = document.createTextNode('!');
                 el.appendChild(shy);
@@ -93,7 +93,7 @@ export default function (scrawl, el) {
             }
 
 
-            // Boilerplate - demolish/kill functionality
+// Boilerplate - demolish/kill functionality
             const additionalDemolishActions = [];
 
             snippet.demolish = () => {
@@ -103,11 +103,11 @@ export default function (scrawl, el) {
             };
 
 
-            // This makes the canvas element's base cell the default group for everything we create
+// This makes the canvas element's base cell the default group for everything we create
             canvas.setAsCurrentCanvas();
 
 
-            // Boilerplate - fix for text alignment
+// Boilerplate - fix for text alignment
             const getJustifyLine = (val) => {
 
                 if (val === 'justify') return 'space-between';
@@ -117,12 +117,12 @@ export default function (scrawl, el) {
             };
 
 
-            // Boilerplate - fix for lineSpacing/lineHeight
+// Boilerplate - fix for lineSpacing/lineHeight
             const getLineSpacing = () => parseFloat(compStyles.lineHeight) / parseFloat(compStyles.fontSize);
 
 
-            // Initialize and collect developer-supplied data
-            // + We also set the defaults here for missing colors/values
+// Initialize and collect developer-supplied data
+// + We also set the defaults here for missing colors/values
             const userData = {
 
                 direction: compStyles.direction || 'ltr',
@@ -149,41 +149,7 @@ export default function (scrawl, el) {
             };
 
 
-            // Build the animated swirl effect
-
-            const getCellHeight = () => Math.ceil(parseFloat(compStyles.lineHeight) / 5);
-
-            const cell = canvas.buildCell({
-                name: name('pattern-cell'),
-                width: 16,
-                height: getCellHeight(),
-                shown: false,
-            });
-
-            const backBlock = scrawl.makeBlock({
-                name: name('back-block'),
-                group: name('pattern-cell'),
-                dimensions: ['100%', '50%'],
-                fillStyle: userData.mainColor,
-            });
-
-            const stripeBlock = backBlock.clone({
-                name: name('stripe-block'),
-                startY: '50%',
-                fillStyle: userData.stripeColor,
-                filters: [name('stripe-filter')],
-                memoizeFilterOutput: true,
-            });
-
-            scrawl.makePattern({
-                name: name('swirl-pattern'),
-                asset: name('pattern-cell'),
-                stretchX: parseFloat(userData.patternStretchX),
-                stretchY: parseFloat(userData.patternStretchY),
-                skewX: parseFloat(userData.patternSkewX),
-                skewY: parseFloat(userData.patternSkewY),
-            });
-
+// Build the animated swirl effect
             const getOuterRadius = () => Math.ceil(parseFloat(compStyles.lineHeight) * 2);
 
             const swirl = scrawl.makeFilter({
@@ -198,23 +164,51 @@ export default function (scrawl, el) {
                 transparentEdges: true,
             });
 
+            const stripeRatio = parseFloat(userData.stripeRatio);
+
+            const stripeGradient = scrawl.makeGradient({
+                name: name('stripe-gradient'),
+
+                startY: 0,
+                endY: Math.ceil(parseFloat(compStyles.lineHeight) / 5),
+
+                spread: 'repeat',
+
+                colors: [
+                    [0, userData.mainColor],
+                    [Math.round(999 * stripeRatio), userData.mainColor],
+                    [Math.round(999 * stripeRatio) + 1, userData.stripeColor],
+                    [999, userData.stripeColor],
+                ],
+            });
+
             const template = scrawl.makeBlock({
                 name: name('template'),
                 dimensions: ['100%', '100%'],
+                order: 4,
                 visibility: false,
+                globalCompositeOperation: 'destination-over',
+            });
+
+            const effect = scrawl.makeBlock({
+                name: name('stripe-effect'),
+                dimensions: ['100%', '100%'],
+                fillStyle: name('stripe-gradient'),
+                order: 1,
+                visibility: false,
+                globalCompositeOperation: 'source-over',
             });
 
             const label = scrawl.makeEnhancedLabel({
                 name: name('content'),
                 layoutTemplate: name('template'),
-
+                order: 2,
                 text: processText(el.innerHTML),
                 fontString: compStyles.font,
-
+                method: 'fill',
+                fillStyle: 'black',
                 textHandleY: 'alphabetic',
                 visibility: false,
-                cacheOutput: false,
-
                 direction: userData.direction,
                 fontStretch: userData.fontStretch,
                 letterSpacing: userData.letterSpacing,
@@ -222,12 +216,10 @@ export default function (scrawl, el) {
                 fontVariantCaps: userData.fontVariantCaps,
                 lineSpacing: getLineSpacing(),
                 justifyLine: userData.justifyLine,
-
-                fillStyle: name('swirl-pattern'),
+                globalCompositeOperation: 'destination-in',
             });
 
-
-            // Boilerplate - font adjustments
+// Boilerplate - font adjustments
             let meta;
 
             const getLineAdjustment = () => {
@@ -247,11 +239,6 @@ export default function (scrawl, el) {
                     el.style.backgroundColor = 'transparent';
                     el.style.color = 'transparent';
 
-                    cell.set({
-                        cleared: true,
-                        compiled: true,
-                    });
-
                     canvas.base.set({ memoizeFilterOutput: true });
 
                     meta = scrawl.getFontMetadata(font);
@@ -265,6 +252,7 @@ export default function (scrawl, el) {
                         visibility: true,
                     });
 
+                    effect.set({ visibility: true });
                     label.set({ visibility: true });
 
                     animation.updateHook('commence', swirlEffect);
@@ -296,7 +284,7 @@ export default function (scrawl, el) {
             animation.updateHook('commence', updateOnFontLoad);
 
 
-            // Boilerplate user interaction - resizing the browser window
+// Boilerplate user interaction - resizing the browser window
             let resizeFlag = true,
                 lastResize = Date.now();
 
@@ -308,10 +296,10 @@ export default function (scrawl, el) {
 
                 const now = Date.now();
 
-                // Canvases don't animate when outside of the browser viewport (to save CPU, battery, etc)
-                // + This check forces those canvases to update once to adapt to the new viewport size
-                // + Doing this should prevent unexpected horizontal scrollbars appearing on the page
-                // + Should also minimize flashes of badly sized content when canvas scrolls into view
+// Canvases don't animate when outside of the browser viewport (to save CPU, battery, etc)
+// + This check forces those canvases to update once to adapt to the new viewport size
+// + Doing this should prevent unexpected horizontal scrollbars appearing on the page
+// + Should also minimize flashes of badly sized content when canvas scrolls into view
                 if (!animation.isRunning() && now > lastResize + resizeChoke) {
 
                     resizeAction();
@@ -326,14 +314,15 @@ export default function (scrawl, el) {
 
                     resizeFlag = false;
 
-                    cell.set({ height: getCellHeight() });
-
                     label.set({ fontString: compStyles.font });
 
                     swirl.set({ outerRadius: getOuterRadius() });
 
-                    if (meta) {
+                    stripeGradient.set({
+                        endY: Math.ceil(parseFloat(compStyles.lineHeight) / 5),
+                    });
 
+                    if (meta) {
                         const displacement = getLineAdjustment();
 
                         template.set({
@@ -356,7 +345,7 @@ export default function (scrawl, el) {
             );
 
 
-            // Boilerplate user interaction - editing the text
+// Boilerplate user interaction - editing the text
             if (el.getAttribute('contenteditable')) {
 
                 const updateText = () => {
@@ -377,7 +366,7 @@ export default function (scrawl, el) {
             }
 
 
-            // Boilerplate - animation control
+// Boilerplate - animation control
             if ('static' === compStyles.position) el.style.position = 'relative';
 
             const control = document.createElement('button');
@@ -398,8 +387,6 @@ export default function (scrawl, el) {
 
                 isAnimated = !isAnimated;
 
-                // myGradient.set({ animateByDelta: isAnimated });
-
                 control.textContent = isAnimated ? 'Halt' : 'Play';
             };
 
@@ -408,14 +395,12 @@ export default function (scrawl, el) {
             );
 
 
-            // Accessibility
+// Accessibility
             const reduceMotionAction = () => {
 
                 if (isAnimated) {
 
                     isAnimated = false;
-
-                    // myGradient.set({ animateByDelta: isAnimated });
 
                     control.textContent = 'Play';
                 }
@@ -427,22 +412,32 @@ export default function (scrawl, el) {
 
                     isAnimated = true;
 
-                    // myGradient.set({ animateByDelta: isAnimated });
-
                     control.textContent = 'Halt';
                 }
             };
 
             const colorSchemeLightAction = () => {
 
-                backBlock.set({ fillStyle: userData.mainColor });
-                stripeBlock.set({ fillStyle: userData.stripeColor });
+                stripeGradient.set({
+                    colors: [
+                        [0, userData.mainColor],
+                        [Math.round(999 * stripeRatio), userData.mainColor],
+                        [Math.round(999 * stripeRatio) + 1, userData.stripeColor],
+                        [999, userData.stripeColor],
+                    ],
+                });
             };
 
             const colorSchemeDarkAction = () => {
 
-                backBlock.set({ fillStyle: userData.darkMainColor });
-                stripeBlock.set({ fillStyle: userData.darkStripeColor });
+                stripeGradient.set({
+                    colors: [
+                        [0, userData.darkMainColor],
+                        [Math.round(999 * stripeRatio), userData.darkMainColor],
+                        [Math.round(999 * stripeRatio) + 1, userData.darkStripeColor],
+                        [999, userData.darkStripeColor],
+                    ],
+                });
             };
 
             canvas.set({
@@ -453,11 +448,11 @@ export default function (scrawl, el) {
             });
 
 
-            // Render once, to get everything in place
+// Render once, to get everything in place
             animation.updateOnce();
 
-            // Return the snippet, so coders can access the snippet's parts
-            // + In case they need to tweak the output to meet the web page's specific requirements
+// Return the snippet, so coders can access the snippet's parts
+// + In case they need to tweak the output to meet the web page's specific requirements
             return snippet;
         }
     }
