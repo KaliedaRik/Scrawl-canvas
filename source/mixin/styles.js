@@ -33,9 +33,9 @@ import { _floor, _isArray, _isFinite, _keys, _values, ADD_EASE, ADD_MAP_CONTOUR,
 //      stage: string - one from: 'before-spread', 'after-spread', on-alpha, 'on-coordinates'.
 //.     parameters: object containing attributes relevant to the given operation
 // }
-// 
+//
 // Thus:
-// 
+//
 // {
 //      operation: 'add-noise',
 //      stage: 'after-spread', - before-spread, after-spread
@@ -45,7 +45,7 @@ import { _floor, _isArray, _isFinite, _keys, _values, ADD_EASE, ADD_MAP_CONTOUR,
 //          seed: '', - any string value
 //      }
 // }
-// 
+//
 // {
 //      operation: 'add-ease',
 //      stage: 'after-spread', - before-spread, after-spread
@@ -896,7 +896,7 @@ export default function (P = Ωempty) {
 
             correctX = -entityStampPosition[0] || 0;
             correctY = -entityStampPosition[1] || 0;
- 
+
             this.updateGradientArgs(correctX, correctY, -entity.currentRotation, 1);
         }
     };

@@ -400,8 +400,8 @@ canvas.buildCell({
     name: name('watermark-pattern-cell'),
     shown: false,
     dimensions: [200, 150],
-    skewX: 0.2,
-    skewY: -0.4,
+    patternSkewX: 0.2,
+    patternSkewY: -0.4,
 });
 
 scrawl.makeLabel({

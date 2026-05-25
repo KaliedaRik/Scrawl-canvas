@@ -402,7 +402,6 @@ export default function (scrawl, el) {
 
                 const highlightColor = (isDark) ? userData.darkHighlightColor : userData.highlightColor;
                 const baseColor = (isDark) ? userData.darkBaseColor : userData.baseColor;
-                const shadowColor = (isDark) ? userData.darkShadowColor : userData.shadowColor;
 
                 worleyGradient.set({
                     colors: [

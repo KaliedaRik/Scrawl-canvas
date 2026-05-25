@@ -36,7 +36,7 @@ import buttonMix from './button.js';
 import filterMix from './filter.js';
 
 // Shared constants
-import { _floor, _isArray, _isFinite, _keys, _parse, _radian, BLACK, BLANK, DESTINATION_OUT, DRAW, FILL, GOOD_HOST, GRADIENTS_ARR, IMG, MOUSE, NAME, PAD, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS, T_CONIC_GRADIENT, T_GRADIENT, T_RADIAL_GRADIENT, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, _keys, _parse, BLACK, BLANK, DESTINATION_OUT, DRAW, FILL, GOOD_HOST, GRADIENTS_ARR, IMG, MOUSE, NAME, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS, T_CONIC_GRADIENT, T_GRADIENT, T_RADIAL_GRADIENT, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const NONZERO = 'nonzero',
@@ -1285,17 +1285,15 @@ export default function (P = Ωempty) {
 // `draw` - stroke the entity outline with the entity's `strokeStyle` color, gradient or pattern - including shadow
     P.draw = function (engine) {
 
-        this.useDrawGradientCache 
-            ? this.applyFromWorkstore(engine, this.identifierDrawGradientCache)
-            : engine.stroke(this.pathObject);
+        if (this.useDrawGradientCache) this.applyFromWorkstore(engine, this.identifierDrawGradientCache);
+        else engine.stroke(this.pathObject);
     };
 
 // `fill` - fill the entity with the entity's `fillStyle` color, gradient or pattern - including shadow
     P.fill = function (engine) {
 
-        this.useFillGradientCache 
-            ? this.applyFromWorkstore(engine, this.identifierFillGradientCache)
-            : engine.fill(this.pathObject, this.winding);
+        if (this.useFillGradientCache) this.applyFromWorkstore(engine, this.identifierFillGradientCache);
+        else engine.fill(this.pathObject, this.winding);
     };
 
 // `drawAndFill` - stamp the entity stroke, then fill, then remove shadow and repeat
@@ -1309,11 +1307,19 @@ export default function (P = Ωempty) {
             fillUse = this.useFillGradientCache,
             fillId = this.identifierFillGradientCache;
 
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
         this.currentHost.clearShadow();
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
     };
 
 // `drawAndFill` - stamp the entity fill, then stroke, then remove shadow and repeat
@@ -1327,11 +1333,19 @@ export default function (P = Ωempty) {
             fillUse = this.useFillGradientCache,
             fillId = this.identifierFillGradientCache;
 
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
         this.currentHost.clearShadow();
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
     };
 
 // `drawThenFill` - stroke the entity's outline, then fill it (shadow applied twice)
@@ -1340,12 +1354,11 @@ export default function (P = Ωempty) {
         const p = this.pathObject,
             apply = this.applyFromWorkstore.bind(this);
 
-        this.useDrawGradientCache 
-            ? apply(engine, this.identifierDrawGradientCache)
-            : engine.stroke(this.pathObject);
-        this.useFillGradientCache 
-            ? apply(engine, this.identifierFillGradientCache)
-            : engine.fill(this.pathObject, this.winding);
+        if (this.useDrawGradientCache) apply(engine, this.identifierDrawGradientCache);
+        else engine.stroke(p);
+
+        if (this.useFillGradientCache) apply(engine, this.identifierFillGradientCache);
+        else engine.fill(p, this.winding);
     };
 
 // `fillThenDraw` - fill the entity's outline, then stroke it (shadow applied twice)
@@ -1354,12 +1367,11 @@ export default function (P = Ωempty) {
         const p = this.pathObject,
             apply = this.applyFromWorkstore.bind(this);
 
-        this.useFillGradientCache 
-            ? apply(engine, this.identifierFillGradientCache)
-            : engine.fill(this.pathObject, this.winding);
-        this.useDrawGradientCache 
-            ? apply(engine, this.identifierDrawGradientCache)
-            : engine.stroke(this.pathObject);
+        if (this.useFillGradientCache) apply(engine, this.identifierFillGradientCache);
+        else engine.fill(p, this.winding);
+
+        if (this.useDrawGradientCache) apply(engine, this.identifierDrawGradientCache);
+        else engine.stroke(p);
     };
 
 // `clip` - restrict drawing activities to the entity's enclosed area

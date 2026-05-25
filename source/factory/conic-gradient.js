@@ -5,7 +5,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, generateIdForArtefact, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
+import { addStrings, doCreate, generateIdForArtefact, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
 import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
 
@@ -13,7 +13,7 @@ import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
 // Shared constants
-import { _radian, BLANK, PAD, STYLES, T_CONIC_GRADIENT, ZERO_STR } from '../helper/shared-vars.js';
+import { _radian, BLANK, PAD, STYLES, T_CONIC_GRADIENT } from '../helper/shared-vars.js';
 
 // Local constants
 // + None defined
@@ -48,14 +48,14 @@ const defaultAttributes = {
     angle: 0,
 
 // The following attributes may trigger a software rendering of the ConicGradient
-// 
+//
 // `spread` - value from 'pad' (default), 'repeat', 'reflect', 'transparent'
 //
 // `angleRange` - by default the Conic gradient will sweep a complete turn around the start point. We can limit it to just a part of the circle by setting this attribute to a value greater than 0 and less than 360 (degrees). The spread attribute then determines how the gradient should complete the circle:
 // + 'pad', 'reflect', 'repeat', 'transparent'
 //
 // `angleRange` - number between 1 and 360 (default) - the distance around the origin which the gratient will wrap
-// + For `pad` spread, the remainder of the distance will be filled equally by the gradient's first and last color points 
+// + For `pad` spread, the remainder of the distance will be filled equally by the gradient's first and last color points
 // + For other spreads, the remaining space will be filled with repeats/reflections of the gradient, or will be transparent
     angleRange: 360,
 

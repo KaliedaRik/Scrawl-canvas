@@ -1,7 +1,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 
-import { doCreate, easeEngines, generateIdForArtefact, isa_fn, λfirstArg } from './utilities.js';
+import { doCreate, easeEngines, isa_fn, λfirstArg } from './utilities.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 import { checkForWorkstoreItem, getWorkstoreItem, setWorkstoreItem } from './workstore.js';
@@ -10,7 +10,7 @@ import { bluenoise, orderedNoise } from './filter-engine-bluenoise-data.js';
 import { makeNoiseAsset } from '../asset-management/noise-asset.js';
 
 // Shared constants
-import { _abs, _atan2, _ceil, _cos, _floor, _isArray, _isFinite, _max, _min, _piHalf, _pow, _radian, _round, _sin, _sqrt, ADD_EASE, ADD_MAP_CONTOUR, ADD_MAP_DISPLACE, ADD_MAP_EASE, ADD_MAP_FLOW, ADD_MAP_ROTATE, ADD_MAP_THRESHOLD, ADD_MAP_WARP, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, BOTTOM, CENTER, DEFAULT_SEED, LEFT, ON_COORDINATES, ORDERED, PATH_ENTITY, PERMITTED_NOISE, RANDOM, REFLECT, REPEAT, RIGHT, T_GRADIENT, T_LABEL, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TOP, TRANSPARENT } from './shared-vars.js';
+import { _abs, _atan2, _ceil, _cos, _floor, _isFinite, _max, _min, _radian, _sin, _sqrt, ADD_EASE, ADD_MAP_CONTOUR, ADD_MAP_DISPLACE, ADD_MAP_EASE, ADD_MAP_FLOW, ADD_MAP_ROTATE, ADD_MAP_THRESHOLD, ADD_MAP_WARP, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLUENOISE, BOTTOM, CENTER, DEFAULT_SEED, LEFT, ON_COORDINATES, ORDERED, PATH_ENTITY, PERMITTED_NOISE, RANDOM, REFLECT, REPEAT, RIGHT, T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT, TOP, TRANSPARENT } from './shared-vars.js';
 
 // Local constants
 const T_GRADIENT_ENGINE = 'GradientEngine',
@@ -23,14 +23,7 @@ const noiseAsset = makeNoiseAsset({
     name: 'SC-gradient-engine-noise-asset',
 });
 
-console.log(noiseAsset);
-
-const {
-    element: noiseElement,
-    engine: noiseEngine,
-    stateAttributeDefaults: noiseDefs,  
-    currentAttributeValues: noiseVals,
-} = noiseAsset;
+const noiseDefs = noiseAsset.stateAttributeDefaults;
 
 
 // #### GradientEngine constructor
@@ -1118,15 +1111,15 @@ const getRippleOperation = function (op, workData, entity, lock) {
 
         const [w, h] = entity.get('dimensions');
 
-        width = w,
+        width = w;
         height = h;
     }
 
     const amplitude = _isFinite(params.amplitude) ? params.amplitude : 10,
         frequency = _isFinite(params.frequency) ? params.frequency : 0.05,
         phase = _isFinite(params.phase) ? params.phase : 0;
-    
-    let originX = getCoordinateValue(params.originX, width),
+
+    const originX = getCoordinateValue(params.originX, width),
         originY = getCoordinateValue(params.originY, height);
 
     return function (coord) {

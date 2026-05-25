@@ -13,7 +13,7 @@ import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
 // Shared constants
-import { BLACK, BLANK, STYLES, T_GRADIENT, PAD } from '../helper/shared-vars.js';
+import { BLANK, STYLES, T_GRADIENT } from '../helper/shared-vars.js';
 
 // Local constants
 // + None defined

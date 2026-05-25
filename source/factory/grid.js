@@ -3,7 +3,7 @@
 
 
 // #### Imports
-import { constructors, entity } from '../core/library.js';
+import { constructors, entity, styles } from '../core/library.js';
 
 import { doCreate, generateIdForArtefact, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, λnull, Ωempty } from '../helper/utilities.js';
 

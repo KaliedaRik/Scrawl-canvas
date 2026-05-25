@@ -612,12 +612,10 @@ P.cleanPathObject = function () {
 // `draw`
 P.draw = function (engine) {
 
-    const p = this.pathObject,
-        apply = this.applyFromWorkstore.bind(this),
-        drawUse = this.useDrawGradientCache,
-        drawId = this.identifierDrawGradientCache;
+    const apply = this.applyFromWorkstore.bind(this);
 
-    drawUse ? apply(engine, drawId) : engine.stroke(p);
+    if (this.identifierDrawGradientCache) apply(engine, this.identifierDrawGradientCache);
+    else engine.stroke(this.pathObject);
 };
 
 // `fill`
@@ -640,12 +638,16 @@ P.drawAndFill = function (engine) {
             drawUse = this.useDrawGradientCache,
             drawId = this.identifierDrawGradientCache;
 
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
         engine.drawImage(this.source, x, y, w, h, _x, _y, _w, _h);
 
         this.currentHost.clearShadow();
 
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
         engine.drawImage(this.source, x, y, w, h, _x, _y, _w, _h);
     }
 };
@@ -664,12 +666,16 @@ P.fillAndDraw = function (engine) {
             drawId = this.identifierDrawGradientCache;
 
         engine.drawImage(this.source, x, y, w, h, _x, _y, _w, _h);
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
 
         this.currentHost.clearShadow();
 
         engine.drawImage(this.source, x, y, w, h, _x, _y, _w, _h);
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
     }
 
     engine.stroke(this.pathObject);
@@ -687,7 +693,9 @@ P.drawThenFill = function (engine) {
             drawUse = this.useDrawGradientCache,
             drawId = this.identifierDrawGradientCache;
 
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
         engine.drawImage(this.source, x, y, w, h, ...this.pasteArray);
     }
 };
@@ -705,7 +713,9 @@ P.fillThenDraw = function (engine) {
             drawId = this.identifierDrawGradientCache;
 
         engine.drawImage(this.source, x, y, w, h, ...this.pasteArray);
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
     }
 };
 

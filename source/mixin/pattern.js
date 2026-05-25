@@ -11,7 +11,7 @@ import { mergeOver, Ωempty } from '../helper/utilities.js';
 import { cell } from '../core/library.js';
 
 // Shared constants
-import { _isArray, _isFinite, BLANK, DRAW, FILL, T_CELL, T_NOISE } from '../helper/shared-vars.js';
+import { BLANK, DRAW, FILL, T_CELL, T_NOISE } from '../helper/shared-vars.js';
 
 // Local constants
 const MAT_REPEAT = ['repeat', 'repeat-x', 'repeat-y', 'no-repeat'],

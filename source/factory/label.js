@@ -406,7 +406,7 @@ P.cleanHandle = function () {
 // Overwrites the function in mixin/entity.js
 P.setGradientCacheFlags = function () {
 
-    let fillGradient, drawGradient;
+    let fillGradient;
 
     if (this.state) {
 

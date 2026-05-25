@@ -590,9 +590,8 @@ export default function (P = Ωempty) {
     // `draw`
     P.draw = function (engine) {
 
-        this.useDrawGradientCache 
-            ? this.applyFromWorkstore(engine, this.identifierDrawGradientCache)
-            : engine.stroke(this.pathObject);
+        if (this.useDrawGradientCache) this.applyFromWorkstore(engine, this.identifierDrawGradientCache);
+        else engine.stroke(this.pathObject);
 
         if (this.showBoundingBox) this.drawBoundingBox(engine);
     };
@@ -600,9 +599,8 @@ export default function (P = Ωempty) {
     // `fill`
     P.fill = function (engine) {
 
-        this.useFillGradientCache 
-            ? this.applyFromWorkstore(engine, this.identifierFillGradientCache)
-            : engine.fill(this.pathObject, this.winding);
+        if (this.useFillGradientCache) this.applyFromWorkstore(engine, this.identifierFillGradientCache);
+        else engine.fill(this.pathObject, this.winding);
 
         if (this.showBoundingBox) this.drawBoundingBox(engine);
     };
@@ -618,11 +616,19 @@ export default function (P = Ωempty) {
             fillUse = this.useFillGradientCache,
             fillId = this.identifierFillGradientCache;
 
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
         this.currentHost.clearShadow();
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
 
         if (this.showBoundingBox) this.drawBoundingBox(engine);
     };
@@ -638,11 +644,19 @@ export default function (P = Ωempty) {
             fillUse = this.useFillGradientCache,
             fillId = this.identifierFillGradientCache;
 
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
         this.currentHost.clearShadow();
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
 
         if (this.showBoundingBox) this.drawBoundingBox(engine);
     };
@@ -653,12 +667,11 @@ export default function (P = Ωempty) {
         const p = this.pathObject,
             apply = this.applyFromWorkstore.bind(this);
 
-        this.useDrawGradientCache 
-            ? apply(engine, this.identifierDrawGradientCache)
-            : engine.stroke(this.pathObject);
-        this.useFillGradientCache 
-            ? apply(engine, this.identifierFillGradientCache)
-            : engine.fill(this.pathObject, this.winding);
+        if (this.useDrawGradientCache) apply(engine, this.identifierDrawGradientCache);
+        else engine.stroke(p);
+
+        if (this.useFillGradientCache) apply(engine, this.identifierFillGradientCache);
+        else engine.fill(p, this.winding);
 
         if (this.showBoundingBox) this.drawBoundingBox(engine);
     };
@@ -669,12 +682,11 @@ export default function (P = Ωempty) {
         const p = this.pathObject,
             apply = this.applyFromWorkstore.bind(this);
 
-        this.useFillGradientCache 
-            ? apply(engine, this.identifierFillGradientCache)
-            : engine.fill(this.pathObject, this.winding);
-        this.useDrawGradientCache 
-            ? apply(engine, this.identifierDrawGradientCache)
-            : engine.stroke(this.pathObject);
+        if (this.useFillGradientCache) apply(engine, this.identifierFillGradientCache);
+        else engine.fill(p, this.winding);
+
+        if (this.useDrawGradientCache) apply(engine, this.identifierDrawGradientCache);
+        else engine.stroke(p);
 
         if (this.showBoundingBox) this.drawBoundingBox(engine);
     };

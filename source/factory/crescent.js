@@ -365,9 +365,8 @@ P.draw = function (engine) {
 // `fill` - fill the entity with the entity's `fillStyle` color, gradient or pattern - including shadow
 P.fill = function (engine) {
 
-    this.useFillGradientCache 
-        ? this.applyFromWorkstore(engine, this.identifierFillGradientCache)
-        : engine.fill(this.pathObject, this.winding);
+    if (this.useFillGradientCache) this.applyFromWorkstore(engine, this.identifierFillGradientCache);
+    else engine.fill(this.pathObject, this.winding);
 };
 
 // `drawAndFill` - stamp the entity stroke, then fill, then remove shadow and repeat
@@ -383,11 +382,19 @@ P.drawAndFill = function (engine) {
 
     if (!this.drawDonut) {
 
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
         this.currentHost.clearShadow();
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
     }
     else {
 
@@ -401,7 +408,8 @@ P.drawAndFill = function (engine) {
             engine.stroke(pInner);
         }
 
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
 
         this.currentHost.clearShadow();
 
@@ -412,7 +420,8 @@ P.drawAndFill = function (engine) {
             engine.stroke(pInner);
         }
 
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
     }
 };
 
@@ -429,18 +438,27 @@ P.fillAndDraw = function (engine) {
 
     if (!this.drawDonut) {
 
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
         this.currentHost.clearShadow();
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
     }
     else {
 
         const pOuter = this.pathObjectOuter,
             pInner = this.pathObjectInner;
 
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
 
         if (drawUse) apply(engine, drawId);
         else {
@@ -451,7 +469,8 @@ P.fillAndDraw = function (engine) {
 
         this.currentHost.clearShadow();
 
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
 
         if (drawUse) apply(engine, drawId);
         else {
@@ -475,8 +494,11 @@ P.drawThenFill = function (engine) {
 
     if (!this.drawDonut) {
 
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
     }
     else {
 
@@ -490,7 +512,8 @@ P.drawThenFill = function (engine) {
             engine.stroke(pInner);
         }
 
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
     }
 };
 
@@ -507,15 +530,19 @@ P.fillThenDraw = function (engine) {
 
     if (!this.drawDonut) {
 
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
-        drawUse ? apply(engine, drawId) : engine.stroke(p);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
     }
     else {
 
         const pOuter = this.pathObjectOuter,
             pInner = this.pathObjectInner;
 
-        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
 
         if (drawUse) apply(engine, drawId);
         else {
