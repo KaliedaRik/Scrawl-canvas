@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -604,7 +609,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { addStrings, mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { styles } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { addStrings, generateIdForArtefact, isa_obj, mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/state.js&#x27;</span>;
 
@@ -613,6 +620,9 @@
 <span class="hljs-keyword">import</span> { filterEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/filter-engine.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { importDomImage } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../asset-management/image-asset.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { currentGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/canvas.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { checkForWorkstoreItem, getWorkstoreItem } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/workstore.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { gradientEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/gradient-engine.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> positionMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./position.js&#x27;</span>;
 <span class="hljs-keyword">import</span> deltaMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./delta.js&#x27;</span>;
@@ -637,7 +647,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _floor, _keys, _parse, <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GOOD_HOST</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STATE_KEYS</span>,  <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _floor, _isArray, _isFinite, _keys, _parse, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">DRAW</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GOOD_HOST</span>, <span class="hljs-variable constant_">GRADIENTS_ARR</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">STATE_KEYS</span>, <span class="hljs-variable constant_">T_CONIC_GRADIENT</span>, <span class="hljs-variable constant_">T_GRADIENT</span>, <span class="hljs-variable constant_">T_RADIAL_GRADIENT</span>, <span class="hljs-variable constant_">UNDEF</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -652,7 +662,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">NONZERO</span> = <span class="hljs-string">&#x27;nonzero&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">NONZERO</span> = <span class="hljs-string">&#x27;nonzero&#x27;</span>,
+    <span class="hljs-variable constant_">STATE_OVERRIDE_DELTA_KEYS</span> = [<span class="hljs-string">&#x27;lineDashOffset&#x27;</span>, <span class="hljs-string">&#x27;lineWidth&#x27;</span>, <span class="hljs-string">&#x27;miterLimit&#x27;</span>],
+    <span class="hljs-variable constant_">STATE_OVERRIDE_KEYS</span> = [...<span class="hljs-variable constant_">STATE_OVERRIDE_DELTA_KEYS</span>, <span class="hljs-string">&#x27;fillStyle&#x27;</span>, <span class="hljs-string">&#x27;lineCap&#x27;</span>, <span class="hljs-string">&#x27;lineDash&#x27;</span>, <span class="hljs-string">&#x27;lineJoin&#x27;</span>, <span class="hljs-string">&#x27;strokeStyle&#x27;</span>];</pre></div></div>
             
         </li>
         
@@ -960,6 +972,7 @@
 <li>COLORNAME String</li>
 <li>GRADIENTNAME String</li>
 <li>RADIALGRADIENTNAME String</li>
+<li>CONICGRADIENTNAME String</li>
 <li>PATTERNNAME String</li>
 </ul>
 <p><strong>globalAlpha</strong> - entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque</p>
@@ -1114,7 +1127,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,
-        S = P.<span class="hljs-property">setters</span>;</pre></div></div>
+        S = P.<span class="hljs-property">setters</span>,
+        D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -1149,8 +1163,12 @@
             
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">lockStylesToEntity</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
+        item = !!item;
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span> = item;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockStrokeStyleToEntity</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1161,6 +1179,302 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <p><strong>lockFillStyleToEntity</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">lockFillStyleToEntity</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        item = !!item;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p><strong>lockStrokeStyleToEntity</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">lockStrokeStyleToEntity</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        item = !!item;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockStrokeStyleToEntity</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
+              <p><strong>flipReverse</strong>, <strong>flipUpend</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">flipReverse</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        item = !!item;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">flipReverse</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
+              <p><strong>lockStrokeStyleToEntity</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">flipUpend</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        item = !!item;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">flipUpend</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
+              <p><strong>fillStyle</strong>, <strong>strokeStyle</strong> - these attributes belong in the state object</p>
+<ul>
+<li>We hijack the normal setting processes for the state object because we want to subscribe to filters</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">fillStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
+        <span class="hljs-keyword">let</span> gradientCandidate = item,
+            currentFill = state.<span class="hljs-property">fillStyle</span>;
+
+        <span class="hljs-keyword">if</span> (currentFill.<span class="hljs-property">substring</span>) currentFill = styles[currentFill];
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(currentFill) &amp;&amp; <span class="hljs-variable constant_">GRADIENTS_ARR</span>.<span class="hljs-title function_">includes</span>(currentFill.<span class="hljs-property">type</span>)) currentFill.<span class="hljs-title function_">fillUnsubscribe</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+
+        <span class="hljs-keyword">if</span> (item &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>) {
+
+            <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
+
+                gradientCandidate = styles[item];
+
+                <span class="hljs-keyword">if</span> (!gradientCandidate) {
+
+                    state.<span class="hljs-property">fillStyle</span> = item;
+
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+                    <span class="hljs-keyword">return</span>;
+                }
+            }
+            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(gradientCandidate)) {
+
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">GRADIENTS_ARR</span>.<span class="hljs-title function_">includes</span>(gradientCandidate.<span class="hljs-property">type</span>)) {
+
+                    gradientCandidate.<span class="hljs-title function_">fillSubscribe</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+                    state.<span class="hljs-property">fillStyle</span> = gradientCandidate.<span class="hljs-property">name</span>;
+                }
+                <span class="hljs-keyword">else</span> state.<span class="hljs-property">fillStyle</span> = gradientCandidate.<span class="hljs-property">name</span> || <span class="hljs-variable constant_">BLANK</span>;
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">return</span>;
+            }
+        }
+        state.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable constant_">BLANK</span>;
+    };
+
+    S.<span class="hljs-property">strokeStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
+        <span class="hljs-keyword">let</span> gradientCandidate = item,
+            currentDraw = state.<span class="hljs-property">strokeStyle</span>;
+
+        <span class="hljs-keyword">if</span> (currentDraw.<span class="hljs-property">substring</span>) currentDraw = styles[currentDraw];
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(currentDraw) &amp;&amp; <span class="hljs-variable constant_">GRADIENTS_ARR</span>.<span class="hljs-title function_">includes</span>(currentDraw.<span class="hljs-property">type</span>)) currentDraw.<span class="hljs-title function_">drawUnsubscribe</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+
+        <span class="hljs-keyword">if</span> (item &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>) {
+
+            <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
+
+                gradientCandidate = styles[item];
+
+                <span class="hljs-keyword">if</span> (!gradientCandidate) {
+
+                    state.<span class="hljs-property">strokeStyle</span> = item;
+
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+                    <span class="hljs-keyword">return</span>;
+                }
+            }
+            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(gradientCandidate)) {
+
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">GRADIENTS_ARR</span>.<span class="hljs-title function_">includes</span>(gradientCandidate.<span class="hljs-property">type</span>)) {
+
+                    gradientCandidate.<span class="hljs-title function_">drawSubscribe</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+                    state.<span class="hljs-property">strokeStyle</span> = gradientCandidate.<span class="hljs-property">name</span>;
+                }
+                <span class="hljs-keyword">else</span> state.<span class="hljs-property">strokeStyle</span> = gradientCandidate.<span class="hljs-property">name</span> || <span class="hljs-variable constant_">BLANK</span>;
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">return</span>;
+            }
+        }
+        state.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable constant_">BLANK</span>;
+    };
+
+    S.<span class="hljs-property">lineDashOffset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(item) &amp;&amp; state) {
+
+            state.<span class="hljs-property">lineDashOffset</span> = item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+    D.<span class="hljs-property">lineDashOffset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(item) &amp;&amp; state) {
+
+            state.<span class="hljs-property">lineDashOffset</span> = <span class="hljs-title function_">addStrings</span>(state.<span class="hljs-property">lineDashOffset</span>, item);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">lineWidth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(item) &amp;&amp; state) {
+
+            state.<span class="hljs-property">lineWidth</span> = item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+    D.<span class="hljs-property">lineWidth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(item) &amp;&amp; state) {
+
+            state.<span class="hljs-property">lineWidth</span> = <span class="hljs-title function_">addStrings</span>(state.<span class="hljs-property">lineWidth</span>, item);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">miterLimit</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(item) &amp;&amp; state) {
+
+            state.<span class="hljs-property">miterLimit</span> = item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+    D.<span class="hljs-property">miterLimit</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(item) &amp;&amp; state) {
+
+            state.<span class="hljs-property">miterLimit</span> = <span class="hljs-title function_">addStrings</span>(state.<span class="hljs-property">miterLimit</span>, item);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">lineCap</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
+        <span class="hljs-keyword">if</span> (state &amp;&amp; item.<span class="hljs-property">substring</span>) {
+
+            state.<span class="hljs-property">lineCap</span> = item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">lineDash</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
+        <span class="hljs-keyword">if</span> (state &amp;&amp; <span class="hljs-title function_">_isArray</span>(item)) {
+
+            state.<span class="hljs-property">lineDash</span> = item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">lineJoin</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
+        <span class="hljs-keyword">if</span> (state &amp;&amp; item.<span class="hljs-property">substring</span>) {
+
+            state.<span class="hljs-property">lineJoin</span> = item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">scaleOutline</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">scaleOutline</span> = !!item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Entity <code>get</code>, <code>set</code> and <code>deltaSet</code> functions need to take into account the entity State object, whose attributes can be retrieved/amended directly on the entity object</p>
 
@@ -1216,9 +1530,22 @@
                 key = keys[i];
                 val = items[key];
 
-                <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-variable constant_">NAME</span> &amp;&amp; val != <span class="hljs-literal">null</span>) {
+                <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-variable constant_">NAME</span> &amp;&amp; val != <span class="hljs-literal">null</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
+              </div>
+              <p>Special circumstances for fillStyle and strokeStyle</p>
 
-                    <span class="hljs-keyword">if</span> (!<span class="hljs-variable constant_">STATE_KEYS</span>.<span class="hljs-title function_">includes</span>(key)) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (!<span class="hljs-variable constant_">STATE_KEYS</span>.<span class="hljs-title function_">includes</span>(key) || <span class="hljs-variable constant_">STATE_OVERRIDE_KEYS</span>.<span class="hljs-title function_">includes</span>(key)) {
 
                         fn = setters[key];
 
@@ -1261,7 +1588,7 @@
 
                 <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-variable constant_">NAME</span> &amp;&amp; val != <span class="hljs-literal">null</span>) {
 
-                    <span class="hljs-keyword">if</span> (!<span class="hljs-variable constant_">STATE_KEYS</span>.<span class="hljs-title function_">includes</span>(key)) {
+                    <span class="hljs-keyword">if</span> (!<span class="hljs-variable constant_">STATE_KEYS</span>.<span class="hljs-title function_">includes</span>(key) || <span class="hljs-variable constant_">STATE_OVERRIDE_DELTA_KEYS</span>.<span class="hljs-title function_">includes</span>(key)) {
 
                         fn = setters[key];
 
@@ -1284,11 +1611,11 @@
         </li>
         
         
-        <li id="section-30">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1297,11 +1624,11 @@
         </li>
         
         
-        <li id="section-31">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><code>entityInit</code> - internal function, called by all entity factory constructors</p>
 
@@ -1328,6 +1655,15 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImageData</span> = <span class="hljs-literal">null</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImage</span> = <span class="hljs-literal">null</span>;
 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradient</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span> = <span class="hljs-variable constant_">ZERO_STR</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradient</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span> = <span class="hljs-variable constant_">ZERO_STR</span>;
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
 
         <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">group</span>) items.<span class="hljs-property">group</span> = currentGroup;
@@ -1348,11 +1684,11 @@
         </li>
         
         
-        <li id="section-32">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <h4 id="display-cycle-functionality">Display cycle functionality</h4>
 <p>Entitys - as artefacts - take part in the Display cycle at the <code>compile</code> stage, when Cell wrappers trigger a compile action cascade through their associated Group objects to entity objects included in those groups.</p>
@@ -1368,11 +1704,11 @@
         </li>
         
         
-        <li id="section-33">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <h5 id="step-1-prepare-the-entity-for-stamping">Step 1: prepare the entity for stamping</h5>
 <p><code>prepareStamp</code> - all entity objects need to check the following dirty flags and take corrective action when a flag is set.</p>
@@ -1395,11 +1731,11 @@
         </li>
         
         
-        <li id="section-34">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>dirtyHost</code> - set by a Cell wrapper on the entitys associated with it (via the Cell’s associated Group objects) whenever the Cell’s dimensions change. The entity sets its own <code>dirtyDimensions</code> flag as a result.</p>
 
@@ -1409,97 +1745,9 @@
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">false</span>;
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
-        }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
-              </div>
-              <p>A number of updates (<strong>scale</strong>, <strong>dimensions</strong>, <strong>start</strong>, <strong>offset</strong>, <strong>handle</strong>) require the entity to recalculate its Path2D object - if any of them are set, then the entity sets its own <code>dirtyPathObject</code> flag as a result.</p>
+        }
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
-              </div>
-              <p><code>dirtyScale</code> - triggers <strong>cleanScale</strong> function - which in turn sets the <code>dirtyDimensions</code>, <code>dirtyHandle</code> and (if required) <code>dirtyPositionSubscribers</code>, <code>dirtyMimicScale</code> flags on the entity.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanScale</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
-              </div>
-              <p><code>dirtyDimensions</code> - triggers <strong>cleanDimensions</strong> function - which in turn sets the <code>dirtyStart</code>, <code>dirtyHandle</code>, <code>dirtyOffset</code> and (if required) <code>dirtyPositionSubscribers</code>, <code>dirtyMimicDimensions</code> flags on the entity.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanDimensions</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
-              </div>
-              <p><code>dirtyLock</code> - triggers <strong>cleanLock</strong> function - which in turn sets the <code>dirtyStart</code> and <code>dirtyHandle</code> flags on the entity.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyLock</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanLock</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
-              </div>
-              <p><code>dirtyStart</code> - triggers <strong>cleanStart</strong> function - which in turn sets the <code>dirtyStampPositions</code> flag on the entity.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStart</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
-              </div>
-              <p><code>dirtyOffset</code> - triggers <strong>cleanOffset</strong> function - which in turn sets the <code>dirtyStampPositions</code> and (if required) <code>dirtyMimicOffset</code> flags on the entity.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanOffset</span>();</pre></div></div>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setGradientCacheFlags</span>();</pre></div></div>
             
         </li>
         
@@ -1510,11 +1758,16 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
-              <p><code>dirtyHandle</code> - triggers <strong>cleanHandle</strong> function - which in turn sets the <code>dirtyStampHandlePositions</code> and (if required) <code>dirtyMimicHandle</code> flags on the entity.</p>
+              <p>A number of updates (<strong>scale</strong>, <strong>dimensions</strong>, <strong>start</strong>, <strong>offset</strong>, <strong>handle</strong>) require the entity to recalculate its Path2D object - if any of them are set, then the entity sets its own <code>dirtyPathObject</code> flag as a result.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanHandle</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+        }</pre></div></div>
             
         </li>
         
@@ -1525,11 +1778,15 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
-              <p><code>dirtyRotation</code> - triggers <strong>cleanRotation</strong> function - which in turn sets (if required) <code>dirtyMimicRotation</code>, <code>dirtyPivotRotation</code>, <code>dirtyPositionSubscribers</code> flags on the entity.</p>
+              <p>Non-classic gradients need to take into account rotation</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanRotation</span>();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span>) {
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+        }</pre></div></div>
             
         </li>
         
@@ -1539,6 +1796,111 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-43">&#x00a7;</a>
+              </div>
+              <p><code>dirtyScale</code> - triggers <strong>cleanScale</strong> function - which in turn sets the <code>dirtyDimensions</code>, <code>dirtyHandle</code> and (if required) <code>dirtyPositionSubscribers</code>, <code>dirtyMimicScale</code> flags on the entity.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanScale</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
+              </div>
+              <p><code>dirtyDimensions</code> - triggers <strong>cleanDimensions</strong> function - which in turn sets the <code>dirtyStart</code>, <code>dirtyHandle</code>, <code>dirtyOffset</code> and (if required) <code>dirtyPositionSubscribers</code>, <code>dirtyMimicDimensions</code> flags on the entity.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanDimensions</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-45">&#x00a7;</a>
+              </div>
+              <p><code>dirtyLock</code> - triggers <strong>cleanLock</strong> function - which in turn sets the <code>dirtyStart</code> and <code>dirtyHandle</code> flags on the entity.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyLock</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanLock</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-46">&#x00a7;</a>
+              </div>
+              <p><code>dirtyStart</code> - triggers <strong>cleanStart</strong> function - which in turn sets the <code>dirtyStampPositions</code> flag on the entity.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStart</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
+              </div>
+              <p><code>dirtyOffset</code> - triggers <strong>cleanOffset</strong> function - which in turn sets the <code>dirtyStampPositions</code> and (if required) <code>dirtyMimicOffset</code> flags on the entity.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanOffset</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-48">&#x00a7;</a>
+              </div>
+              <p><code>dirtyHandle</code> - triggers <strong>cleanHandle</strong> function - which in turn sets the <code>dirtyStampHandlePositions</code> and (if required) <code>dirtyMimicHandle</code> flags on the entity.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanHandle</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-49">&#x00a7;</a>
+              </div>
+              <p><code>dirtyRotation</code> - triggers <strong>cleanRotation</strong> function - which in turn sets (if required) <code>dirtyMimicRotation</code>, <code>dirtyPivotRotation</code>, <code>dirtyPositionSubscribers</code> flags on the entity.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanRotation</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>To handle situations where the entity position is currently under the influence of the mouse/touch cursor - where true, entity will set its own <code>dirtyStampPositions</code>, <code>dirtyStampHandlePositions</code> flags</p>
 
@@ -1553,11 +1915,30 @@
         </li>
         
         
-        <li id="section-44">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
+              </div>
+              <p>Non-classic gradients also need to take into account positional changes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span>) {
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p>Invoke the <strong>cleanStampPositions</strong> and <strong>cleanStampHandlePositions</strong> functions, if needed, to update current positional data prior to the stamping operation. Both functions will set the <code>dirtyPositionSubscribers</code> flag if changes to positional values result from the calculations.</p>
 
@@ -1569,11 +1950,11 @@
         </li>
         
         
-        <li id="section-45">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p>If the entity’s Path2D object has been marked as dirty by the <code>dirtyPathObject</code> flag, rebuild it by invoking the <strong>cleanPathObject</strong> function.</p>
 
@@ -1584,11 +1965,11 @@
         </li>
         
         
-        <li id="section-46">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>dirtyPositionSubscribers</code> - update any artefacts subscribed to this entity as their <code>pivot</code> or <code>mimic</code> source, if required, by invoking the <strong>updatePositionSubscribers</strong> function.</p>
 
@@ -1599,11 +1980,11 @@
         </li>
         
         
-        <li id="section-47">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>prepareStampTabsHelper</code> is defined in the <code>mixin/hidden-dom-elements.js</code> file - handles updates to anchor and button objects</p>
 
@@ -1615,26 +1996,15 @@
         </li>
         
         
-        <li id="section-48">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
-              <p>The <code>dirtyFilters</code> flag is checked and handled by the <strong>filteredStamp</strong> function.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-49">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
-              </div>
-              <p><code>cleanPathObject</code> - <em><strong>this function will be overwritten by every entity Factory</strong></em>, to meet their individual requirements.</p>
+              <p>The <code>dirtyFilters</code> flags are checked and handled by the <strong>filteredStamp</strong> function.</p>
+<p>The <code>dirtyGradientCache</code> flags are checked and handled by the <strong>updateGradientsBeforeStamp</strong> function.</p>
+<p><code>cleanPathObject</code> - <em><strong>this function will be overwritten by every entity Factory</strong></em>, to meet their individual requirements.</p>
 <ul>
 <li>The function needs to build a Canvas API <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D</a> object and store it in the <strong>pathObject</strong> attribute. The Path2D object is used for both entity stamping (see below) and entity collision detection work.</li>
 </ul>
@@ -1646,11 +2016,50 @@
         </li>
         
         
-        <li id="section-50">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
+              </div>
+              <p>We need to do work for gradients up-front - if fillStyle or strokeStyle are set to a gradient, then we need to determine if the gradient is “classic” or not.</p>
+<ul>
+<li>Classic gradients are rendered through the Canvas API</li>
+<li>Non-classic gradients (any gradient that reflects, repeats, or sets areas outside its boundaries to transparent) are not supported by the Canvas API and need to be rendered by SC instead</li>
+<li>Additional checks to prevent Pattern/Color object styles being marked as cache-able</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">setGradientCacheFlags</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-keyword">let</span> fillGradient, drawGradient;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>) {
+
+            <span class="hljs-keyword">const</span> { fillStyle, strokeStyle } = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
+            fillGradient = fillStyle.<span class="hljs-property">substring</span> ? styles[fillStyle] : fillStyle;
+            drawGradient = strokeStyle.<span class="hljs-property">substring</span> ? styles[strokeStyle] : strokeStyle;
+        }
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span> = (fillGradient &amp;&amp; <span class="hljs-variable constant_">GRADIENTS_ARR</span>.<span class="hljs-title function_">includes</span>(fillGradient.<span class="hljs-property">type</span>)) ?
+            !fillGradient.<span class="hljs-property">isClassic</span> :
+            <span class="hljs-literal">false</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span> = (drawGradient &amp;&amp; <span class="hljs-variable constant_">GRADIENTS_ARR</span>.<span class="hljs-title function_">includes</span>(drawGradient.<span class="hljs-property">type</span>)) ?
+            !drawGradient.<span class="hljs-property">isClassic</span> :
+            <span class="hljs-literal">false</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <h5 id="step-2-invoke-the-entitys-stamp-action">Step 2: invoke the entity’s stamp action</h5>
 <p><code>stamp</code> - this is the function invoked by Group objects as they cascade the Display cycle <strong>compile</strong> step through to their member artefacts.</p>
@@ -1678,11 +2087,11 @@
         </li>
         
         
-        <li id="section-51">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p>To note: <code>checkHitIgnoreTransparency</code> is specific to Picture entity</p>
 
@@ -1696,11 +2105,11 @@
         </li>
         
         
-        <li id="section-52">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - this function <em><strong>coordinates the actions required</strong></em> for an entity to display its output on a Cell wrapper’s &lt;canvas&gt; element.</p>
 <p>Scrawl-canvas stamps an entity onto a Cell by moving and rotating the Cell engine’s <code>transformation</code> (its coordinate grid) to match the entity’s <strong>start</strong> and <strong>offset</strong> coordinates, alongside any requirements to rotate (<strong>roll</strong>) and flip (<strong>flipReverse</strong>, <strong>flipUpend</strong>) the transformation as set out by the entity object.</p>
@@ -1726,26 +2135,31 @@
         </li>
         
         
-        <li id="section-53">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p>Get the Cell wrapper to perform required transformations on its &lt;canvas&gt; element’s 2D engine</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            dest.<span class="hljs-title function_">rotateDestination</span>(engine, x, y, <span class="hljs-variable language_">this</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            dest.<span class="hljs-title function_">rotateDestination</span>(engine, x, y, <span class="hljs-variable language_">this</span>);
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) {
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateGradientsBeforeStamp</span>(dest);
+            }</pre></div></div>
             
         </li>
         
         
-        <li id="section-54">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>Get the Cell wrapper to update its 2D engine’s attributes to match the entity’s requirements</p>
 
@@ -1756,11 +2170,11 @@
         </li>
         
         
-        <li id="section-55">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>Invoke the appropriate <strong>stamping method</strong> (below)</p>
 
@@ -1768,16 +2182,235 @@
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span>](engine);
         }
+    };
+
+    P.<span class="hljs-property">getFixedGradientData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">grad, styleType, lockedToEntityOverride = <span class="hljs-literal">null</span></span>) {
+
+        <span class="hljs-keyword">const</span> fixedGradientData = {
+            <span class="hljs-attr">type</span>: grad.<span class="hljs-property">type</span>,
+            <span class="hljs-attr">identifier</span>: grad.<span class="hljs-property">identifier</span>,
+            <span class="hljs-attr">spread</span>: grad.<span class="hljs-property">spread</span>,
+            <span class="hljs-attr">start</span>: [...grad.<span class="hljs-property">start</span>],
+            <span class="hljs-attr">paletteStart</span>: grad.<span class="hljs-property">paletteStart</span>,
+            <span class="hljs-attr">paletteEnd</span>: grad.<span class="hljs-property">paletteEnd</span>,
+            <span class="hljs-attr">cyclePalette</span>: grad.<span class="hljs-property">cyclePalette</span>,
+            <span class="hljs-attr">easing</span>: grad.<span class="hljs-property">palette</span>.<span class="hljs-property">easing</span>,
+            <span class="hljs-attr">stopsData</span>: grad.<span class="hljs-property">palette</span>.<span class="hljs-title function_">getStopsData</span>().<span class="hljs-title function_">slice</span>(),
+            <span class="hljs-attr">operations</span>: grad.<span class="hljs-property">operations</span>,
+            <span class="hljs-attr">lockedToEntity</span>: <span class="hljs-literal">false</span>,
+        };
+
+        <span class="hljs-keyword">if</span> (grad.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_GRADIENT</span>) {
+
+            fixedGradientData.<span class="hljs-property">end</span> = [...grad.<span class="hljs-property">end</span>];
+        }
+
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (grad.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_RADIAL_GRADIENT</span>) {
+
+            fixedGradientData.<span class="hljs-property">end</span> = [...grad.<span class="hljs-property">end</span>];
+            fixedGradientData.<span class="hljs-property">startRadius</span> = grad.<span class="hljs-property">startRadius</span>;
+            fixedGradientData.<span class="hljs-property">endRadius</span> = grad.<span class="hljs-property">endRadius</span>;
+        }
+
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (grad.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_CONIC_GRADIENT</span>) {
+
+            fixedGradientData.<span class="hljs-property">angle</span> = grad.<span class="hljs-property">angle</span>;
+            fixedGradientData.<span class="hljs-property">angleRange</span> = grad.<span class="hljs-property">angleRange</span>;
+            fixedGradientData.<span class="hljs-property">swirlDistance</span> = grad.<span class="hljs-property">swirlDistance</span>;
+            fixedGradientData.<span class="hljs-property">swirlClockwise</span> = grad.<span class="hljs-property">swirlClockwise</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (lockedToEntityOverride != <span class="hljs-literal">null</span>) {
+
+            fixedGradientData.<span class="hljs-property">lockedToEntity</span> = lockedToEntityOverride;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (
+            (styleType === <span class="hljs-variable constant_">FILL</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span>) ||
+            (styleType === <span class="hljs-variable constant_">DRAW</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockStrokeStyleToEntity</span>)
+        ) fixedGradientData.<span class="hljs-property">lockedToEntity</span> = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">return</span> fixedGradientData;
+    };
+
+    P.<span class="hljs-property">updateGradientsBeforeStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">refCell</span>) {
+
+        <span class="hljs-keyword">const</span> getFixedGradientData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getFixedGradientData</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>);
+
+        <span class="hljs-keyword">let</span> drawId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>,
+            fillId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) {
+
+            <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>,
+                pathObject = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+
+            <span class="hljs-keyword">const</span> grad = (state.<span class="hljs-property">strokeStyle</span>.<span class="hljs-property">substring</span>)
+                ? styles[state.<span class="hljs-property">strokeStyle</span>]
+                : state.<span class="hljs-property">strokeStyle</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-64">&#x00a7;</a>
+              </div>
+              <p>We only process gradients, not patterns or color objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">GRADIENTS_ARR</span>.<span class="hljs-title function_">includes</span>(grad.<span class="hljs-property">type</span>)) {
+
+                <span class="hljs-keyword">const</span> myCell = <span class="hljs-title function_">requestCell</span>(),
+                    element = myCell.<span class="hljs-property">element</span>,
+                    engine = myCell.<span class="hljs-property">engine</span>;
+
+                <span class="hljs-keyword">const</span> [width, height] = refCell.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;dimensions&#x27;</span>);
+                <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
+                <span class="hljs-keyword">const</span> matrix = refCell.<span class="hljs-property">engine</span>.<span class="hljs-title function_">getTransform</span>();
+
+                element.<span class="hljs-property">width</span> = width;
+                element.<span class="hljs-property">height</span> = height;
+
+                myCell.<span class="hljs-title function_">rotateDestination</span>(engine, x, y, <span class="hljs-variable language_">this</span>);
+                myCell.<span class="hljs-title function_">setEngine</span>(<span class="hljs-variable language_">this</span>);
+
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradient</span> ||
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> ||
+                    drawId === <span class="hljs-variable constant_">ZERO_STR</span>
+                ) drawId = <span class="hljs-title function_">generateIdForArtefact</span>(<span class="hljs-variable language_">this</span>);
+
+                <span class="hljs-keyword">if</span> (drawId) {
+
+                    <span class="hljs-keyword">const</span> cacheExists = <span class="hljs-title function_">checkForWorkstoreItem</span>(drawId);
+
+                    <span class="hljs-keyword">if</span> (!cacheExists) {
+
+                        grad.<span class="hljs-title function_">getData</span>(<span class="hljs-variable language_">this</span>, refCell, <span class="hljs-variable constant_">DRAW</span>);
+
+                        engine.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>;
+                        engine.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>;
+                        engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>;
+                        engine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
+                        engine.<span class="hljs-title function_">stroke</span>(pathObject);
+
+                        <span class="hljs-keyword">const</span> data = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
+
+                        <span class="hljs-keyword">const</span> success = gradientEngine.<span class="hljs-title function_">action</span>({
+                            <span class="hljs-attr">fixedGradientData</span>: <span class="hljs-title function_">getFixedGradientData</span>(grad, <span class="hljs-variable constant_">DRAW</span>),
+                            <span class="hljs-attr">identifier</span>: drawId,
+                            <span class="hljs-attr">imageData</span>: data,
+                            <span class="hljs-attr">entity</span>: <span class="hljs-variable language_">this</span>,
+                            matrix,
+                        });
+                        <span class="hljs-keyword">if</span> (success) {
+
+                            <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span> = drawId;
+                            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradient</span> = <span class="hljs-literal">false</span>;
+                            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">false</span>;
+                            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+                        }
+                        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+                    }
+                }
+                <span class="hljs-title function_">releaseCell</span>(myCell);
+            }
+        }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) {
+
+            <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>,
+                pathObject = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+
+            <span class="hljs-keyword">const</span> grad = (state.<span class="hljs-property">fillStyle</span>.<span class="hljs-property">substring</span>)
+                ? styles[state.<span class="hljs-property">fillStyle</span>]
+                : state.<span class="hljs-property">fillStyle</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-65">&#x00a7;</a>
+              </div>
+              <p>We only process gradients, not patterns or color objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">GRADIENTS_ARR</span>.<span class="hljs-title function_">includes</span>(grad.<span class="hljs-property">type</span>)) {
+
+                <span class="hljs-keyword">const</span> myCell = <span class="hljs-title function_">requestCell</span>(),
+                    element = myCell.<span class="hljs-property">element</span>,
+                    engine = myCell.<span class="hljs-property">engine</span>;
+
+                <span class="hljs-keyword">const</span> [width, height] = refCell.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;dimensions&#x27;</span>);
+                <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
+                <span class="hljs-keyword">const</span> matrix = refCell.<span class="hljs-property">engine</span>.<span class="hljs-title function_">getTransform</span>();
+
+                element.<span class="hljs-property">width</span> = width;
+                element.<span class="hljs-property">height</span> = height;
+
+                myCell.<span class="hljs-title function_">rotateDestination</span>(engine, x, y, <span class="hljs-variable language_">this</span>);
+                myCell.<span class="hljs-title function_">setEngine</span>(<span class="hljs-variable language_">this</span>);
+
+
+                <span class="hljs-keyword">if</span> (
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradient</span> ||
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> ||
+                    fillId === <span class="hljs-variable constant_">ZERO_STR</span>
+                ) fillId = <span class="hljs-title function_">generateIdForArtefact</span>(<span class="hljs-variable language_">this</span>);
+
+                <span class="hljs-keyword">if</span> (fillId) {
+
+                    <span class="hljs-keyword">const</span> cacheExists = <span class="hljs-title function_">checkForWorkstoreItem</span>(fillId);
+
+                    <span class="hljs-keyword">if</span> (!cacheExists) {
+
+                        grad.<span class="hljs-title function_">getData</span>(<span class="hljs-variable language_">this</span>, refCell, <span class="hljs-variable constant_">FILL</span>);
+
+                        engine.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>;
+                        engine.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>;
+                        engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>;
+                        engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
+                        engine.<span class="hljs-title function_">fill</span>(pathObject, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+
+                        <span class="hljs-keyword">const</span> data = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
+
+                        <span class="hljs-keyword">const</span> success = gradientEngine.<span class="hljs-title function_">action</span>({
+                            <span class="hljs-attr">fixedGradientData</span>: <span class="hljs-title function_">getFixedGradientData</span>(grad, <span class="hljs-variable constant_">FILL</span>),
+                            <span class="hljs-attr">identifier</span>: fillId,
+                            <span class="hljs-attr">imageData</span>: data,
+                            <span class="hljs-attr">entity</span>: <span class="hljs-variable language_">this</span>,
+                            matrix,
+                        });
+
+                        <span class="hljs-keyword">if</span> (success) {
+
+                            <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span> = fillId;
+                            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradient</span> = <span class="hljs-literal">false</span>;
+                            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">false</span>;
+                            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+                        }
+                        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+                    }
+                }
+                <span class="hljs-title function_">releaseCell</span>(myCell);
+            }
+        }
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-56">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><code>filteredStamp</code> - handles stamping functionality for all <strong>entitys that have filter functions</strong> associated with them.</p>
 
@@ -1790,11 +2423,11 @@
         </li>
         
         
-        <li id="section-57">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p>Clean and sort the Entity-level filters before sending them to the filter engine for application</p>
 
@@ -1805,11 +2438,11 @@
         </li>
         
         
-        <li id="section-58">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p>Save current host data into a set of vars, ready for restoration after web engine completes or fails</p>
 
@@ -1829,11 +2462,11 @@
         </li>
         
         
-        <li id="section-59">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p>Get and prepare a pool Cell for the filter operations</p>
 
@@ -1851,11 +2484,11 @@
         </li>
         
         
-        <li id="section-60">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p>Switch off fast stamp</p>
 
@@ -1867,11 +2500,11 @@
         </li>
         
         
-        <li id="section-61">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p>Handle GCO and GA</p>
 
@@ -1892,11 +2525,11 @@
         </li>
         
         
-        <li id="section-62">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p>Stamp the entity onto the pool Cell</p>
 
@@ -1907,11 +2540,11 @@
         </li>
         
         
-        <li id="section-63">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p>Restore GCO and GA</p>
 
@@ -1930,11 +2563,11 @@
         </li>
         
         
-        <li id="section-64">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p>If we’re using the entity as a stencil, copy the entity cell’s current display over the entity in the pool Cell</p>
 
@@ -1974,11 +2607,11 @@
         </li>
         
         
-        <li id="section-65">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p>To note: <code>checkHitIgnoreTransparency</code> is specific to Picture entity</p>
 
@@ -1999,11 +2632,11 @@
         </li>
         
         
-        <li id="section-66">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p>This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img&gt; elements for use elsewhere in the Scrawl-canvas ecosystem.</p>
 
@@ -2024,11 +2657,11 @@
         </li>
         
         
-        <li id="section-67">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p>KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo <a href="../../demo/canvas-020.html">Canvas-020</a> for a workaround.</p>
 
@@ -2077,13 +2710,13 @@
         </li>
         
         
-        <li id="section-68">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
-              <p><code>getCellCoverage</code> - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the <code>scrawl.createImageFromEntity</code> function is invoked.</p>
+              <p><code>getCellCoverage</code> - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host for building an image when the <code>scrawl.createImageFromEntity</code> function is invoked.</p>
 
             </div>
             
@@ -2119,11 +2752,11 @@
         </li>
         
         
-        <li id="section-69">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><code>simpleStamp</code> - an alternative to the <code>stamp</code> function, to get an entity to stamp its output onto a Cell.</p>
 <ul>
@@ -2149,25 +2782,52 @@
         </li>
         
         
-        <li id="section-70">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>All actual drawing is achieved using the entity’s pre-calculated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D object</a>.</p>
 
             </div>
             
+            <div class="content"><div class='highlight'><pre>
+    P.<span class="hljs-property">applyFromWorkstore</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">hostEngine, identifier</span>) {
+
+        <span class="hljs-keyword">const</span> data = <span class="hljs-title function_">getWorkstoreItem</span>(identifier);
+
+        <span class="hljs-keyword">if</span> (data &amp;&amp; data.<span class="hljs-property">w</span> &amp;&amp; data.<span class="hljs-property">h</span> &amp;&amp; data.<span class="hljs-property">imageData</span>) {
+
+            <span class="hljs-keyword">const</span> {x, y, w, h, imageData} = data;
+
+            <span class="hljs-keyword">const</span> myCell = <span class="hljs-title function_">requestCell</span>();
+
+            <span class="hljs-keyword">const</span> { element, engine } = myCell;
+
+            element.<span class="hljs-property">width</span> = w;
+            element.<span class="hljs-property">height</span> = h;
+
+            engine.<span class="hljs-title function_">putImageData</span>(imageData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+
+            hostEngine.<span class="hljs-title function_">save</span>();
+            hostEngine.<span class="hljs-title function_">resetTransform</span>();
+            hostEngine.<span class="hljs-title function_">drawImage</span>(element, x, y);
+            hostEngine.<span class="hljs-title function_">restore</span>();
+
+            <span class="hljs-title function_">releaseCell</span>(myCell);
+        }
+    };</pre></div></div>
+            
         </li>
         
         
-        <li id="section-71">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p><code>draw</code> - stroke the entity outline with the entity’s <code>strokeStyle</code> color, gradient or pattern - including shadow</p>
 
@@ -2175,17 +2835,18 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">draw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">applyFromWorkstore</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-72">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p><code>fill</code> - fill the entity with the entity’s <code>fillStyle</code> color, gradient or pattern - including shadow</p>
 
@@ -2193,17 +2854,18 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">fill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        engine.<span class="hljs-title function_">fill</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">applyFromWorkstore</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-73">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code> - stamp the entity stroke, then fill, then remove shadow and repeat</p>
 
@@ -2211,23 +2873,37 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">drawAndFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+            winding = <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>,
+            apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>),
+            drawUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>,
+            drawId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>,
+            fillUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>,
+            fillId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>;
 
-        engine.<span class="hljs-title function_">stroke</span>(p);
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
-        engine.<span class="hljs-title function_">stroke</span>(p);
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-74">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code> - stamp the entity fill, then stroke, then remove shadow and repeat</p>
 
@@ -2235,23 +2911,37 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">fillAndDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+            winding = <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>,
+            apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>),
+            drawUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>,
+            drawId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>,
+            fillUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>,
+            fillId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>;
 
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-        engine.<span class="hljs-title function_">stroke</span>(p);
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-        engine.<span class="hljs-title function_">stroke</span>(p);
+
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-75">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code> - stroke the entity’s outline, then fill it (shadow applied twice)</p>
 
@@ -2259,20 +2949,24 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">drawThenFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+            apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>);
 
-        engine.<span class="hljs-title function_">stroke</span>(p);
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-title function_">apply</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-title function_">apply</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-76">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code> - fill the entity’s outline, then stroke it (shadow applied twice)</p>
 
@@ -2280,20 +2974,24 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">fillThenDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+            apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>);
 
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-        engine.<span class="hljs-title function_">stroke</span>(p);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-title function_">apply</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-title function_">apply</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-77">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
               <p><code>clip</code> - restrict drawing activities to the entity’s enclosed area</p>
 
@@ -2307,11 +3005,11 @@
         </li>
         
         
-        <li id="section-78">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
               <p><code>clear</code> - remove everything that would have been covered if the entity had performed fill (including shadow)</p>
 
@@ -2330,17 +3028,17 @@
         </li>
         
         
-        <li id="section-79">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-89">&#x00a7;</a>
               </div>
               <p><code>none</code> - perform all the calculations required, but don’t perform the final stamping</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">none</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {}
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">none</span> = λ<span class="hljs-literal">null</span>;
 }</pre></div></div>
             
         </li>

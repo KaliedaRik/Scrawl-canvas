@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -1461,7 +1466,9 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>.<span class="hljs-property">checkSource</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>.<span class="hljs-title function_">checkSource</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span>);
             <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyAsset</span> = <span class="hljs-literal">true</span>;
         }
-    }</pre></div></div>
+    }
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setGradientCacheFlags</span>();</pre></div></div>
             
         </li>
         
@@ -1478,7 +1485,18 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPaste</span> = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+    }
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanScale</span>();
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanDimensions</span>();
@@ -1492,6 +1510,25 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
+              </div>
+              <p>Non-classic gradients also need to take into account positional changes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
     }
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStampPositions</span>();
@@ -1507,11 +1544,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</p>
 
@@ -1522,11 +1559,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Specifically for Loom entitys</p>
 
@@ -1537,11 +1574,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>prepareStampTabsHelper</code> is defined in the <code>mixin/hidden-dom-elements.js</code> file - handles updates to anchor and button objects</p>
 
@@ -1553,11 +1590,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>preparePasteObject</code> - internal function</p>
 <ul>
@@ -1590,11 +1627,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>cleanPathObject</code> - internal function</p>
 <ul>
@@ -1624,33 +1661,15 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
-              </div>
-              <h5 id="stamp-methods">Stamp methods</h5>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
-              <p><code>draw</code></p>
+              <h5 id="stamp-methods">Stamp methods</h5>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">draw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
-
-    engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
-};</pre></div></div>
             
         </li>
         
@@ -1660,6 +1679,27 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
               
               <div class="sswrap ">
                 <a class="ss" href="#section-42">&#x00a7;</a>
+              </div>
+              <p><code>draw</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">draw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
+
+    <span class="hljs-keyword">const</span> apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>) <span class="hljs-title function_">apply</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>);
+    <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -1674,11 +1714,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -1687,50 +1727,27 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">drawAndFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
     <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
-    <span class="hljs-keyword">const</span> [_x, _y, _w, _h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> &amp;&amp; w &amp;&amp; h) {
 
-        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
+        <span class="hljs-keyword">const</span> [_x, _y, _w, _h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>;
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+            apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>),
+            drawUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>,
+            drawId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>;
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
         engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, x, y, w, h, _x, _y, _w, _h);
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
 
-        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
         engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, x, y, w, h, _x, _y, _w, _h);
     }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
-              </div>
-              <p><code>fillAndDraw</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fillAndDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
-
-    <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
-    <span class="hljs-keyword">const</span> [_x, _y, _w, _h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> &amp;&amp; w &amp;&amp; h) {
-
-        engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, x, y, w, h, _x, _y, _w, _h);
-        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
-
-        engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, x, y, w, h, _x, _y, _w, _h);
-        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
-    }
-
-    engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
 };</pre></div></div>
             
         </li>
@@ -1742,18 +1759,36 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
               <div class="sswrap ">
                 <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
-              <p><code>drawThenFill</code></p>
+              <p><code>fillAndDraw</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">drawThenFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fillAndDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
     <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
+
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> &amp;&amp; w &amp;&amp; h) {
 
-        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
-        engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, x, y, w, h, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>);
+        <span class="hljs-keyword">const</span> [_x, _y, _w, _h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>;
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+            apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>),
+            drawUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>,
+            drawId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>;
+
+        engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, x, y, w, h, _x, _y, _w, _h);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
+
+        engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, x, y, w, h, _x, _y, _w, _h);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
     }
+
+    engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
 };</pre></div></div>
             
         </li>
@@ -1765,17 +1800,25 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
               <div class="sswrap ">
                 <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
-              <p><code>fillThenDraw</code></p>
+              <p><code>drawThenFill</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fillThenDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">drawThenFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
     <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
+
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> &amp;&amp; w &amp;&amp; h) {
 
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+            apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>),
+            drawUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>,
+            drawId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>;
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
         engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, x, y, w, h, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>);
-        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
     }
 };</pre></div></div>
             
@@ -1787,6 +1830,37 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
               
               <div class="sswrap ">
                 <a class="ss" href="#section-47">&#x00a7;</a>
+              </div>
+              <p><code>fillThenDraw</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fillThenDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
+
+    <span class="hljs-keyword">const</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> &amp;&amp; w &amp;&amp; h) {
+
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+            apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>),
+            drawUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>,
+            drawId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>;
+
+        engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, x, y, w, h, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>checkHitReturn</code> - overwrites mixin/position.js function</p>
 
@@ -1826,11 +1900,11 @@ D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);

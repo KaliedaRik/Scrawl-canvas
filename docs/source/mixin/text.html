@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -914,6 +919,8 @@
                     <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">LABEL_UPDATE_PARTS_KEYS</span>.<span class="hljs-title function_">includes</span>(key)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">updateUsingFontParts</span> = <span class="hljs-literal">true</span>;
                     <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">LABEL_UPDATE_FONTSTRING_KEYS</span>.<span class="hljs-title function_">includes</span>(key)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">updateUsingFontString</span> = <span class="hljs-literal">true</span>;
                     <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">LABEL_UNLOADED_FONT_KEYS</span>.<span class="hljs-title function_">includes</span>(key)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span> = <span class="hljs-literal">false</span>;
+
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dirtyLabelGradientCache</span>(key);
                 }
             }
         }
@@ -978,10 +985,24 @@
                     <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">LABEL_UPDATE_PARTS_KEYS</span>.<span class="hljs-title function_">includes</span>(key)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">updateUsingFontParts</span> = <span class="hljs-literal">true</span>;
                     <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">LABEL_UPDATE_FONTSTRING_KEYS</span>.<span class="hljs-title function_">includes</span>(key)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">updateUsingFontString</span> = <span class="hljs-literal">true</span>;
                     <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">LABEL_UNLOADED_FONT_KEYS</span>.<span class="hljs-title function_">includes</span>(key)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span> = <span class="hljs-literal">false</span>;
+
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dirtyLabelGradientCache</span>(key);
                 }
             }
         }
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
+    };
+
+    P.<span class="hljs-property">dirtyLabelGradientCache</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">key</span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_LABEL</span>) {
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">TEXTSTYLE_KEYS</span>.<span class="hljs-title function_">includes</span>(key) || <span class="hljs-variable constant_">STATE_KEYS</span>.<span class="hljs-title function_">includes</span>(key) || key === <span class="hljs-string">&#x27;text&#x27;</span>) {
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+            }
+        }
     };
 
     <span class="hljs-keyword">const</span> G = P.<span class="hljs-property">getters</span>,

@@ -440,16 +440,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-211.html">
-                  ./demo/canvas-211.js
-                </a>
-              
-                
-                <a class="source" href="canvas-212.html">
-                  ./demo/canvas-212.js
-                </a>
-              
-                
                 <a class="source" href="delaunator-001.html">
                   ./demo/delaunator-001.js
                 </a>
@@ -1102,6 +1092,12 @@
     ],
 });
 
+<span class="hljs-keyword">const</span> enhancedCellGradient = cellGradient.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;reflected-blue-green&#x27;</span>),
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">spread</span>: <span class="hljs-string">&#x27;reflect&#x27;</span>,
+});
+
 <span class="hljs-keyword">const</span> gridGradient = scrawl.<span class="hljs-title function_">makeGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;red-blue&#x27;</span>),
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
@@ -1112,6 +1108,15 @@
         [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;lightblue&#x27;</span>]
     ],
     <span class="hljs-attr">colorSpace</span>: <span class="hljs-string">&#x27;OKLAB&#x27;</span>,
+});
+
+<span class="hljs-keyword">const</span> enhancedGridGradient = gridGradient.<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;reflected-red-blue&#x27;</span>),
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;75%&#x27;</span>,
+    <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;75%&#x27;</span>,
+    <span class="hljs-attr">spread</span>: <span class="hljs-string">&#x27;reflect&#x27;</span>,
 });</pre></div></div>
             
         </li>
@@ -1145,6 +1150,16 @@
 <span class="hljs-keyword">const</span> gridGradientSource = {
     <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;gridGradient&#x27;</span>,
     <span class="hljs-attr">source</span>: gridGradient,
+};
+
+<span class="hljs-keyword">const</span> enhancedCellGradientSource = {
+    <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;cellGradient&#x27;</span>,
+    <span class="hljs-attr">source</span>: enhancedCellGradient,
+};
+
+<span class="hljs-keyword">const</span> enhancedGridGradientSource = {
+    <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;gridGradient&#x27;</span>,
+    <span class="hljs-attr">source</span>: enhancedGridGradient,
 };</pre></div></div>
             
         </li>
@@ -1476,6 +1491,14 @@
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;gridGradientSource&#x27;</span> :
             myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">0</span>, gridGradientSource);
             <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enhancedCellGradientSource&#x27;</span> :
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">0</span>, enhancedCellGradientSource);
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enhancedGridGradientSource&#x27;</span> :
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">0</span>, enhancedGridGradientSource);
+            <span class="hljs-keyword">break</span>;
     }
 };
 scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateBaseFill, <span class="hljs-string">&#x27;#baseFill&#x27;</span>);
@@ -1503,6 +1526,14 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;gridGradientSource&#x27;</span> :
             myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">1</span>, gridGradientSource);
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enhancedCellGradientSource&#x27;</span> :
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">1</span>, enhancedCellGradientSource);
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enhancedGridGradientSource&#x27;</span> :
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">1</span>, enhancedGridGradientSource);
             <span class="hljs-keyword">break</span>;
     }
 };
@@ -1550,6 +1581,18 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;gridGradientSource&#x27;</span> :
             myGrid.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">gutterColor</span>: gridGradientSource
+            });
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enhancedCellGradientSource&#x27;</span> :
+            myGrid.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">gutterColor</span>: enhancedCellGradientSource
+            });
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enhancedGridGradientSource&#x27;</span> :
+            myGrid.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">gutterColor</span>: enhancedGridGradientSource
             });
             <span class="hljs-keyword">break</span>;
 

@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -597,13 +602,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, entity, styles } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, generateIdForArtefact, isa_number, isa_obj, mergeOver, pushUnique, xt, xta, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/cell-fragment.js&#x27;</span>;
-
 <span class="hljs-keyword">import</span> { releaseCoordinate, requestCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/coordinate.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { checkForWorkstoreItem } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/workstore.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { gradientEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/gradient-engine.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;</pre></div></div>
@@ -621,7 +627,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _isArray, _isFinite, _parse, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">COLOR</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">T_GRID</span>, <span class="hljs-variable constant_">WHITE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _isArray, _isFinite, _parse, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">COLOR</span>, <span class="hljs-variable constant_">DRAW</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">T_GRID</span>, <span class="hljs-variable constant_">WHITE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1802,22 +1808,9 @@ P.<span class="hljs-property">getTilePivotCoordsAt</span> = <span class="hljs-ke
 
     <span class="hljs-keyword">const</span> currentScale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span> || <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">if</span> (currentScale &gt; <span class="hljs-number">0</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-47">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
-              </div>
-              <p>Grab the current engine values for various things</p>
+    <span class="hljs-keyword">if</span> (currentScale &gt; <span class="hljs-number">0</span>) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        engine.<span class="hljs-title function_">save</span>();
+        engine.<span class="hljs-title function_">save</span>();
 
         <span class="hljs-keyword">const</span> composer = <span class="hljs-title function_">requestCell</span>(),
             compEngine = composer.<span class="hljs-property">engine</span>,
@@ -1830,175 +1823,191 @@ P.<span class="hljs-property">getTilePivotCoordsAt</span> = <span class="hljs-ke
             tileVirtualCoords = <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileVirtualCoordinates</span>,
             winding = <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>,
             tileWidth = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTileWidth</span>,
-            tileHeight = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTileHeight</span>;
+            tileHeight = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTileHeight</span>,
+            dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>,
+            applyGridGradient = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyGridGradient</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>);
 
-        <span class="hljs-keyword">const</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>;
+        <span class="hljs-keyword">const</span> getGradientObject = <span class="hljs-keyword">function</span> (<span class="hljs-params">source</span>) {
 
-        <span class="hljs-keyword">let</span> currentPicture;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-48">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
-              </div>
-              <p>Iterate through the grid’s tileSources</p>
+            <span class="hljs-keyword">return</span> source &amp;&amp; source.<span class="hljs-property">substring</span> ? styles[source] : source;
+        };
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        tileSources.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">obj, index</span>) =&gt;</span> {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-49">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
-              </div>
-              <p>Set up the engine fillStyle value (where required)</p>
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">buildTileGradientIdentifier</span> = (<span class="hljs-params">grad, index, lockedToEntity</span>) =&gt; {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (obj &amp;&amp; obj.<span class="hljs-property">type</span>) {
+            <span class="hljs-keyword">return</span> [
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>,
+                <span class="hljs-string">&#x27;grid-tile-gradient&#x27;</span>,
+                index,
+                lockedToEntity ? <span class="hljs-variable constant_">GRID_GRADIENT</span> : <span class="hljs-variable constant_">CELL_GRADIENT</span>,
+                grad.<span class="hljs-property">identifier</span>,
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>,
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRotation</span>,
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;:&#x27;</span>),
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;:&#x27;</span>),
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">columns</span>,
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">rows</span>,
+                tileFill.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;:&#x27;</span>),
+            ].<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;-&#x27;</span>);
+        };
 
-                <span class="hljs-keyword">switch</span> (obj.<span class="hljs-property">type</span>) {
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">buildGutterGradientIdentifier</span> = (<span class="hljs-params">grad, lockedToEntity</span>) =&gt; {
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">COLOR</span> :
+            <span class="hljs-keyword">return</span> [
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>,
+                <span class="hljs-string">&#x27;grid-gutter-gradient&#x27;</span>,
+                lockedToEntity ? <span class="hljs-variable constant_">GRID_GRADIENT</span> : <span class="hljs-variable constant_">CELL_GRADIENT</span>,
+                grad.<span class="hljs-property">identifier</span>,
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>,
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRotation</span>,
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;:&#x27;</span>),
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;:&#x27;</span>),
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">columns</span>,
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">rows</span>,
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">rowGutterWidth</span>,
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">columnGutterWidth</span>,
+            ].<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;-&#x27;</span>);
+        };
 
-                        engine.<span class="hljs-property">fillStyle</span> = obj.<span class="hljs-property">source</span>;
-                        <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">setClassicFillGradient</span> = (<span class="hljs-params">grad, lockedToEntity</span>) =&gt; {
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">CELL_GRADIENT</span> :
+            <span class="hljs-keyword">const</span> currentLock = <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span>;
 
-                        <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span> = <span class="hljs-literal">false</span>;
-                        engine.<span class="hljs-property">fillStyle</span> = obj.<span class="hljs-property">source</span>.<span class="hljs-title function_">getData</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>);
-                        <span class="hljs-keyword">break</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span> = lockedToEntity;
+            engine.<span class="hljs-property">fillStyle</span> = grad.<span class="hljs-title function_">getData</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>, <span class="hljs-variable constant_">FILL</span>);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span> = currentLock;
+        };
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">GRID_GRADIENT</span> :
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">setClassicStrokeGradient</span> = (<span class="hljs-params">grad, lockedToEntity</span>) =&gt; {
 
-                        <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span> = <span class="hljs-literal">true</span>;
-                        engine.<span class="hljs-property">fillStyle</span> = obj.<span class="hljs-property">source</span>.<span class="hljs-title function_">getData</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>);
-                        <span class="hljs-keyword">break</span>;
-                }
-            }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-50">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
-              </div>
-              <p>Get an map of tiles using this source</p>
+            <span class="hljs-keyword">const</span> currentLock = <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockStrokeStyleToEntity</span>;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> validTiles = tileFill.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item === index ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockStrokeStyleToEntity</span> = lockedToEntity;
+            engine.<span class="hljs-property">strokeStyle</span> = grad.<span class="hljs-title function_">getData</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>, <span class="hljs-variable constant_">DRAW</span>);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockStrokeStyleToEntity</span> = currentLock;
+        };
 
-            <span class="hljs-keyword">if</span> (validTiles.<span class="hljs-property">length</span>) {
+        <span class="hljs-keyword">let</span> currentPicture;
 
-                <span class="hljs-keyword">switch</span> (obj.<span class="hljs-property">type</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-51">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
-              </div>
-              <p>Use pool canvases to compose the output</p>
+        tileSources.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">obj, index</span>) =&gt;</span> {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">GRID_PICTURE</span> : {
+            <span class="hljs-keyword">if</span> (!obj || !obj.<span class="hljs-property">type</span>) <span class="hljs-keyword">return</span>;
 
-                        currentPicture = (obj.<span class="hljs-property">source</span>.<span class="hljs-property">substring</span>) ? entity[obj.<span class="hljs-property">source</span>] : obj.<span class="hljs-property">source</span>;
+            <span class="hljs-keyword">const</span> validTiles = tileFill.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item === index ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
 
-                        <span class="hljs-keyword">if</span> (currentPicture.<span class="hljs-property">simpleStamp</span>) {
+            <span class="hljs-keyword">if</span> (!validTiles.<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span>;
 
-                            <span class="hljs-keyword">const</span> W = dims[<span class="hljs-number">0</span>] * currentScale,
-                                H = dims[<span class="hljs-number">1</span>] * currentScale;
+            <span class="hljs-keyword">switch</span> (obj.<span class="hljs-property">type</span>) {
 
-                            compCanvas.<span class="hljs-property">width</span> = W;
-                            compCanvas.<span class="hljs-property">height</span> = H;
-                            compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
+                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">COLOR</span> :
 
-                            currentPicture.<span class="hljs-title function_">simpleStamp</span>(composer, {
-                            <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
-                                <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
-                                <span class="hljs-attr">width</span>: W,
-                                <span class="hljs-attr">height</span>: H,
-                                <span class="hljs-attr">method</span>: <span class="hljs-variable constant_">FILL</span>,
+                    engine.<span class="hljs-property">fillStyle</span> = obj.<span class="hljs-property">source</span>;
+                    validTiles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">tile, pos</span>) =&gt;</span> tile &amp;&amp; engine.<span class="hljs-title function_">fill</span>(tilePaths[pos], winding));
+                    <span class="hljs-keyword">break</span>;
+
+                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">CELL_GRADIENT</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">GRID_GRADIENT</span> : {
+
+                    <span class="hljs-keyword">const</span> grad = <span class="hljs-title function_">getGradientObject</span>(obj.<span class="hljs-property">source</span>),
+                        lockedToEntity = obj.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">GRID_GRADIENT</span>;
+
+                    <span class="hljs-keyword">if</span> (!grad) <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">if</span> (!grad.<span class="hljs-property">isClassic</span>) {
+
+                        <span class="hljs-keyword">const</span> identifier = <span class="hljs-title function_">buildTileGradientIdentifier</span>(grad, index, lockedToEntity);
+
+                        <span class="hljs-title function_">applyGridGradient</span>(engine, grad, <span class="hljs-keyword">function</span> (<span class="hljs-params">maskEngine</span>) {
+
+                            validTiles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">tile, pos</span>) =&gt;</span> {
+
+                                <span class="hljs-keyword">if</span> (tile) maskEngine.<span class="hljs-title function_">fill</span>(tilePaths[pos], winding);
                             });
 
-                            <span class="hljs-keyword">const</span> masker = <span class="hljs-title function_">requestCell</span>(),
-                                mEngine = masker.<span class="hljs-property">engine</span>,
-                                mCanvas = masker.<span class="hljs-property">element</span>;
-
-                            mCanvas.<span class="hljs-property">width</span> = W;
-                            mCanvas.<span class="hljs-property">height</span> = H;
-
-                            mEngine.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable constant_">WHITE</span>;
-
-                            <span class="hljs-keyword">let</span> use, ux, uy;
-
-                            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = validTiles.<span class="hljs-property">length</span>; i &lt; iz; i++) {
-
-                                use = validTiles[i];
-
-                                <span class="hljs-keyword">if</span> (use) {
-
-                                    [ux, uy] = tileVirtualCoords[i];
-
-                                    mEngine.<span class="hljs-title function_">fillRect</span>(ux, uy, tileWidth, tileHeight);
-                                }
-                            }
-
-                            compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">DESTINATION_IN</span>;
-                            compEngine.<span class="hljs-title function_">drawImage</span>(mCanvas, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-
-                            engine.<span class="hljs-title function_">drawImage</span>(compCanvas, ~~tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], ~~tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
-
-                            <span class="hljs-title function_">releaseCell</span>(masker);
-                        }
-                        <span class="hljs-keyword">break</span>;
+                        }, lockedToEntity, identifier);
                     }
+                    <span class="hljs-keyword">else</span> {
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">TILE_PICTURE</span> :
-
-                        currentPicture = (obj.<span class="hljs-property">source</span>.<span class="hljs-property">substring</span>) ? entity[obj.<span class="hljs-property">source</span>] : obj.<span class="hljs-property">source</span>;
-
-                        <span class="hljs-keyword">if</span> (currentPicture.<span class="hljs-property">simpleStamp</span>) {
-
-                            compCanvas.<span class="hljs-property">width</span> = tileWidth;
-                            compCanvas.<span class="hljs-property">height</span> = tileHeight;
-                            compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
-
-                            currentPicture.<span class="hljs-title function_">simpleStamp</span>(composer, {
-                                <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
-                                <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
-                                <span class="hljs-attr">width</span>: tileWidth,
-                                <span class="hljs-attr">height</span>: tileHeight,
-                                <span class="hljs-attr">method</span>: <span class="hljs-variable constant_">FILL</span>,
-                            });
-
-                            validTiles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">tile, pos</span>) =&gt;</span> tile &amp;&amp; engine.<span class="hljs-title function_">drawImage</span>(compCanvas, ~~tileRealCoords[pos][<span class="hljs-number">0</span>], ~~tileRealCoords[pos][<span class="hljs-number">1</span>]));
-                        }
-                        <span class="hljs-keyword">break</span>;
-
-                    <span class="hljs-keyword">default</span> :
-
+                        <span class="hljs-title function_">setClassicFillGradient</span>(grad, lockedToEntity);
                         validTiles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">tile, pos</span>) =&gt;</span> tile &amp;&amp; engine.<span class="hljs-title function_">fill</span>(tilePaths[pos], winding));
+                    }
+                    <span class="hljs-keyword">break</span>;
                 }
+
+                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">GRID_PICTURE</span> : {
+
+                    currentPicture = (obj.<span class="hljs-property">source</span>.<span class="hljs-property">substring</span>) ? entity[obj.<span class="hljs-property">source</span>] : obj.<span class="hljs-property">source</span>;
+
+                    <span class="hljs-keyword">if</span> (currentPicture.<span class="hljs-property">simpleStamp</span>) {
+
+                        <span class="hljs-keyword">const</span> W = dims[<span class="hljs-number">0</span>] * currentScale,
+                            H = dims[<span class="hljs-number">1</span>] * currentScale;
+
+                        compCanvas.<span class="hljs-property">width</span> = W;
+                        compCanvas.<span class="hljs-property">height</span> = H;
+                        compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
+
+                        currentPicture.<span class="hljs-title function_">simpleStamp</span>(composer, {
+                            <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
+                            <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
+                            <span class="hljs-attr">width</span>: W,
+                            <span class="hljs-attr">height</span>: H,
+                            <span class="hljs-attr">method</span>: <span class="hljs-variable constant_">FILL</span>,
+                        });
+
+                        <span class="hljs-keyword">const</span> masker = <span class="hljs-title function_">requestCell</span>(),
+                            mEngine = masker.<span class="hljs-property">engine</span>,
+                            mCanvas = masker.<span class="hljs-property">element</span>;
+
+                        mCanvas.<span class="hljs-property">width</span> = W;
+                        mCanvas.<span class="hljs-property">height</span> = H;
+
+                        mEngine.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable constant_">WHITE</span>;
+
+                        <span class="hljs-keyword">let</span> use, ux, uy;
+
+                        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = validTiles.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+                            use = validTiles[i];
+
+                            <span class="hljs-keyword">if</span> (use) {
+
+                                [ux, uy] = tileVirtualCoords[i];
+
+                                mEngine.<span class="hljs-title function_">fillRect</span>(ux, uy, tileWidth, tileHeight);
+                            }
+                        }
+
+                        compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">DESTINATION_IN</span>;
+                        compEngine.<span class="hljs-title function_">drawImage</span>(mCanvas, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+
+                        engine.<span class="hljs-title function_">drawImage</span>(compCanvas, ~~tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], ~~tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
+
+                        <span class="hljs-title function_">releaseCell</span>(masker);
+                    }
+                    <span class="hljs-keyword">break</span>;
+                }
+
+                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">TILE_PICTURE</span> :
+
+                    currentPicture = (obj.<span class="hljs-property">source</span>.<span class="hljs-property">substring</span>) ? entity[obj.<span class="hljs-property">source</span>] : obj.<span class="hljs-property">source</span>;
+
+                    <span class="hljs-keyword">if</span> (currentPicture.<span class="hljs-property">simpleStamp</span>) {
+
+                        compCanvas.<span class="hljs-property">width</span> = tileWidth;
+                        compCanvas.<span class="hljs-property">height</span> = tileHeight;
+                        compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
+
+                        currentPicture.<span class="hljs-title function_">simpleStamp</span>(composer, {
+                            <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
+                            <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
+                            <span class="hljs-attr">width</span>: tileWidth,
+                            <span class="hljs-attr">height</span>: tileHeight,
+                            <span class="hljs-attr">method</span>: <span class="hljs-variable constant_">FILL</span>,
+                        });
+
+                        validTiles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">tile, pos</span>) =&gt;</span> tile &amp;&amp; engine.<span class="hljs-title function_">drawImage</span>(compCanvas, ~~tileRealCoords[pos][<span class="hljs-number">0</span>], ~~tileRealCoords[pos][<span class="hljs-number">1</span>]));
+                    }
+                    <span class="hljs-keyword">break</span>;
             }
         });
 
@@ -2008,22 +2017,9 @@ P.<span class="hljs-property">getTilePivotCoordsAt</span> = <span class="hljs-ke
 
         <span class="hljs-keyword">let</span> gObject;
 
-        <span class="hljs-keyword">if</span>(<span class="hljs-title function_">xt</span>(gColor)) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-52">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
-              </div>
-              <p>Assign (or construct) the appropriate object to gObject</p>
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(gColor)) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (gColor.<span class="hljs-property">substring</span>) {
+            <span class="hljs-keyword">if</span> (gColor.<span class="hljs-property">substring</span>) {
 
                 gObject = {
                     <span class="hljs-attr">type</span>: <span class="hljs-variable constant_">COLOR</span>,
@@ -2031,160 +2027,209 @@ P.<span class="hljs-property">getTilePivotCoordsAt</span> = <span class="hljs-ke
                 };
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(gColor)) gObject = gColor;
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(gColor) &amp;&amp; <span class="hljs-title function_">isa_obj</span>(tileSources[gColor])) gObject = tileSources[gColor];</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-53">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
-              </div>
-              <p>Set the engine’s strokeStyle to the appropriate value (if needed)</p>
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(gColor) &amp;&amp; <span class="hljs-title function_">isa_obj</span>(tileSources[gColor])) gObject = tileSources[gColor];
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">switch</span> (gObject.<span class="hljs-property">type</span>) {
+            <span class="hljs-keyword">if</span> (gObject &amp;&amp; gObject.<span class="hljs-property">type</span>) {
 
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">CELL_GRADIENT</span> :
+                <span class="hljs-keyword">switch</span> (gObject.<span class="hljs-property">type</span>) {
 
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span> = <span class="hljs-literal">false</span>;
-                    engine.<span class="hljs-property">strokeStyle</span> = gObject.<span class="hljs-property">source</span>.<span class="hljs-title function_">getData</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>);
-                    <span class="hljs-keyword">break</span>;
+                    <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">COLOR</span> :
 
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">GRID_GRADIENT</span> :
+                        engine.<span class="hljs-property">strokeStyle</span> = gObject.<span class="hljs-property">source</span>;
 
-                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span> = <span class="hljs-literal">true</span>;
-                    engine.<span class="hljs-property">strokeStyle</span> = gObject.<span class="hljs-property">source</span>.<span class="hljs-title function_">getData</span>(<span class="hljs-variable language_">this</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>);
-                    <span class="hljs-keyword">break</span>;
+                        <span class="hljs-keyword">if</span> (gRow) {
 
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">COLOR</span> :
+                            engine.<span class="hljs-property">lineWidth</span> = gRow;
+                            engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">rowLines</span>);
+                        }
 
-                    engine.<span class="hljs-property">strokeStyle</span> = gObject.<span class="hljs-property">source</span>;
-                    <span class="hljs-keyword">break</span>;
-            }
+                        <span class="hljs-keyword">if</span> (gCol) {
 
-            <span class="hljs-keyword">switch</span> (gObject.<span class="hljs-property">type</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-54">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
-              </div>
-              <p>Use pool canvas to compose the output</p>
-<ul>
-<li>gridPicture and tilePicture both treated the same</li>
-</ul>
+                            engine.<span class="hljs-property">lineWidth</span> = gCol;
+                            engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">columnLines</span>);
+                        }
+                        <span class="hljs-keyword">break</span>;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">GRID_PICTURE</span> :
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">TILE_PICTURE</span> : {
+                    <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">CELL_GRADIENT</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">GRID_GRADIENT</span> : {
 
-                    <span class="hljs-keyword">if</span> (gRow || gCol) {
+                        <span class="hljs-keyword">const</span> grad = <span class="hljs-title function_">getGradientObject</span>(gObject.<span class="hljs-property">source</span>),
+                            lockedToEntity = gObject.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">GRID_GRADIENT</span>;
 
-                        currentPicture = (gObject.<span class="hljs-property">source</span>.<span class="hljs-property">substring</span>) ? entity[gObject.<span class="hljs-property">source</span>] : gObject.<span class="hljs-property">source</span>;
+                        <span class="hljs-keyword">if</span> (!grad) <span class="hljs-keyword">break</span>;
 
-                        <span class="hljs-keyword">if</span> (currentPicture.<span class="hljs-property">simpleStamp</span>) {
+                        <span class="hljs-keyword">if</span> (!grad.<span class="hljs-property">isClassic</span>) {
 
-                            <span class="hljs-keyword">const</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
-                                x = handle[<span class="hljs-number">0</span>] * currentScale,
-                                y = handle[<span class="hljs-number">1</span>] * currentScale,
-                                W = dims[<span class="hljs-number">0</span>] * currentScale,
-                                H = dims[<span class="hljs-number">1</span>] * currentScale;
+                            <span class="hljs-keyword">const</span> identifier = <span class="hljs-title function_">buildGutterGradientIdentifier</span>(grad, lockedToEntity);
 
-                            compCanvas.<span class="hljs-property">width</span> = W;
-                            compCanvas.<span class="hljs-property">height</span> = H;
-                            compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
+                            <span class="hljs-title function_">applyGridGradient</span>(engine, grad, <span class="hljs-keyword">function</span> (<span class="hljs-params">maskEngine</span>) {
 
-                            currentPicture.<span class="hljs-title function_">simpleStamp</span>(composer, {
-                                <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
-                                <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
-                                <span class="hljs-attr">width</span>: W,
-                                <span class="hljs-attr">height</span>: H,
-                                <span class="hljs-attr">method</span>: <span class="hljs-variable constant_">FILL</span>,
-                            });
+                                <span class="hljs-keyword">if</span> (gRow) {
 
-                            <span class="hljs-keyword">const</span> masker = <span class="hljs-title function_">requestCell</span>(),
-                                mEngine = masker.<span class="hljs-property">engine</span>,
-                                mCanvas = masker.<span class="hljs-property">element</span>;
+                                    maskEngine.<span class="hljs-property">lineWidth</span> = gRow;
+                                    maskEngine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">rowLines</span>);
+                                }
 
-                            mCanvas.<span class="hljs-property">width</span> = W;
-                            mCanvas.<span class="hljs-property">height</span> = H;
+                                <span class="hljs-keyword">if</span> (gCol) {
 
-                            mEngine.<span class="hljs-title function_">translate</span>(x, y);
-                            mEngine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable constant_">WHITE</span>;
+                                    maskEngine.<span class="hljs-property">lineWidth</span> = gCol;
+                                    maskEngine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">columnLines</span>);
+                                }
+
+                            }.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>), lockedToEntity, identifier);
+                        }
+                        <span class="hljs-keyword">else</span> {
+
+                            <span class="hljs-title function_">setClassicStrokeGradient</span>(grad, lockedToEntity);
 
                             <span class="hljs-keyword">if</span> (gRow) {
 
-                                mEngine.<span class="hljs-property">lineWidth</span> = gRow;
-                                mEngine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">rowLines</span>);
+                                engine.<span class="hljs-property">lineWidth</span> = gRow;
+                                engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">rowLines</span>);
                             }
+
                             <span class="hljs-keyword">if</span> (gCol) {
 
-                                mEngine.<span class="hljs-property">lineWidth</span> = gCol;
-                                mEngine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">columnLines</span>);
+                                engine.<span class="hljs-property">lineWidth</span> = gCol;
+                                engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">columnLines</span>);
                             }
-
-                            compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">DESTINATION_IN</span>;
-                            compEngine.<span class="hljs-title function_">drawImage</span>(mCanvas, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-
-                            engine.<span class="hljs-title function_">drawImage</span>(compCanvas, ~~tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], ~~tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
-
-                            <span class="hljs-title function_">releaseCell</span>(masker);
                         }
-                    }
-                    <span class="hljs-keyword">break</span>;
-                }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-55">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
-              </div>
-              <p>We have a color/gradient all set up - stroke the lines directly onto grid</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">default</span> :
-
-                    <span class="hljs-keyword">if</span> (gRow) {
-
-                        engine.<span class="hljs-property">lineWidth</span> = gRow;
-                        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">rowLines</span>);
+                        <span class="hljs-keyword">break</span>;
                     }
 
-                    <span class="hljs-keyword">if</span> (gCol) {
+                    <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">GRID_PICTURE</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">TILE_PICTURE</span> : {
 
-                        engine.<span class="hljs-property">lineWidth</span> = gCol;
-                        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">columnLines</span>);
+                        <span class="hljs-keyword">if</span> (gRow || gCol) {
+
+                            currentPicture = (gObject.<span class="hljs-property">source</span>.<span class="hljs-property">substring</span>) ? entity[gObject.<span class="hljs-property">source</span>] : gObject.<span class="hljs-property">source</span>;
+
+                            <span class="hljs-keyword">if</span> (currentPicture.<span class="hljs-property">simpleStamp</span>) {
+
+                                <span class="hljs-keyword">const</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
+                                    x = handle[<span class="hljs-number">0</span>] * currentScale,
+                                    y = handle[<span class="hljs-number">1</span>] * currentScale,
+                                    W = dims[<span class="hljs-number">0</span>] * currentScale,
+                                    H = dims[<span class="hljs-number">1</span>] * currentScale;
+
+                                compCanvas.<span class="hljs-property">width</span> = W;
+                                compCanvas.<span class="hljs-property">height</span> = H;
+                                compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
+
+                                currentPicture.<span class="hljs-title function_">simpleStamp</span>(composer, {
+                                    <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
+                                    <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
+                                    <span class="hljs-attr">width</span>: W,
+                                    <span class="hljs-attr">height</span>: H,
+                                    <span class="hljs-attr">method</span>: <span class="hljs-variable constant_">FILL</span>,
+                                });
+
+                                <span class="hljs-keyword">const</span> masker = <span class="hljs-title function_">requestCell</span>(),
+                                    mEngine = masker.<span class="hljs-property">engine</span>,
+                                    mCanvas = masker.<span class="hljs-property">element</span>;
+
+                                mCanvas.<span class="hljs-property">width</span> = W;
+                                mCanvas.<span class="hljs-property">height</span> = H;
+
+                                mEngine.<span class="hljs-title function_">translate</span>(x, y);
+                                mEngine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable constant_">WHITE</span>;
+
+                                <span class="hljs-keyword">if</span> (gRow) {
+
+                                    mEngine.<span class="hljs-property">lineWidth</span> = gRow;
+                                    mEngine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">rowLines</span>);
+                                }
+
+                                <span class="hljs-keyword">if</span> (gCol) {
+
+                                    mEngine.<span class="hljs-property">lineWidth</span> = gCol;
+                                    mEngine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">columnLines</span>);
+                                }
+
+                                compEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">DESTINATION_IN</span>;
+                                compEngine.<span class="hljs-title function_">drawImage</span>(mCanvas, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+
+                                engine.<span class="hljs-title function_">drawImage</span>(compCanvas, ~~tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], ~~tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
+
+                                <span class="hljs-title function_">releaseCell</span>(masker);
+                            }
+                        }
+                        <span class="hljs-keyword">break</span>;
                     }
+                }
             }
         }
+
         <span class="hljs-title function_">releaseCell</span>(composer);
 
         engine.<span class="hljs-title function_">restore</span>();
     }
+};
+
+P.<span class="hljs-property">applyGridGradient</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, grad, maskStamp, lockedToEntity = <span class="hljs-literal">false</span>, identifier = ZERO_STR</span>) {
+
+    <span class="hljs-keyword">if</span> (!grad || !maskStamp) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">const</span> refCell = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
+
+    <span class="hljs-keyword">if</span> (!refCell) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">if</span> (!identifier || identifier === <span class="hljs-variable constant_">ZERO_STR</span>) identifier = <span class="hljs-title function_">generateIdForArtefact</span>(<span class="hljs-variable language_">this</span>);
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">checkForWorkstoreItem</span>(identifier)) {
+
+        <span class="hljs-keyword">const</span> myCell = <span class="hljs-title function_">requestCell</span>(),
+            element = myCell.<span class="hljs-property">element</span>,
+            maskEngine = myCell.<span class="hljs-property">engine</span>;
+
+        <span class="hljs-keyword">const</span> [width, height] = refCell.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;dimensions&#x27;</span>),
+            [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>,
+            matrix = refCell.<span class="hljs-property">engine</span>.<span class="hljs-title function_">getTransform</span>();
+
+        element.<span class="hljs-property">width</span> = width;
+        element.<span class="hljs-property">height</span> = height;
+
+        myCell.<span class="hljs-title function_">rotateDestination</span>(maskEngine, x, y, <span class="hljs-variable language_">this</span>);
+        myCell.<span class="hljs-title function_">setEngine</span>(<span class="hljs-variable language_">this</span>);
+
+        maskEngine.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>;
+        maskEngine.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>;
+        maskEngine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>;
+
+        maskEngine.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
+        maskEngine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
+
+        <span class="hljs-title function_">maskStamp</span>(maskEngine);
+
+        <span class="hljs-keyword">const</span> data = maskEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
+
+        <span class="hljs-keyword">const</span> success = gradientEngine.<span class="hljs-title function_">action</span>({
+
+            <span class="hljs-attr">fixedGradientData</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getFixedGradientData</span>(grad, <span class="hljs-variable constant_">FILL</span>, lockedToEntity),
+            identifier,
+            <span class="hljs-attr">imageData</span>: data,
+            <span class="hljs-attr">entity</span>: <span class="hljs-variable language_">this</span>,
+            matrix,
+        });
+
+        <span class="hljs-title function_">releaseCell</span>(myCell);
+
+        <span class="hljs-keyword">if</span> (!success) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    }
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">applyFromWorkstore</span>(engine, identifier);
+
+    <span class="hljs-keyword">return</span> identifier;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-56">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -2198,11 +2243,11 @@ P.<span class="hljs-property">getTilePivotCoordsAt</span> = <span class="hljs-ke
         </li>
         
         
-        <li id="section-57">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -2220,11 +2265,11 @@ P.<span class="hljs-property">getTilePivotCoordsAt</span> = <span class="hljs-ke
         </li>
         
         
-        <li id="section-58">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -2243,11 +2288,11 @@ P.<span class="hljs-property">getTilePivotCoordsAt</span> = <span class="hljs-ke
         </li>
         
         
-        <li id="section-59">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -2264,11 +2309,11 @@ P.<span class="hljs-property">getTilePivotCoordsAt</span> = <span class="hljs-ke
         </li>
         
         
-        <li id="section-60">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -2285,11 +2330,11 @@ P.<span class="hljs-property">getTilePivotCoordsAt</span> = <span class="hljs-ke
         </li>
         
         
-        <li id="section-61">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>checkHit</code> - overrides position mixin function</p>
 <ul>
@@ -2395,11 +2440,11 @@ P.<span class="hljs-property">getTilePivotCoordsAt</span> = <span class="hljs-ke
         </li>
         
         
-        <li id="section-62">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> blueSource = {

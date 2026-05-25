@@ -1,0 +1,2362 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>gradient-engine.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="../asset-management/image-asset.html">
+                  ./source/asset-management/image-asset.js
+                </a>
+              
+                
+                <a class="source" href="../asset-management/noise-asset.html">
+                  ./source/asset-management/noise-asset.js
+                </a>
+              
+                
+                <a class="source" href="../asset-management/raw-asset.html">
+                  ./source/asset-management/raw-asset.js
+                </a>
+              
+                
+                <a class="source" href="../asset-management/reaction-diffusion-asset.html">
+                  ./source/asset-management/reaction-diffusion-asset.js
+                </a>
+              
+                
+                <a class="source" href="../asset-management/sprite-asset.html">
+                  ./source/asset-management/sprite-asset.js
+                </a>
+              
+                
+                <a class="source" href="../asset-management/video-asset.html">
+                  ./source/asset-management/video-asset.js
+                </a>
+              
+                
+                <a class="source" href="../core/animation-loop.html">
+                  ./source/core/animation-loop.js
+                </a>
+              
+                
+                <a class="source" href="../core/display-cycle.html">
+                  ./source/core/display-cycle.js
+                </a>
+              
+                
+                <a class="source" href="../core/document.html">
+                  ./source/core/document.js
+                </a>
+              
+                
+                <a class="source" href="../core/events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
+                <a class="source" href="../core/init.html">
+                  ./source/core/init.js
+                </a>
+              
+                
+                <a class="source" href="../core/library.html">
+                  ./source/core/library.js
+                </a>
+              
+                
+                <a class="source" href="../core/snippets.html">
+                  ./source/core/snippets.js
+                </a>
+              
+                
+                <a class="source" href="../core/user-interaction.html">
+                  ./source/core/user-interaction.js
+                </a>
+              
+                
+                <a class="source" href="../factory/action.html">
+                  ./source/factory/action.js
+                </a>
+              
+                
+                <a class="source" href="../factory/anchor.html">
+                  ./source/factory/anchor.js
+                </a>
+              
+                
+                <a class="source" href="../factory/animation.html">
+                  ./source/factory/animation.js
+                </a>
+              
+                
+                <a class="source" href="../factory/bezier.html">
+                  ./source/factory/bezier.js
+                </a>
+              
+                
+                <a class="source" href="../factory/block.html">
+                  ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="../factory/button.html">
+                  ./source/factory/button.js
+                </a>
+              
+                
+                <a class="source" href="../factory/canvas.html">
+                  ./source/factory/canvas.js
+                </a>
+              
+                
+                <a class="source" href="../factory/cell.html">
+                  ./source/factory/cell.js
+                </a>
+              
+                
+                <a class="source" href="../factory/cog.html">
+                  ./source/factory/cog.js
+                </a>
+              
+                
+                <a class="source" href="../factory/color.html">
+                  ./source/factory/color.js
+                </a>
+              
+                
+                <a class="source" href="../factory/conic-gradient.html">
+                  ./source/factory/conic-gradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/crescent.html">
+                  ./source/factory/crescent.js
+                </a>
+              
+                
+                <a class="source" href="../factory/element.html">
+                  ./source/factory/element.js
+                </a>
+              
+                
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
+                <a class="source" href="../factory/enhanced-label.html">
+                  ./source/factory/enhanced-label.js
+                </a>
+              
+                
+                <a class="source" href="../factory/filter.html">
+                  ./source/factory/filter.js
+                </a>
+              
+                
+                <a class="source" href="../factory/gradient.html">
+                  ./source/factory/gradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/grid.html">
+                  ./source/factory/grid.js
+                </a>
+              
+                
+                <a class="source" href="../factory/group.html">
+                  ./source/factory/group.js
+                </a>
+              
+                
+                <a class="source" href="../factory/label.html">
+                  ./source/factory/label.js
+                </a>
+              
+                
+                <a class="source" href="../factory/line-spiral.html">
+                  ./source/factory/line-spiral.js
+                </a>
+              
+                
+                <a class="source" href="../factory/line.html">
+                  ./source/factory/line.js
+                </a>
+              
+                
+                <a class="source" href="../factory/loom.html">
+                  ./source/factory/loom.js
+                </a>
+              
+                
+                <a class="source" href="../factory/mesh.html">
+                  ./source/factory/mesh.js
+                </a>
+              
+                
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
+                <a class="source" href="../factory/oval.html">
+                  ./source/factory/oval.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle-force.html">
+                  ./source/factory/particle-force.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle-spring.html">
+                  ./source/factory/particle-spring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle-world.html">
+                  ./source/factory/particle-world.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/pattern.html">
+                  ./source/factory/pattern.js
+                </a>
+              
+                
+                <a class="source" href="../factory/picture.html">
+                  ./source/factory/picture.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polygon.html">
+                  ./source/factory/polygon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polyline.html">
+                  ./source/factory/polyline.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quadratic.html">
+                  ./source/factory/quadratic.js
+                </a>
+              
+                
+                <a class="source" href="../factory/radial-gradient.html">
+                  ./source/factory/radial-gradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/rectangle.html">
+                  ./source/factory/rectangle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/render-animation.html">
+                  ./source/factory/render-animation.js
+                </a>
+              
+                
+                <a class="source" href="../factory/shape.html">
+                  ./source/factory/shape.js
+                </a>
+              
+                
+                <a class="source" href="../factory/spiral.html">
+                  ./source/factory/spiral.js
+                </a>
+              
+                
+                <a class="source" href="../factory/stack.html">
+                  ./source/factory/stack.js
+                </a>
+              
+                
+                <a class="source" href="../factory/star.html">
+                  ./source/factory/star.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tetragon.html">
+                  ./source/factory/tetragon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/ticker.html">
+                  ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tween.html">
+                  ./source/factory/tween.js
+                </a>
+              
+                
+                <a class="source" href="../factory/unstacked-element.html">
+                  ./source/factory/unstacked-element.js
+                </a>
+              
+                
+                <a class="source" href="../factory/wheel.html">
+                  ./source/factory/wheel.js
+                </a>
+              
+                
+                <a class="source" href="array-pool.html">
+                  ./source/helper/array-pool.js
+                </a>
+              
+                
+                <a class="source" href="color-engine.html">
+                  ./source/helper/color-engine.js
+                </a>
+              
+                
+                <a class="source" href="document-root-elements.html">
+                  ./source/helper/document-root-elements.js
+                </a>
+              
+                
+                <a class="source" href="filter-engine-bluenoise-data.html">
+                  ./source/helper/filter-engine-bluenoise-data.js
+                </a>
+              
+                
+                <a class="source" href="filter-engine.html">
+                  ./source/helper/filter-engine.js
+                </a>
+              
+                
+                <a class="source" href="gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
+                <a class="source" href="random-seed.html">
+                  ./source/helper/random-seed.js
+                </a>
+              
+                
+                <a class="source" href="shape-path-calculation.html">
+                  ./source/helper/shape-path-calculation.js
+                </a>
+              
+                
+                <a class="source" href="shared-vars.html">
+                  ./source/helper/shared-vars.js
+                </a>
+              
+                
+                <a class="source" href="system-flags.html">
+                  ./source/helper/system-flags.js
+                </a>
+              
+                
+                <a class="source" href="utilities.html">
+                  ./source/helper/utilities.js
+                </a>
+              
+                
+                <a class="source" href="workstore.html">
+                  ./source/helper/workstore.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/anchor.html">
+                  ./source/mixin/anchor.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/asset-advanced-functionality.html">
+                  ./source/mixin/asset-advanced-functionality.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/asset-consumer.html">
+                  ./source/mixin/asset-consumer.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/asset.html">
+                  ./source/mixin/asset.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/base.html">
+                  ./source/mixin/base.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/button.html">
+                  ./source/mixin/button.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/cascade.html">
+                  ./source/mixin/cascade.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/cell-key-functions.html">
+                  ./source/mixin/cell-key-functions.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/display-shape.html">
+                  ./source/mixin/display-shape.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/dom.html">
+                  ./source/mixin/dom.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/entity.html">
+                  ./source/mixin/entity.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/filter.html">
+                  ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/hidden-dom-elements.html">
+                  ./source/mixin/hidden-dom-elements.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pattern.html">
+                  ./source/mixin/pattern.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/position.html">
+                  ./source/mixin/position.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shape-basic.html">
+                  ./source/mixin/shape-basic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shape-curve.html">
+                  ./source/mixin/shape-curve.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/styles.html">
+                  ./source/mixin/styles.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/text.html">
+                  ./source/mixin/text.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/tween.html">
+                  ./source/mixin/tween.js
+                </a>
+              
+                
+                <a class="source" href="../scrawl.html">
+                  ./source/scrawl.js
+                </a>
+              
+                
+                <a class="source" href="../untracked-factory/cell-fragment.html">
+                  ./source/untracked-factory/cell-fragment.js
+                </a>
+              
+                
+                <a class="source" href="../untracked-factory/coordinate.html">
+                  ./source/untracked-factory/coordinate.js
+                </a>
+              
+                
+                <a class="source" href="../untracked-factory/drag-zone.html">
+                  ./source/untracked-factory/drag-zone.js
+                </a>
+              
+                
+                <a class="source" href="../untracked-factory/keyboard-zone.html">
+                  ./source/untracked-factory/keyboard-zone.js
+                </a>
+              
+                
+                <a class="source" href="../untracked-factory/observe-update.html">
+                  ./source/untracked-factory/observe-update.js
+                </a>
+              
+                
+                <a class="source" href="../untracked-factory/palette.html">
+                  ./source/untracked-factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../untracked-factory/particle-history.html">
+                  ./source/untracked-factory/particle-history.js
+                </a>
+              
+                
+                <a class="source" href="../untracked-factory/quaternion.html">
+                  ./source/untracked-factory/quaternion.js
+                </a>
+              
+                
+                <a class="source" href="../untracked-factory/state.html">
+                  ./source/untracked-factory/state.js
+                </a>
+              
+                
+                <a class="source" href="../untracked-factory/text-style.html">
+                  ./source/untracked-factory/text-style.js
+                </a>
+              
+                
+                <a class="source" href="../untracked-factory/vector.html">
+                  ./source/untracked-factory/vector.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>gradient-engine.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
+              </div>
+              <h4 id="imports">Imports</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { doCreate, easeEngines, isa_fn, λfirstArg } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/cell-fragment.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { checkForWorkstoreItem, getWorkstoreItem, setWorkstoreItem } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./workstore.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./random-seed.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { bluenoise, orderedNoise } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filter-engine-bluenoise-data.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { makeNoiseAsset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../asset-management/noise-asset.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
+              </div>
+              <p>Shared constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _abs, _atan2, _ceil, _cos, _floor, _isFinite, _max, _min, _radian, _sin, _sqrt, <span class="hljs-variable constant_">ADD_EASE</span>, <span class="hljs-variable constant_">ADD_MAP_CONTOUR</span>, <span class="hljs-variable constant_">ADD_MAP_DISPLACE</span>, <span class="hljs-variable constant_">ADD_MAP_EASE</span>, <span class="hljs-variable constant_">ADD_MAP_FLOW</span>, <span class="hljs-variable constant_">ADD_MAP_ROTATE</span>, <span class="hljs-variable constant_">ADD_MAP_THRESHOLD</span>, <span class="hljs-variable constant_">ADD_MAP_WARP</span>, <span class="hljs-variable constant_">ADD_NOISE</span>, <span class="hljs-variable constant_">ADD_RIPPLE</span>, <span class="hljs-variable constant_">ADD_WAVE</span>, <span class="hljs-variable constant_">AFTER_SPREAD</span>, <span class="hljs-variable constant_">BEFORE_SPREAD</span>, <span class="hljs-variable constant_">BLUENOISE</span>, <span class="hljs-variable constant_">BOTTOM</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">DEFAULT_SEED</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">ON_COORDINATES</span>, <span class="hljs-variable constant_">ORDERED</span>, <span class="hljs-variable constant_">PATH_ENTITY</span>, <span class="hljs-variable constant_">PERMITTED_NOISE</span>, <span class="hljs-variable constant_">RANDOM</span>, <span class="hljs-variable constant_">REFLECT</span>, <span class="hljs-variable constant_">REPEAT</span>, <span class="hljs-variable constant_">RIGHT</span>, <span class="hljs-variable constant_">T_GRADIENT</span>, <span class="hljs-variable constant_">T_RADIAL_GRADIENT</span>, <span class="hljs-variable constant_">T_CONIC_GRADIENT</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">TRANSPARENT</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./shared-vars.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>Local constants</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">T_GRADIENT_ENGINE</span> = <span class="hljs-string">&#x27;GradientEngine&#x27;</span>,
+    X = <span class="hljs-string">&#x27;x&#x27;</span>,
+    Y = <span class="hljs-string">&#x27;y&#x27;</span>,
+    <span class="hljs-variable constant_">BOTH</span> = <span class="hljs-string">&#x27;both&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Build out the local noise asset</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> noiseAsset = <span class="hljs-title function_">makeNoiseAsset</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;SC-gradient-engine-noise-asset&#x27;</span>,
+});
+
+<span class="hljs-keyword">const</span> noiseDefs = noiseAsset.<span class="hljs-property">stateAttributeDefaults</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <h4 id="gradientengine-constructor">GradientEngine constructor</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">GradientEngine</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span> };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <h4 id="gradientengine-prototype">GradientEngine prototype</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> P = <span class="hljs-title class_">GradientEngine</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title function_">doCreate</span>();
+P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_">T_GRADIENT_ENGINE</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <h4 id="the-main-entry-into-the-engine">The main entry into the engine</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">action</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">packet</span>) {
+
+    <span class="hljs-keyword">const</span> { entity, <span class="hljs-attr">fixedGradientData</span>: gradient, identifier, imageData, matrix } = packet;
+
+    <span class="hljs-keyword">if</span> (identifier) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Entity has a cached imageData object in the workstore?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> itemInWorkstore = <span class="hljs-title function_">checkForWorkstoreItem</span>(identifier);
+        <span class="hljs-keyword">if</span> (itemInWorkstore) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">if</span> (!gradient.<span class="hljs-property">identifier</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>See if we have a stashed gradient</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> { width, height, data } = imageData;
+
+        <span class="hljs-keyword">const</span> gradientId = <span class="hljs-string">`<span class="hljs-subst">${gradient.identifier}</span>-<span class="hljs-subst">${width}</span>-<span class="hljs-subst">${height}</span>`</span>;
+
+        <span class="hljs-keyword">let</span> gradientData = <span class="hljs-title function_">getWorkstoreItem</span>(gradientId);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>Build the gradient ImageData object, if required</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!gradientData) {
+
+            <span class="hljs-title function_">updateOperationsCache</span>(gradient.<span class="hljs-property">operations</span>);
+
+            <span class="hljs-keyword">const</span> coords = <span class="hljs-title function_">getGradientCoordinates</span>(gradient, width, height);
+
+            <span class="hljs-keyword">if</span> (!coords.<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+            <span class="hljs-keyword">if</span> (gradient.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_GRADIENT</span>) gradientData = <span class="hljs-title function_">applyLinearGradient</span>(gradient, coords, width, height);
+            <span class="hljs-keyword">if</span> (gradient.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_RADIAL_GRADIENT</span>) gradientData = <span class="hljs-title function_">applyRadialGradient</span>(gradient, coords, width, height);
+            <span class="hljs-keyword">if</span> (gradient.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_CONIC_GRADIENT</span>) gradientData = <span class="hljs-title function_">applyConicGradient</span>(gradient, coords, width, height);
+
+            <span class="hljs-keyword">if</span> (gradientData) <span class="hljs-title function_">setWorkstoreItem</span>(gradientId, gradientData);
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>Apply the gradient to the entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> workData = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ImageData</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint8ClampedArray</span>(data.<span class="hljs-property">length</span>), width, height);
+
+        <span class="hljs-keyword">const</span> result = {
+            <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">y</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">w</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">h</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">imageData</span>: <span class="hljs-literal">null</span>,
+        };
+
+        <span class="hljs-keyword">if</span> (gradient.<span class="hljs-property">lockedToEntity</span>) <span class="hljs-title function_">applyEntityLockedGradient</span>(result, imageData, workData, gradientData, gradientId, width, height, entity, matrix);
+        <span class="hljs-keyword">else</span>  <span class="hljs-title function_">applyCellLockedGradient</span>(result, imageData, workData, gradientData, width, height);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>Store the entity’s gradient-applied image</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (result.<span class="hljs-property">w</span> &amp;&amp; result.<span class="hljs-property">h</span> &amp;&amp; result.<span class="hljs-property">imageData</span>) {
+
+            <span class="hljs-title function_">setWorkstoreItem</span>(identifier, result);
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+        }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>If we failed to generate an image for the gradient, return false</p>
+<ul>
+<li>The fillStyle or strokeStyle of the affected entity will display as transparent, or black</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <h3 id="gradient-actions">Gradient actions</h3>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getGradientCoordinates = <span class="hljs-keyword">function</span> (<span class="hljs-params">gradient, width, height</span>) {
+
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">cleanPosition</span> = (<span class="hljs-params">val, dim</span>)  =&gt; {
+
+        <span class="hljs-keyword">let</span> res = <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">if</span> (val.<span class="hljs-property">toFixed</span>) res = val;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-variable constant_">LEFT</span> || val === <span class="hljs-variable constant_">TOP</span>) res = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-variable constant_">RIGHT</span> || val === <span class="hljs-variable constant_">BOTTOM</span>) res = dim;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-variable constant_">CENTER</span>) res = dim / <span class="hljs-number">2</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isFinite</span>(<span class="hljs-built_in">parseFloat</span>(val))) res = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">else</span> res = (<span class="hljs-built_in">parseFloat</span>(val) / <span class="hljs-number">100</span>) * dim;
+
+        <span class="hljs-keyword">return</span> res;
+    };
+
+    <span class="hljs-keyword">const</span> cleanRadius = <span class="hljs-keyword">function</span> (<span class="hljs-params">val, dim</span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(val)) <span class="hljs-keyword">return</span> val;
+
+        <span class="hljs-keyword">else</span> {
+
+            val = <span class="hljs-built_in">parseFloat</span>(val);
+
+            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isFinite</span>(val)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+
+            <span class="hljs-keyword">return</span> ( val / <span class="hljs-number">100</span>) * dim;
+        }
+    };
+
+    <span class="hljs-keyword">switch</span> (gradient.<span class="hljs-property">type</span>) {
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">T_GRADIENT</span> : {
+
+            <span class="hljs-keyword">let</span> [sx, sy] = gradient.<span class="hljs-property">start</span>;
+            <span class="hljs-keyword">let</span> [ex, ey] = gradient.<span class="hljs-property">end</span>;
+
+            sx = <span class="hljs-title function_">cleanPosition</span>(sx, width);
+            sy = <span class="hljs-title function_">cleanPosition</span>(sy, height);
+            ex = <span class="hljs-title function_">cleanPosition</span>(ex, width);
+            ey = <span class="hljs-title function_">cleanPosition</span>(ey, height);
+
+            <span class="hljs-keyword">return</span> [sx, sy, ex, ey];
+        }
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">T_RADIAL_GRADIENT</span> : {
+
+            <span class="hljs-keyword">let</span> [sx, sy] = gradient.<span class="hljs-property">start</span>;
+            <span class="hljs-keyword">let</span> [ex, ey] = gradient.<span class="hljs-property">end</span>;
+
+            <span class="hljs-keyword">let</span> sr = gradient.<span class="hljs-property">startRadius</span>,
+                er = gradient.<span class="hljs-property">endRadius</span>;
+
+            sx = <span class="hljs-title function_">cleanPosition</span>(sx, width);
+            sy = <span class="hljs-title function_">cleanPosition</span>(sy, height);
+            sr = <span class="hljs-title function_">cleanRadius</span>(sr, width);
+
+            ex = <span class="hljs-title function_">cleanPosition</span>(ex, width);
+            ey = <span class="hljs-title function_">cleanPosition</span>(ey, height);
+            er = <span class="hljs-title function_">cleanRadius</span>(er, width);
+
+            <span class="hljs-keyword">return</span> [sx, sy, sr, ex, ey, er];
+        }
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">T_CONIC_GRADIENT</span> : {
+
+            <span class="hljs-keyword">let</span> [sx, sy] = gradient.<span class="hljs-property">start</span>;
+
+            sx = <span class="hljs-title function_">cleanPosition</span>(sx, width);
+            sy = <span class="hljs-title function_">cleanPosition</span>(sy, height);
+
+            <span class="hljs-keyword">const</span> a = gradient.<span class="hljs-property">angle</span> * _radian;
+
+            <span class="hljs-keyword">return</span> [a, sx, sy];
+        }
+
+        <span class="hljs-keyword">default</span> :
+            <span class="hljs-keyword">return</span> [];
+    }
+};
+
+<span class="hljs-keyword">const</span> applyLinearGradient = <span class="hljs-keyword">function</span> (<span class="hljs-params">gradient, coords, width, height</span>) {
+
+    <span class="hljs-keyword">if</span> (!gradient.<span class="hljs-property">stopsData</span> || !coords.<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">const</span> [x0, y0, x1, y1] = coords,
+        dx = x1 - x0,
+        dy = y1 - y0,
+        len2 = (dx * dx) + (dy * dy);
+
+    <span class="hljs-keyword">if</span> (!len2) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">const</span> { gData, pixels, pz, engines } = <span class="hljs-title function_">getGradientRenderData</span>(gradient, width, height),
+        { onCoordinatesEngine } = engines;
+
+    <span class="hljs-keyword">const</span> xStep = dx / len2,
+        yStep = dy / len2,
+        rowReset = yStep - (width * xStep);
+
+    <span class="hljs-keyword">if</span> (onCoordinatesEngine === λfirstArg) {
+
+        <span class="hljs-keyword">let</span> p = <span class="hljs-number">0</span>,
+            rowEnd = width,
+            t = ((-x0 * dx) + (-y0 * dy)) / len2,
+            color;
+
+        <span class="hljs-keyword">for</span> (; p &lt; pz; p++) {
+
+            color = <span class="hljs-title function_">getGradientColor</span>(gradient, t, engines, p, width, height);
+
+            <span class="hljs-keyword">if</span> (color) pixels[p] = color;
+
+            t += xStep;
+
+            <span class="hljs-keyword">if</span> (p + <span class="hljs-number">1</span> === rowEnd) {
+
+                t += rowReset;
+                rowEnd += width;
+            }
+        }
+    }
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-keyword">const</span> coord = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
+
+        <span class="hljs-keyword">let</span> p = <span class="hljs-number">0</span>,
+            x = <span class="hljs-number">0</span>,
+            y = <span class="hljs-number">0</span>,
+            color, sampleX, sampleY, t;
+
+        <span class="hljs-keyword">for</span> (; p &lt; pz; p++) {
+
+            coord[<span class="hljs-number">0</span>] = x;
+            coord[<span class="hljs-number">1</span>] = y;
+
+            <span class="hljs-title function_">onCoordinatesEngine</span>(coord, p, width, height);
+
+            sampleX = coord[<span class="hljs-number">0</span>];
+            sampleY = coord[<span class="hljs-number">1</span>];
+
+            t = (((sampleX - x0) * dx) + ((sampleY - y0) * dy)) / len2;
+
+            color = <span class="hljs-title function_">getGradientColor</span>(gradient, t, engines, p, width, height);
+            <span class="hljs-keyword">if</span> (color) pixels[p] = color;
+
+            x++;
+            <span class="hljs-keyword">if</span> (x &gt;= width) {
+
+                x = <span class="hljs-number">0</span>;
+                y++;
+            }
+        }
+    }
+
+    <span class="hljs-keyword">return</span> gData;
+};
+
+<span class="hljs-keyword">const</span> applyRadialGradient = <span class="hljs-keyword">function</span> (<span class="hljs-params">gradient, coords, width, height</span>) {
+
+    <span class="hljs-keyword">if</span> (!gradient.<span class="hljs-property">stopsData</span> || !coords.<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">const</span> [x0, y0, r0, x1, y1, r1] = coords,
+        cx = x1 - x0,
+        cy = y1 - y0,
+        cr = r1 - r0,
+        qa = (cx * cx) + (cy * cy) - (cr * cr),
+        nearZeroQa = <span class="hljs-title function_">_abs</span>(qa) &lt; <span class="hljs-number">0.000001</span>,
+        twoQa = <span class="hljs-number">2</span> * qa;
+
+    <span class="hljs-keyword">const</span> { gData, pixels, pz, engines } = <span class="hljs-title function_">getGradientRenderData</span>(gradient, width, height),
+        { onCoordinatesEngine } = engines;
+
+    <span class="hljs-keyword">const</span> coord = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-number">0</span>,
+        x = <span class="hljs-number">0</span>,
+        y = <span class="hljs-number">0</span>,
+        sampleX, sampleY,
+        px, py,
+        qb, qc, disc, root,
+        t, t1, t2,
+        rad1, rad2,
+        color;
+
+    <span class="hljs-keyword">for</span> (; p &lt; pz; p++) {
+
+        <span class="hljs-keyword">if</span> (onCoordinatesEngine === λfirstArg) {
+
+            sampleX = x;
+            sampleY = y;
+        }
+        <span class="hljs-keyword">else</span> {
+
+            coord[<span class="hljs-number">0</span>] = x;
+            coord[<span class="hljs-number">1</span>] = y;
+
+            <span class="hljs-title function_">onCoordinatesEngine</span>(coord, p, width, height);
+
+            sampleX = coord[<span class="hljs-number">0</span>];
+            sampleY = coord[<span class="hljs-number">1</span>];
+        }
+
+        px = sampleX - x0;
+        py = sampleY - y0;
+
+        qb = -<span class="hljs-number">2</span> * ((px * cx) + (py * cy) + (r0 * cr));
+        qc = (px * px) + (py * py) - (r0 * r0);
+
+        t = <span class="hljs-literal">null</span>;
+
+        <span class="hljs-keyword">if</span> (nearZeroQa) {
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_abs</span>(qb) &gt;= <span class="hljs-number">0.000001</span>) {
+
+                t = -qc / qb;
+
+                <span class="hljs-keyword">if</span> ((r0 + (t * cr)) &lt; <span class="hljs-number">0</span>) t = <span class="hljs-literal">null</span>;
+            }
+        }
+        <span class="hljs-keyword">else</span> {
+
+            disc = (qb * qb) - (<span class="hljs-number">4</span> * qa * qc);
+
+            <span class="hljs-keyword">if</span> (disc &gt;= <span class="hljs-number">0</span>) {
+
+                root = <span class="hljs-title function_">_sqrt</span>(disc);
+
+                t1 = (-qb - root) / twoQa;
+                t2 = (-qb + root) / twoQa;
+
+                rad1 = r0 + (t1 * cr);
+                rad2 = r0 + (t2 * cr);
+
+                <span class="hljs-keyword">if</span> (rad1 &gt;= <span class="hljs-number">0</span> &amp;&amp; rad2 &gt;= <span class="hljs-number">0</span>) t = (t1 &lt; t2) ? t1 : t2;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (rad1 &gt;= <span class="hljs-number">0</span>) t = t1;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (rad2 &gt;= <span class="hljs-number">0</span>) t = t2;
+            }
+        }
+
+        <span class="hljs-keyword">if</span> (t != <span class="hljs-literal">null</span>) {
+
+            color = <span class="hljs-title function_">getGradientColor</span>(gradient, t, engines, p, width, height);
+            <span class="hljs-keyword">if</span> (color) pixels[p] = color;
+        }
+
+        x++;
+        <span class="hljs-keyword">if</span> (x === width) {
+
+            x = <span class="hljs-number">0</span>;
+            y++;
+        }
+    }
+    <span class="hljs-keyword">return</span> gData;
+};
+
+<span class="hljs-keyword">const</span> applyConicGradient = <span class="hljs-keyword">function</span> (<span class="hljs-params">gradient, coords, width, height</span>) {
+
+    <span class="hljs-keyword">if</span> (!gradient.<span class="hljs-property">stopsData</span> || !coords.<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">const</span> startAngle = coords[<span class="hljs-number">0</span>],
+        cx = coords[<span class="hljs-number">1</span>],
+        cy = coords[<span class="hljs-number">2</span>];
+
+    <span class="hljs-keyword">let</span> angleRange = <span class="hljs-built_in">parseFloat</span>(gradient.<span class="hljs-property">angleRange</span>);
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isFinite</span>(angleRange) || angleRange &lt;= <span class="hljs-number">0</span>) angleRange = <span class="hljs-number">360</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (angleRange &gt; <span class="hljs-number">360</span>) angleRange = <span class="hljs-number">360</span>;
+
+    <span class="hljs-keyword">const</span> range = angleRange * _radian,
+        fullCircle = angleRange &gt;= <span class="hljs-number">360</span>;
+
+    <span class="hljs-keyword">let</span> swirlDistance = <span class="hljs-built_in">parseFloat</span>(gradient.<span class="hljs-property">swirlDistance</span>);
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">_isFinite</span>(swirlDistance) || swirlDistance &lt;= <span class="hljs-number">0</span>) swirlDistance = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">const</span> swirlClockwise = gradient.<span class="hljs-property">swirlClockwise</span> !== <span class="hljs-literal">false</span>,
+        swirlDirection = swirlClockwise ? <span class="hljs-number">1</span> : -<span class="hljs-number">1</span>;
+
+    <span class="hljs-keyword">const</span> { gData, pixels, pz, engines } = <span class="hljs-title function_">getGradientRenderData</span>(gradient, width, height),
+        { onCoordinatesEngine } = engines;
+
+    <span class="hljs-keyword">const</span> tau = <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">2</span>,
+        spare = tau - range,
+        halfSpare = spare / <span class="hljs-number">2</span>,
+        swirlFactor = swirlDistance ? (swirlDirection * tau / swirlDistance) : <span class="hljs-number">0</span>,
+        coord = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-number">0</span>,
+        x = <span class="hljs-number">0</span>,
+        y = <span class="hljs-number">0</span>,
+        sampleX, sampleY,
+        dx, dy, angle, diff,
+        t, color;
+
+    <span class="hljs-keyword">for</span> (; p &lt; pz; p++) {
+
+        <span class="hljs-keyword">if</span> (onCoordinatesEngine === λfirstArg) {
+
+            sampleX = x;
+            sampleY = y;
+        }
+        <span class="hljs-keyword">else</span> {
+
+            coord[<span class="hljs-number">0</span>] = x;
+            coord[<span class="hljs-number">1</span>] = y;
+
+            <span class="hljs-title function_">onCoordinatesEngine</span>(coord, p, width, height);
+
+            sampleX = coord[<span class="hljs-number">0</span>];
+            sampleY = coord[<span class="hljs-number">1</span>];
+        }
+
+        dx = sampleX - cx;
+        dy = sampleY - cy;
+
+        angle = <span class="hljs-title function_">_atan2</span>(dy, dx);
+
+        <span class="hljs-keyword">if</span> (swirlFactor) angle += <span class="hljs-title function_">_sqrt</span>((dx * dx) + (dy * dy)) * swirlFactor;
+
+        diff = (angle - startAngle) % tau;
+        <span class="hljs-keyword">if</span> (diff &lt; <span class="hljs-number">0</span>) diff += tau;
+
+        t = diff / range;
+
+        color = <span class="hljs-title function_">getGradientColor</span>(gradient, t, engines, p, width, height, {
+            fullCircle,
+            diff,
+            range,
+            halfSpare,
+        });
+
+        <span class="hljs-keyword">if</span> (color) pixels[p] = color;
+
+        x++;
+        <span class="hljs-keyword">if</span> (x === width) {
+
+            x = <span class="hljs-number">0</span>;
+            y++;
+        }
+    }
+    <span class="hljs-keyword">return</span> gData;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>Helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> clampUnit = <span class="hljs-keyword">function</span> (<span class="hljs-params">v</span>) {
+
+    <span class="hljs-keyword">if</span> (v &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (v &gt; <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">return</span> v;
+};
+
+<span class="hljs-keyword">const</span> getGradientColor = <span class="hljs-keyword">function</span> (<span class="hljs-params">gradient, t, engines, p, width, height, conicData = <span class="hljs-literal">null</span></span>) {
+
+    <span class="hljs-keyword">const</span> {
+        beforeSpreadEngine,
+        afterSpreadEngine,
+        easingEngine,
+    } = engines;
+
+    <span class="hljs-keyword">const</span> spread = gradient.<span class="hljs-property">spread</span>,
+        stopsData = gradient.<span class="hljs-property">stopsData</span>;
+
+    t = <span class="hljs-title function_">beforeSpreadEngine</span>(t, p, width, height);
+
+    <span class="hljs-keyword">if</span> (spread === <span class="hljs-variable constant_">TRANSPARENT</span>) {
+
+        <span class="hljs-keyword">if</span> (conicData &amp;&amp; conicData.<span class="hljs-property">fullCircle</span>) t -= <span class="hljs-title function_">_floor</span>(t);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0</span> || t &gt; <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (spread === <span class="hljs-variable constant_">REPEAT</span>) {
+
+        t -= <span class="hljs-title function_">_floor</span>(t);
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (spread === <span class="hljs-variable constant_">REFLECT</span>) {
+
+        t %= <span class="hljs-number">2</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0</span>) t += <span class="hljs-number">2</span>;
+        <span class="hljs-keyword">if</span> (t &gt; <span class="hljs-number">1</span>) t = <span class="hljs-number">2</span> - t;
+    }
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-keyword">if</span> (
+            conicData &amp;&amp;
+            !conicData.<span class="hljs-property">fullCircle</span> &amp;&amp;
+            t &gt; <span class="hljs-number">1</span>
+        ) {
+
+            t = ((conicData.<span class="hljs-property">diff</span> - conicData.<span class="hljs-property">range</span>) &lt;= conicData.<span class="hljs-property">halfSpare</span>) ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
+        }
+        <span class="hljs-keyword">else</span> t = <span class="hljs-title function_">clampUnit</span>(t);
+    }
+
+    t = <span class="hljs-title function_">clampUnit</span>(t);
+
+    t = <span class="hljs-title function_">afterSpreadEngine</span>(t, p, width, height);
+
+    <span class="hljs-keyword">if</span> (easingEngine) t = <span class="hljs-title function_">easingEngine</span>(t);
+
+    t = <span class="hljs-title function_">clampUnit</span>(t);
+
+    <span class="hljs-keyword">return</span> stopsData[<span class="hljs-title function_">getPaletteIndex</span>(gradient, t)];
+};
+
+<span class="hljs-keyword">const</span> getGradientRenderData = <span class="hljs-keyword">function</span> (<span class="hljs-params">gradient, width, height</span>) {
+
+    <span class="hljs-keyword">const</span> gData = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ImageData</span>(width, height),
+        d = gData.<span class="hljs-property">data</span>,
+        pixels = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(d.<span class="hljs-property">buffer</span>, d.<span class="hljs-property">byteOffset</span>, d.<span class="hljs-property">byteLength</span> &gt;&gt;&gt; <span class="hljs-number">2</span>),
+        easing = gradient.<span class="hljs-property">easing</span>;
+
+    <span class="hljs-keyword">return</span> {
+        gData,
+        pixels,
+        <span class="hljs-attr">pz</span>: pixels.<span class="hljs-property">length</span>,
+        <span class="hljs-attr">engines</span>: {
+            <span class="hljs-attr">beforeSpreadEngine</span>: <span class="hljs-title function_">getBeforeSpreadOperation</span>(gData),
+            <span class="hljs-attr">afterSpreadEngine</span>: <span class="hljs-title function_">getAfterSpreadOperation</span>(gData),
+            <span class="hljs-attr">onCoordinatesEngine</span>: <span class="hljs-title function_">getOnCoordinatesOperation</span>(gData),
+            <span class="hljs-attr">easingEngine</span>: <span class="hljs-title function_">isa_fn</span>(easing) ? easing : easeEngines[easing],
+        },
+    };
+};
+
+
+<span class="hljs-keyword">const</span> getPaletteIndex = <span class="hljs-keyword">function</span> (<span class="hljs-params">gradient, t</span>) {
+
+    <span class="hljs-keyword">const</span> start = gradient.<span class="hljs-property">paletteStart</span>,
+        end = gradient.<span class="hljs-property">paletteEnd</span>,
+        cycle = gradient.<span class="hljs-property">cyclePalette</span>;
+
+    <span class="hljs-keyword">let</span> index, span;
+
+    <span class="hljs-keyword">if</span> (start === end) <span class="hljs-keyword">return</span> start;
+
+    <span class="hljs-keyword">if</span> (start &lt; end) {
+
+        span = end - start;
+        index = start + (t * span);
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cycle) {
+
+        span = (<span class="hljs-number">1000</span> - start) + end;
+        index = start + (t * span);
+
+        <span class="hljs-keyword">if</span> (index &gt; <span class="hljs-number">999</span>) index -= <span class="hljs-number">1000</span>;
+    }
+    <span class="hljs-keyword">else</span> {
+
+        span = start - end;
+        index = start - (t * span);
+    }
+
+    index = <span class="hljs-title function_">_floor</span>(index);
+
+    <span class="hljs-keyword">if</span> (index &lt; <span class="hljs-number">0</span>) index = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (index &gt; <span class="hljs-number">999</span>) index = <span class="hljs-number">999</span>;
+
+    <span class="hljs-keyword">return</span> index;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <h3 id="apply-gradient-data-to-entitys">Apply gradient data to entitys</h3>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> applyEntityLockedGradient = <span class="hljs-keyword">function</span> (<span class="hljs-params">result, imageData, workData, gradientData, gradientId, width, height, entity, matrix</span>) {
+
+    <span class="hljs-keyword">const</span> pathBased = <span class="hljs-variable constant_">PATH_ENTITY</span>.<span class="hljs-title function_">includes</span>(entity.<span class="hljs-property">type</span>),
+
+        entityScale = entity.<span class="hljs-property">currentScale</span> || <span class="hljs-number">1</span>,
+        entityScalesLine = entity.<span class="hljs-property">scaleOutline</span>,
+
+        [entityWidth, entityHeight] = pathBased ? entity.<span class="hljs-property">currentDimensions</span> : entity.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;dimensions&#x27;</span>),
+        [handleX, handleY] = entity.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;handle&#x27;</span>),
+
+        entityLineWidth = entity.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;lineWidth&#x27;</span>) || <span class="hljs-number">0</span>,
+        entityScaledLine = entityScalesLine ? entityLineWidth * entityScale : entityLineWidth,
+        lineOffset = entityScaledLine / <span class="hljs-number">2</span>,
+
+        localHandleX = <span class="hljs-title function_">getCoordinateValue</span>(handleX, entityWidth) * entityScale,
+        localHandleY = <span class="hljs-title function_">getCoordinateValue</span>(handleY, entityHeight) * entityScale,
+
+        inverseMatrix = matrix.<span class="hljs-title function_">inverse</span>(),
+        { <span class="hljs-attr">a</span>: mxA, <span class="hljs-attr">b</span>: mxB, <span class="hljs-attr">c</span>: mxC, <span class="hljs-attr">d</span>: mxD, <span class="hljs-attr">e</span>: mxE, <span class="hljs-attr">f</span>: mxF } = inverseMatrix,
+
+        iData = imageData.<span class="hljs-property">data</span>,
+        iPix = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(iData.<span class="hljs-property">buffer</span>, iData.<span class="hljs-property">byteOffset</span>, iData.<span class="hljs-property">byteLength</span> &gt;&gt;&gt; <span class="hljs-number">2</span>),
+        iLen = iPix.<span class="hljs-property">length</span>,
+
+        wData = workData.<span class="hljs-property">data</span>,
+        wPix = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(wData.<span class="hljs-property">buffer</span>, wData.<span class="hljs-property">byteOffset</span>, wData.<span class="hljs-property">byteLength</span> &gt;&gt;&gt; <span class="hljs-number">2</span>);
+
+    <span class="hljs-keyword">const</span> coordScale = pathBased ? entityScale : <span class="hljs-number">1</span>;
+
+    <span class="hljs-keyword">let</span> localMinX = -lineOffset,
+        localMinY = -lineOffset,
+        localMaxX = (entityWidth * entityScale) + lineOffset,
+        localMaxY = (entityHeight * entityScale) + lineOffset;
+
+    <span class="hljs-keyword">if</span> (pathBased) {
+
+        <span class="hljs-keyword">let</span> x = <span class="hljs-number">0</span>,
+            y = <span class="hljs-number">0</span>,
+            cursor = <span class="hljs-number">0</span>,
+            iChannels, alpha,
+            sx, sy;
+
+        <span class="hljs-keyword">for</span> (; cursor &lt; iLen; cursor++) {
+
+            iChannels = iPix[cursor];
+            alpha = (iChannels &gt;&gt;&gt; <span class="hljs-number">24</span>) &amp; <span class="hljs-number">0xFF</span>;
+
+            <span class="hljs-keyword">if</span> (alpha) {
+
+                sx = (((mxA * x) + (mxC * y) + mxE) * coordScale) + localHandleX;
+                sy = (((mxB * x) + (mxD * y) + mxF) * coordScale) + localHandleY;
+
+                <span class="hljs-keyword">if</span> (sx &lt; localMinX) localMinX = sx;
+                <span class="hljs-keyword">if</span> (sx &gt; localMaxX) localMaxX = sx;
+                <span class="hljs-keyword">if</span> (sy &lt; localMinY) localMinY = sy;
+                <span class="hljs-keyword">if</span> (sy &gt; localMaxY) localMaxY = sy;
+            }
+
+            x++;
+
+            <span class="hljs-keyword">if</span> (x === width) {
+
+                x = <span class="hljs-number">0</span>;
+                y++;
+            }
+        }
+
+        localMinX = <span class="hljs-title function_">_floor</span>(localMinX) - <span class="hljs-number">1</span>;
+        localMinY = <span class="hljs-title function_">_floor</span>(localMinY) - <span class="hljs-number">1</span>;
+        localMaxX = <span class="hljs-title function_">_ceil</span>(localMaxX) + <span class="hljs-number">1</span>;
+        localMaxY = <span class="hljs-title function_">_ceil</span>(localMaxY) + <span class="hljs-number">1</span>;
+    }
+
+    <span class="hljs-keyword">const</span> localWidth = pathBased ? localMaxX - localMinX + <span class="hljs-number">1</span> : <span class="hljs-title function_">_ceil</span>((entityWidth * entityScale) + entityScaledLine),
+        localHeight = pathBased ? localMaxY - localMinY + <span class="hljs-number">1</span> : <span class="hljs-title function_">_ceil</span>((entityHeight * entityScale) + entityScaledLine),
+
+        localOverscale = pathBased &amp;&amp; entityScale &lt; <span class="hljs-number">1</span> ? <span class="hljs-title function_">_min</span>(<span class="hljs-number">4</span>, <span class="hljs-number">1</span> / entityScale) : <span class="hljs-number">1</span>,
+        rasterWidth = <span class="hljs-title function_">_ceil</span>(localWidth * localOverscale),
+        rasterHeight = <span class="hljs-title function_">_ceil</span>(localHeight * localOverscale),
+
+        localGradientId = <span class="hljs-string">`<span class="hljs-subst">${gradientId}</span>-for-<span class="hljs-subst">${localWidth}</span>-<span class="hljs-subst">${localHeight}</span>-at-<span class="hljs-subst">${localMinX}</span>-<span class="hljs-subst">${localMinY}</span>-os-<span class="hljs-subst">${localOverscale}</span>`</span>;
+
+    <span class="hljs-keyword">let</span> localGradientData = <span class="hljs-title function_">getWorkstoreItem</span>(localGradientId);
+
+    <span class="hljs-keyword">if</span> (!localGradientData) {
+
+        <span class="hljs-keyword">const</span> tmpSrc = <span class="hljs-title function_">requestCell</span>(),
+            tmpDest = <span class="hljs-title function_">requestCell</span>();
+
+        <span class="hljs-keyword">const</span> { <span class="hljs-attr">element</span>: tmpSrcEl, <span class="hljs-attr">engine</span>: tmpSrcEng } = tmpSrc,
+            { <span class="hljs-attr">element</span>: tmpDestEl, <span class="hljs-attr">engine</span>: tmpDestEng } = tmpDest;
+
+        tmpSrcEl.<span class="hljs-property">width</span> = width;
+        tmpSrcEl.<span class="hljs-property">height</span> = height;
+        tmpSrcEng.<span class="hljs-title function_">putImageData</span>(gradientData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+
+        tmpDestEl.<span class="hljs-property">width</span> = rasterWidth;
+        tmpDestEl.<span class="hljs-property">height</span> = rasterHeight;
+        tmpDestEng.<span class="hljs-title function_">drawImage</span>(tmpSrcEl, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, rasterWidth, rasterHeight);
+
+        localGradientData = tmpDestEng.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, rasterWidth, rasterHeight);
+
+        <span class="hljs-title function_">releaseCell</span>(tmpSrc, tmpDest);
+
+        <span class="hljs-title function_">setWorkstoreItem</span>(localGradientId, localGradientData);
+    }
+
+    <span class="hljs-keyword">const</span> gData = localGradientData.<span class="hljs-property">data</span>,
+        gPix = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(gData.<span class="hljs-property">buffer</span>, gData.<span class="hljs-property">byteOffset</span>, gData.<span class="hljs-property">byteLength</span> &gt;&gt;&gt; <span class="hljs-number">2</span>);
+
+    <span class="hljs-keyword">let</span> minX = width,
+        minY = height,
+        maxX = <span class="hljs-number">0</span>,
+        maxY = <span class="hljs-number">0</span>,
+        x = <span class="hljs-number">0</span>,
+        y = <span class="hljs-number">0</span>,
+        cursor = <span class="hljs-number">0</span>,
+        iChannels, alpha,
+        localX, localY, localCursor,
+        gChannels, gAlpha, outAlpha;
+
+    <span class="hljs-keyword">for</span> (; cursor &lt; iLen; cursor++) {
+
+        iChannels = iPix[cursor];
+        alpha = (iChannels &gt;&gt;&gt; <span class="hljs-number">24</span>) &amp; <span class="hljs-number">0xFF</span>;
+
+        <span class="hljs-keyword">if</span> (alpha) {
+
+            localX = <span class="hljs-title function_">_floor</span>((((((mxA * x) + (mxC * y) + mxE) * coordScale) + localHandleX) - localMinX) * localOverscale);
+            localY = <span class="hljs-title function_">_floor</span>((((((mxB * x) + (mxD * y) + mxF) * coordScale) + localHandleY) - localMinY) * localOverscale);
+
+            <span class="hljs-keyword">if</span> (localX &gt;= <span class="hljs-number">0</span> &amp;&amp; localX &lt; rasterWidth &amp;&amp; localY &gt;= <span class="hljs-number">0</span> &amp;&amp; localY &lt; rasterHeight) {
+
+                localCursor = (localY * rasterWidth) + localX;
+
+                gChannels = gPix[localCursor];
+                gAlpha = gChannels &gt;&gt;&gt; <span class="hljs-number">24</span>;
+                outAlpha = ((alpha * gAlpha) / <span class="hljs-number">255</span>) | <span class="hljs-number">0</span>;
+
+                <span class="hljs-keyword">if</span> (outAlpha) wPix[cursor] = ((outAlpha &lt;&lt; <span class="hljs-number">24</span>) | (gChannels &amp; <span class="hljs-number">0x00ffffff</span>)) &gt;&gt;&gt; <span class="hljs-number">0</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (x &lt; minX) minX = x;
+            <span class="hljs-keyword">if</span> (x &gt; maxX) maxX = x;
+            <span class="hljs-keyword">if</span> (y &lt; minY) minY = y;
+            <span class="hljs-keyword">if</span> (y &gt; maxY) maxY = y;
+        }
+
+        x++;
+
+        <span class="hljs-keyword">if</span> (x === width) {
+
+            x = <span class="hljs-number">0</span>;
+            y++;
+        }
+    }
+
+    <span class="hljs-keyword">if</span> (maxX &lt; minX || maxY &lt; minY) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">const</span> resWidth = maxX - minX + <span class="hljs-number">1</span>,
+        resHeight = maxY - minY + <span class="hljs-number">1</span>,
+        trimmedImage = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ImageData</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint8ClampedArray</span>(resWidth * resHeight * <span class="hljs-number">4</span>), resWidth, resHeight),
+        tData = trimmedImage.<span class="hljs-property">data</span>,
+        tPix = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(tData.<span class="hljs-property">buffer</span>, tData.<span class="hljs-property">byteOffset</span>, tData.<span class="hljs-property">byteLength</span> &gt;&gt;&gt; <span class="hljs-number">2</span>);
+
+    <span class="hljs-keyword">let</span> rows = <span class="hljs-number">0</span>,
+        index;
+
+    <span class="hljs-keyword">for</span> (; rows &lt; resHeight; rows++) {
+
+        index = ((minY + rows) * width) + minX;
+        tPix.<span class="hljs-title function_">set</span>(wPix.<span class="hljs-title function_">subarray</span>(index, index + resWidth), rows * resWidth);
+    }
+
+    result.<span class="hljs-property">x</span> = minX;
+    result.<span class="hljs-property">y</span> = minY;
+    result.<span class="hljs-property">w</span> = resWidth;
+    result.<span class="hljs-property">h</span> = resHeight;
+    result.<span class="hljs-property">imageData</span> = trimmedImage;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+};
+
+<span class="hljs-keyword">const</span> applyCellLockedGradient = <span class="hljs-keyword">function</span> (<span class="hljs-params">result, imageData, workData, gradientData, width, height</span>) {
+
+    <span class="hljs-keyword">const</span> iData = imageData.<span class="hljs-property">data</span>,
+        iPix = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(iData.<span class="hljs-property">buffer</span>, iData.<span class="hljs-property">byteOffset</span>, iData.<span class="hljs-property">byteLength</span> &gt;&gt;&gt; <span class="hljs-number">2</span>),
+        iLen = iPix.<span class="hljs-property">length</span>,
+        gData = gradientData.<span class="hljs-property">data</span>,
+        gPix = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(gData.<span class="hljs-property">buffer</span>, gData.<span class="hljs-property">byteOffset</span>, gData.<span class="hljs-property">byteLength</span> &gt;&gt;&gt; <span class="hljs-number">2</span>),
+        wData = workData.<span class="hljs-property">data</span>,
+        wPix = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(wData.<span class="hljs-property">buffer</span>, wData.<span class="hljs-property">byteOffset</span>, wData.<span class="hljs-property">byteLength</span> &gt;&gt;&gt; <span class="hljs-number">2</span>);
+
+    <span class="hljs-keyword">let</span> minX = width,
+        minY = height,
+        maxX = <span class="hljs-number">0</span>,
+        maxY = <span class="hljs-number">0</span>,
+        x = <span class="hljs-number">0</span>,
+        y = <span class="hljs-number">0</span>,
+        cursor = <span class="hljs-number">0</span>,
+        iChannels, alpha, gChannels, gAlpha, outAlpha;
+
+    <span class="hljs-keyword">for</span> (; cursor &lt; iLen; cursor++) {
+
+        iChannels = iPix[cursor];
+        alpha = (iChannels &gt;&gt;&gt; <span class="hljs-number">24</span>) &amp; <span class="hljs-number">0xFF</span>;
+
+        <span class="hljs-keyword">if</span> (alpha) {
+
+            gChannels = gPix[cursor];
+            gAlpha = gChannels &gt;&gt;&gt; <span class="hljs-number">24</span>;
+            outAlpha = ((alpha * gAlpha) / <span class="hljs-number">255</span>) | <span class="hljs-number">0</span>;
+
+            <span class="hljs-keyword">if</span> (outAlpha) wPix[cursor] = ((outAlpha &lt;&lt; <span class="hljs-number">24</span>) | (gChannels &amp; <span class="hljs-number">0x00ffffff</span>)) &gt;&gt;&gt; <span class="hljs-number">0</span>;
+
+            <span class="hljs-keyword">if</span> (x &lt; minX) minX = x;
+            <span class="hljs-keyword">if</span> (x &gt; maxX) maxX = x;
+            <span class="hljs-keyword">if</span> (y &lt; minY) minY = y;
+            <span class="hljs-keyword">if</span> (y &gt; maxY) maxY = y;
+        }
+
+        x++;
+
+        <span class="hljs-keyword">if</span> (x === width) {
+
+            x = <span class="hljs-number">0</span>;
+            y++;
+        }
+    }
+
+    <span class="hljs-keyword">if</span> (maxX &lt; minX || maxY &lt; minY) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">const</span> resWidth = maxX - minX + <span class="hljs-number">1</span>,
+        resHeight = maxY - minY + <span class="hljs-number">1</span>,
+        trimmedImage = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ImageData</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint8ClampedArray</span>(resWidth * resHeight * <span class="hljs-number">4</span>), resWidth, resHeight),
+        tData = trimmedImage.<span class="hljs-property">data</span>,
+        tPix = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(tData.<span class="hljs-property">buffer</span>, tData.<span class="hljs-property">byteOffset</span>, tData.<span class="hljs-property">byteLength</span> &gt;&gt;&gt; <span class="hljs-number">2</span>);
+
+    <span class="hljs-keyword">let</span> rows = <span class="hljs-number">0</span>,
+        index, slice;
+
+    <span class="hljs-keyword">for</span> (; rows &lt; resHeight; rows++) {
+
+        index = ((minY + rows) * width) + minX;
+        slice = wPix.<span class="hljs-title function_">slice</span>(index, index + resWidth);
+        tPix.<span class="hljs-title function_">set</span>(slice, rows * resWidth);
+    }
+
+    result.<span class="hljs-property">x</span> = minX;
+    result.<span class="hljs-property">y</span> = minY;
+    result.<span class="hljs-property">w</span> = resWidth;
+    result.<span class="hljs-property">h</span> = resHeight;
+    result.<span class="hljs-property">imageData</span> = trimmedImage;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <h3 id="gradient-operation-functionality">Gradient operation functionality</h3>
+<p>Operations are grouped by stage and compiled into per-stage operation chains</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> operationsCache = {
+    [<span class="hljs-variable constant_">BEFORE_SPREAD</span>]: [],
+    [<span class="hljs-variable constant_">AFTER_SPREAD</span>]: [],
+    [<span class="hljs-variable constant_">ON_COORDINATES</span>]: [],
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">cleanOperationsCache</span> = (<span class="hljs-params"></span>) =&gt; {
+
+    operationsCache[<span class="hljs-variable constant_">BEFORE_SPREAD</span>].<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    operationsCache[<span class="hljs-variable constant_">AFTER_SPREAD</span>].<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    operationsCache[<span class="hljs-variable constant_">ON_COORDINATES</span>].<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateOperationsCache</span> = (<span class="hljs-params">operations = []</span>) =&gt; {
+
+    <span class="hljs-title function_">cleanOperationsCache</span>();
+
+    <span class="hljs-keyword">if</span> (operations.<span class="hljs-property">length</span>) {
+
+        operationsCache[<span class="hljs-variable constant_">BEFORE_SPREAD</span>].<span class="hljs-title function_">push</span>(...operations.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">op</span> =&gt;</span> op.<span class="hljs-property">stage</span> === <span class="hljs-variable constant_">BEFORE_SPREAD</span>));
+        operationsCache[<span class="hljs-variable constant_">AFTER_SPREAD</span>].<span class="hljs-title function_">push</span>(...operations.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">op</span> =&gt;</span> op.<span class="hljs-property">stage</span> === <span class="hljs-variable constant_">AFTER_SPREAD</span>));
+        operationsCache[<span class="hljs-variable constant_">ON_COORDINATES</span>].<span class="hljs-title function_">push</span>(...operations.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">op</span> =&gt;</span> op.<span class="hljs-property">stage</span> === <span class="hljs-variable constant_">ON_COORDINATES</span>));
+    }
+};
+
+<span class="hljs-keyword">const</span> buildOperationChain = <span class="hljs-keyword">function</span> (<span class="hljs-params">engines</span>) {
+
+    <span class="hljs-keyword">if</span> (!engines.<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> λfirstArg;
+
+    <span class="hljs-keyword">if</span> (engines.<span class="hljs-property">length</span> === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> engines[<span class="hljs-number">0</span>];
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">val, p, width, height</span>) {
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = engines.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+            val = engines[i](val, p, width, height);
+        }
+        <span class="hljs-keyword">return</span> val;
+    };
+};
+
+<span class="hljs-keyword">const</span> buildCoordinateOperationChain = <span class="hljs-keyword">function</span> (<span class="hljs-params">engines</span>) {
+
+    <span class="hljs-keyword">if</span> (!engines.<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> λfirstArg;
+
+    <span class="hljs-keyword">if</span> (engines.<span class="hljs-property">length</span> === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> engines[<span class="hljs-number">0</span>];
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">coord, p, width, height</span>) {
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = engines.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+            engines[i](coord, p, width, height);
+        }
+        <span class="hljs-keyword">return</span> coord;
+    };
+};
+
+<span class="hljs-keyword">const</span> compileOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">op, workData, entity, lock</span>) {
+
+    <span class="hljs-keyword">switch</span> (op.<span class="hljs-property">operation</span>) {
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">ADD_EASE</span> :
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">getEasingOperation</span>(op);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">ADD_MAP_CONTOUR</span> :
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">getMapContourOperation</span>(op, workData);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">ADD_MAP_DISPLACE</span> :
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">getMapDisplaceOperation</span>(op, workData);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">ADD_MAP_EASE</span> :
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">getMapEaseOperation</span>(op, workData);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">ADD_MAP_FLOW</span> :
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">getMapFlowOperation</span>(op, workData);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">ADD_MAP_ROTATE</span> :
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">getMapRotateOperation</span>(op, workData);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">ADD_MAP_THRESHOLD</span> :
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">getMapThresholdOperation</span>(op, workData);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">ADD_MAP_WARP</span> :
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">getMapWarpOperation</span>(op, workData);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">ADD_NOISE</span> :
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">getNoiseOperation</span>(op, workData);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">ADD_RIPPLE</span> :
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">getRippleOperation</span>(op, workData, entity, lock);
+
+        <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">ADD_WAVE</span> :
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">getWaveOperation</span>(op);
+
+        <span class="hljs-keyword">default</span> :
+            <span class="hljs-keyword">return</span> λfirstArg;
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>Determine which operation, if any, should be applied at each stage</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getBeforeSpreadOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">workData</span>) {
+
+    <span class="hljs-keyword">const</span> ops = operationsCache[<span class="hljs-variable constant_">BEFORE_SPREAD</span>],
+        engines = [];
+
+    ops.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">op</span> =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> engine = <span class="hljs-title function_">compileOperation</span>(op, workData);
+
+        <span class="hljs-keyword">if</span> (engine !== λfirstArg) engines.<span class="hljs-title function_">push</span>(engine);
+    });
+
+    <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildOperationChain</span>(engines);
+};
+
+<span class="hljs-keyword">const</span> getAfterSpreadOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">workData</span>) {
+
+    <span class="hljs-keyword">const</span> ops = operationsCache[<span class="hljs-variable constant_">AFTER_SPREAD</span>],
+        engines = [];
+
+    ops.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">op</span> =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> engine = <span class="hljs-title function_">compileOperation</span>(op, workData);
+
+        <span class="hljs-keyword">if</span> (engine !== λfirstArg) engines.<span class="hljs-title function_">push</span>(engine);
+    });
+
+    <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildOperationChain</span>(engines);
+};
+
+<span class="hljs-keyword">const</span> getOnCoordinatesOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">workData, entity, lock</span>) {
+
+    <span class="hljs-keyword">const</span> ops = operationsCache[<span class="hljs-variable constant_">ON_COORDINATES</span>],
+        engines = [];
+
+    ops.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">op</span> =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> engine = <span class="hljs-title function_">compileOperation</span>(op, workData, entity, lock);
+
+        <span class="hljs-keyword">if</span> (engine !== λfirstArg) engines.<span class="hljs-title function_">push</span>(engine);
+    });
+
+    <span class="hljs-keyword">return</span> <span class="hljs-title function_">buildCoordinateOperationChain</span>(engines);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>Noise operations</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getNoiseOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">op, workData</span>) {
+
+    <span class="hljs-keyword">const</span> params = op.<span class="hljs-property">parameters</span> || {},
+        noise = params.<span class="hljs-property">noise</span>;
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-variable constant_">PERMITTED_NOISE</span>.<span class="hljs-title function_">includes</span>(noise)) <span class="hljs-keyword">return</span> λfirstArg;
+
+    <span class="hljs-keyword">const</span> strength = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">strength</span>) ? params.<span class="hljs-property">strength</span> : <span class="hljs-number">0.05</span>;
+
+    <span class="hljs-keyword">const</span> rnd = <span class="hljs-title function_">getRandomNumbers</span>({
+        <span class="hljs-attr">seed</span>: params.<span class="hljs-property">seed</span>,
+        <span class="hljs-attr">length</span>: workData.<span class="hljs-property">data</span>.<span class="hljs-property">length</span> &gt;&gt;&gt; <span class="hljs-number">2</span>,
+        <span class="hljs-attr">imgWidth</span>: workData.<span class="hljs-property">width</span>,
+        <span class="hljs-attr">type</span>: noise,
+    });
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">val, p</span>) {
+
+        <span class="hljs-keyword">return</span> val + ((rnd[p] - <span class="hljs-number">0.5</span>) * strength);
+    };
+};
+
+<span class="hljs-keyword">const</span> getRandomNumbers = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) {
+
+    <span class="hljs-keyword">const</span> {
+        seed = <span class="hljs-variable constant_">DEFAULT_SEED</span>,
+        length = <span class="hljs-number">0</span>,
+        imgWidth = <span class="hljs-number">0</span>,
+        type = <span class="hljs-variable constant_">RANDOM</span>,
+    } = items;
+
+    <span class="hljs-keyword">const</span> name = <span class="hljs-string">`random-<span class="hljs-subst">${seed}</span>-<span class="hljs-subst">${length}</span>-<span class="hljs-subst">${imgWidth}</span>-<span class="hljs-subst">${type}</span>`</span>,
+        itemInWorkstore = <span class="hljs-title function_">getWorkstoreItem</span>(name);
+
+    <span class="hljs-keyword">if</span> (itemInWorkstore) <span class="hljs-keyword">return</span> itemInWorkstore;
+
+    <span class="hljs-keyword">if</span> ((type === <span class="hljs-variable constant_">BLUENOISE</span> || type === <span class="hljs-variable constant_">ORDERED</span>) &amp;&amp; imgWidth) {
+
+        <span class="hljs-keyword">const</span> base = (type === <span class="hljs-variable constant_">BLUENOISE</span>) ? bluenoise : orderedNoise,
+            dim = (<span class="hljs-title function_">_sqrt</span>(base.<span class="hljs-property">length</span>) | <span class="hljs-number">0</span>),
+            imgH = <span class="hljs-title function_">_ceil</span>(length / imgWidth),
+            out = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Float32Array</span>(length);
+
+        <span class="hljs-keyword">let</span> p = <span class="hljs-number">0</span>,
+            y, y0, x;
+
+        <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; imgH &amp;&amp; p &lt; length; y++) {
+
+            y0 = (y % dim) * dim;
+
+            <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; imgWidth &amp;&amp; p &lt; length; x++) {
+
+                out[p++] = base[y0 + (x % dim)];
+            }
+        }
+        <span class="hljs-title function_">setWorkstoreItem</span>(name, out);
+
+        <span class="hljs-keyword">return</span> out;
+    }
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-keyword">const</span> engine = <span class="hljs-title function_">seededRandomNumberGenerator</span>(seed),
+            out = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Float32Array</span>(length);
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; length; i++) {
+
+            out[i] = engine.<span class="hljs-title function_">random</span>();
+        }
+        <span class="hljs-title function_">setWorkstoreItem</span>(name, out);
+
+        <span class="hljs-keyword">return</span> out;
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>Easing operations</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getEasingOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">op</span>) {
+
+    <span class="hljs-keyword">const</span> params = op.<span class="hljs-property">parameters</span> || {},
+        easing = params.<span class="hljs-property">easing</span>,
+        engine = <span class="hljs-title function_">isa_fn</span>(easing) ? easing : easeEngines[easing];
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(engine)) <span class="hljs-keyword">return</span> engine;
+
+    <span class="hljs-keyword">return</span> λfirstArg;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>Coordinate operations</p>
+<ul>
+<li>These operations have a known issue with entity-locked gradients, particularly when filipped or rotated. This is due to the discrepency between “global” cell coordinate space and “local” entity coordinate space. This also affects flipped cell-locked gradients.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getCoordinateValue = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord, dimension</span>) {
+
+    <span class="hljs-keyword">if</span> (coord.<span class="hljs-property">substring</span>) {
+
+        <span class="hljs-keyword">const</span> val = <span class="hljs-built_in">parseFloat</span>(coord);
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(val)) <span class="hljs-keyword">return</span> (val / <span class="hljs-number">100</span>) * dimension;
+
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> * dimension;
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-title function_">_isFinite</span>(coord) ? coord : <span class="hljs-number">0.5</span> * dimension;
+};
+
+<span class="hljs-keyword">const</span> getWaveOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">op</span>) {
+
+    <span class="hljs-keyword">const</span> params = op.<span class="hljs-property">parameters</span> || {};
+
+    <span class="hljs-keyword">const</span> axis = (params.<span class="hljs-property">axis</span> === Y || params.<span class="hljs-property">axis</span> === <span class="hljs-variable constant_">BOTH</span>) ? params.<span class="hljs-property">axis</span> : X,
+        amplitude = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">amplitude</span>) ? params.<span class="hljs-property">amplitude</span> : <span class="hljs-number">10</span>,
+        frequency = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">frequency</span>) ? params.<span class="hljs-property">frequency</span> : <span class="hljs-number">0.05</span>,
+        phase = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">phase</span>) ? params.<span class="hljs-property">phase</span> : <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
+
+        <span class="hljs-keyword">const</span> x = coord[<span class="hljs-number">0</span>],
+            y = coord[<span class="hljs-number">1</span>];
+
+        <span class="hljs-keyword">if</span> (axis === X) coord[<span class="hljs-number">0</span>] = x + (<span class="hljs-title function_">_sin</span>((y * frequency) + phase) * amplitude);
+
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (axis === Y) coord[<span class="hljs-number">1</span>] = y + (<span class="hljs-title function_">_sin</span>((x * frequency) + phase) * amplitude);
+
+        <span class="hljs-keyword">else</span> {
+
+            coord[<span class="hljs-number">0</span>] = x + (<span class="hljs-title function_">_sin</span>((y * frequency) + phase) * amplitude);
+            coord[<span class="hljs-number">1</span>] = y + (<span class="hljs-title function_">_sin</span>((x * frequency) + phase) * amplitude);
+        }
+
+        <span class="hljs-keyword">return</span> coord;
+    };
+};
+
+<span class="hljs-keyword">const</span> getRippleOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">op, workData, entity, lock</span>) {
+
+    <span class="hljs-keyword">const</span> params = op.<span class="hljs-property">parameters</span> || {};
+
+    <span class="hljs-keyword">let</span> width = workData.<span class="hljs-property">width</span>,
+        height = workData.<span class="hljs-property">height</span>;
+
+    <span class="hljs-keyword">if</span> (lock &amp;&amp; entity) {
+
+        <span class="hljs-keyword">const</span> [w, h] = entity.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;dimensions&#x27;</span>);
+
+        width = w;
+        height = h;
+    }
+
+    <span class="hljs-keyword">const</span> amplitude = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">amplitude</span>) ? params.<span class="hljs-property">amplitude</span> : <span class="hljs-number">10</span>,
+        frequency = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">frequency</span>) ? params.<span class="hljs-property">frequency</span> : <span class="hljs-number">0.05</span>,
+        phase = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">phase</span>) ? params.<span class="hljs-property">phase</span> : <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">const</span> originX = <span class="hljs-title function_">getCoordinateValue</span>(params.<span class="hljs-property">originX</span>, width),
+        originY = <span class="hljs-title function_">getCoordinateValue</span>(params.<span class="hljs-property">originY</span>, height);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
+
+        <span class="hljs-keyword">const</span> x = coord[<span class="hljs-number">0</span>],
+            y = coord[<span class="hljs-number">1</span>],
+
+            dx = x - originX,
+            dy = y - originY,
+
+            dist = <span class="hljs-title function_">_sqrt</span>((dx * dx) + (dy * dy));
+
+        <span class="hljs-keyword">if</span> (dist) {
+
+            <span class="hljs-keyword">const</span> offset = <span class="hljs-title function_">_sin</span>((dist * frequency) + phase) * amplitude,
+                ratio = offset / dist;
+
+            coord[<span class="hljs-number">0</span>] = x + (dx * ratio);
+            coord[<span class="hljs-number">1</span>] = y + (dy * ratio);
+        }
+
+        <span class="hljs-keyword">return</span> coord;
+    };
+};
+
+<span class="hljs-keyword">const</span> getMapDisplaceOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">op, workData</span>) {
+
+    <span class="hljs-keyword">const</span> params = op.<span class="hljs-property">parameters</span> || {},
+        mapParams = params.<span class="hljs-property">map</span> || {},
+
+        width = workData.<span class="hljs-property">width</span>,
+        height = workData.<span class="hljs-property">height</span>,
+
+        axis = (params.<span class="hljs-property">axis</span> === Y || params.<span class="hljs-property">axis</span> === <span class="hljs-variable constant_">BOTH</span>) ? params.<span class="hljs-property">axis</span> : X,
+
+        strength = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">strength</span>) ? params.<span class="hljs-property">strength</span> : <span class="hljs-number">20</span>,
+        offset = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">offset</span>) ? params.<span class="hljs-property">offset</span> : <span class="hljs-number">0.5</span>,
+        linked = params.<span class="hljs-property">linked</span> === <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">if</span> (!strength) <span class="hljs-keyword">return</span> λfirstArg;
+
+    <span class="hljs-keyword">if</span> (axis === X) {
+
+        <span class="hljs-keyword">const</span> map = <span class="hljs-title function_">getNoiseMap</span>(mapParams, width, height);
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">coord, p</span>) {
+
+            coord[<span class="hljs-number">0</span>] += (map[p] - offset) * strength;
+            <span class="hljs-keyword">return</span> coord;
+        };
+    }
+
+    <span class="hljs-keyword">if</span> (axis === Y) {
+
+        <span class="hljs-keyword">const</span> map = <span class="hljs-title function_">getNoiseMap</span>(mapParams, width, height);
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">coord, p</span>) {
+
+            coord[<span class="hljs-number">1</span>] += (map[p] - offset) * strength;
+            <span class="hljs-keyword">return</span> coord;
+        };
+    }
+
+    <span class="hljs-keyword">const</span> xMap = <span class="hljs-title function_">getNoiseMap</span>(linked ? mapParams : {
+            ...mapParams,
+            <span class="hljs-attr">seed</span>: <span class="hljs-string">`<span class="hljs-subst">${mapParams.seed || DEFAULT_SEED}</span>-x`</span>,
+        }, width, height),
+
+        yMap = <span class="hljs-title function_">getNoiseMap</span>(linked ? mapParams : {
+            ...mapParams,
+            <span class="hljs-attr">seed</span>: <span class="hljs-string">`<span class="hljs-subst">${mapParams.seed || DEFAULT_SEED}</span>-y`</span>,
+        }, width, height);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">coord, p</span>) {
+
+        coord[<span class="hljs-number">0</span>] += (xMap[p] - offset) * strength;
+        coord[<span class="hljs-number">1</span>] += (yMap[p] - offset) * strength;
+
+        <span class="hljs-keyword">return</span> coord;
+    };
+};
+
+<span class="hljs-keyword">const</span> getMapRotateOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">op, workData</span>) {
+
+    <span class="hljs-keyword">const</span> params = op.<span class="hljs-property">parameters</span> || {},
+        mapParams = params.<span class="hljs-property">map</span> || {},
+
+        width = workData.<span class="hljs-property">width</span>,
+        height = workData.<span class="hljs-property">height</span>,
+
+        strength = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">strength</span>) ? params.<span class="hljs-property">strength</span> : <span class="hljs-number">45</span>,
+        offset = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">offset</span>) ? params.<span class="hljs-property">offset</span> : <span class="hljs-number">0.5</span>,
+
+        originX = <span class="hljs-title function_">getCoordinateValue</span>(params.<span class="hljs-property">originX</span>, width),
+        originY = <span class="hljs-title function_">getCoordinateValue</span>(params.<span class="hljs-property">originY</span>, height);
+
+    <span class="hljs-keyword">if</span> (!strength) <span class="hljs-keyword">return</span> λfirstArg;
+
+    <span class="hljs-keyword">const</span> map = <span class="hljs-title function_">getNoiseMap</span>(mapParams, width, height),
+        angleMultiplier = strength * _radian;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">coord, p</span>) {
+
+        <span class="hljs-keyword">const</span> angle = (map[p] - offset) * angleMultiplier,
+            cos = <span class="hljs-title function_">_cos</span>(angle),
+            sin = <span class="hljs-title function_">_sin</span>(angle),
+
+            x = coord[<span class="hljs-number">0</span>] - originX,
+            y = coord[<span class="hljs-number">1</span>] - originY;
+
+        coord[<span class="hljs-number">0</span>] = originX + ((x * cos) - (y * sin));
+        coord[<span class="hljs-number">1</span>] = originY + ((x * sin) + (y * cos));
+
+        <span class="hljs-keyword">return</span> coord;
+    };
+};
+
+<span class="hljs-keyword">const</span> getMapFlowOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">op, workData</span>) {
+
+    <span class="hljs-keyword">const</span> params = op.<span class="hljs-property">parameters</span> || {},
+        mapParams = params.<span class="hljs-property">map</span> || {},
+
+        width = workData.<span class="hljs-property">width</span>,
+        height = workData.<span class="hljs-property">height</span>,
+
+        strength = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">strength</span>) ? params.<span class="hljs-property">strength</span> : <span class="hljs-number">20</span>,
+        offset = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">offset</span>) ? params.<span class="hljs-property">offset</span> : <span class="hljs-number">0.5</span>,
+        linked = params.<span class="hljs-property">linked</span> === <span class="hljs-literal">true</span>,
+        normalize = params.<span class="hljs-property">normalize</span> !== <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">if</span> (!strength) <span class="hljs-keyword">return</span> λfirstArg;
+
+    <span class="hljs-keyword">const</span> xMap = <span class="hljs-title function_">getNoiseMap</span>(linked ? mapParams : {
+            ...mapParams,
+            <span class="hljs-attr">seed</span>: <span class="hljs-string">`<span class="hljs-subst">${mapParams.seed || DEFAULT_SEED}</span>-x`</span>,
+        }, width, height),
+
+        yMap = <span class="hljs-title function_">getNoiseMap</span>(linked ? mapParams : {
+            ...mapParams,
+            <span class="hljs-attr">seed</span>: <span class="hljs-string">`<span class="hljs-subst">${mapParams.seed || DEFAULT_SEED}</span>-y`</span>,
+        }, width, height);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">coord, p</span>) {
+
+        <span class="hljs-keyword">let</span> dx = xMap[p] - offset,
+            dy = yMap[p] - offset;
+
+        <span class="hljs-keyword">if</span> (normalize) {
+
+            <span class="hljs-keyword">const</span> mag = <span class="hljs-title function_">_sqrt</span>((dx * dx) + (dy * dy));
+
+            <span class="hljs-keyword">if</span> (mag) {
+
+                dx /= mag;
+                dy /= mag;
+            }
+        }
+
+        coord[<span class="hljs-number">0</span>] += dx * strength;
+        coord[<span class="hljs-number">1</span>] += dy * strength;
+
+        <span class="hljs-keyword">return</span> coord;
+    };
+};
+
+<span class="hljs-keyword">const</span> getMapThresholdOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">op, workData</span>) {
+
+    <span class="hljs-keyword">const</span> params = op.<span class="hljs-property">parameters</span> || {},
+        mapParams = params.<span class="hljs-property">map</span> || {},
+
+        width = workData.<span class="hljs-property">width</span>,
+        height = workData.<span class="hljs-property">height</span>,
+
+        threshold = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">threshold</span>) ? params.<span class="hljs-property">threshold</span> : <span class="hljs-number">0.5</span>,
+        low = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">low</span>) ? params.<span class="hljs-property">low</span> : <span class="hljs-number">0</span>,
+        high = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">high</span>) ? params.<span class="hljs-property">high</span> : <span class="hljs-number">1</span>,
+
+        bandModulate = params.<span class="hljs-property">bandModulate</span> === <span class="hljs-literal">true</span>,
+        bands = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">bands</span>) ? <span class="hljs-title function_">_max</span>(<span class="hljs-number">2</span>, <span class="hljs-title function_">_floor</span>(params.<span class="hljs-property">bands</span>)) : <span class="hljs-number">8</span>,
+        influence = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">influence</span>) ? params.<span class="hljs-property">influence</span> : <span class="hljs-number">0.25</span>;
+
+    <span class="hljs-keyword">const</span> map = <span class="hljs-title function_">getNoiseMap</span>(mapParams, width, height);
+
+    <span class="hljs-keyword">if</span> (bandModulate) {
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">val, p</span>) {
+
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">_floor</span>(
+                (val + ((map[p] - threshold) * influence)) * bands
+            ) / bands;
+        };
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">val, p</span>) {
+
+        <span class="hljs-keyword">return</span> (map[p] &gt;= threshold) ? high : low;
+    };
+};
+
+<span class="hljs-keyword">const</span> getMapContourOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">op, workData</span>) {
+
+    <span class="hljs-keyword">const</span> params = op.<span class="hljs-property">parameters</span> || {},
+        mapParams = params.<span class="hljs-property">map</span> || {},
+
+        width = workData.<span class="hljs-property">width</span>,
+        height = workData.<span class="hljs-property">height</span>,
+
+        influence = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">influence</span>) ? params.<span class="hljs-property">influence</span> : <span class="hljs-number">0.5</span>,
+        bands = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">bands</span>) ? <span class="hljs-title function_">_max</span>(<span class="hljs-number">2</span>, <span class="hljs-title function_">_floor</span>(params.<span class="hljs-property">bands</span>)) : <span class="hljs-number">8</span>;
+
+    <span class="hljs-keyword">const</span> map = <span class="hljs-title function_">getNoiseMap</span>(mapParams, width, height);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">val, p</span>) {
+
+        <span class="hljs-keyword">const</span> target = <span class="hljs-title function_">_floor</span>(map[p] * bands) / bands;
+
+        <span class="hljs-keyword">return</span> val + ((target - val) * influence);
+    };
+};
+
+<span class="hljs-keyword">const</span> getMapEaseOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">op, workData</span>) {
+
+    <span class="hljs-keyword">const</span> params = op.<span class="hljs-property">parameters</span> || {},
+        mapParams = params.<span class="hljs-property">map</span> || {},
+
+        width = workData.<span class="hljs-property">width</span>,
+        height = workData.<span class="hljs-property">height</span>,
+
+        strength = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">strength</span>) ? params.<span class="hljs-property">strength</span> : <span class="hljs-number">0.25</span>,
+        offset = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">offset</span>) ? params.<span class="hljs-property">offset</span> : <span class="hljs-number">0.5</span>;
+
+    <span class="hljs-keyword">if</span> (!strength) <span class="hljs-keyword">return</span> λfirstArg;
+
+    <span class="hljs-keyword">const</span> map = <span class="hljs-title function_">getNoiseMap</span>(mapParams, width, height);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">val, p</span>) {
+
+        <span class="hljs-keyword">return</span> val + ((map[p] - offset) * strength);
+    };
+};
+
+<span class="hljs-keyword">const</span> getMapWarpOperation = <span class="hljs-keyword">function</span> (<span class="hljs-params">op, workData</span>) {
+
+    <span class="hljs-keyword">const</span> params = op.<span class="hljs-property">parameters</span> || {},
+        mapParams = params.<span class="hljs-property">map</span> || {},
+
+        width = workData.<span class="hljs-property">width</span>,
+        height = workData.<span class="hljs-property">height</span>,
+
+        strength = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">strength</span>) ? params.<span class="hljs-property">strength</span> : <span class="hljs-number">12</span>,
+        offset = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">offset</span>) ? params.<span class="hljs-property">offset</span> : <span class="hljs-number">0.5</span>,
+        iterations = <span class="hljs-title function_">_isFinite</span>(params.<span class="hljs-property">iterations</span>) ? <span class="hljs-title function_">_max</span>(<span class="hljs-number">1</span>, <span class="hljs-title function_">_floor</span>(params.<span class="hljs-property">iterations</span>)) : <span class="hljs-number">3</span>,
+        linked = params.<span class="hljs-property">linked</span> === <span class="hljs-literal">true</span>,
+        normalize = params.<span class="hljs-property">normalize</span> === <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">if</span> (!strength) <span class="hljs-keyword">return</span> λfirstArg;
+
+    <span class="hljs-keyword">const</span> xMap = <span class="hljs-title function_">getNoiseMap</span>(linked ? mapParams : {
+            ...mapParams,
+            <span class="hljs-attr">seed</span>: <span class="hljs-string">`<span class="hljs-subst">${mapParams.seed || DEFAULT_SEED}</span>-x`</span>,
+        }, width, height),
+
+        yMap = <span class="hljs-title function_">getNoiseMap</span>(linked ? mapParams : {
+            ...mapParams,
+            <span class="hljs-attr">seed</span>: <span class="hljs-string">`<span class="hljs-subst">${mapParams.seed || DEFAULT_SEED}</span>-y`</span>,
+        }, width, height),
+
+        sampleMap = <span class="hljs-keyword">function</span> (<span class="hljs-params">map, x, y</span>) {
+
+            x = <span class="hljs-title function_">_floor</span>(x);
+            y = <span class="hljs-title function_">_floor</span>(y);
+
+            <span class="hljs-keyword">if</span> (x &lt; <span class="hljs-number">0</span>) x = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (x &gt;= width) x = width - <span class="hljs-number">1</span>;
+
+            <span class="hljs-keyword">if</span> (y &lt; <span class="hljs-number">0</span>) y = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (y &gt;= height) y = height - <span class="hljs-number">1</span>;
+
+            <span class="hljs-keyword">return</span> map[(y * width) + x];
+        },
+
+        step = strength / iterations;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
+
+        <span class="hljs-keyword">let</span> x = coord[<span class="hljs-number">0</span>],
+            y = coord[<span class="hljs-number">1</span>],
+            dx, dy, mag;
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; iterations; i++) {
+
+            dx = <span class="hljs-title function_">sampleMap</span>(xMap, x, y) - offset;
+            dy = <span class="hljs-title function_">sampleMap</span>(yMap, x, y) - offset;
+
+            <span class="hljs-keyword">if</span> (normalize) {
+
+                mag = <span class="hljs-title function_">_sqrt</span>((dx * dx) + (dy * dy));
+
+                <span class="hljs-keyword">if</span> (mag) {
+
+                    dx /= mag;
+                    dy /= mag;
+                }
+            }
+
+            x += dx * step;
+            y += dy * step;
+        }
+
+        coord[<span class="hljs-number">0</span>] = x;
+        coord[<span class="hljs-number">1</span>] = y;
+
+        <span class="hljs-keyword">return</span> coord;
+    };
+};
+
+<span class="hljs-keyword">const</span> getNoiseMap = <span class="hljs-keyword">function</span> (<span class="hljs-params">noiseParams, width, height</span>) {
+
+    <span class="hljs-keyword">const</span> params = {
+        ...noiseDefs,
+        width,
+        height,
+        ...noiseParams,
+    };
+
+    <span class="hljs-keyword">const</span> name = <span class="hljs-title function_">buildNoiseMapId</span>(params),
+        cached = <span class="hljs-title function_">getWorkstoreItem</span>(name);
+
+    <span class="hljs-keyword">if</span> (cached) <span class="hljs-keyword">return</span> cached;
+
+    noiseAsset.<span class="hljs-title function_">set</span>(noiseDefs);
+    noiseAsset.<span class="hljs-title function_">set</span>({
+        width,
+        height,
+    });
+    noiseAsset.<span class="hljs-title function_">set</span>(noiseParams);
+
+    noiseAsset.<span class="hljs-title function_">cleanOutput</span>();
+
+    <span class="hljs-keyword">const</span> source = noiseAsset.<span class="hljs-property">noiseValues</span>;
+
+    <span class="hljs-keyword">if</span> (!source || source.<span class="hljs-property">length</span> !== width * height) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Float32Array</span>(width * height);
+
+    <span class="hljs-keyword">const</span> out = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Float32Array</span>(source);
+
+    <span class="hljs-title function_">setWorkstoreItem</span>(name, out);
+    <span class="hljs-keyword">return</span> out;
+};
+
+<span class="hljs-keyword">const</span> buildNoiseMapId = <span class="hljs-keyword">function</span> (<span class="hljs-params">p</span>) {
+
+    <span class="hljs-keyword">return</span> [
+        <span class="hljs-string">&#x27;gradient-engine-noise-map&#x27;</span>,
+        p.<span class="hljs-property">width</span>,
+        p.<span class="hljs-property">height</span>,
+        p.<span class="hljs-property">seed</span>,
+        p.<span class="hljs-property">noiseEngine</span>,
+        p.<span class="hljs-property">size</span>,
+        p.<span class="hljs-property">scale</span>,
+        p.<span class="hljs-property">octaves</span>,
+        p.<span class="hljs-property">octaveFunction</span>,
+        p.<span class="hljs-property">persistence</span>,
+        p.<span class="hljs-property">lacunarity</span>,
+        p.<span class="hljs-property">smoothing</span>,
+        p.<span class="hljs-property">sumFunction</span>,
+        p.<span class="hljs-property">sineFrequencyCoeff</span>,
+        p.<span class="hljs-property">sumAmplitude</span>,
+        p.<span class="hljs-property">worleyOutput</span>,
+        p.<span class="hljs-property">worleyDepth</span>,
+    ].<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;-&#x27;</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <h4 id="factory">Factory</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>constructors.<span class="hljs-property">GradientEngine</span> = <span class="hljs-title class_">GradientEngine</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p>Create a singleton filter engine, for export and use within this code base</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> gradientEngine = <span class="hljs-keyword">new</span> <span class="hljs-title class_">GradientEngine</span>();</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

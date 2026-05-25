@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -969,12 +974,16 @@ S.<span class="hljs-property">startAngle</span> = <span class="hljs-keyword">fun
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">startAngle</span> = <span class="hljs-title function_">ensureFloat</span>(val, <span class="hljs-number">4</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">startAngle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">startAngle</span> += <span class="hljs-title function_">ensureFloat</span>(val, <span class="hljs-number">4</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
 };
 
 S.<span class="hljs-property">endAngle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
@@ -982,12 +991,16 @@ S.<span class="hljs-property">endAngle</span> = <span class="hljs-keyword">funct
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">endAngle</span> = <span class="hljs-title function_">ensureFloat</span>(val, <span class="hljs-number">4</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">endAngle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">endAngle</span> += <span class="hljs-title function_">ensureFloat</span>(val, <span class="hljs-number">4</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
 };
 
 S.<span class="hljs-property">closed</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">bool</span>) {
@@ -997,6 +1010,8 @@ S.<span class="hljs-property">closed</span> = <span class="hljs-keyword">functio
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">closed</span> = !!bool;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
     }
 };
 
@@ -1007,6 +1022,8 @@ S.<span class="hljs-property">includeCenter</span> = <span class="hljs-keyword">
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">includeCenter</span> = !!bool;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
     }
 };
 
@@ -1017,6 +1034,8 @@ S.<span class="hljs-property">clockwise</span> = <span class="hljs-keyword">func
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">clockwise</span> = !!bool;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -1055,6 +1074,8 @@ S.<span class="hljs-property">clockwise</span> = <span class="hljs-keyword">func
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
 };
 P.<span class="hljs-property">radiusHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -1066,6 +1087,8 @@ P.<span class="hljs-property">radiusHelper</span> = <span class="hljs-keyword">f
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>

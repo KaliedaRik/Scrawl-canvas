@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -862,6 +867,8 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerRadius</span> = val;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
     }
 };
 D.<span class="hljs-property">outerRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
@@ -871,6 +878,8 @@ D.<span class="hljs-property">outerRadius</span> = <span class="hljs-keyword">fu
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerRadius</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">outerRadius</span>, val);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
     }
 };
 
@@ -881,6 +890,8 @@ S.<span class="hljs-property">innerRadius</span> = <span class="hljs-keyword">fu
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerRadius</span> = val;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
     }
 };
 D.<span class="hljs-property">innerRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
@@ -890,6 +901,8 @@ D.<span class="hljs-property">innerRadius</span> = <span class="hljs-keyword">fu
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerRadius</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">innerRadius</span>, val);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
     }
 };
 
@@ -909,6 +922,8 @@ S.<span class="hljs-property">displacement</span> = <span class="hljs-keyword">f
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
     }
 };
 D.<span class="hljs-property">displacement</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
@@ -922,6 +937,8 @@ D.<span class="hljs-property">displacement</span> = <span class="hljs-keyword">f
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">displacement</span> = d;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
     }
 };
 
@@ -930,6 +947,8 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">displayIntersect</span> = val;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1162,15 +1181,25 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><code>draw</code> - stroke the entity outline with the entity’s <code>strokeStyle</code> color, gradient or pattern - including shadow</p>
+<ul>
+<li>Known issue: for software gradients locked to the strokeStyle, there are issues around scaling - the gradient doesn’t scale below 1, but it does move and roll at all scales</li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">draw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">drawDonut</span>) engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">applyFromWorkstore</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>);
+    }
     <span class="hljs-keyword">else</span> {
-        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span>);
-        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectInner</span>);
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">drawDonut</span>) engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
+        <span class="hljs-keyword">else</span> {
+            engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span>);
+            engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectInner</span>);
+        }
     }
 };</pre></div></div>
             
@@ -1189,7 +1218,8 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    engine.<span class="hljs-title function_">fill</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">applyFromWorkstore</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>);
+    <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
 };</pre></div></div>
             
         </li>
@@ -1207,29 +1237,56 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">drawAndFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
+    <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+        winding = <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>,
+        apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>),
+        drawUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>,
+        drawId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>,
+        fillUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>,
+        fillId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>;
+
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">drawDonut</span>) {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
 
-        engine.<span class="hljs-title function_">stroke</span>(p);
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
-        engine.<span class="hljs-title function_">stroke</span>(p);
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
     }
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
-            pOuter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span>,
+        <span class="hljs-keyword">const</span> pOuter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span>,
             pInner = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectInner</span>;
 
-        engine.<span class="hljs-title function_">stroke</span>(pOuter);
-        engine.<span class="hljs-title function_">stroke</span>(pInner);
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> {
+
+            engine.<span class="hljs-title function_">stroke</span>(pOuter);
+            engine.<span class="hljs-title function_">stroke</span>(pInner);
+        }
+
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
-        engine.<span class="hljs-title function_">stroke</span>(pOuter);
-        engine.<span class="hljs-title function_">stroke</span>(pInner);
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> {
+
+            engine.<span class="hljs-title function_">stroke</span>(pOuter);
+            engine.<span class="hljs-title function_">stroke</span>(pInner);
+        }
+
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
     }
 };</pre></div></div>
             
@@ -1248,29 +1305,56 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fillAndDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
+    <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+        winding = <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>,
+        apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>),
+        drawUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>,
+        drawId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>,
+        fillUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>,
+        fillId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>;
+
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">drawDonut</span>) {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
 
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-        engine.<span class="hljs-title function_">stroke</span>(p);
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-        engine.<span class="hljs-title function_">stroke</span>(p);
+
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
     }
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
-            pOuter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span>,
+        <span class="hljs-keyword">const</span> pOuter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span>,
             pInner = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectInner</span>;
 
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-        engine.<span class="hljs-title function_">stroke</span>(pOuter);
-        engine.<span class="hljs-title function_">stroke</span>(pInner);
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> {
+
+            engine.<span class="hljs-title function_">stroke</span>(pOuter);
+            engine.<span class="hljs-title function_">stroke</span>(pInner);
+        }
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-        engine.<span class="hljs-title function_">stroke</span>(pOuter);
-        engine.<span class="hljs-title function_">stroke</span>(pInner);
+
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> {
+
+            engine.<span class="hljs-title function_">stroke</span>(pOuter);
+            engine.<span class="hljs-title function_">stroke</span>(pInner);
+        }
     }
 };</pre></div></div>
             
@@ -1289,22 +1373,36 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">drawThenFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
+    <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+        winding = <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>,
+        apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>),
+        drawUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>,
+        drawId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>,
+        fillUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>,
+        fillId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>;
+
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">drawDonut</span>) {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
 
-        engine.<span class="hljs-title function_">stroke</span>(p);
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
     }
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
-            pOuter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span>,
+        <span class="hljs-keyword">const</span> pOuter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span>,
             pInner = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectInner</span>;
 
-        engine.<span class="hljs-title function_">stroke</span>(pOuter);
-        engine.<span class="hljs-title function_">stroke</span>(pInner);
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> {
+
+            engine.<span class="hljs-title function_">stroke</span>(pOuter);
+            engine.<span class="hljs-title function_">stroke</span>(pInner);
+        }
+
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
     }
 };</pre></div></div>
             
@@ -1323,22 +1421,36 @@ S.<span class="hljs-property">displayIntersect</span> = <span class="hljs-keywor
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fillThenDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
+    <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+        winding = <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>,
+        apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>),
+        drawUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>,
+        drawId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>,
+        fillUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>,
+        fillId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>;
+
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">drawDonut</span>) {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
 
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-        engine.<span class="hljs-title function_">stroke</span>(p);
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
     }
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
-            pOuter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span>,
+        <span class="hljs-keyword">const</span> pOuter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectOuter</span>,
             pInner = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObjectInner</span>;
 
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-        engine.<span class="hljs-title function_">stroke</span>(pOuter);
-        engine.<span class="hljs-title function_">stroke</span>(pInner);
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> {
+
+            engine.<span class="hljs-title function_">stroke</span>(pOuter);
+            engine.<span class="hljs-title function_">stroke</span>(pInner);
+        }
     }
 };</pre></div></div>
             

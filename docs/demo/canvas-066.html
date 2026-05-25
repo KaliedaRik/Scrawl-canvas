@@ -440,16 +440,6 @@
                 </a>
               
                 
-                <a class="source" href="canvas-211.html">
-                  ./demo/canvas-211.js
-                </a>
-              
-                
-                <a class="source" href="canvas-212.html">
-                  ./demo/canvas-212.js
-                </a>
-              
-                
                 <a class="source" href="delaunator-001.html">
                   ./demo/delaunator-001.js
                 </a>
@@ -1078,6 +1068,53 @@
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">name</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${n}</span>`</span>;
 
 
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.mypatterns&#x27;</span>);
+
+scrawl.<span class="hljs-title function_">makeGradient</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stroke-gradient&#x27;</span>),
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;33%&#x27;</span>,
+    <span class="hljs-attr">spread</span>: <span class="hljs-string">&#x27;reflect&#x27;</span>,
+    <span class="hljs-attr">operations</span>: [{
+        <span class="hljs-attr">operation</span>: <span class="hljs-string">&#x27;add-noise&#x27;</span>,
+        <span class="hljs-attr">stage</span>: <span class="hljs-string">&#x27;after-spread&#x27;</span>,
+        <span class="hljs-attr">parameters</span>: {
+            <span class="hljs-attr">noise</span>: <span class="hljs-string">&#x27;bluenoise&#x27;</span>,
+            <span class="hljs-attr">strength</span>: <span class="hljs-number">0.08</span>,
+        },
+    }],
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;fill-gradient&#x27;</span>),
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;33%&#x27;</span>,
+    <span class="hljs-attr">spread</span>: <span class="hljs-string">&#x27;repeat&#x27;</span>,
+    <span class="hljs-attr">operations</span>: [{
+        <span class="hljs-attr">operation</span>: <span class="hljs-string">&#x27;add-ripple&#x27;</span>,
+        <span class="hljs-attr">stage</span>: <span class="hljs-string">&#x27;on-coordinates&#x27;</span>,
+        <span class="hljs-attr">parameters</span>: {
+            <span class="hljs-attr">amplitude</span>: <span class="hljs-number">20</span>,
+            <span class="hljs-attr">frequency</span>: <span class="hljs-number">0.1</span>,
+            <span class="hljs-attr">phase</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">originX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+            <span class="hljs-attr">originY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+        },
+    }],
+});
+
+scrawl.<span class="hljs-title function_">makePattern</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;fill-pattern&#x27;</span>),
+    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;brick&#x27;</span>,
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;stroke-pattern&#x27;</span>),
+    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;leaves&#x27;</span>,
+
+});
+
+
 <span class="hljs-keyword">const</span> mySpiral = scrawl.<span class="hljs-title function_">makeSpiral</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;my-spiral&#x27;</span>),
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
@@ -1223,6 +1260,11 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
         <span class="hljs-attr">start_yString</span>: [<span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
         <span class="hljs-attr">upend</span>: [<span class="hljs-string">&#x27;flipUpend&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
         <span class="hljs-attr">winding</span>: [<span class="hljs-string">&#x27;winding&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+
+        <span class="hljs-attr">fillStyle</span>: [<span class="hljs-string">&#x27;fillStyle&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+        <span class="hljs-attr">lockFillStyleToEntity</span>: [<span class="hljs-string">&#x27;lockFillStyleToEntity&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+        <span class="hljs-attr">strokeStyle</span>: [<span class="hljs-string">&#x27;strokeStyle&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+        <span class="hljs-attr">lockStrokeStyleToEntity</span>: [<span class="hljs-string">&#x27;lockStrokeStyleToEntity&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
     },
 });</pre></div></div>
             
@@ -1274,6 +1316,11 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;start_yString&#x27;</span>, <span class="hljs-number">1</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;upend&#x27;</span>, <span class="hljs-number">0</span>],
     [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;winding&#x27;</span>, <span class="hljs-number">0</span>],
+
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;fillStyle&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;lockFillStyleToEntity&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;strokeStyle&#x27;</span>, <span class="hljs-number">0</span>],
+    [<span class="hljs-string">&#x27;select&#x27;</span>, <span class="hljs-string">&#x27;lockStrokeStyleToEntity&#x27;</span>, <span class="hljs-number">0</span>],
 ]);</pre></div></div>
             
         </li>
