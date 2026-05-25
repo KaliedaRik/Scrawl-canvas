@@ -38,6 +38,11 @@ scrawl.makePattern({
     imageSource: 'img/water.png',
 });
 
+scrawl.makeColor({
+
+    name: name('color-object'),
+}).get('random');
+
 const mylabel = scrawl.makeLabel({
     name: name('my-label'),
     start: ['center', 'center'],

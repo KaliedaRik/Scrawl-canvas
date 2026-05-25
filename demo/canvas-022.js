@@ -29,6 +29,12 @@ const cellGradient = scrawl.makeGradient({
     ],
 });
 
+const enhancedCellGradient = cellGradient.clone({
+    name: name('reflected-blue-green'),
+    endX: '50%',
+    spread: 'reflect',
+});
+
 const gridGradient = scrawl.makeGradient({
     name: name('red-blue'),
     endX: '100%',
@@ -39,6 +45,15 @@ const gridGradient = scrawl.makeGradient({
         [999, 'lightblue']
     ],
     colorSpace: 'OKLAB',
+});
+
+const enhancedGridGradient = gridGradient.clone({
+    name: name('reflected-red-blue'),
+    startX: '25%',
+    startY: '25%',
+    endX: '75%',
+    endY: '75%',
+    spread: 'reflect',
 });
 
 
@@ -61,6 +76,16 @@ const cellGradientSource = {
 const gridGradientSource = {
     type: 'gridGradient',
     source: gridGradient,
+};
+
+const enhancedCellGradientSource = {
+    type: 'cellGradient',
+    source: enhancedCellGradient,
+};
+
+const enhancedGridGradientSource = {
+    type: 'gridGradient',
+    source: enhancedGridGradient,
 };
 
 
@@ -314,6 +339,14 @@ const updateBaseFill = (e) => {
         case 'gridGradientSource' :
             myGrid.setTileSourceTo(0, gridGradientSource);
             break;
+
+        case 'enhancedCellGradientSource' :
+            myGrid.setTileSourceTo(0, enhancedCellGradientSource);
+            break;
+
+        case 'enhancedGridGradientSource' :
+            myGrid.setTileSourceTo(0, enhancedGridGradientSource);
+            break;
     }
 };
 scrawl.addNativeListener(['input', 'change'], updateBaseFill, '#baseFill');
@@ -341,6 +374,14 @@ const updateHighlightFill = (e) => {
 
         case 'gridGradientSource' :
             myGrid.setTileSourceTo(1, gridGradientSource);
+            break;
+
+        case 'enhancedCellGradientSource' :
+            myGrid.setTileSourceTo(1, enhancedCellGradientSource);
+            break;
+
+        case 'enhancedGridGradientSource' :
+            myGrid.setTileSourceTo(1, enhancedGridGradientSource);
             break;
     }
 };
@@ -388,6 +429,18 @@ const updateGridStroke = (e) => {
         case 'gridGradientSource' :
             myGrid.set({
                 gutterColor: gridGradientSource
+            });
+            break;
+
+        case 'enhancedCellGradientSource' :
+            myGrid.set({
+                gutterColor: enhancedCellGradientSource
+            });
+            break;
+
+        case 'enhancedGridGradientSource' :
+            myGrid.set({
+                gutterColor: enhancedGridGradientSource
             });
             break;
 

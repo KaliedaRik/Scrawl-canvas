@@ -74,6 +74,7 @@ const Palette = function (items = Ωempty) {
 
     this.colors = {};
     this.stops = Array(1000).fill(BLANK);
+    this.stopsData = new Uint32Array(1000);
 
     if (items.colors == null) items.colors = [[0, BLACK], [999, WHITE]];
 
@@ -382,8 +383,12 @@ P.setEasingHelper = function (item) {
     }
 };
 
-// `recalculateStopColors` - populate the stops Array with CSS color Strings, as determined by colors stored in the `colors` object
-// + Be aware that if color stops have not been set at index 0, or index 999, the indices between 0 to start, and between end to 999, will remain transparent black.
+P.getStopsData = function () {
+
+    this.recalculateStopColors();
+    return this.stopsData;
+};
+
 P.recalculateStopColors = function () {
 
     if (!this.dirtyPalette) return;
@@ -391,9 +396,10 @@ P.recalculateStopColors = function () {
     this.dirtyPalette = false;
     this.dirtyPaletteData = true;
 
-    const { colors, stops, factory } = this;
+    const { colors, stops, stopsData, factory } = this;
 
     stops.fill(BLANK);
+    stopsData.fill(0);
 
     const keys = _keys(colors)
         .map(n => parseInt(n, 10))
@@ -407,9 +413,23 @@ P.recalculateStopColors = function () {
         return;
     }
 
-    let a, b, span;
+    const setStop = function (index, colorString) {
 
-    for (let i = 0; i < keys.length - 1; i++) {
+        const data = factory.extractDatafromColorString(colorString);
+
+        stops[index] = colorString;
+
+        stopsData[index] = (
+            ((_floor(data[4] * 255) << 24) |
+            (data[3] << 16) |
+            (data[2] << 8) |
+            data[1])
+        ) >>> 0;
+    };
+
+    let a, b, span, color;
+
+    for (let i = 0, iz = keys.length - 1; i < iz; i++) {
 
         a = keys[i];
         b = keys[i + 1];
@@ -420,14 +440,15 @@ P.recalculateStopColors = function () {
             maximumColor: factory.buildColorStringFromData(colors[b]),
         });
 
-        if (i === 0) stops[a] = factory.getRangeColor(0);
+        if (i === 0) setStop(a, factory.getRangeColor(0));
 
         for (let j = a + 1; j < b; j++) {
 
-            stops[j] = factory.getRangeColor((j - a) / span);
+            color = factory.getRangeColor((j - a) / span);
+            setStop(j, color);
         }
 
-        stops[b] = factory.getRangeColor(1);
+        setStop(b, factory.getRangeColor(1));
     }
 };
 

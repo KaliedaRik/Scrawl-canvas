@@ -1,0 +1,15 @@
+blank_issues_enabled: true
+
+contact_links:
+
+  - name: Demo tests
+    url: https://scrawl-v8.rikweb.org.uk/demo/index.html
+    about: Browse live Scrawl-canvas demos and test cases
+
+  - name: Scrawl-canvas API documentation
+    url: https://scrawl-v8.rikweb.org.uk/docs/typedoc/index.html
+    about: Typedoc API reference for factories, mixins and core functionality
+
+  - name: Scrawl-canvas Runbook
+    url: https://scrawl-v8.rikweb.org.uk/docs/reference/index.html
+    about: Architecture notes, concepts and implementation guidance

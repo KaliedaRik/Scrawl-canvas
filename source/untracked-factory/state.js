@@ -57,6 +57,7 @@ P.defs = {
 // + COLORNAME String
 // + GRADIENTNAME String
 // + RADIALGRADIENTNAME String
+// + CONICGRADIENTNAME String
 // + PATTERNNAME String
     fillStyle: BLACK,
     strokeStyle: BLACK,
@@ -282,8 +283,6 @@ P.getChanges = function (ent, engineState) {
 
             if (desired !== current) result[k] = desired;
         }
-
-        // if (current !== desired) result[k] = desired;
     }
 
     // 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit'

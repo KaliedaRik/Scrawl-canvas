@@ -19,7 +19,7 @@ const name = (n) => `${namespace}-${n}`;
 // Create the radial gradient
 const graddy = scrawl.makeConicGradient({
 
-    name: name('mygradient'),
+    name: 'my-gradient',
     startX: '50%',
     startY: '50%',
     angle: 0,
@@ -44,17 +44,18 @@ const bespokeEasings = {
 
 
 // Create a block entity which will use the gradient
-scrawl.makeBlock({
+const blocky = scrawl.makeBlock({
 
     name: name('myblock'),
     width: '90%',
     height: '90%',
-    startX: '5%',
-    startY: '5%',
-
+    startX: '35%',
+    startY: '35%',
+    handleX: '35%',
+    handleY: '35%',
     fillStyle: graddy,
-    strokeStyle: 'coral',
-    lineWidth: 2,
+    strokeStyle: 'slategray',
+    lineWidth: 40,
     method: 'fillAndDraw',
 });
 
@@ -63,11 +64,18 @@ scrawl.makeBlock({
 // Function to display frames-per-second data, and other information relevant to the demo
 const report = reportSpeed('#reportmessage', function () {
 
+/** @ts-expect-error */
+    const isClassic = graddy.isClassic;
+
     return `
     Palette - start: ${dom.paletteStart.value}; end: ${dom.paletteEnd.value}
     Start - x: ${dom.startX.value}%; y: ${dom.startY.value}%
+    Precision: ${dom.precision.value}
     Angle: ${dom.angle.value}°
-    Precision: ${dom.precision.value}`;
+    Angle range: ${dom.angleRange.value}°
+    Swirl distance: ${dom.swirlDistance.value}px
+
+    isClassic: ${isClassic}`;
 });
 
 
@@ -85,7 +93,7 @@ scrawl.makeRender({
 scrawl.makeUpdater({
 
     event: ['input', 'change'],
-    origin: '.controlItem',
+    origin: '.gradientControl',
 
     target: graddy,
 
@@ -103,11 +111,44 @@ scrawl.makeUpdater({
         angle: ['angle', 'float'],
 
         precision: ['precision', 'int'],
+        swirlDistance: ['swirlDistance', 'int'],
+        angleRange: ['angleRange', 'int'],
 
         cyclePalette: ['cyclePalette', 'boolean'],
+        swirlClockwise: ['swirlClockwise', 'boolean'],
 
         colorSpace: ['colorSpace', 'raw'],
         returnColorAs: ['returnColorAs', 'raw'],
+
+        spread: ['spread', 'raw'],
+
+        operations: ['operations', 'parse'],
+    },
+});
+
+scrawl.makeUpdater({
+
+    event: ['input', 'change'],
+    origin: '.blockControl',
+
+    target: blocky,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
+
+        flipUpend: ['flipUpend', 'boolean'],
+        flipReverse: ['flipReverse', 'boolean'],
+
+        fillStyle: ['fillStyle', 'raw'],
+        strokeStyle: ['strokeStyle', 'raw'],
+
+        lockFillStyleToEntity: ['lockFillStyleToEntity', 'boolean'],
+        lockStrokeStyleToEntity: ['lockStrokeStyleToEntity', 'boolean'],
     },
 });
 
@@ -161,17 +202,31 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 // Set the DOM input values
 const dom = scrawl.initializeDomInputs([
     ['input', 'angle', '0'],
+    ['input', 'angleRange', '360'],
     ['input', 'paletteEnd', '999'],
     ['input', 'paletteStart', '0'],
     ['input', 'precision', '1'],
     ['input', 'startX', '50'],
     ['input', 'startY', '50'],
+    ['input', 'swirlDistance', '0'],
     ['select', 'blue', 0],
     ['select', 'colorSpace', 0],
     ['select', 'cyclePalette', 0],
     ['select', 'easing', 0],
     ['select', 'red', 0],
     ['select', 'returnColorAs', 0],
+    ['select', 'spread', 0],
+    ['select', 'swirlClockwise', 1],
+    ['select', 'operations', 0],
+
+    ['input', 'roll', '0'],
+    ['input', 'scale', '1'],
+    ['select', 'flipReverse', 0],
+    ['select', 'flipUpend', 0],
+    ['select', 'lockFillStyleToEntity', 0],
+    ['select', 'lockStrokeStyleToEntity', 0],
+    ['select', 'fillStyle', 1],
+    ['select', 'strokeStyle', 0],
 ]);
 
 

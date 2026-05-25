@@ -18,18 +18,26 @@ const name = (n) => `${namespace}-${n}`;
 
 
 scrawl.makeGradient({
+
     name: name('linear-gradient'),
     endX: '100%',
 
     colors: [
         [0, 'blue'],
-        [495, 'red'],
-        [500, 'yellow'],
+        [494, 'red'],
+        [495, 'yellow'],
+        [504, 'yellow'],
         [505, 'red'],
         [999, 'green'],
     ],
     colorSpace: 'OKLAB',
     precision: 5,
+
+}).clone({
+
+    name: name('reflected-gradient'),
+    endX: '40%',
+    spread: 'reflect',
 });
 
 scrawl.makePattern({
@@ -47,6 +55,8 @@ const mylabel = scrawl.makeLabel({
 
     fontString: 'bold italic 40px Garamond',
     text: 'Long live the world!',
+
+    lineWidth: 2,
 
     includeUnderline: true,
     underlineWidth: 3,
@@ -82,7 +92,14 @@ canvas.set({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-const report = reportSpeed('#reportmessage');
+const report = reportSpeed('#reportmessage', () => {
+
+    return `
+    useTextStyleForOutline: ${dom.useTextStyleForOutline.value === '0' ? false : true}
+    useTextStyleForBoundingBox: ${dom.useTextStyleForBoundingBox.value === '0' ? false : true}
+    useTextStyleForUnderline: ${dom.useTextStyleForUnderline.value === '0' ? false : true}
+    `
+});
 
 
 // Create the Display cycle animation
@@ -107,28 +124,46 @@ scrawl.makeUpdater({
     preventDefault: true,
 
     updates: {
-        roll: ['roll', 'float'],
-        scale: ['scale', 'float'],
-        upend: ['flipUpend', 'boolean'],
-        reverse: ['flipReverse', 'boolean'],
-        wordSpacing: ['wordSpacing', 'px'],
+        boundingBoxStyle: ['boundingBoxStyle', 'raw'],
+        fillStyle: ['fillStyle', 'raw'],
+        includeUnderline: ['includeUnderline', 'boolean'],
         letterSpacing: ['letterSpacing', 'px'],
         lockFillStyleToEntity: ['lockFillStyleToEntity', 'boolean'],
-        fillStyle: ['fillStyle', 'raw'],
+        method: ['method', 'raw'],
+        reverse: ['flipReverse', 'boolean'],
+        roll: ['roll', 'float'],
+        scale: ['scale', 'float'],
+        showBoundingBox: ['showBoundingBox', 'boolean'],
+        strokeStyle: ['strokeStyle', 'raw'],
+        underlineStyle: ['underlineStyle', 'raw'],
+        upend: ['flipUpend', 'boolean'],
+        useTextStyleForBoundingBox: ['useTextStyleForBoundingBox', 'boolean'],
+        useTextStyleForOutline: ['useTextStyleForOutline', 'boolean'],
+        useTextStyleForUnderline: ['useTextStyleForUnderline', 'boolean'],
+        wordSpacing: ['wordSpacing', 'px'],
     },
 });
 
 
 // Setup form
-scrawl.initializeDomInputs([
+const dom = scrawl.initializeDomInputs([
     ['input', 'letterSpacing', '0'],
     ['input', 'roll', '0'],
     ['input', 'scale', '1'],
     ['input', 'wordSpacing', '0'],
-    ['select', 'reverse', 0],
-    ['select', 'upend', 0],
-    ['select', 'lockFillStyleToEntity', 0],
+    ['select', 'boundingBoxStyle', 0],
     ['select', 'fillStyle', 0],
+    ['select', 'includeUnderline', 1],
+    ['select', 'lockFillStyleToEntity', 0],
+    ['select', 'method', 0],
+    ['select', 'reverse', 0],
+    ['select', 'showBoundingBox', 0],
+    ['select', 'strokeStyle', 0],
+    ['select', 'underlineStyle', 0],
+    ['select', 'upend', 0],
+    ['select', 'useTextStyleForBoundingBox', 0],
+    ['select', 'useTextStyleForOutline', 0],
+    ['select', 'useTextStyleForUnderline', 0],
 ]);
 
 

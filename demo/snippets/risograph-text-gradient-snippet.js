@@ -23,7 +23,6 @@
 // + `--data-dark-outline-color` - any CSS color string (default: `#f4f5d7`)
 // + `--data-outline-width` - (unit % of font size) outline width as a percentage of the font size (default: `0.04`)
 // + `--data-random-radius` - (0 - 1) the amount of mixing of the top and bottom colors (default: `0.8`)
-// + `--data-random-level` - (0 - 1) the density of the color mixing (default: `1`)
 // + `--data-contrast-color` - any CSS color string, used when user has set `prefers-contrast: more` (default: `black`)
 // + `--data-dark-contrast-color` - any CSS color string, used when user has set `prefers-contrast: more` (default: `white`)
 //
@@ -50,33 +49,35 @@
 // + Imports the element's text node text, and sets the text color to `transparent`
 export default function (scrawl, el) {
 
-    // Boilerplate - namespacing
+// Boilerplate - namespacing
     const namespace = el.id;
     const name = (val) => `${namespace}-${val}`;
 
 
-    // Only progress if the supplied element has an `id` attribute
+// Only progress if the supplied element has an `id` attribute
     if (namespace) {
 
 
-        // Create the snippet for this DOM element
+// Create the snippet for this DOM element
         const snippet = scrawl.makeSnippet({
             domElement: el,
         });
 
 
-        // Only proceed if the snippet is successfully generated
+// Only proceed if the snippet is successfully generated
         if (snippet) {
 
 
-            // Unpack the snippet into the parts we'll be using
+// Unpack the snippet into the parts we'll be using
             const canvas = snippet.canvas,
                 demolishAction = snippet.demolish,
                 animation = snippet.animation,
                 compStyles = snippet.element.elementComputedStyles;
 
 
-            // Boilerplate - text processing
+// Boilerplate - text processing
+// + We've added a canvas element to the target element
+// + We need to exclude it from the text
             const addTextNode = () => {
                 const shy = document.createTextNode('!');
                 el.appendChild(shy);
@@ -93,7 +94,7 @@ export default function (scrawl, el) {
             }
 
 
-            // Boilerplate - demolish/kill functionality
+// Boilerplate - demolish/kill functionality
             const additionalDemolishActions = [];
 
             snippet.demolish = () => {
@@ -103,11 +104,11 @@ export default function (scrawl, el) {
             };
 
 
-            // This makes the canvas element's base cell the default group for everything we create
+// This makes the canvas element's base cell the default group for everything we create
             canvas.setAsCurrentCanvas();
 
 
-            // Boilerplate - fix for text alignment
+// Boilerplate - fix for text alignment
             const getJustifyLine = (val) => {
 
                 if (val === 'justify') return 'space-between';
@@ -117,12 +118,12 @@ export default function (scrawl, el) {
             };
 
 
-            // Boilerplate - fix for lineSpacing/lineHeight
+// Boilerplate - fix for lineSpacing/lineHeight
             const getLineSpacing = () => parseFloat(compStyles.lineHeight) / parseFloat(compStyles.fontSize);
 
 
-            // Initialize and collect developer-supplied data
-            // + We also set the defaults here for missing colors/values
+// Initialize and collect developer-supplied data
+// + We also set the defaults here for missing colors/values
             const userData = {
 
                 direction: compStyles.direction || 'ltr',
@@ -143,79 +144,68 @@ export default function (scrawl, el) {
                 darkOutlineColor: compStyles.getPropertyValue('--data-dark-outline-color') || '#f4f5d7',
                 outlineWidth: compStyles.getPropertyValue('--data-outline-width') || '0.04',
                 randomRadius: compStyles.getPropertyValue('--data-random-radius') || '0.8',
-                randomLevel: compStyles.getPropertyValue('--data-random-level') || '1',
                 contrastColor: compStyles.getPropertyValue('--data-contrast-color') || 'black',
                 darkContrastColor: compStyles.getPropertyValue('--data-dark-contrast-color') || 'white',
             };
 
-            // Build the risograph effect
-            scrawl.makeGradient({
+// Build the risograph effect
+            const risoGradient = scrawl.makeGradient({
+
                 name: name('riso-gradient'),
+
+                startY: 0,
+                endY: Math.round(parseFloat(compStyles.lineHeight)),
+
+                spread: 'repeat',
+
                 colors: [
-                    [0, 'white'],
-                    [999, 'black'],
+                    [0, userData.bottomColor],
+                    [499, userData.bottomColor],
+                    [500, userData.topColor],
+                    [999, userData.topColor],
                 ],
-                endY: '100%',
+
+                operations: [{
+                    operation: 'add-noise',
+                    stage: 'after-spread',
+                    parameters: {
+                        noise: 'random',
+                        strength: parseFloat(userData.randomRadius),
+                        seed: name('riso-noise'),
+                    },
+                }],
             });
 
-            scrawl.makeFilter({
-                name: name('random-filter'),
-                method: 'randomNoise',
-                height: Math.round(parseFloat(compStyles.lineHeight) * parseFloat(userData.randomRadius)),
-                noWrap: true,
-                level: parseFloat(userData.randomLevel),
-            });
-
-            const thresholdFilter = scrawl.makeFilter({
-                name: name('threshold-filter'),
-                method: 'threshold',
-                level: 127,
-                lowColor: userData.bottomColor,
-                highColor: userData.topColor,
-            });
-
-            const cell = canvas.buildCell({
-                name: name('riso-cell'),
-                width: 128,
-                height: parseFloat(compStyles.lineHeight),
-                cleared: false,
-                compiled: false,
-                shown: false,
-            });
-
-            scrawl.makeBlock({
-                name: name('riso-block'),
-                group: name('riso-cell'),
-                dimensions: ['100%', '100%'],
-                fillStyle: name('riso-gradient'),
-                filters: [name('random-filter'), name('threshold-filter')],
-                memoizeFilterOutput: true,
-            });
-
-            cell.compile();
-
-            const pattern = scrawl.makePattern({
-                name: name('riso-pattern'),
-                asset: name('riso-cell'),
-            });
-
+// Build out the graphical text
             const template = scrawl.makeBlock({
                 name: name('template'),
+                calculateOrder: 0,
+                stampOrder: 4,
                 dimensions: ['100%', '100%'],
                 visibility: false,
+                globalCompositeOperation: 'destination-over',
             });
 
-            const label = scrawl.makeEnhancedLabel({
+            const effect = scrawl.makeBlock({
+                name: name('riso-effect'),
+                dimensions: ['100%', '100%'],
+                fillStyle: name('riso-gradient'),
+                order: 1,
+                visibility: false,
+                globalCompositeOperation: 'source-over',
+            });
+
+            const textFill = scrawl.makeEnhancedLabel({
                 name: name('content'),
                 layoutTemplate: name('template'),
-
+                order: 1,
                 text: processText(el.innerHTML),
                 fontString: compStyles.font,
-
-                method: 'drawAndFill',
+                fillStyle: 'black',
+                globalAlpha: 1,
+                method: 'fill',
                 textHandleY: 'alphabetic',
                 visibility: false,
-
                 direction: userData.direction,
                 fontStretch: userData.fontStretch,
                 letterSpacing: userData.letterSpacing,
@@ -223,14 +213,36 @@ export default function (scrawl, el) {
                 fontVariantCaps: userData.fontVariantCaps,
                 lineSpacing: getLineSpacing(),
                 justifyLine: userData.justifyLine,
-
-                fillStyle: name('riso-pattern'),
-                strokeStyle: userData.outlineColor,
-                lineWidth: parseFloat(compStyles.lineHeight) * parseFloat(userData.outlineWidth),
+                globalCompositeOperation: 'destination-in',
             });
 
+            const textOutline = scrawl.makeEnhancedLabel({
+                name: name('outline'),
+                layoutTemplate: name('template'),
+                order: 3,
+                text: processText(el.innerHTML),
+                fontString: compStyles.font,
+                fillStyle: 'black',
+                method: 'draw',
+                textHandleY: 'alphabetic',
+                visibility: false,
+                direction: userData.direction,
+                fontStretch: userData.fontStretch,
+                letterSpacing: userData.letterSpacing,
+                wordSpacing: userData.wordSpacing,
+                fontVariantCaps: userData.fontVariantCaps,
+                lineSpacing: getLineSpacing(),
+                justifyLine: userData.justifyLine,
+                strokeStyle: userData.outlineColor,
+                lineWidth: parseFloat(compStyles.lineHeight) * parseFloat(userData.outlineWidth),
+                globalCompositeOperation: 'destination-over',
+            });
 
-            // Boilerplate - font adjustments
+            const texts = scrawl.makeGroup({
+                name: name('text-group'),
+            }).addArtefacts(textFill, textOutline);
+
+// Boilerplate - font adjustments
             let meta;
 
             const getLineAdjustment = () => {
@@ -254,10 +266,6 @@ export default function (scrawl, el) {
 
                     const displacement = getLineAdjustment();
 
-                    pattern.set({
-                        shiftY: -displacement,
-                    });
-
                     template.set({
                         startY: displacement,
                         handleY: displacement,
@@ -265,14 +273,13 @@ export default function (scrawl, el) {
                         visibility: true,
                     });
 
-                    cell.set({
-                        cleared: true,
-                        compiled: true,
-                    });
-
-                    label.set({
+                    texts.setArtefacts({
                         visibility: true,
                     });
+
+                    effect.set({
+                        visibility: true,
+                    })
 
                     animation.updateHook('commence');
                 }
@@ -281,7 +288,7 @@ export default function (scrawl, el) {
             animation.updateHook('commence', updateOnFontLoad);
 
 
-            // Boilerplate user interaction - resizing the browser window
+// Boilerplate user interaction - resizing the browser window
             let resizeFlag = true,
                 lastResize = Date.now();
 
@@ -293,10 +300,10 @@ export default function (scrawl, el) {
 
                 const now = Date.now();
 
-                // Canvases don't animate when outside of the browser viewport (to save CPU, battery, etc)
-                // + This check forces those canvases to update once to adapt to the new viewport size
-                // + Doing this should prevent unexpected horizontal scrollbars appearing on the page
-                // + Should also prevent flashes of badly sized content when canvas scrolls into view
+// Canvases don't animate when outside of the browser viewport (to save CPU, battery, etc)
+// + This check forces those canvases to update once to adapt to the new viewport size
+// + Doing this should prevent unexpected horizontal scrollbars appearing on the page
+// + Should also prevent flashes of badly sized content when canvas scrolls into view
                 if (!animation.isRunning() && now > lastResize + resizeChoke) {
 
                     resizeAction();
@@ -311,11 +318,7 @@ export default function (scrawl, el) {
 
                     resizeFlag = false;
 
-                    cell.set({ height: parseFloat(compStyles.lineHeight) });
-                    cell.clear();
-                    cell.compile();
-
-                    label.set({
+                    texts.setArtefacts({
                         fontString: compStyles.font,
                         lineWidth: parseFloat(compStyles.lineHeight) * parseFloat(userData.outlineWidth),
                     });
@@ -324,18 +327,18 @@ export default function (scrawl, el) {
 
                         const displacement = getLineAdjustment();
 
-                        pattern.set({
-                            shiftY: -displacement,
-                        });
-
                         template.set({
                             startY: displacement,
                             handleY: displacement,
                         });
 
-                        label.set({
+                        texts.setArtefacts({
                             letterSpacing: compStyles.letterSpacing,
                             wordSpacing: compStyles.wordSpacing,
+                        });
+
+                        risoGradient.set({
+                            endY: Math.round(parseFloat(compStyles.lineHeight)),
                         });
                     }
                 }
@@ -348,11 +351,15 @@ export default function (scrawl, el) {
             );
 
 
-            // User interaction - editing the text
+// User interaction - editing the text
+// + Strongly advise never to use snippets on elements with `contenteditable` enabled
+// + We do it here purely to check graphical text and DOM text placement matches
             if (el.getAttribute('contenteditable')) {
 
                 const updateText = () => {
-                    label.set({ text: processText(el.innerHTML) });
+                    texts.setArtefacts({
+                        text: processText(el.innerHTML),
+                    });
                 }
                 const focusText = () => {
                     el.style.color = 'rgb(0 0 0 / 0.4)';
@@ -373,33 +380,33 @@ export default function (scrawl, el) {
             }
 
 
-            // Accessibility
+// Accessibility
             const colorSchemeLightAction = () => {
 
-                thresholdFilter.set({
-                    lowColor: userData.bottomColor,
-                    highColor: userData.topColor,
+                risoGradient.set({
+                    colors: [
+                        [0, userData.bottomColor],
+                        [999, userData.topColor],
+                    ],
                 });
 
-                cell.clear();
-                cell.compile();
-
-                label.set({
+                texts.setArtefacts({
                     strokeStyle: userData.outlineColor,
                 });
             };
 
             const colorSchemeDarkAction = () => {
 
-                thresholdFilter.set({
-                    lowColor: userData.darkBottomColor,
-                    highColor: userData.darkTopColor,
+                risoGradient.set({
+                    colors: [
+                        [0, userData.darkBottomColor],
+                        [499, userData.darkBottomColor],
+                        [500, userData.darkTopColor],
+                        [999, userData.darkTopColor],
+                    ],
                 });
 
-                cell.clear();
-                cell.compile();
-
-                label.set({
+                texts.setArtefacts({
                     strokeStyle: userData.darkOutlineColor,
                 });
             };
@@ -410,10 +417,19 @@ export default function (scrawl, el) {
                     userData.darkContrastColor :
                     userData.contrastColor;
 
-                label.set({
-                    strokeStyle: 'transparent',
-                    fillStyle: color,
+                template.set({
+                    visibility: false,
                 });
+
+                texts.setArtefacts({
+                    visibility: false,
+                });
+
+                effect.set({
+                    visibility: false,
+                });
+
+                el.style.color = color;
             };
 
             const otherContrastAction = () => {
@@ -423,20 +439,31 @@ export default function (scrawl, el) {
                 const lowColor = (isDark) ? userData.darkBottomColor : userData.bottomColor;
                 const highColor = (isDark) ? userData.darkTopColor : userData.topColor;
 
-                thresholdFilter.set({
-                    lowColor,
-                    highColor,
-                });
-
-                cell.clear();
-                cell.compile();
-
                 const strokeStyle = (isDark) ? userData.darkOutlineColor : userData.outlineColor;
 
-                label.set({
-                    strokeStyle,
-                    fillStyle: name('riso-pattern'),
+                risoGradient.set({
+                    colors: [
+                        [0, lowColor],
+                        [499, lowColor],
+                        [500, highColor],
+                        [999, highColor],
+                    ],
                 });
+
+                template.set({
+                    visibility: true,
+                });
+
+                texts.setArtefacts({
+                    visibility: true,
+                    strokeStyle,
+                });
+
+                effect.set({
+                    visibility: true,
+                });
+
+                el.style.color = 'transparent';
             };
 
             canvas.set({
@@ -449,8 +476,8 @@ export default function (scrawl, el) {
 
             animation.updateOnce();
 
-            // Return the snippet, so coders can access the snippet's parts
-            // + In case they need to tweak the output to meet the web page's specific requirements
+// Return the snippet, so product devs can access the snippet's parts
+// + In case they need to tweak the output to meet the web page's specific requirements
             return snippet;
         }
     }

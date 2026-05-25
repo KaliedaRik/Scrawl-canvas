@@ -117,6 +117,8 @@ export default function (P = Ωempty) {
         this.dirtySpecies = true;
         this.dirtyPathObject = true;
         this.dirtyFilterIdentifier = true;
+        this.dirtyDrawGradientCache = true;
+        this.dirtyfillGradientCache = true;
     };
 
     // `shapeInit` - internal constructor helper function
@@ -377,12 +379,23 @@ export default function (P = Ωempty) {
 
         if (this.dirtyHost) this.dirtyHost = false;
 
+        this.setGradientCacheFlags();
+
         if (this.dirtyScale || this.dirtySpecies || this.dirtyDimensions || this.dirtyStart || this.dirtyHandle) {
 
             this.dirtyPathObject = true;
 
+            if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+            if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+
             if (this.dirtyScale || this.dirtySpecies)  this.pathCalculatedOnce = false;
        }
+
+        if (this.dirtyRotation || this.dirtySpecies || this.dirtyPathObject) {
+
+            if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+            if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+        }
 
         if (this.isBeingDragged || this.lockTo.includes(MOUSE) || this.lockTo.includes(PARTICLE)) this.dirtyStampPositions = true;
 
@@ -392,6 +405,12 @@ export default function (P = Ωempty) {
 
         if (this.dirtyOffset) this.cleanOffset();
         if (this.dirtyRotation) this.cleanRotation();
+
+        if (this.dirtyStampPositions || this.dirtyStampHandlePositions) {
+
+            if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+            if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+        }
 
         if (this.dirtyStampPositions) this.cleanStampPositions();
 
@@ -571,57 +590,92 @@ export default function (P = Ωempty) {
     // `draw`
     P.draw = function (engine) {
 
-        engine.stroke(this.pathObject);
+        this.useDrawGradientCache 
+            ? this.applyFromWorkstore(engine, this.identifierDrawGradientCache)
+            : engine.stroke(this.pathObject);
+
         if (this.showBoundingBox) this.drawBoundingBox(engine);
     };
 
     // `fill`
     P.fill = function (engine) {
 
-        engine.fill(this.pathObject, this.winding);
+        this.useFillGradientCache 
+            ? this.applyFromWorkstore(engine, this.identifierFillGradientCache)
+            : engine.fill(this.pathObject, this.winding);
+
         if (this.showBoundingBox) this.drawBoundingBox(engine);
     };
 
     // `drawAndFill`
     P.drawAndFill = function (engine) {
 
-        const p = this.pathObject;
+        const p = this.pathObject,
+            winding = this.winding,
+            apply = this.applyFromWorkstore.bind(this),
+            drawUse = this.useDrawGradientCache,
+            drawId = this.identifierDrawGradientCache,
+            fillUse = this.useFillGradientCache,
+            fillId = this.identifierFillGradientCache;
 
-        engine.stroke(p);
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
+        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
         this.currentHost.clearShadow();
-        engine.fill(p, this.winding);
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
+        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+
         if (this.showBoundingBox) this.drawBoundingBox(engine);
     };
 
     // `fillAndDraw`
     P.fillAndDraw = function (engine) {
 
-        const p = this.pathObject;
+        const p = this.pathObject,
+            winding = this.winding,
+            apply = this.applyFromWorkstore.bind(this),
+            drawUse = this.useDrawGradientCache,
+            drawId = this.identifierDrawGradientCache,
+            fillUse = this.useFillGradientCache,
+            fillId = this.identifierFillGradientCache;
 
-        engine.stroke(p);
+        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
         this.currentHost.clearShadow();
-        engine.fill(p, this.winding);
-        engine.stroke(p);
+        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
+
         if (this.showBoundingBox) this.drawBoundingBox(engine);
     };
 
     // `drawThenFill`
     P.drawThenFill = function (engine) {
 
-        const p = this.pathObject;
+        const p = this.pathObject,
+            apply = this.applyFromWorkstore.bind(this);
 
-        engine.stroke(p);
-        engine.fill(p, this.winding);
+        this.useDrawGradientCache 
+            ? apply(engine, this.identifierDrawGradientCache)
+            : engine.stroke(this.pathObject);
+        this.useFillGradientCache 
+            ? apply(engine, this.identifierFillGradientCache)
+            : engine.fill(this.pathObject, this.winding);
+
         if (this.showBoundingBox) this.drawBoundingBox(engine);
     };
 
     // `fillThenDraw`
     P.fillThenDraw = function (engine) {
 
-        const p = this.pathObject;
+        const p = this.pathObject,
+            apply = this.applyFromWorkstore.bind(this);
 
-        engine.fill(p, this.winding);
-        engine.stroke(p);
+        this.useFillGradientCache 
+            ? apply(engine, this.identifierFillGradientCache)
+            : engine.fill(this.pathObject, this.winding);
+        this.useDrawGradientCache 
+            ? apply(engine, this.identifierDrawGradientCache)
+            : engine.stroke(this.pathObject);
+
         if (this.showBoundingBox) this.drawBoundingBox(engine);
     };
 

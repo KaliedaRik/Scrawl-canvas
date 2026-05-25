@@ -1,5 +1,7 @@
 # Scrawl-canvas: Overview and Capabilities
 
+TODO: review and revise this document to create an updated 'r2' revision document.
+
 ## Document provenance
 
 This document was co-authored by Scrawl-canvas maintainers and current-generation large language models (OpenAI ChatGPT, GPT-4-turbo, May 2025, and Google Gemini, May 2025), based on a structured investigation of the Scrawl-canvas JavaScript library. The evaluation included source code, instructional lessons, runbook documentation, demo projects, and a feature-by-feature comparison with other widely-used HTML5 canvas libraries. All statements are informed by direct evidence from the library and intended for accurate documentation and long-term reference.
@@ -127,6 +129,36 @@ Scrawl-canvas is ideal for:
 ## Deep Dive Resources and Practical Demonstrations
 
 The following links to markdown documents (as .md files) and demonstration code (as .html, .js files) showcase the Scrawl-canvas library's key strengths (responsiveness, accessibility, DOM integration, advanced text/filter effects, multimedia/ML integration).
+
+### Architecture alignment and style notes
+
+Scrawl-canvas deliberately does not use ES6 classes. Factory modules create constructor functions and prototype objects directly. Shared behaviour is installed by mixin modules which mutate the factory prototype at module initialisation time, before instances are created.
+
+This is intentional. Do not rewrite SC code into class syntax, inheritance hierarchies, framework-style components, or per-instance closure-heavy patterns unless explicitly requested.
+
+The mixin approach is used to:
+- keep entity/object shapes stable after construction;
+- avoid mutating object shape during hot render paths;
+- share behaviour through direct prototype methods;
+- allow individual factories to override mixin-installed methods where their rendering semantics differ;
+- keep rendering lifecycle steps explicit and inspectable.
+
+When modifying SC code, prefer:
+- prototype methods on `P`;
+- explicit dirty flags;
+- stable attribute sets;
+- workstore/cell reuse;
+- factory-local overrides of mixin behaviour;
+- small helper functions that fit the existing lifecycle.
+- using pooled temporary objects (Coordinate, Vector, Quaternion, Cell, Array pools, etc.) where appropriate to reduce allocation churn and garbage collection pressure during rendering and animation work;
+
+Avoid:
+- creating new per-frame objects unnecessarily;
+- adding ad-hoc attributes to instances during rendering;
+- replacing prototype patterns with classes;
+- hiding render work inside implicit observers/promises;
+- assuming SC behaves like Fabric, Pixi, Konva, React, or SVG.
+- introducing unnecessary per-frame allocations inside hot paths;
 
 ### Core Functionality & Interactivity
 
@@ -314,6 +346,10 @@ Demonstrates: Building a fully client-side, browser-based screen recording tool 
 - https://github.com/KaliedaRik/sc-screen-recorder/blob/main/index.css // CSS styling for the recorder's layout and responsiveness, including canvas container dimensions.
 - https://github.com/KaliedaRik/sc-screen-recorder/blob/main/index.js // Core JavaScript logic orchestrating Scrawl-canvas artefacts (like Picture for video streams), handling user interactions, and managing media capture and recording processes.
 
+#### A local, web-based image filter builder and batch application tool
+
+TODO: brief write up of the tool's functionality. Link to repo: https://github.com/KaliedaRik/sc-filter-builder - link to demo: https://kaliedarik.github.io/sc-filter-builder/
+
 ---
 
 ## Appendix: Evaluation Inputs
@@ -346,3 +382,4 @@ All insights reflect the capabilities of Scrawl-canvas as of version `8.15.0` (2
 
 - Compatible with: Scrawl-canvas version 8.15.0
 - Document revision: r1 (May 2025)
+

@@ -5,7 +5,7 @@
 
 
 // #### Imports
-import { artefact, asset, constructors, group, tween } from '../core/library.js';
+import { artefact, asset, constructors, group, tween, stylesnames, cellnames } from '../core/library.js';
 
 import { makeState } from '../untracked-factory/state.js';
 import { makeTextStyle } from '../untracked-factory/text-style.js';
@@ -27,7 +27,7 @@ import textMix from '../mixin/text.js';
 import { doCreate, isa_fn, isa_obj, mergeOver, pushUnique, removeItem, xta, λnull, Ωempty } from '../helper/utilities.js';
 
 // Shared constants
-import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, AUTO, BOTTOM, CENTER, DESTINATION_OVER, END, ENTITY, FILL, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, START, T_CELL, T_ENHANCED_LABEL, T_GROUP, TOP, ZERO_STR } from '../helper/shared-vars.js';
+import { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, ALPHABETIC, AUTO, BLACK, BOTTOM, CENTER, DESTINATION_OVER, END, ENTITY, FILL, GOOD_HOST, HANGING, IDEOGRAPHIC, IMG, LEFT, LTR, MIDDLE, NONE, NORMAL, PX0, RIGHT, ROUND, SOURCE_IN, SOURCE_OUT, SOURCE_OVER, SPACE, START, T_CELL, T_COLOR, T_ENHANCED_LABEL, T_GROUP, TOP, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const DRAW = 'draw',
@@ -620,12 +620,26 @@ S.textHandle = function (item) {
 S.guidelineDash = function (item) {
 
     if (_isArray(item)) this.guidelineDash = item;
+    this.handleDirtyCache();
+};
+
+S.guidelineWidth = function (item) {
+
+    if (_isFinite(item)) this.guidelineWidth = item;
+    this.handleDirtyCache();
+};
+
+S.showGuidelines = function (item) {
+
+    this.showGuidelines = !!item;
+    this.handleDirtyCache();
 };
 
 S.guidelineStyle = function (item) {
 
     if (!item) this.guidelineStyle = this.defs.guidelineStyle;
     else if (item.substring) this.guidelineStyle = item;
+    this.handleDirtyCache();
 };
 
 S.pathPosition = function (item) {
@@ -665,6 +679,39 @@ G.textLines = function () {
     return this.lines;
 };
 
+S.order = function (val) {
+
+    this.calculateOrder = val;
+    this.stampOrder = val;
+
+    const g = this.group;
+    if (g && g.type === T_GROUP) g.batchResort = true;
+};
+S.calculateOrder = function (val) {
+
+    this.calculateOrder = val;
+
+    const g = this.group;
+    if (g && g.type === T_GROUP) g.batchResort = true;
+};
+S.stampOrder = function (val) {
+
+    this.stampOrder = val;
+
+    const g = this.group;
+    if (g && g.type === T_GROUP) g.batchResort = true;
+};
+
+S.startTextOnLine = function (val) {
+
+    if (_isFinite(val)) {
+
+        this.startTextOnLine = _floor(val);
+        this.dirtyTextLayout = true;
+        this.handleDirtyCache();
+
+    }
+};
 
 
 // #### Prototype functions
@@ -676,6 +723,35 @@ P.getTester = function () {
     if (controller) return controller.labelStylesCalculator;
 
     return null;
+};
+
+P.getStyle = function (val, stateAlternative) {
+
+    if (!val && stateAlternative) val = this.state[stateAlternative];
+
+    if (val == null || val === ZERO_STR) return BLACK;
+
+    // String handling
+    if (val.substring) {
+
+        // Reject all SC registered styles and cells
+        if (stylesnames.includes(val)) return BLACK;
+        if (cellnames.includes(val)) return BLACK;
+
+        // Assume remaining strings are CSS colours
+        return val;
+    }
+
+    // SC objects
+    if (val && val.type) {
+
+        // Reject everything except Color objects
+        if (val.get && val.type === T_COLOR) return val.get();
+
+        return BLACK;
+    }
+
+    return BLACK;
 };
 
 // `makeWorkingTextStyle` - Clone a TextStyle object
@@ -693,6 +769,13 @@ P.makeWorkingTextStyle = function (template) {
 P.setEngineFromWorkingTextStyle = function (worker, style, state, cell) {
 
     this.updateWorkingTextStyle(worker, style);
+
+    worker.fillStyle = this.getStyle(worker.fillStyle, 'fillStyle', cell);
+    worker.strokeStyle = this.getStyle(worker.strokeStyle, 'strokeStyle', cell);
+    worker.underlineStyle = this.getStyle(worker.underlineStyle, 'fillStyle', cell);
+    worker.overlineStyle = this.getStyle(worker.overlineStyle, 'fillStyle', cell);
+    worker.highlightStyle = this.getStyle(worker.highlightStyle, 'fillStyle', cell);
+
     state.set(worker);
     cell.setEngine(this);
 };
@@ -765,10 +848,13 @@ P.getTextOffset = function (val, dim) {
     return (parseFloat(val) / 100) * dim;
 };
 
-P.dirtyCache = function () {
+P.handleDirtyCache = function () {
 
-    releaseCell(this.cache);
-    this.cache = null;
+    if (this.cache) {
+
+        releaseCell(this.cache);
+        this.cache = null;
+    }
 
     this.textUnitHitZones.length = 0;
 
@@ -796,7 +882,8 @@ P.cleanLayout = function () {
 
     if (this.currentFontIsLoaded) {
 
-        this.dirtyCache();
+        this.handleDirtyCache();
+
         this.dirtyLayout = false;
 
         if (!this.useLayoutTemplateAsPath) this.calculateLines();
@@ -1073,6 +1160,7 @@ P.cleanText = function () {
     if (this.currentFontIsLoaded) {
 
         this.dirtyText = false;
+        this.handleDirtyCache();
 
         const {
             breakTextOnSpaces,
@@ -1672,6 +1760,7 @@ P.layoutText = function () {
             if (layoutTemplate && layoutTemplate.useAsPath) {
 
                 this.dirtyTextLayout = false;
+                this.handleDirtyCache();
 
                 releaseLine(...lines);
                 lines.length = 0;
@@ -1687,6 +1776,7 @@ P.layoutText = function () {
             if (lines.length && textUnits.length) {
 
                 this.dirtyTextLayout = false;
+                this.handleDirtyCache();
 
                 lines.forEach(line => {
 
@@ -2861,7 +2951,7 @@ P.prepareStamp = function() {
 
     if (this.dirtyScale) {
 
-        this.dirtyCache();
+        this.handleDirtyCache();
 
         this.dirtyScale = false;
 
@@ -2872,7 +2962,7 @@ P.prepareStamp = function() {
 
     if (this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle || this.dirtyRotation || this.dirtyFilters) {
 
-        this.dirtyCache();
+        this.handleDirtyCache();
 
         this.dirtyDimensions = false;
         this.dirtyStart = false;
@@ -3067,9 +3157,13 @@ P.regularStamp = function (host) {
 
                 const filterTest = (!this.noFilters && this.filters && this.filters.length) ? true : false;
 
-                if (filterTest) {
+                if (!filterTest) this.dirtyFilters = false;
+                else {
 
-                    if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
+                    if (this.dirtyFilters || !this.currentFilters) {
+
+                        this.cleanFilters();
+                    }
 
                     const filters = this.currentFilters;
 
@@ -3264,8 +3358,9 @@ P.createTextCellsForPath = function (host) {
 
                         method = localStyle.method || currentTextStyle.method;
 
-                        if (localStyle.fillStyle) mEngine.fillStyle = localStyle.fillStyle;
-                        if (localStyle.strokeStyle) mEngine.strokeStyle = localStyle.strokeStyle;
+                        if (localStyle.fillStyle) mEngine.fillStyle = this.getStyle(localStyle.fillStyle, 'fillStyle', mCell);
+
+                        if (localStyle.strokeStyle) mEngine.strokeStyle = this.getStyle(localStyle.strokeStyle, 'strokeStyle', mCell);
 
                         switch (method) {
 
@@ -3409,8 +3504,9 @@ P.createTextCellsForSpace = function (host) {
 
                         method = localStyle.method || currentTextStyle.method;
 
-                        if (localStyle.fillStyle) mEngine.fillStyle = localStyle.fillStyle;
-                        if (localStyle.strokeStyle) mEngine.strokeStyle = localStyle.strokeStyle;
+                    if (localStyle.fillStyle) mEngine.fillStyle = this.getStyle(localStyle.fillStyle, 'fillStyle', mCell);
+
+                    if (localStyle.strokeStyle) mEngine.strokeStyle = this.getStyle(localStyle.strokeStyle, 'strokeStyle', mCell);
 
                         switch (method) {
 
@@ -3937,8 +4033,9 @@ P.setTextUnit = function (index, items) {
             if (UNIT_SETTABLE_KEYS.includes(key)) unit.set({ [key]: val });
         }
     }
+
     this.dirtyLayout = true;
-    this.dirtyCache();
+    this.handleDirtyCache();
 };
 
 P.setAllTextUnits = function (items) {
@@ -3953,14 +4050,15 @@ P.setAllTextUnits = function (items) {
             }
         }
     });
+
     this.dirtyLayout = true;
-    this.dirtyCache();
+    this.handleDirtyCache();
 };
 
 P.applyTextUnitUpdates = function () {
 
     this.dirtyLayout = true;
-    this.dirtyCache();
+    this.handleDirtyCache();
 };
 
 

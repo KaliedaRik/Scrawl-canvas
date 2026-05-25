@@ -17,6 +17,38 @@ const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
+scrawl.importDomImage('.mypatterns');
+
+scrawl.makeGradient({
+
+    name: name('stroke-gradient'),
+    endX: '33%',
+    spread: 'reflect',
+    operations: [{
+        operation: 'add-noise',
+        stage: 'after-spread',
+        parameters: {
+            noise: 'bluenoise',
+            strength: 0.08,
+        },
+    }],
+    colors: [
+        [0, 'blue'],
+        [489, 'red'],
+        [490, 'yellow'],
+        [509, 'yellow'],
+        [510, 'red'],
+        [999, 'green']
+    ],
+});
+
+scrawl.makePattern({
+
+    name: name('stroke-pattern'),
+    asset: 'brick',
+});
+
+
 // Define the entitys that will be used as pivots and paths before the entitys that use them as such
 scrawl.makeWheel({
 
@@ -229,7 +261,10 @@ scrawl.makeWheel({
 
 
 // We can always grab a handle to any canvas entity by reference to its entry in the Scrawl-canvas library. Entitys are stored in both the `artefact` and the `entity` sections of the library
-const arrow = scrawl.findEntity(name('mouse-line'));
+const arrow = scrawl.findEntity(name('mouse-line')),
+    quaddy = scrawl.findEntity(name('my-quad'));
+
+let bezzy = scrawl.findEntity(name('my-bezier'));
 
 
 // Testing to make sure artefacts stick to their paths, even when those paths are animated or manipulated in various ways
@@ -306,6 +341,64 @@ scrawl.makeRender({
 
 
 // #### Development and testing
+scrawl.makeUpdater({
+
+    event: 'change',
+    origin: '.linear',
+
+    target: arrow,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+        ['linear-stroke-style']: ['strokeStyle', 'raw'],
+        ['linear-style-lock']: ['lockStrokeStyleToEntity', 'boolean'],
+    },
+});
+
+scrawl.makeUpdater({
+
+    event: 'change',
+    origin: '.quadratic',
+
+    target: quaddy,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+        ['quadratic-stroke-style']: ['strokeStyle', 'raw'],
+        ['quadratic-style-lock']: ['lockStrokeStyleToEntity', 'boolean'],
+    },
+});
+
+const tempUpdater = scrawl.makeUpdater({
+
+    event: 'change',
+    origin: '.bezier',
+
+    target: bezzy,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+        ['bezier-stroke-style']: ['strokeStyle', 'raw'],
+        ['bezier-style-lock']: ['lockStrokeStyleToEntity', 'boolean'],
+    },
+});
+
+scrawl.initializeDomInputs([
+    ['select', 'linear-stroke-style', 0],
+    ['select', 'linear-style-lock', 0],
+    ['select', 'quadratic-stroke-style', 0],
+    ['select', 'quadratic-style-lock', 0],
+    ['select', 'bezier-stroke-style', 0],
+    ['select', 'bezier-style-lock', 0],
+]);
+
+
 console.log(scrawl.library);
 
 console.log('Performing tests ...');
@@ -345,5 +438,25 @@ killArtefact(scrawl, canvas, name('my-bezier'), 5000, () => {
     scrawl.findEntity(name('path-line')).set({
         endPath: name('my-bezier'),
         endLockTo: 'path',
+    });
+
+    bezzy = scrawl.findEntity(name('my-bezier'));
+
+    tempUpdater();
+
+    scrawl.makeUpdater({
+
+        event: 'change',
+        origin: '.bezier',
+
+        target: bezzy,
+
+        useNativeListener: true,
+        preventDefault: true,
+
+        updates: {
+            ['bezier-stroke-style']: ['strokeStyle', 'raw'],
+            ['bezier-style-lock']: ['lockStrokeStyleToEntity', 'boolean'],
+        },
     });
 });

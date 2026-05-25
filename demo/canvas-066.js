@@ -16,6 +16,53 @@ const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
+scrawl.importDomImage('.mypatterns');
+
+scrawl.makeGradient({
+
+    name: name('stroke-gradient'),
+    endX: '33%',
+    spread: 'reflect',
+    operations: [{
+        operation: 'add-noise',
+        stage: 'after-spread',
+        parameters: {
+            noise: 'bluenoise',
+            strength: 0.08,
+        },
+    }],
+
+}).clone({
+
+    name: name('fill-gradient'),
+    endX: '33%',
+    spread: 'repeat',
+    operations: [{
+        operation: 'add-ripple',
+        stage: 'on-coordinates',
+        parameters: {
+            amplitude: 20,
+            frequency: 0.1,
+            phase: 0,
+            originX: '50%',
+            originY: '50%',
+        },
+    }],
+});
+
+scrawl.makePattern({
+
+    name: name('fill-pattern'),
+    asset: 'brick',
+
+}).clone({
+
+    name: name('stroke-pattern'),
+    asset: 'leaves',
+
+});
+
+
 const mySpiral = scrawl.makeSpiral({
     name: name('my-spiral'),
     start: ['center', 'center'],
@@ -128,6 +175,11 @@ scrawl.makeUpdater({
         start_yString: ['startY', 'raw'],
         upend: ['flipUpend', 'boolean'],
         winding: ['winding', 'raw'],
+
+        fillStyle: ['fillStyle', 'raw'],
+        lockFillStyleToEntity: ['lockFillStyleToEntity', 'boolean'],
+        strokeStyle: ['strokeStyle', 'raw'],
+        lockStrokeStyleToEntity: ['lockStrokeStyleToEntity', 'boolean'],
     },
 });
 
@@ -168,6 +220,11 @@ scrawl.initializeDomInputs([
     ['select', 'start_yString', 1],
     ['select', 'upend', 0],
     ['select', 'winding', 0],
+
+    ['select', 'fillStyle', 0],
+    ['select', 'lockFillStyleToEntity', 0],
+    ['select', 'strokeStyle', 0],
+    ['select', 'lockStrokeStyleToEntity', 0],
 ]);
 
 

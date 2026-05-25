@@ -10,7 +10,9 @@
 
 
 // #### Imports
-import { addStrings, mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';
+import { styles } from '../core/library.js';
+
+import { addStrings, generateIdForArtefact, isa_obj, mergeOver, pushUnique, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeState } from '../untracked-factory/state.js';
 
@@ -19,6 +21,9 @@ import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js'
 import { filterEngine } from '../helper/filter-engine.js';
 import { importDomImage } from '../asset-management/image-asset.js';
 import { currentGroup } from '../factory/canvas.js';
+
+import { checkForWorkstoreItem, getWorkstoreItem } from '../helper/workstore.js';
+import { gradientEngine } from '../helper/gradient-engine.js';
 
 import positionMix from './position.js';
 import deltaMix from './delta.js';
@@ -31,10 +36,12 @@ import buttonMix from './button.js';
 import filterMix from './filter.js';
 
 // Shared constants
-import { _floor, _keys, _parse, DESTINATION_OUT, FILL, GOOD_HOST, IMG, MOUSE, NAME, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS,  UNDEF, ZERO_STR } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, _keys, _parse, _radian, BLACK, BLANK, DESTINATION_OUT, DRAW, FILL, GOOD_HOST, GRADIENTS_ARR, IMG, MOUSE, NAME, PAD, PARTICLE, SOURCE_IN, SOURCE_OVER, STATE_KEYS, T_CONIC_GRADIENT, T_GRADIENT, T_RADIAL_GRADIENT, UNDEF, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const NONZERO = 'nonzero';
+const NONZERO = 'nonzero',
+    STATE_OVERRIDE_DELTA_KEYS = ['lineDashOffset', 'lineWidth', 'miterLimit'],
+    STATE_OVERRIDE_KEYS = [...STATE_OVERRIDE_DELTA_KEYS, 'fillStyle', 'lineCap', 'lineDash', 'lineJoin', 'strokeStyle'];
 
 
 // #### Export function
@@ -134,6 +141,7 @@ export default function (P = Ωempty) {
 // + COLORNAME String
 // + GRADIENTNAME String
 // + RADIALGRADIENTNAME String
+// + CONICGRADIENTNAME String
 // + PATTERNNAME String
 //
 // __globalAlpha__ - entity transparency - a value between 0 and 1, where 0 is completely transparent and 1 is completely opaque
@@ -232,7 +240,8 @@ export default function (P = Ωempty) {
 
 // #### Get, Set, deltaSet
     const G = P.getters,
-        S = P.setters;
+        S = P.setters,
+        D = P.deltaSetters;
 
 // __group__ - returns the entity's latest Group's String name, not the Group object itself
     G.group = function () {
@@ -243,8 +252,246 @@ export default function (P = Ωempty) {
 // __lockStylesToEntity__ - a pseudo-attribute which will set the `lockFillStyleToEntity` and `lockStrokeStyleToEntity` flags to the same Boolean value
     S.lockStylesToEntity = function (item) {
 
+        item = !!item;
+
         this.lockFillStyleToEntity = item;
         this.lockStrokeStyleToEntity = item;
+        this.dirtyFillGradientCache = true;
+        this.dirtyDrawGradientCache = true;
+    };
+
+// __lockFillStyleToEntity__
+    S.lockFillStyleToEntity = function (item) {
+
+        item = !!item;
+
+        this.lockFillStyleToEntity = item;
+        this.dirtyFillGradientCache = true;
+    };
+
+// __lockStrokeStyleToEntity__
+    S.lockStrokeStyleToEntity = function (item) {
+
+        item = !!item;
+
+        this.lockStrokeStyleToEntity = item;
+        this.dirtyDrawGradientCache = true;
+    };
+
+// __flipReverse__, __flipUpend__
+    S.flipReverse = function (item) {
+
+        item = !!item;
+
+        this.flipReverse = item;
+        this.dirtyFillGradientCache = true;
+        this.dirtyDrawGradientCache = true;
+    };
+
+// __lockStrokeStyleToEntity__
+    S.flipUpend = function (item) {
+
+        item = !!item;
+
+        this.flipUpend = item;
+        this.dirtyFillGradientCache = true;
+        this.dirtyDrawGradientCache = true;
+    };
+
+// __fillStyle__, __strokeStyle__ - these attributes belong in the state object
+// + We hijack the normal setting processes for the state object because we want to subscribe to filters
+    S.fillStyle = function (item) {
+
+        const state = this.state;
+
+        let gradientCandidate = item,
+            currentFill = state.fillStyle;
+
+        if (currentFill.substring) currentFill = styles[currentFill];
+
+        if (isa_obj(currentFill) && GRADIENTS_ARR.includes(currentFill.type)) currentFill.fillUnsubscribe(this.name);
+
+        if (item && this.state) {
+
+            if (item.substring) {
+
+                gradientCandidate = styles[item];
+
+                if (!gradientCandidate) {
+
+                    state.fillStyle = item;
+
+                    this.dirtyFillGradientCache = true;
+                    return;
+                }
+            }
+            if (isa_obj(gradientCandidate)) {
+
+                if (GRADIENTS_ARR.includes(gradientCandidate.type)) {
+
+                    gradientCandidate.fillSubscribe(this.name);
+                    state.fillStyle = gradientCandidate.name;
+                }
+                else state.fillStyle = gradientCandidate.name || BLANK;
+
+                this.dirtyFillGradientCache = true;
+                return;
+            }
+        }
+        state.fillStyle = BLANK;
+    };
+
+    S.strokeStyle = function (item) {
+
+        const state = this.state;
+
+        let gradientCandidate = item,
+            currentDraw = state.strokeStyle;
+
+        if (currentDraw.substring) currentDraw = styles[currentDraw];
+
+        if (isa_obj(currentDraw) && GRADIENTS_ARR.includes(currentDraw.type)) currentDraw.drawUnsubscribe(this.name);
+
+        if (item && this.state) {
+
+            if (item.substring) {
+
+                gradientCandidate = styles[item];
+
+                if (!gradientCandidate) {
+
+                    state.strokeStyle = item;
+
+                    this.dirtyDrawGradientCache = true;
+                    return;
+                }
+            }
+            if (isa_obj(gradientCandidate)) {
+
+                if (GRADIENTS_ARR.includes(gradientCandidate.type)) {
+
+                    gradientCandidate.drawSubscribe(this.name);
+                    state.strokeStyle = gradientCandidate.name;
+                }
+                else state.strokeStyle = gradientCandidate.name || BLANK;
+
+                this.dirtyDrawGradientCache = true;
+                return;
+            }
+        }
+        state.strokeStyle = BLANK;
+    };
+
+    S.lineDashOffset = function (item) {
+
+        const state = this.state;
+
+        if (_isFinite(item) && state) {
+
+            state.lineDashOffset = item;
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+    D.lineDashOffset = function (item) {
+
+        const state = this.state;
+
+        if (_isFinite(item) && state) {
+
+            state.lineDashOffset = addStrings(state.lineDashOffset, item);
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+
+    S.lineWidth = function (item) {
+
+        const state = this.state;
+
+        if (_isFinite(item) && state) {
+
+            state.lineWidth = item;
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+    D.lineWidth = function (item) {
+
+        const state = this.state;
+
+        if (_isFinite(item) && state) {
+
+            state.lineWidth = addStrings(state.lineWidth, item);
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+
+    S.miterLimit = function (item) {
+
+        const state = this.state;
+
+        if (_isFinite(item) && state) {
+
+            state.miterLimit = item;
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+    D.miterLimit = function (item) {
+
+        const state = this.state;
+
+        if (_isFinite(item) && state) {
+
+            state.miterLimit = addStrings(state.miterLimit, item);
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+
+    S.lineCap = function (item) {
+
+        const state = this.state;
+
+        if (state && item.substring) {
+
+            state.lineCap = item;
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+
+    S.lineDash = function (item) {
+
+        const state = this.state;
+
+        if (state && _isArray(item)) {
+
+            state.lineDash = item;
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+
+    S.lineJoin = function (item) {
+
+        const state = this.state;
+
+        if (state && item.substring) {
+
+            state.lineJoin = item;
+            this.dirtyDrawGradientCache = true;
+            this.dirtyfillGradientCache = true;
+        }
+    };
+
+    S.scaleOutline = function (item) {
+
+        this.scaleOutline = !!item;
+        this.dirtyDrawGradientCache = true;
+        this.dirtyfillGradientCache = true;
     };
 
 // Entity `get`, `set` and `deltaSet` functions need to take into account the entity State object, whose attributes can be retrieved/amended directly on the entity object
@@ -300,7 +547,8 @@ export default function (P = Ωempty) {
 
                 if (key && key !== NAME && val != null) {
 
-                    if (!STATE_KEYS.includes(key)) {
+                    // Special circumstances for fillStyle and strokeStyle
+                    if (!STATE_KEYS.includes(key) || STATE_OVERRIDE_KEYS.includes(key)) {
 
                         fn = setters[key];
 
@@ -343,7 +591,7 @@ export default function (P = Ωempty) {
 
                 if (key && key !== NAME && val != null) {
 
-                    if (!STATE_KEYS.includes(key)) {
+                    if (!STATE_KEYS.includes(key) || STATE_OVERRIDE_DELTA_KEYS.includes(key)) {
 
                         fn = setters[key];
 
@@ -387,6 +635,15 @@ export default function (P = Ωempty) {
         this.stashOutputAsAsset = false;
         this.stashedImageData = null;
         this.stashedImage = null;
+
+        this.dirtyFillGradient = false;
+        this.dirtyFillGradientCache = false;
+        this.useFillGradientCache = false;
+        this.identifierFillGradientCache = ZERO_STR;
+        this.dirtyDrawGradient = false;
+        this.dirtyDrawGradientCache = false;
+        this.useDrawGradientCache = false;
+        this.identifierDrawGradientCache = ZERO_STR;
 
         this.set(this.defs);
 
@@ -435,8 +692,22 @@ export default function (P = Ωempty) {
             this.dirtyDimensions = true;
         }
 
+        this.setGradientCacheFlags();
+
 // A number of updates (__scale__, __dimensions__, __start__, __offset__, __handle__) require the entity to recalculate its Path2D object - if any of them are set, then the entity sets its own `dirtyPathObject` flag as a result.
-        if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
+        if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) {
+
+            this.dirtyPathObject = true;
+            if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+            if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+        }
+
+        // Non-classic gradients need to take into account rotation
+        if (this.dirtyRotation) {
+
+            if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+            if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+        }
 
 // `dirtyScale` - triggers __cleanScale__ function - which in turn sets the `dirtyDimensions`, `dirtyHandle` and (if required) `dirtyPositionSubscribers`, `dirtyMimicScale` flags on the entity.
         if (this.dirtyScale) this.cleanScale();
@@ -466,6 +737,13 @@ export default function (P = Ωempty) {
             this.dirtyStampHandlePositions = true;
         }
 
+// Non-classic gradients also need to take into account positional changes
+        if (this.dirtyStampPositions || this.dirtyStampHandlePositions) {
+
+            if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+            if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+        }
+
 // Invoke the __cleanStampPositions__ and __cleanStampHandlePositions__ functions, if needed, to update current positional data prior to the stamping operation. Both functions will set the `dirtyPositionSubscribers` flag if changes to positional values result from the calculations.
         if (this.dirtyStampPositions) this.cleanStampPositions();
         if (this.dirtyStampHandlePositions) this.cleanStampHandlePositions();
@@ -480,11 +758,39 @@ export default function (P = Ωempty) {
         this.prepareStampTabsHelper();
     };
 
-// The `dirtyFilters` flag is checked and handled by the __filteredStamp__ function.
-
+// The `dirtyFilters` flags are checked and handled by the __filteredStamp__ function.
+//
+// The `dirtyGradientCache` flags are checked and handled by the __updateGradientsBeforeStamp__ function.
+//
 // `cleanPathObject` - ___this function will be overwritten by every entity Factory___, to meet their individual requirements.
 // + The function needs to build a Canvas API [Path2D](https://developer.mozilla.org/en-US/docs/Web/API/Path2D) object and store it in the __pathObject__ attribute. The Path2D object is used for both entity stamping (see below) and entity collision detection work.
     P.cleanPathObject = λnull;
+
+// We need to do work for gradients up-front - if fillStyle or strokeStyle are set to a gradient, then we need to determine if the gradient is "classic" or not.
+// + Classic gradients are rendered through the Canvas API
+// + Non-classic gradients (any gradient that reflects, repeats, or sets areas outside its boundaries to transparent) are not supported by the Canvas API and need to be rendered by SC instead
+// + Additional checks to prevent Pattern/Color object styles being marked as cache-able
+    P.setGradientCacheFlags = function () {
+
+        let fillGradient, drawGradient;
+
+        if (this.state) {
+
+            const { fillStyle, strokeStyle } = this.state;
+
+            fillGradient = fillStyle.substring ? styles[fillStyle] : fillStyle;
+            drawGradient = strokeStyle.substring ? styles[strokeStyle] : strokeStyle;
+        }
+
+        this.useFillGradientCache = (fillGradient && GRADIENTS_ARR.includes(fillGradient.type)) ?
+            !fillGradient.isClassic :
+            false;
+
+        this.useDrawGradientCache = (drawGradient && GRADIENTS_ARR.includes(drawGradient.type)) ?
+            !drawGradient.isClassic :
+            false;
+    };
+
 
 // ##### Step 2: invoke the entity's stamp action
 // `stamp` - this is the function invoked by Group objects as they cascade the Display cycle __compile__ step through to their member artefacts.
@@ -532,11 +838,211 @@ export default function (P = Ωempty) {
             // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
             dest.rotateDestination(engine, x, y, this);
 
+            if (this.useDrawGradientCache || this.useFillGradientCache) {
+
+                this.updateGradientsBeforeStamp(dest);
+            }
+
             // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
             if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 
             // Invoke the appropriate __stamping method__ (below)
             this[this.method](engine);
+        }
+    };
+
+    P.getFixedGradientData = function (grad, styleType, lockedToEntityOverride = null) {
+
+        const fixedGradientData = {
+            type: grad.type,
+            identifier: grad.identifier,
+            spread: grad.spread,
+            start: [...grad.start],
+            paletteStart: grad.paletteStart,
+            paletteEnd: grad.paletteEnd,
+            cyclePalette: grad.cyclePalette,
+            easing: grad.palette.easing,
+            stopsData: grad.palette.getStopsData().slice(),
+            operations: grad.operations,
+            lockedToEntity: false,
+        };
+
+        if (grad.type === T_GRADIENT) {
+
+            fixedGradientData.end = [...grad.end];
+        }
+
+        else if (grad.type === T_RADIAL_GRADIENT) {
+
+            fixedGradientData.end = [...grad.end];
+            fixedGradientData.startRadius = grad.startRadius;
+            fixedGradientData.endRadius = grad.endRadius;
+        }
+
+        else if (grad.type === T_CONIC_GRADIENT) {
+
+            fixedGradientData.angle = grad.angle;
+            fixedGradientData.angleRange = grad.angleRange;
+            fixedGradientData.swirlDistance = grad.swirlDistance;
+            fixedGradientData.swirlClockwise = grad.swirlClockwise;
+        }
+
+        if (lockedToEntityOverride != null) {
+
+            fixedGradientData.lockedToEntity = lockedToEntityOverride;
+        }
+        else if (
+            (styleType === FILL && this.lockFillStyleToEntity) ||
+            (styleType === DRAW && this.lockStrokeStyleToEntity)
+        ) fixedGradientData.lockedToEntity = true;
+
+        return fixedGradientData;
+    };
+
+    P.updateGradientsBeforeStamp = function (refCell) {
+
+        const getFixedGradientData = this.getFixedGradientData.bind(this);
+
+        let drawId = this.identifierDrawGradientCache,
+            fillId = this.identifierFillGradientCache;
+
+        if (this.useDrawGradientCache) {
+
+            const state = this.state,
+                pathObject = this.pathObject;
+
+            const grad = (state.strokeStyle.substring)
+                ? styles[state.strokeStyle]
+                : state.strokeStyle;
+
+            // We only process gradients, not patterns or color objects
+            if (GRADIENTS_ARR.includes(grad.type)) {
+
+                const myCell = requestCell(),
+                    element = myCell.element,
+                    engine = myCell.engine;
+
+                const [width, height] = refCell.get('dimensions');
+                const [x, y] = this.currentStampPosition;
+                const matrix = refCell.engine.getTransform();
+
+                element.width = width;
+                element.height = height;
+
+                myCell.rotateDestination(engine, x, y, this);
+                myCell.setEngine(this);
+
+                if (this.dirtyDrawGradient ||
+                    this.dirtyDrawGradientCache ||
+                    drawId === ZERO_STR
+                ) drawId = generateIdForArtefact(this);
+
+                if (drawId) {
+
+                    const cacheExists = checkForWorkstoreItem(drawId);
+
+                    if (!cacheExists) {
+
+                        grad.getData(this, refCell, DRAW);
+
+                        engine.shadowOffsetY = 0;
+                        engine.shadowOffsetX = 0;
+                        engine.shadowBlur = 0;
+                        engine.strokeStyle = BLACK;
+                        engine.stroke(pathObject);
+
+                        const data = engine.getImageData(0, 0, width, height);
+
+                        const success = gradientEngine.action({
+                            fixedGradientData: getFixedGradientData(grad, DRAW),
+                            identifier: drawId,
+                            imageData: data,
+                            entity: this,
+                            matrix,
+                        });
+                        if (success) {
+
+                            this.identifierDrawGradientCache = drawId;
+                            this.dirtyDrawGradient = false;
+                            this.dirtyDrawGradientCache = false;
+                            this.dirtyFilterIdentifier = true;
+                        }
+                        else this.dirtyDrawGradientCache = true;
+                    }
+                }
+                releaseCell(myCell);
+            }
+        }
+
+        if (this.useFillGradientCache) {
+
+            const state = this.state,
+                pathObject = this.pathObject;
+
+            const grad = (state.fillStyle.substring)
+                ? styles[state.fillStyle]
+                : state.fillStyle;
+
+            // We only process gradients, not patterns or color objects
+            if (GRADIENTS_ARR.includes(grad.type)) {
+
+                const myCell = requestCell(),
+                    element = myCell.element,
+                    engine = myCell.engine;
+
+                const [width, height] = refCell.get('dimensions');
+                const [x, y] = this.currentStampPosition;
+                const matrix = refCell.engine.getTransform();
+
+                element.width = width;
+                element.height = height;
+
+                myCell.rotateDestination(engine, x, y, this);
+                myCell.setEngine(this);
+
+
+                if (
+                    this.dirtyFillGradient ||
+                    this.dirtyFillGradientCache ||
+                    fillId === ZERO_STR
+                ) fillId = generateIdForArtefact(this);
+
+                if (fillId) {
+
+                    const cacheExists = checkForWorkstoreItem(fillId);
+
+                    if (!cacheExists) {
+
+                        grad.getData(this, refCell, FILL);
+
+                        engine.shadowOffsetY = 0;
+                        engine.shadowOffsetX = 0;
+                        engine.shadowBlur = 0;
+                        engine.fillStyle = BLACK;
+                        engine.fill(pathObject, this.winding);
+
+                        const data = engine.getImageData(0, 0, width, height);
+
+                        const success = gradientEngine.action({
+                            fixedGradientData: getFixedGradientData(grad, FILL),
+                            identifier: fillId,
+                            imageData: data,
+                            entity: this,
+                            matrix,
+                        });
+
+                        if (success) {
+
+                            this.identifierFillGradientCache = fillId;
+                            this.dirtyFillGradient = false;
+                            this.dirtyFillGradientCache = false;
+                            this.dirtyFilterIdentifier = true;
+                        }
+                        else this.dirtyFillGradientCache = true;
+                    }
+                }
+                releaseCell(myCell);
+            }
         }
     };
 
@@ -700,7 +1206,7 @@ export default function (P = Ωempty) {
         }
     };
 
-// `getCellCoverage` - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the `scrawl.createImageFromEntity` function is invoked.
+// `getCellCoverage` - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host for building an image when the `scrawl.createImageFromEntity` function is invoked.
     P.getCellCoverage = function (img) {
 
         const { width, height, data } = img;
@@ -750,58 +1256,110 @@ export default function (P = Ωempty) {
 // ##### Stamp methods
 // All actual drawing is achieved using the entity's pre-calculated [Path2D object](https://developer.mozilla.org/en-US/docs/Web/API/Path2D).
 
+    P.applyFromWorkstore = function (hostEngine, identifier) {
+
+        const data = getWorkstoreItem(identifier);
+
+        if (data && data.w && data.h && data.imageData) {
+
+            const {x, y, w, h, imageData} = data;
+
+            const myCell = requestCell();
+
+            const { element, engine } = myCell;
+
+            element.width = w;
+            element.height = h;
+
+            engine.putImageData(imageData, 0, 0);
+
+            hostEngine.save();
+            hostEngine.resetTransform();
+            hostEngine.drawImage(element, x, y);
+            hostEngine.restore();
+
+            releaseCell(myCell);
+        }
+    };
+
 // `draw` - stroke the entity outline with the entity's `strokeStyle` color, gradient or pattern - including shadow
     P.draw = function (engine) {
 
-        engine.stroke(this.pathObject);
+        this.useDrawGradientCache 
+            ? this.applyFromWorkstore(engine, this.identifierDrawGradientCache)
+            : engine.stroke(this.pathObject);
     };
 
 // `fill` - fill the entity with the entity's `fillStyle` color, gradient or pattern - including shadow
     P.fill = function (engine) {
 
-        engine.fill(this.pathObject, this.winding);
+        this.useFillGradientCache 
+            ? this.applyFromWorkstore(engine, this.identifierFillGradientCache)
+            : engine.fill(this.pathObject, this.winding);
     };
 
 // `drawAndFill` - stamp the entity stroke, then fill, then remove shadow and repeat
     P.drawAndFill = function (engine) {
 
-        const p = this.pathObject;
+        const p = this.pathObject,
+            winding = this.winding,
+            apply = this.applyFromWorkstore.bind(this),
+            drawUse = this.useDrawGradientCache,
+            drawId = this.identifierDrawGradientCache,
+            fillUse = this.useFillGradientCache,
+            fillId = this.identifierFillGradientCache;
 
-        engine.stroke(p);
-        engine.fill(p, this.winding);
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
+        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
         this.currentHost.clearShadow();
-        engine.stroke(p);
-        engine.fill(p, this.winding);
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
+        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
     };
 
 // `drawAndFill` - stamp the entity fill, then stroke, then remove shadow and repeat
     P.fillAndDraw = function (engine) {
 
-        const p = this.pathObject;
+        const p = this.pathObject,
+            winding = this.winding,
+            apply = this.applyFromWorkstore.bind(this),
+            drawUse = this.useDrawGradientCache,
+            drawId = this.identifierDrawGradientCache,
+            fillUse = this.useFillGradientCache,
+            fillId = this.identifierFillGradientCache;
 
-        engine.fill(p, this.winding);
-        engine.stroke(p);
+        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
         this.currentHost.clearShadow();
-        engine.fill(p, this.winding);
-        engine.stroke(p);
+        fillUse ? apply(engine, fillId) : engine.fill(p, winding);
+        drawUse ? apply(engine, drawId) : engine.stroke(p);
     };
 
 // `drawThenFill` - stroke the entity's outline, then fill it (shadow applied twice)
     P.drawThenFill = function (engine) {
 
-        const p = this.pathObject;
+        const p = this.pathObject,
+            apply = this.applyFromWorkstore.bind(this);
 
-        engine.stroke(p);
-        engine.fill(p, this.winding);
+        this.useDrawGradientCache 
+            ? apply(engine, this.identifierDrawGradientCache)
+            : engine.stroke(this.pathObject);
+        this.useFillGradientCache 
+            ? apply(engine, this.identifierFillGradientCache)
+            : engine.fill(this.pathObject, this.winding);
     };
 
 // `fillThenDraw` - fill the entity's outline, then stroke it (shadow applied twice)
     P.fillThenDraw = function (engine) {
 
-        const p = this.pathObject;
+        const p = this.pathObject,
+            apply = this.applyFromWorkstore.bind(this);
 
-        engine.fill(p, this.winding);
-        engine.stroke(p);
+        this.useFillGradientCache 
+            ? apply(engine, this.identifierFillGradientCache)
+            : engine.fill(this.pathObject, this.winding);
+        this.useDrawGradientCache 
+            ? apply(engine, this.identifierDrawGradientCache)
+            : engine.stroke(this.pathObject);
     };
 
 // `clip` - restrict drawing activities to the entity's enclosed area
@@ -822,5 +1380,5 @@ export default function (P = Ωempty) {
     };
 
 // `none` - perform all the calculations required, but don't perform the final stamping
-    P.none = function () {}
+    P.none = λnull;
 }
