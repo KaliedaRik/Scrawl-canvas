@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -622,7 +627,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { $IMAGE, $VIDEO, _isArray, _keys, _values, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">STYLES</span>, <span class="hljs-variable constant_">UNDEF</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { $IMAGE, $VIDEO, _keys, _values, <span class="hljs-variable constant_">NAME</span>, <span class="hljs-variable constant_">STYLES</span>, <span class="hljs-variable constant_">UNDEF</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -656,6 +661,9 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePattern</span>();
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> = <span class="hljs-literal">null</span>;
@@ -666,7 +674,8 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">patternMatrix</span> = <span class="hljs-literal">null</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">isClassic</span> = <span class="hljs-literal">true</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
@@ -736,19 +745,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;asset&#x27;</span>]);
-
-P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(items.<span class="hljs-property">patternMatrix</span>)) copy.<span class="hljs-property">patternMatrix</span> = items.<span class="hljs-property">patternMatrix</span>;
-    <span class="hljs-keyword">else</span> {
-
-        <span class="hljs-keyword">const</span> m = <span class="hljs-variable language_">this</span>.<span class="hljs-property">patternMatrix</span>;
-        <span class="hljs-keyword">if</span> (m) copy.<span class="hljs-property">patternMatrix</span> = [m.<span class="hljs-property">a</span>, m.<span class="hljs-property">b</span>, m.<span class="hljs-property">c</span>, m.<span class="hljs-property">d</span>, m.<span class="hljs-property">e</span>, m.<span class="hljs-property">f</span>];
-    }
-
-    <span class="hljs-keyword">return</span> copy;
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;asset&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -985,12 +982,12 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">entity, cell</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">myentity, mycell, area</span>) {
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyAsset</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanAsset</span>();
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>.<span class="hljs-title function_">checkSource</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildStyle</span>(cell);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildStyle</span>(mycell, myentity, area);
 };</pre></div></div>
             
         </li>

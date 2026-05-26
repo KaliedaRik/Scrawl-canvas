@@ -101,6 +101,8 @@ S.outerRadius = function (val) {
         this.outerRadius = val;
         this.dirtyDimensions = true;
         this.dirtyFilterIdentifier = true;
+        this.dirtyFillGradientCache = true;
+        this.dirtyDrawGradientCache = true;
     }
 };
 D.outerRadius = function (val) {
@@ -110,6 +112,8 @@ D.outerRadius = function (val) {
         this.outerRadius = addStrings(this.outerRadius, val);
         this.dirtyDimensions = true;
         this.dirtyFilterIdentifier = true;
+        this.dirtyFillGradientCache = true;
+        this.dirtyDrawGradientCache = true;
     }
 };
 
@@ -120,6 +124,8 @@ S.innerRadius = function (val) {
         this.innerRadius = val;
         this.dirtyDimensions = true;
         this.dirtyFilterIdentifier = true;
+        this.dirtyFillGradientCache = true;
+        this.dirtyDrawGradientCache = true;
     }
 };
 D.innerRadius = function (val) {
@@ -129,6 +135,8 @@ D.innerRadius = function (val) {
         this.innerRadius = addStrings(this.innerRadius, val);
         this.dirtyDimensions = true;
         this.dirtyFilterIdentifier = true;
+        this.dirtyFillGradientCache = true;
+        this.dirtyDrawGradientCache = true;
     }
 };
 
@@ -148,6 +156,8 @@ S.displacement = function (val) {
 
         this.dirtyDimensions = true;
         this.dirtyFilterIdentifier = true;
+        this.dirtyFillGradientCache = true;
+        this.dirtyDrawGradientCache = true;
     }
 };
 D.displacement = function (val) {
@@ -161,6 +171,8 @@ D.displacement = function (val) {
         this.displacement = d;
         this.dirtyDimensions = true;
         this.dirtyFilterIdentifier = true;
+        this.dirtyFillGradientCache = true;
+        this.dirtyDrawGradientCache = true;
     }
 };
 
@@ -169,6 +181,8 @@ S.displayIntersect = function (val) {
     this.displayIntersect = val;
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
+    this.dirtyFillGradientCache = true;
+    this.dirtyDrawGradientCache = true;
 };
 
 // #### Prototype functions
@@ -331,120 +345,211 @@ P.cleanPathObject = function () {
 };
 
 // `draw` - stroke the entity outline with the entity's `strokeStyle` color, gradient or pattern - including shadow
+// + Known issue: for software gradients locked to the strokeStyle, there are issues around scaling - the gradient doesn't scale below 1, but it does move and roll at all scales
 P.draw = function (engine) {
 
-    if (!this.drawDonut) engine.stroke(this.pathObject);
+    if (this.useDrawGradientCache) {
+
+        this.applyFromWorkstore(engine, this.identifierDrawGradientCache);
+    }
     else {
-        engine.stroke(this.pathObjectOuter);
-        engine.stroke(this.pathObjectInner);
+
+        if (!this.drawDonut) engine.stroke(this.pathObject);
+        else {
+            engine.stroke(this.pathObjectOuter);
+            engine.stroke(this.pathObjectInner);
+        }
     }
 };
 
 // `fill` - fill the entity with the entity's `fillStyle` color, gradient or pattern - including shadow
 P.fill = function (engine) {
 
-    engine.fill(this.pathObject, this.winding);
+    if (this.useFillGradientCache) this.applyFromWorkstore(engine, this.identifierFillGradientCache);
+    else engine.fill(this.pathObject, this.winding);
 };
 
 // `drawAndFill` - stamp the entity stroke, then fill, then remove shadow and repeat
 P.drawAndFill = function (engine) {
 
+    const p = this.pathObject,
+        winding = this.winding,
+        apply = this.applyFromWorkstore.bind(this),
+        drawUse = this.useDrawGradientCache,
+        drawId = this.identifierDrawGradientCache,
+        fillUse = this.useFillGradientCache,
+        fillId = this.identifierFillGradientCache;
+
     if (!this.drawDonut) {
 
-        const p = this.pathObject;
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
 
-        engine.stroke(p);
-        engine.fill(p, this.winding);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
         this.currentHost.clearShadow();
-        engine.stroke(p);
-        engine.fill(p, this.winding);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
     }
     else {
 
-        const p = this.pathObject,
-            pOuter = this.pathObjectOuter,
+        const pOuter = this.pathObjectOuter,
             pInner = this.pathObjectInner;
 
-        engine.stroke(pOuter);
-        engine.stroke(pInner);
-        engine.fill(p, this.winding);
+        if (drawUse) apply(engine, drawId);
+        else {
+
+            engine.stroke(pOuter);
+            engine.stroke(pInner);
+        }
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
         this.currentHost.clearShadow();
-        engine.stroke(pOuter);
-        engine.stroke(pInner);
-        engine.fill(p, this.winding);
+
+        if (drawUse) apply(engine, drawId);
+        else {
+
+            engine.stroke(pOuter);
+            engine.stroke(pInner);
+        }
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
     }
 };
 
 // `drawAndFill` - stamp the entity fill, then stroke, then remove shadow and repeat
 P.fillAndDraw = function (engine) {
 
+    const p = this.pathObject,
+        winding = this.winding,
+        apply = this.applyFromWorkstore.bind(this),
+        drawUse = this.useDrawGradientCache,
+        drawId = this.identifierDrawGradientCache,
+        fillUse = this.useFillGradientCache,
+        fillId = this.identifierFillGradientCache;
+
     if (!this.drawDonut) {
 
-        const p = this.pathObject;
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
 
-        engine.fill(p, this.winding);
-        engine.stroke(p);
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
+
         this.currentHost.clearShadow();
-        engine.fill(p, this.winding);
-        engine.stroke(p);
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
     }
     else {
 
-        const p = this.pathObject,
-            pOuter = this.pathObjectOuter,
+        const pOuter = this.pathObjectOuter,
             pInner = this.pathObjectInner;
 
-        engine.fill(p, this.winding);
-        engine.stroke(pOuter);
-        engine.stroke(pInner);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else {
+
+            engine.stroke(pOuter);
+            engine.stroke(pInner);
+        }
+
         this.currentHost.clearShadow();
-        engine.fill(p, this.winding);
-        engine.stroke(pOuter);
-        engine.stroke(pInner);
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else {
+
+            engine.stroke(pOuter);
+            engine.stroke(pInner);
+        }
     }
 };
 
 // `drawThenFill` - stroke the entity's outline, then fill it (shadow applied twice)
 P.drawThenFill = function (engine) {
 
+    const p = this.pathObject,
+        winding = this.winding,
+        apply = this.applyFromWorkstore.bind(this),
+        drawUse = this.useDrawGradientCache,
+        drawId = this.identifierDrawGradientCache,
+        fillUse = this.useFillGradientCache,
+        fillId = this.identifierFillGradientCache;
+
     if (!this.drawDonut) {
 
-        const p = this.pathObject;
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
 
-        engine.stroke(p);
-        engine.fill(p, this.winding);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
     }
     else {
 
-        const p = this.pathObject,
-            pOuter = this.pathObjectOuter,
+        const pOuter = this.pathObjectOuter,
             pInner = this.pathObjectInner;
 
-        engine.stroke(pOuter);
-        engine.stroke(pInner);
-        engine.fill(p, this.winding);
+        if (drawUse) apply(engine, drawId);
+        else {
+
+            engine.stroke(pOuter);
+            engine.stroke(pInner);
+        }
+
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
     }
 };
 
 // `fillThenDraw` - fill the entity's outline, then stroke it (shadow applied twice)
 P.fillThenDraw = function (engine) {
 
+    const p = this.pathObject,
+        winding = this.winding,
+        apply = this.applyFromWorkstore.bind(this),
+        drawUse = this.useDrawGradientCache,
+        drawId = this.identifierDrawGradientCache,
+        fillUse = this.useFillGradientCache,
+        fillId = this.identifierFillGradientCache;
+
     if (!this.drawDonut) {
 
-        const p = this.pathObject;
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
 
-        engine.fill(p, this.winding);
-        engine.stroke(p);
+        if (drawUse) apply(engine, drawId);
+        else engine.stroke(p);
     }
     else {
 
-        const p = this.pathObject,
-            pOuter = this.pathObjectOuter,
+        const pOuter = this.pathObjectOuter,
             pInner = this.pathObjectInner;
 
-        engine.fill(p, this.winding);
-        engine.stroke(pOuter);
-        engine.stroke(pInner);
+        if (fillUse) apply(engine, fillId);
+        else engine.fill(p, winding);
+
+        if (drawUse) apply(engine, drawId);
+        else {
+
+            engine.stroke(pOuter);
+            engine.stroke(pInner);
+        }
     }
 };
 

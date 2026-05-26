@@ -10,20 +10,17 @@
 // + Value
 //
 // Additional engines include:
-// + Stripes
-// + Smoothed stripes
 // + Worley - both euclidean and manhattan versions
 //
-// These engines are supported by a number of settable (and thus animatable) attributes, including special functions for smoothing the engine output. Demo [Canvas-060](../../demo/canvas-060.html) has been set up to allow for experimenting with these attributes
+// These engines are supported by a number of settable (and thus animatable) attributes, including special functions for smoothing the engine output. Demo [Canvas-052](../../demo/canvas-052.html) has been set up to allow for experimenting with these attributes
 
 
 // #### Imports
 import { constructors } from '../core/library.js';
 import { seededRandomNumberGenerator } from '../helper/random-seed.js';
+import { getWorkstoreItem, setWorkstoreItem } from '../helper/workstore.js';
 
 import { doCreate, easeEngines, interpolate, mergeOver, λfirstArg, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
-
-import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -35,16 +32,16 @@ import { _abs, _floor, _max, _min, _pow, _random, _sin, _sqrt, ASSET, DEFAULT_SE
 
 // Local constants
 const $X = 'X',
-    BESPOKE_NOISE_ENGINES = ['stripes', 'smoothed-stripes', 'worley-euclidean', 'worley-manhattan'],
+    BESPOKE_NOISE_ENGINES = ['worley-euclidean', 'worley-manhattan', 'worley-chebyshev'],
+    CHEBYSHEV_DISTANCE = 'chebyshev-distance',
     EUCLIDEAN_DISTANCE = 'euclidian-distance',
     IMPROVED_PERLIN = 'improved-perlin',
     MANHATTAN_DISTANCE = 'manhattan-distance',
     PERLIN = 'perlin',
     QUINTIC = 'quintic',
     SIMPLEX = 'simplex',
-    SMOOTHED_STRIPES = 'smoothed-stripes',
-    STRIPES = 'stripes',
     T_NOISE_ASSET = 'NoiseAsset',
+    WORLEY_CHEBYSHEV = 'worley-chebyshev',
     WORLEY_EUCLIDEAN = 'worley-euclidean',
     WORLEY_MANHATTAN = 'worley-manhattan',
     WORLEY_OUTPUTS = ['X', 'Y', 'Z', 'XminusY', 'XminusZ', 'YminusX', 'YminusZ', 'ZminusX', 'ZminusY', 'XaddY', 'XaddZ', 'YaddZ', 'XaddYminusZ', 'XaddZminusY', 'YaddZminusX', 'XmultiplyY', 'XmultiplyZ', 'YmultiplyZ', 'XmultiplyYaddZ', 'XmultiplyZaddY', 'YmultiplyZaddX', 'XmultiplyYminusZ', 'XmultiplyZminusY', 'YmultiplyZminusX', 'sum'];
@@ -63,9 +60,15 @@ const NoiseAsset = function (items = Ωempty) {
     this.values = [];
     this.grad = [];
 
-    this.noiseValues = [];
+    this.noiseValues = null;
+    this.rawNoiseValues = null;
+    this.rawNoiseMin = 0;
+    this.rawNoiseMax = 1;
+    this.dirtyNoiseOutput = true;
 
     this.subscribers = [];
+
+    this.currentAttributeValues = { ...this.stateAttributeDefaults };
 
     this.set(this.defs);
     this.set(items);
@@ -100,7 +103,7 @@ const defaultAttributes = {
     width: 300,
     height: 150,
 
-    // __noiseEngine__ - String - the currently supported noise engines String values are: `perlin`, `improved-perlin`, `simplex`, `value`, `stripes`, `smoothed-stripes`, `worley-euclidean`, `worley-manhattan`
+    // __noiseEngine__ - String - the currently supported noise engines String values are: `perlin`, `improved-perlin`, `simplex`, `value`, `worley-chebyshev`, `worley-euclidean`, `worley-manhattan`
     noiseEngine: SIMPLEX,
 
     // When a noise engine initializes it will create several Arrays of pseudo-random values. The __seed__ attribute is a String used to initialize the pseudo-random number generator, while the __size__ attribute is a Number (often a power of 2 value) which determines the lengths of the Arrays
@@ -144,6 +147,25 @@ const defaultAttributes = {
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
+P.stateAttributeDefaults = {
+    height: 150,
+    lacunarity: 2,
+    noiseEngine: SIMPLEX,
+    octaveFunction: NONE,
+    octaves: 1,
+    persistence: 0.5,
+    scale: 50,
+    seed: DEFAULT_SEED,
+    sineFrequencyCoeff: 1,
+    size: 256,
+    smoothing: QUINTIC,
+    sumAmplitude: 5,
+    sumFunction: NONE,
+    width: 300,
+    worleyDepth: 0,
+    worleyOutput: $X,
+};
+
 delete P.defs.source;
 delete P.defs.sourceLoaded;
 
@@ -180,13 +202,17 @@ S.octaveFunction = function (item) {
     this.octaveFunction = (null != this.octaveFunctions[item]) ? this.octaveFunctions[item] : λfirstArg;
     this.dirtyNoise = true;
     this.dirtyOutput = true;
+
+    this.currentAttributeValues.octaveFunction = item;
 };
 
 S.sumFunction = function (item) {
 
     this.sumFunction = (null != this.sumFunctions[item]) ? this.sumFunctions[item] : λfirstArg;
-    this.dirtyNoise = true;
+    this.dirtyNoiseOutput = true;
     this.dirtyOutput = true;
+
+    this.currentAttributeValues.sumFunction = item;
 };
 
 S.smoothing = function (item) {
@@ -194,6 +220,8 @@ S.smoothing = function (item) {
     this.smoothing = (null != easeEngines[item]) ? easeEngines[item] : λfirstArg;
     this.dirtyNoise = true;
     this.dirtyOutput = true;
+
+    this.currentAttributeValues.smoothing = item;
 };
 
 S.noiseEngine = function (item) {
@@ -201,6 +229,8 @@ S.noiseEngine = function (item) {
     this.noiseEngine = (null != this.noiseEngines[item]) ? this.noiseEngines[item] : this.noiseEngines[SIMPLEX];
     this.dirtyNoise = true;
     this.dirtyOutput = true;
+
+    this.currentAttributeValues.noiseEngine = item;
 };
 
 S.octaves = function (item) {
@@ -210,6 +240,8 @@ S.octaves = function (item) {
         this.octaves = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.octaves = item;
     }
 };
 
@@ -220,6 +252,8 @@ S.seed = function (item) {
         this.seed = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.seed = item;
     }
 };
 
@@ -230,6 +264,8 @@ S.scale = function (item) {
         this.scale = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.scale = item;
     }
 };
 
@@ -240,6 +276,8 @@ S.size = function (item) {
         this.size = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.size = item;
     }
 };
 
@@ -250,6 +288,8 @@ S.persistence = function (item) {
         this.persistence = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.persistence = item;
     }
 };
 
@@ -260,6 +300,8 @@ S.lacunarity = function (item) {
         this.lacunarity = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.lacunarity = item;
     }
 };
 
@@ -268,8 +310,10 @@ S.sineFrequencyCoeff = function (item) {
     if (item.toFixed) {
 
         this.sineFrequencyCoeff = item;
-        this.dirtyNoise = true;
+        this.dirtyNoiseOutput = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.sineFrequencyCoeff = item;
     }
 };
 
@@ -279,8 +323,10 @@ S.modularAmplitude = function (item) {
     if (item.toFixed) {
 
         this.sumAmplitude = item;
-        this.dirtyNoise = true;
+        this.dirtyNoiseOutput = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.sumAmplitude = item;
     }
 };
 S.sumAmplitude = function (item) {
@@ -288,8 +334,10 @@ S.sumAmplitude = function (item) {
     if (item.toFixed) {
 
         this.sumAmplitude = item;
-        this.dirtyNoise = true;
+        this.dirtyNoiseOutput = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.sumAmplitude = item;
     }
 };
 
@@ -301,6 +349,8 @@ S.width = function (item) {
         this.sourceNaturalWidth = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.width = item;
     }
 };
 
@@ -312,6 +362,8 @@ S.height = function (item) {
         this.sourceNaturalHeight = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.height = item;
     }
 };
 
@@ -322,6 +374,8 @@ S.worleyDepth = function (item) {
         this.worleyDepth = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.worleyDepth = item;
     }
 };
 
@@ -332,6 +386,8 @@ S.worleyOutput = function (item) {
         this.worleyOutput = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
+
+        this.currentAttributeValues.worleyOutput = item;
     }
 };
 
@@ -348,134 +404,150 @@ S.colors = function (item) {
 // + The `paintCanvas` function is supplied by the _assetAdvancedFunctionality.js_ mixin
 P.cleanOutput = function () {
 
-    if (this.dirtyNoise) this.cleanNoise();
+    if (this.dirtyNoise || this.dirtyNoiseOutput) this.cleanNoise();
     if (this.dirtyOutput) this.paintCanvas();
 };
 
-// `cleanNoise` - internal function called by the `cleanOutput` function
 P.cleanNoise = function () {
 
-    if (this.dirtyNoise) {
-
-        this.dirtyNoise = false;
+    if (this.dirtyNoise || this.dirtyNoiseOutput) {
 
         const {noiseEngine, seed, width, height, octaves, lacunarity, persistence, scale, octaveFunction, sumFunction} = this;
 
         if (noiseEngine && noiseEngine.init) {
 
-            // Seed our pseudo-random number generator
-            this.rndEngine = seededRandomNumberGenerator(seed);
+            const scaleIdentifier = `noise-scale-${width}-${height}-${scale}`;
 
-            // Generate the permutations table(s)
-            this.generatePermutationTable();
+            let scaledData = getWorkstoreItem(scaleIdentifier);
 
-            // Initialize the appropriate noise function
-            noiseEngine.init.call(this);
+            if (!scaledData) {
 
-            const noiseValues = requestArray();
+                const relativeScale = _pow(width, -scale / 100),
+                    scaledXs = new Float32Array(width),
+                    scaledYs = new Float32Array(height);
 
-            let x, y, o,
+                for (let i = 0; i < width; i++) scaledXs[i] = i * relativeScale;
+                for (let i = 0; i < height; i++) scaledYs[i] = i * relativeScale;
+
+                scaledData = {
+                    scaledXs,
+                    scaledYs,
+                };
+
+                setWorkstoreItem(scaleIdentifier, scaledData);
+            }
+
+            const {scaledXs, scaledYs} = scaledData;
+
+            let x, y, o, index,
                 scaledX, scaledY,
                 totalNoise, amplitude, frequency;
 
-            // Prepare the noiseValues 2d array
-            for (y = 0; y < height; y++) {
+            if (this.dirtyNoise) {
 
-                noiseValues[y] = [];
+                this.dirtyNoise = false;
+                this.dirtyNoiseOutput = true;
 
-                for (x = 0; x < width; x++) {
-                    noiseValues[y][x] = [];
-                }
-            }
+                this.rndEngine = seededRandomNumberGenerator(seed);
 
-            // Calculate a relative scale, and setup min/max variables
-            const relativeScale = _pow(width, -scale / 100);
+                this.generatePermutationTable();
 
-            let max = -1000,
-                min = 1000;
+                noiseEngine.init.call(this);
 
-            // This is the core of the calculation, performed for each cell in the noiseValues 2d array
-            const name = noiseEngine.name;
-            if (BESPOKE_NOISE_ENGINES.includes(name)) {
+                const getNoiseValue = noiseEngine.getNoiseValue.bind(this),
+                    rawNoiseValues = new Float32Array(width * height);
 
-                for (y = 0; y < height; y++) {
-                    for (x = 0; x < width; x++) {
+                let max = -1000,
+                    min = 1000;
 
-                        scaledX = x * relativeScale;
-                        scaledY = y * relativeScale;
+                const name = noiseEngine.name;
 
-                        totalNoise = noiseEngine.getNoiseValue.call(this, scaledX, scaledY);
+                if (BESPOKE_NOISE_ENGINES.includes(name)) {
 
-                        noiseValues[y][x] = totalNoise;
+                    for (y = 0; y < height; y++) {
 
-                        min = _min(min, totalNoise);
-                        max = _max(max, totalNoise);
-                    }
-                }
-            }
-            else {
+                        scaledY = scaledYs[y];
 
-                for (y = 0; y < height; y++) {
-                    for (x = 0; x < width; x++) {
+                        for (x = 0; x < width; x++) {
 
-                        // We can modify the output by scaling it
-                        // + Note that modifying the canvas dimensions (width, height) can also have a scaling effect
-                        scaledX = x * relativeScale;
-                        scaledY = y * relativeScale;
+                            index = (y * width) + x;
+                            scaledX = scaledXs[x];
 
-                        // Amplitude and frequency will update once per octave calculation; totalNoise is the sum of all octave results
-                        totalNoise = 0;
-                        amplitude = 1;
-                        frequency = 1;
+                            totalNoise = getNoiseValue(scaledX, scaledY);
 
-                        // The calculation will be performed at least once
-                        // - For some reason the literature insists on calling these loops "octaves"
-                        for (o = 0; o < octaves; o++) {
+                            rawNoiseValues[index] = totalNoise;
 
-                            // Call the appropriate getNoiseValue function
-                            // + The result needs to be stored in a variable scoped locally to this loop iteration
-                            let octaveNoise = noiseEngine.getNoiseValue.call(this, scaledX * frequency, scaledY * frequency);
-
-                            // Update octave with a post-calculation octaveFunction, if required
-                            octaveNoise = octaveFunction(octaveNoise, scaledX, scaledY, o + 1);
-
-                            // Modify result by the current amplitude, and add to the running total
-                            octaveNoise *= amplitude;
-                            totalNoise += octaveNoise;
-
-                            // Update the variables that change over multiple octave loops
-                            frequency *= lacunarity;
-                            amplitude *= persistence;
+                            min = _min(min, totalNoise);
+                            max = _max(max, totalNoise);
                         }
-                        // Update the noise value in its array
-                        noiseValues[y][x] = totalNoise;
-
-                        // ... and check for max/min spread of the generated values
-                        min = _min(min, totalNoise);
-                        max = _max(max, totalNoise);
                     }
                 }
-            }
+                else {
 
-            // Calculate the span of numbers generated - we need to get all the results in the range 0 to 1
-            const noiseSpan = max - min;
+                    for (y = 0; y < height; y++) {
 
-            for (y = 0; y < height; y++) {
-                for (x = 0; x < width; x++) {
+                        scaledY = scaledYs[y];
 
-                    scaledX = x * relativeScale;
-                    scaledY = y * relativeScale;
+                        for (x = 0; x < width; x++) {
 
-                    // Clamp the cell's noise value to between 0 and 1, then update it with the post-calculation sumFunction, if required
-                    const clampedVal = (noiseValues[y][x] - min) / noiseSpan;
-                    noiseValues[y][x] = sumFunction.call(this, clampedVal, x * relativeScale, y * relativeScale);
+                            index = (y * width) + x;
+                            scaledX = scaledXs[x];
+
+                            totalNoise = 0;
+                            amplitude = 1;
+                            frequency = 1;
+
+                            for (o = 0; o < octaves; o++) {
+
+                                let octaveNoise = getNoiseValue(scaledX * frequency, scaledY * frequency);
+
+                                octaveNoise = octaveFunction(octaveNoise, scaledX, scaledY, o + 1);
+
+                                octaveNoise *= amplitude;
+                                totalNoise += octaveNoise;
+
+                                frequency *= lacunarity;
+                                amplitude *= persistence;
+                            }
+
+                            rawNoiseValues[index] = totalNoise;
+
+                            min = _min(min, totalNoise);
+                            max = _max(max, totalNoise);
+                        }
+                    }
                 }
+
+                this.rawNoiseValues = rawNoiseValues;
+                this.rawNoiseMin = min;
+                this.rawNoiseMax = max;
             }
 
-            // Update the cached noise values arrays
-            this.noiseValues.length = 0;
-            this.noiseValues.push(...noiseValues);
-            releaseArray(noiseValues);
+            if (this.dirtyNoiseOutput) {
+
+                this.dirtyNoiseOutput = false;
+
+                const rawNoiseValues = this.rawNoiseValues,
+                    noiseValues = new Float32Array(width * height),
+                    min = this.rawNoiseMin,
+                    noiseSpan = this.rawNoiseMax - min;
+
+                for (y = 0; y < height; y++) {
+
+                    scaledY = scaledYs[y];
+
+                    for (x = 0; x < width; x++) {
+
+                        index = (y * width) + x;
+                        scaledX = scaledXs[x];
+
+                        const clampedVal = (rawNoiseValues[index] - min) / noiseSpan;
+                        noiseValues[index] = sumFunction.call(this, clampedVal, scaledX, scaledY);
+                    }
+                }
+
+                this.noiseValues = noiseValues;
+            }
         }
         else this.dirtyNoise = true;
     }
@@ -486,14 +558,10 @@ P.checkOutputValuesExist = function () {
 
     return (null != this.noiseValues) ? true : false;
 };
-P.getOutputValue = function (index, width) {
+P.getOutputValue = function (index) {
 
-    const row = _floor(index / width),
-        col = index - (row * width);
-
-    return this.noiseValues[row][col];
+    return this.noiseValues[index];
 };
-
 
 // #### NoiseAsset generator functionality
 
@@ -502,16 +570,16 @@ const simplexConstantF = 0.5 * (_sqrt(3) - 1);
 const simplexConstantG = (3 - _sqrt(3)) / 6;
 const simplexConstantDoubleG = ((3 - _sqrt(3)) / 6) * 2;
 
-const perlinGrad = [
-    [1, 1],
-    [-1, 1],
-    [1, -1],
-    [-1, -1],
-    [1, 0],
-    [-1, 0],
-    [0, 1],
-    [0, -1]
-];
+const perlinGrad = new Int8Array([1,  1, -1,  1, 1, -1, -1, -1, 1,  0, -1,  0, 0,  1, 0, -1]);
+
+const getSimplexCornerNoise = function (cx, cy, gridPos) {
+
+    const calc = 0.5 - (cx * cx) - (cy * cy);
+    if (calc < 0) return 0;
+
+    const g = gridPos * 2;
+    return calc * calc * ((perlinGrad[g] * cx) + (perlinGrad[g + 1] * cy));
+};
 
 // `noiseEngines` - a {key:object} object. Each named object contains two functions:
 // + __init__ - invoked to prepare the engine for a bout of calculations - called by the `cleanNoise` function
@@ -546,16 +614,15 @@ P.noiseEngines = {
 
             let u, v;
 
-            const bx0 = _floor(x) % size,
-                bx1 = (bx0 + 1) % size;
-
-            const rx0 = x - _floor(x),
-                rx1 = rx0 - 1;
-
-            const by0 = _floor(y) % size,
-                by1 = (by0 + 1) % size;
-
-            const ry0 = y - _floor(y),
+            const floorX = _floor(x),
+                floorY = _floor(y),
+                bx0 = floorX % size,
+                bx1 = (bx0 + 1) % size,
+                rx0 = x - floorX,
+                rx1 = rx0 - 1,
+                by0 = floorY % size,
+                by1 = (by0 + 1) % size,
+                ry0 = y - floorY,
                 ry1 = ry0 - 1;
 
             const i = perm[bx0],
@@ -592,18 +659,17 @@ P.noiseEngines = {
 
             const {size, perm, permMod8, smoothing} = this;
 
-            let u, v;
+            let u, v, g;
 
-            const bx0 = _floor(x) % size,
-                bx1 = (bx0 + 1) % size;
-
-            const rx0 = x - _floor(x),
-                rx1 = rx0 - 1;
-
-            const by0 = _floor(y) % size,
-                by1 = (by0 + 1) % size;
-
-            const ry0 = y - _floor(y),
+            const floorX = _floor(x),
+                floorY = _floor(y),
+                bx0 = floorX % size,
+                bx1 = (bx0 + 1) % size,
+                rx0 = x - floorX,
+                rx1 = rx0 - 1,
+                by0 = floorY % size,
+                by1 = (by0 + 1) % size,
+                ry0 = y - floorY,
                 ry1 = ry0 - 1;
 
             const i = perm[bx0],
@@ -617,12 +683,20 @@ P.noiseEngines = {
             const sx = smoothing(rx0),
                 sy = smoothing(ry0);
 
-            u = rx0 * perlinGrad[b00][0] + ry0 * perlinGrad[b00][1];
-            v = rx1 * perlinGrad[b10][0] + ry0 * perlinGrad[b10][1];
+            g = b00 * 2;
+            u = rx0 * perlinGrad[g] + ry0 * perlinGrad[g + 1];
+
+            g = b10 * 2;
+            v = rx1 * perlinGrad[g] + ry0 * perlinGrad[g + 1];
+
             const a = interpolate(sx, u, v);
 
-            u = rx0 * perlinGrad[b01][0] + ry1 * perlinGrad[b01][1];
-            v = rx1 * perlinGrad[b11][0] + ry1 * perlinGrad[b11][1];
+            g = b01 * 2;
+            u = rx0 * perlinGrad[g] + ry1 * perlinGrad[g + 1];
+
+            g = b11 * 2;
+            v = rx1 * perlinGrad[g] + ry1 * perlinGrad[g + 1];
+
             const b = interpolate(sx, u, v);
 
             return 0.5 * (1 + interpolate(sy, a, b));
@@ -638,15 +712,6 @@ P.noiseEngines = {
 
         getNoiseValue: function (x, y) {
 
-            const getCornerNoise = function (cx, cy, gridPos) {
-
-                const calc = 0.5 - (cx * cx) - (cy * cy);
-                if (calc < 0) return 0;
-
-                const [gx, gy] = perlinGrad[gridPos];
-                return calc * calc * ((gx * cx) + (gy * cy));
-            };
-
             const { size, perm, permMod8 } = this;
 
             const summedCoordinates = (x + y) * simplexConstantF,
@@ -661,10 +726,14 @@ P.noiseEngines = {
                 remainderY = summedY % size;
 
             let pos = permMod8[remainderX + perm[remainderY]],
-                noise = getCornerNoise(cornerX, cornerY, pos);
+                noise = getSimplexCornerNoise(cornerX, cornerY, pos);
 
-            pos = permMod8[remainderX + 1 + perm[remainderY + 1]]
-            noise += getCornerNoise((cornerX - 1 + simplexConstantDoubleG), (cornerY - 1 + simplexConstantDoubleG), pos);
+            pos = permMod8[remainderX + 1 + perm[remainderY + 1]];
+            noise += getSimplexCornerNoise(
+                cornerX - 1 + simplexConstantDoubleG,
+                cornerY - 1 + simplexConstantDoubleG,
+                pos
+            );
 
             let unitA = 0,
                 unitB = 1;
@@ -675,7 +744,11 @@ P.noiseEngines = {
             }
 
             pos = permMod8[remainderX + unitA + perm[remainderY + unitB]];
-            noise += getCornerNoise((cornerX - unitA + simplexConstantG), (cornerY - unitB + simplexConstantG), pos);
+            noise += getSimplexCornerNoise(
+                cornerX - unitA + simplexConstantG,
+                cornerY - unitB + simplexConstantG,
+                pos
+            );
 
             return 0.5 + (35 * noise);
         },
@@ -702,12 +775,14 @@ P.noiseEngines = {
 
             const {values, size, perm, smoothing} = this;
 
-            const x0 = _floor(x) % size,
-                y0 = _floor(y) % size,
+            const floorX = _floor(x),
+                floorY = _floor(y),
+                x0 = floorX % size,
+                y0 = floorY % size,
                 x1 = (x0 + 1) % size,
                 y1 = (y0 + 1) % size,
-                vx = x - _floor(x),
-                vy = y - _floor(y),
+                vx = x - floorX,
+                vy = y - floorY,
                 sx = smoothing(vx),
                 sy = smoothing(vy),
                 i = perm[x0],
@@ -723,38 +798,6 @@ P.noiseEngines = {
         },
     },
 
-    // For generating repeated stripe gradients, set the sum function to `modular` and vary the canvas width/height attributes to set the stripe direction; stripe spacing can be varied using the modular amplitude value. Other sum function values can also produce interesting effects
-    [STRIPES]: {
-
-        name: STRIPES,
-
-        init: λnull,
-
-        getNoiseValue: function (x, y) {
-
-            return (x / 5) + (y / 5);
-        }
-    },
-
-    // As for stripes, but can apply smoothing function to the output
-    // + interesting things start to happen when scale is set to on/around 100 and canvas dimensions are roughly equal, alongside a higher value for sumAmplitude. Best viewed with a modular sum function
-    [SMOOTHED_STRIPES]: {
-
-        name: SMOOTHED_STRIPES,
-
-        init: λnull,
-
-        getNoiseValue: function (x, y) {
-
-            const {smoothing} = this;
-
-            const sx = smoothing(x),
-                sy = smoothing(y);
-
-            return (sx / 5) + (sy / 5);
-        }
-    },
-
     // Worley functionality found in the [jackunion/tooloud GitHub repository](https://github.com/jackunion/tooloud/blob/master/src/Worley.js)
     [WORLEY_EUCLIDEAN]: {
 
@@ -767,16 +810,13 @@ P.noiseEngines = {
 
         getNoiseValue: function (x, y) {
 
-            const {worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = this;
+            const {worleyDepth, worleyOutputFunctions, worleyOutput} = this,
+                outputFunc = worleyOutputFunctions[worleyOutput];
 
-            const f = worleyDistanceFunctions[EUCLIDEAN_DISTANCE];
-            const o = worleyOutputFunctions[worleyOutput];
-
-            return this.worleyNoise({x:x, y:y, z:worleyDepth}, f, o);
+            return this.worleyNoise(x, y, worleyDepth, EUCLIDEAN_DISTANCE, outputFunc);
         }
     },
 
-    // For generating repeated stripe gradients, set the sum function to `modular` and vary the canvas width/height attributes to set the stripe direction; stripe spacing can be varied using the modular amplitude value. Other sum function values can also produce interesting effects
     [WORLEY_MANHATTAN]: {
 
         name: WORLEY_MANHATTAN,
@@ -788,12 +828,28 @@ P.noiseEngines = {
 
         getNoiseValue: function (x, y) {
 
-            const {worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = this;
+            const {worleyDepth, worleyOutputFunctions, worleyOutput} = this,
+                outputFunc = worleyOutputFunctions[worleyOutput];
 
-            const f = worleyDistanceFunctions[MANHATTAN_DISTANCE];
-            const o = worleyOutputFunctions[worleyOutput];
+            return this.worleyNoise(x, y, worleyDepth, MANHATTAN_DISTANCE, outputFunc);
+        }
+    },
 
-            return this.worleyNoise({x:x, y:y, z:worleyDepth}, f, o);
+    [WORLEY_CHEBYSHEV]: {
+
+        name: WORLEY_CHEBYSHEV,
+
+        init: function () {
+
+            this.worleySeed = _floor(this.rndEngine.random() * 1000000);
+        },
+
+        getNoiseValue: function (x, y) {
+
+            const {worleyDepth, worleyOutputFunctions, worleyOutput} = this,
+                outputFunc = worleyOutputFunctions[worleyOutput];
+
+            return this.worleyNoise(x, y, worleyDepth, CHEBYSHEV_DISTANCE, outputFunc);
         }
     },
 };
@@ -803,17 +859,28 @@ P.noiseEngines = {
 // + `rndEngine` is a seedable pseudo-random number generator
 P.generatePermutationTable = function () {
 
-    const {perm, permMod8, rndEngine, size} = this;
+    const {perm, permMod8, rndEngine, size, seed} = this,
+        identifier = `noise-permutation-${seed}-${size}`;
+
+    const cached = getWorkstoreItem(identifier);
+
+    if (cached) {
+
+        perm.length = 0;
+        permMod8.length = 0;
+
+        perm.push(...cached.perm);
+        permMod8.push(...cached.permMod8);
+
+        return;
+    }
 
     perm.length = 0;
     permMod8.length = 0;
 
     let i, j, k;
 
-    for(i = 0; i < size; i++) {
-
-        perm[i] = i;
-    }
+    for (i = 0; i < size; i++) perm[i] = i;
 
     while (--i) {
 
@@ -823,19 +890,57 @@ P.generatePermutationTable = function () {
         perm[j] = k;
     }
 
-    for(i = 0; i < size; i++) {
+    for (i = 0; i < size; i++) {
 
         perm[i + size] = perm[i];
         permMod8[i] = permMod8[i + size] = perm[i] % 8;
     }
+
+    setWorkstoreItem(identifier, {
+        perm: [...perm],
+        permMod8: [...permMod8],
+    });
 };
 
 // `octaveFunctions` - a {key:functions} object holding functions used to modify octave loop results
-// + calling signature: `octaveFunction(octave, scaledX, scaledY, o + 1)`
+// + calling signature: `octaveFunction(octave, scaledX, scaledY, octaveLevel)`
 P.octaveFunctions = {
 
     none: λfirstArg,
-    absolute: function (octave) { return _abs((octave * 2) - 1) },
+
+    absolute: function (octave) {
+        return _abs((octave * 2) - 1);
+    },
+
+    ridged: function (octave) {
+        octave = 1 - _abs((octave * 2) - 1);
+        return octave * octave;
+    },
+
+    billow: function (octave) {
+        octave = _abs((octave * 2) - 1);
+        return 1 - (octave * octave);
+    },
+
+    signed: function (octave) {
+        return ((octave * 2) - 1) * _abs((octave * 2) - 1);
+    },
+
+    square: function (octave) {
+        return octave * octave;
+    },
+
+    sqrt: function (octave) {
+        return _sqrt(octave);
+    },
+
+    'terrace-light': function (octave) {
+        return _floor(octave * 4) / 4;
+    },
+
+    'terrace-heavy': function (octave) {
+        return _floor(octave * 8) / 8;
+    },
 };
 
 // `sumFunctions` - a {key:functions} object holding functions used to modify noise values after their calculation has completed (post-processing)
@@ -844,21 +949,96 @@ P.sumFunctions = {
 
     none: λfirstArg,
 
+    invert: function (v) {
+        return 1 - v;
+    },
+
+    threshold: function (v) {
+        return (v >= 0.5) ? 1 : 0;
+    },
+
+    posterize: function (v) {
+
+        const a = _max(2, _floor(this.sumAmplitude));
+        return _floor(v * a) / (a - 1);
+    },
+
+    terrace: function (v) {
+
+        const a = _max(2, _floor(this.sumAmplitude)),
+            g = _floor(v * a) / a,
+            r = (v * a) - _floor(v * a);
+
+        return g + ((r * r) / a);
+    },
+
+    contrast: function (v) {
+
+        const a = this.sumAmplitude;
+
+        v = (v - 0.5) * a + 0.5;
+
+        if (v > 1) v = 1;
+        else if (v < 0) v = 0;
+
+        return v;
+    },
+
+    bias: function (v) {
+
+        const a = this.sumAmplitude;
+
+        if (a <= 0) return v;
+
+        v = v / ((((1 / a) - 2) * (1 - v)) + 1);
+
+        if (v > 1) v = 1;
+        else if (v < 0) v = 0;
+
+        return v;
+    },
+
+    gain: function (v) {
+
+        const a = this.sumAmplitude;
+
+        if (a <= 0) return v;
+
+        if (v < 0.5) v = (v / ((((1 / a) - 2) * (1 - (2 * v))) + 1)) / 2;
+        else v = 1 - (((1 - v) / ((((1 / a) - 2) * (1 - (2 * (1 - v)))) + 1)) / 2);
+
+        if (v > 1) v = 1;
+        else if (v < 0) v = 0;
+
+        return v;
+    },
+
     // These functions modify the final output using a sine frequency calculation based on the pixel position within the canvas
-    'sine-x': function (v, sx) { return 0.5 + (_sin((sx * this.sineFrequencyCoeff) + v) / 2) },
-    'sine-y': function (v, sx, sy) { return 0.5 + (_sin((sy * this.sineFrequencyCoeff) + v) / 2) },
-    sine: function (v, sx, sy) { return 0.5 + (_sin((sx * this.sineFrequencyCoeff) + v) / 4) + (_sin((sy * this.sineFrequencyCoeff) + v) / 4) },
+    'sine-x': function (v, sx) {
+        return 0.5 + (_sin((sx * this.sineFrequencyCoeff) + v) / 2);
+    },
+
+    'sine-y': function (v, sx, sy) {
+        return 0.5 + (_sin((sy * this.sineFrequencyCoeff) + v) / 2);
+    },
+
+    sine: function (v, sx, sy) {
+        return 0.5 + (_sin((sx * this.sineFrequencyCoeff) + v) / 4) + (_sin((sy * this.sineFrequencyCoeff) + v) / 4);
+    },
 
     // This function creates repeating bands, the frequency of which depends on the sumAmplitude attribute
     modular: function(v) {
+
         const g = v * this.sumAmplitude;
         return g - _floor(g);
     },
 
     // This function adds random interference to the final output, the strength of which depends on the sumAmplitude attribute (lower values create a stronger effect)
     random: function(v) {
+
         const a = this.sumAmplitude;
         const r = (_random() / a) - (0.5 / a);
+
         let g = v + r;
 
         if (g > 1) g = 1;
@@ -880,27 +1060,6 @@ P.wXorshift = function (value) {
 P.wHash = function (i, j, k) {
 
     return (((((2166136261 ^ i) * 16777619) ^ j) * 16777619) ^ k) * 16777619 & 0xffffffff;
-};
-
-P.worleyDistanceFunctions = {
-
-    [EUCLIDEAN_DISTANCE]: function (p1, p2) {
-
-        const d = function (p1, p2) {
-            return [p1.x - p2.x, p1.y - p2.y, p1.z - p2.z];
-        };
-
-        return d(p1, p2).reduce((sum, x) => sum + (x * x), 0);
-    },
-
-    [MANHATTAN_DISTANCE]: function (p1, p2) {
-
-        const d = function (p1, p2) {
-            return [p1.x - p2.x, p1.y - p2.y, p1.z - p2.z];
-        };
-
-        return d(p1, p2).reduce((sum, x) => sum + _abs(x), 0);
-    },
 };
 
 P.wProbLookup = function (value) {
@@ -1034,22 +1193,20 @@ P.worleyOutputFunctions = {
     },
 }
 
-P.worleyNoise = function (input, distanceFunc, outputFunc) {
+P.worleyNoise = function (inputX, inputY, inputZ, distanceType, outputFunc) {
 
     let lastRandom,
         numberFeaturePoints,
-        featurePoint = { x: 0, y: 0, z: 0 };
-
-    const randomDiff = { x: 0, y: 0, z: 0 };
-
-    let cubeX, cubeY, cubeZ;
+        cubeX, cubeY, cubeZ,
+        randomX, randomY, randomZ,
+        featureX, featureY, featureZ,
+        distance;
 
     const distanceArray = [9999999, 9999999, 9999999];
 
-    let {x:inputX, y:inputY, z:inputZ} = input;
-    inputX = _floor(inputX);
-    inputY = _floor(inputY);
-    inputZ = _floor(inputZ);
+    const baseX = _floor(inputX),
+        baseY = _floor(inputY),
+        baseZ = _floor(inputZ);
 
     for (let i = -1; i < 2; ++i) {
 
@@ -1057,15 +1214,15 @@ P.worleyNoise = function (input, distanceFunc, outputFunc) {
 
             for (let k = -1; k < 2; ++k) {
 
-                cubeX = inputX + i;
-                cubeY = inputY + j;
-                cubeZ = inputZ + k;
+                cubeX = baseX + i;
+                cubeY = baseY + j;
+                cubeZ = baseZ + k;
 
                 lastRandom = this.wXorshift(
                     this.wHash(
                         (cubeX + this.worleySeed) & 0xffffffff,
-                        (cubeY) & 0xffffffff,
-                        (cubeZ) & 0xffffffff
+                        cubeY & 0xffffffff,
+                        cubeZ & 0xffffffff
                     )
                 );
 
@@ -1074,29 +1231,49 @@ P.worleyNoise = function (input, distanceFunc, outputFunc) {
                 for (let l = 0; l < numberFeaturePoints; ++l) {
 
                     lastRandom = this.wXorshift(lastRandom);
-                    randomDiff.X = lastRandom / 0x100000000;
+                    randomX = lastRandom / 0x100000000;
 
                     lastRandom = this.wXorshift(lastRandom);
-                    randomDiff.Y = lastRandom / 0x100000000;
+                    randomY = lastRandom / 0x100000000;
 
                     lastRandom = this.wXorshift(lastRandom);
-                    randomDiff.Z = lastRandom / 0x100000000;
+                    randomZ = lastRandom / 0x100000000;
 
-                    featurePoint = {
-                        x: randomDiff.X + cubeX,
-                        y: randomDiff.Y + cubeY,
-                        z: randomDiff.Z + cubeZ
-                    };
+                    featureX = randomX + cubeX;
+                    featureY = randomY + cubeY;
+                    featureZ = randomZ + cubeZ;
 
-                    this.wInsert(distanceArray, distanceFunc(input, featurePoint));
+                    if (distanceType === EUCLIDEAN_DISTANCE) {
+
+                        const dx = inputX - featureX,
+                            dy = inputY - featureY,
+                            dz = inputZ - featureZ;
+
+                        distance = (dx * dx) + (dy * dy) + (dz * dz);
+                    }
+                    else if (distanceType === CHEBYSHEV_DISTANCE) {
+
+                        distance = _max(
+                            _abs(inputX - featureX),
+                            _max(_abs(inputY - featureY), _abs(inputZ - featureZ))
+                        );
+                    }
+                    else {
+
+                        distance = _abs(inputX - featureX) + _abs(inputY - featureY) + _abs(inputZ - featureZ);
+                    }
+
+                    this.wInsert(distanceArray, distance);
                 }
             }
         }
     }
-    const preFinal = distanceArray.map(x => x < 0 ? 0 : x > 1 ? 1 : x );
-    const final = outputFunc(preFinal);
 
-    return final;
+    distanceArray[0] = distanceArray[0] < 0 ? 0 : distanceArray[0] > 1 ? 1 : distanceArray[0];
+    distanceArray[1] = distanceArray[1] < 0 ? 0 : distanceArray[1] > 1 ? 1 : distanceArray[1];
+    distanceArray[2] = distanceArray[2] < 0 ? 0 : distanceArray[2] > 1 ? 1 : distanceArray[2];
+
+    return outputFunc(distanceArray);
 };
 
 

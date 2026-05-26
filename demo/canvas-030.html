@@ -11,11 +11,16 @@
   <link href="css/tests.css" rel="stylesheet" />
   <style>
     .controls {
-      grid-template-columns: 1fr 3fr 1fr 3fr;
+      grid-template-columns: 1fr 2fr 1fr 2fr;
     }
     canvas {
       margin: 1em auto;
       box-shadow: 0px 0px 0px 1px black;
+
+      & .assets {
+        height: 0;
+        overflow: hidden;
+      }
     }
   </style>
 </head>
@@ -38,9 +43,12 @@
     height="500"
     data-scrawl-canvas
     data-base-background-color="aliceblue"
-  ></canvas>
-
-  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
+  >
+    <div class="assets" aria-hidden="true">
+      <img src="img/brick.png" id="brick" class="mypatterns" />
+      <img src="img/leaves.png" id="leaves" class="mypatterns" />
+    </div>
+  </canvas>
 
   <div class="controls">
 
@@ -111,8 +119,57 @@
     <div class="yellow label">Scale</div>
     <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.2" max="1.5" step="0.05" /></div>
 
+    <div class="orange label">Method</div>
+    <div class="orange">
+      <select class="controlItem" id="method">
+        <option value="fill">fill</option>
+        <option value="draw">draw</option>
+        <option value="fillAndDraw">fillAndDraw</option>
+        <option value="drawAndFill">drawAndFill</option>
+        <option value="fillThenDraw">fillThenDraw</option>
+        <option value="drawThenFill">drawThenFill</option>
+      </select>
+    </div>
+    <div class="orange">&nbsp;</div>
+    <div class="orange">&nbsp;</div>
+
+    <div class="orange label">Fill style</div>
+    <div class="orange"> 
+      <select class="controlItem" id="fillStyle">
+        <option value="rgb(0 0 0 / 0.3)">color</option>
+        <option value="mycanvas-fill-gradient">gradient</option>
+        <option value="mycanvas-fill-pattern">pattern</option>
+      </select>
+    </div>
+
+    <div class="orange label">Fill lock</div>
+    <div class="orange">
+      <select class="controlItem" id="lockFillStyleToEntity">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="orange label">Draw style</div>
+    <div class="orange">
+      <select class="controlItem" id="strokeStyle">
+        <option value="orange">color</option>
+        <option value="mycanvas-stroke-gradient">gradient</option>
+        <option value="mycanvas-stroke-pattern">pattern</option>
+      </select>
+    </div>
+
+    <div class="orange label">Draw lock</div>
+    <div class="orange">
+      <select class="controlItem" id="lockStrokeStyleToEntity">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
 
   </div>
+
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

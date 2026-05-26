@@ -50,33 +50,33 @@
 // + Imports the element's text node text, and sets the text color to `transparent`
 export default function (scrawl, el) {
 
-    // Boilerplate - namespacing
+// Boilerplate - namespacing
     const namespace = el.id;
     const name = (val) => `${namespace}-${val}`;
 
 
-    // Only progress if the supplied element has an `id` attribute
+// Only progress if the supplied element has an `id` attribute
     if (namespace) {
 
 
-        // Create the snippet for this DOM element
+// Create the snippet for this DOM element
         const snippet = scrawl.makeSnippet({
             domElement: el,
         });
 
 
-        // Only proceed if the snippet is successfully generated
+// Only proceed if the snippet is successfully generated
         if (snippet) {
 
 
-            // Unpack the snippet into the parts we'll be using
+// Unpack the snippet into the parts we'll be using
             const canvas = snippet.canvas,
                 animation = snippet.animation,
                 demolishAction = snippet.demolish,
                 compStyles = snippet.element.elementComputedStyles;
 
 
-            // Boilerplate - text processing
+// Boilerplate - text processing
             const addTextNode = () => {
                 const shy = document.createTextNode('!');
                 el.appendChild(shy);
@@ -93,7 +93,7 @@ export default function (scrawl, el) {
             }
 
 
-            // Boilerplate - demolish/kill functionality
+// Boilerplate - demolish/kill functionality
             const additionalDemolishActions = [];
 
             snippet.demolish = () => {
@@ -103,11 +103,11 @@ export default function (scrawl, el) {
             };
 
 
-            // This makes the canvas element's base cell the default group for everything we create
+// This makes the canvas element's base cell the default group for everything we create
             canvas.setAsCurrentCanvas();
 
 
-            // Boilerplate - fix for text alignment
+// Boilerplate - fix for text alignment
             const getJustifyLine = (val) => {
 
                 if (val === 'justify') return 'space-between';
@@ -117,12 +117,12 @@ export default function (scrawl, el) {
             };
 
 
-            // Boilerplate - fix for lineSpacing/lineHeight
+// Boilerplate - fix for lineSpacing/lineHeight
             const getLineSpacing = () => parseFloat(compStyles.lineHeight) / parseFloat(compStyles.fontSize);
 
 
-            // Initialize and collect developer-supplied data
-            // + We also set the defaults here for missing colors/values
+// Initialize and collect developer-supplied data
+// + We also set the defaults here for missing colors/values
             const userData = {
 
                 direction: compStyles.direction || 'ltr',
@@ -149,70 +149,76 @@ export default function (scrawl, el) {
             };
 
 
-            // Build the animated highlight gradient effect
+// Build the animated highlight gradient effect
             const myGradient = scrawl.makeGradient({
                 name: name('highlight-gradient'),
+
+                startY: 0,
+                endY: '25%',
+
+                spread: 'reflect',
+
                 colors: [
                     [0, userData.mainColor],
-                    [199, userData.highlightColor],
-                    [399, userData.mainColor],
-                    [599, userData.highlightColor],
-                    [799, userData.mainColor],
-                    [999, userData.mainColor],
+                    [999, userData.highlightColor],
                 ],
-                endY: '100%',
-                delta: {
-                    paletteStart: -3,
-                    paletteEnd: -3,
-                },
-                cyclePalette: true,
+
                 easing: userData.gradientEasing,
-                precision: 4,
+                precision: 5,
+
+                cyclePalette: true,
                 animateByDelta: true,
+
+                delta: {
+                    paletteStart: 10,
+                    paletteEnd: 10,
+                },
             });
 
-            const cell = canvas.buildCell({
-                name: name('highlight-gradient-cell'),
-                width: 16,
-                height: parseFloat(compStyles.lineHeight),
-                cleared: false,
-                compiled: false,
+            canvas.buildCell({
+                name: name('gradient-pattern'),
+                dimensions: [2, 100],
                 shown: false,
+                patternStretchX: userData.gradientStretchX,
+                patternStretchY: userData.gradientStretchY,
+                patternSkewX: userData.gradientSkewX,
+                patternSkewY: userData.gradientSkewY,
             });
 
             scrawl.makeBlock({
-                name: name('highlight-gradient-block'),
-                group: name('highlight-gradient-cell'),
+                name: name('gradient-pattern-block'),
+                group: name('gradient-pattern'),
                 dimensions: ['100%', '100%'],
                 fillStyle: name('highlight-gradient'),
-            });
-
-            scrawl.makePattern({
-                name: name('highlight-gradient-pattern'),
-                asset: name('highlight-gradient-cell'),
-                stretchX: parseFloat(userData.gradientStretchX),
-                stretchY: parseFloat(userData.gradientStretchY),
-                skewX: parseFloat(userData.gradientSkewX),
-                skewY: parseFloat(userData.gradientSkewY),
             });
 
             const template = scrawl.makeBlock({
                 name: name('template'),
                 dimensions: ['100%', '100%'],
+                order: 4,
                 visibility: false,
+                globalCompositeOperation: 'destination-over',
             });
 
-            const label = scrawl.makeEnhancedLabel({
+            const effect = scrawl.makeBlock({
+                name: name('highlight-gradient-effect'),
+                dimensions: ['100%', '100%'],
+                fillStyle: name('gradient-pattern'),
+                order: 1,
+                visibility: false,
+                globalCompositeOperation: 'source-over',
+            });
+
+            const textFill = scrawl.makeEnhancedLabel({
                 name: name('content'),
                 layoutTemplate: name('template'),
-
+                order: 2,
                 text: processText(el.innerHTML),
                 fontString: compStyles.font,
-
+                method: 'fill',
+                fillStyle: 'black',
                 textHandleY: 'alphabetic',
                 visibility: false,
-                cacheOutput: false,
-
                 direction: userData.direction,
                 fontStretch: userData.fontStretch,
                 letterSpacing: userData.letterSpacing,
@@ -220,12 +226,11 @@ export default function (scrawl, el) {
                 fontVariantCaps: userData.fontVariantCaps,
                 lineSpacing: getLineSpacing(),
                 justifyLine: userData.justifyLine,
-
-                fillStyle: name('highlight-gradient-pattern'),
+                globalCompositeOperation: 'destination-in',
             });
 
 
-            // Boilerplate - font adjustments
+// Boilerplate - font adjustments
             let meta;
 
             const getLineAdjustment = () => {
@@ -256,12 +261,9 @@ export default function (scrawl, el) {
                         visibility: true,
                     });
 
-                    cell.set({
-                        cleared: true,
-                        compiled: true,
-                    });
+                    textFill.set({ visibility: true });
 
-                    label.set({ visibility: true });
+                    effect.set({ visibility: true });
 
                     animation.updateHook('commence');
                 }
@@ -270,7 +272,7 @@ export default function (scrawl, el) {
             animation.updateHook('commence', updateOnFontLoad);
 
 
-            // Boilerplate user interaction - resizing the browser window
+// Boilerplate user interaction - resizing the browser window
             let resizeFlag = true,
                 lastResize = Date.now();
 
@@ -282,10 +284,10 @@ export default function (scrawl, el) {
 
                 const now = Date.now();
 
-                // Canvases don't animate when outside of the browser viewport (to save CPU, battery, etc)
-                // + This check forces those canvases to update once to adapt to the new viewport size
-                // + Doing this should prevent unexpected horizontal scrollbars appearing on the page
-                // + Should also minimize flashes of badly sized content when canvas scrolls into view
+// Canvases don't animate when outside of the browser viewport (to save CPU, battery, etc)
+// + This check forces those canvases to update once to adapt to the new viewport size
+// + Doing this should prevent unexpected horizontal scrollbars appearing on the page
+// + Should also minimize flashes of badly sized content when canvas scrolls into view
                 if (!animation.isRunning() && now > lastResize + resizeChoke) {
 
                     resizeAction();
@@ -300,9 +302,9 @@ export default function (scrawl, el) {
 
                     resizeFlag = false;
 
-                    cell.set({ height: parseFloat(compStyles.lineHeight) });
-
-                    label.set({ fontString: compStyles.font });
+                    textFill.set({
+                        fontString: compStyles.font,
+                    });
 
                     if (meta) {
 
@@ -313,7 +315,7 @@ export default function (scrawl, el) {
                             handleY: displacement,
                         });
 
-                        label.set({
+                        textFill.set({
                             letterSpacing: compStyles.letterSpacing,
                             wordSpacing: compStyles.wordSpacing,
                         });
@@ -328,11 +330,11 @@ export default function (scrawl, el) {
             );
 
 
-            // Boilerplate user interaction - editing the text
+// Boilerplate user interaction - editing the text
             if (el.getAttribute('contenteditable')) {
 
                 const updateText = () => {
-                    label.set({ text: processText(el.innerHTML) });
+                    textFill.set({ text: processText(el.innerHTML) });
                 }
                 const focusText = () => {
                     el.style.color = 'rgb(0 0 0 / 0.4)';
@@ -349,7 +351,7 @@ export default function (scrawl, el) {
             }
 
 
-            // Boilerplate - animation control
+// Boilerplate - animation control
             if ('static' === compStyles.position) el.style.position = 'relative';
 
             const control = document.createElement('button');
@@ -380,7 +382,7 @@ export default function (scrawl, el) {
             );
 
 
-            // Accessibility
+// Accessibility
             const reduceMotionAction = () => {
 
                 if (isAnimated) {
@@ -410,11 +412,7 @@ export default function (scrawl, el) {
                 myGradient.set({
                     colors: [
                         [0, userData.mainColor],
-                        [199, userData.highlightColor],
-                        [399, userData.mainColor],
-                        [599, userData.highlightColor],
-                        [799, userData.mainColor],
-                        [999, userData.mainColor],
+                        [999, userData.highlightColor],
                     ],
                 });
             };
@@ -424,11 +422,7 @@ export default function (scrawl, el) {
                 myGradient.set({
                     colors: [
                         [0, userData.darkMainColor],
-                        [199, userData.darkHighlightColor],
-                        [399, userData.darkMainColor],
-                        [599, userData.darkHighlightColor],
-                        [799, userData.darkMainColor],
-                        [999, userData.darkMainColor],
+                        [999, userData.darkHighlightColor],
                     ],
                 });
             };
@@ -436,15 +430,22 @@ export default function (scrawl, el) {
             const moreContrastAction = () => {
 
                 const prefersDark = canvas.here.prefersDarkColorScheme;
+                const color = prefersDark ? userData.darkContrastColor : userData.contrastColor;
 
-                const color = (prefersDark) ? userData.darkContrastColor : userData.contrastColor;
+                template.set({ visibility: false });
+                textFill.set({ visibility: false });
+                effect.set({ visibility: false });
 
-                label.set({ fillStyle: color });
+                el.style.color = color;
             };
 
             const otherContrastAction = () => {
 
-                label.set({ fillStyle: name('highlight-gradient-pattern') });
+                template.set({ visibility: true });
+                textFill.set({ visibility: true });
+                effect.set({ visibility: true });
+
+                el.style.color = 'transparent';
             };
 
             canvas.set({
@@ -457,11 +458,11 @@ export default function (scrawl, el) {
             });
 
 
-            // Render once, to get everything in place
+// Render once, to get everything in place
             animation.updateOnce();
 
-            // Return the snippet, so coders can access the snippet's parts
-            // + In case they need to tweak the output to meet the web page's specific requirements
+// Return the snippet, so coders can access the snippet's parts
+// + In case they need to tweak the output to meet the web page's specific requirements
             return snippet;
         }
     }

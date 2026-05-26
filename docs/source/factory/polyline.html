@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -1216,6 +1221,8 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">false</span>;
 
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setGradientCacheFlags</span>();
+
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useParticlesAsPins</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPins</span> = <span class="hljs-literal">true</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPins</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyLock</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">true</span>;
@@ -1229,12 +1236,24 @@ S.<span class="hljs-property">mapToPins</span> = <span class="hljs-keyword">func
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isBeingDragged</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">MOUSE</span>) || <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">PARTICLE</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
 
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+    }
+
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanScale</span>();
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStart</span>();
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanOffset</span>();
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanRotation</span>();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+    }
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStampPositions</span>();
 

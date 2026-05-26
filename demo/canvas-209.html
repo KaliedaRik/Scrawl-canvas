@@ -12,24 +12,28 @@
 
   <style>
     @font-face {
-      font-family: "Roboto Serif";
-      src: url("fonts/RobotoSerif-Bold.ttf") format("opentype");
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-Regular.ttf") format("opentype");
+    }
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-Bold.ttf") format("opentype");
       font-weight: bold;
     }
-
     @font-face {
-      font-family: "Noto Thai Sans";
-      src: url("fonts/NotoSansThai-Regular.ttf") format("opentype");
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-Italic.ttf") format("opentype");
+      font-style: italic;
+    }
+    @font-face {
+      font-family: "Roboto Sans";
+      src: url("fonts/Roboto-BoldItalic.ttf") format("opentype");
+      font-weight: bold;
+      font-style: italic;
     }
 
-    @font-face {
-      font-family: "Noto Chinese Simple Sans";
-      src: url("fonts/NotoSansSC-Regular.ttf") format("opentype");
-    }
-
-    @font-face {
-      font-family: "Noto Arabic Sans";
-      src: url("fonts/NotoSansArabic-Regular.ttf") format("opentype");
+    .controls {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
     }
 
     #preload-fonts {
@@ -37,66 +41,129 @@
       overflow: hidden;
     }
 
-    .controls {
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-    }
-
     canvas {
       margin: 1em auto;
       box-shadow: 0px 0px 0px 1px black;
     }
 
-    /* Styling the EnhancedLabel TextUnits */
-    .welcome-text {
-      --SC-local-offset-y: 4;
-    }
-    .country-name {
-      --SC-include-underline: true;
-      --SC-underline-width: 12;
-      --SC-underline-gap: 4;
-      --SC-local-offset-y: -8;
-    }
+    .mycanvas-my-label {
 
-    .mycanvas-Britain-label {
-      & .welcome-text {
-        font-size: 80%;
+      & b {
+        font-weight: bold;
       }
-      & .country-name {
-        --SC-underline-offset: 0.74;
-        font-size: 175%;
-        letter-spacing: 3px;
-      }
-    }
 
-    .mycanvas-Thailand-label {
-      & .welcome-text {
-        font-size: 90%;
-      }
-      & .country-name {
-        --SC-underline-offset: 0.67;
-        font-size: 135%;
-        letter-spacing: 1px;
-      }
-    }
+      & strong {
+        --SC-include-highlight: true;
+        --SC-highlight-style: darkblue;
+        --SC-fill-style: lightblue;
 
-    .mycanvas-China-label {
-      & .welcome-text {
-        font-size: 90%;
+        font-weight: bold;
+        color: var(--SC-fill-style);
+        background-color: var(--SC-highlight-style);
       }
-      & .country-name {
-        --SC-underline-offset: 0.8;
-        font-size: 150%;
-        letter-spacing: 3px;
-      }
-    }
 
-    .mycanvas-Egypt-label {
-      & .welcome-text {
-        font-size: 95%;
+      & i {
+        font-style: italic;
       }
-      & .country-name {
-        --SC-underline-offset: 0.65;
-        font-size: 280%;
+
+      & em {
+        --SC-fill-style: blue;
+
+        font-style: italic;
+        color: var(--SC-fill-style);
+      }
+      
+      & u {
+        --SC-include-underline: true;
+        --SC-underline-offset: 0.89;
+        --SC-underline-style: black;
+
+        text-decoration: underline;
+      }
+      
+      & s {
+        --SC-include-overline: true;
+        --SC-overline-offset: 0.4;
+        --SC-overline-style: red;
+        --SC-overline-width: 5px;
+
+        text-decoration: line-through var(--SC-overline-style) var(--SC-overline-width);
+      }
+
+      & .bold {
+        font-weight: bold;
+      }
+      
+      & .italic {
+        font-style: italic;
+      }
+      
+      & .underline {
+        --SC-include-underline: true;
+        --SC-underline-offset: 0.89;
+        --SC-underline-style: black;
+
+        text-decoration: underline;
+        font-variant: small-caps;
+      }
+
+      & .strike {
+        --SC-fill-style: gray;
+
+        --SC-include-overline: true;
+        --SC-overline-offset: 0.5;
+        --SC-overline-style: gray;
+        --SC-overline-width: 2px;
+
+        color: var(--SC-fill-style);
+        text-decoration-line: line-through;
+        text-decoration-color: var(--SC-overline-style);
+        text-decoration-thickness: var(--SC-overline-width);
+      }
+
+      & .red {
+        --SC-fill-style: red;
+
+        color: var(--SC-fill-style);
+      }
+
+      & .green-highlight {
+        --SC-include-highlight: true;
+        --SC-highlight-style: darkgreen;
+        --SC-fill-style: honeydew;
+
+        color: var(--SC-fill-style);
+        background-color: var(--SC-highlight-style);
+      }
+
+      & .letter-spaced {
+        letter-spacing: 10px;
+      }
+
+      & .word-spaced {
+        word-spacing: 0.8rem;
+      }
+
+      & .make-bigger {
+        font-size: 120%;
+      }
+
+      & .make-monospace {
+        font-family: monospace;
+      }
+
+      & .stamp-outlined {
+        --SC-fill-style: yellow;
+        --SC-stroke-width: 3;
+        --SC-method: drawAndFill;
+
+        color: var(--SC-fill-style);
+
+        text-shadow:
+          -1px -1px 0 black,  
+          1px -1px 0 black,
+          -1px 1px 0 black,
+          1px 1px 0 black;
       }
     }
   </style>
@@ -108,117 +175,127 @@
     <a href="canvas-210.html">Next &rarr;</a>
   </div>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 209</h1>
-  <h2>EnhancedLabel - clone entity, drag-drop; shadows, gradients and patterns</h2>
-  <h3>Drag and drop the entitys around the canvas</h3>
+  <h2>EnhancedLabel entity - keyboard navigation; hit tests</h2>
 
-  <div class="controls">
-
-    <div class="blue label">Composition</div> 
-    <div class="blue">
-      <select class="controlItem" id="globalCompositeOperation">
-        <option value="source-over">source-over</option>
-        <option value="source-in">source-in</option>
-        <option value="source-out">source-out</option>
-        <option value="source-atop">source-atop</option>
-        <option value="destination-over">destination-over</option>
-        <option value="destination-in">destination-in</option>
-        <option value="destination-out">destination-out</option>
-        <option value="destination-atop">destination-atop</option>
-        <option value="copy">copy</option>
-        <option value="xor">xor</option>
-        <option value="difference">difference</option>
-        <option value="exclusion">exclusion</option>
-        <option value="multiply">multiply</option>
-        <option value="screen">screen</option>
-        <option value="overlay">overlay</option>
-        <option value="lighter">lighter</option>
-        <option value="lighten">lighten</option>
-        <option value="darken">darken</option>
-        <option value="hard-light">hard-light</option>
-        <option value="soft-light">soft-light</option>
-        <option value="color-dodge">color-dodge</option>
-        <option value="color-burn">color-burn</option>
-        <option value="hue">hue</option>
-        <option value="saturation">saturation</option>
-        <option value="color">color</option>
-        <option value="luminosity">luminosity</option>
-      </select>
-    </div>
-
-    <div class="blue label">Alpha</div>
-    <div class="blue">
-      <input class="controlItem" id="globalAlpha" type="range" value="1" min="0" max="1" step="0.01" />
-    </div>
-
-    <div class="green label">Text style</div>
-    <div class="green">
-      <select class="controlItem" id="text-fillStyle">
-        <option value="rgb(220 170 140)">Color</option>
-        <option value="mycanvas-linear-gradient">Gradient</option>
-        <option value="mycanvas-brick-pattern">Pattern</option>
-      </select>
-    </div>
-
-    <div class="green label">Lock styles to entity</div>
-    <div class="green">
-      <select class="controlItem" id="lockFillStyleToEntity">
-        <option value="0">false</option>
-        <option value="1">true</option>
-      </select>
-    </div>
-
-    <div class="green label">Underline style</div>
-    <div class="green">
-      <select class="controlItem" id="underline-fillStyle">
-        <option value="">Match text</option>
-        <option value="rgb(220 220 220)">Color</option>
-        <option value="mycanvas-linear-gradient">Gradient</option>
-        <option value="mycanvas-brick-pattern">Pattern</option>
-      </select>
-    </div>
-
-    <div class="pink label">Rotate buttons</div>
-    <div class="pink">
-      <select class="controlItem" id="noDeltaUpdates">
-        <option value="1">false</option>
-        <option value="0">true</option>
-      </select>
-    </div>
-
-  </div>
+  <p>For keyboard navigation:</p>
+  <ul>
+    <li>Tab to the canvas to focus it.</li>
+    <li>Arrows will move the cursor backwards/forwards.</li>
+    <li>Enter will start a selection.</li>
+    <li>Backspace will clear any selection.</li>
+    <li>[CTRL + c] will print any selected text to the console.</li>
+  </ul> 
 
   <canvas 
     id="mycanvas" 
     width="600" 
-    height="400"
+    height="600"
     data-scrawl-canvas
   ></canvas>
 
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 
+  <div class="controls">
+
+    <div class="lavender label">Font string</div>
+    <div class="lavender">
+      <select class="controlItem" id="font">
+        <option value="Roboto Sans">Roboto Sans</option>
+        <option value="noto-hebrew-serif">Noto Hebrew Serif</option>
+        <option value="noto-japanese-sans">Noto Japanese Sans</option>
+      </select>
+    </div>
+    
+    <div class="pink label">Text unit flow</div>
+    <div class="pink">
+      <select class="controlItem" id="textUnitFlow">
+        <option value="row">row</option>
+        <option value="row-reverse">row-reverse</option>
+        <option value="column">column</option>
+        <option value="column-reverse">column-reverse</option>
+      </select>
+    </div>
+
+    <div class="green label">Align text units to path</div>
+    <div class="green">
+      <select class="controlItem" id="alignTextUnitsToPath">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+
+    <div class="green label">Alignment</div>
+    <div class="green">
+      <input class="controlItem" id="alignment" type="range" value="0" min="-180" max="180" step="1" />
+    </div>
+
+    <div class="blue label">Letter spacing</div>
+    <div class="blue">
+      <input class="controlItem" id="letterSpacing" type="range" value="0" min="-5" max="20" step="0.1" />
+    </div>
+
+    <div class="blue label">Word spacing</div>
+    <div class="blue">
+      <input class="controlItem" id="wordSpacing" type="range" value="0" min="-5" max="20" step="0.1" />
+    </div>
+
+    <div class="blue label">Break text on spaces</div>
+    <div class="blue">
+      <select class="controlItem" id="breakTextOnSpaces">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+    
+    <div class="orange label">Animation</div>
+    <div class="orange">
+      <select class="controlItem" id="animation">
+        <option value="">off</option>
+        <option value="on">on</option>
+      </select>
+    </div>
+    
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.5" max="1.5" step="0.01" /></div>
+
+    <div class="yellow label">Flip reverse</div>
+    <div class="yellow">
+      <select class="controlItem" id="flipReverse">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Flip upend</div>
+    <div class="yellow">
+      <select class="controlItem" id="flipUpend">
+        <option value="false">false</option>
+        <option value="true">true</option>
+      </select>
+    </div>
+
+  </div>
+
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Confirm that all four buttons are generated (cloning)</li>
-      <li>Check that each button can be dragged/dropped, and that all parts of the button move as a single unit</li>
-      <li>Check that shadows are applied to both the text and the underline, and the shadow appears slightly down/right of the text/underline as the buttons rotate</li>
-      <li>Confirm that the text/underline respects the globalAlpha attribute setting</li>
+      <li>Use the keyboard to navigate to the canvas, and then move the text cursor (with a black highlight) around the text</li>
+      <li>Confirm that the text can be selected using just the keyboard; CTRL + C should print out any selected text to the browser's console</li>
+      <li>Check that text can also be selected using the mouse in the normal way</li>
     </ul>
 
-    <p><b>Note that:</b> some of the source- and destination-based globalCompositeOperation attribute values will destroy the canvas display. EnhancedLabel entitys work by creating internal cells for applying text and text decorations; those internal cells have dimensions matching the canvas base cell's dimensions, thus any GCO applied to the EnhancedLabel will have a canvas-wide effect.</p>
+    <p><b>Known issue:</b> copying the Hebrew font text is not correct - the punctuation appears to be wrongly positioned. Needs fixing - either in the Demo copy functionality or in the SC code base (not yet determined where the error happens).</p>
 
-    <p><b>Touch test:</b> should work as expected.</p>
-
-    <p><b>Known issue:</b> when using a gradient or pattern, while the gradient/pattern will rotate with the TextUnits it has been set on, it will not rotate with any overline, underline or highlight applied to the text.</p>
+    <p><b>Touch test:</b> not required.</p>
 
     <p><a href="../docs/demo/canvas-209.html">Annotated code</a></p>
   </div>
 
   <div id="preload-fonts" aria-hidden="true">
-    <div style='font-family: "Roboto Serif"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-    <div style='font-family: "Noto Arabic Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-    <div style='font-family: "Noto Chinese Simple Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
-    <div style='font-family: "Noto Thai Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
+    <div style='font-family: "Roboto Sans"'><b><i>Test</i></b> <b>Test</b> <i>Test</i> Test</div>
   </div>
 
   <script src="canvas-209.js" type="module"></script>

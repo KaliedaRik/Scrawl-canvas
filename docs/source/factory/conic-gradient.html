@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -580,7 +585,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="conicgradient-factory">ConicGradient factory</h1>
-<p>Scrawl-canvas ConicGradient objects implement the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createConicGradient">createConicGradient</a> method. The resulting <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient">CanvasGradient</a> object can be used by any Scrawl-canvas entity as its <code>fillStyle</code> or <code>strokeStyle</code>.</p>
+<p>Scrawl-canvas ConicGradient objects implement and extend the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createConicGradient">createConicGradient</a> method. The resulting <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient">CanvasGradient</a> object can be used by any Scrawl-canvas entity as its <code>fillStyle</code> or <code>strokeStyle</code>.</p>
 
             </div>
             
@@ -599,7 +604,9 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, mergeOver, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { addStrings, doCreate, generateIdForArtefact, mergeOver, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { releaseCoordinate, requestCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/coordinate.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> stylesMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/styles.js&#x27;</span>;</pre></div></div>
@@ -617,7 +624,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _radian, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">STYLES</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _radian, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">PAD</span>, <span class="hljs-variable constant_">STYLES</span>, <span class="hljs-variable constant_">T_CONIC_GRADIENT</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -629,10 +636,11 @@
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Local constants</p>
+<ul>
+<li>None defined</li>
+</ul>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">T_CONIC_GRADIENT</span> = <span class="hljs-string">&#x27;ConicGradient&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -719,9 +727,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">angle</span>: <span class="hljs-number">0</span>,
-};
-P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">angle</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -732,31 +738,21 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>In addition to the attributes defined in the <strong>base</strong> and <strong>styles</strong> mixins, Gradients also pass through Palette attributes to their Palette object.</p>
-<p>Attributes from <strong>base</strong> mixin:</p>
+              <p>The following attributes may trigger a software rendering of the ConicGradient</p>
+<p><code>spread</code> - value from ‘pad’ (default), ‘repeat’, ‘reflect’, ‘transparent’</p>
+<p><code>angleRange</code> - by default the Conic gradient will sweep a complete turn around the start point. We can limit it to just a part of the circle by setting this attribute to a value greater than 0 and less than 360 (degrees). The spread attribute then determines how the gradient should complete the circle:</p>
 <ul>
-<li><code>name</code></li>
+<li>‘pad’, ‘reflect’, ‘repeat’, ‘transparent’</li>
 </ul>
-<p>Attributes from <strong>styles</strong> mixin:</p>
+<p><code>angleRange</code> - number between 1 and 360 (default) - the distance around the origin which the gratient will wrap</p>
 <ul>
-<li><code>start</code></li>
-<li><code>startX</code></li>
-<li><code>startY</code></li>
-<li><code>end</code></li>
-<li><code>endX</code></li>
-<li><code>endY</code></li>
-<li><code>palette</code></li>
-<li><code>paletteStart</code></li>
-<li><code>paletteEnd</code></li>
-<li><code>cyclePalette</code></li>
-</ul>
-<p>Attributes from the <strong>palette</strong> factory:</p>
-<ul>
-<li><code>colors</code></li>
-<li><code>cyclic</code></li>
+<li>For <code>pad</code> spread, the remainder of the distance will be filled equally by the gradient’s first and last color points</li>
+<li>For other spreads, the remaining space will be filled with repeats/reflections of the gradient, or will be transparent</li>
 </ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">angleRange</span>: <span class="hljs-number">360</span>,</pre></div></div>
             
         </li>
         
@@ -767,11 +763,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
+              <p><code>swirlDistance</code> - if set above 0, represents the distance from the origin for a complete turn of the gradient to take place; smaller distances give tighter swirls</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;palette&#x27;</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">swirlDistance</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -782,10 +778,13 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <p><code>swirlClockwise</code> - boolean. Determines the direction of the swirl - clockwise by default</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">swirlClockwise</span>: <span class="hljs-literal">true</span>,
+};
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -796,10 +795,11 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;palette&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -810,8 +810,8 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
-<p>No additional getter/setter functionality required</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
             
@@ -824,7 +824,8 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
 
             </div>
             
@@ -836,6 +837,74 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;
+
+S.<span class="hljs-property">angle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">angle</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateSubscribers</span>();
+};
+D.<span class="hljs-property">angle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">angle</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">angle</span>, item);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateSubscribers</span>();
+};
+
+S.<span class="hljs-property">angleRange</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">angleRange</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateSubscribers</span>();
+};
+D.<span class="hljs-property">angleRange</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">angleRange</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">angleRange</span>, item);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateSubscribers</span>();
+};
+
+S.<span class="hljs-property">swirlDistance</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">swirlDistance</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateSubscribers</span>();
+};
+D.<span class="hljs-property">swirlDistance</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">swirlDistance</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">swirlDistance</span>, item);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateSubscribers</span>();
+};
+
+S.<span class="hljs-property">swirlClockwise</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">swirlClockwise</span> = !!item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateSubscribers</span>();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>buildStyle</code> - internal function: creates the radial gradient on the Cell’s CanvasRenderingContext2D engine, and then adds the color stops to it.</p>
 
@@ -862,24 +931,35 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>updateGradientArgs</code> - internal function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateGradientArgs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateGradientArgs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, roll</span>) {
 
     <span class="hljs-keyword">const</span> gradientArgs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">gradientArgs</span>,
-        currentStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStart</span>,
+        currentStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStart</span>;
+
+    <span class="hljs-keyword">let</span> sx = currentStart[<span class="hljs-number">0</span>] + x,
+        sy = currentStart[<span class="hljs-number">1</span>] + y,
         angle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">angle</span> * _radian;
 
-    <span class="hljs-keyword">const</span> sx = currentStart[<span class="hljs-number">0</span>] + x,
-        sy = currentStart[<span class="hljs-number">1</span>] + y;
+    <span class="hljs-keyword">if</span> (roll) {
+
+        <span class="hljs-keyword">const</span> coord = <span class="hljs-title function_">requestCoordinate</span>();
+
+        [sx, sy] = coord.<span class="hljs-title function_">setFromArray</span>([sx, sy]).<span class="hljs-title function_">rotate</span>(roll);
+
+        <span class="hljs-title function_">releaseCoordinate</span>(coord);
+
+        angle += (roll * _radian);
+    }
 
     gradientArgs.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
     gradientArgs.<span class="hljs-title function_">push</span>(angle, sx, sy);
@@ -888,35 +968,49 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>Overwrite styles.updateIdentifier function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateIdentifier</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifier</span> = <span class="hljs-title function_">generateIdForArtefact</span>(<span class="hljs-variable language_">this</span>);
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">isClassic</span> = !(<span class="hljs-variable language_">this</span>.<span class="hljs-property">spread</span> !== <span class="hljs-variable constant_">PAD</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">swirlDistance</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">angleRange</span> !== <span class="hljs-number">360</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">operations</span>.<span class="hljs-property">length</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
-<pre><code><span class="hljs-keyword">let</span> graddy = scrawl.<span class="hljs-title function_">makeConicGradient</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mygradient&#x27;</span>,
-
+<pre><code><span class="hljs-keyword">const</span> graddy = scrawl.<span class="hljs-title function_">makeConicGradient</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-gradient&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
     <span class="hljs-attr">angle</span>: <span class="hljs-number">90</span>,
 });
 
 scrawl.<span class="hljs-title function_">makeBlock</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myblock&#x27;</span>,
-
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-block&#x27;</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;90%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;90%&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
-
     <span class="hljs-attr">fillStyle</span>: graddy,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;coral&#x27;</span>,
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
 });
 </code></pre>

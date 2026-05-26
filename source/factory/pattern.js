@@ -16,7 +16,7 @@ import patternMix from '../mixin/pattern.js';
 import assetConsumerMix from '../mixin/asset-consumer.js';
 
 // Shared constants
-import { $IMAGE, $VIDEO, _isArray, _keys, _values, NAME, STYLES, UNDEF } from '../helper/shared-vars.js';
+import { $IMAGE, $VIDEO, _keys, _values, NAME, STYLES, UNDEF } from '../helper/shared-vars.js';
 
 // Local constants
 const T_PATTERN = 'Pattern';
@@ -27,6 +27,9 @@ const Pattern = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
+
+    this.initializePattern();
+
     this.set(this.defs);
 
     this.source = null;
@@ -37,7 +40,8 @@ const Pattern = function (items = Ωempty) {
     this.dirtyCopyStart = true;
     this.dirtyCopyDimensions = true;
     this.dirtyImageSubscribers = true;
-    this.patternMatrix = null;
+
+    this.isClassic = true;
 
     this.set(items);
 
@@ -66,17 +70,6 @@ assetConsumerMix(P);
 // #### Packet management
 P.packetObjects = pushUnique(P.packetObjects, ['asset']);
 
-P.finalizePacketOut = function (copy, items) {
-
-    if (_isArray(items.patternMatrix)) copy.patternMatrix = items.patternMatrix;
-    else {
-
-        const m = this.patternMatrix;
-        if (m) copy.patternMatrix = [m.a, m.b, m.c, m.d, m.e, m.f];
-    }
-
-    return copy;
-};
 
 // #### Clone management
 // No additional clone functionality required
@@ -197,12 +190,12 @@ P.set = function (items = Ωempty) {
 
 // `getData` function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.
 // + This is the point when we clean Scrawl-canvas assets which have told their subscribers that asset data/attributes have updated
-P.getData = function (entity, cell) {
+P.getData = function (myentity, mycell, area) {
 
     if (this.dirtyAsset) this.cleanAsset();
     this.asset.checkSource(this.sourceNaturalWidth, this.sourceNaturalHeight);
 
-    return this.buildStyle(cell);
+    return this.buildStyle(mycell, myentity, area);
 };
 
 

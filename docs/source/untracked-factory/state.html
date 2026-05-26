@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -730,6 +735,7 @@ P.<span class="hljs-property">type</span> = <span class="hljs-variable constant_
 <li>COLORNAME String</li>
 <li>GRADIENTNAME String</li>
 <li>RADIALGRADIENTNAME String</li>
+<li>CONICGRADIENTNAME String</li>
 <li>PATTERNNAME String</li>
 </ul>
 
@@ -1314,7 +1320,8 @@ S.<span class="hljs-property">canvasFont</span> = <span class="hljs-keyword">fun
         <span class="hljs-keyword">else</span> {
 
             <span class="hljs-keyword">if</span> (desired !== current) result[k] = desired;
-        }</pre></div></div>
+        }
+    }</pre></div></div>
             
         </li>
         
@@ -1324,21 +1331,6 @@ S.<span class="hljs-property">canvasFont</span> = <span class="hljs-keyword">fun
               
               <div class="sswrap ">
                 <a class="ss" href="#section-41">&#x00a7;</a>
-              </div>
-              <p>if (current !== desired) result[k] = desired;</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>‘lineCap’, ‘lineDash’, ‘lineDashOffset’, ‘lineJoin’, ‘lineWidth’, ‘miterLimit’</p>
 
@@ -1395,11 +1387,11 @@ S.<span class="hljs-property">canvasFont</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-43">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>‘fillStyle’, ‘shadowColor’, ‘strokeStyle’</p>
 
@@ -1414,11 +1406,11 @@ S.<span class="hljs-property">canvasFont</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-44">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>string colors - only update if necessary</p>
 
@@ -1429,11 +1421,11 @@ S.<span class="hljs-property">canvasFont</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-45">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>Color object colors need to be extracted before they can be compared and, if necessary, updated</p>
 
@@ -1449,11 +1441,11 @@ S.<span class="hljs-property">canvasFont</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-46">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>gradient and pattern objects - get freshly deployed with each entity stamp</p>
 
@@ -1465,11 +1457,11 @@ S.<span class="hljs-property">canvasFont</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-47">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p>‘font’, ‘direction’, ‘fontKerning’, ‘textRendering’, ‘letterSpacing’, ‘wordSpacing’</p>
 
@@ -1492,11 +1484,11 @@ S.<span class="hljs-property">canvasFont</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-48">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p>The <code>setStateFromEngine</code> function takes a CanvasRenderingContext2D engine object and updates its own attributes to match the engine’s current state.</p>
 
@@ -1518,11 +1510,11 @@ S.<span class="hljs-property">canvasFont</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-49">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>Actively ignore the following attributes</p>
 
@@ -1539,11 +1531,11 @@ S.<span class="hljs-property">canvasFont</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-50">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <p>Only used internally by Cell and entity factory functions</p>

@@ -9,7 +9,7 @@ import { constructors, entity } from '../core/library.js';
 
 import { seededRandomNumberGenerator } from '../helper/random-seed.js';
 
-import { constrain, doCreate, mergeOver, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
+import { doCreate, mergeOver, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
@@ -19,7 +19,7 @@ import assetAdvancedMix from '../mixin/asset-advanced-functionality.js';
 import patternMix from '../mixin/pattern.js';
 
 // Shared constants
-import { _floor, ASSET, DEFAULT_SEED, ENTITY, RANDOM, T_RD_ASSET, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+import { ASSET, DEFAULT_SEED, ENTITY, RANDOM, T_RD_ASSET, WHITE, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const RD_SETTINGS_PREF_VALS = ['random', 'entity'];
@@ -38,7 +38,14 @@ const RdAsset = function (items = Ωempty) {
     this.set(this.defs);
 
     this.currentSource = null;
+    this.outputA = null;
+    this.outputB = null;
     this.initialSettingEntity = null;
+
+    this.rowAbove = null;
+    this.rowBelow = null;
+    this.colLeft = null;
+    this.colRight = null;
 
     this.set(items);
 
@@ -209,7 +216,7 @@ S.drawEvery = function (item) {
     if (item.toFixed) {
 
         this.drawEvery = item;
-        this.dirtyScene = true;
+        this.dirtyOutput = true;
     }
 };
 
@@ -218,7 +225,7 @@ S.maxGenerations = function (item) {
     if (item.toFixed) {
 
         this.maxGenerations = item;
-        this.dirtyScene = true;
+        this.dirtyOutput = true;
     }
 };
 
@@ -500,47 +507,138 @@ P.update = function () {
 // `cleanOutput` - internal function called by the `notifySubscribers` function
 // + All reaction-diffusion calculations are coordinated from this function
 // + Function also checks to see if scene needs to be (re)initialized - initialization will take place after any of the initial parameters are set to new values
-P.cleanOutput = function (iterations = 0) {
+P.cleanOutput = function () {
+
+    let iterations = 0;
 
     if (this.dirtyScene) this.cleanScene();
 
     if (!this.dirtyScene) {
 
-        const { dataArrays, diffusionRateA, diffusionRateB, feedRate, killRate, currentSource, drawEvery, maxGenerations, currentGeneration } = this;
+        const {
+            dataArrays,
+            diffusionRateA,
+            diffusionRateB,
+            feedRate,
+            killRate,
+            currentSource,
+            drawEvery,
+            maxGenerations,
+            currentGeneration,
+            width,
+            height,
+            rowAbove,
+            rowBelow,
+            colLeft,
+            colRight,
+        } = this;
 
-        let sourceA, destA, sourceB, destB, a, b, c, cz, da, db;
+        let sourceA, destA, sourceB, destB;
 
         if (!maxGenerations || currentGeneration < maxGenerations) {
 
-            if (currentSource) {
+            let generation = currentGeneration,
+                sourceFlag = currentSource;
 
-                [destA, sourceA, destB, sourceB] = dataArrays;
+            while (iterations < drawEvery) {
+
+                if (sourceFlag) [destA, sourceA, destB, sourceB] = dataArrays;
+                else [sourceA, destA, sourceB, destB] = dataArrays;
+
+                const killPlusFeed = killRate + feedRate;
+
+                let index,
+                    rowAboveIndex, rowHere, rowBelowIndex,
+                    colLeftIndex, colRightIndex,
+                    topLeft, top, topRight,
+                    left, right,
+                    bottomLeft, bottom, bottomRight,
+                    a, b, bb, reaction,
+                    lapA, lapB,
+                    da, db;
+
+                for (let row = 0; row < height; row++) {
+
+                    rowAboveIndex = rowAbove[row];
+                    rowHere = row * width;
+                    rowBelowIndex = rowBelow[row];
+
+                    for (let col = 0; col < width; col++) {
+
+                        index = rowHere + col;
+
+                        colLeftIndex = colLeft[col];
+                        colRightIndex = colRight[col];
+
+                        topLeft = rowAboveIndex + colLeftIndex;
+                        top = rowAboveIndex + col;
+                        topRight = rowAboveIndex + colRightIndex;
+
+                        left = rowHere + colLeftIndex;
+                        right = rowHere + colRightIndex;
+
+                        bottomLeft = rowBelowIndex + colLeftIndex;
+                        bottom = rowBelowIndex + col;
+                        bottomRight = rowBelowIndex + colRightIndex;
+
+                        a = sourceA[index];
+                        b = sourceB[index];
+
+                        bb = b * b;
+                        reaction = a * bb;
+
+                        lapA =
+                            (sourceA[index] * -1) +
+                            (sourceA[topLeft] * 0.05) +
+                            (sourceA[topRight] * 0.05) +
+                            (sourceA[bottomLeft] * 0.05) +
+                            (sourceA[bottomRight] * 0.05) +
+                            (sourceA[top] * 0.2) +
+                            (sourceA[right] * 0.2) +
+                            (sourceA[left] * 0.2) +
+                            (sourceA[bottom] * 0.2);
+
+                        lapB =
+                            (sourceB[index] * -1) +
+                            (sourceB[topLeft] * 0.05) +
+                            (sourceB[topRight] * 0.05) +
+                            (sourceB[bottomLeft] * 0.05) +
+                            (sourceB[bottomRight] * 0.05) +
+                            (sourceB[top] * 0.2) +
+                            (sourceB[right] * 0.2) +
+                            (sourceB[left] * 0.2) +
+                            (sourceB[bottom] * 0.2);
+
+                        da = a + (diffusionRateA * lapA) - reaction + (feedRate * (1 - a));
+                        db = b + (diffusionRateB * lapB) + reaction - (killPlusFeed * b);
+
+                        destA[index] = da < 0 ? 0 : da > 1 ? 1 : da;
+                        destB[index] = db < 0 ? 0 : db > 1 ? 1 : db;
+                    }
+                }
+
+                sourceFlag = sourceFlag ? 0 : 1;
+                generation++;
+                iterations++;
+
+                if (maxGenerations && generation >= maxGenerations) break;
+            }
+
+            this.currentSource = sourceFlag;
+            this.currentGeneration = generation;
+
+            if (sourceFlag) {
+
+                this.outputA = dataArrays[0];
+                this.outputB = dataArrays[2];
             }
             else {
 
-                [sourceA, destA, sourceB, destB] = dataArrays;
+                this.outputA = dataArrays[1];
+                this.outputB = dataArrays[3];
             }
 
-
-            if (iterations < drawEvery) {
-
-                for (c = 0, cz = sourceA.length; c < cz; c++) {
-
-                    a = sourceA[c];
-                    b = sourceB[c];
-
-                    da = a + diffusionRateA * this.calculateLaplacian(c, sourceA) - a * b * b + feedRate * (1 - a);
-                    db = b + diffusionRateB * this.calculateLaplacian(c, sourceB) + a * b * b - (killRate + feedRate) * b;
-
-                    destA[c] = constrain(da, 0, 1);
-                    destB[c] = constrain(db, 0, 1);
-                }
-
-                this.currentSource = (currentSource) ? 0 : 1;
-                this.currentGeneration = currentGeneration + 1;
-                this.cleanOutput(iterations + 1);
-            }
-            else this.paintCanvas();
+            this.paintCanvas();
         }
         else if (this.dirtyOutput) this.paintCanvas();
     }
@@ -561,18 +659,42 @@ P.cleanScene = function () {
             element.width = width;
             element.height = height;
 
-            const len = width * height;
+            const len = width * height,
+                rowAbove = new Int32Array(height),
+                rowBelow = new Int32Array(height),
+                colLeft = new Int32Array(width),
+                colRight = new Int32Array(width);
+
+            for (let row = 0; row < height; row++) {
+
+                rowAbove[row] = ((row > 0) ? row - 1 : height - 1) * width;
+                rowBelow[row] = ((row < height - 1) ? row + 1 : 0) * width;
+            }
+
+            for (let col = 0; col < width; col++) {
+
+                colLeft[col] = (col > 0) ? col - 1 : width - 1;
+                colRight[col] = (col < width - 1) ? col + 1 : 0;
+            }
+
+            this.rowAbove = rowAbove;
+            this.rowBelow = rowBelow;
+            this.colLeft = colLeft;
+            this.colRight = colRight;
 
             dataArrays.length = 0;
 
             // We use four arrays to contain the current and next state of the scene
             for (let i = 0; i < 4; i++) {
 
-                dataArrays.push(new Float64Array(len))
+                dataArrays.push(new Float32Array(len));
             }
             this.currentSource = 0;
 
             const [sourceA, destA, sourceB, destB] = dataArrays;
+
+            this.outputA = destA;
+            this.outputB = destB;
 
             sourceA.fill(1);
             destA.fill(1);
@@ -625,79 +747,6 @@ P.cleanScene = function () {
     }
 };
 
-// `calculateLaplacian` - additional internal function invoked by the `cleanOutput` function
-P.calculateLaplacian = function (index, src) {
-
-    const w = this.width;
-
-    const row = _floor(index / w),
-        rowAbove = this.checkRow(row - 1) * w,
-        rowBelow = this.checkRow(row + 1) * w,
-        rowHere = row * w,
-        col = index - rowHere,
-        colLeft = this.checkCol(col - 1),
-        colRight = this.checkCol(col + 1);
-
-    let res = 0,
-        cursor;
-
-    // center
-    res += src[index] * -1;
-
-    // topleft
-    cursor = rowAbove + colLeft;
-    res += src[cursor] * 0.05;
-
-    // topright
-    cursor = rowAbove + colRight;
-    res += src[cursor] * 0.05;
-
-    // bottomleft
-    cursor = rowBelow + colLeft;
-    res += src[cursor] * 0.05;
-
-    // bottomright
-    cursor = rowBelow + colRight;
-    res += src[cursor] * 0.05;
-
-    // top
-    cursor = rowAbove + col;
-    res += src[cursor] * 0.2;
-
-    // right
-    cursor = rowHere + colRight;
-    res += src[cursor] * 0.2;
-
-    // left
-    cursor = rowHere + colLeft;
-    res += src[cursor] * 0.2;
-
-    // bottom
-    cursor = rowBelow + col;
-    res += src[cursor] * 0.2;
-
-    return res;
-};
-
-// `checkRow`, `checkCol` - internal functions invoked by the `calculateLaplacian` function
-P.checkRow = function (val) {
-
-    const h = this.height;
-
-    if (val < 0) return h - 1;
-    if (val >= h) return 0;
-    return val;
-}
-
-P.checkCol = function (val) {
-
-    const w = this.width;
-
-    if (val < 0) return w - 1;
-    if (val >= w) return 0;
-    return val;
-}
-
 // `checkOutputValuesExist` and `getOutputValue` are internal variables that must be defined by any asset that makes use of the _assetAdvancedFunctionality.js_ mixin and its `paintCanvas` function
 P.checkOutputValuesExist = function () {
 
@@ -705,20 +754,7 @@ P.checkOutputValuesExist = function () {
 };
 P.getOutputValue = function (index) {
 
-    let destA, destB;
-
-    const { dataArrays, currentSource } = this;
-
-    if (currentSource) {
-
-        [destA, , destB, ] = dataArrays;
-    }
-    else {
-
-        [, destA, , destB] = dataArrays;
-    }
-
-    return (1 + (destA[index] - destB[index])) / 2;
+    return (1 + (this.outputA[index] - this.outputB[index])) / 2;
 };
 
 

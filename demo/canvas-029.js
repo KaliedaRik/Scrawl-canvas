@@ -93,8 +93,8 @@ scrawl.makePattern({
 
     name: name('bunny-pattern'),
     imageSource: 'img/bunny.png',
-    matrixA: 3,
-    matrixD: 3,
+    patternStretchX: 3,
+    patternStretchY: 3,
 });
 
 scrawl.makeBlock({

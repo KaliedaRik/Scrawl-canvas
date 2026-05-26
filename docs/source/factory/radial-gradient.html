@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -601,6 +606,8 @@
 
 <span class="hljs-keyword">import</span> { addStrings, doCreate, isa_number, mergeOver, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
+<span class="hljs-keyword">import</span> { releaseCoordinate, requestCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/coordinate.js&#x27;</span>;
+
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> stylesMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/styles.js&#x27;</span>;</pre></div></div>
             
@@ -617,7 +624,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">BOTTOM</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">RIGHT</span>, <span class="hljs-variable constant_">STYLES</span>, <span class="hljs-variable constant_">TOP</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">STYLES</span>, <span class="hljs-variable constant_">T_RADIAL_GRADIENT</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -629,10 +636,11 @@
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Local constants</p>
+<ul>
+<li>None defined</li>
+</ul>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">T_RADIAL_GRADIENT</span> = <span class="hljs-string">&#x27;RadialGradient&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -861,22 +869,22 @@ G.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">startRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">startRadius</span> = item;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStyle</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateSubscribers</span>();
 };
 S.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">endRadius</span> = item;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStyle</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateSubscribers</span>();
 };
 D.<span class="hljs-property">startRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">startRadius</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">startRadius</span>, item);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStyle</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateSubscribers</span>();
 };
 D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">endRadius</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">endRadius</span>, item);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStyle</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateSubscribers</span>();
 };</pre></div></div>
             
         </li>
@@ -913,26 +921,11 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
 
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">switch</span>(val){
+            val = <span class="hljs-built_in">parseFloat</span>(val);
 
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">TOP</span> :
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">LEFT</span> :
-                    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_number</span>(val)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">BOTTOM</span> :
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">RIGHT</span> :
-                    <span class="hljs-keyword">return</span> len;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">CENTER</span> :
-                    <span class="hljs-keyword">return</span> len / <span class="hljs-number">2</span>;
-
-                <span class="hljs-keyword">default</span> :
-                    val = <span class="hljs-built_in">parseFloat</span>(val);
-
-                    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_number</span>(val)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-
-                    <span class="hljs-keyword">return</span> ( val / <span class="hljs-number">100</span>) * len;
-            }
+            <span class="hljs-keyword">return</span> ( val / <span class="hljs-number">100</span>) * len;
         }
     };
 
@@ -953,9 +946,11 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">buildStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">cell</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">buildStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">cell, myentity</span>) {
 
     <span class="hljs-keyword">if</span> (cell) {
+
+        myentity.<span class="hljs-property">useGradientCache</span> = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">const</span> engine = cell.<span class="hljs-property">engine</span>;
 
@@ -982,19 +977,18 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateGradientArgs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateGradientArgs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, roll, scale</span>) {
 
     <span class="hljs-keyword">const</span> gradientArgs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">gradientArgs</span>,
         currentStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStart</span>,
-        currentEnd = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEnd</span>,
-        sr = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartRadius</span>;
+        currentEnd = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEnd</span>;
 
-    <span class="hljs-keyword">let</span> er = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndRadius</span>;
-
-    <span class="hljs-keyword">const</span> sx = currentStart[<span class="hljs-number">0</span>] + x,
+    <span class="hljs-keyword">let</span> sx = currentStart[<span class="hljs-number">0</span>] + x,
         sy = currentStart[<span class="hljs-number">1</span>] + y,
         ex = currentEnd[<span class="hljs-number">0</span>] + x,
-        ey = currentEnd[<span class="hljs-number">1</span>] + y;</pre></div></div>
+        ey = currentEnd[<span class="hljs-number">1</span>] + y,
+        sr = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartRadius</span>,
+        er = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndRadius</span>;</pre></div></div>
             
         </li>
         
@@ -1010,6 +1004,21 @@ D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">func
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (sx === ex &amp;&amp; sy === ey &amp;&amp; sr === er) er++;
+
+    <span class="hljs-keyword">if</span> (roll) {
+
+        <span class="hljs-keyword">const</span> coord = <span class="hljs-title function_">requestCoordinate</span>();
+
+        [sx, sy] = coord.<span class="hljs-title function_">setFromArray</span>([sx, sy]).<span class="hljs-title function_">rotate</span>(roll);
+        [ex, ey] = coord.<span class="hljs-title function_">setFromArray</span>([ex, ey]).<span class="hljs-title function_">rotate</span>(roll);
+
+        <span class="hljs-title function_">releaseCoordinate</span>(coord);
+    }
+    <span class="hljs-keyword">if</span> (scale !== <span class="hljs-number">1</span>) {
+
+        sr *= scale;
+        er *= scale;
+    }
 
     gradientArgs.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
     gradientArgs.<span class="hljs-title function_">push</span>(sx, sy, sr, ex, ey, er);

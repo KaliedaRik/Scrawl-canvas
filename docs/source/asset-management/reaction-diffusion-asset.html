@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -602,7 +607,7 @@
 
 <span class="hljs-keyword">import</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/random-seed.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { constrain, doCreate, mergeOver, λ<span class="hljs-literal">null</span>, λcloneError, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, mergeOver, λ<span class="hljs-literal">null</span>, λcloneError, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/cell-fragment.js&#x27;</span>;
 
@@ -624,7 +629,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _floor, <span class="hljs-variable constant_">ASSET</span>, <span class="hljs-variable constant_">DEFAULT_SEED</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">RANDOM</span>, <span class="hljs-variable constant_">T_RD_ASSET</span>, <span class="hljs-variable constant_">WHITE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">ASSET</span>, <span class="hljs-variable constant_">DEFAULT_SEED</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">RANDOM</span>, <span class="hljs-variable constant_">T_RD_ASSET</span>, <span class="hljs-variable constant_">WHITE</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -666,7 +671,14 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentSource</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outputA</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outputB</span> = <span class="hljs-literal">null</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-literal">null</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rowAbove</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rowBelow</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">colLeft</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">colRight</span> = <span class="hljs-literal">null</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
@@ -1039,7 +1051,7 @@ S.<span class="hljs-property">drawEvery</span> = <span class="hljs-keyword">func
     <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">drawEvery</span> = item;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScene</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
     }
 };
 
@@ -1048,7 +1060,7 @@ S.<span class="hljs-property">maxGenerations</span> = <span class="hljs-keyword"
     <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">maxGenerations</span> = item;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScene</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
     }
 };
 
@@ -1371,47 +1383,138 @@ G.<span class="hljs-property">generation</span> = <span class="hljs-keyword">fun
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanOutput</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">iterations = <span class="hljs-number">0</span></span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanOutput</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">let</span> iterations = <span class="hljs-number">0</span>;
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScene</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanScene</span>();
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScene</span>) {
 
-        <span class="hljs-keyword">const</span> { dataArrays, diffusionRateA, diffusionRateB, feedRate, killRate, currentSource, drawEvery, maxGenerations, currentGeneration } = <span class="hljs-variable language_">this</span>;
+        <span class="hljs-keyword">const</span> {
+            dataArrays,
+            diffusionRateA,
+            diffusionRateB,
+            feedRate,
+            killRate,
+            currentSource,
+            drawEvery,
+            maxGenerations,
+            currentGeneration,
+            width,
+            height,
+            rowAbove,
+            rowBelow,
+            colLeft,
+            colRight,
+        } = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">let</span> sourceA, destA, sourceB, destB, a, b, c, cz, da, db;
+        <span class="hljs-keyword">let</span> sourceA, destA, sourceB, destB;
 
         <span class="hljs-keyword">if</span> (!maxGenerations || currentGeneration &lt; maxGenerations) {
 
-            <span class="hljs-keyword">if</span> (currentSource) {
+            <span class="hljs-keyword">let</span> generation = currentGeneration,
+                sourceFlag = currentSource;
 
-                [destA, sourceA, destB, sourceB] = dataArrays;
+            <span class="hljs-keyword">while</span> (iterations &lt; drawEvery) {
+
+                <span class="hljs-keyword">if</span> (sourceFlag) [destA, sourceA, destB, sourceB] = dataArrays;
+                <span class="hljs-keyword">else</span> [sourceA, destA, sourceB, destB] = dataArrays;
+
+                <span class="hljs-keyword">const</span> killPlusFeed = killRate + feedRate;
+
+                <span class="hljs-keyword">let</span> index,
+                    rowAboveIndex, rowHere, rowBelowIndex,
+                    colLeftIndex, colRightIndex,
+                    topLeft, top, topRight,
+                    left, right,
+                    bottomLeft, bottom, bottomRight,
+                    a, b, bb, reaction,
+                    lapA, lapB,
+                    da, db;
+
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> row = <span class="hljs-number">0</span>; row &lt; height; row++) {
+
+                    rowAboveIndex = rowAbove[row];
+                    rowHere = row * width;
+                    rowBelowIndex = rowBelow[row];
+
+                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> col = <span class="hljs-number">0</span>; col &lt; width; col++) {
+
+                        index = rowHere + col;
+
+                        colLeftIndex = colLeft[col];
+                        colRightIndex = colRight[col];
+
+                        topLeft = rowAboveIndex + colLeftIndex;
+                        top = rowAboveIndex + col;
+                        topRight = rowAboveIndex + colRightIndex;
+
+                        left = rowHere + colLeftIndex;
+                        right = rowHere + colRightIndex;
+
+                        bottomLeft = rowBelowIndex + colLeftIndex;
+                        bottom = rowBelowIndex + col;
+                        bottomRight = rowBelowIndex + colRightIndex;
+
+                        a = sourceA[index];
+                        b = sourceB[index];
+
+                        bb = b * b;
+                        reaction = a * bb;
+
+                        lapA =
+                            (sourceA[index] * -<span class="hljs-number">1</span>) +
+                            (sourceA[topLeft] * <span class="hljs-number">0.05</span>) +
+                            (sourceA[topRight] * <span class="hljs-number">0.05</span>) +
+                            (sourceA[bottomLeft] * <span class="hljs-number">0.05</span>) +
+                            (sourceA[bottomRight] * <span class="hljs-number">0.05</span>) +
+                            (sourceA[top] * <span class="hljs-number">0.2</span>) +
+                            (sourceA[right] * <span class="hljs-number">0.2</span>) +
+                            (sourceA[left] * <span class="hljs-number">0.2</span>) +
+                            (sourceA[bottom] * <span class="hljs-number">0.2</span>);
+
+                        lapB =
+                            (sourceB[index] * -<span class="hljs-number">1</span>) +
+                            (sourceB[topLeft] * <span class="hljs-number">0.05</span>) +
+                            (sourceB[topRight] * <span class="hljs-number">0.05</span>) +
+                            (sourceB[bottomLeft] * <span class="hljs-number">0.05</span>) +
+                            (sourceB[bottomRight] * <span class="hljs-number">0.05</span>) +
+                            (sourceB[top] * <span class="hljs-number">0.2</span>) +
+                            (sourceB[right] * <span class="hljs-number">0.2</span>) +
+                            (sourceB[left] * <span class="hljs-number">0.2</span>) +
+                            (sourceB[bottom] * <span class="hljs-number">0.2</span>);
+
+                        da = a + (diffusionRateA * lapA) - reaction + (feedRate * (<span class="hljs-number">1</span> - a));
+                        db = b + (diffusionRateB * lapB) + reaction - (killPlusFeed * b);
+
+                        destA[index] = da &lt; <span class="hljs-number">0</span> ? <span class="hljs-number">0</span> : da &gt; <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : da;
+                        destB[index] = db &lt; <span class="hljs-number">0</span> ? <span class="hljs-number">0</span> : db &gt; <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : db;
+                    }
+                }
+
+                sourceFlag = sourceFlag ? <span class="hljs-number">0</span> : <span class="hljs-number">1</span>;
+                generation++;
+                iterations++;
+
+                <span class="hljs-keyword">if</span> (maxGenerations &amp;&amp; generation &gt;= maxGenerations) <span class="hljs-keyword">break</span>;
+            }
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentSource</span> = sourceFlag;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentGeneration</span> = generation;
+
+            <span class="hljs-keyword">if</span> (sourceFlag) {
+
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">outputA</span> = dataArrays[<span class="hljs-number">0</span>];
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">outputB</span> = dataArrays[<span class="hljs-number">2</span>];
             }
             <span class="hljs-keyword">else</span> {
 
-                [sourceA, destA, sourceB, destB] = dataArrays;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">outputA</span> = dataArrays[<span class="hljs-number">1</span>];
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">outputB</span> = dataArrays[<span class="hljs-number">3</span>];
             }
 
-
-            <span class="hljs-keyword">if</span> (iterations &lt; drawEvery) {
-
-                <span class="hljs-keyword">for</span> (c = <span class="hljs-number">0</span>, cz = sourceA.<span class="hljs-property">length</span>; c &lt; cz; c++) {
-
-                    a = sourceA[c];
-                    b = sourceB[c];
-
-                    da = a + diffusionRateA * <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">calculateLaplacian</span>(c, sourceA) - a * b * b + feedRate * (<span class="hljs-number">1</span> - a);
-                    db = b + diffusionRateB * <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">calculateLaplacian</span>(c, sourceB) + a * b * b - (killRate + feedRate) * b;
-
-                    destA[c] = <span class="hljs-title function_">constrain</span>(da, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
-                    destB[c] = <span class="hljs-title function_">constrain</span>(db, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
-                }
-
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentSource</span> = (currentSource) ? <span class="hljs-number">0</span> : <span class="hljs-number">1</span>;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentGeneration</span> = currentGeneration + <span class="hljs-number">1</span>;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanOutput</span>(iterations + <span class="hljs-number">1</span>);
-            }
-            <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">paintCanvas</span>();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">paintCanvas</span>();
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">paintCanvas</span>();
     }
@@ -1446,7 +1549,28 @@ G.<span class="hljs-property">generation</span> = <span class="hljs-keyword">fun
             element.<span class="hljs-property">width</span> = width;
             element.<span class="hljs-property">height</span> = height;
 
-            <span class="hljs-keyword">const</span> len = width * height;
+            <span class="hljs-keyword">const</span> len = width * height,
+                rowAbove = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Int32Array</span>(height),
+                rowBelow = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Int32Array</span>(height),
+                colLeft = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Int32Array</span>(width),
+                colRight = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Int32Array</span>(width);
+
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> row = <span class="hljs-number">0</span>; row &lt; height; row++) {
+
+                rowAbove[row] = ((row &gt; <span class="hljs-number">0</span>) ? row - <span class="hljs-number">1</span> : height - <span class="hljs-number">1</span>) * width;
+                rowBelow[row] = ((row &lt; height - <span class="hljs-number">1</span>) ? row + <span class="hljs-number">1</span> : <span class="hljs-number">0</span>) * width;
+            }
+
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> col = <span class="hljs-number">0</span>; col &lt; width; col++) {
+
+                colLeft[col] = (col &gt; <span class="hljs-number">0</span>) ? col - <span class="hljs-number">1</span> : width - <span class="hljs-number">1</span>;
+                colRight[col] = (col &lt; width - <span class="hljs-number">1</span>) ? col + <span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
+            }
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">rowAbove</span> = rowAbove;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">rowBelow</span> = rowBelow;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">colLeft</span> = colLeft;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">colRight</span> = colRight;
 
             dataArrays.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
@@ -1465,11 +1589,14 @@ G.<span class="hljs-property">generation</span> = <span class="hljs-keyword">fun
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; i++) {
 
-                dataArrays.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Float64Array</span>(len))
+                dataArrays.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Float32Array</span>(len));
             }
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentSource</span> = <span class="hljs-number">0</span>;
 
             <span class="hljs-keyword">const</span> [sourceA, destA, sourceB, destB] = dataArrays;
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">outputA</span> = destA;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">outputB</span> = destB;
 
             sourceA.<span class="hljs-title function_">fill</span>(<span class="hljs-number">1</span>);
             destA.<span class="hljs-title function_">fill</span>(<span class="hljs-number">1</span>);
@@ -1569,211 +1696,6 @@ G.<span class="hljs-property">generation</span> = <span class="hljs-keyword">fun
               <div class="sswrap ">
                 <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
-              <p><code>calculateLaplacian</code> - additional internal function invoked by the <code>cleanOutput</code> function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">calculateLaplacian</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index, src</span>) {
-
-    <span class="hljs-keyword">const</span> w = <span class="hljs-variable language_">this</span>.<span class="hljs-property">width</span>;
-
-    <span class="hljs-keyword">const</span> row = <span class="hljs-title function_">_floor</span>(index / w),
-        rowAbove = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkRow</span>(row - <span class="hljs-number">1</span>) * w,
-        rowBelow = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkRow</span>(row + <span class="hljs-number">1</span>) * w,
-        rowHere = row * w,
-        col = index - rowHere,
-        colLeft = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkCol</span>(col - <span class="hljs-number">1</span>),
-        colRight = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkCol</span>(col + <span class="hljs-number">1</span>);
-
-    <span class="hljs-keyword">let</span> res = <span class="hljs-number">0</span>,
-        cursor;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
-              </div>
-              <p>center</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    res += src[index] * -<span class="hljs-number">1</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
-              </div>
-              <p>topleft</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowAbove + colLeft;
-    res += src[cursor] * <span class="hljs-number">0.05</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
-              </div>
-              <p>topright</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowAbove + colRight;
-    res += src[cursor] * <span class="hljs-number">0.05</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
-              </div>
-              <p>bottomleft</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowBelow + colLeft;
-    res += src[cursor] * <span class="hljs-number">0.05</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
-              </div>
-              <p>bottomright</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowBelow + colRight;
-    res += src[cursor] * <span class="hljs-number">0.05</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
-              </div>
-              <p>top</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowAbove + col;
-    res += src[cursor] * <span class="hljs-number">0.2</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
-              </div>
-              <p>right</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowHere + colRight;
-    res += src[cursor] * <span class="hljs-number">0.2</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
-              </div>
-              <p>left</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowHere + colLeft;
-    res += src[cursor] * <span class="hljs-number">0.2</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
-              </div>
-              <p>bottom</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowBelow + col;
-    res += src[cursor] * <span class="hljs-number">0.2</span>;
-
-    <span class="hljs-keyword">return</span> res;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
-              </div>
-              <p><code>checkRow</code>, <code>checkCol</code> - internal functions invoked by the <code>calculateLaplacian</code> function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkRow</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
-
-    <span class="hljs-keyword">const</span> h = <span class="hljs-variable language_">this</span>.<span class="hljs-property">height</span>;
-
-    <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> h - <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (val &gt;= h) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">return</span> val;
-}
-
-P.<span class="hljs-property">checkCol</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
-
-    <span class="hljs-keyword">const</span> w = <span class="hljs-variable language_">this</span>.<span class="hljs-property">width</span>;
-
-    <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> w - <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (val &gt;= w) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">return</span> val;
-}</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
-              </div>
               <p><code>checkOutputValuesExist</code> and <code>getOutputValue</code> are internal variables that must be defined by any asset that makes use of the <em>assetAdvancedFunctionality.js</em> mixin and its <code>paintCanvas</code> function</p>
 
             </div>
@@ -1784,30 +1706,17 @@ P.<span class="hljs-property">checkCol</span> = <span class="hljs-keyword">funct
 };
 P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) {
 
-    <span class="hljs-keyword">let</span> destA, destB;
-
-    <span class="hljs-keyword">const</span> { dataArrays, currentSource } = <span class="hljs-variable language_">this</span>;
-
-    <span class="hljs-keyword">if</span> (currentSource) {
-
-        [destA, , destB, ] = dataArrays;
-    }
-    <span class="hljs-keyword">else</span> {
-
-        [, destA, , destB] = dataArrays;
-    }
-
-    <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> + (destA[index] - destB[index])) / <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> + (<span class="hljs-variable language_">this</span>.<span class="hljs-property">outputA</span>[index] - <span class="hljs-variable language_">this</span>.<span class="hljs-property">outputB</span>[index])) / <span class="hljs-number">2</span>;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-43">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeReactionDiffusionAsset</span>({

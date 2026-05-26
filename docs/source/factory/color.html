@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -705,6 +710,8 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentMinimumColorInternalData</span> = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentMinimumColorReturnData</span> = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentMinimumColorString</span> = <span class="hljs-string">&#x27;&#x27;</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">isClassic</span> = <span class="hljs-literal">true</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
 
@@ -1520,15 +1527,15 @@ P.<span class="hljs-property">getRangeColor</span> = <span class="hljs-keyword">
         currentRangePoint,
     } = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">const</span> val = <span class="hljs-title function_">isa_fn</span>(easing) ? <span class="hljs-title function_">easing</span>(item) : easeEngines[easing](item);
+    <span class="hljs-keyword">const</span> val = <span class="hljs-title function_">isa_fn</span>(easing) ? <span class="hljs-title function_">easing</span>(item) : easeEngines[easing](item);
 
-        <span class="hljs-keyword">if</span> (val !== currentRangePoint) {
+    <span class="hljs-keyword">if</span> (val !== currentRangePoint) {
 
-            <span class="hljs-keyword">let</span> c1 = <span class="hljs-title function_">interpolate</span>(val, min[<span class="hljs-number">1</span>], max[<span class="hljs-number">1</span>]),
-                c2 = <span class="hljs-title function_">interpolate</span>(val, min[<span class="hljs-number">2</span>], max[<span class="hljs-number">2</span>]),
-                c3 = <span class="hljs-title function_">interpolate</span>(val, min[<span class="hljs-number">3</span>], max[<span class="hljs-number">3</span>]),
-                alpha = <span class="hljs-title function_">interpolate</span>(val, min[<span class="hljs-number">4</span>], max[<span class="hljs-number">4</span>]),
-                cMin, cMax;</pre></div></div>
+        <span class="hljs-keyword">let</span> c1 = <span class="hljs-title function_">interpolate</span>(val, min[<span class="hljs-number">1</span>], max[<span class="hljs-number">1</span>]),
+            c2 = <span class="hljs-title function_">interpolate</span>(val, min[<span class="hljs-number">2</span>], max[<span class="hljs-number">2</span>]),
+            c3 = <span class="hljs-title function_">interpolate</span>(val, min[<span class="hljs-number">3</span>], max[<span class="hljs-number">3</span>]),
+            alpha = <span class="hljs-title function_">interpolate</span>(val, min[<span class="hljs-number">4</span>], max[<span class="hljs-number">4</span>]),
+            cMin, cMax;</pre></div></div>
             
         </li>
         
@@ -1543,98 +1550,84 @@ P.<span class="hljs-property">getRangeColor</span> = <span class="hljs-keyword">
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">switch</span> (colorSpace) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">switch</span> (colorSpace) {
 
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">RGB</span> :
-                    c1 = <span class="hljs-title function_">clamp</span>(c1, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>);
-                    c2 = <span class="hljs-title function_">clamp</span>(c2, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>);
-                    c3 = <span class="hljs-title function_">clamp</span>(c3, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>);
-                    <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">RGB</span> :
+                c1 = <span class="hljs-title function_">clamp</span>(c1, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>);
+                c2 = <span class="hljs-title function_">clamp</span>(c2, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>);
+                c3 = <span class="hljs-title function_">clamp</span>(c3, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>);
+                <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">OKLCH</span> :
-                    c1 = <span class="hljs-title function_">clamp</span>(c1, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
-                    c2 = <span class="hljs-title function_">clamp</span>(c2, <span class="hljs-number">0</span>, <span class="hljs-number">0.4</span>);
+            <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">OKLCH</span> :
+                c1 = <span class="hljs-title function_">clamp</span>(c1, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
+                c2 = <span class="hljs-title function_">clamp</span>(c2, <span class="hljs-number">0</span>, <span class="hljs-number">0.4</span>);
 
-                    cMin = min[<span class="hljs-number">2</span>];
-                    cMax = max[<span class="hljs-number">2</span>];
-                    <span class="hljs-keyword">if</span> (cMin &lt;= <span class="hljs-variable constant_">EPS</span> &amp;&amp; cMax &lt;= <span class="hljs-variable constant_">EPS</span>) c3 = <span class="hljs-title function_">correctAngle</span>(max[<span class="hljs-number">3</span>]);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cMin &lt;= <span class="hljs-variable constant_">EPS</span>) c3 = <span class="hljs-title function_">correctAngle</span>(max[<span class="hljs-number">3</span>]);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cMax &lt;= <span class="hljs-variable constant_">EPS</span>) c3 = <span class="hljs-title function_">correctAngle</span>(min[<span class="hljs-number">3</span>]);
-                    <span class="hljs-keyword">else</span> c3 = <span class="hljs-title function_">interpolateShortestHue</span>(val, min[<span class="hljs-number">3</span>], max[<span class="hljs-number">3</span>]);
+                cMin = min[<span class="hljs-number">2</span>];
+                cMax = max[<span class="hljs-number">2</span>];
+                <span class="hljs-keyword">if</span> (cMin &lt;= <span class="hljs-variable constant_">EPS</span> &amp;&amp; cMax &lt;= <span class="hljs-variable constant_">EPS</span>) c3 = <span class="hljs-title function_">correctAngle</span>(max[<span class="hljs-number">3</span>]);
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cMin &lt;= <span class="hljs-variable constant_">EPS</span>) c3 = <span class="hljs-title function_">correctAngle</span>(max[<span class="hljs-number">3</span>]);
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cMax &lt;= <span class="hljs-variable constant_">EPS</span>) c3 = <span class="hljs-title function_">correctAngle</span>(min[<span class="hljs-number">3</span>]);
+                <span class="hljs-keyword">else</span> c3 = <span class="hljs-title function_">interpolateShortestHue</span>(val, min[<span class="hljs-number">3</span>], max[<span class="hljs-number">3</span>]);
 
-                    <span class="hljs-keyword">break</span>;
+                <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">OKLAB</span> :
-                    c1 = <span class="hljs-title function_">clamp</span>(c1, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
-                    c2 = <span class="hljs-title function_">clamp</span>(c2, -<span class="hljs-number">0.4</span>, <span class="hljs-number">0.4</span>);
-                    c3 = <span class="hljs-title function_">clamp</span>(c3, -<span class="hljs-number">0.4</span>, <span class="hljs-number">0.4</span>);
-                    <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">OKLAB</span> :
+                c1 = <span class="hljs-title function_">clamp</span>(c1, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
+                c2 = <span class="hljs-title function_">clamp</span>(c2, -<span class="hljs-number">0.4</span>, <span class="hljs-number">0.4</span>);
+                c3 = <span class="hljs-title function_">clamp</span>(c3, -<span class="hljs-number">0.4</span>, <span class="hljs-number">0.4</span>);
+                <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">LCH</span> :
-                    c1 = <span class="hljs-title function_">clamp</span>(c1, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>);
-                    c2 = <span class="hljs-title function_">clamp</span>(c2, <span class="hljs-number">0</span>, <span class="hljs-number">230</span>);
+            <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">LCH</span> :
+                c1 = <span class="hljs-title function_">clamp</span>(c1, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>);
+                c2 = <span class="hljs-title function_">clamp</span>(c2, <span class="hljs-number">0</span>, <span class="hljs-number">230</span>);
 
-                    cMin = min[<span class="hljs-number">2</span>];
-                    cMax = max[<span class="hljs-number">2</span>];
-                    <span class="hljs-keyword">if</span> (cMin &lt;= <span class="hljs-variable constant_">EPS</span> &amp;&amp; cMax &lt;= <span class="hljs-variable constant_">EPS</span>) c3 = <span class="hljs-title function_">correctAngle</span>(max[<span class="hljs-number">3</span>]);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cMin &lt;= <span class="hljs-variable constant_">EPS</span>) c3 = <span class="hljs-title function_">correctAngle</span>(max[<span class="hljs-number">3</span>]);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cMax &lt;= <span class="hljs-variable constant_">EPS</span>) c3 = <span class="hljs-title function_">correctAngle</span>(min[<span class="hljs-number">3</span>]);
-                    <span class="hljs-keyword">else</span> c3 = <span class="hljs-title function_">interpolateShortestHue</span>(val, min[<span class="hljs-number">3</span>], max[<span class="hljs-number">3</span>]);
+                cMin = min[<span class="hljs-number">2</span>];
+                cMax = max[<span class="hljs-number">2</span>];
+                <span class="hljs-keyword">if</span> (cMin &lt;= <span class="hljs-variable constant_">EPS</span> &amp;&amp; cMax &lt;= <span class="hljs-variable constant_">EPS</span>) c3 = <span class="hljs-title function_">correctAngle</span>(max[<span class="hljs-number">3</span>]);
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cMin &lt;= <span class="hljs-variable constant_">EPS</span>) c3 = <span class="hljs-title function_">correctAngle</span>(max[<span class="hljs-number">3</span>]);
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cMax &lt;= <span class="hljs-variable constant_">EPS</span>) c3 = <span class="hljs-title function_">correctAngle</span>(min[<span class="hljs-number">3</span>]);
+                <span class="hljs-keyword">else</span> c3 = <span class="hljs-title function_">interpolateShortestHue</span>(val, min[<span class="hljs-number">3</span>], max[<span class="hljs-number">3</span>]);
 
-                    <span class="hljs-keyword">break</span>;
+                <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">LAB</span> :
-                    c1 = <span class="hljs-title function_">clamp</span>(c1, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>);
-                    c2 = <span class="hljs-title function_">clamp</span>(c2, -<span class="hljs-number">125</span>, <span class="hljs-number">125</span>);
-                    c3 = <span class="hljs-title function_">clamp</span>(c3, -<span class="hljs-number">125</span>, <span class="hljs-number">125</span>);
-                    <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">LAB</span> :
+                c1 = <span class="hljs-title function_">clamp</span>(c1, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>);
+                c2 = <span class="hljs-title function_">clamp</span>(c2, -<span class="hljs-number">125</span>, <span class="hljs-number">125</span>);
+                c3 = <span class="hljs-title function_">clamp</span>(c3, -<span class="hljs-number">125</span>, <span class="hljs-number">125</span>);
+                <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">HSL</span> :
-                    c1 = <span class="hljs-title function_">interpolateShortestHue</span>(val, min[<span class="hljs-number">1</span>], max[<span class="hljs-number">1</span>]);
-                    c2 = <span class="hljs-title function_">clamp</span>(c2, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>);
-                    c3 = <span class="hljs-title function_">clamp</span>(c3, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>);
-                    <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">HSL</span> :
+                c1 = <span class="hljs-title function_">interpolateShortestHue</span>(val, min[<span class="hljs-number">1</span>], max[<span class="hljs-number">1</span>]);
+                c2 = <span class="hljs-title function_">clamp</span>(c2, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>);
+                c3 = <span class="hljs-title function_">clamp</span>(c3, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>);
+                <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">HWB</span> :
-                    c1 = <span class="hljs-title function_">interpolateShortestHue</span>(val, min[<span class="hljs-number">1</span>], max[<span class="hljs-number">1</span>]);
-                    c2 = <span class="hljs-title function_">clamp</span>(c2, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>);
-                    c3 = <span class="hljs-title function_">clamp</span>(c3, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>);
-                    <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">HWB</span> :
+                c1 = <span class="hljs-title function_">interpolateShortestHue</span>(val, min[<span class="hljs-number">1</span>], max[<span class="hljs-number">1</span>]);
+                c2 = <span class="hljs-title function_">clamp</span>(c2, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>);
+                c3 = <span class="hljs-title function_">clamp</span>(c3, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>);
+                <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">XYZ</span> :
-                    c1 = <span class="hljs-title function_">clamp</span>(c1, -<span class="hljs-number">0.001</span>, <span class="hljs-number">1.2</span>);
-                    c2 = <span class="hljs-title function_">clamp</span>(c2, -<span class="hljs-number">0.001</span>, <span class="hljs-number">1.2</span>);
-                    c3 = <span class="hljs-title function_">clamp</span>(c3, -<span class="hljs-number">0.001</span>, <span class="hljs-number">1.2</span>);
-                    <span class="hljs-keyword">break</span>;
-            }
+            <span class="hljs-keyword">case</span> <span class="hljs-variable constant_">XYZ</span> :
+                c1 = <span class="hljs-title function_">clamp</span>(c1, -<span class="hljs-number">0.001</span>, <span class="hljs-number">1.2</span>);
+                c2 = <span class="hljs-title function_">clamp</span>(c2, -<span class="hljs-number">0.001</span>, <span class="hljs-number">1.2</span>);
+                c3 = <span class="hljs-title function_">clamp</span>(c3, -<span class="hljs-number">0.001</span>, <span class="hljs-number">1.2</span>);
+                <span class="hljs-keyword">break</span>;
+        }
 
-            alpha = <span class="hljs-title function_">clamp</span>(alpha, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
+        alpha = <span class="hljs-title function_">clamp</span>(alpha, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
 
-            <span class="hljs-keyword">const</span> data = [colorSpace, c1, c2, c3, alpha];
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentColorInternalData</span> = data;
+        <span class="hljs-keyword">const</span> data = [colorSpace, c1, c2, c3, alpha];
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentColorInternalData</span> = data;
 
-            <span class="hljs-keyword">const</span> res = colorEngine.<span class="hljs-title function_">convertColorData</span>(data, returnColorAs);
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentColorReturnData</span> = res;
+        <span class="hljs-keyword">const</span> res = colorEngine.<span class="hljs-title function_">convertColorData</span>(data, returnColorAs);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentColorReturnData</span> = res;
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentColorString</span> = colorEngine.<span class="hljs-title function_">buildColorStringFromData</span>(res);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentColorString</span> = colorEngine.<span class="hljs-title function_">buildColorStringFromData</span>(res);
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRangePoint</span> = val;
-        }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
-              </div>
-              <p>}</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentColorString</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRangePoint</span> = val;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentColorString</span>;
 };
 
 P.<span class="hljs-property">generateRandomColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
@@ -1658,11 +1651,11 @@ P.<span class="hljs-property">generateRandomColor</span> = <span class="hljs-key
         </li>
         
         
-        <li id="section-43">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>We need to clamp color channels to meet colorSpace requirements</p>
 
@@ -1751,11 +1744,11 @@ P.<span class="hljs-property">generateRandomColor</span> = <span class="hljs-key
         </li>
         
         
-        <li id="section-44">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>getData</code> function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
 
@@ -1769,11 +1762,11 @@ P.<span class="hljs-property">generateRandomColor</span> = <span class="hljs-key
         </li>
         
         
-        <li id="section-45">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <h4 id="passing-functions-from-the-color-engine-through-to-the-factory-instances-api">Passing functions from the color engine through to the factory instance’s API</h4>
 <p><code>buildColorStringFromData</code></p>
@@ -1789,11 +1782,11 @@ P.<span class="hljs-property">generateRandomColor</span> = <span class="hljs-key
         </li>
         
         
-        <li id="section-46">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>extractRGBfromColorString</code> - returns the R, G and B channel values (0 to 255) from a valid CSS Colors level 4 string</p>
 
@@ -1804,11 +1797,11 @@ P.<span class="hljs-property">generateRandomColor</span> = <span class="hljs-key
         </li>
         
         
-        <li id="section-47">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>extractDatafromColorString</code> - returns the R, G, B (0 to 255) and A (0 to 1) channel values from a valid CSS Colors level 4 string, together with its color space value.</p>
 <ul>
@@ -1822,11 +1815,11 @@ P.<span class="hljs-property">generateRandomColor</span> = <span class="hljs-key
         </li>
         
         
-        <li id="section-48">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>convertRGBtoHex</code></p>
 
@@ -1837,11 +1830,11 @@ P.<span class="hljs-property">generateRandomColor</span> = <span class="hljs-key
         </li>
         
         
-        <li id="section-49">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">const</span> mycol = scrawl.<span class="hljs-title function_">makeColor</span>({

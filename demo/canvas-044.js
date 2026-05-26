@@ -174,6 +174,7 @@ scrawl.makePolygon({
 
     // To use a Cell as a pattern we just assign its name to the entity's fillStyle attribute
     fillStyle: name('gradient-pattern-cell'),
+    lockFillStyleToEntity: true,
 });
 
 
@@ -233,8 +234,8 @@ scrawl.makePattern({
 
     name: name('wavy-pattern'),
     asset: name('gradient-pattern-cell'),
-    skewY: 0.7,
-    shiftY: -150,
+    patternSkewY: 0.7,
+    patternShiftY: -150,
 });
 
 scrawl.makeBlock({

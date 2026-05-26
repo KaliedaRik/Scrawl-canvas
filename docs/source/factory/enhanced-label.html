@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -598,7 +603,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, asset, constructors, group, tween } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, asset, constructors, group, tween, stylesnames, cellnames } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/state.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { makeTextStyle } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/text-style.js&#x27;</span>;
@@ -632,7 +637,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, <span class="hljs-variable constant_">ALPHABETIC</span>, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">BOTTOM</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">DESTINATION_OVER</span>, <span class="hljs-variable constant_">END</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GOOD_HOST</span>, <span class="hljs-variable constant_">HANGING</span>, <span class="hljs-variable constant_">IDEOGRAPHIC</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LTR</span>, <span class="hljs-variable constant_">MIDDLE</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-title class_">PX0</span>, <span class="hljs-variable constant_">RIGHT</span>, <span class="hljs-variable constant_">ROUND</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OUT</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">SPACE</span>, <span class="hljs-variable constant_">START</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">T_ENHANCED_LABEL</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _abs, _assign, _ceil, _computed, _cos, _create, _entries, _floor, _hypot, _isArray, _isFinite, _keys, _radian, _round, _setPrototypeOf, _sin, _values, <span class="hljs-variable constant_">ALPHABETIC</span>, <span class="hljs-variable constant_">AUTO</span>, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BOTTOM</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">DESTINATION_OVER</span>, <span class="hljs-variable constant_">END</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GOOD_HOST</span>, <span class="hljs-variable constant_">HANGING</span>, <span class="hljs-variable constant_">IDEOGRAPHIC</span>, <span class="hljs-variable constant_">IMG</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LTR</span>, <span class="hljs-variable constant_">MIDDLE</span>, <span class="hljs-variable constant_">NONE</span>, <span class="hljs-variable constant_">NORMAL</span>, <span class="hljs-title class_">PX0</span>, <span class="hljs-variable constant_">RIGHT</span>, <span class="hljs-variable constant_">ROUND</span>, <span class="hljs-variable constant_">SOURCE_IN</span>, <span class="hljs-variable constant_">SOURCE_OUT</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">SPACE</span>, <span class="hljs-variable constant_">START</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">T_COLOR</span>, <span class="hljs-variable constant_">T_ENHANCED_LABEL</span>, <span class="hljs-variable constant_">T_GROUP</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1869,12 +1874,26 @@ S.<span class="hljs-property">textHandle</span> = <span class="hljs-keyword">fun
 S.<span class="hljs-property">guidelineDash</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">guidelineDash</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
+};
+
+S.<span class="hljs-property">guidelineWidth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">guidelineWidth</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
+};
+
+S.<span class="hljs-property">showGuidelines</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">showGuidelines</span> = !!item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
 };
 
 S.<span class="hljs-property">guidelineStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (!item) <span class="hljs-variable language_">this</span>.<span class="hljs-property">guidelineStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>.<span class="hljs-property">guidelineStyle</span>;
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">guidelineStyle</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
 };
 
 S.<span class="hljs-property">pathPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
@@ -1912,6 +1931,40 @@ G.<span class="hljs-property">textUnits</span> = <span class="hljs-keyword">func
 G.<span class="hljs-property">textLines</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">lines</span>;
+};
+
+S.<span class="hljs-property">order</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">calculateOrder</span> = val;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampOrder</span> = val;
+
+    <span class="hljs-keyword">const</span> g = <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>;
+    <span class="hljs-keyword">if</span> (g &amp;&amp; g.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_GROUP</span>) g.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
+};
+S.<span class="hljs-property">calculateOrder</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">calculateOrder</span> = val;
+
+    <span class="hljs-keyword">const</span> g = <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>;
+    <span class="hljs-keyword">if</span> (g &amp;&amp; g.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_GROUP</span>) g.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
+};
+S.<span class="hljs-property">stampOrder</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampOrder</span> = val;
+
+    <span class="hljs-keyword">const</span> g = <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>;
+    <span class="hljs-keyword">if</span> (g &amp;&amp; g.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_GROUP</span>) g.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
+};
+
+S.<span class="hljs-property">startTextOnLine</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(val)) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">startTextOnLine</span> = <span class="hljs-title function_">_floor</span>(val);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTextLayout</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
+
+    }
 };</pre></div></div>
             
         </li>
@@ -1935,7 +1988,13 @@ G.<span class="hljs-property">textLines</span> = <span class="hljs-keyword">func
     <span class="hljs-keyword">if</span> (controller) <span class="hljs-keyword">return</span> controller.<span class="hljs-property">labelStylesCalculator</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
-};</pre></div></div>
+};
+
+P.<span class="hljs-property">getStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val, stateAlternative</span>) {
+
+    <span class="hljs-keyword">if</span> (!val &amp;&amp; stateAlternative) val = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>[stateAlternative];
+
+    <span class="hljs-keyword">if</span> (val == <span class="hljs-literal">null</span> || val === <span class="hljs-variable constant_">ZERO_STR</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">BLACK</span>;</pre></div></div>
             
         </li>
         
@@ -1945,6 +2004,89 @@ G.<span class="hljs-property">textLines</span> = <span class="hljs-keyword">func
               
               <div class="sswrap ">
                 <a class="ss" href="#section-57">&#x00a7;</a>
+              </div>
+              <p>String handling</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (val.<span class="hljs-property">substring</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-58">&#x00a7;</a>
+              </div>
+              <p>Reject all SC registered styles and cells</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (stylesnames.<span class="hljs-title function_">includes</span>(val)) <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">BLACK</span>;
+        <span class="hljs-keyword">if</span> (cellnames.<span class="hljs-title function_">includes</span>(val)) <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">BLACK</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-59">&#x00a7;</a>
+              </div>
+              <p>Assume remaining strings are CSS colours</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> val;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-60">&#x00a7;</a>
+              </div>
+              <p>SC objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (val &amp;&amp; val.<span class="hljs-property">type</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-61">&#x00a7;</a>
+              </div>
+              <p>Reject everything except Color objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (val.<span class="hljs-property">get</span> &amp;&amp; val.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_COLOR</span>) <span class="hljs-keyword">return</span> val.<span class="hljs-title function_">get</span>();
+
+        <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">BLACK</span>;
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">BLACK</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>makeWorkingTextStyle</code> - Clone a TextStyle object</p>
 
@@ -1963,11 +2105,11 @@ G.<span class="hljs-property">textLines</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-58">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><code>setEngineFromWorkingTextStyle</code> - Sets the state object to current working requirements, alongside directly updating the Cell’s engine to match</p>
 
@@ -1976,6 +2118,13 @@ G.<span class="hljs-property">textLines</span> = <span class="hljs-keyword">func
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setEngineFromWorkingTextStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">worker, style, state, cell</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateWorkingTextStyle</span>(worker, style);
+
+    worker.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getStyle</span>(worker.<span class="hljs-property">fillStyle</span>, <span class="hljs-string">&#x27;fillStyle&#x27;</span>, cell);
+    worker.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getStyle</span>(worker.<span class="hljs-property">strokeStyle</span>, <span class="hljs-string">&#x27;strokeStyle&#x27;</span>, cell);
+    worker.<span class="hljs-property">underlineStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getStyle</span>(worker.<span class="hljs-property">underlineStyle</span>, <span class="hljs-string">&#x27;fillStyle&#x27;</span>, cell);
+    worker.<span class="hljs-property">overlineStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getStyle</span>(worker.<span class="hljs-property">overlineStyle</span>, <span class="hljs-string">&#x27;fillStyle&#x27;</span>, cell);
+    worker.<span class="hljs-property">highlightStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getStyle</span>(worker.<span class="hljs-property">highlightStyle</span>, <span class="hljs-string">&#x27;fillStyle&#x27;</span>, cell);
+
     state.<span class="hljs-title function_">set</span>(worker);
     cell.<span class="hljs-title function_">setEngine</span>(<span class="hljs-variable language_">this</span>);
 };</pre></div></div>
@@ -1983,11 +2132,11 @@ G.<span class="hljs-property">textLines</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-59">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><code>updateWorkingTextStyle</code> - Updates the working TextStyle object with a partial TextStyle object, and regenerates font strings from the updated data</p>
 <ul>
@@ -2009,11 +2158,11 @@ G.<span class="hljs-property">textLines</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-60">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>getTextHandleX</code> - Calculate the horizontal offset required for a given TextUnit</p>
 
@@ -2035,11 +2184,11 @@ G.<span class="hljs-property">textLines</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-61">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><code>getTextHandleY</code> - Calculate the vertical offset required for a given TextUnit</p>
 
@@ -2079,11 +2228,11 @@ G.<span class="hljs-property">textLines</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-62">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><code>getTextOffset</code> - Calculate the horizontal offset required for a given TextUnit</p>
 
@@ -2097,10 +2246,13 @@ G.<span class="hljs-property">textLines</span> = <span class="hljs-keyword">func
     <span class="hljs-keyword">return</span> (<span class="hljs-built_in">parseFloat</span>(val) / <span class="hljs-number">100</span>) * dim;
 };
 
-P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+P.<span class="hljs-property">handleDirtyCache</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-title function_">releaseCell</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>);
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>) {
+
+        <span class="hljs-title function_">releaseCell</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span> = <span class="hljs-literal">null</span>;
+    }
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">textUnitHitZones</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
@@ -2110,11 +2262,11 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-63">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <h4 id="clean-functions">Clean functions</h4>
 <p><code>cleanPathObject</code> - calculate the EnhancedLabel entity’s <strong>Path2D object</strong></p>
@@ -2136,11 +2288,11 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-64">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>cleanLayout</code> - recalculate the positioning of all TextUnits in the space or along the path</p>
 
@@ -2150,7 +2302,8 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span>) {
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dirtyCache</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyLayout</span> = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">useLayoutTemplateAsPath</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">calculateLines</span>();
@@ -2162,11 +2315,11 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-65">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><code>calculateLines</code> - calculate the positions and lengths of multiple lines withing a layout entity’s enclosed space.</p>
 
@@ -2209,11 +2362,11 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-66">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p>Prepare canvas for work</p>
 
@@ -2285,11 +2438,11 @@ P.<span class="hljs-property">dirtyCache</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-67">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p>Protecting against a zero value step</p>
 
@@ -2388,11 +2541,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-68">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p>Always start with the source so later passes (CJK binding) can run</p>
 
@@ -2407,11 +2560,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-69">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <ol>
 <li>Developer hook</li>
@@ -2430,11 +2583,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-70">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <ol start="2">
 <li>Built-in Intl.Segmenter fallback</li>
@@ -2491,11 +2644,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-71">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <ol start="3">
 <li>CJK punctuation binding can (and should) run even when autoHyphenate is false</li>
@@ -2513,11 +2666,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-72">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><code>cleanText</code> - Break the entity’s text into smaller TextUnit objects which can be positioned within, or along, the layout entity’s shape</p>
 
@@ -2528,6 +2681,7 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyText</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
 
         <span class="hljs-keyword">const</span> {
             breakTextOnSpaces,
@@ -2541,11 +2695,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-73">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p>Language-aware preprocessing (opt-in)</p>
 
@@ -2561,11 +2715,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-74">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p>Decide whether to use vertical CJK forms for this run</p>
 
@@ -2587,11 +2741,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-75">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <ul>
 <li>Soft hyphens and truncation marking is deliberately suppressed for RTL fonts</li>
@@ -2657,11 +2811,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-76">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p>Capturing the last word</p>
 
@@ -2700,11 +2854,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-77">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p>Capturing the last word</p>
 
@@ -2728,11 +2882,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-78">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p>Some Chinese/Japanese characters simply have to stick together (but not in columns)!</p>
 
@@ -2821,11 +2975,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-79">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <p><code>assessTextForStyle</code> - Add styling details to each TextUnit</p>
 <ul>
@@ -2841,11 +2995,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-80">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <p>No calculator! Reset dirty flag and return</p>
 
@@ -2860,11 +3014,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-81">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <p>Local helper function <code>processNode</code></p>
 <ul>
@@ -2897,11 +3051,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-82">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
               <p>Local helper function <code>getCharacterUnit</code></p>
 <ul>
@@ -2937,11 +3091,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-83">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
               <p>Local helper function <code>diffStyles</code></p>
 <ul>
@@ -3094,11 +3248,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-84">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-84">&#x00a7;</a>
+                <a class="ss" href="#section-89">&#x00a7;</a>
               </div>
               <p>Local helper function <code>setupTester</code></p>
 <ul>
@@ -3148,11 +3302,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-85">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-85">&#x00a7;</a>
+                <a class="ss" href="#section-90">&#x00a7;</a>
               </div>
               <p>Start processing data here</p>
 
@@ -3172,11 +3326,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-86">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-86">&#x00a7;</a>
+                <a class="ss" href="#section-91">&#x00a7;</a>
               </div>
               <p><code>measureTextUnits</code> - TextUnit lengths represent the amount of space they will need to take along the line they will (eventually) be assigned to.</p>
 <ul>
@@ -3223,11 +3377,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-87">
+        <li id="section-92">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-87">&#x00a7;</a>
+                <a class="ss" href="#section-92">&#x00a7;</a>
               </div>
               <p>Add word spacing to space chars</p>
 
@@ -3242,11 +3396,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-88">
+        <li id="section-93">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-88">&#x00a7;</a>
+                <a class="ss" href="#section-93">&#x00a7;</a>
               </div>
               <p>Prep soft hyphens</p>
 
@@ -3261,11 +3415,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-89">
+        <li id="section-94">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-89">&#x00a7;</a>
+                <a class="ss" href="#section-94">&#x00a7;</a>
               </div>
               <p>Prep truncation</p>
 
@@ -3280,11 +3434,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-90">
+        <li id="section-95">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-90">&#x00a7;</a>
+                <a class="ss" href="#section-95">&#x00a7;</a>
               </div>
               <p>No gaps between CJK chars and punctuation when textUnitFlow is columnar</p>
 
@@ -3301,11 +3455,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-91">
+        <li id="section-96">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-91">&#x00a7;</a>
+                <a class="ss" href="#section-96">&#x00a7;</a>
               </div>
               <p>Gather kerning data (if required) - only applies to rows</p>
 
@@ -3316,11 +3470,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-92">
+        <li id="section-97">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-92">&#x00a7;</a>
+                <a class="ss" href="#section-97">&#x00a7;</a>
               </div>
               <p>Reset things back to initial before starting the second walk-through</p>
 
@@ -3337,11 +3491,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-93">
+        <li id="section-98">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-93">&#x00a7;</a>
+                <a class="ss" href="#section-98">&#x00a7;</a>
               </div>
               <p>Do we need to perform this work?</p>
 
@@ -3354,11 +3508,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-94">
+        <li id="section-99">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-94">&#x00a7;</a>
+                <a class="ss" href="#section-99">&#x00a7;</a>
               </div>
               <p>No need to kern the last textUnit</p>
 
@@ -3371,11 +3525,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-95">
+        <li id="section-100">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-95">&#x00a7;</a>
+                <a class="ss" href="#section-100">&#x00a7;</a>
               </div>
               <p>We don’t need to kern anything next to a space, or the space itself</p>
 
@@ -3386,11 +3540,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-96">
+        <li id="section-101">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-96">&#x00a7;</a>
+                <a class="ss" href="#section-101">&#x00a7;</a>
               </div>
               <p>We won’t kern anything that’s changing style in significant ways</p>
 
@@ -3405,11 +3559,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-97">
+        <li id="section-102">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-97">&#x00a7;</a>
+                <a class="ss" href="#section-102">&#x00a7;</a>
               </div>
               <p>the kerning applies the the next textUnit, not the current one</p>
 
@@ -3428,11 +3582,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-98">
+        <li id="section-103">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-98">&#x00a7;</a>
+                <a class="ss" href="#section-103">&#x00a7;</a>
               </div>
               <p><code>layoutText</code> - initiate the process of laying out text into a space, or along a line</p>
 <ul>
@@ -3452,6 +3606,7 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
             <span class="hljs-keyword">if</span> (layoutTemplate &amp;&amp; layoutTemplate.<span class="hljs-property">useAsPath</span>) {
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTextLayout</span> = <span class="hljs-literal">false</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
 
                 <span class="hljs-title function_">releaseLine</span>(...lines);
                 lines.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
@@ -3467,6 +3622,7 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
             <span class="hljs-keyword">if</span> (lines.<span class="hljs-property">length</span> &amp;&amp; textUnits.<span class="hljs-property">length</span>) {
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTextLayout</span> = <span class="hljs-literal">false</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
 
                 lines.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">line</span> =&gt;</span> {
 
@@ -3488,11 +3644,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-99">
+        <li id="section-104">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-99">&#x00a7;</a>
+                <a class="ss" href="#section-104">&#x00a7;</a>
               </div>
               <p><code>assignTextUnitsToLines</code> - Assign sufficient text units to each line to fill the line’s length</p>
 
@@ -3547,11 +3703,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-100">
+        <li id="section-105">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-100">&#x00a7;</a>
+                <a class="ss" href="#section-105">&#x00a7;</a>
               </div>
               <p>Check: is there room for the text unit</p>
 
@@ -3562,11 +3718,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-101">
+        <li id="section-106">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-101">&#x00a7;</a>
+                <a class="ss" href="#section-106">&#x00a7;</a>
               </div>
               <p>We need to discount the length of spaces that end up at the beginning of the line</p>
 
@@ -3579,11 +3735,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-102">
+        <li id="section-107">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-102">&#x00a7;</a>
+                <a class="ss" href="#section-107">&#x00a7;</a>
               </div>
               <p>Hyphens capture</p>
 <ul>
@@ -3598,11 +3754,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-103">
+        <li id="section-108">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-103">&#x00a7;</a>
+                <a class="ss" href="#section-108">&#x00a7;</a>
               </div>
               <p>We need to do a look-forward for soft hyphens</p>
 
@@ -3613,11 +3769,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-104">
+        <li id="section-109">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-104">&#x00a7;</a>
+                <a class="ss" href="#section-109">&#x00a7;</a>
               </div>
               <p>Next text unit is a soft hyphen</p>
 
@@ -3630,11 +3786,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-105">
+        <li id="section-110">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-105">&#x00a7;</a>
+                <a class="ss" href="#section-110">&#x00a7;</a>
               </div>
               <p>Check: this text unit and the next significant one will fit on line</p>
 
@@ -3645,11 +3801,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-106">
+        <li id="section-111">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-106">&#x00a7;</a>
+                <a class="ss" href="#section-111">&#x00a7;</a>
               </div>
               <p>Check: this text unit and the visible hyphen will fit on line</p>
 
@@ -3666,11 +3822,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-107">
+        <li id="section-112">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-107">&#x00a7;</a>
+                <a class="ss" href="#section-112">&#x00a7;</a>
               </div>
               <p>Check: there’s no room for this text unit and its soft hyphen</p>
 
@@ -3682,11 +3838,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-108">
+        <li id="section-113">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-108">&#x00a7;</a>
+                <a class="ss" href="#section-113">&#x00a7;</a>
               </div>
               <p>Next text unit is not a soft hyphen; add this text unit to the array</p>
 
@@ -3698,11 +3854,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-109">
+        <li id="section-114">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-109">&#x00a7;</a>
+                <a class="ss" href="#section-114">&#x00a7;</a>
               </div>
               <p>Everything else, including all TextUnits with an <code>rtl</code> direction, and all along a column</p>
 
@@ -3716,11 +3872,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-110">
+        <li id="section-115">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-110">&#x00a7;</a>
+                <a class="ss" href="#section-115">&#x00a7;</a>
               </div>
               <p>There’s no room left on this line for the TextUnit</p>
 <ul>
@@ -3740,11 +3896,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-111">
+        <li id="section-116">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-111">&#x00a7;</a>
+                <a class="ss" href="#section-116">&#x00a7;</a>
               </div>
               <p>Truncation check</p>
 <ul>
@@ -3832,11 +3988,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-112">
+        <li id="section-117">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-112">&#x00a7;</a>
+                <a class="ss" href="#section-117">&#x00a7;</a>
               </div>
               <p><code>positionTextUnits</code> - Initiate the process of generating positional coordinates for each TextUnit. This function breaks the work into two options:</p>
 <ul>
@@ -3857,11 +4013,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-113">
+        <li id="section-118">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-113">&#x00a7;</a>
+                <a class="ss" href="#section-118">&#x00a7;</a>
               </div>
               <p><code>positionTextUnitsAlongPath</code> - Position each TextUnit along a single-line path of the layout entity (if possible)</p>
 
@@ -3899,11 +4055,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-114">
+        <li id="section-119">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-114">&#x00a7;</a>
+                <a class="ss" href="#section-119">&#x00a7;</a>
               </div>
               <p>TODO: this is an ugly fix for making RTL words appear correctly along the line</p>
 <ul>
@@ -4080,11 +4236,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-115">
+        <li id="section-120">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-115">&#x00a7;</a>
+                <a class="ss" href="#section-120">&#x00a7;</a>
               </div>
               <p><code>positionTextUnitsInSpace</code> - Position each TextUnit along the line it has been assigned to. This work takes into account:</p>
 <ul>
@@ -4141,11 +4297,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-116">
+        <li id="section-121">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-116">&#x00a7;</a>
+                <a class="ss" href="#section-121">&#x00a7;</a>
               </div>
               <p>only process lines that have textUnits</p>
 
@@ -4172,11 +4328,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-117">
+        <li id="section-122">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-117">&#x00a7;</a>
+                <a class="ss" href="#section-122">&#x00a7;</a>
               </div>
               <p>Get distances that need to be processed</p>
 
@@ -4191,11 +4347,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-118">
+        <li id="section-123">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-118">&#x00a7;</a>
+                <a class="ss" href="#section-123">&#x00a7;</a>
               </div>
               <p>We ignore spaces at the start/end of the line</p>
 
@@ -4206,11 +4362,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-119">
+        <li id="section-124">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-119">&#x00a7;</a>
+                <a class="ss" href="#section-124">&#x00a7;</a>
               </div>
               <p>Populate the initialDistances array, and keep a running total of the current length used</p>
 
@@ -4226,11 +4382,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-120">
+        <li id="section-125">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-120">&#x00a7;</a>
+                <a class="ss" href="#section-125">&#x00a7;</a>
               </div>
               <p>keep a count of the number of spaces within the line</p>
 
@@ -4244,11 +4400,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-121">
+        <li id="section-126">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-121">&#x00a7;</a>
+                <a class="ss" href="#section-126">&#x00a7;</a>
               </div>
               <p>Unused space</p>
 
@@ -4259,11 +4415,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-122">
+        <li id="section-127">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-122">&#x00a7;</a>
+                <a class="ss" href="#section-127">&#x00a7;</a>
               </div>
               <p>Adjustment for dynamic inputs (soft hyphen, truncation chars)</p>
 <ul>
@@ -4281,11 +4437,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-123">
+        <li id="section-128">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-123">&#x00a7;</a>
+                <a class="ss" href="#section-128">&#x00a7;</a>
               </div>
               <p>Add unused space to distances as we push data into adjustedDistances</p>
 
@@ -4296,11 +4452,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-124">
+        <li id="section-129">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-124">&#x00a7;</a>
+                <a class="ss" href="#section-129">&#x00a7;</a>
               </div>
               <p>If justify is ‘end’, we add unused space to all distances</p>
 
@@ -4314,11 +4470,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-125">
+        <li id="section-130">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-125">&#x00a7;</a>
+                <a class="ss" href="#section-130">&#x00a7;</a>
               </div>
               <p>If justify is ‘center’, we add half the unused space to all distances</p>
 
@@ -4333,11 +4489,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-126">
+        <li id="section-131">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-126">&#x00a7;</a>
+                <a class="ss" href="#section-131">&#x00a7;</a>
               </div>
               <p>If justify is ‘space-between’ or ‘space-around’ … we handle this case below</p>
 
@@ -4360,11 +4516,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-127">
+        <li id="section-132">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-127">&#x00a7;</a>
+                <a class="ss" href="#section-132">&#x00a7;</a>
               </div>
               <p>If justify is ‘start’ … no distance adjustments required</p>
 
@@ -4378,11 +4534,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-128">
+        <li id="section-133">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-128">&#x00a7;</a>
+                <a class="ss" href="#section-133">&#x00a7;</a>
               </div>
               <p>space-between justify text needs special processing as we only want to add portions of remaining space to each of the relevant ‘space’ text units</p>
 
@@ -4441,11 +4597,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-129">
+        <li id="section-134">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-129">&#x00a7;</a>
+                <a class="ss" href="#section-134">&#x00a7;</a>
               </div>
               <p>Now we can update the relevant textUnit objects. This is where we take into account the language/font preference for what they consider to be their natural start/end sides</p>
 
@@ -4592,11 +4748,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-130">
+        <li id="section-135">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-130">&#x00a7;</a>
+                <a class="ss" href="#section-135">&#x00a7;</a>
               </div>
               <p><code>positionTextDecoration</code> - Recovers data which can be used for building underline, overline and highlight Path2D objects</p>
 
@@ -4803,11 +4959,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-131">
+        <li id="section-136">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-131">&#x00a7;</a>
+                <a class="ss" href="#section-136">&#x00a7;</a>
               </div>
               <p>Process each line separately</p>
 <ul>
@@ -4846,11 +5002,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-132">
+        <li id="section-137">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-132">&#x00a7;</a>
+                <a class="ss" href="#section-137">&#x00a7;</a>
               </div>
               <p>Update styling data as required by each TextUnit</p>
 
@@ -4872,11 +5028,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-133">
+        <li id="section-138">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-133">&#x00a7;</a>
+                <a class="ss" href="#section-138">&#x00a7;</a>
               </div>
               <p>Only process visible TextUnits</p>
 
@@ -4889,11 +5045,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-134">
+        <li id="section-139">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-134">&#x00a7;</a>
+                <a class="ss" href="#section-139">&#x00a7;</a>
               </div>
               <p>TextUnits along a column never style spaces</p>
 
@@ -4932,11 +5088,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-135">
+        <li id="section-140">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-135">&#x00a7;</a>
+                <a class="ss" href="#section-140">&#x00a7;</a>
               </div>
               <p>TextUnits that are all single chars will style spaces</p>
 
@@ -4997,11 +5153,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-136">
+        <li id="section-141">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-136">&#x00a7;</a>
+                <a class="ss" href="#section-141">&#x00a7;</a>
               </div>
               <p>TextUnits that are blocks of chars chars will not style spaces</p>
 
@@ -5038,11 +5194,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-137">
+        <li id="section-142">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-137">&#x00a7;</a>
+                <a class="ss" href="#section-142">&#x00a7;</a>
               </div>
               <p>Non-pathed TextUnits along a row will style spaces</p>
 
@@ -5109,11 +5265,11 @@ P.<span class="hljs-property">preprocessTextForLineBreaks</span> = <span class="
         </li>
         
         
-        <li id="section-138">
+        <li id="section-143">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-138">&#x00a7;</a>
+                <a class="ss" href="#section-143">&#x00a7;</a>
               </div>
               <h4 id="display-cycle-functions">Display cycle functions</h4>
 
@@ -5133,7 +5289,7 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span>) {
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dirtyCache</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> = <span class="hljs-literal">false</span>;
 
@@ -5144,7 +5300,7 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilters</span>) {
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dirtyCache</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">false</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">false</span>;
@@ -5165,11 +5321,11 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-139">
+        <li id="section-144">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-139">&#x00a7;</a>
+                <a class="ss" href="#section-144">&#x00a7;</a>
               </div>
               <p>Cleaning the font fails if font isn’t loaded. Only need to proceed to clean the text after font loads.</p>
 
@@ -5183,11 +5339,11 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-140">
+        <li id="section-145">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-140">&#x00a7;</a>
+                <a class="ss" href="#section-145">&#x00a7;</a>
               </div>
               <p><code>cleanText</code>, <code>cleanLayout</code> and <code>layoutText</code> functions will also check to see if font has uploaded before performing their work</p>
 
@@ -5208,11 +5364,11 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-141">
+        <li id="section-146">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-141">&#x00a7;</a>
+                <a class="ss" href="#section-146">&#x00a7;</a>
               </div>
               <p><code>stamp</code> - Invoked by the entity’s Group</p>
 <ul>
@@ -5292,11 +5448,11 @@ P.<span class="hljs-property">getCellCoverage</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-142">
+        <li id="section-147">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-142">&#x00a7;</a>
+                <a class="ss" href="#section-147">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - A small, internal function to direct stamping towards the correct functionality</p>
 <ul>
@@ -5390,9 +5546,13 @@ P.<span class="hljs-property">getCellCoverage</span> = <span class="hljs-keyword
 
                 <span class="hljs-keyword">const</span> filterTest = (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noFilters</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span>.<span class="hljs-property">length</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 
-                <span class="hljs-keyword">if</span> (filterTest) {
+                <span class="hljs-keyword">if</span> (!filterTest) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilters</span> = <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">else</span> {
 
-                    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilters</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanFilters</span>();
+                    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilters</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>) {
+
+                        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanFilters</span>();
+                    }
 
                     <span class="hljs-keyword">const</span> filters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>;
 
@@ -5506,11 +5666,11 @@ P.<span class="hljs-property">createTextCellsForPath</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-143">
+        <li id="section-148">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-143">&#x00a7;</a>
+                <a class="ss" href="#section-148">&#x00a7;</a>
               </div>
               <p>These pool cells <em>should</em> be returned to / released by the calling function</p>
 
@@ -5599,8 +5759,9 @@ P.<span class="hljs-property">createTextCellsForPath</span> = <span class="hljs-
 
                         method = localStyle.<span class="hljs-property">method</span> || currentTextStyle.<span class="hljs-property">method</span>;
 
-                        <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">fillStyle</span>) mEngine.<span class="hljs-property">fillStyle</span> = localStyle.<span class="hljs-property">fillStyle</span>;
-                        <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">strokeStyle</span>) mEngine.<span class="hljs-property">strokeStyle</span> = localStyle.<span class="hljs-property">strokeStyle</span>;
+                        <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">fillStyle</span>) mEngine.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getStyle</span>(localStyle.<span class="hljs-property">fillStyle</span>, <span class="hljs-string">&#x27;fillStyle&#x27;</span>, mCell);
+
+                        <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">strokeStyle</span>) mEngine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getStyle</span>(localStyle.<span class="hljs-property">strokeStyle</span>, <span class="hljs-string">&#x27;strokeStyle&#x27;</span>, mCell);
 
                         <span class="hljs-keyword">switch</span> (method) {
 
@@ -5636,11 +5797,11 @@ P.<span class="hljs-property">createTextCellsForPath</span> = <span class="hljs-
         </li>
         
         
-        <li id="section-144">
+        <li id="section-149">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-144">&#x00a7;</a>
+                <a class="ss" href="#section-149">&#x00a7;</a>
               </div>
               <p>If we’re returning null, we need to release the pool cells</p>
 
@@ -5660,11 +5821,11 @@ P.<span class="hljs-property">createTextCellsForSpace</span> = <span class="hljs
         </li>
         
         
-        <li id="section-145">
+        <li id="section-150">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-145">&#x00a7;</a>
+                <a class="ss" href="#section-150">&#x00a7;</a>
               </div>
               <p>These pool cells <em>should</em> be returned to / released by the calling function</p>
 
@@ -5737,11 +5898,11 @@ P.<span class="hljs-property">createTextCellsForSpace</span> = <span class="hljs
         </li>
         
         
-        <li id="section-146">
+        <li id="section-151">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-146">&#x00a7;</a>
+                <a class="ss" href="#section-151">&#x00a7;</a>
               </div>
               <ul>
 <li>Soft hyphens and truncation marking is deliberately suppressed for RTL fonts</li>
@@ -5783,8 +5944,9 @@ P.<span class="hljs-property">createTextCellsForSpace</span> = <span class="hljs
 
                         method = localStyle.<span class="hljs-property">method</span> || currentTextStyle.<span class="hljs-property">method</span>;
 
-                        <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">fillStyle</span>) mEngine.<span class="hljs-property">fillStyle</span> = localStyle.<span class="hljs-property">fillStyle</span>;
-                        <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">strokeStyle</span>) mEngine.<span class="hljs-property">strokeStyle</span> = localStyle.<span class="hljs-property">strokeStyle</span>;
+                    <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">fillStyle</span>) mEngine.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getStyle</span>(localStyle.<span class="hljs-property">fillStyle</span>, <span class="hljs-string">&#x27;fillStyle&#x27;</span>, mCell);
+
+                    <span class="hljs-keyword">if</span> (localStyle.<span class="hljs-property">strokeStyle</span>) mEngine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getStyle</span>(localStyle.<span class="hljs-property">strokeStyle</span>, <span class="hljs-string">&#x27;strokeStyle&#x27;</span>, mCell);
 
                         <span class="hljs-keyword">switch</span> (method) {
 
@@ -5821,11 +5983,11 @@ P.<span class="hljs-property">createTextCellsForSpace</span> = <span class="hljs
         </li>
         
         
-        <li id="section-147">
+        <li id="section-152">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-147">&#x00a7;</a>
+                <a class="ss" href="#section-152">&#x00a7;</a>
               </div>
               <p>If we’re returning null, we need to release the pool cells</p>
 
@@ -5849,11 +6011,11 @@ P.<span class="hljs-property">addUnderlinesToCopyCell</span> = <span class="hljs
         </li>
         
         
-        <li id="section-148">
+        <li id="section-153">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-148">&#x00a7;</a>
+                <a class="ss" href="#section-153">&#x00a7;</a>
               </div>
               <p>This pool cell is local to the function and not returned to calling function</p>
 
@@ -5891,11 +6053,11 @@ P.<span class="hljs-property">addUnderlinesToCopyCell</span> = <span class="hljs
         </li>
         
         
-        <li id="section-149">
+        <li id="section-154">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-149">&#x00a7;</a>
+                <a class="ss" href="#section-154">&#x00a7;</a>
               </div>
               <p>Releasing, just in case …</p>
 
@@ -5919,11 +6081,11 @@ P.<span class="hljs-property">createOverlineCell</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-150">
+        <li id="section-155">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-150">&#x00a7;</a>
+                <a class="ss" href="#section-155">&#x00a7;</a>
               </div>
               <p>Pool cell <em>should</em> be returned to / released by the calling function</p>
 
@@ -5950,11 +6112,11 @@ P.<span class="hljs-property">createOverlineCell</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-151">
+        <li id="section-156">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-151">&#x00a7;</a>
+                <a class="ss" href="#section-156">&#x00a7;</a>
               </div>
               <p>Releasing, just in case …</p>
 
@@ -5978,11 +6140,11 @@ P.<span class="hljs-property">createHighlightCell</span> = <span class="hljs-key
         </li>
         
         
-        <li id="section-152">
+        <li id="section-157">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-152">&#x00a7;</a>
+                <a class="ss" href="#section-157">&#x00a7;</a>
               </div>
               <p>Pool cell <em>should</em> be returned to / released by the calling function</p>
 
@@ -6009,11 +6171,11 @@ P.<span class="hljs-property">createHighlightCell</span> = <span class="hljs-key
         </li>
         
         
-        <li id="section-153">
+        <li id="section-158">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-153">&#x00a7;</a>
+                <a class="ss" href="#section-158">&#x00a7;</a>
               </div>
               <p>Releasing, just in case …</p>
 
@@ -6139,11 +6301,11 @@ P.<span class="hljs-property">checkHit</span> = <span class="hljs-keyword">funct
         </li>
         
         
-        <li id="section-154">
+        <li id="section-159">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-154">&#x00a7;</a>
+                <a class="ss" href="#section-159">&#x00a7;</a>
               </div>
               <p><code>updatePivotSubscribers</code></p>
 
@@ -6189,11 +6351,11 @@ P.<span class="hljs-property">getUnitAlignment</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-155">
+        <li id="section-160">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-155">&#x00a7;</a>
+                <a class="ss" href="#section-160">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-variable constant_">TODO</span>...
@@ -6213,11 +6375,11 @@ constructors.<span class="hljs-property">EnhancedLabel</span> = <span class="hlj
         </li>
         
         
-        <li id="section-156">
+        <li id="section-161">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-156">&#x00a7;</a>
+                <a class="ss" href="#section-161">&#x00a7;</a>
               </div>
               <h4 id="textunit-objects">TextUnit objects</h4>
 
@@ -6432,8 +6594,9 @@ P.<span class="hljs-property">setTextUnit</span> = <span class="hljs-keyword">fu
             <span class="hljs-keyword">if</span> (<span class="hljs-variable constant_">UNIT_SETTABLE_KEYS</span>.<span class="hljs-title function_">includes</span>(key)) unit.<span class="hljs-title function_">set</span>({ [key]: val });
         }
     }
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyLayout</span> = <span class="hljs-literal">true</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dirtyCache</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
 };
 
 P.<span class="hljs-property">setAllTextUnits</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
@@ -6448,24 +6611,25 @@ P.<span class="hljs-property">setAllTextUnits</span> = <span class="hljs-keyword
             }
         }
     });
+
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyLayout</span> = <span class="hljs-literal">true</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dirtyCache</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
 };
 
 P.<span class="hljs-property">applyTextUnitUpdates</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyLayout</span> = <span class="hljs-literal">true</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">dirtyCache</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handleDirtyCache</span>();
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-157">
+        <li id="section-162">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-157">&#x00a7;</a>
+                <a class="ss" href="#section-162">&#x00a7;</a>
               </div>
               <h4 id="textunit-pool">TextUnit pool</h4>
 
@@ -6486,11 +6650,11 @@ P.<span class="hljs-property">applyTextUnitUpdates</span> = <span class="hljs-ke
         </li>
         
         
-        <li id="section-158">
+        <li id="section-163">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-158">&#x00a7;</a>
+                <a class="ss" href="#section-163">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - return a TextUnit to the text unit pool. Failing to return text units to the pool may lead to more inefficient code and possible memory leaks.</p>
 
@@ -6507,11 +6671,11 @@ P.<span class="hljs-property">applyTextUnitUpdates</span> = <span class="hljs-ke
         </li>
         
         
-        <li id="section-159">
+        <li id="section-164">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-159">&#x00a7;</a>
+                <a class="ss" href="#section-164">&#x00a7;</a>
               </div>
               <h4 id="line-objects">Line objects</h4>
 
@@ -6579,11 +6743,11 @@ L.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-160">
+        <li id="section-165">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-160">&#x00a7;</a>
+                <a class="ss" href="#section-165">&#x00a7;</a>
               </div>
               <h4 id="lineobject-pool">LineObject pool</h4>
 
@@ -6612,11 +6776,11 @@ L.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-161">
+        <li id="section-166">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-161">&#x00a7;</a>
+                <a class="ss" href="#section-166">&#x00a7;</a>
               </div>
               <p>Line object pool</p>
 
@@ -6634,11 +6798,11 @@ L.<span class="hljs-property">reset</span> = <span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-162">
+        <li id="section-167">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-162">&#x00a7;</a>
+                <a class="ss" href="#section-167">&#x00a7;</a>
               </div>
               <h4 id="textunit-array">TextUnit array</h4>
 
@@ -6666,11 +6830,11 @@ A.<span class="hljs-property">findByIndex</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-163">
+        <li id="section-168">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-163">&#x00a7;</a>
+                <a class="ss" href="#section-168">&#x00a7;</a>
               </div>
               <p>Note: this could be more sophisticated if we allowed regexes …</p>
 
@@ -6692,11 +6856,11 @@ A.<span class="hljs-property">findByIndex</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-164">
+        <li id="section-169">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-164">&#x00a7;</a>
+                <a class="ss" href="#section-169">&#x00a7;</a>
               </div>
               <p>Note: this could be more sophisticated if we allowed regexes …</p>
 

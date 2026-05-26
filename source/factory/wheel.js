@@ -160,12 +160,16 @@ S.startAngle = function (val) {
     this.startAngle = ensureFloat(val, 4);
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
+    this.dirtyDrawGradientCache = true;
+    this.dirtyfillGradientCache = true;
 };
 D.startAngle = function (val) {
 
     this.startAngle += ensureFloat(val, 4);
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
+    this.dirtyDrawGradientCache = true;
+    this.dirtyfillGradientCache = true;
 };
 
 S.endAngle = function (val) {
@@ -173,12 +177,16 @@ S.endAngle = function (val) {
     this.endAngle = ensureFloat(val, 4);
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
+    this.dirtyDrawGradientCache = true;
+    this.dirtyfillGradientCache = true;
 };
 D.endAngle = function (val) {
 
     this.endAngle += ensureFloat(val, 4);
     this.dirtyPathObject = true;
     this.dirtyFilterIdentifier = true;
+    this.dirtyDrawGradientCache = true;
+    this.dirtyfillGradientCache = true;
 };
 
 S.closed = function (bool) {
@@ -188,6 +196,8 @@ S.closed = function (bool) {
         this.closed = !!bool;
         this.dirtyPathObject = true;
         this.dirtyFilterIdentifier = true;
+        this.dirtyDrawGradientCache = true;
+        this.dirtyfillGradientCache = true;
     }
 };
 
@@ -198,6 +208,8 @@ S.includeCenter = function (bool) {
         this.includeCenter = !!bool;
         this.dirtyPathObject = true;
         this.dirtyFilterIdentifier = true;
+        this.dirtyDrawGradientCache = true;
+        this.dirtyfillGradientCache = true;
     }
 };
 
@@ -208,6 +220,8 @@ S.clockwise = function (bool) {
         this.clockwise = !!bool;
         this.dirtyPathObject = true;
         this.dirtyFilterIdentifier = true;
+        this.dirtyDrawGradientCache = true;
+        this.dirtyfillGradientCache = true;
     }
 };
 
@@ -224,6 +238,8 @@ P.dimensionsHelper = function () {
 
     this.dirtyDimensions = true;
     this.dirtyFilterIdentifier = true;
+    this.dirtyDrawGradientCache = true;
+    this.dirtyfillGradientCache = true;
 };
 P.radiusHelper = function () {
 
@@ -235,6 +251,8 @@ P.radiusHelper = function () {
 
     this.dirtyDimensions = true;
     this.dirtyFilterIdentifier = true;
+    this.dirtyDrawGradientCache = true;
+    this.dirtyfillGradientCache = true;
 };
 
 // Dimensions calculations - overwrites mixin/position.js function

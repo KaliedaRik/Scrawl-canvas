@@ -10,10 +10,10 @@ import { cell, cellnames, styles, stylesnames } from '../core/library.js';
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 // Shared constants
-import { _cos, _entries, _isArray, _keys, _radian, _sin, BLANK, LEFT, LINE_DASH, STATE_ALL_KEYS, TOP } from '../helper/shared-vars.js';
+import { _cos, _entries, _isArray, _keys, _radian, _sin, BLANK, DRAW, FILL, LEFT, LINE_DASH, STATE_ALL_KEYS, TOP } from '../helper/shared-vars.js';
 
 // Local constants
-const STYLES_ARR = ['Gradient', 'RadialGradient', 'Pattern'];
+// - None defined
 
 
 // #### Export function
@@ -80,14 +80,14 @@ export default function (P = Ωempty) {
     };
 
     // `setEngine` - internal function: set engine to match the entity object's State attribute values
-    P.setEngine = function (entity) {
+    P.setEngine = function (myentity) {
 
         const state = this.state,
-            entityState = entity.state;
+            entityState = myentity.state;
 
         if (entityState) {
 
-            const changes = entityState.getChanges(entity, state),
+            const changes = entityState.getChanges(myentity, state),
                 action = this.setEngineActions;
 
             if (_keys(changes).length) {
@@ -96,18 +96,18 @@ export default function (P = Ωempty) {
 
                 for (const item in changes) {
 
-                    action[item](changes[item], engine, STYLES_ARR, entity, this);
+                    action[item](changes[item], engine, myentity, this);
                     state[item] = changes[item];
                 }
             }
         }
-        return entity;
+        return myentity;
     };
 
     // __setEngineActions__ - an Object containing functions for updating the engine's attributes; used by `setEngine`
     P.setEngineActions = {
 
-        fillStyle: function (item, engine, STYLES_ARR, entity, layer) {
+        fillStyle: function (item, engine, myentity, layer) {
 
             if (item.substring) {
 
@@ -118,12 +118,12 @@ export default function (P = Ωempty) {
 
                 if (brokenStyle) {
 
-                    entity.state.fillStyle = brokenStyle;
-                    engine.fillStyle = brokenStyle.getData(entity, layer);
+                    myentity.state.fillStyle = brokenStyle;
+                    engine.fillStyle = brokenStyle.getData(myentity, layer, FILL);
                 }
                 else engine.fillStyle = item;
             }
-            else engine.fillStyle = item.getData(entity, layer);
+            else engine.fillStyle = item.getData(myentity, layer, FILL);
         },
 
         filter: function (item, engine) {
@@ -191,7 +191,7 @@ export default function (P = Ωempty) {
             engine.shadowOffsetY = item;
         },
 
-        strokeStyle: function (item, engine, STYLES_ARR, entity, layer) {
+        strokeStyle: function (item, engine, myentity, layer) {
 
             if (item.substring) {
 
@@ -202,12 +202,12 @@ export default function (P = Ωempty) {
 
                 if (brokenStyle) {
 
-                    entity.state.strokeStyle = brokenStyle;
-                    engine.strokeStyle = brokenStyle.getData(entity, layer);
+                    myentity.state.strokeStyle = brokenStyle;
+                    engine.strokeStyle = brokenStyle.getData(myentity, layer, DRAW);
                 }
                 else engine.strokeStyle = item;
             }
-            else engine.strokeStyle = item.getData(entity, layer);
+            else engine.strokeStyle = item.getData(myentity, layer, DRAW);
         },
 
         direction: function (item, engine) {
@@ -266,9 +266,9 @@ export default function (P = Ωempty) {
     };
 
     // `restoreShadow`
-    P.restoreShadow = function (entity) {
+    P.restoreShadow = function (myentity) {
 
-        const state = entity.state;
+        const state = myentity.state;
 
         this.engine.shadowOffsetX = state.shadowOffsetX;
         this.engine.shadowOffsetY = state.shadowOffsetY;
@@ -344,9 +344,9 @@ export default function (P = Ωempty) {
     // `rotateDestination` - internal function, called by entity objects about to stamp themselves onto the Cell.
     // + entity stamp functionality works by performing a `setTransform` action on the Cell engine so that engine coordinates [0, 0] equal the entity's `currentStampPosition` coordinates, alongside any directionality (`flipReverse`, `flipUpend`) and rotational (`roll`) changes necessary
     // + doing it this way saves a massive amount of calculation that is otherwise required to correctly position the entity in the display
-    P.rotateDestination = function (engine, x, y, entity) {
+    P.rotateDestination = function (engine, x, y, myentity) {
 
-        const self = (entity) ? entity : this,
+        const self = (myentity) ? myentity : this,
             mimic = self.mimic,
             pivot = self.pivot;
 

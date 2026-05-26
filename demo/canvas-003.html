@@ -92,25 +92,32 @@
   <div class="controls">
 
     <div class="pink label">paletteStart</div>
-    <div class="pink"><input class="controlItem" id="paletteStart" type="range" value="0" min="0" max="999" step="1" /></div>
+    <div class="pink"><input class="controlItem gradientControl" id="paletteStart" type="range" value="0" min="0" max="999" step="1" /></div>
 
     <div class="pink label">paletteEnd</div>
-    <div class="pink"><input class="controlItem" id="paletteEnd" type="range" value="0" min="0" max="999" step="1" /></div>
+    <div class="pink"><input class="controlItem gradientControl" id="paletteEnd" type="range" value="0" min="0" max="999" step="1" /></div>
 
     <div class="pink label">Cycle palette</div>
     <div class="pink">
-        <select class="controlItem" id="cyclePalette">
+        <select class="controlItem gradientControl" id="cyclePalette">
           <option value="0">false</option>
           <option value="1">true</option>
       </select>
     </div>
 
-    <div class="pink label">&nbsp;</div>
-    <div class="pink label">&nbsp;</div>
+    <div class="pink label">Spread</div>
+    <div class="pink">
+        <select class="controlItem gradientControl" id="spread">
+          <option value="pad">pad</option>
+          <option value="repeat">repeat</option>
+          <option value="reflect">reflect</option>
+          <option value="transparent">transparent</option>
+      </select>
+    </div>
 
     <div class="pink label">Int. color space</div>
     <div class="pink">
-        <select class="controlItem" id="colorSpace">
+        <select class="controlItem gradientControl" id="colorSpace">
           <option value="RGB">RGB</option>
           <option value="HSL">HSL</option>
           <option value="HWB">HWB</option>
@@ -124,7 +131,7 @@
 
     <div class="pink label">Ret. color space</div>
     <div class="pink">
-        <select class="controlItem" id="returnColorAs">
+        <select class="controlItem gradientControl" id="returnColorAs">
           <option value="RGB">RGB</option>
           <option value="HSL">HSL</option>
           <option value="HWB">HWB</option>
@@ -136,16 +143,16 @@
     </div>
 
     <div class="green label">startX</div>
-    <div class="green"><input class="controlItem" id="startX" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="green"><input class="controlItem gradientControl" id="startX" type="range" value="0" min="0" max="100" step="1" /></div>
 
     <div class="blue label">endX</div>
-    <div class="blue"><input class="controlItem" id="endX" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="blue"><input class="controlItem gradientControl" id="endX" type="range" value="0" min="0" max="100" step="1" /></div>
 
     <div class="green label">startY</div>
-    <div class="green"><input class="controlItem" id="startY" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="green"><input class="controlItem gradientControl" id="startY" type="range" value="0" min="0" max="100" step="1" /></div>
 
     <div class="blue label">endY</div>
-    <div class="blue"><input class="controlItem" id="endY" type="range" value="0" min="0" max="100" step="1" /></div>
+    <div class="blue"><input class="controlItem gradientControl" id="endY" type="range" value="0" min="0" max="100" step="1" /></div>
 
     <div class="yellow label">Include red</div>
     <div class="yellow">
@@ -165,7 +172,7 @@
 
     <div class="lavender label">Easing</div>
     <div class="lavender">
-      <select class="controlItem" id="easing">
+      <select class="controlItem gradientControl" id="easing">
         <option value="linear">linear</option>
         <option value="out">out</option>
         <option value="in">in</option>
@@ -188,7 +195,78 @@
     </div>
 
     <div class="lavender label">Precision</div>
-    <div class="lavender"><input class="controlItem" id="precision" type="range" value="1" min="0" max="20" step="1" /></div>
+    <div class="lavender"><input class="controlItem gradientControl" id="precision" type="range" value="1" min="0" max="20" step="1" /></div>
+
+    <div class="lavender label">Operations</div>
+    <div class="lavender">
+      <select class="controlItem gradientControl" id="operations">
+        <option value='[]'>None</option>
+
+        <option value="" disabled>---</option>
+        <option value='[{"operation":"add-noise","stage":"before-spread","parameters":{"noise":"random","strength":0.02,"seed":"linear-gradient-test"}}]'>Weak random noise before spread</option>
+        <option value='[{"operation":"add-noise","stage":"before-spread","parameters":{"noise":"random","strength":0.08,"seed":"linear-gradient-test"}}]'>Strong random noise before spread</option>
+        <option value='[{"operation":"add-noise","stage":"before-spread","parameters":{"noise":"ordered","strength":0.02,"seed":"linear-gradient-test"}}]'>Weak ordered noise before spread</option>
+        <option value='[{"operation":"add-noise","stage":"before-spread","parameters":{"noise":"ordered","strength":0.08,"seed":"linear-gradient-test"}}]'>Strong ordered noise before spread</option>
+        <option value='[{"operation":"add-noise","stage":"before-spread","parameters":{"noise":"bluenoise","strength":0.02,"seed":"linear-gradient-test"}}]'>Weak bluenoise before spread</option>
+        <option value='[{"operation":"add-noise","stage":"before-spread","parameters":{"noise":"bluenoise","strength":0.08,"seed":"linear-gradient-test"}}]'>Strong bluenoise before spread</option>
+
+        <option value="" disabled>---</option>
+        <option value='[{"operation":"add-noise","stage":"after-spread","parameters":{"noise":"random","strength":0.02,"seed":"linear-gradient-test"}}]'>Weak random noise after spread</option>
+        <option value='[{"operation":"add-noise","stage":"after-spread","parameters":{"noise":"random","strength":0.08,"seed":"linear-gradient-test"}}]'>Strong random noise after spread</option>
+        <option value='[{"operation":"add-noise","stage":"after-spread","parameters":{"noise":"ordered","strength":0.02,"seed":"linear-gradient-test"}}]'>Weak ordered noise after spread</option>
+        <option value='[{"operation":"add-noise","stage":"after-spread","parameters":{"noise":"ordered","strength":0.08,"seed":"linear-gradient-test"}}]'>Strong ordered noise after spread</option>
+        <option value='[{"operation":"add-noise","stage":"after-spread","parameters":{"noise":"bluenoise","strength":0.02,"seed":"linear-gradient-test"}}]'>Weak bluenoise after spread</option>
+        <option value='[{"operation":"add-noise","stage":"after-spread","parameters":{"noise":"bluenoise","strength":0.08,"seed":"linear-gradient-test"}}]'>Strong bluenoise after spread</option>
+
+        <option value="" disabled>---</option>
+        <option value='[{"operation":"add-ease","stage":"before-spread","parameters":{"easing":"easeOut3"}}]'>Ease out before spread</option>
+        <option value='[{"operation":"add-ease","stage":"before-spread","parameters":{"easing":"easeOutIn3"}}]'>Ease out-in before spread</option>
+        <option value='[{"operation":"add-ease","stage":"before-spread","parameters":{"easing":"steppedEasing4"}}]'>Stepped ease before spread</option>
+        <option value='[{"operation":"add-ease","stage":"after-spread","parameters":{"easing":"easeOut3"}}]'>Ease out after spread</option>
+        <option value='[{"operation":"add-ease","stage":"after-spread","parameters":{"easing":"easeOutIn3"}}]'>Ease out-in after spread</option>
+        <option value='[{"operation":"add-ease","stage":"after-spread","parameters":{"easing":"steppedEasing4"}}]'>Stepped ease after spread</option>
+
+        <option value="" disabled>---</option>
+        <option value='[{"operation":"add-wave","stage":"on-coordinates","parameters":{"axis":"x","amplitude":20,"frequency":0.05,"phase":0}}]'>Horizontal waves</option>
+        <option value='[{"operation":"add-wave","stage":"on-coordinates","parameters":{"axis":"y","amplitude":20,"frequency":0.05,"phase":0}}]'>Vertical waves</option>
+        <option value='[{"operation":"add-wave","stage":"on-coordinates","parameters":{"axis":"both","amplitude":20,"frequency":0.05,"phase":0}}]'>Mixed waves</option>
+        <option value='[{"operation":"add-ripple","stage":"on-coordinates","parameters":{"amplitude":20,"frequency":0.04,"phase":0,"originX":"50%","originY":"50%"}}]'>Shallow ripple</option>
+        <option value='[{"operation":"add-ripple","stage":"on-coordinates","parameters":{"amplitude":20,"frequency":0.1,"phase":0,"originX":"50%","originY":"50%"}}]'>Deep ripple</option>
+
+        <option value="" disabled>---</option>
+        <option value='[{"operation":"add-map-displace","stage":"on-coordinates","parameters":{"axis":"both","strength":20,"offset":0.5,"linked":false,"map":{"noiseEngine":"simplex","scale":50,"octaves":3}}}]'>Add map - displace (simplex)</option>
+        <option value='[{"operation":"add-map-displace","stage":"on-coordinates","parameters":{"axis":"both","strength":40,"offset":0.5,"linked":false,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":60}}}]'>Add map - displace (worley-euc)</option>
+        <option value='[{"operation":"add-map-ease","stage":"before-spread","parameters":{"strength":0.25,"offset":0.5,"map":{"noiseEngine":"simplex","scale":50,"octaves":3}}}]'>Add map - ease (simplex)</option>
+        <option value='[{"operation":"add-map-ease","stage":"before-spread","parameters":{"strength":0.35,"offset":0.5,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":60}}}]'>Add map - ease (worley-euc)</option>
+        <option value='[{"operation":"add-map-rotate","stage":"on-coordinates","parameters":{"strength":60,"offset":0.5,"originX":"50%","originY":"50%","map":{"noiseEngine":"simplex","scale":50,"octaves":3}}}]'>Add map - rotate (simplex)</option>
+        <option value='[{"operation":"add-map-rotate","stage":"on-coordinates","parameters":{"strength":90,"offset":0.5,"originX":"50%","originY":"50%","map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":60}}}]'>Add map - rotate (worley-euc)</option>
+        <option value='[{"operation":"add-map-flow","stage":"on-coordinates","parameters":{"strength":25,"angle":360,"offset":0.5,"map":{"noiseEngine":"simplex","scale":40,"octaves":4}}}]'>Add map - flow (simplex)</option>
+        <option value='[{"operation":"add-map-flow","stage":"on-coordinates","parameters":{"strength":35,"angle":360,"offset":0.5,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":60}}}]'>Add map - flow (worley-euc)</option>
+        <option value='[{"operation":"add-map-flow","stage":"on-coordinates","parameters":{"strength":20,"offset":0.5,"linked":false,"normalize":true,"map":{"noiseEngine":"simplex","scale":45,"octaves":3}}}]'>Add map - flow vector (simplex)</option>
+
+        <option value="" disabled>---</option>
+        <option value='[{"operation":"add-map-threshold","stage":"after-spread","parameters":{"threshold":0.5,"low":0,"high":1,"map":{"noiseEngine":"simplex","scale":40,"octaves":4}}}]'>Add map - threshold mask (simplex)</option>
+        <option value='[{"operation":"add-map-threshold","stage":"after-spread","parameters":{"threshold":0.55,"low":0,"high":1,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":60}}}]'>Add map - threshold cells (worley-euc)</option>
+        <option value='[{"operation":"add-map-threshold","stage":"after-spread","parameters":{"bandModulate":true,"bands":6,"influence":0.2,"threshold":0.5,"map":{"noiseEngine":"simplex","scale":35,"octaves":3}}}]'>Add map - contour bands (simplex)</option>
+        <option value='[{"operation":"add-map-threshold","stage":"after-spread","parameters":{"bandModulate":true,"bands":12,"influence":0.35,"threshold":0.5,"map":{"noiseEngine":"simplex","octaveFunction":"terrace-heavy","scale":45,"octaves":5}}}]'>Add map - terraced strata (simplex)</option>
+        <option value='[{"operation":"add-map-threshold","stage":"after-spread","parameters":{"bandModulate":true,"bands":8,"influence":0.45,"threshold":0.45,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"XmultiplyYminusZ","scale":55}}}]'>Add map - crystal segmentation (worley-euc)</option>
+        <option value='[{"operation":"add-map-threshold","stage":"after-spread","parameters":{"bandModulate":true,"bands":20,"influence":0.1,"threshold":0.5,"map":{"noiseEngine":"value","scale":25,"octaves":2}}}]'>Add map - fine topography (value)</option>
+
+        <option value="" disabled>---</option>
+        <option value='[{"operation":"add-map-contour","stage":"after-spread","parameters":{"influence":0.45,"bands":8,"map":{"noiseEngine":"simplex","scale":40,"octaves":4}}}]'>Add map - contour drift (simplex)</option>
+        <option value='[{"operation":"add-map-contour","stage":"after-spread","parameters":{"influence":0.7,"bands":12,"map":{"noiseEngine":"simplex","octaveFunction":"terrace-light","scale":45,"octaves":5}}}]'>Add map - contour terrace (simplex)</option>
+        <option value='[{"operation":"add-map-contour","stage":"after-spread","parameters":{"influence":0.6,"bands":10,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"XminusY","scale":60}}}]'>Add map - cellular contour (worley-euc)</option>
+        <option value='[{"operation":"add-map-contour","stage":"after-spread","parameters":{"influence":0.75,"bands":16,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":70}}}]'>Add map - cracked contour (worley-euc)</option>
+        <option value='[{"operation":"add-map-contour","stage":"after-spread","parameters":{"influence":0.5,"bands":20,"map":{"noiseEngine":"value","scale":30,"octaves":3,"smoothing":"easeOutIn3"}}}]'>Add map - soft topographic contour (value)</option>
+        <option value='[{"operation":"add-map-contour","stage":"after-spread","parameters":{"influence":0.85,"bands":6,"map":{"noiseEngine":"worley-manhattan","worleyOutput":"XmultiplyYminusZ","scale":55}}}]'>Add map - blocky mineral contour (worley-man)</option>
+
+        <option value="" disabled>---</option>
+        <option value='[{"operation":"add-map-warp","stage":"on-coordinates","parameters":{"strength":24,"iterations":3,"offset":0.5,"linked":false,"map":{"noiseEngine":"simplex","scale":45,"octaves":4}}}]'>Add map - warp (simplex)</option>
+        <option value='[{"operation":"add-map-warp","stage":"on-coordinates","parameters":{"strength":36,"iterations":5,"offset":0.5,"linked":false,"normalize":true,"map":{"noiseEngine":"simplex","scale":55,"octaves":5}}}]'>Add map - warp flow (simplex)</option>
+        <option value='[{"operation":"add-map-warp","stage":"on-coordinates","parameters":{"strength":28,"iterations":4,"offset":0.5,"linked":false,"map":{"noiseEngine":"worley-euclidean","worleyOutput":"YminusX","scale":65}}}]'>Add map - warp cells (worley-euc)</option>
+        <option value='[{"operation":"add-map-warp","stage":"on-coordinates","parameters":{"strength":42,"iterations":5,"offset":0.5,"linked":false,"normalize":true,"map":{"noiseEngine":"worley-manhattan","worleyOutput":"XmultiplyYminusZ","scale":55}}}]'>Add map - warp mineral (worley-man)</option>
+      </select>
+    </div>
 
   </div>
 
@@ -209,6 +287,66 @@
     </canvas>
   </div>
 
+  <div class="controls">
+    
+    <div class="orange label">Roll</div>
+    <div class="orange"><input class="controlItem blockControl" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+
+    <div class="orange label">Scale</div>
+    <div class="orange"><input class="controlItem blockControl" id="scale" type="range" value="1" min="0.5" max="1.5" step="0.01" /></div>
+
+    <div class="orange label">Flip reverse</div>
+    <div class="orange">
+        <select class="controlItem blockControl" id="flipReverse">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="orange label">Flip upend</div>
+    <div class="orange">
+        <select class="controlItem blockControl" id="flipUpend">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="orange label">Fill style</div>
+    <div class="orange">
+        <select class="controlItem blockControl" id="fillStyle">
+          <option value="slategray">color</option>
+          <option value="my-gradient">gradient</option>
+      </select>
+    </div>
+
+    <div class="orange label">Stroke style</div>
+    <div class="orange">
+        <select class="controlItem blockControl" id="strokeStyle">
+          <option value="slategray">color</option>
+          <option value="my-gradient">gradient</option>
+      </select>
+    </div>
+
+    <div class="orange label">Lock fillStyle to entity</div>
+    <div class="orange">
+        <select class="controlItem blockControl" id="lockFillStyleToEntity">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="orange label">Lock strokeStyle to entity</div>
+    <div class="orange">
+        <select class="controlItem blockControl" id="lockStrokeStyleToEntity">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
+
+  </div>
+
+  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
+
   <p>CSS-equivalent gradients</p>
 
   <div class="css-gradients-container">
@@ -220,8 +358,6 @@
     <div class="css-gradients" id="oklab">OKLAB</div>
     <div class="css-gradients" id="oklch">OKLCH</div>
   </div>
-
-  <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. The canvas element is ignored; instead a placeholder image displays where the canvas would have appeared.</p>
 
   <div class="testinfo">
     <h4>Test purpose</h4>

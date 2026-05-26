@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -597,13 +602,16 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, styles, stylesnames } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { doCreate, mergeOver, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { doCreate, generateIdForArtefact, mergeOver, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/state.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { makeTextStyle } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/text-style.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { currentGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/canvas.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { checkForWorkstoreItem, getWorkstoreItem } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/workstore.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { gradientEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/gradient-engine.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { releaseCell, requestCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../untracked-factory/cell-fragment.js&#x27;</span>;
 
@@ -624,7 +632,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _abs, _ceil, _isFinite, <span class="hljs-variable constant_">ALPHABETIC</span>, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BOTTOM</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">END</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">HANGING</span>, <span class="hljs-variable constant_">IDEOGRAPHIC</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LTR</span>, <span class="hljs-variable constant_">MIDDLE</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">RIGHT</span>, <span class="hljs-variable constant_">ROUND</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">START</span>, <span class="hljs-variable constant_">T_LABEL</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _abs, _ceil, _isArray, _isFinite, <span class="hljs-variable constant_">ALPHABETIC</span>, <span class="hljs-variable constant_">BLACK</span>, <span class="hljs-variable constant_">BOTTOM</span>, <span class="hljs-variable constant_">CENTER</span>, <span class="hljs-variable constant_">DESTINATION_OUT</span>, <span class="hljs-variable constant_">END</span>, <span class="hljs-variable constant_">ENTITY</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">GRADIENTS_ARR</span>, <span class="hljs-variable constant_">HANGING</span>, <span class="hljs-variable constant_">IDEOGRAPHIC</span>, <span class="hljs-variable constant_">LEFT</span>, <span class="hljs-variable constant_">LTR</span>, <span class="hljs-variable constant_">MIDDLE</span>, <span class="hljs-variable constant_">MOUSE</span>, <span class="hljs-variable constant_">PARTICLE</span>, <span class="hljs-variable constant_">RIGHT</span>, <span class="hljs-variable constant_">ROUND</span>, <span class="hljs-variable constant_">SOURCE_OUT</span>, <span class="hljs-variable constant_">SOURCE_OVER</span>, <span class="hljs-variable constant_">START</span>, <span class="hljs-variable constant_">T_COLOR</span>, <span class="hljs-variable constant_">T_LABEL</span>, <span class="hljs-variable constant_">TOP</span>, <span class="hljs-variable constant_">ZERO_STR</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -635,9 +643,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Local constants (none defined)</p>
+              <p>Local constants</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">METHODS_USING_DRAW_FIRST</span> = [<span class="hljs-string">&#x27;drawAndFill&#x27;</span>, <span class="hljs-string">&#x27;drawThenFill&#x27;</span>],
+    <span class="hljs-variable constant_">METHODS_USING_DRAW_LAST</span> = [<span class="hljs-string">&#x27;draw&#x27;</span>, <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>, <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>],
+    <span class="hljs-variable constant_">DRAW</span> = <span class="hljs-string">&#x27;draw&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -729,6 +741,10 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">boundingBoxLineWidth</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">boundingBoxLineDash</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">boundingBoxLineDashOffset</span>: <span class="hljs-number">0</span>,
+
+    <span class="hljs-attr">useTextStyleForUnderline</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">useTextStyleForBoundingBox</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">useTextStyleForOutline</span>: <span class="hljs-literal">false</span>,
 };
 P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
@@ -823,7 +839,82 @@ G.<span class="hljs-property">dimensions</span> = <span class="hljs-keyword">fun
     <span class="hljs-keyword">return</span> [...<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>];
 };
 S.<span class="hljs-property">dimensions</span> = λ<span class="hljs-literal">null</span>;
-D.<span class="hljs-property">dimensions</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
+D.<span class="hljs-property">dimensions</span> = λ<span class="hljs-literal">null</span>;
+
+S.<span class="hljs-property">showBoundingBox</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span> = !!item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+};
+
+S.<span class="hljs-property">boundingBoxStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxStyle</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+};
+
+S.<span class="hljs-property">boundingBoxLineWidth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(item)) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineWidth</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+    }
+};
+
+D.<span class="hljs-property">boundingBoxLineWidth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(item)) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineWidth</span> += item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+    }
+};
+
+S.<span class="hljs-property">boundingBoxLineDash</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(item)) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineDash</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+    }
+};
+
+S.<span class="hljs-property">boundingBoxLineDashOffset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(item)) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineDashOffset</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+    }
+};
+
+D.<span class="hljs-property">boundingBoxLineDashOffset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isFinite</span>(item)) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineDashOffset</span> += item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+    }
+};
+
+S.<span class="hljs-property">useTextStyleForUnderline</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForUnderline</span> = !!item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+};
+
+S.<span class="hljs-property">useTextStyleForBoundingBox</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForBoundingBox</span> = !!item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+};
+
+S.<span class="hljs-property">useTextStyleForOutline</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForOutline</span> = !!item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+};</pre></div></div>
             
         </li>
         
@@ -1003,8 +1094,7 @@ D.<span class="hljs-property">dimensions</span> = λ<span class="hljs-literal">n
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">fontVerticalOffset</span> = offset;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
-};</pre></div></div>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -1014,6 +1104,22 @@ D.<span class="hljs-property">dimensions</span> = λ<span class="hljs-literal">n
               
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>Tacky fix for making the dimensions update</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">letterSpacing</span>: defaultTextStyle.<span class="hljs-property">letterSpacing</span> });
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="clean-functions">Clean functions</h4>
 <p><code>cleanPathObject</code> - calculate the Label entity’s <strong>Path2D object</strong></p>
@@ -1038,11 +1144,11 @@ D.<span class="hljs-property">dimensions</span> = λ<span class="hljs-literal">n
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>cleanDimensions</code> - calculate the entity’s <strong>currentDimensions</strong> Array</p>
 
@@ -1084,11 +1190,11 @@ P.<span class="hljs-property">cleanHandle</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>horizontal</p>
 
@@ -1106,11 +1212,11 @@ P.<span class="hljs-property">cleanHandle</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>vertical</p>
 
@@ -1136,22 +1242,62 @@ P.<span class="hljs-property">cleanHandle</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p>Overwrites the function in mixin/entity.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setGradientCacheFlags</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">let</span> fillGradient;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>) {
+
+        <span class="hljs-keyword">const</span> fillStyle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">fillStyle</span>;
+
+        fillGradient = fillStyle.<span class="hljs-property">substring</span> ? styles[fillStyle] : fillStyle;
+    }
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span> = (fillGradient &amp;&amp; <span class="hljs-variable constant_">GRADIENTS_ARR</span>.<span class="hljs-title function_">includes</span>(fillGradient.<span class="hljs-property">type</span>));
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span> = <span class="hljs-literal">false</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="display-cycle-functions">Display cycle functions</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setGradientCacheFlags</span>();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+    }
 
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanScale</span>();
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyText</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateAccessibleTextHold</span>();
@@ -1169,6 +1315,11 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
     }
 
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+    }
+
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStampPositions</span>();
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStampHandlePositions</span>();
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanPathObject</span>();
@@ -1180,17 +1331,14 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p><code>regularStamp</code> - overwrites mixin/entity.js function.</p>
-<ul>
-<li>If decide to pass host instead of host.engine to method functions for all entitys, then this may be a temporary fix</li>
-</ul>
 
             </div>
             
@@ -1199,46 +1347,68 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
     <span class="hljs-keyword">const</span> dest = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>,
         textStyle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>;
 
-    <span class="hljs-keyword">if</span> (dest &amp;&amp; textStyle) {
+    <span class="hljs-keyword">if</span> (dest &amp;&amp; textStyle &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span>) {
 
         <span class="hljs-keyword">const</span> engine = dest.<span class="hljs-property">engine</span>;
-        <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
-              </div>
-              <p>Get the Cell wrapper to perform required transformations on its &lt;canvas&gt; element’s 2D engine</p>
+        <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        dest.<span class="hljs-title function_">rotateDestination</span>(engine, x, y, <span class="hljs-variable language_">this</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
-              </div>
-              <p>Get the Cell wrapper to update its 2D engine’s attributes to match the entity’s requirements</p>
+        dest.<span class="hljs-title function_">rotateDestination</span>(engine, x, y, <span class="hljs-variable language_">this</span>);
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noCanvasEngineUpdates</span>) {
+        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noCanvasEngineUpdates</span>) {
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">set</span>(textStyle);
             dest.<span class="hljs-title function_">setEngine</span>(<span class="hljs-variable language_">this</span>);
         }
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setImageSmoothing</span>(dest.<span class="hljs-property">engine</span>);</pre></div></div>
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateGradientsBeforeStamp</span>(dest);
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setImageSmoothing</span>(engine);
+
+        <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampLabelGradientFill</span>(dest);
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampLabelDirect</span>(engine, pos);
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">postProcessLabelDecorations</span>(dest, pos);
+    }
+};
+
+P.<span class="hljs-property">updateGradientsBeforeStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">refCell</span>) {
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">const</span> getFixedGradientData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getFixedGradientData</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>);
+
+    <span class="hljs-keyword">const</span> state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
+
+    <span class="hljs-keyword">const</span> grad = (state.<span class="hljs-property">fillStyle</span>.<span class="hljs-property">substring</span>)
+        ? styles[state.<span class="hljs-property">fillStyle</span>]
+        : state.<span class="hljs-property">fillStyle</span>;
+
+    <span class="hljs-keyword">if</span> (!grad || !<span class="hljs-variable constant_">GRADIENTS_ARR</span>.<span class="hljs-title function_">includes</span>(grad.<span class="hljs-property">type</span>)) <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">let</span> fillId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradient</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> || fillId === <span class="hljs-variable constant_">ZERO_STR</span>) fillId = <span class="hljs-title function_">generateIdForArtefact</span>(<span class="hljs-variable language_">this</span>);
+
+    <span class="hljs-keyword">if</span> (!fillId) <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">checkForWorkstoreItem</span>(fillId)) <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">const</span> myCell = <span class="hljs-title function_">requestCell</span>(),
+        element = myCell.<span class="hljs-property">element</span>,
+        engine = myCell.<span class="hljs-property">engine</span>;
+
+    <span class="hljs-keyword">const</span> [width, height] = refCell.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;dimensions&#x27;</span>);
+    <span class="hljs-keyword">const</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
+    <span class="hljs-keyword">const</span> matrix = refCell.<span class="hljs-property">engine</span>.<span class="hljs-title function_">getTransform</span>();
+
+    element.<span class="hljs-property">width</span> = width;
+    element.<span class="hljs-property">height</span> = height;
+
+    myCell.<span class="hljs-title function_">rotateDestination</span>(engine, x, y, <span class="hljs-variable language_">this</span>);
+    myCell.<span class="hljs-title function_">setEngine</span>(<span class="hljs-variable language_">this</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setLabelTextEngine</span>(engine);</pre></div></div>
             
         </li>
         
@@ -1249,13 +1419,39 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
-              <p>Invoke the appropriate <strong>stamping method</strong> (below)</p>
+              <p>Gradients don’t understand the quirks of Label entity scaling</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>[textStyle.<span class="hljs-property">method</span>](dest);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> tempScale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span> = <span class="hljs-number">1</span>;
+    grad.<span class="hljs-title function_">getData</span>(<span class="hljs-variable language_">this</span>, refCell, <span class="hljs-variable constant_">FILL</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span> = tempScale;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setImageSmoothing</span>(engine);
+
+    <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
+
+    engine.<span class="hljs-title function_">fillText</span>(...pos);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForOutline</span>) engine.<span class="hljs-title function_">strokeText</span>(...pos);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForUnderline</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addUnderlineToGradientMask</span>(myCell, pos, matrix);
     }
-};</pre></div></div>
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForBoundingBox</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>) {
+
+        engine.<span class="hljs-title function_">save</span>();
+        engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineWidth</span>;
+        engine.<span class="hljs-title function_">setLineDash</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineDash</span> || []);
+        engine.<span class="hljs-property">lineDashOffset</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineDashOffset</span> || <span class="hljs-number">0</span>;
+        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
+        engine.<span class="hljs-title function_">restore</span>();
+    }
+
+    <span class="hljs-keyword">const</span> data = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);</pre></div></div>
             
         </li>
         
@@ -1265,6 +1461,195 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
               
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p>Sadly, the gradient engine doesn’t understand the quirks of Label entity scaling either</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span> = <span class="hljs-number">1</span>;
+
+    <span class="hljs-keyword">const</span> success = gradientEngine.<span class="hljs-title function_">action</span>({
+        <span class="hljs-attr">fixedGradientData</span>: <span class="hljs-title function_">getFixedGradientData</span>(grad, <span class="hljs-variable constant_">FILL</span>),
+        <span class="hljs-attr">identifier</span>: fillId,
+        <span class="hljs-attr">imageData</span>: data,
+        <span class="hljs-attr">entity</span>: <span class="hljs-variable language_">this</span>,
+        matrix,
+    });
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span> = tempScale;
+
+    <span class="hljs-keyword">if</span> (success) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span> = fillId;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradient</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-title function_">releaseCell</span>(myCell);
+};
+
+P.<span class="hljs-property">setLabelTextEngine</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
+
+    <span class="hljs-keyword">const</span> textStyle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>;
+
+    engine.<span class="hljs-property">font</span> = textStyle.<span class="hljs-property">canvasFont</span>;
+    engine.<span class="hljs-property">fontKerning</span> = textStyle.<span class="hljs-property">fontKerning</span>;
+    engine.<span class="hljs-property">fontStretch</span> = textStyle.<span class="hljs-property">fontStretch</span>;
+    engine.<span class="hljs-property">fontVariantCaps</span> = textStyle.<span class="hljs-property">fontVariantCaps</span>;
+    engine.<span class="hljs-property">textRendering</span> = textStyle.<span class="hljs-property">textRendering</span>;
+    engine.<span class="hljs-property">letterSpacing</span> = textStyle.<span class="hljs-property">letterSpacing</span>;
+    engine.<span class="hljs-property">wordSpacing</span> = textStyle.<span class="hljs-property">wordSpacing</span>;
+    engine.<span class="hljs-property">direction</span> = textStyle.<span class="hljs-property">direction</span>;
+    engine.<span class="hljs-property">textAlign</span> = <span class="hljs-variable constant_">LEFT</span>;
+    engine.<span class="hljs-property">textBaseline</span> = <span class="hljs-variable constant_">TOP</span>;
+
+    engine.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>;
+    engine.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>;
+    engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>;
+    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
+    engine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
+};
+
+P.<span class="hljs-property">stampLabelDirect</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, pos</span>) {
+
+    <span class="hljs-keyword">const</span> method = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">method</span>,
+        complexFill = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>,
+        textFillColor = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getLabelTextFillColor</span>();
+
+    <span class="hljs-keyword">if</span> (
+        (!complexFill || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForOutline</span>) &amp;&amp;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">methodDrawsOutlineBeforeFill</span>(method)
+    ) {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawLabelOutline</span>(
+            engine,
+            pos,
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForOutline</span> ? textFillColor : <span class="hljs-literal">null</span>
+        );
+    }
+
+    <span class="hljs-keyword">if</span> (method !== <span class="hljs-variable constant_">DRAW</span>) {
+
+        engine.<span class="hljs-property">fillStyle</span> = textFillColor;
+        engine.<span class="hljs-title function_">fillText</span>(...pos);
+    }
+};
+
+P.<span class="hljs-property">stampLabelGradientFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
+
+    <span class="hljs-keyword">const</span> identifier = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>;
+
+    <span class="hljs-keyword">if</span> (!identifier) <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">const</span> data = <span class="hljs-title function_">getWorkstoreItem</span>(identifier);
+
+    <span class="hljs-keyword">if</span> (data &amp;&amp; data.<span class="hljs-property">w</span> &amp;&amp; data.<span class="hljs-property">h</span> &amp;&amp; data.<span class="hljs-property">imageData</span>) {
+
+        <span class="hljs-keyword">const</span> { x, y, w, h, imageData } = data;
+
+        <span class="hljs-keyword">const</span> myCell = <span class="hljs-title function_">requestCell</span>();
+
+        <span class="hljs-keyword">const</span> {
+            element,
+            engine,
+        } = myCell;
+
+        element.<span class="hljs-property">width</span> = w;
+        element.<span class="hljs-property">height</span> = h;
+
+        engine.<span class="hljs-title function_">putImageData</span>(imageData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+
+        <span class="hljs-keyword">const</span> hostEngine = host.<span class="hljs-property">engine</span>;
+
+        hostEngine.<span class="hljs-title function_">save</span>();
+        hostEngine.<span class="hljs-title function_">resetTransform</span>();
+        hostEngine.<span class="hljs-title function_">drawImage</span>(element, x, y);
+        hostEngine.<span class="hljs-title function_">restore</span>();
+
+        <span class="hljs-title function_">releaseCell</span>(myCell);
+    }
+};
+
+P.<span class="hljs-property">addUnderlineToGradientMask</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">targetCell, pos</span>) {
+
+    <span class="hljs-keyword">const</span> {
+        currentDimensions,
+        currentScale,
+        currentStampPosition,
+        defaultTextStyle,
+        fontVerticalOffset,
+    } = <span class="hljs-variable language_">this</span>;
+
+    <span class="hljs-keyword">const</span> {
+        underlineGap,
+        underlineOffset,
+        underlineWidth,
+    } = defaultTextStyle;
+
+    <span class="hljs-keyword">const</span> [, x, y] = pos;
+    <span class="hljs-keyword">const</span> [localWidth, localHeight] = currentDimensions;
+
+    <span class="hljs-keyword">const</span> underlineStartY = y + (underlineOffset * localHeight) - fontVerticalOffset * currentScale;
+    <span class="hljs-keyword">const</span> underlineDepth = underlineWidth * currentScale;
+
+    <span class="hljs-keyword">const</span> {
+        <span class="hljs-attr">element</span>: targetElement,
+        <span class="hljs-attr">engine</span>: targetEngine,
+    } = targetCell;
+
+    <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(targetElement.<span class="hljs-property">width</span>, targetElement.<span class="hljs-property">height</span>);
+
+    <span class="hljs-keyword">const</span> {
+        element,
+        engine,
+    } = mycell;
+
+    element.<span class="hljs-property">width</span> = targetElement.<span class="hljs-property">width</span>;
+    element.<span class="hljs-property">height</span> = targetElement.<span class="hljs-property">height</span>;
+
+    mycell.<span class="hljs-title function_">rotateDestination</span>(engine, ...currentStampPosition, <span class="hljs-variable language_">this</span>);
+
+    engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
+    engine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
+    engine.<span class="hljs-property">font</span> = defaultTextStyle.<span class="hljs-property">canvasFont</span>;
+    engine.<span class="hljs-property">fontKerning</span> = defaultTextStyle.<span class="hljs-property">fontKerning</span>;
+    engine.<span class="hljs-property">fontStretch</span> = defaultTextStyle.<span class="hljs-property">fontStretch</span>;
+    engine.<span class="hljs-property">fontVariantCaps</span> = defaultTextStyle.<span class="hljs-property">fontVariantCaps</span>;
+    engine.<span class="hljs-property">textRendering</span> = defaultTextStyle.<span class="hljs-property">textRendering</span>;
+    engine.<span class="hljs-property">letterSpacing</span> = defaultTextStyle.<span class="hljs-property">letterSpacing</span>;
+    engine.<span class="hljs-property">lineCap</span> = <span class="hljs-variable constant_">ROUND</span>;
+    engine.<span class="hljs-property">lineJoin</span> = <span class="hljs-variable constant_">ROUND</span>;
+    engine.<span class="hljs-property">wordSpacing</span> = defaultTextStyle.<span class="hljs-property">wordSpacing</span>;
+    engine.<span class="hljs-property">direction</span> = defaultTextStyle.<span class="hljs-property">direction</span>;
+    engine.<span class="hljs-property">textAlign</span> = <span class="hljs-variable constant_">LEFT</span>;
+    engine.<span class="hljs-property">textBaseline</span> = <span class="hljs-variable constant_">TOP</span>;
+    engine.<span class="hljs-property">lineWidth</span> = (underlineGap * <span class="hljs-number">2</span>) * currentScale;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setImageSmoothing</span>(engine);
+
+    engine.<span class="hljs-title function_">strokeText</span>(...pos);
+    engine.<span class="hljs-title function_">fillText</span>(...pos);
+
+    engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OUT</span>;
+    engine.<span class="hljs-title function_">fillRect</span>(x, underlineStartY, localWidth, underlineDepth);
+
+    targetEngine.<span class="hljs-title function_">save</span>();
+    targetEngine.<span class="hljs-title function_">resetTransform</span>();
+    targetEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
+    targetEngine.<span class="hljs-title function_">drawImage</span>(element, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    targetEngine.<span class="hljs-title function_">restore</span>();
+
+    <span class="hljs-title function_">releaseCell</span>(mycell);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>stampPositioningHelper</code> - internal helper function</p>
 
@@ -1282,51 +1667,31 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <p><code>underlineEngine</code> - internal helper function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">underlineEngine</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host, pos</span>) {</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
-              <p>Setup constants</p>
+              <p>Overwrite stamp functions from mixin/entity.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> {
-        currentDimensions,
-        currentScale,
-        currentStampPosition,
-        defaultTextStyle,
-        fontVerticalOffset,
-    } = <span class="hljs-variable language_">this</span>;
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">draw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
 
-    <span class="hljs-keyword">const</span> {
-        underlineGap,
-        underlineOffset,
-        underlineStyle,
-        underlineWidth,
-    } = defaultTextStyle;
+    <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">postProcessLabelDecorations</span>(host, pos);
+};
 
-    <span class="hljs-keyword">const</span> [, x, y] = pos;
-    <span class="hljs-keyword">const</span> [localWidth, localHeight] = currentDimensions;
+P.<span class="hljs-property">fill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
 
-    <span class="hljs-keyword">const</span> underlineStartY = y + (underlineOffset * localHeight) - fontVerticalOffset * currentScale;
-    <span class="hljs-keyword">const</span> underlineDepth = underlineWidth * currentScale;</pre></div></div>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampLabelDirect</span>(host.<span class="hljs-property">engine</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>());
+};
+
+P.<span class="hljs-property">drawAndFill</span> = P.<span class="hljs-property">fill</span>;
+P.<span class="hljs-property">fillAndDraw</span> = P.<span class="hljs-property">fill</span>;
+P.<span class="hljs-property">drawThenFill</span> = P.<span class="hljs-property">fill</span>;
+P.<span class="hljs-property">fillThenDraw</span> = P.<span class="hljs-property">fill</span>;</pre></div></div>
             
         </li>
         
@@ -1336,351 +1701,6 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
               
               <div class="sswrap ">
                 <a class="ss" href="#section-31">&#x00a7;</a>
-              </div>
-              <p>Setup the cell parts</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> { element, engine } = host;
-
-    <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(element.<span class="hljs-property">width</span>, element.<span class="hljs-property">height</span>);
-
-    <span class="hljs-keyword">const</span> {
-        <span class="hljs-attr">element</span>: underlineElement,
-        <span class="hljs-attr">engine</span>: underlineEngine,
-    } = mycell;
-
-    mycell.<span class="hljs-title function_">rotateDestination</span>(underlineEngine, ...currentStampPosition, <span class="hljs-variable language_">this</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
-              </div>
-              <p>Setup the underline context</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    underlineEngine.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
-    underlineEngine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
-    underlineEngine.<span class="hljs-property">font</span> = defaultTextStyle.<span class="hljs-property">canvasFont</span>;
-    underlineEngine.<span class="hljs-property">fontKerning</span> = defaultTextStyle.<span class="hljs-property">fontKerning</span>;
-    underlineEngine.<span class="hljs-property">fontStretch</span> = defaultTextStyle.<span class="hljs-property">fontStretch</span>;
-    underlineEngine.<span class="hljs-property">fontVariantCaps</span> = defaultTextStyle.<span class="hljs-property">fontVariantCaps</span>;
-    underlineEngine.<span class="hljs-property">textRendering</span> = defaultTextStyle.<span class="hljs-property">textRendering</span>;
-    underlineEngine.<span class="hljs-property">letterSpacing</span> = defaultTextStyle.<span class="hljs-property">letterSpacing</span>;
-    underlineEngine.<span class="hljs-property">lineCap</span> = <span class="hljs-variable constant_">ROUND</span>;
-    underlineEngine.<span class="hljs-property">lineJoin</span> = <span class="hljs-variable constant_">ROUND</span>;
-    underlineEngine.<span class="hljs-property">wordSpacing</span> = defaultTextStyle.<span class="hljs-property">wordSpacing</span>;
-    underlineEngine.<span class="hljs-property">direction</span> = defaultTextStyle.<span class="hljs-property">direction</span>;
-    underlineEngine.<span class="hljs-property">textAlign</span> = <span class="hljs-variable constant_">LEFT</span>;
-    underlineEngine.<span class="hljs-property">textBaseline</span> = <span class="hljs-variable constant_">TOP</span>;
-    underlineEngine.<span class="hljs-property">lineWidth</span> = (underlineGap * <span class="hljs-number">2</span>) * currentScale;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setImageSmoothing</span>(underlineEngine);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
-              </div>
-              <p>Underlines can take their own styling, or use the fillStyle set on the Label entity</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> uStyle = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getStyle</span>(underlineStyle, <span class="hljs-string">&#x27;fillStyle&#x27;</span>, mycell);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
-              </div>
-              <p>Generate the underline</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    underlineEngine.<span class="hljs-title function_">strokeText</span>(...pos);
-    underlineEngine.<span class="hljs-title function_">fillText</span>(...pos);
-
-    underlineEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-out&#x27;</span>;
-    underlineEngine.<span class="hljs-property">fillStyle</span> = uStyle;
-
-    underlineEngine.<span class="hljs-title function_">fillRect</span>(x, underlineStartY, localWidth, underlineDepth);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
-              </div>
-              <p>Copy the underline over to the real cell</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    engine.<span class="hljs-title function_">save</span>();
-    engine.<span class="hljs-title function_">resetTransform</span>();
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setImageSmoothing</span>(engine);
-
-    engine.<span class="hljs-title function_">drawImage</span>(underlineElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-    engine.<span class="hljs-title function_">restore</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
-              </div>
-              <p>Release the temporary cell</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">releaseCell</span>(mycell);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
-              </div>
-              <p><code>drawBoundingBox</code> - internal helper function called by <code>method</code> functions</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">drawBoundingBox</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>) {
-
-        <span class="hljs-keyword">const</span> uStroke = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getStyle</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxStyle</span>, <span class="hljs-string">&#x27;fillStyle&#x27;</span>, host);
-        <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
-
-        engine.<span class="hljs-title function_">save</span>();
-        engine.<span class="hljs-property">strokeStyle</span> = uStroke;
-        engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineWidth</span>;
-        engine.<span class="hljs-title function_">setLineDash</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineDash</span> || []);
-        engine.<span class="hljs-property">lineDashOffset</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineDashOffset</span> || <span class="hljs-number">0</span>;
-        engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
-        engine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
-        engine.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>;
-        engine.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>;
-        engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>;
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setImageSmoothing</span>(engine);
-
-        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
-        engine.<span class="hljs-title function_">restore</span>();
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
-              </div>
-              <p><code>draw</code> - stroke the entity outline with the entity’s <code>strokeStyle</code> color, gradient or pattern - including shadow</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">draw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span>) {
-
-        <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
-
-        <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
-
-        engine.<span class="hljs-title function_">strokeText</span>(...pos);
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(host);
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
-              </div>
-              <p><code>fill</code> - fill the entity with the entity’s <code>fillStyle</code> color, gradient or pattern - including shadow</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span>) {
-
-        <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
-        <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
-
-        engine.<span class="hljs-title function_">fillText</span>(...pos);
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(host);
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
-              </div>
-              <p><code>drawAndFill</code> - stamp the entity stroke, then fill, then remove shadow and repeat</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">drawAndFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span>) {
-
-        <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
-        <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
-
-        engine.<span class="hljs-title function_">strokeText</span>(...pos);
-        engine.<span class="hljs-title function_">fillText</span>(...pos);
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
-        engine.<span class="hljs-title function_">strokeText</span>(...pos);
-        engine.<span class="hljs-title function_">fillText</span>(...pos);
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(host);
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
-              </div>
-              <p><code>drawAndFill</code> - stamp the entity fill, then stroke, then remove shadow and repeat</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fillAndDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span>) {
-
-        <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
-        <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
-
-        engine.<span class="hljs-title function_">fillText</span>(...pos);
-        engine.<span class="hljs-title function_">strokeText</span>(...pos);
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
-        engine.<span class="hljs-title function_">fillText</span>(...pos);
-        engine.<span class="hljs-title function_">strokeText</span>(...pos);
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(host);
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
-              </div>
-              <p><code>drawThenFill</code> - stroke the entity’s outline, then fill it (shadow applied twice)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">drawThenFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span>) {
-
-        <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
-        <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
-
-        engine.<span class="hljs-title function_">strokeText</span>(...pos);
-        engine.<span class="hljs-title function_">fillText</span>(...pos);
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(host);
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
-              </div>
-              <p><code>fillThenDraw</code> - fill the entity’s outline, then stroke it (shadow applied twice)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fillThenDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span>) {
-
-        <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
-        <span class="hljs-keyword">const</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampPositioningHelper</span>();
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>.<span class="hljs-property">includeUnderline</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(host, pos);
-
-        engine.<span class="hljs-title function_">fillText</span>(...pos);
-        engine.<span class="hljs-title function_">strokeText</span>(...pos);
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(host);
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-44">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>clip</code> - restrict drawing activities to the entity’s enclosed area</p>
 
@@ -1695,11 +1715,11 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-45">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><code>clear</code> - remove everything that would have been covered if the entity had performed fill (including shadow)</p>
 
@@ -1724,26 +1744,251 @@ P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-46">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><code>none</code> - perform all the calculations required, but don’t perform the final stamping</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">none</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">none</span> = λ<span class="hljs-literal">null</span>;
+
+P.<span class="hljs-property">postProcessLabelDecorations</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host, pos</span>) {
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFontIsLoaded</span>) <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>,
+        textStyle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defaultTextStyle</span>,
+        complexFill = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>,
+        textFillColor = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getLabelTextFillColor</span>();
+
+    <span class="hljs-keyword">if</span> (!engine || !textStyle) <span class="hljs-keyword">return</span>;
+
+    <span class="hljs-keyword">if</span> (
+        (!complexFill || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForOutline</span>) &amp;&amp;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">methodDrawsOutlineAfterFill</span>(textStyle.<span class="hljs-property">method</span>)
+    ) {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawLabelOutline</span>(
+            engine,
+            pos,
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForOutline</span> ? textFillColor : <span class="hljs-literal">null</span>
+        );
+    }
+
+    <span class="hljs-keyword">if</span> (
+        textStyle.<span class="hljs-property">includeUnderline</span> &amp;&amp;
+        (!complexFill || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForUnderline</span>)
+    ) {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">underlineEngine</span>(
+            host,
+            pos,
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForUnderline</span> ? textFillColor : <span class="hljs-literal">null</span>
+        );
+    }
+
+    <span class="hljs-keyword">if</span> (
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span> &amp;&amp;
+        (!complexFill || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForBoundingBox</span>)
+    ) {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(
+            host,
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">useTextStyleForBoundingBox</span> ? textFillColor : <span class="hljs-literal">null</span>
+        );
+    }
+};
+
+P.<span class="hljs-property">getLabelTextFillColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getLabelColorOnlyStyle</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">fillStyle</span>);
+};
+
+P.<span class="hljs-property">methodDrawsOutlineBeforeFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">method</span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">METHODS_USING_DRAW_FIRST</span>.<span class="hljs-title function_">includes</span>(method);
+};
+
+P.<span class="hljs-property">methodDrawsOutlineAfterFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">method</span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">METHODS_USING_DRAW_LAST</span>.<span class="hljs-title function_">includes</span>(method);
+};
+
+P.<span class="hljs-property">drawLabelOutline</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine, pos, style = <span class="hljs-literal">null</span></span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>) {
+
+        engine.<span class="hljs-title function_">save</span>();
+
+        engine.<span class="hljs-property">strokeStyle</span> = style || <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getLabelColorOnlyStyle</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">strokeStyle</span>);
+        engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getLabelTextFillColor</span>();
+
+        engine.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>;
+        engine.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>;
+        engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setImageSmoothing</span>(engine);
+
+        engine.<span class="hljs-title function_">strokeText</span>(...pos);
+        engine.<span class="hljs-title function_">restore</span>();
+    }
+};
+
+P.<span class="hljs-property">getLabelColorOnlyStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, fallback = BLACK</span>) {
+
+    <span class="hljs-keyword">if</span> (!item) <span class="hljs-keyword">return</span> fallback;
+
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
+
+        <span class="hljs-keyword">if</span> (stylesnames.<span class="hljs-title function_">includes</span>(item)) {
+
+            <span class="hljs-keyword">const</span> obj = styles[item];
+
+            <span class="hljs-keyword">if</span> (obj &amp;&amp; obj.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_COLOR</span>) <span class="hljs-keyword">return</span> obj.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;color&#x27;</span>);
+
+            <span class="hljs-keyword">return</span> fallback;
+        }
+        <span class="hljs-keyword">return</span> item;
+    }
+
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">name</span> &amp;&amp; item.<span class="hljs-property">type</span> &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-variable constant_">T_COLOR</span>) <span class="hljs-keyword">return</span> item.<span class="hljs-title function_">get</span>();
+
+    <span class="hljs-keyword">return</span> fallback;
+};</pre></div></div>
             
         </li>
         
         
-        <li id="section-47">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
+              <p><code>underlineEngine</code> - internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">underlineEngine</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host, pos, style = <span class="hljs-literal">null</span></span>) {
+
+    <span class="hljs-keyword">const</span> {
+        currentDimensions,
+        currentScale,
+        currentStampPosition,
+        defaultTextStyle,
+        fontVerticalOffset,
+    } = <span class="hljs-variable language_">this</span>;
+
+    <span class="hljs-keyword">const</span> {
+        underlineGap,
+        underlineOffset,
+        underlineStyle,
+        underlineWidth,
+    } = defaultTextStyle;
+
+    <span class="hljs-keyword">const</span> [, x, y] = pos;
+    <span class="hljs-keyword">const</span> [localWidth, localHeight] = currentDimensions;
+
+    <span class="hljs-keyword">const</span> underlineStartY = y + (underlineOffset * localHeight) - fontVerticalOffset * currentScale;
+    <span class="hljs-keyword">const</span> underlineDepth = underlineWidth * currentScale;
+
+    <span class="hljs-keyword">const</span> { element, engine } = host;
+
+    <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>(element.<span class="hljs-property">width</span>, element.<span class="hljs-property">height</span>);
+
+    <span class="hljs-keyword">const</span> {
+        <span class="hljs-attr">element</span>: underlineElement,
+        <span class="hljs-attr">engine</span>: underlineEngine,
+    } = mycell;
+
+    mycell.<span class="hljs-title function_">rotateDestination</span>(underlineEngine, ...currentStampPosition, <span class="hljs-variable language_">this</span>);
+
+    underlineEngine.<span class="hljs-property">fillStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
+    underlineEngine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-variable constant_">BLACK</span>;
+    underlineEngine.<span class="hljs-property">font</span> = defaultTextStyle.<span class="hljs-property">canvasFont</span>;
+    underlineEngine.<span class="hljs-property">fontKerning</span> = defaultTextStyle.<span class="hljs-property">fontKerning</span>;
+    underlineEngine.<span class="hljs-property">fontStretch</span> = defaultTextStyle.<span class="hljs-property">fontStretch</span>;
+    underlineEngine.<span class="hljs-property">fontVariantCaps</span> = defaultTextStyle.<span class="hljs-property">fontVariantCaps</span>;
+    underlineEngine.<span class="hljs-property">textRendering</span> = defaultTextStyle.<span class="hljs-property">textRendering</span>;
+    underlineEngine.<span class="hljs-property">letterSpacing</span> = defaultTextStyle.<span class="hljs-property">letterSpacing</span>;
+    underlineEngine.<span class="hljs-property">lineCap</span> = <span class="hljs-variable constant_">ROUND</span>;
+    underlineEngine.<span class="hljs-property">lineJoin</span> = <span class="hljs-variable constant_">ROUND</span>;
+    underlineEngine.<span class="hljs-property">wordSpacing</span> = defaultTextStyle.<span class="hljs-property">wordSpacing</span>;
+    underlineEngine.<span class="hljs-property">direction</span> = defaultTextStyle.<span class="hljs-property">direction</span>;
+    underlineEngine.<span class="hljs-property">textAlign</span> = <span class="hljs-variable constant_">LEFT</span>;
+    underlineEngine.<span class="hljs-property">textBaseline</span> = <span class="hljs-variable constant_">TOP</span>;
+    underlineEngine.<span class="hljs-property">lineWidth</span> = (underlineGap * <span class="hljs-number">2</span>) * currentScale;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setImageSmoothing</span>(underlineEngine);
+
+    <span class="hljs-keyword">const</span> uStyle = style || <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getLabelColorOnlyStyle</span>(underlineStyle);
+
+    underlineEngine.<span class="hljs-title function_">strokeText</span>(...pos);
+    underlineEngine.<span class="hljs-title function_">fillText</span>(...pos);
+
+    underlineEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-out&#x27;</span>;
+    underlineEngine.<span class="hljs-property">fillStyle</span> = uStyle;
+
+    underlineEngine.<span class="hljs-title function_">fillRect</span>(x, underlineStartY, localWidth, underlineDepth);
+
+    engine.<span class="hljs-title function_">save</span>();
+    engine.<span class="hljs-title function_">resetTransform</span>();
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setImageSmoothing</span>(engine);
+
+    engine.<span class="hljs-title function_">drawImage</span>(underlineElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    engine.<span class="hljs-title function_">restore</span>();
+
+    <span class="hljs-title function_">releaseCell</span>(mycell);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
+              </div>
+              <p><code>drawBoundingBox</code> - internal helper function called by <code>method</code> functions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">drawBoundingBox</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host, style = <span class="hljs-literal">null</span></span>) {
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>) {
+
+        <span class="hljs-keyword">const</span> uStroke = style || <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getLabelColorOnlyStyle</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxStyle</span>);
+        <span class="hljs-keyword">const</span> engine = host.<span class="hljs-property">engine</span>;
+
+        engine.<span class="hljs-title function_">save</span>();
+        engine.<span class="hljs-property">strokeStyle</span> = uStroke;
+        engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineWidth</span>;
+        engine.<span class="hljs-title function_">setLineDash</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineDash</span> || []);
+        engine.<span class="hljs-property">lineDashOffset</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">boundingBoxLineDashOffset</span> || <span class="hljs-number">0</span>;
+        engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-variable constant_">SOURCE_OVER</span>;
+        engine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
+        engine.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>;
+        engine.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>;
+        engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setImageSmoothing</span>(engine);
+
+        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
+        engine.<span class="hljs-title function_">restore</span>();
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeLabel</span>({

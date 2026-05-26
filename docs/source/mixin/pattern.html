@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -602,7 +607,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_number, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { cell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;</pre></div></div>
             
@@ -619,7 +624,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { _isArray, <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">T_NOISE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-variable constant_">BLANK</span>, <span class="hljs-variable constant_">DRAW</span>, <span class="hljs-variable constant_">FILL</span>, <span class="hljs-variable constant_">T_CELL</span>, <span class="hljs-variable constant_">T_NOISE</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../helper/shared-vars.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -634,14 +639,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> _A = <span class="hljs-string">&#x27;a&#x27;</span>,
-    _B = <span class="hljs-string">&#x27;b&#x27;</span>,
-    _C = <span class="hljs-string">&#x27;c&#x27;</span>,
-    _D = <span class="hljs-string">&#x27;d&#x27;</span>,
-    _E = <span class="hljs-string">&#x27;e&#x27;</span>,
-    _F = <span class="hljs-string">&#x27;f&#x27;</span>,
-    <span class="hljs-variable constant_">MAT_POS</span> = [<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;f&#x27;</span>],
-    <span class="hljs-variable constant_">MAT_REPEAT</span> = [<span class="hljs-string">&#x27;repeat&#x27;</span>, <span class="hljs-string">&#x27;repeat-x&#x27;</span>, <span class="hljs-string">&#x27;repeat-y&#x27;</span>, <span class="hljs-string">&#x27;no-repeat&#x27;</span>],
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">MAT_REPEAT</span> = [<span class="hljs-string">&#x27;repeat&#x27;</span>, <span class="hljs-string">&#x27;repeat-x&#x27;</span>, <span class="hljs-string">&#x27;repeat-y&#x27;</span>, <span class="hljs-string">&#x27;no-repeat&#x27;</span>],
     <span class="hljs-variable constant_">REPEAT</span> = <span class="hljs-string">&#x27;repeat&#x27;</span>;</pre></div></div>
             
         </li>
@@ -698,20 +696,16 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p><strong>patternMatrix</strong> - Scrawl-canvas will apply a 2d-style, 6 value <a href="https://developer.mozilla.org/en-US/docs/Web/API/DOMMatrix">DOMMatrix</a> to the pattern each time it is recreated. Changing the values of the matrix will change the rotation, skew, etc of the pattern. Pseudo-attributes can be used to set individual elements of the matrix, as follows:</p>
-<ul>
-<li><code>stretchX</code> (or <code>matrixA</code>) - generally used for horizontal (x axis) scale</li>
-<li><code>skewY</code> (or <code>matrixB</code>) - generally used for horizontal (x axis) skew</li>
-<li><code>skewX</code> (or <code>matrixC</code>) - generally used for vertical (y axis) skew</li>
-<li><code>stretchY</code> (or <code>matrixD</code>) - generally used for vertical (y axis) scale</li>
-<li><code>shiftX</code> (or <code>matrixE</code>) - generally used for horizontal (x axis) positioning</li>
-<li><code>shiftY</code> (or <code>matrixF</code>) - generally used for vertical (y axis) positioning</li>
-</ul>
-<p>To rotate the pattern, update the B and C matrix values in tandem. Results will be dependent on the surrounding matrix values. See demo <a href="../../demo/canvas-035.html">Canvas-035</a> to explore further.</p>
+              <p>Pattern matrix values</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">patternMatrix</span>: <span class="hljs-literal">null</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">patternStretchX</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">patternStretchY</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">patternSkewX</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">patternSkewY</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">patternShiftX</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">patternShiftY</span>: <span class="hljs-number">0</span>,
     };
     P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
@@ -770,8 +764,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>,
-        G = P.<span class="hljs-property">getters</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
         
@@ -801,13 +794,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p><code>checkMatrixExists</code> - internal helper function</p>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">checkMatrixExists</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">initializePattern</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">patternMatrix</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">patternMatrix</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DOMMatrix</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPatternMatrix</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">DOMMatrix</span>();
     };</pre></div></div>
             
         </li>
@@ -819,149 +812,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p><code>updateMatrixNumber</code> - internal helper function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">updateMatrixNumber</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, pos</span>) {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkMatrixExists</span>();
-
-        item = (item.<span class="hljs-property">substring</span>) ? <span class="hljs-built_in">parseFloat</span>(item) : item;
-
-        <span class="hljs-keyword">const</span> posCheck = <span class="hljs-variable constant_">MAT_POS</span>.<span class="hljs-title function_">includes</span>(pos);
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(item) &amp;&amp; posCheck) <span class="hljs-variable language_">this</span>.<span class="hljs-property">patternMatrix</span>[pos] = item;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p><strong>matrixA</strong>, <strong>matrixB</strong>, <strong>matrixC</strong>, <strong>matrixD</strong>, <strong>matrixE</strong>, <strong>matrixF</strong> - these <em>pseudo-attributes</em> can be used to set individual attributes of the <code>patternMatrix</code> DOMMatrix object</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">matrixA</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, _A); };
-    S.<span class="hljs-property">matrixB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, _B); };
-    S.<span class="hljs-property">matrixC</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, _C); };
-    S.<span class="hljs-property">matrixD</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, _D); };
-    S.<span class="hljs-property">matrixE</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, _E); };
-    S.<span class="hljs-property">matrixF</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, _F); };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p><strong>stretchX</strong>, <strong>skewY</strong>, <strong>skewX</strong>, <strong>stretchY</strong>, <strong>shiftX</strong>, <strong>shiftY</strong> - these <em>pseudo-attributes</em> can be used to set individual attributes of the <code>patternMatrix</code> DOMMatrix object</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">stretchX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, _A); };
-    S.<span class="hljs-property">skewY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, _B); };
-    S.<span class="hljs-property">skewX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, _C); };
-    S.<span class="hljs-property">stretchY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, _D); };
-    S.<span class="hljs-property">shiftX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, _E); };
-    S.<span class="hljs-property">shiftY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateMatrixNumber</span>(item, _F); };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p><code>retrieveMatrixNumber</code> - internal helper function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">retrieveMatrixNumber</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">pos</span>) {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkMatrixExists</span>();
-        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">patternMatrix</span>[pos];
-    };
-
-    G.<span class="hljs-property">matrixA</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveMatrixNumber</span>(_A); };
-    G.<span class="hljs-property">matrixB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveMatrixNumber</span>(_B); };
-    G.<span class="hljs-property">matrixC</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveMatrixNumber</span>(_C); };
-    G.<span class="hljs-property">matrixD</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveMatrixNumber</span>(_D); };
-    G.<span class="hljs-property">matrixE</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveMatrixNumber</span>(_E); };
-    G.<span class="hljs-property">matrixF</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveMatrixNumber</span>(_F); };
-
-    G.<span class="hljs-property">stretchX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveMatrixNumber</span>(_A); };
-    G.<span class="hljs-property">skewY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveMatrixNumber</span>(_B); };
-    G.<span class="hljs-property">skewX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveMatrixNumber</span>(_C); };
-    G.<span class="hljs-property">stretchY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveMatrixNumber</span>(_D); };
-    G.<span class="hljs-property">shiftX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveMatrixNumber</span>(_E); };
-    G.<span class="hljs-property">shiftY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">retrieveMatrixNumber</span>(_F); };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p><strong>patternMatrix</strong> - the argument must be an Array containing 6 Number elements in the form of <code>[a, b, c, d, e, f]</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">patternMatrix</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">_isArray</span>(item)) {
-
-            <span class="hljs-keyword">const</span> update = <span class="hljs-variable language_">this</span>.<span class="hljs-property">updateMatrixNumber</span>;
-
-            <span class="hljs-title function_">update</span>(item[<span class="hljs-number">0</span>], _A);
-            <span class="hljs-title function_">update</span>(item[<span class="hljs-number">1</span>], _B);
-            <span class="hljs-title function_">update</span>(item[<span class="hljs-number">2</span>], _C);
-            <span class="hljs-title function_">update</span>(item[<span class="hljs-number">3</span>], _D);
-            <span class="hljs-title function_">update</span>(item[<span class="hljs-number">4</span>], _E);
-            <span class="hljs-title function_">update</span>(item[<span class="hljs-number">5</span>], _F);
-        }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
               <p><code>buildStyle</code> - internal function: creates the pattern on the Cell’s CanvasRenderingContext2D engine.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">buildStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">mycell</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">buildStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">mycell, myentity, area</span>) {
 
         <span class="hljs-keyword">if</span> (mycell) {
 
@@ -982,9 +837,96 @@
 
                 <span class="hljs-keyword">const</span> p = engine.<span class="hljs-title function_">createPattern</span>(source, repeat);
 
-                p.<span class="hljs-title function_">setTransform</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">patternMatrix</span>);
+                <span class="hljs-keyword">if</span> (p) {
 
-                <span class="hljs-keyword">return</span> p;
+                    <span class="hljs-keyword">const</span> {
+                        patternStretchX,
+                        patternStretchY,
+                        patternSkewX,
+                        patternSkewY,
+                        patternShiftX,
+                        patternShiftY,
+                    } = <span class="hljs-variable language_">this</span>;
+
+                    <span class="hljs-keyword">const</span> matrix = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPatternMatrix</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>Base pattern-owned transform</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    matrix.<span class="hljs-property">a</span> = patternStretchX;
+                    matrix.<span class="hljs-property">b</span> = patternSkewY;
+                    matrix.<span class="hljs-property">c</span> = patternSkewX;
+                    matrix.<span class="hljs-property">d</span> = patternStretchY;
+                    matrix.<span class="hljs-property">e</span> = patternShiftX;
+                    matrix.<span class="hljs-property">f</span> = patternShiftY;
+
+                    <span class="hljs-keyword">if</span> (
+                        (area === <span class="hljs-variable constant_">FILL</span> &amp;&amp; myentity.<span class="hljs-property">lockFillStyleToEntity</span>) ||
+                        (area === <span class="hljs-variable constant_">DRAW</span> &amp;&amp; myentity.<span class="hljs-property">lockStrokeStyleToEntity</span>)
+                    ) {
+
+                        <span class="hljs-keyword">const</span> scale = myentity.<span class="hljs-property">currentScale</span> || <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>Entity scale is not part of the canvas transform.</p>
+<ul>
+<li>Add it only when the pattern is entity-locked.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        matrix.<span class="hljs-property">a</span> *= scale;
+                        matrix.<span class="hljs-property">b</span> *= scale;
+                        matrix.<span class="hljs-property">c</span> *= scale;
+                        matrix.<span class="hljs-property">d</span> *= scale;
+                        matrix.<span class="hljs-property">e</span> *= scale;
+                        matrix.<span class="hljs-property">f</span> *= scale;
+                    }
+                    <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>The engine is already translated/rotated for the entity.</p>
+<ul>
+<li>Undo that transform so the pattern behaves as cell-locked.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">const</span> inverse = engine.<span class="hljs-title function_">getTransform</span>().<span class="hljs-title function_">invertSelf</span>();
+
+                        matrix.<span class="hljs-title function_">preMultiplySelf</span>(inverse);
+                    }
+
+                    p.<span class="hljs-title function_">setTransform</span>(matrix);
+
+                    <span class="hljs-keyword">return</span> p;
+                }
             }
         }
         <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">BLANK</span>;

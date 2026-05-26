@@ -13,6 +13,15 @@
     canvas {
       margin: 1em auto;
       box-shadow: 0px 0px 0px 1px black;
+
+      & .assets {
+        height: 0;
+        overflow: hidden;
+      }
+    }
+
+    .controls {
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     }
   </style>
 </head>
@@ -31,7 +40,66 @@
     height="600"
     data-scrawl-canvas
     data-base-background-color="aliceblue"
-  ></canvas>
+  >
+    <div class="assets" aria-hidden="true">
+      <img src="img/brick.png" id="brick" class="mypatterns" />
+    </div>
+  </canvas>
+
+  <div class="controls">
+
+    <div class="orange label">Linear draw style</div>
+    <div class="orange">
+      <select class="controlItem linear" id="linear-stroke-style">
+        <option value="darkred">color</option>
+        <option value="mycanvas-stroke-gradient">gradient</option>
+        <option value="mycanvas-stroke-pattern">pattern</option>
+      </select>
+    </div>
+
+    <div class="blue label">Quadratic draw style</div>
+    <div class="blue">
+      <select class="controlItem quadratic" id="quadratic-stroke-style">
+        <option value="darkblue">color</option>
+        <option value="mycanvas-stroke-gradient">gradient</option>
+        <option value="mycanvas-stroke-pattern">pattern</option>
+      </select>
+    </div>
+
+    <div class="green label">Bezier draw style</div>
+    <div class="green">
+      <select class="controlItem bezier" id="bezier-stroke-style">
+        <option value="darkgreen">color</option>
+        <option value="mycanvas-stroke-gradient">gradient</option>
+        <option value="mycanvas-stroke-pattern">pattern</option>
+      </select>
+    </div>
+
+    <div class="orange label">Linear lock to entity</div>
+    <div class="orange">
+      <select class="controlItem linear" id="linear-style-lock">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="blue label">Quadratic lock to entity</div>
+    <div class="blue">
+      <select class="controlItem quadratic" id="quadratic-style-lock">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="green label">Bezier lock to entity</div>
+    <div class="green">
+      <select class="controlItem bezier" id="bezier-style-lock">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+  </div>
 
   <p id="reportmessage" role="timer" aria-live="polite">To note: Javascript is not running in this browser environment. Our apologies, but this demo has not yet been updated to support progressive enhancement.</p>
 

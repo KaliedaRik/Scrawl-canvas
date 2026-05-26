@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -858,6 +863,8 @@
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyfillGradientCache</span> = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1324,12 +1331,23 @@
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">false</span>;
 
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setGradientCacheFlags</span>();
+
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
 
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span>)  <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCalculatedOnce</span> = <span class="hljs-literal">false</span>;
        }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span>) {
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+        }
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isBeingDragged</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">MOUSE</span>) || <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-variable constant_">PARTICLE</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
 
@@ -1339,6 +1357,12 @@
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanOffset</span>();
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanRotation</span>();
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span>) {
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFillGradientCache</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDrawGradientCache</span> = <span class="hljs-literal">true</span>;
+        }
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStampPositions</span>();
 
@@ -1615,7 +1639,9 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">draw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">applyFromWorkstore</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
+
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(engine);
     };</pre></div></div>
             
@@ -1634,7 +1660,9 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">fill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        engine.<span class="hljs-title function_">fill</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">applyFromWorkstore</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(engine);
     };</pre></div></div>
             
@@ -1653,11 +1681,28 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">drawAndFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+            winding = <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>,
+            apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>),
+            drawUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>,
+            drawId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>,
+            fillUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>,
+            fillId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>;
 
-        engine.<span class="hljs-title function_">stroke</span>(p);
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
+
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(engine);
     };</pre></div></div>
             
@@ -1676,12 +1721,28 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">fillAndDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+            winding = <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>,
+            apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>),
+            drawUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>,
+            drawId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>,
+            fillUse = <span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>,
+            fillId = <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>;
 
-        engine.<span class="hljs-title function_">stroke</span>(p);
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-        engine.<span class="hljs-title function_">stroke</span>(p);
+
+        <span class="hljs-keyword">if</span> (fillUse) <span class="hljs-title function_">apply</span>(engine, fillId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, winding);
+
+        <span class="hljs-keyword">if</span> (drawUse) <span class="hljs-title function_">apply</span>(engine, drawId);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(engine);
     };</pre></div></div>
             
@@ -1700,10 +1761,15 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">drawThenFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+            apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>);
 
-        engine.<span class="hljs-title function_">stroke</span>(p);
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-title function_">apply</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-title function_">apply</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(engine);
     };</pre></div></div>
             
@@ -1722,10 +1788,15 @@
             
             <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">fillThenDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
+        <span class="hljs-keyword">const</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>,
+            apply = <span class="hljs-variable language_">this</span>.<span class="hljs-property">applyFromWorkstore</span>.<span class="hljs-title function_">bind</span>(<span class="hljs-variable language_">this</span>);
 
-        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
-        engine.<span class="hljs-title function_">stroke</span>(p);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useFillGradientCache</span>) <span class="hljs-title function_">apply</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierFillGradientCache</span>);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">useDrawGradientCache</span>) <span class="hljs-title function_">apply</span>(engine, <span class="hljs-variable language_">this</span>.<span class="hljs-property">identifierDrawGradientCache</span>);
+        <span class="hljs-keyword">else</span> engine.<span class="hljs-title function_">stroke</span>(p);
+
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">showBoundingBox</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">drawBoundingBox</span>(engine);
     };</pre></div></div>
             

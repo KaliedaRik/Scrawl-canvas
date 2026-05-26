@@ -418,6 +418,8 @@ P.prepareStamp = function () {
         this.dirtyDimensions = true;
     }
 
+    this.setGradientCacheFlags();
+
     if (this.dirtyScale || this.dirtyDimensions || this.dirtyStart || this.dirtyOffset || this.dirtyHandle) this.dirtyPathObject = true;
 
     if (this.dirtyScale) this.cleanScale();

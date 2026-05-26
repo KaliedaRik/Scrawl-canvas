@@ -30,12 +30,12 @@ const patternCell = canvas.buildCell({
     name: name('bar-cell-pattern'),
     dimensions: [80, 80],
     shown: false,
-    skewX: 0,
-    stretchX: 1,
-    shiftX: 0,
-    skewY: 0,
-    stretchY: 1,
-    shiftY: 0,
+    patternSkewX: 0,
+    patternStretchX: 1,
+    patternShiftX: 0,
+    patternSkewY: 0,
+    patternStretchY: 1,
+    patternShiftY: 0,
 });
 
 const barGradient = scrawl.makeGradient({
@@ -429,12 +429,12 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
             patternCell.set({
                 width: 80,
                 height: 80,
-                shiftX: 0,
-                shiftY: 0,
-                skewX: 0,
-                skewY: 0,
-                stretchX: 1,
-                stretchY: 1,
+                patternShiftX: 0,
+                patternShiftY: 0,
+                patternSkewX: 0,
+                patternSkewY: 0,
+                patternStretchX: 1,
+                patternStretchY: 1,
             });
 
             filterBlock.set({
@@ -465,12 +465,12 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
             patternCell.set({
                 width: 80,
                 height: 80,
-                shiftX: 0,
-                shiftY: 0,
-                skewX: 0,
-                skewY: 0,
-                stretchX: 1,
-                stretchY: 1,
+                patternShiftX: 0,
+                patternShiftY: 0,
+                patternSkewX: 0,
+                patternSkewY: 0,
+                patternStretchX: 1,
+                patternStretchY: 1,
             });
 
             filterBlock.set({
@@ -501,12 +501,12 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
             patternCell.set({
                 width: 80,
                 height: 80,
-                shiftX: 0,
-                shiftY: 0,
-                skewX: -0.65,
-                skewY: -0.31,
-                stretchX: 1,
-                stretchY: 0.26,
+                patternShiftX: 0,
+                patternShiftY: 0,
+                patternSkewX: -0.65,
+                patternSkewY: -0.31,
+                patternStretchX: 1,
+                patternStretchY: 0.26,
             });
 
             filterBlock.set({
@@ -537,12 +537,12 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
             patternCell.set({
                 width: 80,
                 height: 80,
-                shiftX: 0,
-                shiftY: 0,
-                skewX: 1.04,
-                skewY: 0.05,
-                stretchX: 0.35,
-                stretchY: 0,
+                patternShiftX: 0,
+                patternShiftY: 0,
+                patternSkewX: 1.04,
+                patternSkewY: 0.05,
+                patternStretchX: 0.35,
+                patternStretchY: 0,
             });
 
             filterBlock.set({

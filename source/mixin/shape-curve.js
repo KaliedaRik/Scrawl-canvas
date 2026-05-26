@@ -365,6 +365,14 @@ P.factoryKill = function () {
 
         if (this.dirtyHost) this.dirtyHost = false;
 
+        this.setGradientCacheFlags();
+
+        if (this.dirtyRotation || this.dirtySpecies || this.dirtyPathObject || this.dirtyPins.length || this.dirtyLock || this.dirtyStartControlLock || this.dirtyEndControlLock || this.dirtyControlLock || this.dirtyEndLock) {
+
+            if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+            if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+        }
+
         // `preparePinsForStamp` function defined in line, quadratic and bezier modules
         if (this.dirtyPins.length) {
 
@@ -419,6 +427,12 @@ P.factoryKill = function () {
 
         if (this.dirtyOffset) this.cleanOffset();
         if (this.dirtyRotation) this.cleanRotation();
+
+        if (this.dirtyStampPositions || this.dirtyStampHandlePositions) {
+
+            if (this.useFillGradientCache) this.dirtyFillGradientCache = true;
+            if (this.useDrawGradientCache) this.dirtyDrawGradientCache = true;
+        }
 
         if (this.dirtyStampPositions) this.cleanStampPositions();
 

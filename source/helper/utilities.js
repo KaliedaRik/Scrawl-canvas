@@ -63,15 +63,6 @@ export const addStrings = (current, delta) => {
 };
 
 
-// __constrain__ - clamps a value between a minimum and maximum value
-export const constrain = function (val, min, max) {
-
-    if (val < min) return min;
-    if (val > max) return max;
-    return val;
-};
-
-
 // __convertTime__ converts a time value into its component string suffix and (millisecond) number value properties; returns an array
 //
 // Examples:
@@ -173,6 +164,8 @@ export const generateUniqueString = () => {
 
     return performance.now().toString(36) + _random().toString(36).substr(2);
 };
+
+export const generateIdForArtefact = (art) => `${art.type}_${art.name}_${generateUniqueString()}`;
 
 // __interpolate__ clamp a value between a maximum and minimum value
 export const interpolate = function (val, min, max) {

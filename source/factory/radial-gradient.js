@@ -7,14 +7,16 @@ import { constructors } from '../core/library.js';
 
 import { addStrings, doCreate, isa_number, mergeOver, pushUnique, Ωempty } from '../helper/utilities.js';
 
+import { releaseCoordinate, requestCoordinate } from '../untracked-factory/coordinate.js';
+
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
 // Shared constants
-import { BLANK, BOTTOM, CENTER, LEFT, RIGHT, STYLES, TOP } from '../helper/shared-vars.js';
+import { BLANK, STYLES, T_RADIAL_GRADIENT } from '../helper/shared-vars.js';
 
 // Local constants
-const T_RADIAL_GRADIENT = 'RadialGradient';
+// + None defined
 
 
 // #### RadialGradient constructor
@@ -104,22 +106,22 @@ G.endRadius = function () {
 S.startRadius = function (item) {
 
     this.startRadius = item;
-    this.dirtyStyle = true;
+    this.updateSubscribers();
 };
 S.endRadius = function (item) {
 
     this.endRadius = item;
-    this.dirtyStyle = true;
+    this.updateSubscribers();
 };
 D.startRadius = function (item) {
 
     this.startRadius = addStrings(this.startRadius, item);
-    this.dirtyStyle = true;
+    this.updateSubscribers();
 };
 D.endRadius = function (item) {
 
     this.endRadius = addStrings(this.endRadius, item);
-    this.dirtyStyle = true;
+    this.updateSubscribers();
 };
 
 
@@ -134,26 +136,11 @@ P.cleanRadius = function (width) {
 
         else {
 
-            switch(val){
+            val = parseFloat(val);
 
-                case TOP :
-                case LEFT :
-                    return 0;
+            if (!isa_number(val)) return 0;
 
-                case BOTTOM :
-                case RIGHT :
-                    return len;
-
-                case CENTER :
-                    return len / 2;
-
-                default :
-                    val = parseFloat(val);
-
-                    if (!isa_number(val)) return 0;
-
-                    return ( val / 100) * len;
-            }
+            return ( val / 100) * len;
         }
     };
 
@@ -162,9 +149,11 @@ P.cleanRadius = function (width) {
 };
 
 // `buildStyle` - internal function: creates the radial gradient on the Cell's CanvasRenderingContext2D engine, and then adds the color stops to it.
-P.buildStyle = function (cell) {
+P.buildStyle = function (cell, myentity) {
 
     if (cell) {
+
+        myentity.useGradientCache = false;
 
         const engine = cell.engine;
 
@@ -179,22 +168,36 @@ P.buildStyle = function (cell) {
 };
 
 // `updateGradientArgs` - internal function
-P.updateGradientArgs = function (x, y) {
+P.updateGradientArgs = function (x, y, roll, scale) {
 
     const gradientArgs = this.gradientArgs,
         currentStart = this.currentStart,
-        currentEnd = this.currentEnd,
-        sr = this.currentStartRadius;
+        currentEnd = this.currentEnd;
 
-    let er = this.currentEndRadius;
-
-    const sx = currentStart[0] + x,
+    let sx = currentStart[0] + x,
         sy = currentStart[1] + y,
         ex = currentEnd[0] + x,
-        ey = currentEnd[1] + y;
+        ey = currentEnd[1] + y,
+        sr = this.currentStartRadius,
+        er = this.currentEndRadius;
 
     // check to correct situation where coordinates represent a '0 x 0' box - which will cause errors in some browsers
     if (sx === ex && sy === ey && sr === er) er++;
+
+    if (roll) {
+
+        const coord = requestCoordinate();
+
+        [sx, sy] = coord.setFromArray([sx, sy]).rotate(roll);
+        [ex, ey] = coord.setFromArray([ex, ey]).rotate(roll);
+
+        releaseCoordinate(coord);
+    }
+    if (scale !== 1) {
+
+        sr *= scale;
+        er *= scale;
+    }
 
     gradientArgs.length = 0;
     gradientArgs.push(sx, sy, sr, ex, ey, er);

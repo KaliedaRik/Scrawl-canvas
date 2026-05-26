@@ -71,6 +71,8 @@ const Color = function (items = Ωempty) {
     this.currentMinimumColorReturnData = [];
     this.currentMinimumColorString = '';
 
+    this.isClassic = true;
+
     this.set(this.defs);
 
     this.easing = LINEAR;
@@ -466,95 +468,94 @@ P.getRangeColor = function (item) {
         currentRangePoint,
     } = this;
 
-        const val = isa_fn(easing) ? easing(item) : easeEngines[easing](item);
+    const val = isa_fn(easing) ? easing(item) : easeEngines[easing](item);
 
-        if (val !== currentRangePoint) {
+    if (val !== currentRangePoint) {
 
-            let c1 = interpolate(val, min[1], max[1]),
-                c2 = interpolate(val, min[2], max[2]),
-                c3 = interpolate(val, min[3], max[3]),
-                alpha = interpolate(val, min[4], max[4]),
-                cMin, cMax;
+        let c1 = interpolate(val, min[1], max[1]),
+            c2 = interpolate(val, min[2], max[2]),
+            c3 = interpolate(val, min[3], max[3]),
+            alpha = interpolate(val, min[4], max[4]),
+            cMin, cMax;
 
-            // We need to clamp color channels to meet colorSpace requirements
-            switch (colorSpace) {
+        // We need to clamp color channels to meet colorSpace requirements
+        switch (colorSpace) {
 
-                case RGB :
-                    c1 = clamp(c1, 0, 255);
-                    c2 = clamp(c2, 0, 255);
-                    c3 = clamp(c3, 0, 255);
-                    break;
+            case RGB :
+                c1 = clamp(c1, 0, 255);
+                c2 = clamp(c2, 0, 255);
+                c3 = clamp(c3, 0, 255);
+                break;
 
-                case OKLCH :
-                    c1 = clamp(c1, 0, 1);
-                    c2 = clamp(c2, 0, 0.4);
+            case OKLCH :
+                c1 = clamp(c1, 0, 1);
+                c2 = clamp(c2, 0, 0.4);
 
-                    cMin = min[2];
-                    cMax = max[2];
-                    if (cMin <= EPS && cMax <= EPS) c3 = correctAngle(max[3]);
-                    else if (cMin <= EPS) c3 = correctAngle(max[3]);
-                    else if (cMax <= EPS) c3 = correctAngle(min[3]);
-                    else c3 = interpolateShortestHue(val, min[3], max[3]);
+                cMin = min[2];
+                cMax = max[2];
+                if (cMin <= EPS && cMax <= EPS) c3 = correctAngle(max[3]);
+                else if (cMin <= EPS) c3 = correctAngle(max[3]);
+                else if (cMax <= EPS) c3 = correctAngle(min[3]);
+                else c3 = interpolateShortestHue(val, min[3], max[3]);
 
-                    break;
+                break;
 
-                case OKLAB :
-                    c1 = clamp(c1, 0, 1);
-                    c2 = clamp(c2, -0.4, 0.4);
-                    c3 = clamp(c3, -0.4, 0.4);
-                    break;
+            case OKLAB :
+                c1 = clamp(c1, 0, 1);
+                c2 = clamp(c2, -0.4, 0.4);
+                c3 = clamp(c3, -0.4, 0.4);
+                break;
 
-                case LCH :
-                    c1 = clamp(c1, 0, 100);
-                    c2 = clamp(c2, 0, 230);
+            case LCH :
+                c1 = clamp(c1, 0, 100);
+                c2 = clamp(c2, 0, 230);
 
-                    cMin = min[2];
-                    cMax = max[2];
-                    if (cMin <= EPS && cMax <= EPS) c3 = correctAngle(max[3]);
-                    else if (cMin <= EPS) c3 = correctAngle(max[3]);
-                    else if (cMax <= EPS) c3 = correctAngle(min[3]);
-                    else c3 = interpolateShortestHue(val, min[3], max[3]);
+                cMin = min[2];
+                cMax = max[2];
+                if (cMin <= EPS && cMax <= EPS) c3 = correctAngle(max[3]);
+                else if (cMin <= EPS) c3 = correctAngle(max[3]);
+                else if (cMax <= EPS) c3 = correctAngle(min[3]);
+                else c3 = interpolateShortestHue(val, min[3], max[3]);
 
-                    break;
+                break;
 
-                case LAB :
-                    c1 = clamp(c1, 0, 100);
-                    c2 = clamp(c2, -125, 125);
-                    c3 = clamp(c3, -125, 125);
-                    break;
+            case LAB :
+                c1 = clamp(c1, 0, 100);
+                c2 = clamp(c2, -125, 125);
+                c3 = clamp(c3, -125, 125);
+                break;
 
-                case HSL :
-                    c1 = interpolateShortestHue(val, min[1], max[1]);
-                    c2 = clamp(c2, 0, 100);
-                    c3 = clamp(c3, 0, 100);
-                    break;
+            case HSL :
+                c1 = interpolateShortestHue(val, min[1], max[1]);
+                c2 = clamp(c2, 0, 100);
+                c3 = clamp(c3, 0, 100);
+                break;
 
-                case HWB :
-                    c1 = interpolateShortestHue(val, min[1], max[1]);
-                    c2 = clamp(c2, 0, 100);
-                    c3 = clamp(c3, 0, 100);
-                    break;
+            case HWB :
+                c1 = interpolateShortestHue(val, min[1], max[1]);
+                c2 = clamp(c2, 0, 100);
+                c3 = clamp(c3, 0, 100);
+                break;
 
-                case XYZ :
-                    c1 = clamp(c1, -0.001, 1.2);
-                    c2 = clamp(c2, -0.001, 1.2);
-                    c3 = clamp(c3, -0.001, 1.2);
-                    break;
-            }
-
-            alpha = clamp(alpha, 0, 1);
-
-            const data = [colorSpace, c1, c2, c3, alpha];
-            this.currentColorInternalData = data;
-
-            const res = colorEngine.convertColorData(data, returnColorAs);
-            this.currentColorReturnData = res;
-
-            this.currentColorString = colorEngine.buildColorStringFromData(res);
-
-            this.currentRangePoint = val;
+            case XYZ :
+                c1 = clamp(c1, -0.001, 1.2);
+                c2 = clamp(c2, -0.001, 1.2);
+                c3 = clamp(c3, -0.001, 1.2);
+                break;
         }
-    // }
+
+        alpha = clamp(alpha, 0, 1);
+
+        const data = [colorSpace, c1, c2, c3, alpha];
+        this.currentColorInternalData = data;
+
+        const res = colorEngine.convertColorData(data, returnColorAs);
+        this.currentColorReturnData = res;
+
+        this.currentColorString = colorEngine.buildColorStringFromData(res);
+
+        this.currentRangePoint = val;
+    }
     return this.currentColorString;
 };
 

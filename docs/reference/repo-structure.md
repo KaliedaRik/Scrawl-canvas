@@ -138,6 +138,9 @@ Version release has not (yet) been automated, which means the following steps ne
 
 + Updates need to be made to the [scrawl-canvas-website](https://github.com/KaliedaRik/scrawl-canvas-website) repo, in particular updating all mentions of the previous version to the new version, and copying over some folders to the website repo.
 + All the Pens held in the [Scrawl-canvas CodePens collection](https://codepen.io/collection/RzzMjw) need to be updated to use the latest release.
++ Also update the tools which have been built by repo-devs to test SC functionality in public-facing products:
+  - The [Scrawl-canvas screen recorder](https://github.com/KaliedaRik/sc-screen-recorder) tool; and
+  - The [Scrawl-canvas filter builder](https://github.com/KaliedaRik/sc-filter-builder) tool.
 
 ### Release steps
 

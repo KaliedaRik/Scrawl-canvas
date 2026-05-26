@@ -16,7 +16,7 @@
 // #### Imports
 import { entity, styles, stylesnames } from '../core/library.js';
 
-import { addStrings, isa_obj, mergeDiscard, mergeOver, xt, λnull, Ωempty } from '../helper/utilities.js';
+import { addStrings, isa_boolean, generateIdForArtefact, isa_obj, mergeDiscard, mergeOver, pushUnique, removeItem, xt, λnull, Ωempty } from '../helper/utilities.js';
 
 import { makeAnimation } from '../factory/animation.js';
 import { makeCoordinate } from '../untracked-factory/coordinate.js';
@@ -24,11 +24,83 @@ import { makeCoordinate } from '../untracked-factory/coordinate.js';
 import { makePalette } from '../untracked-factory/palette.js';
 
 // Shared constants
-import { _floor, _isArray, _isFinite, _keys, _values, BLACK, BLANK, BOTTOM, CENTER, END, LEFT, LINEAR, NAME, RGB, RIGHT, START, T_PALETTE, TOP, UNDEF, WHITE } from '../helper/shared-vars.js';
+import { _floor, _isArray, _isFinite, _keys, _values, ADD_EASE, ADD_MAP_CONTOUR, ADD_MAP_DISPLACE, ADD_MAP_EASE, ADD_MAP_FLOW, ADD_MAP_ROTATE, ADD_MAP_THRESHOLD, ADD_MAP_WARP, ADD_NOISE, ADD_RIPPLE, ADD_WAVE, AFTER_SPREAD, BEFORE_SPREAD, BLACK, BLANK, BOTTOM, CENTER, DRAW, END, FILL, LEFT, LINEAR, NAME, ON_COORDINATES, PAD, PERMITTED_NOISE, REFLECT, REPEAT, RGB, RIGHT, START, T_CONIC_GRADIENT, T_GRADIENT, T_PALETTE, T_RADIAL_GRADIENT, TOP, TRANSPARENT, UNDEF, WHITE, ZERO_STR } from '../helper/shared-vars.js';
+
+// ```
+// Available gradient operation shapes
+// {
+//      operation: string - one from: 'add-noise'.
+//      stage: string - one from: 'before-spread', 'after-spread', on-alpha, 'on-coordinates'.
+//.     parameters: object containing attributes relevant to the given operation
+// }
+//
+// Thus:
+//
+// {
+//      operation: 'add-noise',
+//      stage: 'after-spread', - before-spread, after-spread
+//      parameters: {
+//          noise: 'bluenoise', - random, ordered, bluenoise
+//          strength: 0.05, - 0.01 to 0.1 for reasonable effect
+//          seed: '', - any string value
+//      }
+// }
+//
+// {
+//      operation: 'add-ease',
+//      stage: 'after-spread', - before-spread, after-spread
+//      parameters: {
+//          ease: 'easeOutIn', - any supported SC easing, or bespoke easing function
+//      }
+// }
+//
+// {
+//     operation: 'add-wave',
+//     stage: 'on-coordinates', - on-coordinates only
+//     parameters: {
+//         axis: 'x', - x, y, both
+//         amplitude: 12,
+//         frequency: 0.05,
+//         phase: 0,
+//     }
+// }
+//
+// {
+//     operation: 'add-ripple',
+//     stage: 'on-coordinates', - on-coordinates only
+//     parameters: {
+//         amplitude: 12,
+//         frequency: 0.05,
+//         phase: 0,
+//         originX: '50%',
+//         originY: '50%',
+//     }
+// }
+//
+// {
+//     operation: 'add-map-displace',
+//     stage: 'on-coordinates',
+//     parameters: {
+//         axis: 'both',          - x, y, both
+//         strength: 20,          - pixels
+//         offset: 0.5,           - map centre point
+//         linked: false,         - true = use same map for x/y
+//         map: {
+//             noiseEngine: 'simplex',  - 'perlin', 'improved-perlin', 'simplex', 'value', 'worley-euclidean', 'worley-manhattan'
+//             scale: 50,               - positive integer number
+//             octaves: 3,              - positive integer number
+//         }
+//     }
+// }
+// ```
 
 // Local constants
 const COLORS = 'colors',
-    PALETTE_KEYS = ['colors', 'stops'];
+    PALETTE_KEYS = ['colors', 'stops'],
+    SPREAD_VALUES = [PAD, REPEAT, REFLECT, TRANSPARENT],
+    PERMITTED_OPERATIONS = [ADD_EASE, ADD_MAP_CONTOUR, ADD_MAP_DISPLACE, ADD_MAP_EASE, ADD_MAP_FLOW, ADD_MAP_ROTATE, ADD_MAP_THRESHOLD, ADD_MAP_WARP, ADD_NOISE, ADD_RIPPLE, ADD_WAVE],
+    PERMITTED_STAGES = [BEFORE_SPREAD, AFTER_SPREAD, ON_COORDINATES],
+    IDENTIFIED_STYLES = [T_GRADIENT, T_RADIAL_GRADIENT, T_CONIC_GRADIENT];
 
 
 // Create an animation to handle automated delta gradient animation
@@ -53,7 +125,6 @@ export default function (P = Ωempty) {
 
 // #### Shared attributes
     const defaultAttributes = {
-
 
 // __start__, __end__ - Gradient-type styles use Coordinate factory Arrays to hold details of their start and end coordinates. The following _pseudo-attributes_ can also be used to reference these values:
 // + for the start coordinate, __startX__ and __startY__
@@ -83,6 +154,12 @@ export default function (P = Ωempty) {
 // The __animateByDelta__ attribute, when true, will delta animate the gradient at the start of each Display cycle. When the gradient is used in the `mapToGradient`` filter, setting this attribute to `false` (default) should speed up the filter
         animateByDelta: false,
 
+// __spread__ - determines how the gradient behaves beyond the border its other attributes set for it. Default is `pad`, which is the only option available to gradients supplied by the Canvas API. Additional spreads include: `repeat`, `reflect`, `transparent`
+        spread: PAD,
+
+// __operations__ - an array of operation objects. Operation objects define additional parameters that can act on gradient generation and painting
+        operations: null,
+
 // The __delta__ object is not stored in the defs object; it acts in a similar way to the artefact delta object - though it is restricted to adding delta values to Number and 'String%' attributes.
 // + Unlike artefacts, where delta animation will be applied to artefacts by default as part of each Display cycle, gradient delta animations need to be explicitly invoked: `my_gradient.updateByDelta();`
 //
@@ -104,6 +181,7 @@ export default function (P = Ωempty) {
 
 
 // #### Packet management
+    P.packetExclusions = pushUnique(P.packetExclusions, ['fillSubscribers', 'drawSubscribers']);
     P.finalizePacketOut = function (copy, items) {
 
         if (items.colors) copy.colors = items.colors;
@@ -132,7 +210,7 @@ export default function (P = Ωempty) {
 
 
 // #### Clone management
-// No additional clone functionality defined here
+// No additional actions for cloning
 
 
 // #### Kill management
@@ -183,7 +261,7 @@ export default function (P = Ωempty) {
         if (coord != null) {
 
             this.start[0] = coord;
-            this.dirtyStart = true;
+            this.updateSubscribers();
         }
     };
     S.startY = function (coord) {
@@ -191,30 +269,30 @@ export default function (P = Ωempty) {
         if (coord != null) {
 
             this.start[1] = coord;
-            this.dirtyStart = true;
+            this.updateSubscribers();
         }
     };
     S.start = function (x, y) {
 
         this.setCoordinateHelper(START, x, y);
-        this.dirtyStart = true;
+        this.updateSubscribers();
     };
     D.startX = function (coord) {
 
         const c = this.start;
         c[0] = addStrings(c[0], coord);
-        this.dirtyStart = true;
+        this.updateSubscribers();
     };
     D.startY = function (coord) {
 
         const c = this.start;
         c[1] = addStrings(c[1], coord);
-        this.dirtyStart = true;
+        this.updateSubscribers();
     };
     D.start = function (x, y) {
 
         this.setDeltaCoordinateHelper(START, x, y);
-        this.dirtyStart = true;
+        this.updateSubscribers();
     };
 
 // `end`, `endX`, `endY`
@@ -231,7 +309,7 @@ export default function (P = Ωempty) {
         if (coord != null) {
 
             this.end[0] = coord;
-            this.dirtyEnd = true;
+            this.updateSubscribers();
         }
     };
     S.endY = function (coord) {
@@ -239,30 +317,30 @@ export default function (P = Ωempty) {
         if (coord != null) {
 
             this.end[1] = coord;
-            this.dirtyEnd = true;
+            this.updateSubscribers();
         }
     };
     S.end = function (x, y) {
 
         this.setCoordinateHelper(END, x, y);
-        this.dirtyEnd = true;
+        this.updateSubscribers();
     };
     D.endX = function (coord) {
 
         const c = this.end;
         c[0] = addStrings(c[0], coord);
-        this.dirtyEnd = true;
+        this.updateSubscribers();
     };
     D.endY = function (coord) {
 
         const c = this.end;
         c[1] = addStrings(c[1], coord);
-        this.dirtyEnd = true;
+        this.updateSubscribers();
     };
     D.end = function (x, y) {
 
         this.setDeltaCoordinateHelper(END, x, y);
-        this.dirtyEnd = true;
+        this.updateSubscribers();
     };
 
 // `palette` - argument has to be a Palette object
@@ -272,6 +350,7 @@ export default function (P = Ωempty) {
 
             item.dirtyPalette = true;
             this.palette = item;
+            this.updateSubscribers();
         }
     };
 
@@ -286,6 +365,7 @@ export default function (P = Ωempty) {
             this.paletteStart = p;
 
             this.palette.updateData();
+            this.updateSubscribers();
         }
     };
     D.paletteStart = function (item) {
@@ -301,6 +381,7 @@ export default function (P = Ωempty) {
             }
             this.paletteStart = p;
             this.palette.updateData();
+            this.updateSubscribers();
         }
     };
 
@@ -316,6 +397,7 @@ export default function (P = Ωempty) {
             this.paletteEnd = p;
 
             this.palette.updateData();
+            this.updateSubscribers();
         }
     };
 
@@ -332,6 +414,7 @@ export default function (P = Ωempty) {
             }
             this.paletteEnd = p;
             this.palette.updateData();
+            this.updateSubscribers();
         }
     };
 
@@ -341,6 +424,7 @@ export default function (P = Ωempty) {
 
             this.cyclePalette = !!item;
             this.palette.updateData();
+            this.updateSubscribers();
         }
     };
 
@@ -349,7 +433,11 @@ export default function (P = Ωempty) {
 // + String is any legitimate CSS color string value
     S.colors = function (item) {
 
-        if (_isArray(item) && this.palette) this.palette.set({ colors: item });
+        if (_isArray(item) && this.palette) {
+
+            this.palette.set({ colors: item });
+            this.updateSubscribers();
+        }
     };
 
 // `easing`, `easingFunction` - the easing to be applied to the gradient
@@ -360,6 +448,7 @@ export default function (P = Ωempty) {
         if (this.palette) {
 
             this.palette.set({ easing: item });
+            this.updateSubscribers();
         }
     };
     S.easingFunction = S.easing;
@@ -372,7 +461,11 @@ export default function (P = Ωempty) {
     };
     S.colorSpace = function (item) {
 
-        if (this.palette) this.palette.set({ colorSpace: item });
+        if (this.palette) {
+
+            this.palette.set({ colorSpace: item });
+            this.updateSubscribers();
+        }
     };
     G.returnColorAs = function () {
 
@@ -381,7 +474,11 @@ export default function (P = Ωempty) {
     };
     S.returnColorAs = function (item) {
 
-        if (this.palette) this.palette.set({ returnColorAs: item });
+        if (this.palette) {
+
+            this.palette.set({ returnColorAs: item });
+            this.updateSubscribers();
+        }
     };
 
 // `getColorAtPosition` - a convenience function to retrieve the color at a specified position within the current gradient
@@ -394,13 +491,116 @@ export default function (P = Ωempty) {
 // `precision` - Pass through a positive integer Number value between 0 and 50 to the Palette object. If value is `0` (default) no easing will be applied to the gradient; values above 0 apply the easing to the gradient; higher values will give a quicker, but less precise, mapping.
     S.precision = function (item) {
 
-        if (this.palette) this.palette.set({ precision: item });
+        if (this.palette) {
+
+            this.palette.set({ precision: item });
+            this.updateSubscribers();
+        }
     };
 
 // `delta` - Gradient-type styles objects support the delta attribute, and can be delta-animated using its attributes
     S.delta = function (items = Ωempty) {
 
-        if (items) this.delta = mergeDiscard(this.delta, items);
+        if (items) {
+
+            this.delta = mergeDiscard(this.delta, items);
+            this.updateSubscribers();
+        }
+    };
+
+// `spread` - The spread option for the gradient
+// - Permitted values: 'pad', 'repeat', 'reflect', 'transparent'
+    S.spread = function (item) {
+
+        if (SPREAD_VALUES.includes(item)) this.spread = item;
+        else this.spread = PAD;
+        this.updateSubscribers();
+    };
+
+// `operations` - an array of gradient operation objects
+    S.operations = function (item) {
+
+        if (_isArray(item)) this.replaceGradientOperations(item);
+        else if (isa_obj(item)) this.replaceGradientOperations([item]);
+        else if (isa_boolean(item) && !item) {
+
+            this.operations.length = 0;
+            this.updateSubscribers();
+        }
+    };
+
+    P.checkGradientOperation = function (item) {
+
+        if (isa_obj(item)) {
+
+            if (!item.stage || !item.operation || !item.parameters) return false;
+            if (!isa_obj(item.parameters)) return false;
+            if (!PERMITTED_STAGES.includes(item.stage)) return false;
+            if (!PERMITTED_OPERATIONS.includes(item.operation)) return false;
+
+            if (item.operation === ADD_NOISE) {
+
+                if (!PERMITTED_NOISE.includes(item.parameters.noise)) return false;
+            }
+            return true;
+        }
+        return false;
+    }
+    P.addGradientOperation = function (item) {
+
+        if (this.checkGradientOperation(item)) {
+
+            this.operations.push(item);
+        }
+        this.updateSubscribers();
+    };
+    P.replaceGradientOperations = function (item) {
+
+        if (_isArray(item)) {
+
+            this.operations.length = 0;
+
+            item.forEach(action => {
+
+                if (this.checkGradientOperation(action)) this.operations.push(action);
+            });
+
+            this.updateSubscribers();
+        }
+    };
+    P.removeGradientOperationByIndex = function (index) {
+
+        index = _floor(index);
+
+        if (_isFinite(index) && index >= 0 && index < this.operations.length) {
+
+            this.operations.splice(index, 1);
+            this.updateSubscribers();
+        }
+    };
+    P.removeGradientOperationsFromStage = function (stage) {
+
+        if (PERMITTED_STAGES.includes(stage)) {
+
+            const len = this.operations.length;
+
+            this.operations = this.operations.filter(op => op.stage !== stage);
+
+            if (this.operations.length !== len) this.updateSubscribers();
+        }
+    };
+    P.removeGradientOperationByValues = function (pos) {
+
+        console.log('removeGradientOperationByValues', pos)
+        this.updateSubscribers();
+    };
+    P.clearGradientOperations = function () {
+
+        if (this.operations.length) {
+
+            this.operations.length = 0;
+            this.updateSubscribers();
+        }
     };
 
 
@@ -598,32 +798,43 @@ export default function (P = Ωempty) {
         });
 
         this.delta = {};
+        this.fillSubscribers = [];
+        this.drawSubscribers = [];
+        this.operations = [];
+
+        this.isClassic = true;
 
         this.set(this.defs);
 
         this.set(items);
+
+        this.identifier = ZERO_STR;
+        this.updateIdentifier();
     };
 
 
 // `getData` - Every styles object (Gradient, RadialGradient, ConicGradient, Pattern, Color, Cell) needs to include a __getData__ function. This is invoked by Cell objects during the Display cycle `compile` step, when it takes an entity State object and updates its &lt;canvas> element's context engine to bring it into alignment with requirements.
-    P.getData = function (entity, cell) {
+    P.getData = function (myentity, mycell, area) {
 
         // Step 1: recalculate current start and end points
-        this.cleanStyle(entity, cell);
+        this.cleanStyle(myentity, mycell, area);
 
         // Step 2: finalize the coordinates to use for creating the gradient in relation to the current entity's position and requirements on the canvas
-        this.finalizeCoordinates(entity);
+        this.finalizeCoordinates(myentity, area);
 
         // Step 3: create, populate and return gradient/pattern object
-        return this.buildStyle(cell);
+        return this.buildStyle(mycell, myentity, area);
     };
 
 // `cleanStyle` - internal function invoked as part of the gradient-type object's `getData` function. The style has to be cleaned every time it is applied to a Cell's engine because it can never know which Cell is invoking it, or for which entity it is to be used.
-    P.cleanStyle = function (entity = Ωempty, cell = Ωempty) {
+    P.cleanStyle = function (entity = Ωempty, cell = Ωempty, area) {
 
         let dims, w, h, scale;
 
-        if (entity.lockFillStyleToEntity || entity.lockStrokeStyleToEntity) {
+        if (
+            (area === FILL && entity.lockFillStyleToEntity) ||
+            (area === DRAW && entity.lockStrokeStyleToEntity)
+        ) {
 
             dims = entity.currentDimensions;
             scale = entity.currentScale;
@@ -663,7 +874,7 @@ export default function (P = Ωempty) {
     };
 
 // `finalizeCoordinates` - internal function invoked as part of the gradient-type object's `getData` function.
-    P.finalizeCoordinates = function (entity = Ωempty) {
+    P.finalizeCoordinates = function (entity = Ωempty, area) {
 
         const entityStampPosition = entity.currentStampPosition,
             entityStampHandlePosition = entity.currentStampHandlePosition,
@@ -671,17 +882,23 @@ export default function (P = Ωempty) {
 
         let correctX, correctY;
 
-        if (entity.lockFillStyleToEntity || entity.lockStrokeStyleToEntity) {
+        if (
+            (area === FILL && entity.lockFillStyleToEntity) ||
+            (area === DRAW && entity.lockStrokeStyleToEntity)
+        ) {
 
             correctX = -(entityStampHandlePosition[0] * entityScale) || 0;
             correctY = -(entityStampHandlePosition[1] * entityScale) || 0;
+
+            this.updateGradientArgs(correctX, correctY, 0, entityScale);
         }
         else {
 
             correctX = -entityStampPosition[0] || 0;
             correctY = -entityStampPosition[1] || 0;
+
+            this.updateGradientArgs(correctX, correctY, -entity.currentRotation, 1);
         }
-        this.updateGradientArgs(correctX, correctY);
     };
 
 
@@ -692,6 +909,7 @@ export default function (P = Ωempty) {
 // `buildStyle` - Just in case something went wrong with loading other styles Factory modules, which must overwrite this function, we can return transparent color here
     P.buildStyle = function () {
 
+console.log('styles mixin P.buildStyle')
         return BLANK;
     };
 
@@ -754,6 +972,7 @@ export default function (P = Ωempty) {
 
             this.dirtyFilterIdentifier = true;
             this.palette.updateColor(index, color);
+            this.updateSubscribers();
         }
 
         return this;
@@ -767,8 +986,78 @@ export default function (P = Ωempty) {
 
             this.dirtyFilterIdentifier = true;
             this.palette.removeColor(index);
+            this.updateSubscribers();
         }
 
         return this;
+    };
+
+// `fillSubscribe`, `fillUnsubscribe`, `drawSubscribe`, `drawUnsubscribe` - we only keep the names of subscribing entitys in these arrays
+    P.fillSubscribe = function (name) {
+
+        if (name.substring) pushUnique(this.fillSubscribers, name);
+    };
+    P.fillUnsubscribe = function (name) {
+
+        if (name.substring) removeItem(this.fillSubscribers, name);
+    };
+    P.drawSubscribe = function (name) {
+
+        if (name.substring) pushUnique(this.drawSubscribers, name);
+    };
+    P.drawUnsubscribe = function (name) {
+
+        if (name.substring) removeItem(this.drawSubscribers, name);
+    };
+
+// `updateSubscribers`, `updateFillSubscribers`, `updateDrawSubscribers` - signal to subscribers that something about the gradient has changed
+    P.updateSubscribers = function () {
+
+        this.updateFillSubscribers();
+        this.updateDrawSubscribers();
+
+        // We only update subscribers when something has changed
+        // + So we might as well update the identifier here as well
+        this.updateIdentifier()
+
+    };
+    P.updateFillSubscribers = function () {
+
+        let ent;
+
+        this.fillSubscribers.forEach(sub => {
+
+            ent = entity[sub];
+
+            if (ent) ent.dirtyFillGradient = true;
+        });
+    };
+    P.updateDrawSubscribers = function () {
+
+        let ent;
+
+        this.drawSubscribers.forEach(sub => {
+
+            ent = entity[sub];
+
+            if (ent) ent.dirtyDrawGradient = true;
+        });
+    };
+    // P.updateIdentifier = function () {
+
+    //     if (IDENTIFIED_STYLES.includes(this.type)) {
+
+    //         if (this.spread === PAD && !this.operations.length) this.identifier = ZERO_STR;
+    //         else this.identifier = generateIdForArtefact(this);
+    //     }
+    //     else this.identifier = ZERO_STR;
+    // };
+
+    P.updateIdentifier = function () {
+
+        this.identifier = generateIdForArtefact(this);
+
+        if (IDENTIFIED_STYLES.includes(this.type)) this.isClassic = (this.spread === PAD && !this.operations.length);
+        else this.isClassic = true;
     };
 }

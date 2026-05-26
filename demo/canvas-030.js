@@ -17,6 +17,53 @@ const namespace = canvas.name;
 const name = (n) => `${namespace}-${n}`;
 
 
+scrawl.importDomImage('.mypatterns');
+
+scrawl.makeGradient({
+
+    name: name('stroke-gradient'),
+    endX: '33%',
+    spread: 'reflect',
+    operations: [{
+        operation: 'add-noise',
+        stage: 'after-spread',
+        parameters: {
+            noise: 'bluenoise',
+            strength: 0.08,
+        },
+    }],
+
+}).clone({
+
+    name: name('fill-gradient'),
+    endX: '33%',
+    spread: 'repeat',
+    operations: [{
+        operation: 'add-ripple',
+        stage: 'on-coordinates',
+        parameters: {
+            amplitude: 20,
+            frequency: 0.1,
+            phase: 0,
+            originX: '50%',
+            originY: '50%',
+        },
+    }],
+});
+
+scrawl.makePattern({
+
+    name: name('fill-pattern'),
+    asset: 'brick',
+
+}).clone({
+
+    name: name('stroke-pattern'),
+    asset: 'leaves',
+
+});
+
+
 // Build some coordinate arrays ...
 const absoluteCoords = [[100, 200], [200, 400], [300, 300], [400, 400], [500, 200], [240, 100]];
 
@@ -99,6 +146,7 @@ const myline = scrawl.makePolyline({
 
     mapToPins: false,
 
+    fillStyle: 'rgb(0 0 0 / 0.3)',
     strokeStyle: 'orange',
     lineWidth: 6,
 
@@ -249,6 +297,11 @@ scrawl.makeUpdater({
         upend: ['flipUpend', 'boolean'],
         roll: ['roll', 'float'],
         scale: ['scale', 'float'],
+        fillStyle: ['fillStyle', 'raw'],
+        lockFillStyleToEntity: ['lockFillStyleToEntity', 'boolean'],
+        strokeStyle: ['strokeStyle', 'raw'],
+        lockStrokeStyleToEntity: ['lockStrokeStyleToEntity', 'boolean'],
+        method: ['method', 'raw'],
     },
 });
 
@@ -280,6 +333,12 @@ scrawl.initializeDomInputs([
     ['select', 'pivot', 0],
     ['select', 'reverse', 0],
     ['select', 'upend', 0],
+
+    ['select', 'method', 1],
+    ['select', 'fillStyle', 0],
+    ['select', 'lockFillStyleToEntity', 0],
+    ['select', 'strokeStyle', 0],
+    ['select', 'lockStrokeStyleToEntity', 0],
 ]);
 
 

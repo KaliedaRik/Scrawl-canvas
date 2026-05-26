@@ -11,6 +11,53 @@ const ovalCanvas = scrawl.findCanvas('oval-canvas');
 const ovalNamespace = ovalCanvas.name;
 const oName = (n) => `${ovalNamespace}-${n}`;
 
+scrawl.importDomImage('.mypatterns');
+
+scrawl.makeGradient({
+
+    name: oName('stroke-gradient'),
+    endX: '33%',
+    spread: 'reflect',
+    operations: [{
+        operation: 'add-noise',
+        stage: 'after-spread',
+        parameters: {
+            noise: 'bluenoise',
+            strength: 0.08,
+        },
+    }],
+
+}).clone({
+
+    name: oName('fill-gradient'),
+    endX: '33%',
+    spread: 'repeat',
+    operations: [{
+        operation: 'add-ripple',
+        stage: 'on-coordinates',
+        parameters: {
+            amplitude: 20,
+            frequency: 0.1,
+            phase: 0,
+            originX: '50%',
+            originY: '50%',
+        },
+    }],
+});
+
+scrawl.makePattern({
+
+    name: oName('fill-pattern'),
+    asset: 'brick',
+
+}).clone({
+
+    name: oName('stroke-pattern'),
+    asset: 'leaves',
+
+});
+
+
 ovalCanvas.setAsCurrentCanvas();
 
 const myOval = scrawl.makeOval({
@@ -173,6 +220,11 @@ scrawl.makeUpdater({
         start_yString: ['startY', 'raw'],
         upend: ['flipUpend', 'boolean'],
         winding: ['winding', 'raw'],
+
+        fillStyle: ['fillStyle', 'raw'],
+        lockFillStyleToEntity: ['lockFillStyleToEntity', 'boolean'],
+        strokeStyle: ['strokeStyle', 'raw'],
+        lockStrokeStyleToEntity: ['lockStrokeStyleToEntity', 'boolean'],
     },
 });
 
@@ -218,6 +270,11 @@ scrawl.initializeDomInputs([
     ['select', 'start_yString', 1],
     ['select', 'upend', 0],
     ['select', 'winding', 0],
+
+    ['select', 'fillStyle', 0],
+    ['select', 'lockFillStyleToEntity', 0],
+    ['select', 'strokeStyle', 0],
+    ['select', 'lockStrokeStyleToEntity', 0],
 ]);
 
 

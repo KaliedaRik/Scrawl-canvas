@@ -53,33 +53,33 @@
 // + Imports the element's text node text, and sets the text color to `transparent`
 export default function (scrawl, el) {
 
-    // Boilerplate - namespacing
+// Boilerplate - namespacing
     const namespace = el.id;
     const name = (val) => `${namespace}-${val}`;
 
 
-    // Only progress if the supplied element has an `id` attribute
+// Only progress if the supplied element has an `id` attribute
     if (namespace) {
 
 
-        // Create the snippet for this DOM element
+// Create the snippet for this DOM element
         const snippet = scrawl.makeSnippet({
             domElement: el,
         });
 
 
-        // Only proceed if the snippet is successfully generated
+// Only proceed if the snippet is successfully generated
         if (snippet) {
 
 
-            // Unpack the snippet into the parts we'll be using
+// Unpack the snippet into the parts we'll be using
             const canvas = snippet.canvas,
                 demolishAction = snippet.demolish,
                 animation = snippet.animation,
                 compStyles = snippet.element.elementComputedStyles;
 
 
-            // Boilerplate - text processing
+// Boilerplate - text processing
             const addTextNode = () => {
                 const shy = document.createTextNode('!');
                 el.appendChild(shy);
@@ -96,7 +96,7 @@ export default function (scrawl, el) {
             }
 
 
-            // Boilerplate - demolish/kill functionality
+// Boilerplate - demolish/kill functionality
             const additionalDemolishActions = [];
 
             snippet.demolish = () => {
@@ -106,11 +106,11 @@ export default function (scrawl, el) {
             };
 
 
-            // This makes the canvas element's base cell the default group for everything we create
+// This makes the canvas element's base cell the default group for everything we create
             canvas.setAsCurrentCanvas();
 
 
-            // Boilerplate - fix for text alignment
+// Boilerplate - fix for text alignment
             const getJustifyLine = (val) => {
 
                 if (val === 'justify') return 'space-between';
@@ -120,12 +120,12 @@ export default function (scrawl, el) {
             };
 
 
-            // Boilerplate - fix for lineSpacing/lineHeight
+// Boilerplate - fix for lineSpacing/lineHeight
             const getLineSpacing = () => parseFloat(compStyles.lineHeight) / parseFloat(compStyles.fontSize);
 
 
-            // Initialize and collect developer-supplied data
-            // + We also set the defaults here for missing colors/values
+// Initialize and collect developer-supplied data
+// + We also set the defaults here for missing colors/values
             const userData = {
 
                 direction: compStyles.direction || 'ltr',
@@ -142,57 +142,75 @@ export default function (scrawl, el) {
                 darkBaseColor: compStyles.getPropertyValue('--data-dark-base-color') || 'white',
                 highlightColor: compStyles.getPropertyValue('--data-highlight-color') || 'orange',
                 darkHighlightColor: compStyles.getPropertyValue('--data-dark-highlight-color') || 'orange',
+
+                contrastColor: compStyles.getPropertyValue('--data-contrast-color') || 'black',
+                darkContrastColor: compStyles.getPropertyValue('--data-dark-contrast-color') || 'white',
+
                 noiseSumFunction: compStyles.getPropertyValue('--data-noise-sum-function') || 'random',
                 noiseOutput: compStyles.getPropertyValue('--data-noise-output') || 'X',
                 noiseScale: compStyles.getPropertyValue('--data-noise-scale') || '50',
-                shadowColor: compStyles.getPropertyValue('--data-shadow-color') || 'black',
-                darkShadowColor: compStyles.getPropertyValue('--data-dark-shadow-color') || 'white',
-                shadowOffsetX: compStyles.getPropertyValue('--data-shadow-offset-x') || '0',
-                shadowOffsetY: compStyles.getPropertyValue('--data-shadow-offset-y') || '0',
-                shadowBlur: compStyles.getPropertyValue('--data-shadow-blur') || '0',
-                contrastColor: compStyles.getPropertyValue('--data-contrast-color') || 'black',
-                darkContrastColor: compStyles.getPropertyValue('--data-dark-contrast-color') || 'white',
             };
 
 
-            // Build the worley noise effect
-            const worley = scrawl.makeNoiseAsset({
-                name: name('worley-noise'),
+// Build the worley noise effect
+            const worleyGradient = scrawl.makeGradient({
+
+                name: name('worley-gradient'),
+
+                startY: 0,
+                endY: Math.round(parseFloat(compStyles.lineHeight)),
+
+                spread: 'repeat',
+
                 colors: [
                     [0, userData.highlightColor],
                     [999, userData.baseColor],
                 ],
-                colorSpace: 'OKLAB',
-                noiseEngine: 'worley-euclidean',
-                sumFunction: userData.noiseSumFunction,
-                scale: userData.noiseScale,
-                worleyOutput: userData.noiseOutput,
-                width: Math.ceil(parseFloat(compStyles.width)),
-                height: Math.ceil(parseFloat(compStyles.height)),
-            });
 
-            scrawl.makePattern({
-                name: name('worley-pattern'),
-                asset: name('worley-noise'),
+                operations: [{
+                    operation: 'add-map-contour',
+                    stage: 'after-spread',
+                    parameters: {
+                        strength: 1,
+                        offset: 0,
+                        map: {
+                            noiseEngine: 'worley-euclidean',
+                            sumFunction: userData.noiseSumFunction,
+                            scale: parseFloat(userData.noiseScale),
+                            worleyOutput: userData.noiseOutput,
+                            seed: name('worley-map'),
+                        },
+                    },
+                }],
             });
 
             const template = scrawl.makeBlock({
                 name: name('template'),
                 dimensions: ['100%', '100%'],
+                order: 4,
                 visibility: false,
+                globalCompositeOperation: 'destination-over',
             });
 
-            const label = scrawl.makeEnhancedLabel({
+            const effect = scrawl.makeBlock({
+                name: name('worley-effect'),
+                dimensions: ['100%', '100%'],
+                fillStyle: name('worley-gradient'),
+                order: 1,
+                visibility: false,
+                globalCompositeOperation: 'source-over',
+            });
+
+            const textFill = scrawl.makeEnhancedLabel({
                 name: name('content'),
                 layoutTemplate: name('template'),
-
+                order: 2,
                 text: processText(el.innerHTML),
                 fontString: compStyles.font,
-
                 method: 'fill',
+                fillStyle: 'black',
                 textHandleY: 'alphabetic',
                 visibility: false,
-
                 direction: userData.direction,
                 fontStretch: userData.fontStretch,
                 letterSpacing: userData.letterSpacing,
@@ -200,16 +218,10 @@ export default function (scrawl, el) {
                 fontVariantCaps: userData.fontVariantCaps,
                 lineSpacing: getLineSpacing(),
                 justifyLine: userData.justifyLine,
-
-                fillStyle: name('worley-pattern'),
-                shadowOffsetX: userData.shadowOffsetX,
-                shadowOffsetY: userData.shadowOffsetY,
-                shadowBlur: userData.shadowBlur,
-                shadowColor: userData.shadowColor,
+                globalCompositeOperation: 'destination-in',
             });
 
-
-            // Boilerplate - font adjustments
+// Boilerplate - font adjustments
             let meta;
 
             const getLineAdjustment = () => {
@@ -240,7 +252,11 @@ export default function (scrawl, el) {
                         visibility: true,
                     });
 
-                    label.set({
+                    textFill.set({
+                        visibility: true,
+                    });
+
+                    effect.set({
                         visibility: true,
                     });
 
@@ -251,7 +267,7 @@ export default function (scrawl, el) {
             animation.updateHook('commence', updateOnFontLoad);
 
 
-            // Boilerplate user interaction - resizing the browser window
+// Boilerplate user interaction - resizing the browser window
             let resizeFlag = true,
                 lastResize = Date.now();
 
@@ -263,10 +279,10 @@ export default function (scrawl, el) {
 
                 const now = Date.now();
 
-                // Canvases don't animate when outside of the browser viewport (to save CPU, battery, etc)
-                // + This check forces those canvases to update once to adapt to the new viewport size
-                // + Doing this should prevent unexpected horizontal scrollbars appearing on the page
-                // + Should also prevent flashes of badly sized content when canvas scrolls into view
+// Canvases don't animate when outside of the browser viewport (to save CPU, battery, etc)
+// + This check forces those canvases to update once to adapt to the new viewport size
+// + Doing this should prevent unexpected horizontal scrollbars appearing on the page
+// + Should also prevent flashes of badly sized content when canvas scrolls into view
                 if (!animation.isRunning() && now > lastResize + resizeChoke) {
 
                     resizeAction();
@@ -281,12 +297,7 @@ export default function (scrawl, el) {
 
                     resizeFlag = false;
 
-                    worley.set({
-                        width: Math.ceil(parseFloat(compStyles.width)),
-                        height: Math.ceil(parseFloat(compStyles.height)),
-                    });
-
-                    label.set({
+                    textFill.set({
                         fontString: compStyles.font,
                     });
 
@@ -299,9 +310,13 @@ export default function (scrawl, el) {
                             handleY: displacement,
                         });
 
-                        label.set({
+                        textFill.set({
                             letterSpacing: compStyles.letterSpacing,
                             wordSpacing: compStyles.wordSpacing,
+                        });
+
+                        worleyGradient.set({
+                            endY: Math.round(parseFloat(compStyles.lineHeight)),
                         });
                     }
                 }
@@ -314,11 +329,11 @@ export default function (scrawl, el) {
             );
 
 
-            // User interaction - editing the text
+// User interaction - editing the text
             if (el.getAttribute('contenteditable')) {
 
                 const updateText = () => {
-                    label.set({ text: processText(el.innerHTML) });
+                    textFill.set({ text: processText(el.innerHTML) });
                 }
                 const focusText = () => {
                     el.style.color = 'rgb(0 0 0 / 0.4)';
@@ -339,32 +354,24 @@ export default function (scrawl, el) {
             }
 
 
-            // Accessibility
+// Accessibility
             const colorSchemeLightAction = () => {
 
-                worley.set({
+                worleyGradient.set({
                     colors: [
                         [0, userData.highlightColor],
                         [999, userData.baseColor],
                     ],
                 });
-
-                label.set({
-                    shadowColor: userData.shadowColor,
-                });
             };
 
             const colorSchemeDarkAction = () => {
 
-                worley.set({
+                worleyGradient.set({
                     colors: [
                         [0, userData.darkHighlightColor],
                         [999, userData.darkBaseColor],
                     ],
-                });
-
-                label.set({
-                    shadowColor: userData.darkShadowColor,
                 });
             };
 
@@ -374,12 +381,19 @@ export default function (scrawl, el) {
                     userData.darkContrastColor :
                     userData.contrastColor;
 
-                label.set({
-                    fillStyle: color,
-                    shadowOffsetX: 0,
-                    shadowOffsetY: 0,
-                    shadowBlur: 0,
+                template.set({
+                    visibility: false,
                 });
+
+                textFill.set({
+                    visibility: false,
+                });
+
+                effect.set({
+                    visibility: false,
+                });
+
+                el.style.color = color;
             };
 
             const otherContrastAction = () => {
@@ -388,22 +402,27 @@ export default function (scrawl, el) {
 
                 const highlightColor = (isDark) ? userData.darkHighlightColor : userData.highlightColor;
                 const baseColor = (isDark) ? userData.darkBaseColor : userData.baseColor;
-                const shadowColor = (isDark) ? userData.darkShadowColor : userData.shadowColor;
 
-                worley.set({
+                worleyGradient.set({
                     colors: [
                         [0, highlightColor],
                         [999, baseColor],
                     ],
                 });
 
-                label.set({
-                    fillStyle: name('worley-pattern'),
-                    shadowOffsetX: userData.shadowOffsetX,
-                    shadowOffsetY: userData.shadowOffsetY,
-                    shadowBlur: userData.shadowBlur,
-                    shadowColor,
+                template.set({
+                    visibility: true,
                 });
+
+                textFill.set({
+                    visibility: true,
+                });
+
+                effect.set({
+                    visibility: true,
+                });
+
+                el.style.color = 'transparent';
             };
 
             canvas.set({
@@ -416,8 +435,8 @@ export default function (scrawl, el) {
 
             animation.updateOnce();
 
-            // Return the snippet, so coders can access the snippet's parts
-            // + In case they need to tweak the output to meet the web page's specific requirements
+// Return the snippet, so coders can access the snippet's parts
+// + In case they need to tweak the output to meet the web page's specific requirements
             return snippet;
         }
     }

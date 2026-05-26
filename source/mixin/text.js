@@ -221,6 +221,8 @@ export default function (P = Ωempty) {
                     if (LABEL_UPDATE_PARTS_KEYS.includes(key)) this.updateUsingFontParts = true;
                     if (LABEL_UPDATE_FONTSTRING_KEYS.includes(key)) this.updateUsingFontString = true;
                     if (LABEL_UNLOADED_FONT_KEYS.includes(key)) this.currentFontIsLoaded = false;
+
+                    this.dirtyLabelGradientCache(key);
                 }
             }
         }
@@ -285,10 +287,24 @@ export default function (P = Ωempty) {
                     if (LABEL_UPDATE_PARTS_KEYS.includes(key)) this.updateUsingFontParts = true;
                     if (LABEL_UPDATE_FONTSTRING_KEYS.includes(key)) this.updateUsingFontString = true;
                     if (LABEL_UNLOADED_FONT_KEYS.includes(key)) this.currentFontIsLoaded = false;
+
+                    this.dirtyLabelGradientCache(key);
                 }
             }
         }
         return this;
+    };
+
+    P.dirtyLabelGradientCache = function (key) {
+
+        if (this.type === T_LABEL) {
+
+            if (TEXTSTYLE_KEYS.includes(key) || STATE_KEYS.includes(key) || key === 'text') {
+
+                this.dirtyFillGradientCache = true;
+                this.dirtyDrawGradientCache = true;
+            }
+        }
     };
 
     const G = P.getters,

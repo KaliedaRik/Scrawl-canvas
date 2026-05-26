@@ -440,16 +440,6 @@
                 </a>
               
                 
-                <a class="source" href="../canvas-211.html">
-                  ./demo/canvas-211.js
-                </a>
-              
-                
-                <a class="source" href="../canvas-212.html">
-                  ./demo/canvas-212.js
-                </a>
-              
-                
                 <a class="source" href="../delaunator-001.html">
                   ./demo/delaunator-001.js
                 </a>
@@ -1513,16 +1503,13 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
                 <span class="hljs-attr">darkBaseColor</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-dark-base-color&#x27;</span>) || <span class="hljs-string">&#x27;white&#x27;</span>,
                 <span class="hljs-attr">highlightColor</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-highlight-color&#x27;</span>) || <span class="hljs-string">&#x27;orange&#x27;</span>,
                 <span class="hljs-attr">darkHighlightColor</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-dark-highlight-color&#x27;</span>) || <span class="hljs-string">&#x27;orange&#x27;</span>,
+
+                <span class="hljs-attr">contrastColor</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-contrast-color&#x27;</span>) || <span class="hljs-string">&#x27;black&#x27;</span>,
+                <span class="hljs-attr">darkContrastColor</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-dark-contrast-color&#x27;</span>) || <span class="hljs-string">&#x27;white&#x27;</span>,
+
                 <span class="hljs-attr">noiseSumFunction</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-noise-sum-function&#x27;</span>) || <span class="hljs-string">&#x27;random&#x27;</span>,
                 <span class="hljs-attr">noiseOutput</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-noise-output&#x27;</span>) || <span class="hljs-string">&#x27;X&#x27;</span>,
                 <span class="hljs-attr">noiseScale</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-noise-scale&#x27;</span>) || <span class="hljs-string">&#x27;50&#x27;</span>,
-                <span class="hljs-attr">shadowColor</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-shadow-color&#x27;</span>) || <span class="hljs-string">&#x27;black&#x27;</span>,
-                <span class="hljs-attr">darkShadowColor</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-dark-shadow-color&#x27;</span>) || <span class="hljs-string">&#x27;white&#x27;</span>,
-                <span class="hljs-attr">shadowOffsetX</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-shadow-offset-x&#x27;</span>) || <span class="hljs-string">&#x27;0&#x27;</span>,
-                <span class="hljs-attr">shadowOffsetY</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-shadow-offset-y&#x27;</span>) || <span class="hljs-string">&#x27;0&#x27;</span>,
-                <span class="hljs-attr">shadowBlur</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-shadow-blur&#x27;</span>) || <span class="hljs-string">&#x27;0&#x27;</span>,
-                <span class="hljs-attr">contrastColor</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-contrast-color&#x27;</span>) || <span class="hljs-string">&#x27;black&#x27;</span>,
-                <span class="hljs-attr">darkContrastColor</span>: compStyles.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--data-dark-contrast-color&#x27;</span>) || <span class="hljs-string">&#x27;white&#x27;</span>,
             };</pre></div></div>
             
         </li>
@@ -1538,43 +1525,64 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> worley = scrawl.<span class="hljs-title function_">makeNoiseAsset</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;worley-noise&#x27;</span>),
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> worleyGradient = scrawl.<span class="hljs-title function_">makeGradient</span>({
+
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;worley-gradient&#x27;</span>),
+
+                <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">endY</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-built_in">parseFloat</span>(compStyles.<span class="hljs-property">lineHeight</span>)),
+
+                <span class="hljs-attr">spread</span>: <span class="hljs-string">&#x27;repeat&#x27;</span>,
+
                 <span class="hljs-attr">colors</span>: [
                     [<span class="hljs-number">0</span>, userData.<span class="hljs-property">highlightColor</span>],
                     [<span class="hljs-number">999</span>, userData.<span class="hljs-property">baseColor</span>],
                 ],
-                <span class="hljs-attr">colorSpace</span>: <span class="hljs-string">&#x27;OKLAB&#x27;</span>,
-                <span class="hljs-attr">noiseEngine</span>: <span class="hljs-string">&#x27;worley-euclidean&#x27;</span>,
-                <span class="hljs-attr">sumFunction</span>: userData.<span class="hljs-property">noiseSumFunction</span>,
-                <span class="hljs-attr">scale</span>: userData.<span class="hljs-property">noiseScale</span>,
-                <span class="hljs-attr">worleyOutput</span>: userData.<span class="hljs-property">noiseOutput</span>,
-                <span class="hljs-attr">width</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">ceil</span>(<span class="hljs-built_in">parseFloat</span>(compStyles.<span class="hljs-property">width</span>)),
-                <span class="hljs-attr">height</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">ceil</span>(<span class="hljs-built_in">parseFloat</span>(compStyles.<span class="hljs-property">height</span>)),
-            });
 
-            scrawl.<span class="hljs-title function_">makePattern</span>({
-                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;worley-pattern&#x27;</span>),
-                <span class="hljs-attr">asset</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;worley-noise&#x27;</span>),
+                <span class="hljs-attr">operations</span>: [{
+                    <span class="hljs-attr">operation</span>: <span class="hljs-string">&#x27;add-map-contour&#x27;</span>,
+                    <span class="hljs-attr">stage</span>: <span class="hljs-string">&#x27;after-spread&#x27;</span>,
+                    <span class="hljs-attr">parameters</span>: {
+                        <span class="hljs-attr">strength</span>: <span class="hljs-number">1</span>,
+                        <span class="hljs-attr">offset</span>: <span class="hljs-number">0</span>,
+                        <span class="hljs-attr">map</span>: {
+                            <span class="hljs-attr">noiseEngine</span>: <span class="hljs-string">&#x27;worley-euclidean&#x27;</span>,
+                            <span class="hljs-attr">sumFunction</span>: userData.<span class="hljs-property">noiseSumFunction</span>,
+                            <span class="hljs-attr">scale</span>: <span class="hljs-built_in">parseFloat</span>(userData.<span class="hljs-property">noiseScale</span>),
+                            <span class="hljs-attr">worleyOutput</span>: userData.<span class="hljs-property">noiseOutput</span>,
+                            <span class="hljs-attr">seed</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;worley-map&#x27;</span>),
+                        },
+                    },
+                }],
             });
 
             <span class="hljs-keyword">const</span> template = scrawl.<span class="hljs-title function_">makeBlock</span>({
                 <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;template&#x27;</span>),
                 <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+                <span class="hljs-attr">order</span>: <span class="hljs-number">4</span>,
                 <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;destination-over&#x27;</span>,
             });
 
-            <span class="hljs-keyword">const</span> label = scrawl.<span class="hljs-title function_">makeEnhancedLabel</span>({
+            <span class="hljs-keyword">const</span> effect = scrawl.<span class="hljs-title function_">makeBlock</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;worley-effect&#x27;</span>),
+                <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+                <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;worley-gradient&#x27;</span>),
+                <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-over&#x27;</span>,
+            });
+
+            <span class="hljs-keyword">const</span> textFill = scrawl.<span class="hljs-title function_">makeEnhancedLabel</span>({
                 <span class="hljs-attr">name</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;content&#x27;</span>),
                 <span class="hljs-attr">layoutTemplate</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;template&#x27;</span>),
-
+                <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
                 <span class="hljs-attr">text</span>: <span class="hljs-title function_">processText</span>(el.<span class="hljs-property">innerHTML</span>),
                 <span class="hljs-attr">fontString</span>: compStyles.<span class="hljs-property">font</span>,
-
                 <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
+                <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
                 <span class="hljs-attr">textHandleY</span>: <span class="hljs-string">&#x27;alphabetic&#x27;</span>,
                 <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
-
                 <span class="hljs-attr">direction</span>: userData.<span class="hljs-property">direction</span>,
                 <span class="hljs-attr">fontStretch</span>: userData.<span class="hljs-property">fontStretch</span>,
                 <span class="hljs-attr">letterSpacing</span>: userData.<span class="hljs-property">letterSpacing</span>,
@@ -1582,12 +1590,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
                 <span class="hljs-attr">fontVariantCaps</span>: userData.<span class="hljs-property">fontVariantCaps</span>,
                 <span class="hljs-attr">lineSpacing</span>: <span class="hljs-title function_">getLineSpacing</span>(),
                 <span class="hljs-attr">justifyLine</span>: userData.<span class="hljs-property">justifyLine</span>,
-
-                <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;worley-pattern&#x27;</span>),
-                <span class="hljs-attr">shadowOffsetX</span>: userData.<span class="hljs-property">shadowOffsetX</span>,
-                <span class="hljs-attr">shadowOffsetY</span>: userData.<span class="hljs-property">shadowOffsetY</span>,
-                <span class="hljs-attr">shadowBlur</span>: userData.<span class="hljs-property">shadowBlur</span>,
-                <span class="hljs-attr">shadowColor</span>: userData.<span class="hljs-property">shadowColor</span>,
+                <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;destination-in&#x27;</span>,
             });</pre></div></div>
             
         </li>
@@ -1633,7 +1636,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
                         <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
                     });
 
-                    label.<span class="hljs-title function_">set</span>({
+                    textFill.<span class="hljs-title function_">set</span>({
+                        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
+                    });
+
+                    effect.<span class="hljs-title function_">set</span>({
                         <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
                     });
 
@@ -1699,12 +1706,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
                     resizeFlag = <span class="hljs-literal">false</span>;
 
-                    worley.<span class="hljs-title function_">set</span>({
-                        <span class="hljs-attr">width</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">ceil</span>(<span class="hljs-built_in">parseFloat</span>(compStyles.<span class="hljs-property">width</span>)),
-                        <span class="hljs-attr">height</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">ceil</span>(<span class="hljs-built_in">parseFloat</span>(compStyles.<span class="hljs-property">height</span>)),
-                    });
-
-                    label.<span class="hljs-title function_">set</span>({
+                    textFill.<span class="hljs-title function_">set</span>({
                         <span class="hljs-attr">fontString</span>: compStyles.<span class="hljs-property">font</span>,
                     });
 
@@ -1717,9 +1719,13 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
                             <span class="hljs-attr">handleY</span>: displacement,
                         });
 
-                        label.<span class="hljs-title function_">set</span>({
+                        textFill.<span class="hljs-title function_">set</span>({
                             <span class="hljs-attr">letterSpacing</span>: compStyles.<span class="hljs-property">letterSpacing</span>,
                             <span class="hljs-attr">wordSpacing</span>: compStyles.<span class="hljs-property">wordSpacing</span>,
+                        });
+
+                        worleyGradient.<span class="hljs-title function_">set</span>({
+                            <span class="hljs-attr">endY</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-built_in">parseFloat</span>(compStyles.<span class="hljs-property">lineHeight</span>)),
                         });
                     }
                 }
@@ -1747,7 +1753,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (el.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;contenteditable&#x27;</span>)) {
 
                 <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateText</span> = (<span class="hljs-params"></span>) =&gt; {
-                    label.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">text</span>: <span class="hljs-title function_">processText</span>(el.<span class="hljs-property">innerHTML</span>) });
+                    textFill.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">text</span>: <span class="hljs-title function_">processText</span>(el.<span class="hljs-property">innerHTML</span>) });
                 }
                 <span class="hljs-keyword">const</span> <span class="hljs-title function_">focusText</span> = (<span class="hljs-params"></span>) =&gt; {
                     el.<span class="hljs-property">style</span>.<span class="hljs-property">color</span> = <span class="hljs-string">&#x27;rgb(0 0 0 / 0.4)&#x27;</span>;
@@ -1782,29 +1788,21 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> <span class="hljs-title function_">colorSchemeLightAction</span> = (<span class="hljs-params"></span>) =&gt; {
 
-                worley.<span class="hljs-title function_">set</span>({
+                worleyGradient.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">colors</span>: [
                         [<span class="hljs-number">0</span>, userData.<span class="hljs-property">highlightColor</span>],
                         [<span class="hljs-number">999</span>, userData.<span class="hljs-property">baseColor</span>],
                     ],
                 });
-
-                label.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">shadowColor</span>: userData.<span class="hljs-property">shadowColor</span>,
-                });
             };
 
             <span class="hljs-keyword">const</span> <span class="hljs-title function_">colorSchemeDarkAction</span> = (<span class="hljs-params"></span>) =&gt; {
 
-                worley.<span class="hljs-title function_">set</span>({
+                worleyGradient.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">colors</span>: [
                         [<span class="hljs-number">0</span>, userData.<span class="hljs-property">darkHighlightColor</span>],
                         [<span class="hljs-number">999</span>, userData.<span class="hljs-property">darkBaseColor</span>],
                     ],
-                });
-
-                label.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">shadowColor</span>: userData.<span class="hljs-property">darkShadowColor</span>,
                 });
             };
 
@@ -1814,12 +1812,19 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
                     userData.<span class="hljs-property">darkContrastColor</span> :
                     userData.<span class="hljs-property">contrastColor</span>;
 
-                label.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">fillStyle</span>: color,
-                    <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">0</span>,
-                    <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">0</span>,
-                    <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">0</span>,
+                template.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
                 });
+
+                textFill.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+                });
+
+                effect.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+                });
+
+                el.<span class="hljs-property">style</span>.<span class="hljs-property">color</span> = color;
             };
 
             <span class="hljs-keyword">const</span> <span class="hljs-title function_">otherContrastAction</span> = (<span class="hljs-params"></span>) =&gt; {
@@ -1828,22 +1833,27 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
                 <span class="hljs-keyword">const</span> highlightColor = (isDark) ? userData.<span class="hljs-property">darkHighlightColor</span> : userData.<span class="hljs-property">highlightColor</span>;
                 <span class="hljs-keyword">const</span> baseColor = (isDark) ? userData.<span class="hljs-property">darkBaseColor</span> : userData.<span class="hljs-property">baseColor</span>;
-                <span class="hljs-keyword">const</span> shadowColor = (isDark) ? userData.<span class="hljs-property">darkShadowColor</span> : userData.<span class="hljs-property">shadowColor</span>;
 
-                worley.<span class="hljs-title function_">set</span>({
+                worleyGradient.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">colors</span>: [
                         [<span class="hljs-number">0</span>, highlightColor],
                         [<span class="hljs-number">999</span>, baseColor],
                     ],
                 });
 
-                label.<span class="hljs-title function_">set</span>({
-                    <span class="hljs-attr">fillStyle</span>: <span class="hljs-title function_">name</span>(<span class="hljs-string">&#x27;worley-pattern&#x27;</span>),
-                    <span class="hljs-attr">shadowOffsetX</span>: userData.<span class="hljs-property">shadowOffsetX</span>,
-                    <span class="hljs-attr">shadowOffsetY</span>: userData.<span class="hljs-property">shadowOffsetY</span>,
-                    <span class="hljs-attr">shadowBlur</span>: userData.<span class="hljs-property">shadowBlur</span>,
-                    shadowColor,
+                template.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
                 });
+
+                textFill.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
+                });
+
+                effect.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
+                });
+
+                el.<span class="hljs-property">style</span>.<span class="hljs-property">color</span> = <span class="hljs-string">&#x27;transparent&#x27;</span>;
             };
 
             canvas.<span class="hljs-title function_">set</span>({

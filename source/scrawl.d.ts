@@ -1,4 +1,4 @@
-// Type definitions for Scrawl-canvas 8.18.0
+// Type definitions for Scrawl-canvas 8.19.0
 
 
 
@@ -420,33 +420,19 @@ interface PathMixinFunctions {}
 
 // Pattern mixin
 // -------------------------------------
-interface PatternMatrix {
-    a?: number;
-    b?: number;
-    c?: number;
-    d?: number;
-    e?: number;
-    f?: number;
-}
+type PatternRepeatValues = 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat';
 
 interface PatternMixinDeltaInputs {
-    matrixA?: number; 
-    matrixB?: number; 
-    matrixC?: number; 
-    matrixD?: number; 
-    matrixE?: number; 
-    matrixF?: number; 
-    stretchX?: number; 
-    skewY?: number; 
-    skewX?: number; 
-    stretchY?: number; 
-    shiftX?: number; 
-    shiftY?: number; 
+    patternStretchX?: number; 
+    patternSkewX?: number; 
+    patternShiftX?: number; 
+    patternStretchY?: number; 
+    patternSkewY?: number; 
+    patternShiftY?: number; 
 }
 
 interface PatternMixinInputs {
-    repeat?: string;
-    patternMatrix?: PatternMatrix;
+    repeat?: PatternRepeatValues;
 }
 
 interface PatternMixinFunctions {}
@@ -591,6 +577,15 @@ interface ShapeCurveMixinFunctions extends ShapeBasicMixinFunctions {}
 // Styles mixin
 // -------------------------------------
 type StyleColorsArray = [number, string]
+type StylePermittedSpread = 'pad' | 'repeat' | 'reflect' | 'transparent';
+type StyleOperationPermittedOperations = 'add-ease' | 'add-map-contour' | 'add-map-displace' | 'add-map-ease' | 'add-map-flow' | 'add-map-rotate' | 'add-map-threshold' | 'add-map-warp' | 'add-noise' | 'add-ripple' | 'add-wave';
+type StyleOperationPermittedStages = 'before-spread' | 'after-spread' | 'on-coordinates';
+
+interface StyleOperationObject {
+    operation: StyleOperationPermittedOperations;
+    stage: StyleOperationPermittedStages;
+    parameters?: CommonObjectInput;
+}
 
 interface StylesMixinDeltaInputs {
     end?: CommonTwoElementArrayInput;
@@ -613,6 +608,8 @@ interface StylesMixinInputs {
     palette?: CommonObjectInput;
     precision?: number;
     returnColorAs?: ReturnColorValues;
+    spread?: StylePermittedSpread;
+    operations?: StyleOperationObject[];
 }
 
 interface StylesMixinFunctions {

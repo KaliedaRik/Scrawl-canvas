@@ -355,6 +355,11 @@
                 </a>
               
                 
+                <a class="source" href="../helper/gradient-engine.html">
+                  ./source/helper/gradient-engine.js
+                </a>
+              
+                
                 <a class="source" href="../helper/random-seed.html">
                   ./source/helper/random-seed.js
                 </a>
@@ -698,6 +703,7 @@
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span> = {};
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">stops</span> = <span class="hljs-title class_">Array</span>(<span class="hljs-number">1000</span>).<span class="hljs-title function_">fill</span>(<span class="hljs-variable constant_">BLANK</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">stopsData</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint32Array</span>(<span class="hljs-number">1000</span>);
 
     <span class="hljs-keyword">if</span> (items.<span class="hljs-property">colors</span> == <span class="hljs-literal">null</span>) items.<span class="hljs-property">colors</span> = [[<span class="hljs-number">0</span>, <span class="hljs-variable constant_">BLACK</span>], [<span class="hljs-number">999</span>, <span class="hljs-variable constant_">WHITE</span>]];
 
@@ -1275,34 +1281,25 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPaletteData</span> = <span class="hljs-literal">true</span>;
     }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <p><code>recalculateStopColors</code> - populate the stops Array with CSS color Strings, as determined by colors stored in the <code>colors</code> object</p>
-<ul>
-<li>Be aware that if color stops have not been set at index 0, or index 999, the indices between 0 to start, and between end to 999, will remain transparent black.</li>
-</ul>
+};
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">recalculateStopColors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+P.<span class="hljs-property">getStopsData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">recalculateStopColors</span>();
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">stopsData</span>;
+};
+
+P.<span class="hljs-property">recalculateStopColors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span>) <span class="hljs-keyword">return</span>;
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">false</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPaletteData</span> = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">const</span> { colors, stops, factory } = <span class="hljs-variable language_">this</span>;
+    <span class="hljs-keyword">const</span> { colors, stops, stopsData, factory } = <span class="hljs-variable language_">this</span>;
 
     stops.<span class="hljs-title function_">fill</span>(<span class="hljs-variable constant_">BLANK</span>);
+    stopsData.<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>);
 
     <span class="hljs-keyword">const</span> keys = <span class="hljs-title function_">_keys</span>(colors)
         .<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-built_in">parseInt</span>(n, <span class="hljs-number">10</span>))
@@ -1316,9 +1313,23 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         <span class="hljs-keyword">return</span>;
     }
 
-    <span class="hljs-keyword">let</span> a, b, span;
+    <span class="hljs-keyword">const</span> setStop = <span class="hljs-keyword">function</span> (<span class="hljs-params">index, colorString</span>) {
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; keys.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i++) {
+        <span class="hljs-keyword">const</span> data = factory.<span class="hljs-title function_">extractDatafromColorString</span>(colorString);
+
+        stops[index] = colorString;
+
+        stopsData[index] = (
+            ((<span class="hljs-title function_">_floor</span>(data[<span class="hljs-number">4</span>] * <span class="hljs-number">255</span>) &lt;&lt; <span class="hljs-number">24</span>) |
+            (data[<span class="hljs-number">3</span>] &lt;&lt; <span class="hljs-number">16</span>) |
+            (data[<span class="hljs-number">2</span>] &lt;&lt; <span class="hljs-number">8</span>) |
+            data[<span class="hljs-number">1</span>])
+        ) &gt;&gt;&gt; <span class="hljs-number">0</span>;
+    };
+
+    <span class="hljs-keyword">let</span> a, b, span, color;
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &lt; iz; i++) {
 
         a = keys[i];
         b = keys[i + <span class="hljs-number">1</span>];
@@ -1329,25 +1340,26 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
             <span class="hljs-attr">maximumColor</span>: factory.<span class="hljs-title function_">buildColorStringFromData</span>(colors[b]),
         });
 
-        <span class="hljs-keyword">if</span> (i === <span class="hljs-number">0</span>) stops[a] = factory.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-number">0</span>);
+        <span class="hljs-keyword">if</span> (i === <span class="hljs-number">0</span>) <span class="hljs-title function_">setStop</span>(a, factory.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-number">0</span>));
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = a + <span class="hljs-number">1</span>; j &lt; b; j++) {
 
-            stops[j] = factory.<span class="hljs-title function_">getRangeColor</span>((j - a) / span);
+            color = factory.<span class="hljs-title function_">getRangeColor</span>((j - a) / span);
+            <span class="hljs-title function_">setStop</span>(j, color);
         }
 
-        stops[b] = factory.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-number">1</span>);
+        <span class="hljs-title function_">setStop</span>(b, factory.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-number">1</span>));
     }
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-30">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>updateColor</code> - add or update a gradient-type style’s Palette object with a color.</p>
 <ul>
@@ -1377,11 +1389,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>removeColor</code> - remove a gradient-type style’s Palette object color from a specified index</p>
 <ul>
@@ -1413,11 +1425,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>getStopData</code> - retrieve memoised gradient data, or generate it</p>
 
@@ -1428,11 +1440,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-33">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Option 0: in case of errors, return transparent black</p>
 
@@ -1450,11 +1462,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Option 1 start == end, cycle irrelevant. Returns solid color at start of gradient</p>
 
@@ -1482,11 +1494,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Special handling for stepped easings</p>
 
@@ -1557,11 +1569,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Option 2: start &lt; end, cycle irrelevant</p>
 
@@ -1618,11 +1630,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-37">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Option 3: start &gt; end, cycle = true</p>
 
@@ -1672,11 +1684,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-38">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Option 4: start &gt; end, cycle = false</p>
 
@@ -1724,11 +1736,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-39">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>check to see if data has already been memoized and is suitable for return</p>
 
@@ -1740,11 +1752,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-40">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>addStopsToGradient</code> - complete the construction of the Canvas API CanvasGradient object</p>
 
@@ -1769,11 +1781,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-41">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>updateData</code> - used by code elsewhere to tell the palette to update its stop data</p>
 
@@ -1787,11 +1799,11 @@ P.<span class="hljs-property">setEasingHelper</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-42">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
