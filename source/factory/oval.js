@@ -251,9 +251,7 @@ P.calculateLocalPathAdditionalActions = function () {
 
     this.pathCalculatedOnce = false;
 
-    // ALWAYS, when invoking `calculateLocalPath` from `calculateLocalPathAdditionalActions`, include the second argument, set to `true`! Failure to do this leads to an infinite loop which will make your machine weep.
-    // + We need to recalculate the local path to take into account the offset required to put the Oval entity's start coordinates at the top-left of the local box, and to recalculate the data used by other artefacts to place themselves on, or move along, its path.
-    this.calculateLocalPath(this.pathDefinition, true);
+    this.calculateLocalPath(true);
 };
 
 

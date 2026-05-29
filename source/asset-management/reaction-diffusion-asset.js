@@ -12,6 +12,7 @@ import { seededRandomNumberGenerator } from '../helper/random-seed.js';
 import { doCreate, mergeOver, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
+import { releaseFloat32Array, requestFloat32Array, releaseInt32Array, requestInt32Array } from '../helper/array-pool.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
@@ -135,7 +136,11 @@ P.clone = λcloneError;
 
 
 // #### Kill management
-// No additional kill functionality required
+P.factoryKill = function () {
+
+    releaseFloat32Array(...this.dataArrays);
+    releaseInt32Array(this.rowAbove, this.rowBelow, this.colLeft, this.colRight);
+};
 
 
 // #### Get, Set, deltaSet
@@ -540,12 +545,24 @@ P.cleanOutput = function () {
             let generation = currentGeneration,
                 sourceFlag = currentSource;
 
+            const killPlusFeed = killRate + feedRate;
+
             while (iterations < drawEvery) {
 
-                if (sourceFlag) [destA, sourceA, destB, sourceB] = dataArrays;
-                else [sourceA, destA, sourceB, destB] = dataArrays;
+                if (sourceFlag) {
 
-                const killPlusFeed = killRate + feedRate;
+                    destA = dataArrays[0];
+                    sourceA = dataArrays[1];
+                    destB = dataArrays[2];
+                    sourceB = dataArrays[3];
+                }
+                else {
+
+                    sourceA = dataArrays[0];
+                    destA = dataArrays[1];
+                    sourceB = dataArrays[2];
+                    destB = dataArrays[3];
+                }
 
                 let index,
                     rowAboveIndex, rowHere, rowBelowIndex,
@@ -656,14 +673,16 @@ P.cleanScene = function () {
 
             this.dirtyScene = false;
 
+            releaseInt32Array(this.rowAbove, this.rowBelow, this.colLeft, this.colRight);
+
             element.width = width;
             element.height = height;
 
             const len = width * height,
-                rowAbove = new Int32Array(height),
-                rowBelow = new Int32Array(height),
-                colLeft = new Int32Array(width),
-                colRight = new Int32Array(width);
+                rowAbove = requestInt32Array(height),
+                rowBelow = requestInt32Array(height),
+                colLeft = requestInt32Array(width),
+                colRight = requestInt32Array(width);
 
             for (let row = 0; row < height; row++) {
 
@@ -682,13 +701,15 @@ P.cleanScene = function () {
             this.colLeft = colLeft;
             this.colRight = colRight;
 
+            // We use four arrays to contain the current and next state of the scene
+            releaseFloat32Array(...dataArrays);
             dataArrays.length = 0;
 
-            // We use four arrays to contain the current and next state of the scene
             for (let i = 0; i < 4; i++) {
 
-                dataArrays.push(new Float32Array(len));
+                dataArrays.push(requestFloat32Array(len));
             }
+
             this.currentSource = 0;
 
             const [sourceA, destA, sourceB, destB] = dataArrays;

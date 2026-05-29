@@ -721,7 +721,7 @@ P.getStopData = function (gradient, start, end, cycle) {
     }
 
     // check to see if data has already been memoized and is suitable for return
-    return getWorkstoreItem(workstoreName) || BLANK;
+    return (workstoreName) ? getWorkstoreItem(workstoreName) : BLANK;
 };
 
 // `addStopsToGradient` - complete the construction of the Canvas API CanvasGradient object

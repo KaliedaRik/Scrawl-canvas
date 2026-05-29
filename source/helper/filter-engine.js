@@ -122,8 +122,11 @@ P.action = function (packet) {
 
     let i, iz, actData, a;
 
-    const itemInWorkstore = getWorkstoreItem(identifier);
-    if (itemInWorkstore) return itemInWorkstore;
+    if (identifier) {
+
+        const itemInWorkstore = getWorkstoreItem(identifier);
+        if (itemInWorkstore) return itemInWorkstore;
+    }
 
     actions.length = 0;
 

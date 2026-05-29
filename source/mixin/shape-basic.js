@@ -7,11 +7,9 @@ import { artefact } from '../core/library.js';
 
 import { mergeOver, pushUnique, xt, λnull, Ωempty } from '../helper/utilities.js';
 
-import { releaseVector, requestVector } from '../untracked-factory/vector.js';
-
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
-import { calculatePath, releasePathCalcObject, requestPathCalcObject } from '../helper/shape-path-calculation.js';
+import { calculatePath } from '../helper/shape-path-calculation.js';
 
 import entityMix from './entity.js';
 
@@ -19,7 +17,8 @@ import entityMix from './entity.js';
 import { _atan2, _isFinite, _parse, _piHalf, _pow, _radian, BEZIER, CLOSE, DESTINATION_OUT, LINEAR, MOUSE, MOVE, PARTICLE, QUADRATIC, SOURCE_OVER, T_BEZIER, T_LINE, T_POLYLINE, T_QUADRATIC, UNKNOWN, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
-const HALFTRANS = 'rgb(0 0 0 / 0.5)';
+const HALFTRANS = 'rgb(0 0 0 / 0.5)',
+    CURVE_PATH_TYPES = [T_LINE, T_QUADRATIC, T_BEZIER];
 
 
 // #### Export function
@@ -147,85 +146,22 @@ export default function (P = Ωempty) {
     // `positionPointOnPath`
     P.positionPointOnPath = function (vals) {
 
-        const v = requestVector(vals);
+        let x = vals.x - this.currentStampHandlePosition[0],
+            y = vals.y - this.currentStampHandlePosition[1];
 
-        v.vectorSubtract(this.currentStampHandlePosition);
+        if (this.flipReverse) x = -x;
+        if (this.flipUpend) y = -y;
 
-        if(this.flipReverse) v.x = -v.x;
-        if(this.flipUpend) v.y = -v.y;
-
-        v.rotate(this.roll);
-
-        v.vectorAdd(this.currentStampPosition);
-
-        const res = {
-            x: v.x,
-            y: v.y
-        }
-
-        releaseVector(v);
-
-        return res;
-    };
-
-    // `getBezierXY`
-    P.getBezierXY = function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
-
-        const T = 1 - t;
+        const r = this.roll * _radian,
+            cos = Math.cos(r),
+            sin = Math.sin(r),
+            rx = (x * cos) - (y * sin),
+            ry = (x * sin) + (y * cos);
 
         return {
-            x: (_pow(T, 3) * sx) + (3 * t * _pow(T, 2) * cp1x) + (3 * t * t * T * cp2x) + (t * t * t * ex),
-            y: (_pow(T, 3) * sy) + (3 * t * _pow(T, 2) * cp1y) + (3 * t * t * T * cp2y) + (t * t * t * ey)
+            x: rx + this.currentStampPosition[0],
+            y: ry + this.currentStampPosition[1],
         };
-    };
-
-    // `getQuadraticXY`
-    P.getQuadraticXY = function (t, sx, sy, cp1x, cp1y, ex, ey) {
-
-        const T = 1 - t;
-
-        return {
-            x: T * T * sx + 2 * T * t * cp1x + t * t * ex,
-            y: T * T * sy + 2 * T * t * cp1y + t * t * ey
-        };
-    };
-
-    // `getLinearXY`
-    P.getLinearXY = function (t, sx, sy, ex, ey) {
-
-        return {
-            x: sx + ((ex - sx) * t),
-            y: sy + ((ey - sy) * t)
-        };
-    };
-
-    // `getBezierAngle`
-    P.getBezierAngle = function (t, sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey) {
-
-        const T = 1 - t,
-            dx = _pow(T, 2) * (cp1x - sx) + 2 * t * T * (cp2x - cp1x) + t * t * (ex - cp2x),
-            dy = _pow(T, 2) * (cp1y - sy) + 2 * t * T * (cp2y - cp1y) + t * t * (ey - cp2y);
-
-        return (-_atan2(dx, dy) + _piHalf) / _radian;
-    };
-
-    // `getQuadraticAngle`
-    P.getQuadraticAngle = function (t, sx, sy, cp1x, cp1y, ex, ey) {
-
-        const T = 1 - t,
-            dx = 2 * T * (cp1x - sx) + 2 * t * (ex - cp1x),
-            dy = 2 * T * (cp1y - sy) + 2 * t * (ey - cp1y);
-
-        return (-_atan2(dx, dy) + _piHalf) / _radian;
-    };
-
-    // `getLinearAngle`
-    P.getLinearAngle = function (t, sx, sy, ex, ey) {
-
-        const dx = ex - sx,
-            dy = ey - sy;
-
-        return (-_atan2(dx, dy) + _piHalf) / _radian;
     };
 
     // `getConstantPosition` - internal function called by `getPathPositionData`
@@ -285,44 +221,76 @@ export default function (P = Ωempty) {
     // `buildPathPositionObject` - internal function called by `getPathPositionData`
     P.buildPathPositionObject = function (unit, myLen) {
 
-        if (unit) {
+        if (!unit) return false;
 
-            const [unitSpecies, ...vars] = unit;
+        const unitSpecies = unit[0],
+            point = {
+                x: 0,
+                y: 0,
+            };
 
-            let myPoint, angle;
+        let angle, T, dx, dy;
 
-            switch (unitSpecies) {
+        switch (unitSpecies) {
 
-                case LINEAR :
-                    myPoint = this.positionPointOnPath(this.getLinearXY(myLen, ...vars));
-                    angle = this.getLinearAngle(myLen, ...vars);
-                    break;
+            case LINEAR :
+                point.x = unit[1] + ((unit[3] - unit[1]) * myLen);
+                point.y = unit[2] + ((unit[4] - unit[2]) * myLen);
 
-                case QUADRATIC :
-                    myPoint = this.positionPointOnPath(this.getQuadraticXY(myLen, ...vars));
-                    angle = this.getQuadraticAngle(myLen, ...vars);
-                    break;
+                dx = unit[3] - unit[1];
+                dy = unit[4] - unit[2];
+                angle = (-_atan2(dx, dy) + _piHalf) / _radian;
+                break;
 
-                case BEZIER :
-                    myPoint = this.positionPointOnPath(this.getBezierXY(myLen, ...vars));
-                    angle = this.getBezierAngle(myLen, ...vars);
-                    break;
-            }
+            case QUADRATIC :
+                T = 1 - myLen;
 
-            let flipAngle = 0
-            if (this.flipReverse) flipAngle++;
-            if (this.flipUpend) flipAngle++;
+                point.x = (T * T * unit[1]) + (2 * T * myLen * unit[3]) + (myLen * myLen * unit[5]);
+                point.y = (T * T * unit[2]) + (2 * T * myLen * unit[4]) + (myLen * myLen * unit[6]);
 
-            if (flipAngle === 1) angle = -angle;
+                dx = (2 * T * (unit[3] - unit[1])) + (2 * myLen * (unit[5] - unit[3]));
+                dy = (2 * T * (unit[4] - unit[2])) + (2 * myLen * (unit[6] - unit[4]));
+                angle = (-_atan2(dx, dy) + _piHalf) / _radian;
+                break;
 
-            angle += this.roll;
+            case BEZIER :
+                T = 1 - myLen;
 
-            myPoint.angle = angle;
+                point.x = (_pow(T, 3) * unit[1]) + (3 * myLen * _pow(T, 2) * unit[3]) + (3 * myLen * myLen * T * unit[5]) + (myLen * myLen * myLen * unit[7]);
+                point.y = (_pow(T, 3) * unit[2]) + (3 * myLen * _pow(T, 2) * unit[4]) + (3 * myLen * myLen * T * unit[6]) + (myLen * myLen * myLen * unit[8]);
 
-            return myPoint;
+                dx = (_pow(T, 2) * (unit[3] - unit[1])) + (2 * myLen * T * (unit[5] - unit[3])) + (myLen * myLen * (unit[7] - unit[5]));
+                dy = (_pow(T, 2) * (unit[4] - unit[2])) + (2 * myLen * T * (unit[6] - unit[4])) + (myLen * myLen * (unit[8] - unit[6]));
+                angle = (-_atan2(dx, dy) + _piHalf) / _radian;
+                break;
+
+            default :
+                return false;
         }
-        return false;
-    }
+
+        const myPoint = this.positionPointOnPath(point);
+
+        let flipAngle = 0;
+        if (this.flipReverse) flipAngle++;
+        if (this.flipUpend) flipAngle++;
+
+        if (flipAngle === 1) angle = -angle;
+
+        angle += this.roll;
+
+        // Special consideration for curve shapes - line, quadratic, bezier
+        if (CURVE_PATH_TYPES.includes(this.type)) {
+
+            const lineOffset = this.controlledLineOffset;
+
+            myPoint.x += lineOffset[0];
+            myPoint.y += lineOffset[1];
+        }
+
+        myPoint.angle = angle;
+
+        return myPoint;
+    };
 
     // `getPathPositionData`
     // + Also useful in user code to retrieve the Cell-relative coordinates of any point (measured as a float Number between `0` and `1` along the path)
@@ -447,7 +415,7 @@ export default function (P = Ωempty) {
                 this.pathCalculatedOnce = false;
             }
 
-            this.calculateLocalPath(this.pathDefinition);
+            this.calculateLocalPath();
 
             if (this.dirtyDimensions) this.cleanDimensions();
             if (this.dirtyHandle) this.cleanHandle();
@@ -460,13 +428,13 @@ export default function (P = Ωempty) {
     };
 
     // `calculateLocalPath` - internal helper function - called by `cleanPathObject`
-    P.calculateLocalPath = function (d, isCalledFromAdditionalActions) {
+    P.calculateLocalPath = function (isCalledFromAdditionalActions = false) {
 
         let res;
 
         if (!this.pathCalculatedOnce) {
 
-            res = calculatePath(d, this.currentScale, this.currentStart, this.useAsPath, this.precision, requestPathCalcObject());
+            res = calculatePath(this);
             this.pathCalculatedOnce = true;
         }
 
@@ -497,68 +465,10 @@ export default function (P = Ωempty) {
             box.length = 0;
             box.push(minX, minY, dims[0], dims[1]);
 
-            if (this.useAsPath) {
-
-                // we can do work here to flatten some of these arrays
-                const {units, unitLengths, unitPartials, unitProgression, unitPositions} = res;
-
-                const flatProgression = requestArray(),
-                    flatPositions = requestArray();
-
-                let lastLength = 0,
-                    currentPartial,
-                    lastPartial,
-                    progression,
-                    positions,
-                    i, iz, j, jz, l, p;
-
-                for (i = 0, iz = unitLengths.length; i < iz; i++) {
-
-                    lastLength += unitLengths[i];
-                    progression = unitProgression[i];
-
-                    if (progression) {
-
-                        lastPartial = unitPartials[i];
-
-                        currentPartial = (i + 1 < unitPartials.length) ? unitPartials[i + 1] - lastPartial : 1 - lastPartial;
-
-                        positions = unitPositions[i];
-
-                        for (j = 0, jz = progression.length; j < jz; j++) {
-
-                            l = lastLength + progression[j];
-                            flatProgression.push(l);
-
-                            p = lastPartial + (positions[j] * currentPartial);
-                            flatPositions.push(p);
-                        }
-                    }
-                }
-                this.units.length = 0;
-                this.units.push(...units);
-
-                this.unitLengths.length = 0;
-                this.unitLengths.push(...unitLengths);
-
-                this.unitPartials.length = 0;
-                this.unitPartials.push(...unitPartials);
-
-                if (!this.unitProgression) this.unitProgression = [];
-                this.unitProgression.length = 0;
-                this.unitProgression.push(...flatProgression);
-
-                if (!this.unitPositions) this.unitPositions = [];
-                this.unitPositions.length = 0;
-                this.unitPositions.push(...flatPositions);
-
-                releaseArray(flatProgression, flatPositions);
-            }
-            releasePathCalcObject(res);
-
             if (!isCalledFromAdditionalActions) this.calculateLocalPathAdditionalActions();
         }
     };
+
     P.calculateLocalPathAdditionalActions = λnull;
 
 // `updatePathSubscribers`
