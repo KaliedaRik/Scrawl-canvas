@@ -101,12 +101,67 @@ const releaseHarness = (...harnesses) => {
 // Temporary during dev work
 let tempTraceChoke = 2000,
     traceLastPerformed = 0,
+    ui8created = 0,
+    ui8served = 0,
+    ui8stored = 0,
     i32created = 0,
     i32served = 0,
     f32created = 0,
     f32served = 0,
     f64created = 0,
     f64served = 0;
+
+const ui8Pool = [];
+
+export const requestUI8Array = (length = 0, fillValue = false) => {
+
+    for (let i = 0, iz = ui8Pool.length; i < iz; i++) {
+
+        const harness = ui8Pool[i];
+
+        if (length === harness.length) {
+
+            const array = harness.array;
+
+            ui8Pool.splice(i, 1);
+
+            releaseHarness(harness);
+
+// Temporary during dev work
+            ui8served++;
+    // console.log(`serving ui8Array`, length)
+
+            return (_isFinite(fillValue)) ? array.fill(fillValue) : array;
+        }
+    }
+
+// Temporary during dev work
+    ui8created++;
+    // console.log(`creating ui8Array`, length)
+
+    const array = new Uint8ClampedArray(length);
+
+    return (_isFinite(fillValue)) ? array.fill(fillValue) : array;
+};
+
+export const releaseUI8Array = (...args) => {
+
+    args.forEach(a => {
+
+        if (a && a.constructor === Uint8ClampedArray) {
+
+            const harness = requestHarness();
+
+            harness.length = a.length;
+            harness.array = a;
+            harness.stamp = _now();
+
+            ui8Pool.push(harness);
+
+            ui8stored++;
+        }
+    });
+};
 
 const int32Pool = [];
 
@@ -359,6 +414,33 @@ const purgeArrayPools = () => {
 
             i32created = 0;
             i32served = 0;
+        }
+
+        // ui8
+        purgeItems.length = 0;
+        keepItems.length = 0;
+
+        for (i = 0, iz = ui8Pool.length; i < iz; i++) {
+
+            item = ui8Pool[i];
+
+            if (item.stamp < choke) purgeItems.push(item);
+            else keepItems.push(item);
+        }
+
+        ui8Pool.length = 0;
+        ui8Pool.push(...keepItems);
+
+        releaseHarness(...purgeItems);
+
+// Temporary during dev work
+        if (traceFlag) {
+
+            console.log(`ui8 hygiene - created: ${ui8created}, stored ${ui8stored}, served ${ui8served}, purgeItems ${purgeItems.length}, keepItems ${keepItems.length}`);
+
+            ui8created = 0;
+            ui8served = 0;
+            ui8stored = 0;
         }
     }
 };
