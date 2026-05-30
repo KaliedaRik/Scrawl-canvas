@@ -204,7 +204,6 @@ export default function (P = Ωempty) {
 
                 this.dirtyOutput = false;
 
-                // const {element, engine, width, height, gradient, choke, gradientLastUpdated } = this;
                 const { element, engine, width, height, gradient } = this;
 
                 // Update the display element's dimensions - this will also clear the canvas display

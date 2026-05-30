@@ -34,9 +34,6 @@ export const checkForWorkstoreItem = (identifier) => {
 
     const item = workstore[identifier];
 
-// Temporary stuff
-    if (item) traceHits++; else {traceMisses++; console.log('checkForWorkstoreItem', identifier);}
-
     if (!item) return false;
 
     item.stamp = _now();
@@ -46,9 +43,6 @@ export const checkForWorkstoreItem = (identifier) => {
 export const getWorkstoreItem = (identifier) => {
 
     const item = workstore[identifier];
-
-// Temporary stuff
-    if (item) traceHits++; else {traceMisses++; console.log('getWorkstoreItem', identifier);}
 
     if (item) {
 
@@ -60,10 +54,6 @@ export const getWorkstoreItem = (identifier) => {
 
 export const setWorkstoreItem = (identifier, value) => {
 
-// Temporary stuff
-    traceMisses++
-    console.log('setWorkstoreItem', identifier);
-
     workstore[identifier] = {
         value,
         stamp: _now(),
@@ -74,9 +64,6 @@ export const getOrAddWorkstoreItem = function (identifier, value = []) {
 
     const item = workstore[identifier],
         now = _now();
-
-// Temporary stuff
-    if (item) traceHits++; else {traceMisses++; console.log('getOrAddWorkstoreItem', identifier);}
 
     if (item) {
 
@@ -95,9 +82,6 @@ export const setAndReturnWorkstoreItem = function (identifier, value = []) {
 
     const item = workstore[identifier],
         now = _now();
-
-// Temporary stuff
-    if (item) traceHits++; else {traceMisses++; console.log('setAndReturnWorkstoreItem', identifier);}
 
     if (item) {
 
@@ -124,33 +108,6 @@ export const setWorkstorePurgeChoke = (val) => {
 };
 
 
-// Temporary stuff
-let tempTraceChoke = 2000,
-    traceLastPerformed = 0,
-    traceHits = 0,
-    traceMisses = 0,
-    tracePurged = 0;
-
-const actionTempTrace = () => {
-
-    const now = _now(),
-        choke = now - tempTraceChoke;
-
-    if (traceLastPerformed < choke) {
-
-        console.log(`workstore size: ${_keys(workstore).length}
-    traceHits: ${traceHits}
-    traceMisses: ${traceMisses}
-    tracePurged: ${tracePurged}`);
-
-        traceHits = 0,
-        traceMisses = 0,
-        tracePurged = 0;
-
-        traceLastPerformed = now
-    }
-};
-
 const purgeWorkstore = () => {
 
     const now = _now(),
@@ -161,31 +118,24 @@ const purgeWorkstore = () => {
         const workstoreKeys = _keys(workstore),
             workstoreChoke = now - lifetimeLength;
 
-        tracePurged++;
-
         for (let i = 0, iz = workstoreKeys.length, identifier, item; i < iz; i++) {
 
             identifier = workstoreKeys[i];
             item = workstore[identifier];
 
-            if (item.stamp < workstoreChoke) {
-
-                delete workstore[identifier];
-            }
+            if (item.stamp < workstoreChoke) delete workstore[identifier];
         }
+
         purgeLastPerformed = now;
     }
 };
+
 
 // `core-workstore-hygeine` animation object runs every RAF cycle
 makeAnimation({
 
     name: 'SC-core-workstore-hygiene',
     order: 998,
-    // fn: () => purgeWorkstore(),
 
-    fn: () => {
-        actionTempTrace();
-        purgeWorkstore();
-    },
+    fn: () => purgeWorkstore(),
 });

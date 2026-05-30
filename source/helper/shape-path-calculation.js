@@ -47,7 +47,6 @@ const cleanResultObject = function (res) {
 
 
 // #### Export function
-// export const calculatePath = (d, scale, start, useAsPath, precision, result, myentity) => {
 export const calculatePath = (myEntity) => {
 
     const {
@@ -701,7 +700,6 @@ const rotateVector = function (v, angle) {
 // #### Helper functions
 
 // `getShapeUnitMetaData`
-// const getShapeUnitMetaData = function (species, precision, args) {
 const getShapeUnitMetaData = function (species, precision, unit) {
 
     let xPts = [],
@@ -905,7 +903,6 @@ const arcToCubicBeziers = function (x1, y1, rx, ry, phi, fa, fs, x2, y2) {
         delta = dtheta / segs,
         t = (4 / 3) * _tan(delta / 4);
 
-    // const beziers = [];
     const beziers = requestArray();
 
     let i, th1, th2,

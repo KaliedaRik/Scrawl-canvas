@@ -56,11 +56,8 @@ export const releaseArray = function (...args) {
             genericArrayPool.push(a);
         }
     });
-    if (genericArrayPool.length > 256) {
 
-        console.log('purging genericArrayPool', genericArrayPool.length);
-        genericArrayPool.length = 64;
-    }
+    if (genericArrayPool.length > 256) genericArrayPool.length = 64;
 };
 
 
@@ -91,26 +88,12 @@ const releaseHarness = (...harnesses) => {
 
         harnessPool.push(harness);
     });
-    if (harnessPool.length > 256) {
 
-        console.log('purging harnessPool', harnessPool.length);
-        harnessPool.length = 64;
-    }
+    if (harnessPool.length > 256) harnessPool.length = 64;
 };
 
-// Temporary during dev work
-let tempTraceChoke = 2000,
-    traceLastPerformed = 0,
-    ui8created = 0,
-    ui8served = 0,
-    ui8stored = 0,
-    i32created = 0,
-    i32served = 0,
-    f32created = 0,
-    f32served = 0,
-    f64created = 0,
-    f64served = 0;
 
+// Uint8ClampedArray pool
 const ui8Pool = [];
 
 export const requestUI8Array = (length = 0, fillValue = false) => {
@@ -122,22 +105,12 @@ export const requestUI8Array = (length = 0, fillValue = false) => {
         if (length === harness.length) {
 
             const array = harness.array;
-
             ui8Pool.splice(i, 1);
-
             releaseHarness(harness);
-
-// Temporary during dev work
-            ui8served++;
-    // console.log(`serving ui8Array`, length)
 
             return (_isFinite(fillValue)) ? array.fill(fillValue) : array;
         }
     }
-
-// Temporary during dev work
-    ui8created++;
-    // console.log(`creating ui8Array`, length)
 
     const array = new Uint8ClampedArray(length);
 
@@ -157,12 +130,12 @@ export const releaseUI8Array = (...args) => {
             harness.stamp = _now();
 
             ui8Pool.push(harness);
-
-            ui8stored++;
         }
     });
 };
 
+
+// Int32Array pool
 const int32Pool = [];
 
 export const requestInt32Array = (length = 0, fillValue = false) => {
@@ -174,20 +147,12 @@ export const requestInt32Array = (length = 0, fillValue = false) => {
         if (length === harness.length) {
 
             const array = harness.array;
-
             int32Pool.splice(i, 1);
-
             releaseHarness(harness);
-
-// Temporary during dev work
-            i32served++;
 
             return (_isFinite(fillValue)) ? array.fill(fillValue) : array;
         }
     }
-
-// Temporary during dev work
-    i32created++;
 
     const array = new Int32Array(length);
 
@@ -211,6 +176,8 @@ export const releaseInt32Array = (...args) => {
     });
 };
 
+
+// Float32Array pool
 const float32Pool = [];
 
 export const requestFloat32Array = (length = 0, fillValue = false) => {
@@ -222,20 +189,12 @@ export const requestFloat32Array = (length = 0, fillValue = false) => {
         if (length === harness.length) {
 
             const array = harness.array;
-
             float32Pool.splice(i, 1);
-
             releaseHarness(harness);
-
-// Temporary during dev work
-            f32served++;
 
             return (_isFinite(fillValue)) ? array.fill(fillValue) : array;
         }
     }
-
-// Temporary during dev work
-    f32created++;
 
     const array = new Float32Array(length);
 
@@ -259,6 +218,8 @@ export const releaseFloat32Array = (...args) => {
     });
 };
 
+
+// Float64Array pool
 const float64Pool = [];
 
 export const requestFloat64Array = (length = 0, fillValue = false) => {
@@ -270,20 +231,12 @@ export const requestFloat64Array = (length = 0, fillValue = false) => {
         if (length === harness.length) {
 
             const array = harness.array;
-
             float64Pool.splice(i, 1);
-
             releaseHarness(harness);
-
-// Temporary during dev work
-            f64served++;
 
             return (_isFinite(fillValue)) ? array.fill(fillValue) : array;
         }
     }
-
-// Temporary during dev work
-    f64created++;
 
     const array = new Float64Array(length);
 
@@ -307,6 +260,7 @@ export const releaseFloat64Array = (...args) => {
     });
 };
 
+
 // Typed array pools hygeine
 let purgeChoke = 500;
 let purgeLastPerformed = 0;
@@ -329,13 +283,8 @@ const purgeArrayPools = () => {
 
         purgeLastPerformed = now;
 
-// Temporary during dev work
-        const traceChoke = now - tempTraceChoke,
-            traceFlag = traceLastPerformed < traceChoke;
-
-        if (traceFlag) traceLastPerformed = now;
-
         let i, iz, item;
+
 
         // float32
         purgeItems.length = 0;
@@ -344,7 +293,6 @@ const purgeArrayPools = () => {
         for (i = 0, iz = float32Pool.length; i < iz; i++) {
 
             item = float32Pool[i];
-
             if (item.stamp < choke) purgeItems.push(item);
             else keepItems.push(item);
         }
@@ -354,14 +302,6 @@ const purgeArrayPools = () => {
 
         releaseHarness(...purgeItems);
 
-// Temporary during dev work
-        if (traceFlag) {
-
-            console.log(`f32 hygiene - created: ${f32created}, served ${f32served}, purgeItems ${purgeItems.length}, keepItems ${keepItems.length}`);
-
-            f32created = 0;
-            f32served = 0;
-        }
 
         // float64
         purgeItems.length = 0;
@@ -370,7 +310,6 @@ const purgeArrayPools = () => {
         for (i = 0, iz = float64Pool.length; i < iz; i++) {
 
             item = float64Pool[i];
-
             if (item.stamp < choke) purgeItems.push(item);
             else keepItems.push(item);
         }
@@ -380,14 +319,6 @@ const purgeArrayPools = () => {
 
         releaseHarness(...purgeItems);
 
-// Temporary during dev work
-        if (traceFlag) {
-
-            console.log(`f64 hygiene - created: ${f64created}, served ${f64served}, purgeItems ${purgeItems.length}, keepItems ${keepItems.length}`);
-
-            f64created = 0;
-            f64served = 0;
-        }
 
         // int32
         purgeItems.length = 0;
@@ -396,7 +327,6 @@ const purgeArrayPools = () => {
         for (i = 0, iz = int32Pool.length; i < iz; i++) {
 
             item = int32Pool[i];
-
             if (item.stamp < choke) purgeItems.push(item);
             else keepItems.push(item);
         }
@@ -406,14 +336,6 @@ const purgeArrayPools = () => {
 
         releaseHarness(...purgeItems);
 
-// Temporary during dev work
-        if (traceFlag) {
-
-            console.log(`i32 hygiene - created: ${i32created}, served ${i32served}, purgeItems ${purgeItems.length}, keepItems ${keepItems.length}`);
-
-            i32created = 0;
-            i32served = 0;
-        }
 
         // ui8
         purgeItems.length = 0;
@@ -422,7 +344,6 @@ const purgeArrayPools = () => {
         for (i = 0, iz = ui8Pool.length; i < iz; i++) {
 
             item = ui8Pool[i];
-
             if (item.stamp < choke) purgeItems.push(item);
             else keepItems.push(item);
         }
@@ -431,20 +352,10 @@ const purgeArrayPools = () => {
         ui8Pool.push(...keepItems);
 
         releaseHarness(...purgeItems);
-
-// Temporary during dev work
-        if (traceFlag) {
-
-            console.log(`ui8 hygiene - created: ${ui8created}, stored ${ui8stored}, served ${ui8served}, purgeItems ${purgeItems.length}, keepItems ${keepItems.length}`);
-
-            ui8created = 0;
-            ui8served = 0;
-            ui8stored = 0;
-        }
     }
 };
 
-// `core-workstore-hygeine` animation object runs every RAF cycle
+// `core-array-pools-hygiene` animation object runs every RAF cycle
 setTimeout(() => {
 
     makeAnimation({
