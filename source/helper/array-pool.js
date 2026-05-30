@@ -307,7 +307,6 @@ export const releaseFloat64Array = (...args) => {
     });
 };
 
-
 // Typed array pools hygeine
 let purgeChoke = 500;
 let purgeLastPerformed = 0;
