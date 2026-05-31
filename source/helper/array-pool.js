@@ -219,48 +219,6 @@ export const releaseFloat32Array = (...args) => {
 };
 
 
-// Float64Array pool
-// const float64Pool = [];
-
-// export const requestFloat64Array = (length = 0, fillValue = false) => {
-
-//     for (let i = 0, iz = float64Pool.length; i < iz; i++) {
-
-//         const harness = float64Pool[i];
-
-//         if (length === harness.length) {
-
-//             const array = harness.array;
-//             float64Pool.splice(i, 1);
-//             releaseHarness(harness);
-
-//             return (_isFinite(fillValue)) ? array.fill(fillValue) : array;
-//         }
-//     }
-
-//     const array = new Float64Array(length);
-
-//     return (_isFinite(fillValue)) ? array.fill(fillValue) : array;
-// };
-
-// export const releaseFloat64Array = (...args) => {
-
-//     args.forEach(a => {
-
-//         if (a && a.constructor === Float64Array) {
-
-//             const harness = requestHarness();
-
-//             harness.length = a.length;
-//             harness.array = a;
-//             harness.stamp = _now();
-
-//             float64Pool.push(harness);
-//         }
-//     });
-// };
-
-
 // Typed array pools hygeine
 const purgeChoke = 500;
 let purgeLastPerformed = 0;
@@ -295,23 +253,6 @@ const purgeArrayPools = () => {
         float32Pool.push(...keepItems);
 
         releaseHarness(...purgeItems);
-
-
-        // float64
-        // purgeItems.length = 0;
-        // keepItems.length = 0;
-
-        // for (i = 0, iz = float64Pool.length; i < iz; i++) {
-
-        //     item = float64Pool[i];
-        //     if (item.stamp < choke) purgeItems.push(item);
-        //     else keepItems.push(item);
-        // }
-
-        // float64Pool.length = 0;
-        // float64Pool.push(...keepItems);
-
-        // releaseHarness(...purgeItems);
 
 
         // int32
