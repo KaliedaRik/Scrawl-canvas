@@ -12,7 +12,7 @@ import { addStrings, isa_boolean, mergeOver, pushUnique, removeItem, Ωempty } f
 import { makeCoordinate } from '../untracked-factory/coordinate.js';
 
 // Shared constants
-import { _values, BEZIER, CONTROL, COORD, END, END_CONTROL, LINEAR, MOUSE, PARTICLE, PATH, PIVOT, QUADRATIC, START_CONTROL, T_BEZIER, T_ENHANCED_LABEL, T_LINE, T_PARTICLE, T_QUADRATIC, ZERO_STR } from '../helper/shared-vars.js';
+import { _values, CONTROL, COORD, END, END_CONTROL, MOUSE, PARTICLE, PATH, PIVOT, START_CONTROL, T_BEZIER, T_ENHANCED_LABEL, T_LINE, T_PARTICLE, T_QUADRATIC, ZERO_STR } from '../helper/shared-vars.js';
 
 // Local constants
 const END_PARTICLE = 'endParticle',
@@ -308,53 +308,6 @@ P.factoryKill = function () {
                 }
             }
         }
-    };
-
-    // `buildPathPositionObject` - internal function called by `getPathPositionData`
-    P.buildPathPositionObject = function (unit, myLen) {
-
-        if (unit) {
-
-            const [unitSpecies, ...vars] = unit;
-
-            let myPoint, angle;
-
-            switch (unitSpecies) {
-
-                case LINEAR :
-                    myPoint = this.positionPointOnPath(this.getLinearXY(myLen, ...vars));
-                    angle = this.getLinearAngle(myLen, ...vars);
-                    break;
-
-                case QUADRATIC :
-                    myPoint = this.positionPointOnPath(this.getQuadraticXY(myLen, ...vars));
-                    angle = this.getQuadraticAngle(myLen, ...vars);
-                    break;
-
-                case BEZIER :
-                    myPoint = this.positionPointOnPath(this.getBezierXY(myLen, ...vars));
-                    angle = this.getBezierAngle(myLen, ...vars);
-                    break;
-            }
-
-            let flipAngle = 0
-            if (this.flipReverse) flipAngle++;
-            if (this.flipUpend) flipAngle++;
-
-            if (flipAngle === 1) angle = -angle;
-
-            angle += this.roll;
-
-            const lineOffset = this.controlledLineOffset;
-
-            myPoint.x += lineOffset[0];
-            myPoint.y += lineOffset[1];
-
-            myPoint.angle = angle;
-
-            return myPoint;
-        }
-        return false;
     };
 
 

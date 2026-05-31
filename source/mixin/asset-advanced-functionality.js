@@ -10,7 +10,7 @@ import { makeGradient } from '../factory/gradient.js';
 import { releaseCell, requestCell } from '../untracked-factory/cell-fragment.js';
 
 // Shared constants
-import { _floor, _now, _2D, CANVAS, PC100 } from '../helper/shared-vars.js';
+import { _floor, _2D, CANVAS, PC100 } from '../helper/shared-vars.js';
 
 // Local constants (none defined)
 
@@ -22,9 +22,8 @@ export default function (P = Ωempty) {
 // #### Shared attributes
     const defaultAttributes = {
 
-// __choke__ - used to limit the number of times the assets that use this mixin repaint their display canvases.
-// + For example, the `asset-management/reaction-diffusion-asset.js` asset may run multiple iterations of its calculations in batches; we need to make sure the canvas repainting functionality does not trigger after each separate iteration.
-        choke: 15,
+// __generateVisualOutput__ - when set to false, suppresses the generation of visual output
+        generateVisualOutput: true,
 
 // __paletteStart__, __paletteEnd__ _pseudo-attributes_ - We don't need to use the entire palette when building a gradient; we can restrict the palette using these start and end attributes.
 
@@ -142,14 +141,7 @@ export default function (P = Ωempty) {
         this.gradient = makeGradient({
             name: `${name}-gradient`,
             endX: PC100,
-            delta: {
-                paletteStart: 0,
-                paletteEnd: 0,
-            },
-            cyclePalette: false,
         });
-
-        this.gradientLastUpdated = 0;
 
         return this;
     };
@@ -200,13 +192,19 @@ export default function (P = Ωempty) {
     // `paintCanvas` - internal function called by the `cleanOutput` function
     P.paintCanvas = function () {
 
+        if (!this.generateVisualOutput) {
+
+            this.dirtyOutput = false;
+            return;
+        }
+
         if (this.checkOutputValuesExist()) {
 
             if (this.dirtyOutput) {
 
                 this.dirtyOutput = false;
 
-                const {element, engine, width, height, gradient, choke, gradientLastUpdated } = this;
+                const { element, engine, width, height, gradient } = this;
 
                 // Update the display element's dimensions - this will also clear the canvas display
                 element.width = width;
@@ -216,15 +214,6 @@ export default function (P = Ωempty) {
                 const img = engine.getImageData(0, 0, width, height),
                     iData = img.data,
                     len = width * height;
-
-                const now = _now();
-
-                if (gradientLastUpdated + choke < now) {
-
-                    gradient.updateByDelta();
-
-                    this.gradientLastUpdated = now;
-                }
 
                 // We use a pool cell to generate the current gradient. Note that gradients can be manipulated and animated in various ways
                 const myCell = requestCell();

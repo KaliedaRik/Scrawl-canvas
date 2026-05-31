@@ -909,7 +909,6 @@ export default function (P = Ωempty) {
 // `buildStyle` - Just in case something went wrong with loading other styles Factory modules, which must overwrite this function, we can return transparent color here
     P.buildStyle = function () {
 
-console.log('styles mixin P.buildStyle')
         return BLANK;
     };
 

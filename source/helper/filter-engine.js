@@ -13,7 +13,7 @@ import { getOrAddWorkstoreItem, getWorkstoreItem, setAndReturnWorkstoreItem, set
 
 import { colorEngine } from './color-engine.js';
 
-import { releaseArray, requestArray } from './array-pool.js';
+import { releaseArray, requestArray, requestUI8Array, releaseUI8Array } from './array-pool.js';
 
 import { makeAnimation } from '../factory/animation.js';
 
@@ -122,8 +122,11 @@ P.action = function (packet) {
 
     let i, iz, actData, a;
 
-    const itemInWorkstore = getWorkstoreItem(identifier);
-    if (itemInWorkstore) return itemInWorkstore;
+    if (identifier) {
+
+        const itemInWorkstore = getWorkstoreItem(identifier);
+        if (itemInWorkstore) return itemInWorkstore;
+    }
 
     actions.length = 0;
 
@@ -146,9 +149,17 @@ P.action = function (packet) {
             if (a) a.call(this, actData);
         }
 
-        if (identifier) setWorkstoreItem(identifier, cache.work);
+        const result = new ImageData(
+            new Uint8ClampedArray(cache.work.data),
+            cache.work.width,
+            cache.work.height
+        );
 
-        return cache.work;
+        releaseCacheImageData();
+
+        if (identifier) setWorkstoreItem(identifier, result);
+
+        return result;
     }
     return image;
 };
@@ -161,14 +172,37 @@ P.unknit = function (image) {
 
     cache = {};
 
-    const { width, height, data } = image;
+    const { width, height, data } = image,
+        sourceArray = requestUI8Array(data.length),
+        workArray = requestUI8Array(data.length);
 
-    cache.source = new ImageData(new Uint8ClampedArray(data), width, height);
-    cache.work = new ImageData(new Uint8ClampedArray(data), width, height);
+    sourceArray.set(data);
+    workArray.set(data);
+
+    cache.source = new ImageData(sourceArray, width, height);
+    cache.work = new ImageData(workArray, width, height);
 };
 
-
 // ### Functions invoked by a range of different action functions
+
+const releaseCacheImageData = function () {
+
+    if (!cache) return;
+
+    Object.keys(cache).forEach(key => {
+
+        const item = cache[key];
+
+        if (item) {
+
+            if (item.constructor === ImageData && item.data) releaseUI8Array(item.data);
+            else if (item.constructor === Uint8ClampedArray) releaseUI8Array(item);
+        }
+    });
+
+    cache = null;
+};
+
 const getRandomNumbers = function (items = {}) {
 
     const {
@@ -178,7 +212,7 @@ const getRandomNumbers = function (items = {}) {
         type = RANDOM,
     } = items;
 
-    const name = `random-${seed}-${length}-${type}`,
+    const name = `random-${seed}-${length}-${imgWidth}-${type}`,
         itemInWorkstore = getWorkstoreItem(name);
 
     if (itemInWorkstore) return itemInWorkstore;
@@ -293,8 +327,8 @@ const getInputAndOutputLines = function (requirements) {
     const getAlphaData = function (image) {
 
         const { width, height, data:iData } = image,
-            aImg = new ImageData(width, height),
-            aData = aImg.data;
+            aData = requestUI8Array(width * height * 4, 0),
+            aImg = new ImageData(aData, width, height);
 
         for (let i = 3, len = iData.length; i < len; i += 4) {
 
@@ -331,7 +365,11 @@ const getInputAndOutputLines = function (requirements) {
 
     if (!requirements.lineOut || !cache[requirements.lineOut]) {
 
-        lineOut = new ImageData(lineIn.width, lineIn.height);
+        lineOut = new ImageData(
+            requestUI8Array(lineIn.width * lineIn.height * 4, 0),
+            lineIn.width,
+            lineIn.height
+        );
 
         if (requirements.lineOut) cache[requirements.lineOut] = lineOut;
     }
@@ -341,17 +379,22 @@ const getInputAndOutputLines = function (requirements) {
 };
 
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
-const processResults = function (store, incoming, ratio) {
+const processResults = function (store, incoming, ratio, releaseIncoming = false) {
 
     const sData = store.data,
         iData = incoming.data;
 
     // Clamp ratio defensively
-    if (ratio <= 0) return;
+    if (ratio <= 0) {
+
+        if (releaseIncoming) releaseUI8Array(iData);
+        return;
+    }
 
     if (ratio >= 1) {
 
         sData.set(iData);
+        if (releaseIncoming) releaseUI8Array(iData);
         return;
     }
 
@@ -393,6 +436,8 @@ const processResults = function (store, incoming, ratio) {
         // Repack lanes back to RGBA
         s32[p] = ((o_hi << 8) & 0xFF00FF00) | o_lo;
     }
+
+    if (releaseIncoming) releaseUI8Array(iData);
 };
 
 const transferDataUnchanged = function (oData, iData, len) {
@@ -534,7 +579,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __alpha-to-luminance__ - Sets the OKLAB luminance channel to the value of the alpha channel, then sets the alpha channel to opaque and the A and B channels to 0 (gray)
@@ -601,7 +646,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __area-alpha__ - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
@@ -706,7 +751,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __average-channels__ - Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0.
@@ -781,7 +826,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations).
@@ -803,6 +848,10 @@ P.theBigActionsObject = {
         if (!mix) {
 
             transferDataUnchanged(output.data, input.data, input.data.length);
+
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity, true);
+
             return;
         }
 
@@ -832,7 +881,7 @@ P.theBigActionsObject = {
         if (!hasOverlap) {
 
             if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
+            else processResults(cache.work, output, opacity, true);
             return;
         }
 
@@ -1116,7 +1165,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __blur__ - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect.
@@ -1262,7 +1311,8 @@ P.theBigActionsObject = {
 
             oData.set(iData);
 
-            const hold = new Uint8ClampedArray(iData);
+            const hold = requestUI8Array(iData.length);
+            hold.set(iData);
 
             let pass, counter, rIdx, gIdx, bIdx, aIdx, startX, endX, width, height, sx, ex, y, rowBase, step4, sumR, sumG, sumB, sumA, countRGB, totalCount, idx, c, aVal, startY, endY, sy, ey, x, stepRow4, pr, pg, pb, pa, base, pos, count;
 
@@ -1546,10 +1596,11 @@ P.theBigActionsObject = {
                     if (pass < passesVertical - 1) hold.set(oData);
                 }
             }
+            releaseUI8Array(hold);
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __channels-to-alpha__ - Calculates an average value from each pixel's included channels and applies that value to the alpha channel.
@@ -1620,7 +1671,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __chroma__ - Using an array of 'range' arrays, determine whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. Each 'range' array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values.
@@ -1875,7 +1926,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __clamp-channels__ - Clamp each color channel to a range set by lowColor and highColor values
@@ -1979,7 +2030,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __colors-to-alpha__ - Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the "red", "green" and "blue" arguments. The sensitivity of the effect can be manipulated using the "transparentAt" and "opaqueAt" values, both of which lie in the range 0-1.
@@ -2084,7 +2135,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __compose__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the "compose" argument; permitted values are: 'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', 'xor', or 'lighter'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
@@ -2103,6 +2154,10 @@ P.theBigActionsObject = {
         if (!mix) {
 
             transferDataUnchanged(output.data, input.data, input.data.length);
+
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity, true);
+
             return;
         }
 
@@ -2136,7 +2191,7 @@ P.theBigActionsObject = {
                 o32.set(i32);
 
                 if (lineOut) processResults(output, input, 1 - opacity);
-                else processResults(cache.work, output, opacity);
+                else processResults(cache.work, output, opacity, true);
 
                 return;
 
@@ -2156,7 +2211,7 @@ P.theBigActionsObject = {
         if (!hasOverlap || compose === CLEAR) {
 
             if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
+            else processResults(cache.work, output, opacity, true);
             return;
         }
 
@@ -2313,7 +2368,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values.
@@ -2624,7 +2679,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __displace__ - Shift pixels around the image, based on the values supplied in a displacement image
@@ -2635,6 +2690,10 @@ P.theBigActionsObject = {
         if (!mix) {
 
             transferDataUnchanged(output.data, input.data, input.data.length);
+
+            if (lineOut) processResults(output, input, 1 - opacity);
+            else processResults(cache.work, output, opacity, true);
+
             return;
         }
 
@@ -2757,7 +2816,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __emboss__ - applies a directional 3×3 convolution to turn local color differences into a raised or recessed relief effect, with optional post-processing to keep or highlight only the changed areas.
@@ -2914,7 +2973,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __flood__ - Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments
@@ -2961,7 +3020,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __gaussian-blur__ - adapted and evolved from code in this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
@@ -3577,7 +3636,7 @@ P.theBigActionsObject = {
                 }
             }
             if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
+            else processResults(cache.work, output, opacity, true);
 
             return;
         }
@@ -3650,7 +3709,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __glitch__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
@@ -3849,7 +3908,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __grayscale__ - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.
@@ -3886,7 +3945,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __invert-channels__ - For each pixel, subtracts its current channel values - when included - from 255.
@@ -3922,7 +3981,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __lock-channels-to-levels__ - Produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value.
@@ -4052,7 +4111,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __luminance-to-alpha__ - sets the OKLAB alpha channel to the value of the luminance channel, then sets the luminance, A and B channels to 0 (black).
@@ -4213,7 +4272,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __map-to-gradient__ - maps the colors in the supplied (complex) gradient to a grayscaled input.
@@ -4325,7 +4384,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __matrix__ - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation.
@@ -4456,7 +4515,7 @@ P.theBigActionsObject = {
             out32.set(src32);
 
             if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
+            else processResults(cache.work, output, opacity, true);
 
             releaseArray(nzIdx, nzW);
 
@@ -4589,7 +4648,7 @@ P.theBigActionsObject = {
         releaseArray(nzIdx, nzW);
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // modify-ok-channels__ - Adds a value to each of the OKLAB channels. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow).
@@ -4651,7 +4710,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __modulate-channels__ - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at that pixel's grayscale values. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value.
@@ -4753,7 +4812,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __modulate-ok-channels__ - Multiplies each of the OKLAB channels by a given amount. Note that: the `L` (luminance) channel controls brightness, and will be a value between `0.0` (black) and `1.0` (white); the `A` (red-green) channel controls red-green hues - values range from `-0.4` (full green) to `+0.4` (full red); the `B` (yellow-blue) channel controls yellow-blue hues - values range from `-0.4` (full blue) to `+0.4` (full yellow).
@@ -4817,7 +4876,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __negative__ - for each pixel: convert to OKLAB; negate A and B; invert L; convert back to RGB
@@ -4869,7 +4928,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __newsprint__ - Attempts to simulate a black-white dither effect similar to newsprint
@@ -4955,7 +5014,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __offset__ - Offset the input image in the output image.
@@ -5107,7 +5166,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __pixelate__ - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the "tileWidth", "tileHeight", "offsetX" and "offsetY" arguments.
@@ -5232,7 +5291,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __process-image__ - expects preprocessor to have stored an ImageData in the workstore under `identifier`.
@@ -5246,12 +5305,17 @@ P.theBigActionsObject = {
             height: hostH,
         } = cache.source;
 
-        const specifiedIdentifier = `${identifier}_${hostW}_${hostH}`;
+        const specifiedIdentifier = `${identifier}_${hostW}_${hostH}`,
+            item = getWorkstoreItem(specifiedIdentifier),
+            data = requestUI8Array(hostW * hostH * 4, 0),
+            img = new ImageData(data, hostW, hostH);
 
-        const item = getWorkstoreItem(specifiedIdentifier);
+        if (item && item.width === hostW && item.height === hostH) {
 
-        if (item && item.width === hostW && item.height === hostH) cache[lineOut] = item;
-        else cache[lineOut] = new ImageData(hostW, hostH);
+            data.set(item.data);
+        }
+
+        cache[lineOut] = img;
     },
 
 // __random-noise__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
@@ -5429,7 +5493,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __reducePalette__ - Reduce the number of colors in its palette. The `palette` attribute can be: a Number (for the commonest colors);  an Array of CSS color Strings to use as the palette; or  the String name of a pre-defined palette - default: 'black-white'
@@ -5591,7 +5655,7 @@ P.theBigActionsObject = {
             setLastUsedReducePalette(palette);
 
             if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
+            else processResults(cache.work, output, opacity, true);
 
             return;
         }
@@ -5671,7 +5735,7 @@ P.theBigActionsObject = {
             setLastUsedReducePalette(palette);
 
             if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
+            else processResults(cache.work, output, opacity, true);
 
             return;
         }
@@ -5809,7 +5873,7 @@ P.theBigActionsObject = {
 
         // Boilerplate post-processing
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __rotate-hue__ - for each pixel, converts the pixel to OKLCH, rotates the hue value by the given amount and converts back to RGB
@@ -5880,7 +5944,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __set-channel-to-level__ - Sets the value of each pixel's included channel to the value supplied in the "level" argument.
@@ -5941,7 +6005,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __step-channels__ - Takes three divisor values - "red", "green", "blue". For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of '50' applied to a channel value of '120' will give a result of '100'. The output is a form of posterization.
@@ -6047,7 +6111,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __swirl__ - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
@@ -6262,7 +6326,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __threshold__ - performs a binary check on each pixel and, according to the result, assigns the pixel to a defined high or low color
@@ -6356,7 +6420,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __tiles__ - Cover the image with tiles whose color matches the average channel values for the pixels included in each tile. Has a similarity to the `pixelate` filter, but uses a set of coordinate points to generate the tiles which results in a Delauney-like output
@@ -6815,8 +6879,10 @@ P.theBigActionsObject = {
         if (!nTiles) {
 
             transferDataUnchanged(oData, iData, len);
+
             if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
+            else processResults(cache.work, output, opacity, true);
+
             return;
         }
 
@@ -6966,7 +7032,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __tint-channels__ - Has similarities to the SVG &lt;feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The 'sepia' convenience filter presets these values to create a sepia effect.
@@ -7033,7 +7099,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __unsharp__ - OKLab L-only sharpen with Sobel edge mask
@@ -7278,8 +7344,10 @@ P.theBigActionsObject = {
         if (strength === 0 || radius <= 0) {
 
             transferDataUnchanged(oData, iData, len);
+
             if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
+            else processResults(cache.work, output, opacity, true);
+
             return;
         }
 
@@ -7386,7 +7454,7 @@ P.theBigActionsObject = {
         }
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 
@@ -7408,7 +7476,7 @@ P.theBigActionsObject = {
         transferDataUnchanged(oData, iData, len);
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __vary-channels-by-weights__ - manipulate colors using a set of channel curve arrays.
@@ -7477,7 +7545,7 @@ P.theBigActionsObject = {
             }
         }
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 
 // __ok-perceptual-curves__ - manipulate OK* channels using per-bucket offsets. Curves are supplied as delta arrays:
@@ -7544,7 +7612,7 @@ P.theBigActionsObject = {
         transferDataUnchanged(oData, iData, len);
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
 
         return;
     }
@@ -7691,7 +7759,7 @@ P.theBigActionsObject = {
     }
 
     if (lineOut) processResults(output, input, 1 - opacity);
-    else processResults(cache.work, output, opacity);
+    else processResults(cache.work, output, opacity, true);
 },
 
 // __zoom-blur__ - blur with radial easing & inner/outer radius
@@ -7879,7 +7947,7 @@ P.theBigActionsObject = {
             out32.set(src32);
 
             if (lineOut) processResults(output, input, 1 - opacity);
-            else processResults(cache.work, output, opacity);
+            else processResults(cache.work, output, opacity, true);
             return;
         }
 
@@ -8486,7 +8554,7 @@ P.theBigActionsObject = {
         if (premultiply) unpremultiply_u32(out32, pixels);
 
         if (lineOut) processResults(output, input, 1 - opacity);
-        else processResults(cache.work, output, opacity);
+        else processResults(cache.work, output, opacity, true);
     },
 };
 

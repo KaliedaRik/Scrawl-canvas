@@ -20,7 +20,8 @@ const T_GRADIENT_ENGINE = 'GradientEngine',
 
 // Build out the local noise asset
 const noiseAsset = makeNoiseAsset({
-    name: 'SC-gradient-engine-noise-asset',
+    name: 'SC-core-gradient-engine-noise-asset',
+    generateVisualOutput: false,
 });
 
 const noiseDefs = noiseAsset.stateAttributeDefaults;
@@ -801,13 +802,12 @@ const applyCellLockedGradient = function (result, imageData, workData, gradientD
         tPix = new Uint32Array(tData.buffer, tData.byteOffset, tData.byteLength >>> 2);
 
     let rows = 0,
-        index, slice;
+        index;
 
     for (; rows < resHeight; rows++) {
 
         index = ((minY + rows) * width) + minX;
-        slice = wPix.slice(index, index + resWidth);
-        tPix.set(slice, rows * resWidth);
+        tPix.set(wPix.subarray(index, index + resWidth), rows * resWidth);
     }
 
     result.x = minX;
@@ -839,11 +839,13 @@ const updateOperationsCache = (operations = []) => {
 
     cleanOperationsCache();
 
-    if (operations.length) {
+    for (let i = 0, iz = operations.length, op; i < iz; i++) {
 
-        operationsCache[BEFORE_SPREAD].push(...operations.filter(op => op.stage === BEFORE_SPREAD));
-        operationsCache[AFTER_SPREAD].push(...operations.filter(op => op.stage === AFTER_SPREAD));
-        operationsCache[ON_COORDINATES].push(...operations.filter(op => op.stage === ON_COORDINATES));
+        op = operations[i];
+
+        if (op.stage === BEFORE_SPREAD) operationsCache[BEFORE_SPREAD].push(op);
+        else if (op.stage === AFTER_SPREAD) operationsCache[AFTER_SPREAD].push(op);
+        else if (op.stage === ON_COORDINATES) operationsCache[ON_COORDINATES].push(op);
     }
 };
 

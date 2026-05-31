@@ -19,6 +19,7 @@
 import { constructors } from '../core/library.js';
 import { seededRandomNumberGenerator } from '../helper/random-seed.js';
 import { getWorkstoreItem, setWorkstoreItem } from '../helper/workstore.js';
+import { releaseFloat32Array, requestFloat32Array } from '../helper/array-pool.js';
 
 import { doCreate, easeEngines, interpolate, mergeOver, λfirstArg, λnull, λcloneError, Ωempty } from '../helper/utilities.js';
 
@@ -58,7 +59,7 @@ const NoiseAsset = function (items = Ωempty) {
     this.perm = [];
     this.permMod8 = [];
     this.values = [];
-    this.grad = [];
+    this.grad = null;
 
     this.noiseValues = null;
     this.rawNoiseValues = null;
@@ -185,7 +186,10 @@ P.clone = λcloneError;
 
 
 // #### Kill management
-// No additional kill functionality required
+P.factoryKill = function () {
+
+    releaseFloat32Array(this.rawNoiseValues, this.noiseValues, this.grad);
+};
 
 
 // #### Get, Set, deltaSet
@@ -454,8 +458,10 @@ P.cleanNoise = function () {
 
                 noiseEngine.init.call(this);
 
+                releaseFloat32Array(this.rawNoiseValues);
+
                 const getNoiseValue = noiseEngine.getNoiseValue.bind(this),
-                    rawNoiseValues = new Float32Array(width * height);
+                    rawNoiseValues = requestFloat32Array(width * height);
 
                 let max = -1000,
                     min = 1000;
@@ -527,8 +533,10 @@ P.cleanNoise = function () {
 
                 this.dirtyNoiseOutput = false;
 
+                releaseFloat32Array(this.noiseValues);
+
                 const rawNoiseValues = this.rawNoiseValues,
-                    noiseValues = new Float32Array(width * height),
+                    noiseValues = requestFloat32Array(width * height),
                     min = this.rawNoiseMin,
                     noiseSpan = this.rawNoiseMax - min;
 
@@ -593,26 +601,35 @@ P.noiseEngines = {
 
         init: function () {
 
-            const {grad, size, rndEngine} = this;
+            const { size, rndEngine } = this;
 
-            let dist;
+            releaseFloat32Array(this.grad);
 
-            grad.length = 0;
+            const grad = requestFloat32Array(size * 2);
 
-            for(let i = 0; i < size; i++) {
+            let x, y, dist, index;
 
-                grad[i] = [(rndEngine.random() * 2) - 1, (rndEngine.random() * 2) - 1];
-                dist = _sqrt(grad[i][0] *  grad[i][0] + grad[i][1] * grad[i][1]);
-                grad[i][0] /= dist;
-                grad[i][1] /= dist;
+             for (let i = 0; i < size; i++) {
+
+                index = i * 2;
+
+                x = (rndEngine.random() * 2) - 1;
+                y = (rndEngine.random() * 2) - 1;
+
+                dist = _sqrt((x * x) + (y * y));
+
+                grad[index] = x / dist;
+                grad[index + 1] = y / dist;
             }
+
+            this.grad = grad;
         },
 
         getNoiseValue: function (x, y) {
 
             const {size, perm, grad, smoothing} = this;
 
-            let u, v;
+            let u, v, g;
 
             const floorX = _floor(x),
                 floorY = _floor(y),
@@ -636,12 +653,20 @@ P.noiseEngines = {
             const sx = smoothing(rx0),
                 sy = smoothing(ry0);
 
-            u = rx0 * grad[b00][0] + ry0 * grad[b00][1];
-            v = rx1 * grad[b10][0] + ry0 * grad[b10][1];
+            g = b00 * 2;
+            u = (rx0 * grad[g]) + (ry0 * grad[g + 1]);
+
+            g = b10 * 2;
+            v = (rx1 * grad[g]) + (ry0 * grad[g + 1]);
+
             const a = interpolate(sx, u, v);
 
-            u = rx0 * grad[b01][0] + ry1 * grad[b01][1];
-            v = rx1 * grad[b11][0] + ry1 * grad[b11][1];
+            g = b01 * 2;
+            u = (rx0 * grad[g]) + (ry1 * grad[g + 1]);
+
+            g = b11 * 2;
+            v = (rx1 * grad[g]) + (ry1 * grad[g + 1]);
+
             const b = interpolate(sx, u, v);
 
             return 0.5 * (1 + interpolate(sy, a, b));
