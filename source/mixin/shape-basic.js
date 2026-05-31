@@ -7,8 +7,6 @@ import { artefact } from '../core/library.js';
 
 import { mergeOver, pushUnique, xt, λnull, Ωempty } from '../helper/utilities.js';
 
-import { releaseArray, requestArray } from '../helper/array-pool.js';
-
 import { calculatePath } from '../helper/shape-path-calculation.js';
 
 import entityMix from './entity.js';

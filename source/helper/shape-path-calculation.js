@@ -702,9 +702,10 @@ const rotateVector = function (v, angle) {
 // `getShapeUnitMetaData`
 const getShapeUnitMetaData = function (species, precision, unit) {
 
-    let xPts = [],
-        yPts = [],
-        len = 0,
+    const xPts = [],
+        yPts = [];
+
+    let len = 0,
         w, h;
 
     const progression = [],
@@ -806,8 +807,8 @@ const getXY = {
             ex = unit[7],
             ey = unit[8];
 
-        res.x = (_pow(T, 3) * sx) + (3 * t * _pow(T, 2) * cp1x) + (3 * t * t * T * cp2x) + (t * t * t * ex),
-        res.y = (_pow(T, 3) * sy) + (3 * t * _pow(T, 2) * cp1y) + (3 * t * t * T * cp2y) + (t * t * t * ey)
+        res.x = (_pow(T, 3) * sx) + (3 * t * _pow(T, 2) * cp1x) + (3 * t * t * T * cp2x) + (t * t * t * ex);
+        res.y = (_pow(T, 3) * sy) + (3 * t * _pow(T, 2) * cp1y) + (3 * t * t * T * cp2y) + (t * t * t * ey);
     },
 
     [GET_QUADRATIC]: function (res, t, unit) {
@@ -820,8 +821,8 @@ const getXY = {
             ex = unit[5],
             ey = unit[6];
 
-        res.x = T * T * sx + 2 * T * t * cp1x + t * t * ex,
-        res.y = T * T * sy + 2 * T * t * cp1y + t * t * ey
+        res.x = T * T * sx + 2 * T * t * cp1x + t * t * ex;
+        res.y = T * T * sy + 2 * T * t * cp1y + t * t * ey;
     },
 };
 
