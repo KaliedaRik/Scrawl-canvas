@@ -106,7 +106,7 @@ const animationLoop = (timestamp) => {
 export const startCoreAnimationLoop = () => {
 
     setDoAnimation(true);
-    animationLoop();
+    window.requestAnimationFrame(animationLoop);
 };
 
 // `Exported function` (modules and scrawl object). Halt the RAF function
