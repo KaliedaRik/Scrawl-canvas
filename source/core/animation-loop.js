@@ -16,7 +16,7 @@ import { getDoAnimation, getResortBatchAnimations, setDoAnimation, setResortBatc
 import { releaseArray, requestArray } from '../helper/array-pool.js';
 
 // Shared constants
-import { _floor, _now } from '../helper/shared-vars.js';
+import { _floor } from '../helper/shared-vars.js';
 
 // Local constants
 const animate_sorted = [];
@@ -75,7 +75,7 @@ const sortAnimations = () => {
 };
 
 // The __requestAnimationFrame__ function
-const animationLoop = () => {
+const animationLoop = (timestamp) => {
 
     if (getResortBatchAnimations()) {
 
@@ -89,13 +89,11 @@ const animationLoop = () => {
 
         if (a.chokedAnimation) {
 
-            const now = _now();
-
             // Warning: magic number! `825` seems to allow the frame rate to reach the max frame rate; setting it to anything higher means the frame rate never reaches the max frame rate.
-            if (a.lastRun + (825 / a.maxFrameRate) < now) {
+            if (a.lastRun + (825 / a.maxFrameRate) < timestamp) {
 
                 a.fn();
-                a.lastRun = now;
+                a.lastRun = timestamp;
             }
         }
         else a.fn();
@@ -108,7 +106,7 @@ const animationLoop = () => {
 export const startCoreAnimationLoop = () => {
 
     setDoAnimation(true);
-    animationLoop();
+    window.requestAnimationFrame(animationLoop);
 };
 
 // `Exported function` (modules and scrawl object). Halt the RAF function
