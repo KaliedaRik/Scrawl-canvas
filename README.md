@@ -210,7 +210,7 @@ $> yarn build
 
 
 ### Star History
-[![Star History Chart](https://api.star-history.com/svg?repos=KaliedaRik/Scrawl-canvas&type=Date)](https://star-history.com/#KaliedaRik/Scrawl-canvas&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=KaliedaRik/Scrawl-canvas&type=Date)](https://star-history.dera.page/#KaliedaRik/Scrawl-canvas&Date)
 
 
 
